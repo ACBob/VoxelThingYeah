@@ -3,7 +3,8 @@ project('VoxelThingYeah', 'cpp',
 	version: '0.0.0')
 
 sources = [
-	'src/main.cpp'
+	'src/main.cpp',
+	'src/vector.cpp'
 ]
 includes = [
 ]
@@ -14,7 +15,8 @@ args = [
 	'-pedantic', 
 	'-Wno-unused-parameter', 
 	'-Wno-missing-field-initializers', 
-	'-Wno-c++11-narrowing'
+	'-Wno-c++11-narrowing',
+	'-fno-exceptions'
 ]
 add_global_arguments(args, language: 'cpp')
 
