@@ -2,10 +2,13 @@ project('VoxelThingYeah', 'cpp',
 	default_options: ['cpp_standard=c++11', 'warning_level=2'],
 	version: '0.0.0')
 
+# TODO: add_subdirectory
 sources = [
 	'src/main.cpp',
 	'src/vector.cpp',
-	'src/player.cpp'
+	'src/player.cpp',
+
+	'src/stuff_that_touches_sdl/window.cpp'
 ]
 includes = [
 ]

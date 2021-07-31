@@ -9,10 +9,13 @@
 #include <SDL2/SDL_syswm.h>
 #include <SDL2/SDL_keyboard.h>
 
+#include "window.h"
+
 #include "vector.h"
 #include "player.h"
 
 #include <fstream>
+#include <iostream>
 
 struct PosColorVertex
 {
@@ -81,27 +84,16 @@ int main (int argc, char* args[]) {
 					SDL_GetError());
 		return -1;
 	}
-	//Create a window
-	window = SDL_CreateWindow("VoxelThingYeah",
-		SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED,
-		WIDTH, HEIGHT,
-		SDL_WINDOW_SHOWN);
-	if(window == NULL) {
-		printf("Window could not be created! SDL_Error: %s\n",
-					SDL_GetError());
-		return -1;
-	}
 
-	SDL_SysWMinfo wmi;
-	SDL_VERSION(&wmi.version);
-	if (!SDL_GetWindowWMInfo(window, &wmi)) {
-		return 1;
-	}
+	BobWindow window("VoxelThingYeah", Vector(800,600));
 
 	bgfx::PlatformData pd;
-	pd.ndt = wmi.info.x11.display;
-	pd.nwh = (void*)(uintptr_t)wmi.info.x11.window;
+	#ifdef __linux__
+		pd.ndt = window.nativeDisplayType;
+	#else
+		pd.ndt = NULL;
+	#endif
+	pd.nwh = (void*)(uintptr_t)window.nativeWindow;
 
 	bgfx::setPlatformData(pd);
 
@@ -142,7 +134,7 @@ int main (int argc, char* args[]) {
 			}
 		}
 
-		SDL_WarpMouseInWindow(window, WIDTH/2, HEIGHT/2);
+		// SDL_WarpMouseInWindow(window, WIDTH/2, HEIGHT/2);
 
 		plyr.Update();
 
@@ -159,9 +151,6 @@ int main (int argc, char* args[]) {
         bgfx::submit(0, prg);
         bgfx::frame();
 	}
-
-	// Free up window
-	SDL_DestroyWindow(window);
 
 	bgfx::shutdown();
 	// Shutdown SDL

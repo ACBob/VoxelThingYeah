@@ -1,0 +1,1 @@
+A container for all the stuff that touches SDL (shivers)
