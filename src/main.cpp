@@ -7,6 +7,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_syswm.h>
+#include <SDL2/SDL_keyboard.h>
 
 #include "vector.h"
 #include "player.h"
@@ -124,6 +125,9 @@ int main (int argc, char* args[]) {
 
 	Player plyr = Player();
 
+	// Get relative mouse change from MouseMove
+	SDL_SetRelativeMouseMode(SDL_TRUE);
+
 	bool run = true;
 	SDL_Event currentEvent;
 	while(run) {
@@ -132,9 +136,16 @@ int main (int argc, char* args[]) {
 				run = false;
 			}
 
-			if (currentEvent.type == SDL_KEYDOWN)
-				plyr.Input(true);
+			if (currentEvent.type == SDL_MOUSEMOTION)
+			{
+				plyr.dir = plyr.dir.Rotate(2, currentEvent.motion.xrel * -0.5);
+				plyr.dir = plyr.dir.Rotate(1, currentEvent.motion.yrel * 0.5);
+			}
 		}
+
+		SDL_WarpMouseInWindow(window, WIDTH/2, HEIGHT/2);
+
+
         float view[16];
         bx::mtxLookAt(view, plyr.pos + plyr.dir, plyr.pos);
         float proj[16];
