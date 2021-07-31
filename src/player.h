@@ -7,8 +7,16 @@ class Player
 	public:
 		Player();
 
+		void Update();
+
 		void Input(bool e);
+		void MouseInput(float xrel, float yrel);
 
 		Vector pos = Vector(0.0f, 0.0f, -5.0f);
-		Vector dir = Vector(0.0f, 0.0f, 1.0f);
+
+		float yaw;
+		float pitch;
+
+		// Gets rotated to our pitch/yaw
+		Vector forward = Vector(0.0f, 0.0f, 1.0f);
 };

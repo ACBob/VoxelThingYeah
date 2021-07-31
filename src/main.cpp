@@ -138,16 +138,17 @@ int main (int argc, char* args[]) {
 
 			if (currentEvent.type == SDL_MOUSEMOTION)
 			{
-				plyr.dir = plyr.dir.Rotate(2, currentEvent.motion.xrel * -0.5);
-				plyr.dir = plyr.dir.Rotate(1, currentEvent.motion.yrel * 0.5);
+				plyr.MouseInput(currentEvent.motion.xrel, currentEvent.motion.yrel);
 			}
 		}
 
 		SDL_WarpMouseInWindow(window, WIDTH/2, HEIGHT/2);
 
+		plyr.Update();
+
 
         float view[16];
-        bx::mtxLookAt(view, plyr.pos + plyr.dir, plyr.pos);
+        bx::mtxLookAt(view, plyr.pos + plyr.forward, plyr.pos);
         float proj[16];
         bx::mtxProj(proj, 60.0f, float(WIDTH) / float(HEIGHT), 0.1f, 100.0f, bgfx::getCaps()->homogeneousDepth);
         bgfx::setViewTransform(0, view, proj);
