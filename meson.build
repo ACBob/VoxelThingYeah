@@ -4,7 +4,8 @@ project('VoxelThingYeah', 'cpp',
 
 sources = [
 	'src/main.cpp',
-	'src/vector.cpp'
+	'src/vector.cpp',
+	'src/player.cpp'
 ]
 includes = [
 ]

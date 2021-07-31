@@ -1,10 +1,39 @@
 #include "vector.h"
+#include <math.h>
 
 Vector::Vector( float x, float y, float z )
 {
 	this->x = x;
 	this->y = y;
 	this->z = z;
+}
+
+#define DEG2RAD (M_PI/180.0)
+
+// Methods
+Vector Vector::Rotate(int axis, float degrees)
+{
+	Vector g = Vector(x,y,z);
+
+	degrees *= DEG2RAD;
+
+	switch(axis)
+	{
+		case 1:
+			g.y = y * cos(degrees) - z * sin(degrees);
+			g.z = y * sin(degrees) + z * cos(degrees);
+		break;
+		case 2:
+			g.x = x * cos(degrees) - z * sin(degrees);
+			g.z = x * sin(degrees) + z * cos(degrees);
+		break;
+		case 3:
+			g.x = x * cos(degrees) - y * sin(degrees);
+			g.y = x * sin(degrees) + y * cos(degrees);
+		break;
+	}
+	
+	return g;
 }
 
 // Operators

@@ -9,6 +9,7 @@
 #include <SDL2/SDL_syswm.h>
 
 #include "vector.h"
+#include "player.h"
 
 #include <fstream>
 
@@ -121,6 +122,8 @@ int main (int argc, char* args[]) {
 	bgfx::ShaderHandle vs = loadShader("cube.vs");
 	bgfx::ProgramHandle prg = bgfx::createProgram(vs, fs, true);
 
+	Player plyr = Player();
+
 	bool run = true;
 	SDL_Event currentEvent;
 	while(run) {
@@ -128,11 +131,12 @@ int main (int argc, char* args[]) {
 			if(currentEvent.type == SDL_QUIT) {
 				run = false;
 			}
+
+			if (currentEvent.type == SDL_KEYDOWN)
+				plyr.Input(true);
 		}
-		const Vector at = {0.0f, 0.0f,  0.0f};
-        const Vector eye = {0.0f, 0.0f, -5.0f};
         float view[16];
-        bx::mtxLookAt(view, eye, at);
+        bx::mtxLookAt(view, plyr.pos + plyr.dir, plyr.pos);
         float proj[16];
         bx::mtxProj(proj, 60.0f, float(WIDTH) / float(HEIGHT), 0.1f, 100.0f, bgfx::getCaps()->homogeneousDepth);
         bgfx::setViewTransform(0, view, proj);

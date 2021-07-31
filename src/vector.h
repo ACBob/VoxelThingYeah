@@ -10,6 +10,9 @@ class Vector
 	// Default constructor, just keeps everything 0,0,0
 	Vector( float x = 0, float y = 0, float z = 0 );
 
+	// Methods
+	Vector Rotate(int axis, float degrees); // Returns this vector rotated around axis (1=x,3=z) by degrees
+
 	// Operators
 	// Math, with other vectors
 	Vector operator+( Vector oVec );
