@@ -35,6 +35,23 @@ Vector Vector::Rotate(int axis, float degrees)
 	
 	return g;
 }
+float Vector::Magnitude()
+{
+	return sqrt((x*x) + (y*y) + (z*z));
+}
+Vector Vector::Normal()
+{
+	Vector g = Vector(x,y,z);
+
+	// Magnitude
+	float mag = Magnitude();
+	
+	g.x = x / mag;
+	g.y = y / mag;
+	g.z = z / mag;
+
+	return g;
+}
 
 // Operators
 // Math, with other vectors

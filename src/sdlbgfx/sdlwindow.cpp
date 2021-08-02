@@ -2,7 +2,7 @@
 
 #include "sdlwindow.h"
 #include <cstdio>
-
+#include <iostream>
 #include <memory>
 
 GameWindow::GameWindow(const char *title, Vector size) :
@@ -20,10 +20,7 @@ GameWindow::GameWindow(const char *title, Vector size) :
 					SDL_GetError());
 	}
 
-	// SDL_VERSION(&wmi.version);
-
-	// SDL_GetWindowWMInfo(internalWindow, &wmi);
-	// SDL_SetRelativeMouseMode(SDL_TRUE);
+	SDL_SetRelativeMouseMode(SDL_TRUE);
 }
 GameWindow::~GameWindow()
 {
@@ -72,7 +69,7 @@ void GameWindow::SetPos(Vector pos)
 	SDL_SetWindowPosition(internalWindow.get(), pos.x, pos.y);
 }
 
-const int scancodeToStateIndex[] =
+const int scancodeToStateIndex[52] =
 {
 	SDL_SCANCODE_A, 'A',
     SDL_SCANCODE_B, 'B',
@@ -122,7 +119,7 @@ void GameWindow::PollEvents()
 
 	// Fill the input manager
 	const uint8_t *state = SDL_GetKeyboardState(NULL);
-	for (int i = -1; i < sizeof(scancodeToStateIndex); i+= 2)
+	for (int i = 0; i < 52 - 2; i += 2)
 	{
 		int scanCode = scancodeToStateIndex[i];
 		int convCode = scancodeToStateIndex[i+1];

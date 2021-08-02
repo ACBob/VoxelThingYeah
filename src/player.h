@@ -13,7 +13,7 @@ class Player
 		void Input(bool e);
 		void MouseInput(float xrel, float yrel);
 
-		Vector pos = Vector(0.0f, 0.0f, -5.0f);
+		Vector pos = Vector(0.0f, 0.0f, 5.0f);
 
 		float yaw;
 		float pitch;

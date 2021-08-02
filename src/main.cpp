@@ -132,7 +132,9 @@ int main (int argc, char* args[]) {
 
 	while(!window.shouldClose) {
 		window.PollEvents();
-		window.CaptureMouse();
+
+		if (window.IsVisible())
+			window.CaptureMouse();
 
 		// Entity handling go here
 

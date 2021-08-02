@@ -10,8 +10,15 @@ Player::Player()
 
 void Player::Update()
 {
+	// TODO: Custom Controls (inputMan properties?)
 	if (inputMan->keyboardState['W'])
-		pos = pos + Vector(1,0,0);
+		pos = pos + (forward.Normal() * -0.2);
+	else if(inputMan->keyboardState['S'])
+		pos = pos + (forward.Normal() * 0.2);
+	if (inputMan->keyboardState['A'])
+		pos = pos + (forward.Normal().Rotate(2, 90) * -0.2);
+	else if (inputMan->keyboardState['D'])
+		pos = pos + (forward.Normal().Rotate(2, 90) * 0.2);
 	
 	MouseInput(inputMan->mouseMovement.x, inputMan->mouseMovement.y);
 
@@ -21,8 +28,8 @@ void Player::Update()
 
 void Player::MouseInput(float xrel, float yrel)
 {
-	pitch += yrel * 0.5;
-	yaw += xrel * 0.5;
+	pitch += yrel;
+	yaw += xrel;
 
 	pitch = pitch < -87 ? -87 : (pitch > 87 ? 87 : pitch);
 }
