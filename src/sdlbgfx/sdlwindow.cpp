@@ -111,8 +111,8 @@ void GameWindow::PollEvents()
 				shouldClose = true;
 			break;
 			case SDL_MOUSEMOTION:
-				inputMan->mouseMovement = Vector(currentEvent.motion.xrel, currentEvent.motion.yrel);
-				inputMan->mousePos = Vector(0,0); // TODO:
+				inputMan->mouseMovement = inputMan->mouseMovement + Vector(currentEvent.motion.xrel, currentEvent.motion.yrel);
+				inputMan->mousePos = Vector(currentEvent.motion.x, currentEvent.motion.y);
 			break;
 		}
 	}

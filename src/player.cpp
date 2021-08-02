@@ -14,13 +14,10 @@ void Player::Update()
 {
 	// TODO: Custom Controls (inputMan properties?)
 	if (inputMan->keyboardState['W'])
-		pos = pos + (forward.Normal() * -0.2);
+		pos = pos + (forward * -0.2);
 	else if(inputMan->keyboardState['S'])
-		pos = pos + (forward.Normal() * 0.2);
-	if (inputMan->keyboardState['A'])
-		pos = pos + (forward.Normal().Rotate(2, 90) * -0.2);
-	else if (inputMan->keyboardState['D'])
-		pos = pos + (forward.Normal().Rotate(2, 90) * 0.2);
+		pos = pos + (forward * 0.2);
+	// TODO: right/left
 	
 	MouseInput(inputMan->mouseMovement.x, inputMan->mouseMovement.y);
 
@@ -30,8 +27,9 @@ void Player::Update()
 
 void Player::MouseInput(float xrel, float yrel)
 {
-	pitch -= yrel;
-	yaw -= xrel;
+	// TODO: sensitivity
+	pitch -= yrel * 0.05;
+	yaw -= xrel * 0.05;
 
 	while (yaw > 360)
 		yaw -= 360;
