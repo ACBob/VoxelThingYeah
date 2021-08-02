@@ -1,4 +1,5 @@
 #include "vector.h"
+#include "inputmanager.h"
 
 class BobWindow
 {
@@ -30,4 +31,7 @@ class BobWindow
 
 		// Places the mouse in the middle of the screen
 		virtual void CaptureMouse() = 0;
+
+		// Pointer to Input manager
+		InputManager *inputMan;
 };

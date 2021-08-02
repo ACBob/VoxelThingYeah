@@ -37,6 +37,11 @@ class GameWindow : public BobWindow
 		void CaptureMouse();
 
 		std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> internalWindow;
+
+		bool shouldClose;
+
+		// Pointer to Input manager
+		InputManager *inputMan;
 };
 
 #endif

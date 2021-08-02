@@ -86,6 +86,10 @@ int main (int argc, char* args[]) {
 	const int WIDTH = window.GetSize().x;
 	const int HEIGHT = window.GetSize().y;
 
+	// Create input manager and give the window a pointer to it
+	InputManager input;
+	window.inputMan = &input;
+
 	//! TODO: NOT THIS
 	bgfx::PlatformData pd;
 	SDL_SysWMinfo wmi;
@@ -122,6 +126,7 @@ int main (int argc, char* args[]) {
 	bgfx::ProgramHandle prg = bgfx::createProgram(vs, fs, true);
 
 	Player plyr = Player();
+	plyr.inputMan = &input;
 
 	// Get relative mouse change from MouseMove
 

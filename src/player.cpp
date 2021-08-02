@@ -10,6 +10,9 @@ Player::Player()
 
 void Player::Update()
 {
+	if (inputMan->keyboardState['W'])
+		pos = pos + Vector(1,0,0);
+
 	// Rotate our forward vector towards pitch/yaw
 	forward = Vector(0,0,1).Rotate(2, -yaw).Rotate(1, pitch);
 }

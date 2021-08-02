@@ -7,6 +7,7 @@ sources = [
 	'src/main.cpp',
 	'src/vector.cpp',
 	'src/player.cpp',
+	'src/inputmanager.cpp',
 
 	'src/sdlbgfx/sdlwindow.cpp'
 ]

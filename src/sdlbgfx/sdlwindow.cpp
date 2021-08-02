@@ -23,7 +23,7 @@ GameWindow::GameWindow(const char *title, Vector size) :
 	// SDL_VERSION(&wmi.version);
 
 	// SDL_GetWindowWMInfo(internalWindow, &wmi);
-	SDL_SetRelativeMouseMode(SDL_TRUE);
+	// SDL_SetRelativeMouseMode(SDL_TRUE);
 }
 GameWindow::~GameWindow()
 {
@@ -72,6 +72,36 @@ void GameWindow::SetPos(Vector pos)
 	SDL_SetWindowPosition(internalWindow.get(), pos.x, pos.y);
 }
 
+const int scancodeToStateIndex[] =
+{
+	SDL_SCANCODE_A, 'A',
+    SDL_SCANCODE_B, 'B',
+    SDL_SCANCODE_C, 'C',
+    SDL_SCANCODE_D, 'D',
+    SDL_SCANCODE_E, 'E',
+    SDL_SCANCODE_F, 'F',
+    SDL_SCANCODE_G, 'G',
+    SDL_SCANCODE_H, 'H',
+    SDL_SCANCODE_I, 'I',
+    SDL_SCANCODE_J, 'J',
+    SDL_SCANCODE_K, 'K',
+    SDL_SCANCODE_L, 'L',
+    SDL_SCANCODE_M, 'M',
+    SDL_SCANCODE_N, 'N',
+    SDL_SCANCODE_O, 'O',
+    SDL_SCANCODE_P, 'P',
+    SDL_SCANCODE_Q, 'Q',
+    SDL_SCANCODE_R, 'R',
+    SDL_SCANCODE_S, 'S',
+    SDL_SCANCODE_T, 'T',
+    SDL_SCANCODE_U, 'U',
+    SDL_SCANCODE_V, 'V',
+    SDL_SCANCODE_W, 'W',
+    SDL_SCANCODE_X, 'X',
+    SDL_SCANCODE_Y, 'Y',
+    SDL_SCANCODE_Z, 'Z'
+};
+
 void GameWindow::PollEvents()
 {
 	SDL_Event currentEvent;
@@ -82,6 +112,15 @@ void GameWindow::PollEvents()
 				shouldClose = true;
 			break;
 		}
+	}
+
+	// Fill the input manager
+	const uint8_t *state = SDL_GetKeyboardState(NULL);
+	for (int i = -1; i < sizeof(scancodeToStateIndex); i+= 2)
+	{
+		int scanCode = scancodeToStateIndex[i];
+		int convCode = scancodeToStateIndex[i+1];
+		inputMan->keyboardState[convCode] = (state[scanCode] == 1);
 	}
 }
 
