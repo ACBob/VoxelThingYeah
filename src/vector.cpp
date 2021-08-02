@@ -19,15 +19,15 @@ Vector Vector::Rotate(int axis, float degrees)
 
 	switch(axis)
 	{
-		case 1:
+		case 1: // X
 			g.y = y * cos(degrees) - z * sin(degrees);
 			g.z = y * sin(degrees) + z * cos(degrees);
 		break;
-		case 2:
+		case 2: // Y
 			g.x = x * cos(degrees) - z * sin(degrees);
 			g.z = x * sin(degrees) + z * cos(degrees);
 		break;
-		case 3:
+		case 3: // Z
 			g.x = x * cos(degrees) - y * sin(degrees);
 			g.y = x * sin(degrees) + y * cos(degrees);
 		break;
