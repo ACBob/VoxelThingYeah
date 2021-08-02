@@ -9,7 +9,7 @@
 #include <SDL2/SDL_syswm.h>
 #include <SDL2/SDL_keyboard.h>
 
-#include "window.h"
+#include "sdlbgfx/sdlwindow.h"
 
 #include "vector.h"
 #include "player.h"
@@ -74,9 +74,6 @@ bgfx::ShaderHandle loadShader(const char *filename)
 	return bgfx::createShader(mem);
 }
 
-SDL_Window* window = NULL;
-const int WIDTH = 640;
-const int HEIGHT = 480;
 int main (int argc, char* args[]) {
 	// Initialize SDL systems
 	if(SDL_Init( SDL_INIT_VIDEO )) {
@@ -85,15 +82,24 @@ int main (int argc, char* args[]) {
 		return -1;
 	}
 
-	BobWindow window("VoxelThingYeah", Vector(800,600));
+	GameWindow window("VoxelThingYeah", Vector(800,600));
+	const int WIDTH = window.GetSize().x;
+	const int HEIGHT = window.GetSize().y;
 
+	//! TODO: NOT THIS
 	bgfx::PlatformData pd;
+	SDL_SysWMinfo wmi;
+
+	SDL_VERSION(&wmi.version);
+	SDL_GetWindowWMInfo(window.internalWindow.get(), &wmi);
+
+	// TODO: other system support
 	#ifdef __linux__
-		pd.ndt = window.nativeDisplayType;
+		pd.ndt = wmi.info.x11.display;
 	#else
 		pd.ndt = NULL;
 	#endif
-	pd.nwh = (void*)(uintptr_t)window.nativeWindow;
+	pd.nwh = (void*)(uintptr_t)wmi.info.x11.window;
 
 	bgfx::setPlatformData(pd);
 
