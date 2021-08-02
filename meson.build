@@ -8,6 +8,8 @@ sources = [
 	'src/vector.cpp',
 	'src/player.cpp',
 	'src/inputmanager.cpp',
+	'src/chunk.cpp',
+	'src/chunkmodel.cpp',
 
 	'src/sdlbgfx/sdlwindow.cpp'
 ]

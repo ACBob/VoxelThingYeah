@@ -13,6 +13,7 @@
 
 #include "vector.h"
 #include "player.h"
+#include "chunk.h"
 
 #include <fstream>
 #include <iostream>
@@ -113,6 +114,8 @@ int main (int argc, char* args[]) {
 	bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x008080ff, 1.0f, 0);
 	bgfx::touch(0);
 
+	Chunk testChunk;
+
 	bgfx::VertexLayout pcvDecl;
     pcvDecl.begin()
         .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
@@ -120,6 +123,14 @@ int main (int argc, char* args[]) {
     .end();
     bgfx::VertexBufferHandle vbh = bgfx::createVertexBuffer(bgfx::makeRef(cubeVertices, sizeof(cubeVertices)), pcvDecl);
     bgfx::IndexBufferHandle ibh = bgfx::createIndexBuffer(bgfx::makeRef(cubeTriList, sizeof(cubeTriList)));
+
+
+	bgfx::VertexLayout pcvDecl1;
+    pcvDecl1.begin()
+        .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+    .end();
+    bgfx::VertexBufferHandle vbh1 = bgfx::createVertexBuffer(bgfx::makeRef(&testChunk.mdl.vertices[0], testChunk.mdl.vertices.size()), pcvDecl1);
+    bgfx::IndexBufferHandle ibh1 = bgfx::createIndexBuffer(bgfx::makeRef(&testChunk.mdl.faces[0], testChunk.mdl.faces.size()));
 
 	bgfx::ShaderHandle fs = loadShader("cube.fs");
 	bgfx::ShaderHandle vs = loadShader("cube.vs");
@@ -149,6 +160,11 @@ int main (int argc, char* args[]) {
 
         bgfx::setVertexBuffer(0, vbh);
         bgfx::setIndexBuffer(ibh);
+
+        bgfx::submit(0, prg);
+
+        bgfx::setVertexBuffer(0, vbh1);
+        bgfx::setIndexBuffer(ibh1);
 
         bgfx::submit(0, prg);
         bgfx::frame();
