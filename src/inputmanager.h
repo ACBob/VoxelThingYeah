@@ -1,5 +1,7 @@
 #include "vector.h"
 
+#pragma once
+
 class InputManager
 {
 	public:

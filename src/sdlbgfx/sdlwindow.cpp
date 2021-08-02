@@ -104,12 +104,18 @@ const int scancodeToStateIndex[] =
 
 void GameWindow::PollEvents()
 {
+	inputMan->mouseMovement = Vector(0,0);
+
 	SDL_Event currentEvent;
 	while(SDL_PollEvent(&currentEvent) != 0) {
 		switch (currentEvent.type)
 		{
 			case SDL_QUIT: // Handle quitting directly
 				shouldClose = true;
+			break;
+			case SDL_MOUSEMOTION:
+				inputMan->mouseMovement = Vector(currentEvent.motion.xrel, currentEvent.motion.yrel);
+				inputMan->mousePos = Vector(0,0); // TODO:
 			break;
 		}
 	}
