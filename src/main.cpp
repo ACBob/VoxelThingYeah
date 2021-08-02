@@ -124,27 +124,16 @@ int main (int argc, char* args[]) {
 	Player plyr = Player();
 
 	// Get relative mouse change from MouseMove
-	SDL_SetRelativeMouseMode(SDL_TRUE);
 
-	bool run = true;
-	SDL_Event currentEvent;
-	while(run) {
-		while(SDL_PollEvent(&currentEvent) != 0) {
-			if(currentEvent.type == SDL_QUIT) {
-				run = false;
-			}
+	while(!window.shouldClose) {
+		window.PollEvents();
+		window.CaptureMouse();
 
-			if (currentEvent.type == SDL_MOUSEMOTION)
-			{
-				plyr.MouseInput(currentEvent.motion.xrel, currentEvent.motion.yrel);
-			}
-		}
-
-		// SDL_WarpMouseInWindow(window, WIDTH/2, HEIGHT/2);
+		// Entity handling go here
 
 		plyr.Update();
 
-
+		// Rendering right at the end
         float view[16];
         bx::mtxLookAt(view, plyr.pos + plyr.forward, plyr.pos);
         float proj[16];

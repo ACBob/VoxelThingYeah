@@ -32,6 +32,10 @@ class GameWindow : public BobWindow
 		Vector GetPos();
 		void SetPos(Vector p);
 
+		void PollEvents();
+
+		void CaptureMouse();
+
 		std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> internalWindow;
 };
 

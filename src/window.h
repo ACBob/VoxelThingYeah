@@ -22,4 +22,12 @@ class BobWindow
 		// SDL_SetWindowPos / SDL_GetWindowPos
 		virtual Vector GetPos() = 0;
 		virtual void SetPos(Vector p) = 0;
+
+		// Poll events
+		virtual void PollEvents() = 0;
+
+		bool shouldClose = false;
+
+		// Places the mouse in the middle of the screen
+		virtual void CaptureMouse() = 0;
 };
