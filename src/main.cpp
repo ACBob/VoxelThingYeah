@@ -129,8 +129,14 @@ int main (int argc, char* args[]) {
     pcvDecl1.begin()
         .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
     .end();
-    bgfx::VertexBufferHandle vbh1 = bgfx::createVertexBuffer(bgfx::makeRef(&testChunk.mdl.vertices[0], testChunk.mdl.vertices.size()), pcvDecl1);
-    bgfx::IndexBufferHandle ibh1 = bgfx::createIndexBuffer(bgfx::makeRef(&testChunk.mdl.faces[0], testChunk.mdl.faces.size()));
+	ChunkModel::Vertex FUCKER[testChunk.mdl.vertices.size()];
+	for (int i = 0; i < testChunk.mdl.vertices.size(); i++)
+		FUCKER[i] = testChunk.mdl.vertices[i];
+	ChunkModel::Face MYDICK[testChunk.mdl.faces.size()];
+	for (int i = 0; i < testChunk.mdl.faces.size(); i++)
+		MYDICK[i] = testChunk.mdl.faces[i];
+    bgfx::VertexBufferHandle vbh1 = bgfx::createVertexBuffer(bgfx::makeRef(FUCKER, sizeof(FUCKER)), pcvDecl1);
+    bgfx::IndexBufferHandle ibh1 = bgfx::createIndexBuffer(bgfx::makeRef(MYDICK, sizeof(MYDICK)));
 
 	bgfx::ShaderHandle fs = loadShader("cube.fs");
 	bgfx::ShaderHandle vs = loadShader("cube.vs");

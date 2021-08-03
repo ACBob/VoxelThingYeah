@@ -9,13 +9,13 @@
 class ChunkModel {
 	public:
 		struct Vertex {
-			Vertex(int a, int b, int c) {x=a;y=b;z=c;};
+			Vertex(int a = 69, int b = 69, int c = 69) {x=a;y=b;z=c;};
 			float x, y, z;
 			// TODO: UV, Texture, Colour, Lighting, Etc.
 		};
 
 		struct Face {
-			Face(int a, int b, int c) {v=a;vv=b;vvv=c;};
+			Face(int a = 0, int b = 0, int c = 0) {v=a;vv=b;vvv=c;};
 			int v, vv, vvv;
 		};
 		std::vector<Vertex> vertices;

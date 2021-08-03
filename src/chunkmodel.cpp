@@ -46,31 +46,31 @@ void ChunkModel::Build(blocktype_t blocks[])
 	vertices.clear();
 	faces.clear();
 
-	for (int y = 0; y < CHUNKSIZE_Y; y++)
+	// for (int y = 0; y < CHUNKSIZE_Y; y++)
+	// {
+	// 	for (int x = 0; x < CHUNKSIZE_X; x++)
+	// 	{
+	// 		for (int z = 0; z < CHUNKSIZE_Z; z++)
+	// 		{
+	// 			// blocktype_t block = blocks[indexArray(x,y,z)];
+
+	// block here! Construct!
+	for (int i = 0; i < 6; i++)
 	{
-		for (int x = 0; x < CHUNKSIZE_X; x++)
-		{
-			for (int z = 0; z < CHUNKSIZE_Z; z++)
-			{
-				// blocktype_t block = blocks[indexArray(x,y,z)];
+		std::vector<Vertex> g = sampleFace(blockface_t(i));
+		std::copy(g.begin(), g.end(), std::back_inserter(vertices));
 
-				// block here! Construct!
-				for (int i = 0; i < 6; i++)
-				{
-					std::vector<Vertex> g = sampleFace(blockface_t(i));
-					std::copy(g.begin(), g.end(), std::back_inserter(vertices));
+		int nVertices = vertices.size();
 
-					int nVertices = vertices.size();
+		faces.push_back(
+			{nVertices - 4, nVertices - 4 + 1, nVertices - 4 + 2}
+		);
+		faces.push_back(
+			{nVertices - 4, nVertices - 4 + 2, nVertices - 4 + 3}
+		);
 
-					faces.push_back(
-						{nVertices - 4, nVertices - 4 + 1, nVertices - 4 + 2}
-					);
-					faces.push_back(
-						{nVertices - 4, nVertices - 4 + 2, nVertices - 4 + 3}
-					);
-
-				}
-			}
-		}
 	}
+	// 		}
+	// 	}
+	// }
 }
