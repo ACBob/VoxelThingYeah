@@ -22,13 +22,13 @@ const ChunkModel::Vertex vertices[] = {
 
 // D-d-d-d-double vector
 const std::vector<std::vector<int>> triangles = {
-	{0, 1, 2, 3}, // N
-	{5, 0, 3, 6}, // E
-	{4, 5, 6, 7}, // S
-	{1, 4, 7, 2}, // W
+	{3, 2, 1, 0}, // N
+	{6, 3, 0, 5}, // E
+	{7, 6, 5, 4}, // S
+	{2, 7, 4, 1}, // W
 
-	{5, 4, 1, 0}, // UP
-	{3, 2, 7, 6} // DN
+	{0, 1, 4, 5}, // UP
+	{6, 7, 2, 3} // DN
 };
 
 std::vector<ChunkModel::Vertex> sampleFace(blockface_t dir, int x = 0, int y = 0, int z = 0)
@@ -83,7 +83,7 @@ void ChunkModel::Build(blocktype_t blocks[])
 						if ( ValidChunkPosition(neighbour) )
 						{
 							if (
-								blocks[indexArray(neighbour.x,neighbour.y,neighbour.z)] == true
+								blocks[indexArray(neighbour.x,neighbour.y,neighbour.z)]
 							) // Skip if neighbouring
 							{
 								continue;

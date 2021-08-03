@@ -6,7 +6,7 @@ Chunk::Chunk()
 {
 	// FOR NOW: start off filled with blocks
 	for (int i = 0; i < sizeof(blocks); i++)
-		blocks[i] = true;
+		blocks[i] = random() > RAND_MAX * 0.9;
 
 	mdl.Build(blocks);
 }
