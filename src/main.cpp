@@ -132,27 +132,10 @@ int main (int argc, char* args[]) {
 
 	ChunkModel::Vertex FUCKER[testChunk.mdl.vertices.size()];
 	for (int i = 0; i < testChunk.mdl.vertices.size(); i++)
-	{
 		FUCKER[i] = testChunk.mdl.vertices[i];
-		// if (FUCKER[i].x == 0) std::cout << "WOOWEE " << i << std::endl;
-		// if (FUCKER[i].y == 0) std::cout << "WOOWEE " << i << std::endl;
-		// if (FUCKER[i].z == 0) std::cout << "WOOWEE " << i << std::endl;
-		if (FUCKER[i].x == 0 && FUCKER[i].z == 0) std::cout << "DEAR CHRIST " << i << std::endl;
-		if (FUCKER[i].x == 0 && FUCKER[i].y == 0) std::cout << "DEAR LORD " << i << std::endl;
-		if (FUCKER[i].z == 0 && FUCKER[i].y == 0) std::cout << "UNMERCIFUL " << i << std::endl;
-		if (FUCKER[i].x == 0 && FUCKER[i].y == 0 && FUCKER[i].z == 0) std::cout << "WHAT THE FUCK " << i << std::endl;
-	}
-
-	std::cout << "-----------" << std::endl;
-
 	ChunkModel::Face MYDICK[testChunk.mdl.faces.size()];
 	for (int i = 0; i < testChunk.mdl.faces.size(); i++)
-	{
 		MYDICK[i] = testChunk.mdl.faces[i];
-		if (MYDICK[i].v == 0) std::cout << "WEEWOO " << i << std::endl;
-		if (MYDICK[i].vv == 0) std::cout << "WEEWOO " << i << std::endl;
-		if (MYDICK[i].vvv == 0) std::cout << "WEEWOO " << i << std::endl;
-	}
 
     bgfx::VertexBufferHandle vbh1 = bgfx::createVertexBuffer(bgfx::makeRef(FUCKER, sizeof(FUCKER)), pcvDecl1);
     bgfx::IndexBufferHandle ibh1 = bgfx::createIndexBuffer(bgfx::makeRef(MYDICK, sizeof(MYDICK)));
