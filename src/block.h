@@ -1,12 +1,12 @@
 // TODO:
 
+#include "vector.h"
+
 #pragma once
 
 typedef bool blocktype_t;
 
-enum blockface_t {
-	WHAT, // default
-	
+enum blockface_t {	
 	NORTH = 1,
 	EAST = 2,
 	SOUTH = 3,

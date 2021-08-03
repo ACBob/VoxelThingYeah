@@ -1,5 +1,7 @@
 #include "chunk.h"
 
+#include <random>
+
 Chunk::Chunk()
 {
 	// FOR NOW: start off filled with blocks

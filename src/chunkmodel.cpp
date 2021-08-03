@@ -5,7 +5,7 @@
 
 int indexArray(int x, int y, int z)
 {
-	return int(x + CHUNKSIZE_X * (y + CHUNKSIZE_Z * z));
+	return (x + CHUNKSIZE_X * (y + CHUNKSIZE_Z * z));
 }
 const ChunkModel::Vertex vertices[] = {
 	// NORTH +Z
@@ -46,11 +46,25 @@ std::vector<ChunkModel::Vertex> sampleFace(blockface_t dir, int x = 0, int y = 0
 	return g;
 }
 
+// TODO: Somewhere else?
+Vector blockdir[] = {
+	{0, 0, 1}, // NORTH
+	{1, 0, 0}, // EAST
+	{0, 0, -1}, // SOUTH
+	{-1, 0, 0}, // WEST
+
+	{0, 1, 0}, // UP
+	{0, -1, 0} // DOWN
+};
+
 
 void ChunkModel::Build(blocktype_t blocks[])
 {
 	vertices.clear();
 	faces.clear();
+
+	// Reserve enough space to have verticies inside all space
+	vertices.reserve(CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z * 4);
 
 	for (int y = 0; y < CHUNKSIZE_Y; y++)
 	{
@@ -58,22 +72,42 @@ void ChunkModel::Build(blocktype_t blocks[])
 		{
 			for (int z = 0; z < CHUNKSIZE_Z; z++)
 			{
-				// blocktype_t block = blocks[indexArray(x,y,z)];
+				blocktype_t block = blocks[indexArray(x,y,z)];
 
 				// block here! Construct!
-				for (int i = 0; i < 6; i++)
+				if (block == true)
 				{
-					std::vector<Vertex> g = sampleFace(blockface_t(i), x, y, z);
-					std::copy(g.begin(), g.end(), std::back_inserter(vertices));
+					for (int i = 0; i < 6; i++)
+					{
+						// TODO: Test against other chunks
+						Vector neighbour = Vector(x,y,z) + blockdir[i];
+						if (
+							// Make sure the coordinates are inside
+							(neighbour.x >= 0 && neighbour.y >= 0 && neighbour.z >= 0 )
+							&&
+							(neighbour.x <= CHUNKSIZE_X && neighbour.y <= CHUNKSIZE_X && neighbour.z <= CHUNKSIZE_Z)
+						)
+						{
+							if (
+								blocks[indexArray(neighbour.x,neighbour.y,neighbour.z)] == true
+							) // Skip if neighbouring
+							{
+								continue;
+							}
+						}
 
-					int nVertices = vertices.size();
+						std::vector<Vertex> g = sampleFace(blockface_t(i), x, y, z);
+						std::copy(g.begin(), g.end(), std::back_inserter(vertices));
 
-					faces.push_back(
-						{nVertices - 4, nVertices - 3, nVertices - 2}
-					);
-					faces.push_back(
-						{nVertices - 4, nVertices - 2, nVertices - 1}
-					);
+						int nVertices = vertices.size();
+
+						faces.push_back(
+							{nVertices - 4, nVertices - 3, nVertices - 2}
+						);
+						faces.push_back(
+							{nVertices - 4, nVertices - 2, nVertices - 1}
+						);
+					}
 				}
 			}
 		}
