@@ -4,7 +4,7 @@
 		"name": "(gdb) Launch",
 		"type": "cppdbg",
 		"request": "launch",
-		"program": "${workspaceFolder}/builddir/VoxelThingYeah",
+		"program": "${workspaceFolder}/bin/VoxelThingYeah",
 		"args": [],
 		"stopAtEntry": false,
 		"cwd": "${workspaceFolder}",

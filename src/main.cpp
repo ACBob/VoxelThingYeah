@@ -57,7 +57,7 @@ static const uint16_t cubeTriList[] =
 // TODO: abstraction yadda yadda
 bgfx::ShaderHandle loadShader(const char *filename)
 {
-	std::ifstream f(filename, std::ios::ate);
+	std::ifstream f(filename, std::ios::binary | std::ios::ate);
 	std::streamsize size = f.tellg();
 	f.seekg(0, std::ios::beg);
 
@@ -70,7 +70,7 @@ bgfx::ShaderHandle loadShader(const char *filename)
     // HACK: tired and want this to work
 	for (int i = 0; i < size; i++)
 		mem->data[i] = g[i];
-    mem->data[mem->size - 1] = '\0';
+    mem->data[mem->size + 1] = '\0';
 
 	return bgfx::createShader(mem);
 }
@@ -141,8 +141,8 @@ int main (int argc, char* args[]) {
     bgfx::VertexBufferHandle vbh1 = bgfx::createVertexBuffer(bgfx::makeRef(FUCKER, sizeof(FUCKER)), pcvDecl1);
     bgfx::IndexBufferHandle ibh1 = bgfx::createIndexBuffer(bgfx::makeRef(MYDICK, sizeof(MYDICK)));
 
-	bgfx::ShaderHandle fs = loadShader("cube.fs");
-	bgfx::ShaderHandle vs = loadShader("cube.vs");
+	bgfx::ShaderHandle vs = loadShader("shaders/cube_vs.spv");
+	bgfx::ShaderHandle fs = loadShader("shaders/cube_fs.spv");
 	bgfx::ProgramHandle prg = bgfx::createProgram(vs, fs, true);
 
 	Player plyr = Player();

@@ -1,0 +1,8 @@
+# CMake builddir
+build/
+# Runtime output dir
+bin/
+
+# Compiled shaders
+shaders/*.bin
+shaders/*.spv

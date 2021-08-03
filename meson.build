@@ -2,6 +2,8 @@ project('VoxelThingYeah', 'cpp',
 	default_options: ['cpp_standard=c++17', 'warning_level=2'],
 	version: '0.0.0')
 
+warning('Meson build project may be outdated, It is kept because I may return.')
+
 # TODO: add_subdirectory
 sources = [
 	'src/main.cpp',
@@ -31,6 +33,8 @@ add_global_arguments(args, language: 'cpp')
 cmake = import('cmake')
 
 bgfx = cmake.subproject('bgfx.cmake')
+
+subdir('shaders')
 
 deps = [
 	bgfx.dependency('bimg'), bgfx.dependency('astc'), bgfx.dependency('astc-codec'), bgfx.dependency('bx'), bgfx.dependency('bgfx'),

@@ -2,12 +2,16 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"type": "meson",
-			"target": "VoxelThingYeah",
-			"mode": "build",
+			"type": "shell",
 			"problemMatcher": [
 				"$gcc"
 			],
+			"command": "make",
+			"args": [
+			],
+			"options": {
+				"cwd": "build"
+			},
 			"group": "build",
 			"label": "Build"
 		}
