@@ -24,3 +24,5 @@ class Chunk
 
 		ChunkModel mdl;
 };
+
+bool ValidChunkPosition(Vector pos);

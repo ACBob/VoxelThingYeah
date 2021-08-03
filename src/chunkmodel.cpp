@@ -5,7 +5,7 @@
 
 int indexArray(int x, int y, int z)
 {
-	return (x + CHUNKSIZE_X * (y + CHUNKSIZE_Z * z));
+	return x * CHUNKSIZE_Y * CHUNKSIZE_Z + y * CHUNKSIZE_Z + z;
 }
 const ChunkModel::Vertex vertices[] = {
 	// NORTH +Z
@@ -57,7 +57,6 @@ Vector blockdir[] = {
 	{0, -1, 0} // DOWN
 };
 
-
 void ChunkModel::Build(blocktype_t blocks[])
 {
 	vertices.clear();
@@ -81,12 +80,7 @@ void ChunkModel::Build(blocktype_t blocks[])
 					{
 						// TODO: Test against other chunks
 						Vector neighbour = Vector(x,y,z) + blockdir[i];
-						if (
-							// Make sure the coordinates are inside
-							(neighbour.x >= 0 && neighbour.y >= 0 && neighbour.z >= 0 )
-							&&
-							(neighbour.x <= CHUNKSIZE_X && neighbour.y <= CHUNKSIZE_X && neighbour.z <= CHUNKSIZE_Z)
-						)
+						if ( ValidChunkPosition(neighbour) )
 						{
 							if (
 								blocks[indexArray(neighbour.x,neighbour.y,neighbour.z)] == true
