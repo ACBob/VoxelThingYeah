@@ -128,6 +128,7 @@ int main (int argc, char* args[]) {
 	bgfx::VertexLayout pcvDecl1;
     pcvDecl1.begin()
         .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+		.add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
     .end();
 
 	ChunkModel::Vertex FUCKER[testChunk.mdl.vertices.size()];

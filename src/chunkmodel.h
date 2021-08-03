@@ -9,9 +9,10 @@
 class ChunkModel {
 	public:
 		struct Vertex {
-			Vertex(int a = 69, int b = 69, int c = 69) {x=a;y=b;z=c;};
+			Vertex(int a = 69, int b = 69, int c = 69, float u = 0, float v = 0) {x=a;y=b;z=c;};
 			float x, y, z;
-			// TODO: UV, Texture, Colour, Lighting, Etc.
+			float u, v;
+			// TODO: Texture, Colour, Lighting, Etc.
 		};
 
 		struct Face {

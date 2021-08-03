@@ -41,6 +41,26 @@ std::vector<ChunkModel::Vertex> sampleFace(blockface_t dir, int x = 0, int y = 0
 		g[i].x += x;
 		g[i].y += y;
 		g[i].z += z;
+
+		switch(i)
+		{
+			case 0:
+				g[i].u = 0;
+				g[i].v = 0;
+			break;
+			case 1:
+				g[i].u = 1;
+				g[i].v = 0;
+			break;
+			case 2:
+				g[i].u = 1;
+				g[i].v = 1;
+			break;
+			case 3:
+				g[i].u = 0;
+				g[i].v = 1;
+			break;
+		}
 	}
 
 	return g;
