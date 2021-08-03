@@ -2,9 +2,9 @@
 #include "block.h"
 #include "chunkmodel.h"
 
-#define CHUNKSIZE_X 2
-#define CHUNKSIZE_Y 2
-#define CHUNKSIZE_Z 2
+#define CHUNKSIZE_X 1
+#define CHUNKSIZE_Y 1
+#define CHUNKSIZE_Z 1
 
 #pragma once
 
