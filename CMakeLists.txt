@@ -10,7 +10,7 @@ project(VoxelThingYeah VERSION 0.0.0)
 # endif()
 
 # Set C flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Wno-unused-parameter -Wno-missing-field-initializers -fno-exceptions")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Wno-unused-parameter -Wno-missing-field-initializers -fno-exceptions -fms-extensions")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -23,13 +23,16 @@ add_subdirectory(subprojects/bgfx.cmake)
 # TODO: windows :trollface:
 find_package(SDL2 REQUIRED)
 
+# LodePNG
+add_library(lodepng STATIC subprojects/lodepng/lodepng.cpp subprojects/lodepng/lodepng.h)
+
 
 # Includes
 set(includes
 	.
 )
 list(TRANSFORM includes PREPEND "src/")
-include_directories(${includes} ${SDL2_INCLUDE_DIRS})
+include_directories(${includes} ${SDL2_INCLUDE_DIRS} subprojects/lodepng)
 
 set(sources
 	main.cpp
@@ -39,8 +42,9 @@ set(sources
 	chunk.cpp
 	chunkmodel.cpp
 	sdlbgfx/sdlwindow.cpp
+	sdlbgfx/bgfxtexturemanager.cpp
 )
 list(TRANSFORM sources PREPEND "src/")
 
 add_executable(${PROJECT_NAME} ${sources})
-target_link_libraries(${PROJECT_NAME} bimg astc astc-codec bx bgfx ${SDL2_LIBRARIES} ${CMAKE_DL_LIBS})
+target_link_libraries(${PROJECT_NAME} astc astc-codec bx bgfx ${SDL2_LIBRARIES} ${CMAKE_DL_LIBS} lodepng)
