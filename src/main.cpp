@@ -15,6 +15,7 @@
 #include "player.h"
 #include "chunk.h"
 #include "texturemanager.h"
+#include "chunkmanager.h"
 
 #include <fstream>
 #include <iostream>
@@ -80,6 +81,7 @@ int main (int argc, char* args[]) {
 	bgfx::touch(0);
 
 	Chunk testChunk;
+	ChunkManager chunkMan;
 
 	// bgfx::VertexLayout pcvDecl;
     // pcvDecl.begin()
@@ -88,23 +90,6 @@ int main (int argc, char* args[]) {
     // .end();
     // bgfx::VertexBufferHandle vbh = bgfx::createVertexBuffer(bgfx::makeRef(cubeVertices, sizeof(cubeVertices)), pcvDecl);
     // bgfx::IndexBufferHandle ibh = bgfx::createIndexBuffer(bgfx::makeRef(cubeTriList, sizeof(cubeTriList)));
-
-
-	bgfx::VertexLayout pcvDecl1;
-    pcvDecl1.begin()
-        .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
-		.add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
-    .end();
-
-	ChunkModel::Vertex FUCKER[testChunk.mdl.vertices.size()];
-	for (int i = 0; i < testChunk.mdl.vertices.size(); i++)
-		FUCKER[i] = testChunk.mdl.vertices[i];
-	ChunkModel::Face MYDICK[testChunk.mdl.faces.size()];
-	for (int i = 0; i < testChunk.mdl.faces.size(); i++)
-		MYDICK[i] = testChunk.mdl.faces[i];
-
-    bgfx::VertexBufferHandle vbh1 = bgfx::createVertexBuffer(bgfx::makeRef(FUCKER, sizeof(FUCKER)), pcvDecl1);
-    bgfx::IndexBufferHandle ibh1 = bgfx::createIndexBuffer(bgfx::makeRef(MYDICK, sizeof(MYDICK)));
 
 	bgfx::UniformHandle textureSampler = bgfx::createUniform("texture", bgfx::UniformType::Sampler);
 
@@ -140,17 +125,16 @@ int main (int argc, char* args[]) {
 
         bgfx::setTexture(0, textureSampler, { reinterpret_cast<uint16_t>(terrainpng) });
 
-        bgfx::setVertexBuffer(0, vbh1);
-        bgfx::setIndexBuffer(ibh1);
+		testChunk.Render(prg.idx);
 
-        bgfx::submit(0, prg);
+		// chunkMan.Render(prg.idx);
         bgfx::frame();
 	}
 
 	// bgfx::destroy(vbh);
 	// bgfx::destroy(ibh);
-	bgfx::destroy(vbh1);
-	bgfx::destroy(ibh1);
+	// bgfx::destroy(vbh1);
+	// bgfx::destroy(ibh1);
 	bgfx::destroy(textureSampler);
 	bgfx::destroy(prg);
 

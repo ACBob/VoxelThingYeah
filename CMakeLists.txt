@@ -42,9 +42,11 @@ set(sources
 	chunk.cpp
 	chunkmodel.cpp
 	block.cpp
+	chunkmanager.cpp
 
 	sdlbgfx/sdlwindow.cpp
 	sdlbgfx/bgfxtexturemanager.cpp
+	sdlbgfx/bgfxchunkrenderer.cpp
 )
 list(TRANSFORM sources PREPEND "src/")
 
