@@ -72,6 +72,8 @@ int main (int argc, char* args[]) {
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
+	glEnable(GL_CULL_FACE); 
+	glCullFace(GL_FRONT);
 
 	// Get relative mouse change from MouseMove
 	
