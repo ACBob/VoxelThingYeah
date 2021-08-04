@@ -1,5 +1,9 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
+#define VEC_UP Vector(0.0f, 1.0f, 0.0f)
+
 class Vector
 {
 	public:
@@ -29,4 +33,7 @@ class Vector
 	// Comparison
 	bool operator==( Vector oVec );
 	bool operator!=( Vector oVec );
+
+	operator glm::vec3() const;
+	Vector(glm::vec3 glmVec);
 };

@@ -6,6 +6,7 @@
 #include <cstdio>
 
 #include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 
 Shader::Shader(const char* vs, const char* fs)
 {
@@ -60,12 +61,17 @@ Shader::Shader(const char* vs, const char* fs)
 	glGetProgramiv(id, GL_LINK_STATUS, &success);
 	if (!success)
 	{
-		glGetProgramInfoLog(fragSh, 512, NULL, err);
-		printf("Shader linking Error (%s):\n%s", fs, err);
+		glGetProgramInfoLog(id, 512, NULL, err);
+		printf("Shader linking Error (%s,%s):\n%s", vs,fs, err);
 	}
 
 	glDeleteShader(vertSh);
 	glDeleteShader(fragSh);
+}
+
+void Shader::SetMat4(const char* name, glm::mat4 value)
+{
+	glUniformMatrix4fv(glGetUniformLocation(id, name), 1, false, glm::value_ptr(value));
 }
 
 void Shader::Use()

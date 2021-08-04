@@ -1,5 +1,7 @@
 // TODO: shader manager
 
+#include <glm/glm.hpp>
+
 class Shader
 {
 	public:
@@ -8,6 +10,9 @@ class Shader
 	unsigned int id;
 
 	Shader(const char* vs, const char* fs);
+
+	// Uniforms
+	void SetMat4(const char* name, glm::mat4 value);
 
 	void Use();
 };

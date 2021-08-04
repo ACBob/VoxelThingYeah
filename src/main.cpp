@@ -10,12 +10,17 @@
 #include "player.h"
 // #include "chunk.h"
 #include "texturemanager.h"
+#include "shadermanager.h"
 // #include "chunkmanager.h"
 
 #include <fstream>
 #include <iostream>
 
 #include <glad/glad.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 int main (int argc, char* args[]) {
 	// Initialize SDL systems
@@ -59,11 +64,13 @@ int main (int argc, char* args[]) {
 	TextureManager texman;
 	Texture terrainpng = texman.LoadTexture("terrain.png");
 
+	Shader genericShader = Shader("shaders/generic.vert", "shaders/generic.frag");
+
 	glClearColor(0.5f, 0.0f, 0.5f, 1.0f);
 	glViewport(0, 0, WIDTH, HEIGHT);
 
 	// Get relative mouse change from MouseMove
-
+	
 	while(!window.shouldClose) {
 		window.PollEvents();
 
@@ -77,7 +84,16 @@ int main (int argc, char* args[]) {
 		// Rendering right at the end
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		// testChunk.Render(prg.idx);
+		// view = glm::lookAt();
+
+		genericShader.Use();
+
+		glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+		genericShader.SetMat4("projection", projection);
+
+		glm::mat4 view;
+		view = glm::lookAt(glm::vec3(plyr.pos), glm::vec3(plyr.forward), glm::vec3(VEC_UP));
+		genericShader.SetMat4("view", view);
 
 		window.SwapBuffers();
 	}

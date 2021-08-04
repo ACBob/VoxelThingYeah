@@ -24,13 +24,15 @@ find_package(SDL2 REQUIRED)
 # LodePNG
 add_library(lodepng STATIC subprojects/lodepng/lodepng.cpp subprojects/lodepng/lodepng.h)
 
+# GLM
+add_subdirectory(subprojects/glm)
 
 # Includes
 set(includes
 	.
 )
 list(TRANSFORM includes PREPEND "src/")
-include_directories(${includes} ${SDL2_INCLUDE_DIRS} subprojects/lodepng include)
+include_directories(${includes} ${SDL2_INCLUDE_DIRS} "${CMAKE_CURRENT_LIST_DIR}/subprojects/lodepng" "${CMAKE_CURRENT_LIST_DIR}/include")
 
 set(sources
 
@@ -52,4 +54,4 @@ set(sources
 list(TRANSFORM sources PREPEND "src/")
 
 add_executable(${PROJECT_NAME} ${sources})
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${CMAKE_DL_LIBS} lodepng GL)
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${CMAKE_DL_LIBS} lodepng GL glm::glm)
