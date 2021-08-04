@@ -117,8 +117,3 @@ bool Vector::operator!=( Vector oVec )
 {
 	return !operator==( oVec );
 }
-// Conversion
-Vector::operator bx::Vec3() const
-{
-	return bx::Vec3(x,y,z);
-}

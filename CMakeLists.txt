@@ -18,8 +18,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Put the game executable in /bin
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
-add_subdirectory(subprojects/bgfx.cmake)
-
 # TODO: windows :trollface:
 find_package(SDL2 REQUIRED)
 
@@ -39,16 +37,14 @@ set(sources
 	vector.cpp
 	player.cpp
 	inputmanager.cpp
-	chunk.cpp
-	chunkmodel.cpp
-	block.cpp
-	chunkmanager.cpp
+	# chunk.cpp
+	# chunkmodel.cpp
+	# block.cpp
+	# chunkmanager.cpp
 
 	sdlbgfx/sdlwindow.cpp
-	sdlbgfx/bgfxtexturemanager.cpp
-	sdlbgfx/bgfxchunkrenderer.cpp
 )
 list(TRANSFORM sources PREPEND "src/")
 
 add_executable(${PROJECT_NAME} ${sources})
-target_link_libraries(${PROJECT_NAME} bx bgfx ${SDL2_LIBRARIES} ${CMAKE_DL_LIBS} lodepng)
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${CMAKE_DL_LIBS} lodepng GL)

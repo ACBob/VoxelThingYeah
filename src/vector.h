@@ -1,7 +1,5 @@
 #pragma once
 
-#include "bx/math.h"
-
 class Vector
 {
 	public:
@@ -31,7 +29,4 @@ class Vector
 	// Comparison
 	bool operator==( Vector oVec );
 	bool operator!=( Vector oVec );
-
-	// Conversion
-	operator bx::Vec3() const;
 };

@@ -5,6 +5,8 @@
 #include <iostream>
 #include <memory>
 
+
+
 GameWindow::GameWindow(const char *title, Vector size) :
 	internalWindow(nullptr, &SDL_DestroyWindow)
 {
@@ -12,7 +14,7 @@ GameWindow::GameWindow(const char *title, Vector size) :
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
 		size.x, size.y,
-		SDL_WINDOW_SHOWN));
+		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL));
 
 	if (internalWindow == NULL)
 	{
@@ -20,10 +22,17 @@ GameWindow::GameWindow(const char *title, Vector size) :
 					SDL_GetError());
 	}
 
+	glctx = SDL_GL_CreateContext(internalWindow.get());
+
 	SDL_SetRelativeMouseMode(SDL_TRUE);
 }
 GameWindow::~GameWindow()
 {
+}
+
+void GameWindow::SwapBuffers()
+{
+	SDL_GL_SwapWindow(internalWindow.get());
 }
 
 bool GameWindow::IsVisible()

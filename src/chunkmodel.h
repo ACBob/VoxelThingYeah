@@ -17,7 +17,7 @@ class ChunkModel {
 
 		struct Face {
 			Face(int a = 0, int b = 0, int c = 0) {v=a;vv=b;vvv=c;};
-			uint16_t v, vv, vvv;
+			unsigned int v, vv, vvv;
 		};
 		std::vector<Vertex> vertices;
 		std::vector<Face> faces;

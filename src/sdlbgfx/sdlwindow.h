@@ -36,7 +36,10 @@ class GameWindow : public BobWindow
 
 		void CaptureMouse();
 
+		void SwapBuffers();
+
 		std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> internalWindow;
+		SDL_GLContext glctx;
 
 		bool shouldClose;
 
