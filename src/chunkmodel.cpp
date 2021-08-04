@@ -5,7 +5,7 @@
 
 int indexArray(int x, int y, int z)
 {
-	return x * CHUNKSIZE_Y * CHUNKSIZE_Z + y * CHUNKSIZE_Z + z;
+	return CHUNK3D_TO_1D(x,y,z);
 }
 const ChunkModel::Vertex vertices[] = {
 	// NORTH +Z
@@ -102,14 +102,12 @@ void ChunkModel::Build(Block blocks[])
 					{
 						// TODO: Test against other chunks
 						Vector neighbour = Vector(x,y,z) + blockdir[i];
-						if ( ValidChunkPosition(neighbour) )
+						if (
+							ValidChunkPosition(neighbour) &&
+							blocks[indexArray(neighbour.x,neighbour.y,neighbour.z)].blockType != AIR
+						) // Skip if neighbouring
 						{
-							if (
-								blocks[indexArray(neighbour.x,neighbour.y,neighbour.z)].blockType != AIR
-							) // Skip if neighbouring
-							{
-								continue;
-							}
+							continue;
 						}
 
 						std::vector<Vertex> g = sampleFace(blockface_t(i), block, x, y, z);

@@ -6,6 +6,8 @@
 #define CHUNKSIZE_Y 16
 #define CHUNKSIZE_Z 16
 
+#define CHUNK3D_TO_1D(x, y, z) x + y*CHUNKSIZE_X + z*CHUNKSIZE_X*CHUNKSIZE_Z
+
 #pragma once
 
 class Chunk
