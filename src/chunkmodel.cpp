@@ -47,20 +47,20 @@ std::vector<ChunkModel::Vertex> sampleFace(blockface_t dir, Block block, int x =
 		switch(i)
 		{
 			case 0:
-				g[i].u = tex.x / 16.0f;
-				g[i].v = tex.y / 16.0f;
+				g[i].u = (float)tex.x / 16.0f;
+				g[i].v = (float)tex.y / 16.0f;
 			break;
 			case 1:
-				g[i].u = tex.x / 16.0f;
-				g[i].v = tex.y / 16.0f;
+				g[i].u = (float)(tex.x + tex.sizex) / 16.0f;
+				g[i].v = (float)tex.y / 16.0f;
 			break;
 			case 2:
-				g[i].u = tex.x / 16.0f;
-				g[i].v = tex.y / 16.0f;
+				g[i].u = (float)(tex.x + tex.sizex) / 16.0f;
+				g[i].v = (float)(tex.y + tex.sizey) / 16.0f;
 			break;
 			case 3:
-				g[i].u = tex.x / 16.0f;
-				g[i].v = tex.y / 16.0f;
+				g[i].u = (float)tex.x / 16.0f;
+				g[i].v = (float)(tex.y + tex.sizey) / 16.0f;
 			break;
 		}
 	}
