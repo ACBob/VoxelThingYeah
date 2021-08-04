@@ -9,13 +9,13 @@
 #include "vector.h"
 #include "player.h"
 // #include "chunk.h"
-// #include "texturemanager.h"
+#include "texturemanager.h"
 // #include "chunkmanager.h"
 
 #include <fstream>
 #include <iostream>
 
-#include <GL/gl.h>
+#include <glad/glad.h>
 
 int main (int argc, char* args[]) {
 	// Initialize SDL systems
@@ -24,10 +24,27 @@ int main (int argc, char* args[]) {
 					SDL_GetError());
 		return -1;
 	}
+	SDL_GL_LoadLibrary(NULL);
+
+	SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
+
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 
 	GameWindow window("VoxelThingYeah", Vector(800,600));
 	const int WIDTH = window.GetSize().x;
 	const int HEIGHT = window.GetSize().y;
+
+	if (!gladLoadGLLoader(SDL_GL_GetProcAddress))
+	{
+		// TODO: Use SDL rendering and display an error on-screen
+		printf("Cannot load Glad (SOMEHOW!?)\n");
+		return -1;
+	}
+
+	printf("---- OpenGL Info ----\nVendor: %s\nRenderer: %s\nVersion: %s\n", glGetString(GL_VENDOR), glGetString(GL_RENDERER), glGetString(GL_VERSION));
 
 	// Create input manager and give the window a pointer to it
 	InputManager input;
@@ -39,8 +56,8 @@ int main (int argc, char* args[]) {
 	Player plyr = Player();
 	plyr.inputMan = &input;
 
-	// TextureManager texman;
-	// Texture terrainpng = texman.LoadTexture("terrain.png");
+	TextureManager texman;
+	Texture terrainpng = texman.LoadTexture("terrain.png");
 
 	glClearColor(0.5f, 0.0f, 0.5f, 1.0f);
 	glViewport(0, 0, WIDTH, HEIGHT);

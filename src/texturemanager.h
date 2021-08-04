@@ -3,7 +3,14 @@
 
 #include <vector>
 
-typedef unsigned short Texture;
+class Texture
+{
+	public:
+		Texture(const char* path);
+
+		std::vector<unsigned char> image;
+		unsigned int width, height, id;
+};
 
 class TextureManager
 {

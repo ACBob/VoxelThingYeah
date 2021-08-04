@@ -30,13 +30,18 @@ set(includes
 	.
 )
 list(TRANSFORM includes PREPEND "src/")
-include_directories(${includes} ${SDL2_INCLUDE_DIRS} subprojects/lodepng)
+include_directories(${includes} ${SDL2_INCLUDE_DIRS} subprojects/lodepng include)
 
 set(sources
+
+	glad.c
+
 	main.cpp
 	vector.cpp
 	player.cpp
 	inputmanager.cpp
+	texturemanager.cpp
+	shadermanager.cpp
 	# chunk.cpp
 	# chunkmodel.cpp
 	# block.cpp
