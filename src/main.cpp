@@ -85,11 +85,9 @@ int main (int argc, char* args[]) {
 		// Rendering right at the end
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		// view = glm::lookAt();
-
 		genericShader.Use();
 
-		glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+		glm::mat4 projection = glm::perspective(glm::radians(70.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
 		genericShader.SetMat4("projection", projection);
 
 		glm::mat4 view;

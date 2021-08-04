@@ -18,4 +18,6 @@ class ChunkRenderer {
 		unsigned int vbo;
 		// Array buffer
 		unsigned int vao;
+		// Element buffer
+		unsigned int ebo;
 };

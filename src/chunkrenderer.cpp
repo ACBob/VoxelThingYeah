@@ -1,4 +1,5 @@
 #include "chunkrenderer.h"
+#include "chunkmodel.h"
 
 #include <glad/glad.h>
 
@@ -10,9 +11,15 @@ ChunkRenderer::ChunkRenderer(ChunkModel *mdl)
 	
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
+	// glGenBuffers(1, &ebo);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(mdl->vertices), &mdl->vertices[0], GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, mdl->vertices.size() * sizeof(ChunkModel::Vertex), mdl->vertices.data(), GL_DYNAMIC_DRAW);
+
+	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo);
+	// glBufferData(GL_ELEMENT_ARRAY_BUFFER, mdl->faces.size() * sizeof(ChunkModel::Vertex), mdl->faces.data(), GL_DYNAMIC_DRAW);
+
+	glBindVertexArray(vao);
 
 	// Position
 	glVertexAttribPointer(0, 3, GL_FLOAT, false, 5 * sizeof(float), (void*)0);
@@ -20,21 +27,26 @@ ChunkRenderer::ChunkRenderer(ChunkModel *mdl)
 	// texture coordinate
 	glVertexAttribPointer(1, 2, GL_FLOAT, false, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+
+	glBindVertexArray(0);
 }
 
 void ChunkRenderer::Populate()
 {
-
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, _mdl->vertices.size() * sizeof(ChunkModel::Vertex), _mdl->vertices.data(), GL_DYNAMIC_DRAW);
 }
 
 ChunkRenderer::~ChunkRenderer()
 {
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
+	// glDeleteBuffers(1, &ebo);
 }
 
 void ChunkRenderer::Render()
 {
 	glBindVertexArray(vao);
-	glDrawArrays(GL_TRIANGLES, 0, sizeof(_mdl->faces.size()));
+	glDrawElements(GL_TRIANGLES, _mdl->faces.size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 }
