@@ -53,6 +53,6 @@ void ChunkRenderer::Render()
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glDrawElements(GL_TRIANGLES, _mdl->faces.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, _mdl->faces.size() * sizeof(ChunkModel::Face), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
