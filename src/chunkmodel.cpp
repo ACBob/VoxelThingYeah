@@ -31,7 +31,7 @@ const std::vector<std::vector<int>> triangles = {
 	{6, 7, 2, 3} // DN
 };
 
-std::vector<ChunkModel::Vertex> sampleFace(blockface_t dir, int x = 0, int y = 0, int z = 0)
+std::vector<ChunkModel::Vertex> sampleFace(blockface_t dir, Block block, int x = 0, int y = 0, int z = 0)
 {
 	std::vector<ChunkModel::Vertex> g;
 	for (int i = 0; i < 4; i++)
@@ -42,23 +42,25 @@ std::vector<ChunkModel::Vertex> sampleFace(blockface_t dir, int x = 0, int y = 0
 		g[i].y += y;
 		g[i].z += z;
 
+		BlockTexture tex = block.GetSideTexture(dir);
+
 		switch(i)
 		{
 			case 0:
-				g[i].u = 0;
-				g[i].v = 14.0f / 16.0f;
+				g[i].u = tex.x / 16.0f;
+				g[i].v = tex.y / 16.0f;
 			break;
 			case 1:
-				g[i].u = 1.0f / 16.0f;
-				g[i].v = 14.0f / 16.0f;
+				g[i].u = tex.x / 16.0f;
+				g[i].v = tex.y / 16.0f;
 			break;
 			case 2:
-				g[i].u = 1.0f / 16.0f;
-				g[i].v = 15.0f / 16.0f;
+				g[i].u = tex.x / 16.0f;
+				g[i].v = tex.y / 16.0f;
 			break;
 			case 3:
-				g[i].u = 0;
-				g[i].v = 15.0f / 16.0f;
+				g[i].u = tex.x / 16.0f;
+				g[i].v = tex.y / 16.0f;
 			break;
 		}
 	}
@@ -77,7 +79,7 @@ Vector blockdir[] = {
 	{0, -1, 0} // DOWN
 };
 
-void ChunkModel::Build(blocktype_t blocks[])
+void ChunkModel::Build(Block blocks[])
 {
 	vertices.clear();
 	faces.clear();
@@ -91,10 +93,10 @@ void ChunkModel::Build(blocktype_t blocks[])
 		{
 			for (int z = 0; z < CHUNKSIZE_Z; z++)
 			{
-				blocktype_t block = blocks[indexArray(x,y,z)];
+				Block block = blocks[indexArray(x,y,z)];
 
 				// block here! Construct!
-				if (block == true)
+				if (block.blockType != AIR)
 				{
 					for (int i = 0; i < 6; i++)
 					{
@@ -103,14 +105,14 @@ void ChunkModel::Build(blocktype_t blocks[])
 						if ( ValidChunkPosition(neighbour) )
 						{
 							if (
-								blocks[indexArray(neighbour.x,neighbour.y,neighbour.z)]
+								blocks[indexArray(neighbour.x,neighbour.y,neighbour.z)].blockType != AIR
 							) // Skip if neighbouring
 							{
 								continue;
 							}
 						}
 
-						std::vector<Vertex> g = sampleFace(blockface_t(i), x, y, z);
+						std::vector<Vertex> g = sampleFace(blockface_t(i), block, x, y, z);
 						std::copy(g.begin(), g.end(), std::back_inserter(vertices));
 
 						int nVertices = vertices.size();

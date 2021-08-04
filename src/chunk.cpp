@@ -5,8 +5,8 @@
 Chunk::Chunk()
 {
 	// FOR NOW: start off filled with blocks
-	for (int i = 0; i < sizeof(blocks); i++)
-		blocks[i] = random() > RAND_MAX * 0.9;
+	for (int i = 0; i < sizeof(blocks) / sizeof(Block); i++)
+		blocks[i].blockType = blocktype_t(random() % 4);
 
 	mdl.Build(blocks);
 }
@@ -16,7 +16,7 @@ Chunk::~Chunk()
 
 }
 
-blocktype_t Chunk::GetBlockAtLocal(Vector pos)
+Block Chunk::GetBlockAtLocal(Vector pos)
 {
 	return blocks[int(pos.x * CHUNKSIZE_Y * CHUNKSIZE_Z + pos.y * CHUNKSIZE_Z + pos.z)];
 }

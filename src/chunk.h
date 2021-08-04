@@ -16,11 +16,11 @@ class Chunk
 		
 		Vector WorldPos;
 
-		blocktype_t GetBlockAtLocal(Vector pos);
+		Block GetBlockAtLocal(Vector pos);
 
 		// Flat array of blocks, access with
 		// Indexed with [x + SIZEX * (y + SIZEZ * z)]
-		blocktype_t blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
+		Block blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 
 		ChunkModel mdl;
 };

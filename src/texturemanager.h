@@ -3,7 +3,7 @@
 
 #include <vector>
 
-typedef void* Texture;
+typedef unsigned short Texture;
 
 class TextureManager
 {

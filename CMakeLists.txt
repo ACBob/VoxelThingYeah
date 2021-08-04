@@ -10,7 +10,7 @@ project(VoxelThingYeah VERSION 0.0.0)
 # endif()
 
 # Set C flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Wno-unused-parameter -Wno-missing-field-initializers -fno-exceptions -fms-extensions")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Wno-unused-parameter -Wno-missing-field-initializers -fno-exceptions")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -41,10 +41,12 @@ set(sources
 	inputmanager.cpp
 	chunk.cpp
 	chunkmodel.cpp
+	block.cpp
+
 	sdlbgfx/sdlwindow.cpp
 	sdlbgfx/bgfxtexturemanager.cpp
 )
 list(TRANSFORM sources PREPEND "src/")
 
 add_executable(${PROJECT_NAME} ${sources})
-target_link_libraries(${PROJECT_NAME} astc astc-codec bx bgfx ${SDL2_LIBRARIES} ${CMAKE_DL_LIBS} lodepng)
+target_link_libraries(${PROJECT_NAME} bx bgfx ${SDL2_LIBRARIES} ${CMAKE_DL_LIBS} lodepng)
