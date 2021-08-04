@@ -94,7 +94,7 @@ int main (int argc, char* args[]) {
 		genericShader.SetMat4("projection", projection);
 
 		glm::mat4 view;
-		view = glm::lookAt(glm::vec3(plyr.forward), glm::vec3(plyr.pos), glm::vec3(VEC_UP));
+		view = glm::lookAt(glm::vec3(plyr.pos), glm::vec3(plyr.pos + plyr.forward), glm::vec3(VEC_UP));
 		genericShader.SetMat4("view", view);
 
 		testChunk.Render();
