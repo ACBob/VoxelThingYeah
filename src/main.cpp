@@ -141,8 +141,8 @@ int main (int argc, char* args[]) {
     bgfx::VertexBufferHandle vbh1 = bgfx::createVertexBuffer(bgfx::makeRef(FUCKER, sizeof(FUCKER)), pcvDecl1);
     bgfx::IndexBufferHandle ibh1 = bgfx::createIndexBuffer(bgfx::makeRef(MYDICK, sizeof(MYDICK)));
 
-	bgfx::ShaderHandle vs = loadShader("shaders/cube_vs.spv");
-	bgfx::ShaderHandle fs = loadShader("shaders/cube_fs.spv");
+	bgfx::ShaderHandle vs = loadShader("shaders/cube_vs.bin");
+	bgfx::ShaderHandle fs = loadShader("shaders/cube_fs.bin");
 	bgfx::ProgramHandle prg = bgfx::createProgram(vs, fs, true);
 
 	Player plyr = Player();
@@ -167,10 +167,10 @@ int main (int argc, char* args[]) {
         bx::mtxProj(proj, 60.0f, float(WIDTH) / float(HEIGHT), 0.1f, 100.0f, bgfx::getCaps()->homogeneousDepth);
         bgfx::setViewTransform(0, view, proj);
 
-        // bgfx::setVertexBuffer(0, vbh);
-        // bgfx::setIndexBuffer(ibh);
+        bgfx::setVertexBuffer(0, vbh);
+        bgfx::setIndexBuffer(ibh);
 
-        // bgfx::submit(0, prg);
+        bgfx::submit(0, prg);
 
         bgfx::setVertexBuffer(0, vbh1);
         bgfx::setIndexBuffer(ibh1);
