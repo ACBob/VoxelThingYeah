@@ -179,6 +179,11 @@ int main (int argc, char* args[]) {
         bgfx::frame();
 	}
 
+	bgfx::destroy(vbh);
+	bgfx::destroy(ibh);
+	bgfx::destroy(vbh1);
+	bgfx::destroy(ibh1);
+
 	bgfx::shutdown();
 	// Shutdown SDL
 	SDL_Quit();

@@ -1,6 +1,7 @@
-#version 330 core
- 
+$input v_color0
 
-void main()
-{
-} 
+#include "bgfx_shader.sh"
+
+void main() {
+    gl_FragColor = v_color0;
+}
