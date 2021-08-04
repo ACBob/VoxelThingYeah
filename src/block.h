@@ -9,17 +9,17 @@ enum blocktype_t {
 	AIR = 0,
 	STONE = 1,
 	DIRT = 2,
-	GRASS = 3
+	GRASS = 3,
 };
 
 enum blockface_t {	
-	NORTH = 1,
-	EAST = 2,
-	SOUTH = 3,
-	WEST = 4,
+	NORTH = 0,
+	EAST = 1,
+	SOUTH = 2,
+	WEST = 3,
 
-	UP = 5,
-	DOWN = 6
+	UP = 4,
+	DOWN = 5
 };
 
 class Block {

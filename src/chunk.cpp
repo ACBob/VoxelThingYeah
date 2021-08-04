@@ -7,7 +7,7 @@ Chunk::Chunk()
 	// FOR NOW: start off filled with blocks
 	for (int i = 0; i < sizeof(blocks) / sizeof(Block); i++)
 	{
-		blocks[i].blockType = blocktype_t::DIRT;
+		blocks[i].blockType = blocktype_t(random() % 4);
 	}
 
 	mdl.Build(blocks);

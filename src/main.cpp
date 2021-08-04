@@ -152,6 +152,7 @@ int main (int argc, char* args[]) {
 	bgfx::destroy(vbh1);
 	bgfx::destroy(ibh1);
 	bgfx::destroy(textureSampler);
+	bgfx::destroy(prg);
 
 	bgfx::shutdown();
 	// Shutdown SDL
