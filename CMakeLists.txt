@@ -42,7 +42,7 @@ set(sources
 	# block.cpp
 	# chunkmanager.cpp
 
-	sdlbgfx/sdlwindow.cpp
+	sdlstuff/sdlwindow.cpp
 )
 list(TRANSFORM sources PREPEND "src/")
 

@@ -4,7 +4,7 @@
 #include <SDL2/SDL_syswm.h>
 #include <SDL2/SDL_keyboard.h>
 
-#include "sdlbgfx/sdlwindow.h"
+#include "sdlstuff/sdlwindow.h"
 
 #include "vector.h"
 #include "player.h"
