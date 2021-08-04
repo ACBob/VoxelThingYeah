@@ -12,7 +12,7 @@
 class GameWindow : public BobWindow
 {
 	public:
-		GameWindow(const char *title = "GameWindow", Vector size = Vector(800,600)); // SDL_CreateWindow
+		GameWindow(const char *title = "GameWindow", Vector size = Vector(800,600), bool resizeable = false); // SDL_CreateWindow
 		~GameWindow(); // SDL_DestroyWindow
 
 		// SDL_HideWindow / SDL_ShowWindow

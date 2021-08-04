@@ -39,7 +39,7 @@ int main (int argc, char* args[]) {
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 
-	GameWindow window("VoxelThingYeah", Vector(800,600));
+	GameWindow window("VoxelThingYeah", Vector(1280,720), true);
 	const int WIDTH = window.GetSize().x;
 	const int HEIGHT = window.GetSize().y;
 
@@ -92,7 +92,7 @@ int main (int argc, char* args[]) {
 
 		genericShader.Use();
 
-		glm::mat4 projection = glm::perspective(glm::radians(70.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+		glm::mat4 projection = glm::perspective(glm::radians(70.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 10000.0f);
 		genericShader.SetMat4("projection", projection);
 
 		glm::mat4 view;

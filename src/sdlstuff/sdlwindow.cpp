@@ -7,14 +7,17 @@
 
 
 
-GameWindow::GameWindow(const char *title, Vector size) :
+GameWindow::GameWindow(const char *title, Vector size, bool resizeable) :
 	internalWindow(nullptr, &SDL_DestroyWindow)
 {
 	internalWindow.reset(SDL_CreateWindow("VoxelThingYeah",
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
 		size.x, size.y,
-		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL));
+		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | (resizeable ? SDL_WINDOW_RESIZABLE : 0)));
+
+	// if (resizeable);
+	// 	flags |= SDL_WINDOW_RESIZABLE;
 
 	if (internalWindow == NULL)
 	{
