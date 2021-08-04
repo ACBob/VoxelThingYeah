@@ -70,6 +70,9 @@ int main (int argc, char* args[]) {
 	glClearColor(0.5f, 0.0f, 0.5f, 1.0f);
 	glViewport(0, 0, WIDTH, HEIGHT);
 
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+
 	// Get relative mouse change from MouseMove
 	
 	while(!window.shouldClose) {
@@ -83,7 +86,7 @@ int main (int argc, char* args[]) {
 		plyr.Update();
 
 		// Rendering right at the end
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		genericShader.Use();
 
@@ -91,7 +94,7 @@ int main (int argc, char* args[]) {
 		genericShader.SetMat4("projection", projection);
 
 		glm::mat4 view;
-		view = glm::lookAt(glm::vec3(plyr.pos), glm::vec3(plyr.forward), glm::vec3(VEC_UP));
+		view = glm::lookAt(glm::vec3(plyr.forward), glm::vec3(plyr.pos), glm::vec3(VEC_UP));
 		genericShader.SetMat4("view", view);
 
 		testChunk.Render();
