@@ -14,9 +14,9 @@ Chunk::Chunk() :
 	RebuildMdl();
 }
 
-void Chunk::Render(shader_t shader)
+void Chunk::Render()
 {
-	rend.Render(shader);
+	rend.Render();
 }
 
 void Chunk::RebuildMdl()

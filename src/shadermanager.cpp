@@ -34,9 +34,13 @@ Shader::Shader(const char* vs, const char* fs)
 	const char* c = vsc.c_str();
 	glShaderSource(vertSh, 1, &c, NULL);
 
+	// printf("%s\n",c);
+
 	unsigned int fragSh = glCreateShader(GL_FRAGMENT_SHADER);
-	const char* c1 = vsc.c_str();
+	const char* c1 = fsc.c_str();
 	glShaderSource(fragSh, 1, &c1, NULL);
+	
+	// printf("%s\n",c1);
 
 	glCompileShader(vertSh);
 	glGetShaderiv(vertSh, GL_COMPILE_STATUS, &success);

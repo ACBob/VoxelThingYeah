@@ -24,7 +24,7 @@ class Chunk
 
 		void RebuildMdl();
 
-		void Render(shader_t shader);
+		void Render();
 
 		// Flat array of blocks, access with
 		// Indexed with [x + SIZEX * (y + SIZEZ * z)]

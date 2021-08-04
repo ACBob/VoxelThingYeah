@@ -8,7 +8,7 @@
 
 #include "vector.h"
 #include "player.h"
-// #include "chunk.h"
+#include "chunk.h"
 #include "texturemanager.h"
 #include "shadermanager.h"
 // #include "chunkmanager.h"
@@ -34,6 +34,7 @@ int main (int argc, char* args[]) {
 	SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
@@ -55,7 +56,7 @@ int main (int argc, char* args[]) {
 	InputManager input;
 	window.inputMan = &input;
 
-	// Chunk testChunk;
+	Chunk testChunk;
 	// ChunkManager chunkMan;
 
 	Player plyr = Player();
@@ -94,6 +95,8 @@ int main (int argc, char* args[]) {
 		glm::mat4 view;
 		view = glm::lookAt(glm::vec3(plyr.pos), glm::vec3(plyr.forward), glm::vec3(VEC_UP));
 		genericShader.SetMat4("view", view);
+
+		testChunk.Render();
 
 		window.SwapBuffers();
 	}

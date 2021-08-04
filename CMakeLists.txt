@@ -44,9 +44,10 @@ set(sources
 	inputmanager.cpp
 	texturemanager.cpp
 	shadermanager.cpp
-	# chunk.cpp
-	# chunkmodel.cpp
-	# block.cpp
+	chunk.cpp
+	chunkrenderer.cpp
+	chunkmodel.cpp
+	block.cpp
 	# chunkmanager.cpp
 
 	sdlstuff/sdlwindow.cpp

@@ -8,14 +8,14 @@ class ChunkRenderer {
 		// Updated the index buffer and vertex buffer
 		void Populate();
 
-		void Render(shader_t shader);
+		void Render();
 	
 	private:
 		// Internal model (pointer to chunk model)
 		ChunkModel *_mdl;
 
-		// Index Buffer
-		unsigned short idx;
-		// Vertex buffer
-		unsigned short vtx;
+		// Vertex Buffer
+		unsigned int vbo;
+		// Array buffer
+		unsigned int vao;
 };
