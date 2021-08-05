@@ -9,8 +9,7 @@ ChunkManager::ChunkManager()
 		{
 			for (pos.z = 0; pos.z < 4; pos.z++)
 			{
-				Chunk chunk;
-				chunk.WorldPos = pos;
+				Chunk chunk(pos);
 				chunk.RebuildMdl();
 				chunks.push_back(chunk);
 			}
@@ -18,8 +17,8 @@ ChunkManager::ChunkManager()
 	}
 }
 
-void ChunkManager::Render(shader_t shader)
+void ChunkManager::Render()
 {
 	for (int i = 0; i < chunks.size(); i++)
-		chunks[i].Render(shader);
+		chunks[i].Render();
 }

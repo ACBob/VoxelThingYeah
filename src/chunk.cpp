@@ -2,8 +2,24 @@
 
 #include <random>
 
-Chunk::Chunk() :
-	rend(&mdl)
+
+ChunkPos::ChunkPos(Vector pos)
+{
+	this->pos = pos;
+}
+
+Vector ChunkPos::ToWorld()
+{
+	Vector g = Vector(pos);
+	g.x *= CHUNKSIZE_X;
+	g.y *= CHUNKSIZE_Y;
+	g.z *= CHUNKSIZE_Z;
+	return g;
+}
+
+Chunk::Chunk(Vector pos) :
+	rend(&mdl),
+	worldPos(pos)
 {
 	// FOR NOW: start off filled with blocks
 	for (int i = 0; i < sizeof(blocks) / sizeof(Block); i++)
@@ -21,7 +37,7 @@ void Chunk::Render()
 
 void Chunk::RebuildMdl()
 {
-	mdl.Build(blocks);
+	mdl.Build(blocks, worldPos.ToWorld());
 	rend.Populate();
 }
 

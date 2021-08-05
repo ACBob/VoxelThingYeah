@@ -12,13 +12,24 @@
 
 #pragma once
 
+class ChunkPos
+{
+	public:
+		ChunkPos(Vector pos);
+
+		// Converts it to block coordinates
+		Vector ToWorld();
+
+		Vector pos;
+};
+
 class Chunk
 {
 	public:
-		Chunk();
+		Chunk(Vector pos);
 		~Chunk();
 		
-		Vector WorldPos;
+		ChunkPos worldPos;
 
 		Block GetBlockAtLocal(Vector pos);
 

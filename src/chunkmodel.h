@@ -22,5 +22,5 @@ class ChunkModel {
 		std::vector<Vertex> vertices;
 		std::vector<Face> faces;
 
-		void Build(Block blocks[]);
+		void Build(Block blocks[], Vector pos);
 };

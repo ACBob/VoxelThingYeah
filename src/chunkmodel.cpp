@@ -79,7 +79,7 @@ Vector blockdir[] = {
 	{0, -1, 0} // DOWN
 };
 
-void ChunkModel::Build(Block blocks[])
+void ChunkModel::Build(Block blocks[], Vector pos)
 {
 	vertices.clear();
 	faces.clear();
@@ -110,7 +110,7 @@ void ChunkModel::Build(Block blocks[])
 							continue;
 						}
 
-						std::vector<Vertex> g = sampleFace(blockface_t(i), block, x, y, z);
+						std::vector<Vertex> g = sampleFace(blockface_t(i), block, pos.x + x, pos.y + y, pos.z + z);
 						std::copy(g.begin(), g.end(), std::back_inserter(vertices));
 
 						int nVertices = vertices.size();

@@ -10,8 +10,7 @@ class ChunkManager {
 
 		ChunkManager();
 
-		// TODO: Internal shader storage / our own shader class
-		void Render(shader_t shader);
+		void Render();
 
 		std::vector<Chunk> chunks;
 };

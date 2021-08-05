@@ -11,7 +11,7 @@
 #include "chunk.h"
 #include "texturemanager.h"
 #include "shadermanager.h"
-// #include "chunkmanager.h"
+#include "chunkmanager.h"
 
 #include <fstream>
 #include <iostream>
@@ -56,7 +56,8 @@ int main (int argc, char* args[]) {
 	InputManager input;
 	window.inputMan = &input;
 
-	Chunk testChunk;
+	Chunk testChunk(Vector(0));
+	Chunk testChunk1(Vector(1,0,0));
 	// ChunkManager chunkMan;
 
 	Player plyr = Player();
@@ -100,6 +101,8 @@ int main (int argc, char* args[]) {
 		genericShader.SetMat4("view", view);
 
 		testChunk.Render();
+		testChunk1.Render();
+		// chunkMan.Render();
 
 		window.SwapBuffers();
 	}
