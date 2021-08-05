@@ -18,7 +18,7 @@ class GUI
 			float r,g,b;
 		};
 
-		std::vector<Vertex> GetQuad(Vector pos, Vector size, float r = 1, float g = 1, float b = 1);
+		std::vector<Vertex> GetQuad(Vector pos, Vector size, Colour color);
 
 		unsigned int vbo, vao;
 		std::vector<Vertex> Vertices;
@@ -36,7 +36,7 @@ class GUI
 		void Update();
 
 		// Current button pressed down
-		int mouseDown;
+		int mouseState;
 		// Item under the mouse
 		int hotItem;
 		// Current interaction

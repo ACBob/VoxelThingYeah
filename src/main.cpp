@@ -85,6 +85,7 @@ int main (int argc, char* args[]) {
 	Shader textShader = Shader("shaders/text.vert", "shaders/text.frag");
 
 	GUI gui;
+	gui.inputMan = &input;
 
 	glClearColor(0.5f, 0.0f, 0.5f, 1.0f);
 	glViewport(0, 0, WIDTH, HEIGHT);
@@ -101,8 +102,8 @@ int main (int argc, char* args[]) {
 	while(!window.shouldClose) {
 		window.PollEvents();
 
-		if (window.IsVisible())
-			window.CaptureMouse();
+		// if (window.IsVisible())
+		// 	window.CaptureMouse();
 
 		// Entity handling go here
 
@@ -130,7 +131,8 @@ int main (int argc, char* args[]) {
 		textShader.Use();
 		textShader.SetMat4("projection", projection);
 
-		gui.Button(0, Vector(0,0), Vector(512,128));
+		if(gui.Button(1, Vector(0,0), Vector(512,128)) != 0)
+			printf("Clicky!\n");
 		gui.Update();
 
 		// TextRendering::RenderText("HELLO WORLD", Vector(0), &texman);

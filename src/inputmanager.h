@@ -17,14 +17,14 @@ class InputManager
 		Vector mousePos, mouseMovement;
 
 		// 0 = Nothing
-		// 1 = Left
-		// 2 = right
+		// 2 = Left
+		// 4 = right
 		enum MouseState {
-			NONE = 0,
-			LEFT = 1,
-			RIGHT = 2
+			NONE =     1 << 0,
+			LEFT =     1 << 1,
+			RIGHT =    1 << 2,
 		};
 
-		MouseState mouseState = MouseState::NONE;
+		int mouseState = 0;
 
 };

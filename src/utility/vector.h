@@ -42,3 +42,7 @@ class Vector
 
 const Vector VEC_UP(0.0f, 1.0f, 0.0f);
 const Vector VEC_RIGHT(1.0f, 0.0f, 0.0f);
+
+// Trollface
+typedef Vector Color;
+typedef Color Colour;

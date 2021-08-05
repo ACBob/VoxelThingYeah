@@ -27,7 +27,7 @@ GameWindow::GameWindow(const char *title, Vector size, bool resizeable) :
 
 	glctx = SDL_GL_CreateContext(internalWindow.get());
 
-	SDL_SetRelativeMouseMode(SDL_TRUE);
+	// SDL_SetRelativeMouseMode(SDL_TRUE);
 }
 GameWindow::~GameWindow()
 {
@@ -126,14 +126,6 @@ void GameWindow::PollEvents()
 				inputMan->mouseMovement = inputMan->mouseMovement + Vector(currentEvent.motion.xrel, currentEvent.motion.yrel);
 				inputMan->mousePos = Vector(currentEvent.motion.x, currentEvent.motion.y);
 			break;
-			case SDL_MOUSEBUTTONDOWN:
-				if (currentEvent.button.button == 1)
-					inputMan->mouseState = InputManager::MouseState::LEFT;
-			break;
-			case SDL_MOUSEBUTTONUP:
-				if (currentEvent.button.button == 1)
-					inputMan->mouseState = InputManager::MouseState::NONE;
-			break;
 		}
 	}
 
@@ -145,6 +137,11 @@ void GameWindow::PollEvents()
 		int convCode = scancodeToStateIndex[i+1];
 		inputMan->keyboardState[convCode] = (state[scanCode] == 1);
 	}
+	
+
+	// Set the mouseState
+	unsigned int buttons = SDL_GetMouseState(NULL, NULL);
+	inputMan->mouseState = inputMan->mouseState | ((buttons & SDL_BUTTON_LMASK) != 0) ? InputManager::MouseState::LEFT : 0;
 }
 
 void GameWindow::CaptureMouse()
