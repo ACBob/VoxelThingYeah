@@ -13,6 +13,8 @@
 #include "shadermanager.h"
 #include "chunkmanager.h"
 
+#include "textrender.h"
+
 #include <fstream>
 #include <iostream>
 
@@ -76,7 +78,10 @@ int main (int argc, char* args[]) {
 	TextureManager texman;
 	Texture terrainpng = texman.LoadTexture("terrain.png");
 
+	TextRendering::InitText();
+
 	Shader genericShader = Shader("shaders/generic.vert", "shaders/generic.frag");
+	Shader textShader = Shader("shaders/text.vert", "shaders/text.frag");
 
 	glClearColor(0.5f, 0.0f, 0.5f, 1.0f);
 	glViewport(0, 0, WIDTH, HEIGHT);
@@ -85,6 +90,8 @@ int main (int argc, char* args[]) {
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_CULL_FACE); 
 	glCullFace(GL_FRONT);
+
+	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	// Get relative mouse change from MouseMove
 	
@@ -103,6 +110,8 @@ int main (int argc, char* args[]) {
 
 		genericShader.Use();
 
+		glBindTexture(GL_TEXTURE_2D, terrainpng.id);
+
 		glm::mat4 projection = glm::perspective(glm::radians(70.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 10000.0f);
 		genericShader.SetMat4("projection", projection);
 
@@ -111,6 +120,9 @@ int main (int argc, char* args[]) {
 		genericShader.SetMat4("view", view);
 
 		chunkMan.Render();
+
+		textShader.Use();
+		TextRendering::RenderText("HELLO WORLD", Vector(0), &texman);
 
 		window.SwapBuffers();
 	}

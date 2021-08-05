@@ -49,6 +49,7 @@ set(sources
 	chunkmodel.cpp
 	block.cpp
 	chunkmanager.cpp
+	textrender.cpp
 
 	sdlstuff/sdlwindow.cpp
 )
