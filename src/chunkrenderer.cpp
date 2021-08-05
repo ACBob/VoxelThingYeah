@@ -22,10 +22,10 @@ ChunkRenderer::ChunkRenderer(ChunkModel *mdl)
 	glBindVertexArray(vao);
 
 	// Position
-	glVertexAttribPointer(0, 3, GL_FLOAT, false, 5 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, false, 5 * sizeof(float), (void*)offsetof(ChunkModel::Vertex, x));
 	glEnableVertexAttribArray(0);
 	// texture coordinate
-	glVertexAttribPointer(1, 2, GL_FLOAT, false, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, false, 5 * sizeof(float), (void*)offsetof(ChunkModel::Vertex, u));
 	glEnableVertexAttribArray(1);
 
 	glBindVertexArray(0);
@@ -38,7 +38,6 @@ void ChunkRenderer::Populate()
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, _mdl->faces.size() * sizeof(ChunkModel::Face), _mdl->faces.data(), GL_DYNAMIC_DRAW);
-
 }
 
 ChunkRenderer::~ChunkRenderer()
