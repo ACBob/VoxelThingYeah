@@ -6,12 +6,12 @@
 
 #include "sdlstuff/sdlwindow.h"
 
-#include "vector.h"
+#include "utility/vector.h"
 #include "player.h"
-#include "chunk.h"
-#include "texturemanager.h"
-#include "shadermanager.h"
-#include "chunkmanager.h"
+#include "world/chunk.h"
+#include "rendering/texturemanager.h"
+#include "rendering/shadermanager.h"
+#include "world/chunkmanager.h"
 
 #include "textrender.h"
 

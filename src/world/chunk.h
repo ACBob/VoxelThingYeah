@@ -1,8 +1,10 @@
-#include "vector.h"
-#include "block.h"
-#include "chunkmodel.h"
-#include "chunkrenderer.h"
-#include "shadermanager.h"
+#include "utility/vector.h"
+
+#include "world/block.h"
+
+#include "rendering/chunkmodel.h"
+#include "rendering/chunkrenderer.h"
+#include "rendering/shadermanager.h"
 
 #define CHUNKSIZE_X 16
 #define CHUNKSIZE_Y 16

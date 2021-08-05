@@ -1,7 +1,7 @@
 // TODO: genric model class
 
-#include "vector.h"
-#include "block.h"
+#include "utility/vector.h"
+#include "world/block.h"
 #include <vector>
 
 #pragma once

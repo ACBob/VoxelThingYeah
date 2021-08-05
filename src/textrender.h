@@ -1,5 +1,5 @@
-#include "vector.h"
-#include "texturemanager.h"
+#include "utility/vector.h"
+#include "rendering/texturemanager.h"
 
 namespace TextRendering
 {

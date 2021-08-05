@@ -1,9 +1,7 @@
-// TODO:
+#include "utility/direction.h"
+#include "utility/vector.h"
 
-#include "direction.h"
-
-#include "vector.h"
-#include "blocktexture.h"
+#include "rendering/blocktexture.h"
 
 #pragma once
 

@@ -1,0 +1,5 @@
+set(utility_SRCS
+	${CMAKE_CURRENT_SOURCE_DIR}/glad.c
+	${CMAKE_CURRENT_SOURCE_DIR}/vector.cpp
+	PARENT_SCOPE
+)

@@ -1,9 +1,4 @@
-#include "vector.h"
-
 #include <glad/glad.h>
-
-#include "shadermanager.h"
-#include "texturemanager.h"
 
 #include "textrender.h"
 

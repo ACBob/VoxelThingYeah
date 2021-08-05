@@ -27,33 +27,15 @@ add_library(lodepng STATIC subprojects/lodepng/lodepng.cpp subprojects/lodepng/l
 # GLM
 add_subdirectory(subprojects/glm)
 
+# Game Sources
+add_subdirectory(src)
+
 # Includes
 set(includes
-	.
+	${CMAKE_CURRENT_LIST_DIR}/src
 )
-list(TRANSFORM includes PREPEND "src/")
 include_directories(${includes} ${SDL2_INCLUDE_DIRS} "${CMAKE_CURRENT_LIST_DIR}/subprojects/lodepng" "${CMAKE_CURRENT_LIST_DIR}/include")
 
-set(sources
 
-	glad.c
-
-	main.cpp
-	vector.cpp
-	player.cpp
-	inputmanager.cpp
-	texturemanager.cpp
-	shadermanager.cpp
-	chunk.cpp
-	chunkrenderer.cpp
-	chunkmodel.cpp
-	block.cpp
-	chunkmanager.cpp
-	textrender.cpp
-
-	sdlstuff/sdlwindow.cpp
-)
-list(TRANSFORM sources PREPEND "src/")
-
-add_executable(${PROJECT_NAME} ${sources})
+add_executable(${PROJECT_NAME} ${game_SRCS})
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${CMAKE_DL_LIBS} lodepng GL glm::glm)

@@ -1,7 +1,9 @@
-#include "chunk.h"
-#include "block.h"
-#include "vector.h"
-#include "shadermanager.h"
+#include "world/chunk.h"
+#include "world/block.h"
+
+#include "utility/vector.h"
+
+#include "rendering/shadermanager.h"
 
 #pragma once
 
