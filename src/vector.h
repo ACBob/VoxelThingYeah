@@ -33,6 +33,10 @@ class Vector
 	// Comparison
 	bool operator==( Vector oVec );
 	bool operator!=( Vector oVec );
+	bool operator> ( Vector oVec );
+	bool operator< ( Vector oVec );
+	bool operator>=( Vector oVec );
+	bool operator<=( Vector oVec );
 
 	operator glm::vec3() const;
 	Vector(glm::vec3 glmVec);

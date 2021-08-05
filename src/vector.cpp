@@ -117,6 +117,22 @@ bool Vector::operator!=( Vector oVec )
 {
 	return !operator==( oVec );
 }
+bool Vector::operator>( Vector oVec )
+{
+	return (x > oVec.x && y > oVec.y && z > oVec.z);
+}
+bool Vector::operator<( Vector oVec )
+{
+	return !operator>( oVec );
+}
+bool Vector::operator>=( Vector oVec )
+{
+	return operator==( oVec ) && operator>( oVec );
+}
+bool Vector::operator<=( Vector oVec )
+{
+	return operator==( oVec ) && operator<( oVec );
+}
 
 Vector::operator glm::vec3() const
 {
