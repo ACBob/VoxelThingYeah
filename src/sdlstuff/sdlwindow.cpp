@@ -27,7 +27,7 @@ GameWindow::GameWindow(const char *title, Vector size, bool resizeable) :
 
 	glctx = SDL_GL_CreateContext(internalWindow.get());
 
-	// SDL_SetRelativeMouseMode(SDL_TRUE);
+	SDL_SetRelativeMouseMode(SDL_TRUE);
 }
 GameWindow::~GameWindow()
 {
