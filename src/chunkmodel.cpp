@@ -101,7 +101,7 @@ void ChunkModel::Build(Block blocks[], Vector pos)
 						if (ValidChunkPosition(neighbour))
 						{
 							if (
-								blocks[indexArray(neighbour.x,neighbour.y,neighbour.z)].blockType != AIR
+								reinterpret_cast<Chunk*>(_chunk)->GetBlockAtLocal(neighbour)->blockType != AIR
 							) // Skip if neighbouring
 							{
 								continue;
@@ -109,16 +109,17 @@ void ChunkModel::Build(Block blocks[], Vector pos)
 						}
 						else
 						{
-							// Test a neighbour
-							Chunk *chunkNeighbour = reinterpret_cast<Chunk*>(_chunk)->Neighbour(Direction(i));
-							if (chunkNeighbour != nullptr)
-							{
-								neighbour = neighbour + (DirectionVector[i] * -16.0f);
+							// TODO: Fix this
+							// // Test a neighbour
+							// Chunk *chunkNeighbour = reinterpret_cast<Chunk*>(_chunk)->Neighbour(Direction(i));
+							// if (chunkNeighbour != nullptr)
+							// {
+							// 	neighbour = neighbour + (DirectionVector[i] * -16.0f);
 
-								Block *b = chunkNeighbour->GetBlockAtLocal(neighbour);
-								if (b != nullptr && b->blockType != AIR)
-									continue;
-							}
+							// 	Block *b = chunkNeighbour->GetBlockAtLocal(neighbour);
+							// 	if (b != nullptr && b->blockType != AIR)
+							// 		continue;
+							// }
 						}
 
 						std::vector<Vertex> g = sampleFace(Direction(i), block, pos.x + x, pos.y + y, pos.z + z);
