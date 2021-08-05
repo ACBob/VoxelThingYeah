@@ -55,40 +55,40 @@ Vector Vector::Normal()
 
 // Operators
 // Math, with other vectors
-Vector Vector::operator+( Vector oVec )
+Vector Vector::operator+( Vector oVec ) const
 {
 	oVec.x += x, oVec.y += y, oVec.z += z;
 	return oVec;
 }
-Vector Vector::operator-( Vector oVec )
+Vector Vector::operator-( Vector oVec ) const
 {
 	oVec.x -= x, oVec.y -= y, oVec.z -= z;
 	return oVec;
 }
-Vector Vector::operator*( Vector oVec )
+Vector Vector::operator*( Vector oVec ) const
 {
 	oVec.x *= x, oVec.y *= y, oVec.z *= z;
 	return oVec;
 }
-Vector Vector::operator/( Vector oVec )
+Vector Vector::operator/( Vector oVec ) const
 {
 	oVec.x /= x, oVec.y /= y, oVec.z /= z;
 	return oVec;
 }
 // Math, with single ints/floats
-Vector Vector::operator+( float i )
+Vector Vector::operator+( float i ) const
 {
 	return operator+( Vector( i, i, i ) );
 }
-Vector Vector::operator-( float i )
+Vector Vector::operator-( float i ) const
 {
 	return operator-( Vector( i, i, i ) );
 }
-Vector Vector::operator*( float i )
+Vector Vector::operator*( float i ) const
 {
 	return operator*( Vector( i, i, i ) );
 }
-Vector Vector::operator/( float i )
+Vector Vector::operator/( float i ) const
 {
 	return operator/( Vector( i, i, i ) );
 }

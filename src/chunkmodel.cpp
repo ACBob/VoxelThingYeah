@@ -113,9 +113,7 @@ void ChunkModel::Build(Block blocks[], Vector pos)
 							Chunk *chunkNeighbour = reinterpret_cast<Chunk*>(_chunk)->Neighbour(Direction(i));
 							if (chunkNeighbour != nullptr)
 							{
-								neighbour.x -= neighbour.x >= 16 ? 16 : neighbour.x < 0 ? -16 : 0;
-								neighbour.y -= neighbour.y >= 16 ? 16 : neighbour.y < 0 ? -16 : 0;
-								neighbour.z -= neighbour.z >= 16 ? 16 : neighbour.z < 0 ? -16 : 0;
+								neighbour = neighbour + (DirectionVector[i] * -16.0f);
 
 								Block *b = chunkNeighbour->GetBlockAtLocal(neighbour);
 								if (b != nullptr && b->blockType != AIR)

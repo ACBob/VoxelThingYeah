@@ -2,8 +2,6 @@
 
 #include <glm/glm.hpp>
 
-#define VEC_UP Vector(0.0f, 1.0f, 0.0f)
-
 class Vector
 {
 	public:
@@ -19,15 +17,15 @@ class Vector
 
 	// Operators
 	// Math, with other vectors
-	Vector operator+( Vector oVec );
-	Vector operator-( Vector oVec );
-	Vector operator*( Vector oVec );
-	Vector operator/( Vector oVec );
+	Vector operator+( Vector oVec ) const;
+	Vector operator-( Vector oVec ) const;
+	Vector operator*( Vector oVec ) const;
+	Vector operator/( Vector oVec ) const;
 	// Math, with single ints/floats
-	Vector operator+( float i );
-	Vector operator-( float i );
-	Vector operator*( float i );
-	Vector operator/( float i );
+	Vector operator+( float i ) const;
+	Vector operator-( float i ) const;
+	Vector operator*( float i ) const;
+	Vector operator/( float i ) const;
 	// Access
 	float operator[](int index);
 	// Comparison
@@ -41,3 +39,6 @@ class Vector
 	operator glm::vec3() const;
 	Vector(glm::vec3 glmVec);
 };
+
+const Vector VEC_UP(0.0f, 1.0f, 0.0f);
+const Vector VEC_RIGHT(1.0f, 0.0f, 0.0f);
