@@ -14,9 +14,11 @@ class GUI
 		struct Vertex {
 			float x,y,z; //! Z always 0!!
 			float u,v;
+			// Color
+			float r,g,b;
 		};
 
-		std::vector<Vertex> GetQuad(float x, float y, float w, float h);
+		std::vector<Vertex> GetQuad(Vector pos, Vector size, float r = 1, float g = 1, float b = 1);
 
 		unsigned int vbo, vao;
 		std::vector<Vertex> Vertices;

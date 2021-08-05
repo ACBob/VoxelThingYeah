@@ -16,14 +16,17 @@ GUI::GUI()
 		glBindVertexArray(vao);
 		
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 5, NULL, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 8, NULL, GL_DYNAMIC_DRAW);
 
 		// Position
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, 5 * sizeof(float), (void*)0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0);
 		// texture coordinate
-		glVertexAttribPointer(1, 2, GL_FLOAT, false, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+		glVertexAttribPointer(1, 2, GL_FLOAT, false, 8 * sizeof(float), (void*)offsetof(GUI::Vertex, u));
 		glEnableVertexAttribArray(1);
+		// colour
+		glVertexAttribPointer(2, 3, GL_FLOAT, false, 8 * sizeof(float), (void*)offsetof(GUI::Vertex, r));
+		glEnableVertexAttribArray(2);
 
 		glBindVertexArray(0);
 	}
@@ -57,16 +60,16 @@ void GUI::Update()
 	Vertices.clear();
 }
 
-std::vector<GUI::Vertex> GUI::GetQuad(float x, float y, float w, float h)
+std::vector<GUI::Vertex> GUI::GetQuad(Vector pos, Vector size, float r, float g, float b)
 {
 	return {
-		{ x + w, y,     0,  1.0f, 1.0f },
-		{ x,     y,     0,  0.0f, 1.0f },
-		{ x,     y + h, 0,  0.0f, 0.0f },
+		{ pos.x + size.x, pos.y,          0,  1.0f, 1.0f,  r,g,b },
+		{ pos.x,          pos.y,          0,  0.0f, 1.0f,  r,g,b },
+		{ pos.x,          pos.y + size.y, 0,  0.0f, 0.0f,  r,g,b },
 
-		{ x + w, y + h, 0,  1.0f, 0.0f },
-		{ x + w, y,     0,  1.0f, 1.0f },
-		{ x,     y + h, 0,  0.0f, 0.0f },
+		{ pos.x + size.x, pos.y + size.y, 0,  1.0f, 0.0f,  r,g,b },
+		{ pos.x + size.x, pos.y,          0,  1.0f, 1.0f,  r,g,b },
+		{ pos.x,          pos.y + size.y, 0,  0.0f, 0.0f,  r,g,b },
 	};
 }
 
@@ -99,7 +102,7 @@ int GUI::Button(int id, Vector pos, Vector size)
 	// OpenGl
 	{
 		// Get vertices
-		std::vector<GUI::Vertex> g = GetQuad(pos.x, pos.x, size.x, size.y);
+		std::vector<GUI::Vertex> g = GetQuad(pos, size);
 		std::copy(g.begin(), g.end(), std::back_inserter(Vertices));
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
