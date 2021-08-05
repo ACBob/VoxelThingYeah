@@ -31,7 +31,7 @@ BlockTexture Block::GetSideTexture(blockface_t Side)
 			}
 			if (Side == blockface_t::DOWN)
 			{
-				return {2,0, 1,1};
+				return {1,0, 1,1};
 			}
 			return {3,0, 1,1};
 		break;
