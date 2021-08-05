@@ -141,7 +141,8 @@ void GameWindow::PollEvents()
 
 	// Set the mouseState
 	unsigned int buttons = SDL_GetMouseState(NULL, NULL);
-	inputMan->mouseState = inputMan->mouseState | ((buttons & SDL_BUTTON_LMASK) != 0) ? InputManager::MouseState::LEFT : 0;
+	inputMan->mouseState = 0;
+	inputMan->mouseState = inputMan->mouseState | ((buttons & SDL_BUTTON_LMASK) != 0) ? IN_LEFT_MOUSE : 0;
 }
 
 void GameWindow::CaptureMouse()

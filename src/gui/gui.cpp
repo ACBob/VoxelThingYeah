@@ -8,7 +8,7 @@
 
 GUI::GUI()
 {
-	mouseState = InputManager::MouseState::NONE;
+	mouseState = IN_NO_MOUSE;
 	activeItem = 0;
 	hotItem = 0;
 
@@ -48,8 +48,13 @@ GUI::~GUI()
 
 void GUI::Update()
 {
+	if (mouseState == IN_NO_MOUSE)
+		activeItem = 0;
+	
 	mousePos = inputMan->mousePos;
 	mouseState = inputMan->mouseState;
+	// else if (activeItem == 0)
+	// 	activeItem = -1;
 
 	hotItem = 0;
 
@@ -102,13 +107,15 @@ int GUI::Button(int id, Vector pos, Vector size)
 	{
 		hotItem = id;
 		color = Colour(0.75, 0.75, 0.75);
-		if (activeItem == 0 && (mouseState & InputManager::MouseState::LEFT) != 0)
+		if (mouseState != 0)
+			NULL; // Breakpoint
+		if (activeItem == 0 && (mouseState == IN_LEFT_MOUSE))
 		{
 			activeItem = id;
 		}
 	}
 
-	if (mouseState == 0 && hotItem == id && activeItem == id)
+	if (mouseState == IN_NO_MOUSE && hotItem == id && activeItem == id)
 	{
 		returnCode = 1;
 		color = Colour(0.75, 0.75, 1);

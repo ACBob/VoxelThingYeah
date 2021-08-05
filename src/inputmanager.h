@@ -2,6 +2,11 @@
 
 #pragma once
 
+#define IN_NO_MOUSE 0
+#define IN_LEFT_MOUSE 1 << 0
+#define IN_MIDDLE_MOUSE 1 << 1
+#define IN_RIGHT_MOUSE 1 << 2
+
 class InputManager
 {
 	public:
@@ -15,15 +20,6 @@ class InputManager
 		// Mousemovement is the movement of the mouse since last frame
 		// Z is ignored
 		Vector mousePos, mouseMovement;
-
-		// 0 = Nothing
-		// 2 = Left
-		// 4 = right
-		enum MouseState {
-			NONE =     1 << 0,
-			LEFT =     1 << 1,
-			RIGHT =    1 << 2,
-		};
 
 		int mouseState = 0;
 
