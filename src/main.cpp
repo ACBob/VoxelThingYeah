@@ -127,7 +127,12 @@ int main (int argc, char* args[]) {
 		textShader.Use();
 		textShader.SetMat4("projection", projection);
 
-		gui.Label("Hello, World!", Vector(0,0));
+		gui.Label("BobCraft NuDev", Vector(0,0));
+		char buf[100];
+		snprintf(buf, sizeof(buf), "Position: (%f, %f, %f)", plyr.pos.x, plyr.pos.y, plyr.pos.z);
+		gui.Label(buf, Vector(0,HEIGHT-36));
+		snprintf(buf, sizeof(buf), "Angle: (%f, %f)", plyr.pitch, plyr.yaw);
+		gui.Label(buf, Vector(0,HEIGHT-72));
 		gui.Update();
 
 		// TextRendering::RenderText("HELLO WORLD", Vector(0), &texman);
