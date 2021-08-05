@@ -15,7 +15,9 @@ class Texture
 class TextureManager
 {
 	public:
-		Texture LoadTexture(const char* path);
+		TextureManager();
+
+		Texture* LoadTexture(const char* path);
 
 		std::vector<Texture> loadedTextures;
 };

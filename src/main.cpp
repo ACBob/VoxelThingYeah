@@ -14,8 +14,6 @@
 #include "world/chunkmanager.h"
 #include "gui/gui.h"
 
-#include "textrender.h"
-
 #include <fstream>
 #include <iostream>
 
@@ -77,14 +75,12 @@ int main (int argc, char* args[]) {
 	plyr.inputMan = &input;
 
 	TextureManager texman;
-	Texture terrainpng = texman.LoadTexture("terrain.png");
-
-	TextRendering::InitText();
+	Texture* terrainpng = texman.LoadTexture("terrain.png");
 
 	Shader genericShader = Shader("shaders/generic.vert", "shaders/generic.frag");
 	Shader textShader = Shader("shaders/text.vert", "shaders/text.frag");
 
-	GUI gui;
+	GUI gui(&texman);
 	gui.inputMan = &input;
 
 	glClearColor(0.5f, 0.0f, 0.5f, 1.0f);
@@ -114,7 +110,7 @@ int main (int argc, char* args[]) {
 
 		genericShader.Use();
 
-		glBindTexture(GL_TEXTURE_2D, terrainpng.id);
+		glBindTexture(GL_TEXTURE_2D, terrainpng->id);
 
 		glm::mat4 projection = glm::perspective(glm::radians(70.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 10000.0f);
 		genericShader.SetMat4("projection", projection);
@@ -131,8 +127,7 @@ int main (int argc, char* args[]) {
 		textShader.Use();
 		textShader.SetMat4("projection", projection);
 
-		if(gui.Button(1, Vector(0,0), Vector(512,128)) != 0)
-			printf("Clicky!\n");
+		gui.Label("Hello, World!", Vector(0,0));
 		gui.Update();
 
 		// TextRendering::RenderText("HELLO WORLD", Vector(0), &texman);

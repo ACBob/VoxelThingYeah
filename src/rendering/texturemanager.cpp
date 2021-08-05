@@ -30,10 +30,18 @@ Texture::Texture(const char* path)
 // {
 // }
 
-Texture TextureManager::LoadTexture(const char* path)
-{
-	Texture tex(path);
-	loadedTextures.push_back(tex);
+// TODO: hard-coded limit because of how fragile things are
+// You think this is bad? Look at the ChunkManager!
+#define MAX_TEXTURES 32
 
-	return tex;
+TextureManager::TextureManager()
+{
+	loadedTextures.reserve(MAX_TEXTURES);
+}
+
+Texture *TextureManager::LoadTexture(const char* path)
+{
+	loadedTextures.emplace_back(path);
+
+	return &loadedTextures.back();
 }

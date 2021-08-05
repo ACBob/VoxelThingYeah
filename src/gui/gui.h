@@ -1,6 +1,7 @@
 
 #include "utility/vector.h"
 #include "../inputmanager.h"
+#include "rendering/texturemanager.h"
 
 #include <vector>
 
@@ -19,11 +20,15 @@ class GUI
 		};
 
 		std::vector<Vertex> GetQuad(Vector pos, Vector size, Colour color);
+		std::vector<Vertex> GetCharQuad(const char *c, Vector pos, Vector size, Colour color);
 
 		unsigned int vbo, vao;
 		std::vector<Vertex> Vertices;
+
+		// Teh epic textTex
+		Texture* textTex;
 	public:
-		GUI();
+		GUI(TextureManager *texMan);
 		~GUI();
 
 		// Z Ignored
@@ -47,4 +52,5 @@ class GUI
 
 		// Elements
 		int Button(int id, Vector pos, Vector size);
+		void Label(const char* text, Vector pos, Colour color = Color(1,1,1));
 };
