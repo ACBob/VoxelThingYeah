@@ -1,5 +1,7 @@
 // TODO:
 
+#include "direction.h"
+
 #include "vector.h"
 #include "blocktexture.h"
 
@@ -12,21 +14,11 @@ enum blocktype_t {
 	GRASS = 3,
 };
 
-enum blockface_t {	
-	NORTH = 0,
-	EAST = 1,
-	SOUTH = 2,
-	WEST = 3,
-
-	UP = 4,
-	DOWN = 5
-};
-
 class Block {
 	public:
 		Block();
 
 		blocktype_t blockType = blocktype_t::AIR;
 
-		BlockTexture GetSideTexture(blockface_t side);
+		BlockTexture GetSideTexture(Direction side);
 };

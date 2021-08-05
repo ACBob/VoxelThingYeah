@@ -8,6 +8,8 @@
 
 class ChunkModel {
 	public:
+		ChunkModel(void* parent);
+
 		struct Vertex {
 			Vertex(int a = 69, int b = 69, int c = 69, float u = 0, float v = 0) {x=a;y=b;z=c;};
 			float x, y, z;
@@ -21,6 +23,9 @@ class ChunkModel {
 		};
 		std::vector<Vertex> vertices;
 		std::vector<Face> faces;
+
+		// Parent Chunk
+		void *_chunk;
 
 		void Build(Block blocks[], Vector pos);
 };

@@ -1,5 +1,7 @@
 #include "texturemanager.h"
 
+#pragma once
+
 struct BlockTexture
 {
 	BlockTexture(int x, int y, int sizex, int sizey)

@@ -1,5 +1,6 @@
 #include "chunkmodel.h"
 #include "chunk.h" // CHUNKSIZE definitions
+#include "chunkmanager.h"
 
 #include <iostream>
 
@@ -7,6 +8,12 @@ int indexArray(int x, int y, int z)
 {
 	return CHUNK3D_TO_1D(x,y,z);
 }
+
+ChunkModel::ChunkModel(void* chunk)
+{
+	_chunk = chunk;
+}
+
 const ChunkModel::Vertex vertices[] = {
 	// NORTH +Z
 	{ 1,  1, 1},
@@ -31,7 +38,7 @@ const std::vector<std::vector<int>> triangles = {
 	{6, 7, 2, 3} // DN
 };
 
-std::vector<ChunkModel::Vertex> sampleFace(blockface_t dir, Block block, int x = 0, int y = 0, int z = 0)
+std::vector<ChunkModel::Vertex> sampleFace(Direction dir, Block block, int x = 0, int y = 0, int z = 0)
 {
 	std::vector<ChunkModel::Vertex> g;
 	for (int i = 0; i < 4; i++)
@@ -68,22 +75,11 @@ std::vector<ChunkModel::Vertex> sampleFace(blockface_t dir, Block block, int x =
 	return g;
 }
 
-// TODO: Somewhere else?
-Vector blockdir[] = {
-	{0, 0, 1}, // NORTH
-	{1, 0, 0}, // EAST
-	{0, 0, -1}, // SOUTH
-	{-1, 0, 0}, // WEST
-
-	{0, 1, 0}, // UP
-	{0, -1, 0} // DOWN
-};
-
+// We include the chunk manager here so we can test our neighbouring chunks
 void ChunkModel::Build(Block blocks[], Vector pos)
 {
 	vertices.clear();
 	faces.clear();
-
 	// Reserve enough space to have verticies inside all space
 	vertices.reserve(CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z * 4);
 
@@ -101,16 +97,33 @@ void ChunkModel::Build(Block blocks[], Vector pos)
 					for (int i = 0; i < 6; i++)
 					{
 						// TODO: Test against other chunks
-						Vector neighbour = Vector(x,y,z) + blockdir[i];
-						if (
-							ValidChunkPosition(neighbour) &&
-							blocks[indexArray(neighbour.x,neighbour.y,neighbour.z)].blockType != AIR
-						) // Skip if neighbouring
+						Vector neighbour = Vector(x,y,z) + DirectionVector[i];
+						if (ValidChunkPosition(neighbour))
 						{
-							continue;
+							if (
+								blocks[indexArray(neighbour.x,neighbour.y,neighbour.z)].blockType != AIR
+							) // Skip if neighbouring
+							{
+								continue;
+							}
+						}
+						else
+						{
+							// Test a neighbour
+							Chunk *chunkNeighbour = reinterpret_cast<Chunk*>(_chunk)->Neighbour(Direction(i));
+							if (chunkNeighbour != nullptr)
+							{
+								neighbour.x -= neighbour.x >= 16 ? 16 : neighbour.x < 0 ? -16 : 0;
+								neighbour.y -= neighbour.y >= 16 ? 16 : neighbour.y < 0 ? -16 : 0;
+								neighbour.z -= neighbour.z >= 16 ? 16 : neighbour.z < 0 ? -16 : 0;
+
+								Block *b = chunkNeighbour->GetBlockAtLocal(neighbour);
+								if (b != nullptr && b->blockType != AIR)
+									continue;
+							}
 						}
 
-						std::vector<Vertex> g = sampleFace(blockface_t(i), block, pos.x + x, pos.y + y, pos.z + z);
+						std::vector<Vertex> g = sampleFace(Direction(i), block, pos.x + x, pos.y + y, pos.z + z);
 						std::copy(g.begin(), g.end(), std::back_inserter(vertices));
 
 						int nVertices = vertices.size();

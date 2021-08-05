@@ -26,12 +26,14 @@ class ChunkPos
 class Chunk
 {
 	public:
-		Chunk(Vector pos);
+		Chunk(Vector pos, void* chunkMan);
 		~Chunk();
 		
+		Chunk* Neighbour(Direction dir);
+
 		ChunkPos worldPos;
 
-		Block GetBlockAtLocal(Vector pos);
+		Block* GetBlockAtLocal(Vector pos);
 
 		void RebuildMdl();
 
@@ -44,6 +46,9 @@ class Chunk
 		ChunkModel mdl;
 		// Given the model to replace its' index buffers and such
 		ChunkRenderer rend;
+
+		// ChunkManager pointer (can't set type because circular include :lenny:)
+		void* chunkMan;
 };
 
 bool ValidChunkPosition(Vector pos);

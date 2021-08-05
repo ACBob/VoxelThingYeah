@@ -11,13 +11,46 @@ ChunkManager::ChunkManager()
 		{
 			for (pos.z = 0; pos.z < 2; pos.z++)
 			{
-				chunks.emplace_back(pos);
+				chunks.emplace_back(pos, this);
 			}
 		}
 	}
 	// DBUG
 	// chunks.emplace_back(Vector(0,0,0));
 	// chunks.emplace_back(Vector(1,0,0));
+}
+
+// Return in good faith that it's a valid position
+Chunk* ChunkManager::ChunkAtChunkPos(Vector pos)
+{
+	if (!ValidChunkPos(pos))
+		return nullptr;
+
+	return &chunks[CHUNK3D_TO_1D(pos.x, pos.y, pos.z)];
+}
+
+
+// Return in good faith that it's a valid position
+Chunk* ChunkManager::ChunkAtBlockPos(Vector pos)
+{
+	pos.x /= 16.0f;
+	pos.y /= 16.0f;
+	pos.z /= 16.0f;
+
+	pos.x = ceil(pos.x);
+	pos.y = ceil(pos.y);
+	pos.z = ceil(pos.z);
+
+	return ChunkAtChunkPos(pos);
+}
+
+bool ChunkManager::ValidChunkPos(Vector pos)
+{
+	// TODO: negatives?
+	int idx = CHUNK3D_TO_1D(pos.x, pos.y, pos.z);
+	if (idx >= chunks.size() || idx < 0)
+		return false;
+	return true;
 }
 
 void ChunkManager::Render()

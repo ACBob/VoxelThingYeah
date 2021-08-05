@@ -1,6 +1,8 @@
 #include "chunkmodel.h"
 #include "shadermanager.h"
 
+#pragma once
+
 class ChunkRenderer {
 	public:
 		ChunkRenderer(ChunkModel *mdl);

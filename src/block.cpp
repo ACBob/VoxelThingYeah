@@ -7,7 +7,7 @@ Block::Block()
 
 }
 
-BlockTexture Block::GetSideTexture(blockface_t Side)
+BlockTexture Block::GetSideTexture(Direction Side)
 {
 	switch (this->blockType)
 	{
@@ -25,11 +25,11 @@ BlockTexture Block::GetSideTexture(blockface_t Side)
 		break;
 
 		case GRASS:
-			if (Side == blockface_t::UP)
+			if (Side == Direction::UP)
 			{
 				return {2,0, 1,1};
 			}
-			if (Side == blockface_t::DOWN)
+			if (Side == Direction::DOWN)
 			{
 				return {1,0, 1,1};
 			}

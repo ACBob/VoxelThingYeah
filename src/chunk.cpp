@@ -2,6 +2,8 @@
 
 #include <random>
 
+#include "chunkmanager.h"
+
 
 ChunkPos::ChunkPos(Vector pos)
 {
@@ -17,17 +19,29 @@ Vector ChunkPos::ToWorld()
 	return g;
 }
 
-Chunk::Chunk(Vector pos) :
+Chunk::Chunk(Vector pos, void* chunkMan) :
+	mdl(this),
 	rend(&mdl),
 	worldPos(pos)
 {
 	// FOR NOW: start off filled with blocks
 	for (int i = 0; i < sizeof(blocks) / sizeof(Block); i++)
 	{
-		blocks[i].blockType = blocktype_t(random() % 4);
+		// blocks[i].blockType = blocktype_t(random() % 4);
+		blocks[i].blockType = blocktype_t::GRASS;
 	}
 
+	this->chunkMan = chunkMan;
+
 	RebuildMdl();
+}
+
+Chunk* Chunk::Neighbour(Direction dir)
+{
+	Vector neighbourPos = worldPos.pos + DirectionVector[dir];
+	if (reinterpret_cast<ChunkManager*>(chunkMan)->ValidChunkPos(neighbourPos))
+		return reinterpret_cast<ChunkManager*>(chunkMan)->ChunkAtChunkPos(neighbourPos);
+	return nullptr;
 }
 
 void Chunk::Render()
@@ -46,9 +60,11 @@ Chunk::~Chunk()
 
 }
 
-Block Chunk::GetBlockAtLocal(Vector pos)
+Block *Chunk::GetBlockAtLocal(Vector pos)
 {
-	return blocks[int(CHUNK3D_TO_1D(pos.x, pos.y, pos.z))];
+	if (!ValidChunkPosition(pos))
+		return nullptr;
+	return &blocks[int(CHUNK3D_TO_1D(pos.x, pos.y, pos.z))];
 }
 
 bool ValidChunkPosition(Vector pos)
