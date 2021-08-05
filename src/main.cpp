@@ -12,6 +12,7 @@
 #include "rendering/texturemanager.h"
 #include "rendering/shadermanager.h"
 #include "world/chunkmanager.h"
+#include "gui/gui.h"
 
 #include "textrender.h"
 
@@ -83,6 +84,8 @@ int main (int argc, char* args[]) {
 	Shader genericShader = Shader("shaders/generic.vert", "shaders/generic.frag");
 	Shader textShader = Shader("shaders/text.vert", "shaders/text.frag");
 
+	GUI gui;
+
 	glClearColor(0.5f, 0.0f, 0.5f, 1.0f);
 	glViewport(0, 0, WIDTH, HEIGHT);
 
@@ -121,8 +124,16 @@ int main (int argc, char* args[]) {
 
 		chunkMan.Render();
 
+		glBindTexture(GL_TEXTURE_2D, 0);
+		projection = glm::ortho(0.0f, static_cast<float>(WIDTH), 0.0f, static_cast<float>(HEIGHT));
+
 		textShader.Use();
-		TextRendering::RenderText("HELLO WORLD", Vector(0), &texman);
+		textShader.SetMat4("projection", projection);
+
+		gui.Button(0, Vector(0,0), Vector(512,128));
+		gui.Update();
+
+		// TextRendering::RenderText("HELLO WORLD", Vector(0), &texman);
 
 		window.SwapBuffers();
 	}

@@ -1,5 +1,7 @@
 #include "inputmanager.h"
 
+// Usually set/handled by the window
+
 InputManager::InputManager()
 {
 	// Fill the array

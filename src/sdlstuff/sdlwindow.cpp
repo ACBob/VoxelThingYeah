@@ -81,7 +81,7 @@ void GameWindow::SetPos(Vector pos)
 	SDL_SetWindowPosition(internalWindow.get(), pos.x, pos.y);
 }
 
-const int scancodeToStateIndex[52] =
+const int scancodeToStateIndex[] =
 {
 	SDL_SCANCODE_A, 'A',
     SDL_SCANCODE_B, 'B',
@@ -125,6 +125,14 @@ void GameWindow::PollEvents()
 			case SDL_MOUSEMOTION:
 				inputMan->mouseMovement = inputMan->mouseMovement + Vector(currentEvent.motion.xrel, currentEvent.motion.yrel);
 				inputMan->mousePos = Vector(currentEvent.motion.x, currentEvent.motion.y);
+			break;
+			case SDL_MOUSEBUTTONDOWN:
+				if (currentEvent.button.button == 1)
+					inputMan->mouseState = InputManager::MouseState::LEFT;
+			break;
+			case SDL_MOUSEBUTTONUP:
+				if (currentEvent.button.button == 1)
+					inputMan->mouseState = InputManager::MouseState::NONE;
 			break;
 		}
 	}
