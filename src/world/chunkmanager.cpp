@@ -2,8 +2,6 @@
 
 ChunkManager::ChunkManager()
 {
-	chunks.reserve(64);
-
 	Vector pos(0,0,0);
 	for (pos.x = 0; pos.x < 2; pos.x++)
 	{
@@ -11,7 +9,10 @@ ChunkManager::ChunkManager()
 		{
 			for (pos.z = 0; pos.z < 2; pos.z++)
 			{
-				chunks.emplace_back(pos, this);
+				Chunk* c = &chunks[pos];
+				c->worldPos = pos;
+				c->chunkMan = this;
+				c->RebuildMdl();
 			}
 		}
 	}
@@ -26,7 +27,7 @@ Chunk* ChunkManager::ChunkAtChunkPos(Vector pos)
 	if (!ValidChunkPos(pos))
 		return nullptr;
 
-	return &chunks[CHUNK3D_TO_1D(pos.x, pos.y, pos.z)];
+	return &chunks.at(pos);
 }
 
 
@@ -46,15 +47,20 @@ Chunk* ChunkManager::ChunkAtBlockPos(Vector pos)
 
 bool ChunkManager::ValidChunkPos(Vector pos)
 {
-	// TODO: negatives?
-	int idx = CHUNK3D_TO_1D(pos.x, pos.y, pos.z);
-	if (idx >= chunks.size() || idx < 0)
-		return false;
-	return true;
+	if (chunks.count(pos))
+		return true;
+	return false;
 }
 
 void ChunkManager::Render()
 {
-	for (int i = 0; i < chunks.size(); i++)
-		chunks[i].Render();
+	int j = 0;
+	std::map<const Vector, Chunk>::iterator i = chunks.begin();
+	while (i != chunks.end())
+	{
+		i->second.Render();
+		i++;
+		j++;
+	}
+	j;
 }

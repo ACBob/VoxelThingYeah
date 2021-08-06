@@ -19,10 +19,10 @@ Vector ChunkPos::ToWorld()
 	return g;
 }
 
-Chunk::Chunk(Vector pos, void* chunkMan) :
+Chunk::Chunk() :
 	mdl(this),
 	rend(&mdl),
-	worldPos(pos)
+	worldPos(Vector())
 {
 	// FOR NOW: start off filled with blocks
 	for (int i = 0; i < sizeof(blocks) / sizeof(Block); i++)
@@ -30,10 +30,6 @@ Chunk::Chunk(Vector pos, void* chunkMan) :
 		// blocks[i].blockType = blocktype_t(random() % 4);
 		blocks[i].blockType = blocktype_t::GRASS;
 	}
-
-	this->chunkMan = chunkMan;
-
-	RebuildMdl();
 }
 
 Chunk* Chunk::Neighbour(Direction dir)

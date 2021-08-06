@@ -31,8 +31,8 @@ class Vector
 	// Comparison
 	bool operator==( Vector oVec );
 	bool operator!=( Vector oVec );
-	bool operator> ( Vector oVec );
-	bool operator< ( Vector oVec );
+	bool operator> ( Vector oVec ) const;
+	bool operator< ( Vector oVec ) const;
 	bool operator>=( Vector oVec );
 	bool operator<=( Vector oVec );
 

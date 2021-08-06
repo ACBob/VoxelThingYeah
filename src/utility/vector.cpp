@@ -117,11 +117,11 @@ bool Vector::operator!=( Vector oVec )
 {
 	return !operator==( oVec );
 }
-bool Vector::operator>( Vector oVec )
+bool Vector::operator>( Vector oVec ) const
 {
 	return (x > oVec.x && y > oVec.y && z > oVec.z);
 }
-bool Vector::operator<( Vector oVec )
+bool Vector::operator<( Vector oVec ) const
 {
 	return !operator>( oVec );
 }

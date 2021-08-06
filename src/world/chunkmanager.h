@@ -8,6 +8,7 @@
 #pragma once
 
 #include <vector>
+#include <map>
 
 class ChunkManager {
 	public:
@@ -22,5 +23,5 @@ class ChunkManager {
 		// Is the position within our place
 		bool ValidChunkPos(Vector pos);
 
-		std::vector<Chunk> chunks;
+		std::map<const Vector, Chunk> chunks;
 };
