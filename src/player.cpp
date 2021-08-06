@@ -5,9 +5,11 @@
 
 // TODO: seperate player from camera
 
-Player::Player()
+Player::Player() :
+	pos(0.0f, 0.0f, 5.0f),
+	forward(0.0f, 0.0f, 1.0f)
 {
-
+	pitch = yaw = 0.0f;
 }
 
 void Player::Update()
