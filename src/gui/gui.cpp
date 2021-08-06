@@ -6,9 +6,16 @@
 
 #include <glad/glad.h>
 
-// TODO: not this
-#define TEXTWIDTH 8
-#define TEXTHEIGHT 9
+// The whole coordinate system is based on these GUIUUNITs.
+// When we start to dynamically rescale the GUI based on resolution this will come in handy. for now, 16px.
+#define GUIUNIT 16
+
+#define TEXTINTEXWIDTH 8
+#define TEXTINTEXHEIGHT 9
+#define TEXTRATIO 1.125
+
+#define TEXTWIDTH GUIUNIT * TEXTRATIO
+#define TEXTHEIGHT GUIUNIT
 
 // I am not supporting weird configurations
 #define TEXTTILES 16
@@ -103,27 +110,27 @@ std::vector<GUI::Vertex> GUI::GetCharQuad(const char* c, Vector pos, Vector size
 	std::vector<GUI::Vertex> vert = GetQuad(pos, size, color);
 
 	float x, y;
-	x = (int(*c - ' ') % TEXTTILES) * TEXTWIDTH;
-	y = (int(*c - ' ') / TEXTTILES) * TEXTHEIGHT;
+	x = (int(*c - ' ') % TEXTTILES) * TEXTINTEXWIDTH;
+	y = (int(*c - ' ') / TEXTTILES) * TEXTINTEXHEIGHT;
 
-	vert[0].u = (x + TEXTWIDTH) / (16.0f * TEXTWIDTH);
-	vert[0].v = (y + TEXTHEIGHT) / (16.0f * TEXTHEIGHT);
+	vert[0].u = (x + TEXTINTEXWIDTH) / (16.0f * TEXTINTEXWIDTH);
+	vert[0].v = (y + TEXTINTEXHEIGHT) / (16.0f * TEXTINTEXHEIGHT);
 
-	vert[1].u = (x) / (16.0f * TEXTWIDTH);
-	vert[1].v = (y + TEXTHEIGHT) / (16.0f * TEXTHEIGHT);
+	vert[1].u = (x) / (16.0f * TEXTINTEXWIDTH);
+	vert[1].v = (y + TEXTINTEXHEIGHT) / (16.0f * TEXTINTEXHEIGHT);
 
-	vert[2].u = (x) / (16.0f * TEXTWIDTH);
-	vert[2].v = (y) / (16.0f * TEXTHEIGHT);
+	vert[2].u = (x) / (16.0f * TEXTINTEXWIDTH);
+	vert[2].v = (y) / (16.0f * TEXTINTEXHEIGHT);
 
 
-	vert[3].u = (x + TEXTWIDTH) / (16.0f * TEXTWIDTH);
-	vert[3].v = (y) / (16.0f * TEXTHEIGHT);
+	vert[3].u = (x + TEXTINTEXWIDTH) / (16.0f * TEXTINTEXWIDTH);
+	vert[3].v = (y) / (16.0f * TEXTINTEXHEIGHT);
 
-	vert[4].u = (x + TEXTWIDTH) / (16.0f * TEXTWIDTH);
-	vert[4].v = (y + TEXTHEIGHT) / (16.0f * TEXTHEIGHT);
+	vert[4].u = (x + TEXTINTEXWIDTH) / (16.0f * TEXTINTEXWIDTH);
+	vert[4].v = (y + TEXTINTEXHEIGHT) / (16.0f * TEXTINTEXHEIGHT);
 
-	vert[5].u = (x) / (16.0f * TEXTWIDTH);
-	vert[5].v = (y) / (16.0f * TEXTHEIGHT);
+	vert[5].u = (x) / (16.0f * TEXTINTEXWIDTH);
+	vert[5].v = (y) / (16.0f * TEXTINTEXHEIGHT);
 
 	return vert;
 }
@@ -143,6 +150,10 @@ bool GUI::RegionHit(Vector pos, Vector size)
 
 int GUI::Button(int id, Vector pos, Vector size)
 {
+
+	pos = pos * GUIUNIT;
+	size = size * GUIUNIT;
+
 	int returnCode = 0;
 
 	Colour color = Colour(0.5,0.5,0.5);
@@ -179,6 +190,8 @@ int GUI::Button(int id, Vector pos, Vector size)
 
 void GUI::Label(const char* text, Vector pos, Colour color)
 {
+	pos = pos * GUIUNIT;
+
 	// Render
 	// OpenGl
 	{
@@ -187,10 +200,10 @@ void GUI::Label(const char* text, Vector pos, Colour color)
 		while(text[i] != '\0')
 		{
 			// Get vertices
-			std::vector<GUI::Vertex> g = GetCharQuad(&text[i], pos, Vector(TEXTWIDTH * 4, TEXTHEIGHT * 4), color);
+			std::vector<GUI::Vertex> g = GetCharQuad(&text[i], pos, Vector(TEXTWIDTH, TEXTHEIGHT), color);
 			std::copy(g.begin(), g.end(), std::back_inserter(Vertices));
 
-			pos = pos + Vector(TEXTWIDTH * 4,0);
+			pos = pos + Vector(TEXTWIDTH,0);
 
 			i++;
 		}

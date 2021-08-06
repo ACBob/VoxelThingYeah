@@ -130,9 +130,9 @@ int main (int argc, char* args[]) {
 		gui.Label("BobCraft NuDev", Vector(0,0));
 		char buf[100];
 		snprintf(buf, sizeof(buf), "Position: (%f, %f, %f)", plyr.pos.x, plyr.pos.y, plyr.pos.z);
-		gui.Label(buf, Vector(0,HEIGHT-36));
+		gui.Label(buf, Vector(0,1));
 		snprintf(buf, sizeof(buf), "Angle: (%f, %f)", plyr.pitch, plyr.yaw);
-		gui.Label(buf, Vector(0,HEIGHT-72));
+		gui.Label(buf, Vector(0,2));
 		gui.Update();
 
 		// TextRendering::RenderText("HELLO WORLD", Vector(0), &texman);
