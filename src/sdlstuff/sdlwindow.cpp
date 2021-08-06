@@ -8,7 +8,12 @@
 
 
 GameWindow::GameWindow(const char *title, Vector size, bool resizeable) :
-	internalWindow(nullptr, &SDL_DestroyWindow)
+	internalWindow(nullptr, &SDL_DestroyWindow),
+	ticks(0),
+	framesInTheLastSecond(0),
+	secondsPerFrame(0.0f),
+	inputMan(nullptr),
+	shouldClose(false)
 {
 	internalWindow.reset(SDL_CreateWindow("VoxelThingYeah",
 		SDL_WINDOWPOS_UNDEFINED,
