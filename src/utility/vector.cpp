@@ -8,13 +8,6 @@ Vector::Vector( float x, float y, float z )
 	this->z = z;
 }
 
-// Vector::Vector( const Vector& origin )
-// {
-// 	this->x = origin.x;
-// 	this->y = origin.y;
-// 	this->z = origin.z;
-// }
-
 #define DEG2RAD (M_PI/180.0)
 
 // Methods
@@ -62,49 +55,45 @@ Vector Vector::Normal()
 
 // Operators
 // Math, with other vectors
-Vector Vector::operator+( const Vector oVec ) const
+Vector Vector::operator+( Vector oVec ) const
 {
-	Vector g(oVec);
-	g.x += x, g.y += y, g.z += z;
+	oVec.x += x, oVec.y += y, oVec.z += z;
 	return oVec;
 }
-Vector Vector::operator-( const Vector oVec ) const
+Vector Vector::operator-( Vector oVec ) const
 {
-	Vector g(oVec);
-	g.x -= x, g.y -= y, g.z -= z;
+	oVec.x -= x, oVec.y -= y, oVec.z -= z;
 	return oVec;
 }
-Vector Vector::operator*( const Vector oVec ) const
+Vector Vector::operator*( Vector oVec ) const
 {
-	Vector g(oVec);
-	g.x *= x, g.y *= y, g.z *= z;
+	oVec.x *= x, oVec.y *= y, oVec.z *= z;
 	return oVec;
 }
-Vector Vector::operator/( const Vector oVec ) const
+Vector Vector::operator/( Vector oVec ) const
 {
-	Vector g(oVec);
-	g.x /= x, g.y /= y, g.z /= z;
+	oVec.x /= x, oVec.y /= y, oVec.z /= z;
 	return oVec;
 }
 // Math, with single ints/floats
-Vector Vector::operator+( const float i ) const
+Vector Vector::operator+( float i ) const
 {
 	return operator+( Vector( i, i, i ) );
 }
-Vector Vector::operator-( const float i ) const
+Vector Vector::operator-( float i ) const
 {
 	return operator-( Vector( i, i, i ) );
 }
-Vector Vector::operator*( const float i ) const
+Vector Vector::operator*( float i ) const
 {
 	return operator*( Vector( i, i, i ) );
 }
-Vector Vector::operator/( const float i ) const
+Vector Vector::operator/( float i ) const
 {
 	return operator/( Vector( i, i, i ) );
 }
 // Access
-float Vector::operator[](const int index) const
+float Vector::operator[](int index)
 {
 	switch (index)
 	{
@@ -120,27 +109,27 @@ float Vector::operator[](const int index) const
 	}
 }
 // Comparison
-bool Vector::operator==( const Vector oVec ) const
+bool Vector::operator==( Vector oVec )
 {
 	return oVec.x == x && oVec.y == y && oVec.z == z;
 }
-bool Vector::operator!=( const Vector oVec ) const
+bool Vector::operator!=( Vector oVec )
 {
 	return !operator==( oVec );
 }
-bool Vector::operator>( const Vector oVec ) const
+bool Vector::operator>( Vector oVec )
 {
 	return (x > oVec.x && y > oVec.y && z > oVec.z);
 }
-bool Vector::operator<( const Vector oVec ) const
+bool Vector::operator<( Vector oVec )
 {
 	return !operator>( oVec );
 }
-bool Vector::operator>=( const Vector oVec ) const
+bool Vector::operator>=( Vector oVec )
 {
 	return operator==( oVec ) && operator>( oVec );
 }
-bool Vector::operator<=( const Vector oVec ) const
+bool Vector::operator<=( Vector oVec )
 {
 	return operator==( oVec ) && operator<( oVec );
 }
