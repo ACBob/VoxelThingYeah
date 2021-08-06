@@ -2,6 +2,8 @@
 
 ChunkManager::ChunkManager()
 {
+	chunks = {};
+
 	Vector pos(0,0,0);
 	for (pos.x = 0; pos.x < 2; pos.x++)
 	{
@@ -9,16 +11,24 @@ ChunkManager::ChunkManager()
 		{
 			for (pos.z = 0; pos.z < 2; pos.z++)
 			{
-				Chunk* c = &chunks[pos];
+				Chunk *c = new Chunk();
 				c->worldPos = pos;
 				c->chunkMan = this;
 				c->RebuildMdl();
+
+				chunks[Vector(pos)] = c;
 			}
 		}
 	}
 	// DBUG
 	// chunks.emplace_back(Vector(0,0,0));
 	// chunks.emplace_back(Vector(1,0,0));
+}
+ChunkManager::~ChunkManager()
+{
+	// Destroy chunks
+	for (auto &c : chunks)
+		delete c.second;
 }
 
 // Return in good faith that it's a valid position
@@ -27,7 +37,7 @@ Chunk* ChunkManager::ChunkAtChunkPos(Vector pos)
 	if (!ValidChunkPos(pos))
 		return nullptr;
 
-	return &chunks.at(pos);
+	return chunks.at(pos);
 }
 
 
@@ -54,13 +64,8 @@ bool ChunkManager::ValidChunkPos(Vector pos)
 
 void ChunkManager::Render()
 {
-	int j = 0;
-	std::map<const Vector, Chunk>::iterator i = chunks.begin();
-	while (i != chunks.end())
+	for (auto &chunk : chunks)
 	{
-		i->second.Render();
-		i++;
-		j++;
+		chunk.second->Render();
 	}
-	j;
 }

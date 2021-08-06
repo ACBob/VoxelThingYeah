@@ -14,6 +14,7 @@ class ChunkManager {
 	public:
 
 		ChunkManager();
+		~ChunkManager();
 
 		void Render();
 
@@ -23,5 +24,5 @@ class ChunkManager {
 		// Is the position within our place
 		bool ValidChunkPos(Vector pos);
 
-		std::map<const Vector, Chunk> chunks;
+		std::map<Vector, Chunk*> chunks;
 };

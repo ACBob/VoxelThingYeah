@@ -53,7 +53,6 @@ void Chunk::RebuildMdl()
 
 Chunk::~Chunk()
 {
-
 }
 
 Block *Chunk::GetBlockAtLocal(Vector pos)
