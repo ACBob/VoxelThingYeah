@@ -32,6 +32,12 @@ class GameWindow : public BobWindow
 		Vector GetPos();
 		void SetPos(Vector p);
 
+		float GetSPF();
+
+		unsigned int ticks;
+		unsigned int framesInTheLastSecond;
+		float secondsPerFrame;
+
 		void PollEvents();
 
 		void CaptureMouse();

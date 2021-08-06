@@ -81,6 +81,18 @@ void GameWindow::SetPos(Vector pos)
 	SDL_SetWindowPosition(internalWindow.get(), pos.x, pos.y);
 }
 
+float GameWindow::GetSPF()
+{
+	framesInTheLastSecond ++;
+	if (ticks < SDL_GetTicks() - 1000) // Has it been a second
+	{
+		ticks = SDL_GetTicks();
+		secondsPerFrame = 1000.0f/float(framesInTheLastSecond);
+		framesInTheLastSecond = 0;
+	}
+	return secondsPerFrame;
+}
+
 const int scancodeToStateIndex[] =
 {
 	SDL_SCANCODE_A, 'A',

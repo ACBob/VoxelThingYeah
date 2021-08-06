@@ -24,6 +24,10 @@ class BobWindow
 		virtual Vector GetPos() = 0;
 		virtual void SetPos(Vector p) = 0;
 
+		// Returns the (milli)seconds per frame
+		// To get the FPS, 1000/this
+		virtual float GetSPF() = 0;
+
 		// Poll events
 		virtual void PollEvents() = 0;
 

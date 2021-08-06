@@ -133,6 +133,8 @@ int main (int argc, char* args[]) {
 		gui.Label(buf, Vector(0,1));
 		snprintf(buf, sizeof(buf), "Angle: (%f, %f)", plyr.pitch, plyr.yaw);
 		gui.Label(buf, Vector(0,2));
+		snprintf(buf, sizeof(buf), "FPS: %f", 1000 / window.GetSPF());
+		gui.Label(buf, Vector(0,3));
 		gui.Update();
 
 		// TextRendering::RenderText("HELLO WORLD", Vector(0), &texman);
