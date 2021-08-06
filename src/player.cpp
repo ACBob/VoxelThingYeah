@@ -42,5 +42,5 @@ void Player::MouseInput(float xrel, float yrel)
 	while (yaw < 0)
 		yaw += 360;
 
-	pitch = pitch < -87 ? -87 : (pitch > 87 ? 87 : pitch);
+	pitch = pitch < -89.9 ? -89.9 : (pitch > 89.9 ? 89.9 : pitch);
 }
