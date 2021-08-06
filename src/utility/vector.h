@@ -9,6 +9,7 @@ class Vector
 
 	// Default constructor, just keeps everything 0,0,0
 	Vector( float x = 0, float y = 0, float z = 0 );
+	Vector( const Vector& origin );
 
 	// Methods
 	Vector Rotate(int axis, float degrees); // Returns this vector rotated around axis (1=x,3=z) by degrees
@@ -17,24 +18,24 @@ class Vector
 
 	// Operators
 	// Math, with other vectors
-	Vector operator+( Vector oVec ) const;
-	Vector operator-( Vector oVec ) const;
-	Vector operator*( Vector oVec ) const;
-	Vector operator/( Vector oVec ) const;
+	Vector operator+( const Vector oVec ) const;
+	Vector operator-( const Vector oVec ) const;
+	Vector operator*( const Vector oVec ) const;
+	Vector operator/( const Vector oVec ) const;
 	// Math, with single ints/floats
-	Vector operator+( float i ) const;
-	Vector operator-( float i ) const;
-	Vector operator*( float i ) const;
-	Vector operator/( float i ) const;
+	Vector operator+( const float i ) const;
+	Vector operator-( const float i ) const;
+	Vector operator*( const float i ) const;
+	Vector operator/( const float i ) const;
 	// Access
-	float operator[](int index);
+	float operator[](int index) const;
 	// Comparison
-	bool operator==( Vector oVec );
-	bool operator!=( Vector oVec );
-	bool operator> ( Vector oVec );
-	bool operator< ( Vector oVec );
-	bool operator>=( Vector oVec );
-	bool operator<=( Vector oVec );
+	bool operator==( const Vector oVec ) const;
+	bool operator!=( const Vector oVec ) const;
+	bool operator> ( const Vector oVec ) const;
+	bool operator< ( const Vector oVec ) const;
+	bool operator>=( const Vector oVec ) const;
+	bool operator<=( const Vector oVec ) const;
 
 	operator glm::vec3() const;
 	Vector(glm::vec3 glmVec);
