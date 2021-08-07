@@ -35,5 +35,9 @@ BlockTexture Block::GetSideTexture(Direction Side)
 			}
 			return {3,0, 1,1};
 		break;
+
+		case COBBLE:
+			return {4,0, 1,1};
+		break;
 	}
 }
