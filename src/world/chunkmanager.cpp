@@ -46,9 +46,9 @@ Chunk* ChunkManager::ChunkAtChunkPos(Vector pos)
 // Return in good faith that it's a valid position
 Chunk* ChunkManager::ChunkAtBlockPos(Vector pos)
 {
-	pos.x /= 16.0f;
-	pos.y /= 16.0f;
-	pos.z /= 16.0f;
+	pos.x /= float(CHUNKSIZE_X);
+	pos.y /= float(CHUNKSIZE_Y);
+	pos.z /= float(CHUNKSIZE_Z);
 
 	pos.x = ceil(pos.x);
 	pos.y = ceil(pos.y);
