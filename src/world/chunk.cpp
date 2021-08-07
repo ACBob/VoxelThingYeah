@@ -34,9 +34,12 @@ void Chunk::Generate()
 		// blocks[i].blockType = blocktype_t(random() % 4);
 		int x, y, z;
 		CHUNK1D_TO_3D(i, x, y, z);
+		Vector Worldposition = PosToWorld(Vector(x,y,z));
 
-		if (PosToWorld(Vector(x,y,z)).y < 8)
+		if (Worldposition.y == 8)
 			blocks[i].blockType = blocktype_t::GRASS;
+		else if (Worldposition.y < 8)
+			blocks[i].blockType = random() % 2 > 0 ? blocktype_t::STONE : blocktype_t::AIR;
 		else
 			blocks[i].blockType = blocktype_t::AIR;
 	}

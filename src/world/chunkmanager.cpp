@@ -5,11 +5,11 @@ ChunkManager::ChunkManager()
 	chunks = {};
 
 	Vector pos(0,0,0);
-	for (pos.x = 0; pos.x < 2; pos.x++)
+	for (pos.x = -2; pos.x < 2; pos.x++)
 	{
-		for (pos.y = 0; pos.y < 2; pos.y++)
+		for (pos.y = -2; pos.y < 2; pos.y++)
 		{
-			for (pos.z = 0; pos.z < 2; pos.z++)
+			for (pos.z = -2; pos.z < 2; pos.z++)
 			{
 				Chunk *c = new Chunk();
 				c->worldPos = pos;
