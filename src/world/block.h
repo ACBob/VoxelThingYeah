@@ -10,6 +10,7 @@ enum blocktype_t {
 	STONE = 1,
 	DIRT = 2,
 	GRASS = 3,
+	COBBLE = 4
 };
 
 class Block {
