@@ -5,6 +5,8 @@
 
 #include "rendering/shadermanager.h"
 
+#include "world/block.h"
+
 #pragma once
 
 #include <vector>
@@ -20,6 +22,10 @@ class ChunkManager {
 
 		Chunk *ChunkAtBlockPos(Vector pos);
 		Chunk *ChunkAtChunkPos(Vector chunkPos);
+
+		// Returns the block at the position in world coords
+		// If outside the world it returns a nullptr
+		Block *BlockAtWorldPos(Vector pos);
 
 		// Is the position within our place
 		bool ValidChunkPos(const Vector pos);

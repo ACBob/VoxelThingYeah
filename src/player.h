@@ -1,5 +1,7 @@
 #include "utility/vector.h"
 #include "inputmanager.h"
+#include "raycast.h"
+#include "world/chunkmanager.h"
 
 #pragma once
 
@@ -8,7 +10,7 @@ class Player
 	public:
 		Player();
 
-		void Update();
+		void Update(ChunkManager *chunkMan);
 
 		void Input(bool e);
 		void MouseInput(float xrel, float yrel);
@@ -23,4 +25,7 @@ class Player
 
 		// Pointer to Input manager
 		InputManager *inputMan;
+
+		VoxRaycast hand;
+		PointedThing pointed;
 };

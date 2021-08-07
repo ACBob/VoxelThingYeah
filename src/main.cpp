@@ -103,7 +103,7 @@ int main (int argc, char* args[]) {
 
 		// Entity handling go here
 
-		plyr.Update();
+		plyr.Update(&chunkMan);
 
 		// Rendering right at the end
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -135,6 +135,10 @@ int main (int argc, char* args[]) {
 		gui.Label(buf, Vector(0,2));
 		snprintf(buf, sizeof(buf), "FPS: %f", 1000 / window.GetSPF());
 		gui.Label(buf, Vector(0,3));
+		snprintf(buf, sizeof(buf), "Pointed: %i", plyr.pointed.block != nullptr ? plyr.pointed.block->blockType : -1);
+		gui.Label(buf, Vector(0,4));
+		snprintf(buf, sizeof(buf), "Pointed Position: (%i,%i,%i)", plyr.pointed.position.x, plyr.pointed.position.y, plyr.pointed.position.z);
+		gui.Label(buf, Vector(0,5));
 		gui.Update();
 
 		// TextRendering::RenderText("HELLO WORLD", Vector(0), &texman);

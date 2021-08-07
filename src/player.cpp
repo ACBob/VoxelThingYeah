@@ -10,9 +10,10 @@ Player::Player() :
 	forward(0.0f, 0.0f, 1.0f)
 {
 	pitch = yaw = 0.0f;
+	hand.length = 5;
 }
 
-void Player::Update()
+void Player::Update(ChunkManager *chunkMan)
 {
 	Vector right = forward.Rotate(2, 90);
 	right.y = 0;
@@ -31,6 +32,10 @@ void Player::Update()
 
 	// Rotate our forward vector towards pitch/yaw
 	forward = Vector(0,0,1).Rotate(1, pitch).Rotate(2, yaw).Normal();
+
+	hand.pos = pos;
+	hand.dir = forward;
+	pointed = hand.Cast(chunkMan);
 }
 
 void Player::MouseInput(float xrel, float yrel)

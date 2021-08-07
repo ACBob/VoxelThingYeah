@@ -57,6 +57,14 @@ Chunk* ChunkManager::ChunkAtBlockPos(Vector pos)
 	return ChunkAtChunkPos(pos);
 }
 
+Block *ChunkManager::BlockAtWorldPos(Vector pos)
+{
+	Chunk *chunk = ChunkAtBlockPos(pos);
+	if (chunk == nullptr) return nullptr;
+	pos = pos - chunk->worldPos.ToWorld();
+	return chunk->GetBlockAtLocal(pos);
+}
+
 bool ChunkManager::ValidChunkPos(const Vector pos)
 {
 	if (chunks.count(pos))
