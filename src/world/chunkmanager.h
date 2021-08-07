@@ -20,7 +20,7 @@ class ChunkManager {
 
 		void Render();
 
-		Chunk *ChunkAtBlockPos(Vector pos);
+		Chunk *ChunkAtWorldPos(Vector pos);
 		Chunk *ChunkAtChunkPos(Vector chunkPos);
 
 		// Returns the block at the position in world coords

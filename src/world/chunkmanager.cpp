@@ -44,7 +44,7 @@ Chunk* ChunkManager::ChunkAtChunkPos(Vector pos)
 
 
 // Return in good faith that it's a valid position
-Chunk* ChunkManager::ChunkAtBlockPos(Vector pos)
+Chunk* ChunkManager::ChunkAtWorldPos(Vector pos)
 {
 	pos.x /= float(CHUNKSIZE_X);
 	pos.y /= float(CHUNKSIZE_Y);
@@ -59,10 +59,16 @@ Chunk* ChunkManager::ChunkAtBlockPos(Vector pos)
 
 Block *ChunkManager::BlockAtWorldPos(Vector pos)
 {
-	Chunk *chunk = ChunkAtBlockPos(pos);
+	const Vector ThePos = Vector(
+		ceil(pos.x),
+		ceil(pos.y),
+		ceil(pos.z)
+	);
+	Chunk *chunk = ChunkAtWorldPos(ThePos);
 	if (chunk == nullptr) return nullptr;
-	pos = pos - chunk->worldPos.ToWorld();
-	return chunk->GetBlockAtLocal(pos);
+	const Vector BlockPos = (ThePos - chunk->worldPos.ToWorld());
+
+	return chunk->GetBlockAtLocal(BlockPos);
 }
 
 bool ChunkManager::ValidChunkPos(const Vector pos)

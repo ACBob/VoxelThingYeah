@@ -67,16 +67,22 @@ PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 		{
 			if (tMax.x < tMax.z)
 			{
-				if (tMax.x > radius) search = false;
-
 				ray.x = ray.x + step.x;
+				if (tMax.x > radius)
+				{
+					search = false;
+					goto end;
+				}
 				tMax.x = tMax.x + delta.x;
 			}
 			else
 			{
-				if (tMax.z > radius) search = false;
-
 				ray.z = ray.z + step.z;
+				if (tMax.z > radius)
+				{
+					search = false;
+					goto end;
+				}
 				tMax.z = tMax.z + delta.z;
 			}
 		}
@@ -84,31 +90,42 @@ PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 		{
 			if (tMax.x < tMax.z)
 			{
-				if (tMax.y > radius) search = false;
-
 				ray.y = ray.y + step.y;
+				if (tMax.y > radius)
+				{
+					search = false;
+					goto end;
+				}
 				tMax.y = tMax.y + delta.y;
 			}
 			else
 			{
-				if (tMax.z > radius) search = false;
-
 				ray.z = ray.z + step.z;
+				if (tMax.z > radius)
+				{
+					search = false;
+					goto end;
+				}
 				tMax.z = tMax.z + delta.z;
 			}
 		}
 
+		end:
 		b = chunkMan->BlockAtWorldPos(ray);
 		if (b == nullptr)
 			search = false;
 		else if (b->blockType == blocktype_t::AIR)
-		{
 			search = false;
-		}
 	}
 
 	PointedThing p;
+	p.position = Vector(
+		ceil(ray.x),
+		ceil(ray.y),
+		ceil(ray.z)
+	);
+	if (b == nullptr)
+		b = chunkMan->BlockAtWorldPos(p.position);
 	p.block = b;
-	p.position = pos;
 	return p;
 }
