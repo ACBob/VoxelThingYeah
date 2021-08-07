@@ -11,9 +11,9 @@ class ChunkModel {
 		ChunkModel(void* parent);
 
 		struct Vertex {
-			Vertex(int a = 69, int b = 69, int c = 69, float u = 0, float v = 0) {x=a;y=b;z=c;};
-			float x, y, z;
-			float u, v;
+			float x, y, z; // Position
+			float nx, ny, nz; // Normal
+			float u, v; // Texture U/V
 			// TODO: Texture, Colour, Lighting, Etc.
 		};
 

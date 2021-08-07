@@ -50,6 +50,12 @@ std::vector<ChunkModel::Vertex> sampleFace(Direction dir, Block block, int x = 0
 		g[i].y += y;
 		g[i].z += z;
 
+		Vector normal = DirectionVector[dir];
+
+		g[i].nx = normal.x;
+		g[i].ny = normal.y;
+		g[i].nz = normal.z;
+
 		BlockTexture tex = block.GetSideTexture(dir);
 
 		switch(i)
