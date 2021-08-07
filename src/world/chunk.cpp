@@ -24,11 +24,21 @@ Chunk::Chunk() :
 	rend(&mdl),
 	worldPos(Vector())
 {
+}
+
+void Chunk::Generate()
+{
 	// FOR NOW: start off filled with blocks
 	for (int i = 0; i < sizeof(blocks) / sizeof(Block); i++)
 	{
 		// blocks[i].blockType = blocktype_t(random() % 4);
-		blocks[i].blockType = blocktype_t::GRASS;
+		int x, y, z;
+		CHUNK1D_TO_3D(i, x, y, z);
+
+		if (PosToWorld(Vector(x,y,z)).y < 8)
+			blocks[i].blockType = blocktype_t::GRASS;
+		else
+			blocks[i].blockType = blocktype_t::AIR;
 	}
 }
 
@@ -47,6 +57,13 @@ void Chunk::RebuildMdl()
 {
 	mdl.Build(blocks, worldPos.ToWorld());
 	rend.Populate();
+}
+
+// Takes a coordinate and returns a vector in world coordinates relative to this chunk
+// Intended to be used by in-chunk coords but doesn't throw a hissyfit if it's not
+Vector Chunk::PosToWorld(Vector pos)
+{
+	return worldPos.ToWorld() + pos;
 }
 
 Chunk::~Chunk()

@@ -19,9 +19,12 @@ ChunkManager::ChunkManager()
 		}
 	}
 
-	// Now that all the chunks exist, rebuild their models
+	// Now that all the chunks exist, generate and rebuild their models
 	for (auto c : chunks)
+	{
+		c.second->Generate();
 		c.second->RebuildMdl();
+	}
 }
 ChunkManager::~ChunkManager()
 {

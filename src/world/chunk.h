@@ -10,7 +10,9 @@
 #define CHUNKSIZE_Y 16
 #define CHUNKSIZE_Z 16
 
+// Why yes, I am a C++ Programmer, how could you tell?
 #define CHUNK3D_TO_1D(x, y, z) x + y*CHUNKSIZE_X + z*CHUNKSIZE_X*CHUNKSIZE_Z
+#define CHUNK1D_TO_3D(i, x, y, z) z = round(i / (CHUNKSIZE_X * CHUNKSIZE_Y)); y = round((i - z * CHUNKSIZE_X * CHUNKSIZE_Y) / CHUNKSIZE_X); x = i - CHUNKSIZE_X * (y + CHUNKSIZE_Y * z)
 
 #pragma once
 
@@ -31,6 +33,8 @@ class Chunk
 		Chunk();
 		~Chunk();
 		
+		void Generate();
+
 		Chunk* Neighbour(Direction dir);
 
 		ChunkPos worldPos;
@@ -40,6 +44,8 @@ class Chunk
 		void RebuildMdl();
 
 		void Render();
+
+		Vector PosToWorld(Vector pos);
 
 		// Flat array of blocks, access with
 		// Indexed with [x + SIZEX * (y + SIZEZ * z)]
