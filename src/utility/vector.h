@@ -11,9 +11,9 @@ class Vector
 	Vector( float x = 0, float y = 0, float z = 0 );
 
 	// Methods
-	Vector Rotate(int axis, float degrees); // Returns this vector rotated around axis (1=x,3=z) by degrees
-	float Magnitude(); // Returns the length (or magnitude) of this vector
-	Vector Normal(); // Returns the normal
+	Vector Rotate(int axis, float degrees) const; // Returns this vector rotated around axis (1=x,3=z) by degrees
+	float Magnitude() const; // Returns the length (or magnitude) of this vector
+	Vector Normal() const; // Returns the normal
 
 	// Operators
 	// Math, with other vectors
@@ -29,12 +29,12 @@ class Vector
 	// Access
 	float operator[](int index);
 	// Comparison
-	bool operator==( Vector oVec );
-	bool operator!=( Vector oVec );
+	bool operator==( Vector oVec ) const;
+	bool operator!=( Vector oVec ) const;
 	bool operator> ( Vector oVec ) const;
 	bool operator< ( Vector oVec ) const;
-	bool operator>=( Vector oVec );
-	bool operator<=( Vector oVec );
+	bool operator>=( Vector oVec ) const;
+	bool operator<=( Vector oVec ) const;
 
 	operator glm::vec3() const;
 	Vector(glm::vec3 glmVec);

@@ -35,9 +35,7 @@ Chunk::Chunk() :
 Chunk* Chunk::Neighbour(Direction dir)
 {
 	Vector neighbourPos = worldPos.pos + DirectionVector[dir];
-	if (reinterpret_cast<ChunkManager*>(chunkMan)->ValidChunkPos(neighbourPos))
-		return reinterpret_cast<ChunkManager*>(chunkMan)->ChunkAtChunkPos(neighbourPos);
-	return nullptr;
+	return (reinterpret_cast<ChunkManager*>(chunkMan))->ChunkAtChunkPos(neighbourPos);
 }
 
 void Chunk::Render()

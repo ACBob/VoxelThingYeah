@@ -11,7 +11,7 @@ Vector::Vector( float x, float y, float z )
 #define DEG2RAD (M_PI/180.0)
 
 // Methods
-Vector Vector::Rotate(int axis, float degrees)
+Vector Vector::Rotate(int axis, float degrees) const
 {
 	Vector g = Vector(x,y,z);
 
@@ -35,11 +35,11 @@ Vector Vector::Rotate(int axis, float degrees)
 	
 	return g;
 }
-float Vector::Magnitude()
+float Vector::Magnitude() const
 {
 	return sqrt((x*x) + (y*y) + (z*z));
 }
-Vector Vector::Normal()
+Vector Vector::Normal() const
 {
 	Vector g = Vector(x,y,z);
 
@@ -109,29 +109,29 @@ float Vector::operator[](int index)
 	}
 }
 // Comparison
-bool Vector::operator==( Vector oVec )
+bool Vector::operator==( Vector oVec ) const
 {
 	return oVec.x == x && oVec.y == y && oVec.z == z;
 }
-bool Vector::operator!=( Vector oVec )
+bool Vector::operator!=( Vector oVec ) const
 {
 	return !operator==( oVec );
 }
 bool Vector::operator>( Vector oVec ) const
 {
-	return (x > oVec.x && y > oVec.y && z > oVec.z);
+	return Magnitude() > oVec.Magnitude();
 }
 bool Vector::operator<( Vector oVec ) const
 {
-	return !operator>( oVec );
+	return !operator>( oVec ) && !operator==( oVec );
 }
-bool Vector::operator>=( Vector oVec )
+bool Vector::operator>=( Vector oVec ) const
 {
-	return operator==( oVec ) && operator>( oVec );
+	return operator==( oVec ) || operator>( oVec );
 }
-bool Vector::operator<=( Vector oVec )
+bool Vector::operator<=( Vector oVec ) const
 {
-	return operator==( oVec ) && operator<( oVec );
+	return operator==( oVec ) || operator<( oVec );
 }
 
 Vector::operator glm::vec3() const

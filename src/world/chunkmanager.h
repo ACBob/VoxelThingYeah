@@ -22,7 +22,7 @@ class ChunkManager {
 		Chunk *ChunkAtChunkPos(Vector chunkPos);
 
 		// Is the position within our place
-		bool ValidChunkPos(Vector pos);
+		bool ValidChunkPos(const Vector pos);
 
 		std::map<const Vector, Chunk*> chunks;
 };

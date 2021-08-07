@@ -14,15 +14,14 @@ ChunkManager::ChunkManager()
 				Chunk *c = new Chunk();
 				c->worldPos = pos;
 				c->chunkMan = this;
-				c->RebuildMdl();
-
 				chunks.insert(std::make_pair(pos, c));
 			}
 		}
 	}
-	// DBUG
-	// chunks.emplace_back(Vector(0,0,0));
-	// chunks.emplace_back(Vector(1,0,0));
+
+	// Now that all the chunks exist, rebuild their models
+	for (auto c : chunks)
+		c.second->RebuildMdl();
 }
 ChunkManager::~ChunkManager()
 {
@@ -55,7 +54,7 @@ Chunk* ChunkManager::ChunkAtBlockPos(Vector pos)
 	return ChunkAtChunkPos(pos);
 }
 
-bool ChunkManager::ValidChunkPos(Vector pos)
+bool ChunkManager::ValidChunkPos(const Vector pos)
 {
 	if (chunks.count(pos))
 		return true;
