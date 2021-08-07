@@ -60,7 +60,7 @@ PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 
 	float radius = length / dir.Magnitude();
 
-	Block *b;
+	Block *b = nullptr;
 	while (search)
 	{
 		if (tMax.x < tMax.y)
@@ -74,27 +74,34 @@ PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 			}
 			else
 			{
-				if (tMax.x < tMax.z)
-				{
-					if (tMax.y > radius) search = false;
+				if (tMax.z > radius) search = false;
 
-					ray.y = ray.y + step.y;
-					tMax.y = tMax.y + delta.y;
-				}
-				else
-				{
-					if (tMax.z > radius) search = false;
+				ray.z = ray.z + step.z;
+				tMax.z = tMax.z + delta.z;
+			}
+		}
+		else
+		{
+			if (tMax.x < tMax.z)
+			{
+				if (tMax.y > radius) search = false;
 
-					ray.z = ray.z + step.z;
-					tMax.z = tMax.z + delta.z;
-				}
+				ray.y = ray.y + step.y;
+				tMax.y = tMax.y + delta.y;
+			}
+			else
+			{
+				if (tMax.z > radius) search = false;
+
+				ray.z = ray.z + step.z;
+				tMax.z = tMax.z + delta.z;
 			}
 		}
 
 		b = chunkMan->BlockAtWorldPos(ray);
 		if (b == nullptr)
 			search = false;
-		else if (b->blockType != blocktype_t::AIR)
+		else if (b->blockType == blocktype_t::AIR)
 		{
 			search = false;
 		}

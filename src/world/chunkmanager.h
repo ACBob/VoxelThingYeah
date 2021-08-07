@@ -24,6 +24,7 @@ class ChunkManager {
 		Chunk *ChunkAtChunkPos(Vector chunkPos);
 
 		// Returns the block at the position in world coords
+		// The given position is rounded by ceil() before being used
 		// If outside the world it returns a nullptr
 		Block *BlockAtWorldPos(Vector pos);
 

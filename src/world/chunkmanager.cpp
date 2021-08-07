@@ -67,7 +67,7 @@ Block *ChunkManager::BlockAtWorldPos(Vector pos)
 
 bool ChunkManager::ValidChunkPos(const Vector pos)
 {
-	if (chunks.count(pos))
+	if (chunks.count(pos) > 0)
 		return true;
 	return false;
 }

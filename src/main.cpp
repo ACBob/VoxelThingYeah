@@ -137,7 +137,7 @@ int main (int argc, char* args[]) {
 		gui.Label(buf, Vector(0,3));
 		snprintf(buf, sizeof(buf), "Pointed: %i", plyr.pointed.block != nullptr ? plyr.pointed.block->blockType : -1);
 		gui.Label(buf, Vector(0,4));
-		snprintf(buf, sizeof(buf), "Pointed Position: (%i,%i,%i)", plyr.pointed.position.x, plyr.pointed.position.y, plyr.pointed.position.z);
+		snprintf(buf, sizeof(buf), "Pointed Position: (%f,%f,%f)", plyr.pointed.position.x, plyr.pointed.position.y, plyr.pointed.position.z);
 		gui.Label(buf, Vector(0,5));
 		gui.Update();
 
