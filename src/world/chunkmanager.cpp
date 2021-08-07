@@ -16,7 +16,7 @@ ChunkManager::ChunkManager()
 				c->chunkMan = this;
 				c->RebuildMdl();
 
-				chunks[Vector(pos)] = c;
+				chunks.insert(std::make_pair(pos, c));
 			}
 		}
 	}
