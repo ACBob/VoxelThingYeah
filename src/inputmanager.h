@@ -6,6 +6,8 @@
 #define IN_LEFT_MOUSE 1 << 0
 #define IN_MIDDLE_MOUSE 1 << 1
 #define IN_RIGHT_MOUSE 1 << 2
+#define IN_WHEEL_UP 1 << 3
+#define IN_WHEEL_DOWN 1 << 4
 
 class InputManager
 {

@@ -132,6 +132,9 @@ void GameWindow::PollEvents()
 {
 	inputMan->mouseMovement = Vector(0,0);
 
+	inputMan->oldMouseState = inputMan->mouseState;
+	inputMan->mouseState = 0;
+
 	SDL_Event currentEvent;
 	while(SDL_PollEvent(&currentEvent) != 0) {
 		switch (currentEvent.type)
@@ -142,6 +145,9 @@ void GameWindow::PollEvents()
 			case SDL_MOUSEMOTION:
 				inputMan->mouseMovement = inputMan->mouseMovement + Vector(currentEvent.motion.xrel, currentEvent.motion.yrel);
 				inputMan->mousePos = Vector(currentEvent.motion.x, currentEvent.motion.y);
+			break;
+			case SDL_MOUSEWHEEL:
+				inputMan->mouseState |= (currentEvent.wheel.y > 0) ? IN_WHEEL_UP : IN_WHEEL_DOWN;
 			break;
 		}
 	}
@@ -156,10 +162,8 @@ void GameWindow::PollEvents()
 	}
 	
 
-	// Set the mouseState
+	// Set the mouseState for buttons
 	unsigned int buttons = SDL_GetMouseState(NULL, NULL);
-	inputMan->oldMouseState = inputMan->mouseState;
-	inputMan->mouseState = 0;
 	if ((buttons & SDL_BUTTON_LMASK) != 0)
 	{
 		inputMan->mouseState = inputMan->mouseState | IN_LEFT_MOUSE;

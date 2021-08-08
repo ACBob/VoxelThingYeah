@@ -53,6 +53,19 @@ void Player::Update(ChunkManager *chunkMan)
 			b->Update();
 		}
 	}
+
+	if (inputMan->mouseState & IN_WHEEL_UP)
+	{
+		selectedBlockType = blocktype_t(selectedBlockType + 1);
+		if (selectedBlockType > blocktype_t::COBBLE)
+			selectedBlockType = blocktype_t::STONE;
+	}
+	else if (inputMan->mouseState & IN_WHEEL_DOWN)
+	{
+		selectedBlockType = blocktype_t(selectedBlockType - 1);
+		if (selectedBlockType <= blocktype_t::AIR)
+			selectedBlockType = blocktype_t::COBBLE;
+	}
 }
 
 void Player::MouseInput(float xrel, float yrel)
