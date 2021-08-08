@@ -23,6 +23,9 @@ ChunkManager::ChunkManager()
 	for (Chunk *c : chunks)
 	{
 		c->Generate();
+	}
+	for (Chunk *c : chunks)
+	{
 		c->RebuildMdl();
 	}
 }
@@ -47,13 +50,8 @@ Chunk* ChunkManager::ChunkAtChunkPos(Vector pos)
 // Return in good faith that it's a valid position
 Chunk* ChunkManager::ChunkAtWorldPos(Vector pos)
 {
-	pos.x /= float(CHUNKSIZE_X);
-	pos.y /= float(CHUNKSIZE_Y);
-	pos.z /= float(CHUNKSIZE_Z);
-
-	pos.x = ceil(pos.x);
-	pos.y = ceil(pos.y);
-	pos.z = ceil(pos.z);
+	pos = pos / Vector(CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z);
+	pos = pos.Floor();
 
 	return ChunkAtChunkPos(pos);
 }

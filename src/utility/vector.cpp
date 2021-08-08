@@ -55,11 +55,17 @@ Vector Vector::Normal() const
 Vector Vector::Floor() const
 {
 	Vector g = Vector(floor(x), floor(y), floor(z));
+	g.x = g.x == INFINITY ? 0 : g.x;
+	g.y = g.y == INFINITY ? 0 : g.y;
+	g.z = g.z == INFINITY ? 0 : g.z;
 	return g;
 }
 Vector Vector::Ceil() const
 {
 	Vector g = Vector(ceil(x), ceil(y), ceil(z));
+	g.x = g.x == INFINITY ? 0 : g.x;
+	g.y = g.y == INFINITY ? 0 : g.y;
+	g.z = g.z == INFINITY ? 0 : g.z;
 	return g;
 }
 
@@ -67,23 +73,35 @@ Vector Vector::Ceil() const
 // Math, with other vectors
 Vector Vector::operator+( Vector oVec ) const
 {
-	oVec.x += x, oVec.y += y, oVec.z += z;
-	return oVec;
+	Vector g(x,y,z);
+	g.x += oVec.x;
+	g.y += oVec.y;
+	g.z += oVec.z;
+	return g;
 }
 Vector Vector::operator-( Vector oVec ) const
 {
-	oVec.x -= x, oVec.y -= y, oVec.z -= z;
-	return oVec;
+	Vector g(x,y,z);
+	g.x -= oVec.x;
+	g.y -= oVec.y;
+	g.z -= oVec.z;
+	return g;
 }
 Vector Vector::operator*( Vector oVec ) const
 {
-	oVec.x *= x, oVec.y *= y, oVec.z *= z;
-	return oVec;
+	Vector g(x,y,z);
+	g.x *= oVec.x;
+	g.y *= oVec.y;
+	g.z *= oVec.z;
+	return g;
 }
 Vector Vector::operator/( Vector oVec ) const
 {
-	oVec.x /= x, oVec.y /= y, oVec.z /= z;
-	return oVec;
+	Vector g(x,y,z);
+	g.x /= oVec.x;
+	g.y /= oVec.y;
+	g.z /= oVec.z;
+	return g;
 }
 // Math, with single ints/floats
 Vector Vector::operator+( float i ) const

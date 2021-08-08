@@ -1,10 +1,18 @@
 #include "block.h"
+#include "chunk.h"
 
 #include <stdio.h>
 
-Block::Block()
+Block::Block() :
+	chunk(nullptr)
 {
 
+}
+
+void Block::Update()
+{
+	if (chunk != nullptr)
+		reinterpret_cast<Chunk*>(chunk)->RebuildMdl();
 }
 
 BlockTexture Block::GetSideTexture(Direction Side)

@@ -36,6 +36,9 @@ void Chunk::Generate()
 		CHUNK1D_TO_3D(i, x, y, z);
 		Vector Worldposition = PosToWorld(Vector(x,y,z));
 
+		// Make the block aware of our existence
+		blocks[i].chunk = this;
+
 		if (Worldposition.y == 8)
 			blocks[i].blockType = blocktype_t::GRASS;
 		else if (Worldposition.y < 8)

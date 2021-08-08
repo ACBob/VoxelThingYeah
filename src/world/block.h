@@ -20,4 +20,11 @@ class Block {
 		blocktype_t blockType = blocktype_t::AIR;
 
 		BlockTexture GetSideTexture(Direction side);
+
+		// block update
+		// causes a mesh rebuild
+		void Update();
+
+		// Pointer to chunk that holds us
+		void* chunk;
 };
