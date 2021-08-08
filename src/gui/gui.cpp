@@ -86,11 +86,13 @@ void GUI::Update()
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
 			glBufferData(GL_ARRAY_BUFFER, textVertiecs.size() * sizeof(GUI::Vertex), textVertiecs.data(), GL_DYNAMIC_DRAW);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glDrawArrays(GL_TRIANGLES, 0, (textVertiecs.size() * sizeof(GUI::Vertex)) / 6);
+			glDrawArrays(GL_TRIANGLES, 0, textVertiecs.size());
 
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
+		glBindVertexArray(0);
 		// Images
+		glBindVertexArray(vao);
 		{
 			for (GUI::_Image img : images)
 			{
@@ -98,7 +100,7 @@ void GUI::Update()
 				glBindBuffer(GL_ARRAY_BUFFER, vbo);
 				glBufferData(GL_ARRAY_BUFFER, img.vertices.size() * sizeof(GUI::Vertex), img.vertices.data(), GL_DYNAMIC_DRAW);
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
-				glDrawArrays(GL_TRIANGLES, 0, (img.vertices.size() * sizeof(GUI::Vertex)) / 6);
+				glDrawArrays(GL_TRIANGLES, 0, img.vertices.size());
 				glBindTexture(GL_TEXTURE_2D, 0);				
 			}
 		}
@@ -108,6 +110,8 @@ void GUI::Update()
 
 	// Clear our vertices
 	textVertiecs.clear();
+	// Clear our images
+	images.clear();
 }
 
 std::vector<GUI::Vertex> GUI::GetQuad(Vector pos, Vector size, Colour color, Vector uStart, Vector uEnd)
@@ -236,8 +240,8 @@ void GUI::ImageAtlas(Texture* tex, Atlas atlas, float atlasDivisions, Vector pos
 	{
 		GUI::_Image img;
 		img.vertices = GetQuad(pos - (size * origin), size, Colour(1,1,1),
-			{atlas.x / atlasDivisions, atlas.y  / atlasDivisions},
-			{atlas.x + atlas.sizex  / atlasDivisions, atlas.y + atlas.sizey  / atlasDivisions}
+			{atlas.x / atlasDivisions, atlas.y / atlasDivisions},
+			{(atlas.x + atlas.sizex) / atlasDivisions, (atlas.y + atlas.sizey) / atlasDivisions}
 		);
 		img._tex = tex;
 		images.push_back(img);

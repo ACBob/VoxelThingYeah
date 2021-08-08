@@ -40,6 +40,13 @@ class GUI
 		// TODO: Put this in a generic utility class and then make all atlas-based things (i.e text, blocks) inherit it
 		struct Atlas
 		{
+			Atlas(float x, float y, float sizex, float sizey)
+			{
+				this->x=x;
+				this->y=y;
+				this->sizex=sizex;
+				this->sizey=sizey;
+			};
 			float x, y, sizex, sizey;
 		};
 

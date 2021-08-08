@@ -76,6 +76,7 @@ int main (int argc, char* args[]) {
 	TextureManager texman;
 	Texture* terrainpng = texman.LoadTexture("terrain.png");
 	Texture* crosshairpng = texman.LoadTexture("crosshair.png");
+	Texture* testpng = texman.LoadTexture("test.png");
 
 	Shader genericShader = Shader("shaders/generic.vert", "shaders/generic.frag");
 	Shader textShader = Shader("shaders/text.vert", "shaders/text.frag");
@@ -135,34 +136,39 @@ int main (int argc, char* args[]) {
 		}
 
 		glBindTexture(GL_TEXTURE_2D, 0);
-		projection = glm::ortho(0.0f, static_cast<float>(WIDTH), 0.0f, static_cast<float>(HEIGHT));
 
-		textShader.Use();
-		textShader.SetMat4("projection", projection);
+		// GUI
+		{
+			projection = glm::ortho(0.0f, static_cast<float>(WIDTH), 0.0f, static_cast<float>(HEIGHT));
 
-		gui.Label("BobCraft NuDev", Vector(0,0));
-		char buf[100];
-		snprintf(buf, sizeof(buf), "Position: (%f, %f, %f)", plyr.pos.x, plyr.pos.y, plyr.pos.z);
-		gui.Label(buf, Vector(0,1));
-		snprintf(buf, sizeof(buf), "Forward: (%f, %f, %f)", plyr.forward.x, plyr.forward.y, plyr.forward.z);
-		gui.Label(buf, Vector(0,2));
-		snprintf(buf, sizeof(buf), "Angle: (%f, %f)", plyr.pitch, plyr.yaw);
-		gui.Label(buf, Vector(0,3));
-		snprintf(buf, sizeof(buf), "FPS: %f", 1000 / window.GetSPF());
-		gui.Label(buf, Vector(0,4));
-		snprintf(buf, sizeof(buf), "Pointed: %i", plyr.pointed.block != nullptr ? plyr.pointed.block->blockType : -1);
-		gui.Label(buf, Vector(0,5));
-		snprintf(buf, sizeof(buf), "Pointed Position: (%f,%f,%f)", plyr.pointed.position.x, plyr.pointed.position.y, plyr.pointed.position.z);
-		gui.Label(buf, Vector(0,6));
+			textShader.Use();
+			textShader.SetMat4("projection", projection);
 
-		gui.Image(crosshairpng, gui.screenCentre, Vector(2,2), Vector(0.5,0.5));
+			gui.Label("BobCraft NuDev", Vector(0,0));
+			char buf[100];
+			snprintf(buf, sizeof(buf), "Position: (%f, %f, %f)", plyr.pos.x, plyr.pos.y, plyr.pos.z);
+			gui.Label(buf, Vector(0,1));
+			snprintf(buf, sizeof(buf), "Forward: (%f, %f, %f)", plyr.forward.x, plyr.forward.y, plyr.forward.z);
+			gui.Label(buf, Vector(0,2));
+			snprintf(buf, sizeof(buf), "Angle: (%f, %f)", plyr.pitch, plyr.yaw);
+			gui.Label(buf, Vector(0,3));
+			snprintf(buf, sizeof(buf), "FPS: %f", 1000 / window.GetSPF());
+			gui.Label(buf, Vector(0,4));
+			snprintf(buf, sizeof(buf), "Pointed: %i", plyr.pointed.block != nullptr ? plyr.pointed.block->blockType : -1);
+			gui.Label(buf, Vector(0,5));
+			snprintf(buf, sizeof(buf), "Pointed Position: (%f,%f,%f)", plyr.pointed.position.x, plyr.pointed.position.y, plyr.pointed.position.z);
+			gui.Label(buf, Vector(0,6));
 
-		BlockTexture bTex = GetDefaultBlockTextureSide(plyr.selectedBlockType, Direction::NORTH);
-		gui.ImageAtlas(terrainpng, {(float)bTex.x, (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey}, 16, gui.screenCentre, Vector(2,2), Vector(1,1));
+			gui.Image(crosshairpng, gui.screenCentre, Vector(2,2), Vector(0.5,0.5));
 
-		glDisable(GL_DEPTH_TEST);
-		gui.Update();
-		glEnable(GL_DEPTH_TEST);
+			BlockTexture bTex = GetDefaultBlockTextureSide(plyr.selectedBlockType, Direction::NORTH);
+			gui.ImageAtlas(terrainpng, {(float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey}, 
+				16, Vector(gui.screenCentre.x * 2, 0), Vector(8,8), Vector(1.0f,0.0f));
+
+			glDisable(GL_DEPTH_TEST);
+			gui.Update();
+			glEnable(GL_DEPTH_TEST);
+		}
 		
 		
 		// TextRendering::RenderText("HELLO WORLD", Vector(0), &texman);
