@@ -76,11 +76,12 @@ int main (int argc, char* args[]) {
 
 	TextureManager texman;
 	Texture* terrainpng = texman.LoadTexture("terrain.png");
+	Texture* crosshairpng = texman.LoadTexture("crosshair.png");
 
 	Shader genericShader = Shader("shaders/generic.vert", "shaders/generic.frag");
 	Shader textShader = Shader("shaders/text.vert", "shaders/text.frag");
 
-	GUI gui(&texman);
+	GUI gui(&texman, WIDTH, HEIGHT);
 	gui.inputMan = &input;
 
 	glClearColor(0.5f, 0.0f, 0.5f, 1.0f);
@@ -141,6 +142,9 @@ int main (int argc, char* args[]) {
 		gui.Label(buf, Vector(0,5));
 		snprintf(buf, sizeof(buf), "Pointed Position: (%f,%f,%f)", plyr.pointed.position.x, plyr.pointed.position.y, plyr.pointed.position.z);
 		gui.Label(buf, Vector(0,6));
+
+		gui.Image(crosshairpng, gui.screenCentre, Vector(2,2), Vector(0.5,0.5));
+
 		gui.Update();
 		
 		// TextRendering::RenderText("HELLO WORLD", Vector(0), &texman);

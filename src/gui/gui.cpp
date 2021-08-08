@@ -20,13 +20,12 @@
 // I am not supporting weird configurations
 #define TEXTTILES 16
 
-GUI::GUI(TextureManager *texMan)
-{
-	mouseState = IN_NO_MOUSE;
-	activeItem = 0;
-	hotItem = 0;
-
-
+GUI::GUI(TextureManager *texMan, int screenW, int screenH) :
+	screenCentre((screenW * 0.5) / GUIUNIT, (screenH * 0.5) / GUIUNIT),
+	mouseState(IN_NO_MOUSE),
+	activeItem(0),
+	hotItem(0)
+{	
 	// OpenGl
 	{
 		glGenVertexArrays(1, &vao);
@@ -36,6 +35,9 @@ GUI::GUI(TextureManager *texMan)
 		
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 8, NULL, GL_DYNAMIC_DRAW);
+
+
+		// + sizeof(Texture*) so we skip the little internal thing at the end
 
 		// Position
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * sizeof(float), (void*)0);
@@ -76,21 +78,36 @@ void GUI::Update()
 
 	// Render
 	{
-		glBindTexture(GL_TEXTURE_2D, textTex->id);
-
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, Vertices.size() * sizeof(GUI::Vertex), Vertices.data(), GL_DYNAMIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(vao);
-		glDrawArrays(GL_TRIANGLES, 0, (Vertices.size() * sizeof(GUI::Vertex)) / 6);
-		glBindVertexArray(0);
+		// Text
+		{
+			glBindTexture(GL_TEXTURE_2D, textTex->id);
 
-		glBindTexture(GL_TEXTURE_2D, 0);
+			glBindBuffer(GL_ARRAY_BUFFER, vbo);
+			glBufferData(GL_ARRAY_BUFFER, textVertiecs.size() * sizeof(GUI::Vertex), textVertiecs.data(), GL_DYNAMIC_DRAW);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glDrawArrays(GL_TRIANGLES, 0, (textVertiecs.size() * sizeof(GUI::Vertex)) / 6);
+
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+		// Images
+		{
+			for (GUI::_Image &img : images)
+			{
+				glBindTexture(GL_TEXTURE_2D, img._tex->id);
+				glBindBuffer(GL_ARRAY_BUFFER, vbo);
+				glBufferData(GL_ARRAY_BUFFER, img.vertices.size() * sizeof(GUI::Vertex), img.vertices.data(), GL_DYNAMIC_DRAW);
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+				glDrawArrays(GL_TRIANGLES, 0, (img.vertices.size() * sizeof(GUI::Vertex)) / 6);
+				glBindTexture(GL_TEXTURE_2D, 0);				
+			}
+		}
+		glBindVertexArray(0);
 	}
 
 
 	// Clear our vertices
-	Vertices.clear();
+	textVertiecs.clear();
 }
 
 std::vector<GUI::Vertex> GUI::GetQuad(Vector pos, Vector size, Colour color)
@@ -182,7 +199,7 @@ int GUI::Button(int id, Vector pos, Vector size)
 	{
 		// Get vertices
 		std::vector<GUI::Vertex> g = GetQuad(pos, size, color);
-		std::copy(g.begin(), g.end(), std::back_inserter(Vertices));
+		std::copy(g.begin(), g.end(), std::back_inserter(textVertiecs));
 	}
 
 	return returnCode;
@@ -201,11 +218,24 @@ void GUI::Label(const char* text, Vector pos, Colour color)
 		{
 			// Get vertices
 			std::vector<GUI::Vertex> g = GetCharQuad(&text[i], pos, Vector(TEXTWIDTH, TEXTHEIGHT), color);
-			std::copy(g.begin(), g.end(), std::back_inserter(Vertices));
+			std::copy(g.begin(), g.end(), std::back_inserter(textVertiecs));
 
 			pos = pos + Vector(TEXTWIDTH,0);
 
 			i++;
 		}
+	}
+}
+
+void GUI::Image(Texture* tex, Vector pos, Vector size, Vector origin)
+{
+	pos = pos * GUIUNIT;
+	size = size * GUIUNIT;
+
+	{
+		GUI::_Image img;
+		img.vertices = GetQuad(pos - (size * origin), size, Colour(1,1,1));
+		img._tex = tex;
+		images.push_back(img);
 	}
 }

@@ -19,16 +19,22 @@ class GUI
 			float r,g,b;
 		};
 
+		struct _Image {
+			Texture *_tex;
+			std::vector<Vertex> vertices;
+		};
+
 		std::vector<Vertex> GetQuad(Vector pos, Vector size, Colour color);
 		std::vector<Vertex> GetCharQuad(const char *c, Vector pos, Vector size, Colour color);
 
 		unsigned int vbo, vao;
-		std::vector<Vertex> Vertices;
+		std::vector<Vertex> textVertiecs;
+		std::vector<_Image> images;
 
 		// Teh epic textTex
 		Texture* textTex;
 	public:
-		GUI(TextureManager *texMan);
+		GUI(TextureManager *texMan, int screenW, int screenH);
 		~GUI();
 
 		// Z Ignored
@@ -39,6 +45,8 @@ class GUI
 
 		// Update
 		void Update();
+
+		Vector screenCentre;
 
 		// Current button pressed down
 		int mouseState;
@@ -53,4 +61,5 @@ class GUI
 		// Elements
 		int Button(int id, Vector pos, Vector size);
 		void Label(const char* text, Vector pos, Colour color = Color(1,1,1));
+		void Image(Texture* tex, Vector pos, Vector size, Vector origin = Vector(0,0));
 };
