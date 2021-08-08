@@ -80,16 +80,19 @@ int main (int argc, char* args[]) {
 
 	Shader genericShader = Shader("shaders/generic.vert", "shaders/generic.frag");
 	Shader textShader = Shader("shaders/text.vert", "shaders/text.frag");
+	Shader skyShader = Shader("shaders/sky.vert", "shaders/sky.frag");
 
 	ChunkManager chunkMan(&genericShader);
 
 	Model blockHilighter = GetCubeModel(Vector(0.5025, 0.5025, 0.5025));
 	blockHilighter.SetShader(&genericShader);
 
+	Model Skybox = GetCubeModel(Vector(-1, -1, -1));
+	Skybox.SetShader(&skyShader);
+
 	GUI gui(&texman, WIDTH, HEIGHT);
 	gui.inputMan = &input;
-
-	glClearColor(0.5f, 0.0f, 0.5f, 1.0f);
+	
 	glViewport(0, 0, WIDTH, HEIGHT);
 
 	glEnable(GL_DEPTH_TEST);
@@ -112,17 +115,24 @@ int main (int argc, char* args[]) {
 		plyr.Update(&chunkMan);
 
 		// Rendering right at the end
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_DEPTH_BUFFER_BIT);
+
+		glm::mat4 projection = glm::perspective(glm::radians(70.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 10000.0f);
+		glm::mat4 view = glm::lookAt(glm::vec3(plyr.pos), glm::vec3(plyr.pos + plyr.forward), glm::vec3(VEC_UP));
+
+		glDisable(GL_DEPTH_TEST);
+		skyShader.Use();
+		genericShader.SetMat4("projection", projection);
+		genericShader.SetMat4("view", view);
+		Skybox.pos = plyr.pos;
+		Skybox.Render();
+		glEnable(GL_DEPTH_TEST);
 
 		genericShader.Use();
 
 		glBindTexture(GL_TEXTURE_2D, terrainpng->id);
-
-		glm::mat4 projection = glm::perspective(glm::radians(70.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 10000.0f);
 		genericShader.SetMat4("projection", projection);
 
-		glm::mat4 view;
-		view = glm::lookAt(glm::vec3(plyr.pos), glm::vec3(plyr.pos + plyr.forward), glm::vec3(VEC_UP));
 		genericShader.SetMat4("view", view);
 
 		chunkMan.Render();
@@ -170,9 +180,6 @@ int main (int argc, char* args[]) {
 			gui.Update();
 			glEnable(GL_DEPTH_TEST);
 		}
-		
-		
-		// TextRendering::RenderText("HELLO WORLD", Vector(0), &texman);
 
 		window.SwapBuffers();
 	}

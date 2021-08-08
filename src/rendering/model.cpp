@@ -13,6 +13,8 @@ void Model::Update()
 
 void Model::Render()
 {
+	// Don't waste timet rying to render
+	if (vertices.size() == 0) return;
 	renderer.Render(pos);
 }
 
