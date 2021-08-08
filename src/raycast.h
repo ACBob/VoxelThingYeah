@@ -21,6 +21,6 @@ class VoxRaycast
 
 		Vector pos;
 		Vector dir;
-		int length;
+		float length;
 
 };

@@ -37,20 +37,22 @@ PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 		step.z / dir.z
 	};
 
-	bool search = true;
+	float radius = length / dir.Magnitude();
 
 	Block *b = nullptr;
-	while (search && ray.x > -MAXCOORD_X && ray.x < MAXCOORD_X && ray.y -MAXCOORD_Y && ray.y < MAXCOORD_Y && ray.z > -MAXCOORD_Z && ray.z < MAXCOORD_Z)
+	while (ray.x > -MAXCOORD_X && ray.x < MAXCOORD_X && ray.y -MAXCOORD_Y && ray.y < MAXCOORD_Y && ray.z > -MAXCOORD_Z && ray.z < MAXCOORD_Z)
 	{
 		if (t.x < t.y)
 		{
 			if (t.x < t.z)
 			{
+				if (t.x > radius) break;
 				ray.x += step.x;
 				t.x += delta.x;
 			}
 			else
 			{
+				if (t.z > radius) break;
 				ray.z += step.z;
 				t.z += delta.z;
 			}
@@ -59,11 +61,13 @@ PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 		{
 			if (t.y < t.z)
 			{
+				if (t.y > radius) break;
 				ray.y += step.y;
 				t.y += delta.y;
 			}
 			else
 			{
+				if (t.z > radius) break;
 				ray.z += step.z;
 				t.z += delta.z;
 			}
