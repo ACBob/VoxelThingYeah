@@ -82,7 +82,7 @@ int main (int argc, char* args[]) {
 
 	ChunkManager chunkMan(&genericShader);
 
-	Model blockHilighter = GetCubeModel(Vector(0.55, 0.55, 0.55));
+	Model blockHilighter = GetCubeModel(Vector(0.51, 0.51, 0.51));
 	blockHilighter.SetShader(&genericShader);
 
 	GUI gui(&texman, WIDTH, HEIGHT);
@@ -128,8 +128,10 @@ int main (int argc, char* args[]) {
 
 		if (plyr.pointed.block != nullptr && plyr.pointed.block->blockType != blocktype_t::AIR)
 		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			blockHilighter.pos = plyr.pointed.position - Vector(0.5, 0.5, 0.5);
 			blockHilighter.Render();
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
 
 		glBindTexture(GL_TEXTURE_2D, 0);
