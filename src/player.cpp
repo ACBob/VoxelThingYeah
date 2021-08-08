@@ -38,6 +38,14 @@ void Player::Update(ChunkManager *chunkMan)
 	hand.pos = pos;
 	hand.dir = forward;
 	pointed = hand.Cast(chunkMan);
+
+	if (inputMan->mouseState & IN_LEFT_MOUSE && pointed.block != nullptr)
+	{
+		pointed.block->blockType = blocktype_t::AIR;
+		// for now rebuild all chunks lmao
+		for (Chunk *c : chunkMan->chunks)
+			c->RebuildMdl();
+	}
 }
 
 void Player::MouseInput(float xrel, float yrel)

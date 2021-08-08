@@ -39,7 +39,7 @@ void Chunk::Generate()
 		if (Worldposition.y == 8)
 			blocks[i].blockType = blocktype_t::GRASS;
 		else if (Worldposition.y < 8)
-			blocks[i].blockType = random() % 2 > 0 ? blocktype_t::COBBLE : blocktype_t::AIR;
+			blocks[i].blockType = /*random() % 2 > 0 ?*/ blocktype_t::COBBLE /*: blocktype_t::AIR*/;
 		else
 			blocks[i].blockType = blocktype_t::AIR;
 	}
