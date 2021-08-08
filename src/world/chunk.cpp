@@ -76,6 +76,19 @@ Chunk::~Chunk()
 {
 }
 
+void Chunk::Update()
+{
+	// Chunk update makes neighbours and ourself update our model
+	// Hahahahahahah slow
+	RebuildMdl();
+	for (int i = 0; i < 6; i++)
+	{
+		Chunk *neighbour = Neighbour((Direction)i);
+		if (neighbour != nullptr)
+			neighbour->RebuildMdl();
+	}
+}
+
 Block *Chunk::GetBlockAtLocal(Vector pos)
 {
 	if (!ValidChunkPosition(pos))

@@ -45,6 +45,8 @@ class Chunk
 
 		void Render();
 
+		void Update();
+
 		Vector PosToWorld(Vector pos);
 
 		// Flat array of blocks, access with

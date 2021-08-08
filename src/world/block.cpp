@@ -12,7 +12,7 @@ Block::Block() :
 void Block::Update()
 {
 	if (chunk != nullptr)
-		reinterpret_cast<Chunk*>(chunk)->RebuildMdl();
+		reinterpret_cast<Chunk*>(chunk)->Update();
 }
 
 BlockTexture Block::GetSideTexture(Direction Side)
