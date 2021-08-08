@@ -24,12 +24,17 @@ VoxRaycast::VoxRaycast() :
 PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 {
 
-	Vector ray = pos.Floor();
+	Vector ray = pos;
 	Vector step = {
-		dir.x > 0.0f ? 1.0f : dir.x < 0.0f ? -1.0f : 0.0f,
-		dir.y > 0.0f ? 1.0f : dir.y < 0.0f ? -1.0f : 0.0f,
-		dir.z > 0.0f ? 1.0f : dir.z < 0.0f ? -1.0f : 0.0f
+		// dir.x > 0.0f ? 1.0f : dir.x < 0.0f ? -1.0f : 0.0f,6
+		// dir.y > 0.0f ? 1.0f : dir.y < 0.0f ? -1.0f : 0.0f,
+		// dir.z > 0.0f ? 1.0f : dir.z < 0.0f ? -1.0f : 0.0f
+		dir
 	};
+
+	if (step.x == 0 || step.y == 0 || step.z == 0)
+		NULL; //breakpoint
+
 	Vector t = dir.Floor();
 	Vector delta = {
 		step.x / dir.x,

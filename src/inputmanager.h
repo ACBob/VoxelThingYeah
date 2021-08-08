@@ -22,5 +22,6 @@ class InputManager
 		Vector mousePos, mouseMovement;
 
 		int mouseState = 0;
+		int oldMouseState = 0; // stores mouseState from the last frame
 
 };

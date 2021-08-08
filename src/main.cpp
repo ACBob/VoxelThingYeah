@@ -131,14 +131,16 @@ int main (int argc, char* args[]) {
 		char buf[100];
 		snprintf(buf, sizeof(buf), "Position: (%f, %f, %f)", plyr.pos.x, plyr.pos.y, plyr.pos.z);
 		gui.Label(buf, Vector(0,1));
-		snprintf(buf, sizeof(buf), "Angle: (%f, %f)", plyr.pitch, plyr.yaw);
+		snprintf(buf, sizeof(buf), "Forward: (%f, %f, %f)", plyr.forward.x, plyr.forward.y, plyr.forward.z);
 		gui.Label(buf, Vector(0,2));
-		snprintf(buf, sizeof(buf), "FPS: %f", 1000 / window.GetSPF());
+		snprintf(buf, sizeof(buf), "Angle: (%f, %f)", plyr.pitch, plyr.yaw);
 		gui.Label(buf, Vector(0,3));
-		snprintf(buf, sizeof(buf), "Pointed: %i", plyr.pointed.block != nullptr ? plyr.pointed.block->blockType : -1);
+		snprintf(buf, sizeof(buf), "FPS: %f", 1000 / window.GetSPF());
 		gui.Label(buf, Vector(0,4));
-		snprintf(buf, sizeof(buf), "Pointed Position: (%f,%f,%f)", plyr.pointed.position.x, plyr.pointed.position.y, plyr.pointed.position.z);
+		snprintf(buf, sizeof(buf), "Pointed: %i", plyr.pointed.block != nullptr ? plyr.pointed.block->blockType : -1);
 		gui.Label(buf, Vector(0,5));
+		snprintf(buf, sizeof(buf), "Pointed Position: (%f,%f,%f)", plyr.pointed.position.x, plyr.pointed.position.y, plyr.pointed.position.z);
+		gui.Label(buf, Vector(0,6));
 		gui.Update();
 		
 		// TextRendering::RenderText("HELLO WORLD", Vector(0), &texman);
