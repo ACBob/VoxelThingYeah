@@ -24,7 +24,7 @@ class GUI
 			std::vector<Vertex> vertices;
 		};
 
-		std::vector<Vertex> GetQuad(Vector pos, Vector size, Colour color);
+		std::vector<Vertex> GetQuad(Vector pos, Vector size, Colour color, Vector uStart = Vector(0,0), Vector uEnd = Vector(1,1));
 		std::vector<Vertex> GetCharQuad(const char *c, Vector pos, Vector size, Colour color);
 
 		unsigned int vbo, vao;
@@ -36,6 +36,12 @@ class GUI
 	public:
 		GUI(TextureManager *texMan, int screenW, int screenH);
 		~GUI();
+
+		// TODO: Put this in a generic utility class and then make all atlas-based things (i.e text, blocks) inherit it
+		struct Atlas
+		{
+			float x, y, sizex, sizey;
+		};
 
 		// Z Ignored
 		Vector mousePos;
@@ -62,4 +68,5 @@ class GUI
 		int Button(int id, Vector pos, Vector size);
 		void Label(const char* text, Vector pos, Colour color = Color(1,1,1));
 		void Image(Texture* tex, Vector pos, Vector size, Vector origin = Vector(0,0));
+		void ImageAtlas(Texture* tex, Atlas atlas, float atlasDivisions, Vector pos, Vector size, Vector origin = Vector(0,0));
 };

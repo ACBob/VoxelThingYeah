@@ -157,6 +157,9 @@ int main (int argc, char* args[]) {
 
 		gui.Image(crosshairpng, gui.screenCentre, Vector(2,2), Vector(0.5,0.5));
 
+		BlockTexture bTex = GetDefaultBlockTextureSide(plyr.selectedBlockType, Direction::NORTH);
+		gui.ImageAtlas(terrainpng, {(float)bTex.x, (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey}, 16, gui.screenCentre, Vector(2,2), Vector(1,1));
+
 		glDisable(GL_DEPTH_TEST);
 		gui.Update();
 		glEnable(GL_DEPTH_TEST);

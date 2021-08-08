@@ -92,7 +92,7 @@ void GUI::Update()
 		}
 		// Images
 		{
-			for (GUI::_Image &img : images)
+			for (GUI::_Image img : images)
 			{
 				glBindTexture(GL_TEXTURE_2D, img._tex->id);
 				glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -110,46 +110,34 @@ void GUI::Update()
 	textVertiecs.clear();
 }
 
-std::vector<GUI::Vertex> GUI::GetQuad(Vector pos, Vector size, Colour color)
+std::vector<GUI::Vertex> GUI::GetQuad(Vector pos, Vector size, Colour color, Vector uStart, Vector uEnd)
 {
 	return {
-		{ pos.x + size.x, pos.y,          0,  1.0f, 1.0f,  color.x,color.y,color.z },
-		{ pos.x,          pos.y,          0,  0.0f, 1.0f,  color.x,color.y,color.z },
-		{ pos.x,          pos.y + size.y, 0,  0.0f, 0.0f,  color.x,color.y,color.z },
+		{ pos.x + size.x, pos.y,          0,  uEnd.x,   uEnd.y,    color.x,color.y,color.z },
+		{ pos.x,          pos.y,          0,  uStart.x, uEnd.y,    color.x,color.y,color.z },
+		{ pos.x,          pos.y + size.y, 0,  uStart.x, uStart.y,  color.x,color.y,color.z },
 
-		{ pos.x + size.x, pos.y + size.y, 0,  1.0f, 0.0f,  color.x,color.y,color.z },
-		{ pos.x + size.x, pos.y,          0,  1.0f, 1.0f,  color.x,color.y,color.z },
-		{ pos.x,          pos.y + size.y, 0,  0.0f, 0.0f,  color.x,color.y,color.z },
+		{ pos.x + size.x, pos.y + size.y, 0,  uEnd.x,   uStart.y,  color.x,color.y,color.z },
+		{ pos.x + size.x, pos.y,          0,  uEnd.x,   uEnd.y,    color.x,color.y,color.z },
+		{ pos.x,          pos.y + size.y, 0,  uStart.x, uStart.y,  color.x,color.y,color.z },
 	};
 }
 std::vector<GUI::Vertex> GUI::GetCharQuad(const char* c, Vector pos, Vector size, Colour color)
 {
-	std::vector<GUI::Vertex> vert = GetQuad(pos, size, color);
-
 	float x, y;
 	x = (int(*c - ' ') % TEXTTILES) * TEXTINTEXWIDTH;
 	y = (int(*c - ' ') / TEXTTILES) * TEXTINTEXHEIGHT;
 
-	vert[0].u = (x + TEXTINTEXWIDTH) / (16.0f * TEXTINTEXWIDTH);
-	vert[0].v = (y + TEXTINTEXHEIGHT) / (16.0f * TEXTINTEXHEIGHT);
+	Vector uStart = {
+		x / (16.0f * TEXTINTEXWIDTH),
+		y / (16.0f * TEXTINTEXHEIGHT),
+	};
+	Vector uEnd = {
+		(x + TEXTINTEXWIDTH) / (16.0f * TEXTINTEXWIDTH),
+		(y + TEXTINTEXHEIGHT) / (16.0f * TEXTINTEXHEIGHT),
+	};
 
-	vert[1].u = (x) / (16.0f * TEXTINTEXWIDTH);
-	vert[1].v = (y + TEXTINTEXHEIGHT) / (16.0f * TEXTINTEXHEIGHT);
-
-	vert[2].u = (x) / (16.0f * TEXTINTEXWIDTH);
-	vert[2].v = (y) / (16.0f * TEXTINTEXHEIGHT);
-
-
-	vert[3].u = (x + TEXTINTEXWIDTH) / (16.0f * TEXTINTEXWIDTH);
-	vert[3].v = (y) / (16.0f * TEXTINTEXHEIGHT);
-
-	vert[4].u = (x + TEXTINTEXWIDTH) / (16.0f * TEXTINTEXWIDTH);
-	vert[4].v = (y + TEXTINTEXHEIGHT) / (16.0f * TEXTINTEXHEIGHT);
-
-	vert[5].u = (x) / (16.0f * TEXTINTEXWIDTH);
-	vert[5].v = (y) / (16.0f * TEXTINTEXHEIGHT);
-
-	return vert;
+	return GetQuad(pos, size, color, uStart, uEnd);
 }
 
 bool GUI::RegionHit(Vector pos, Vector size)
@@ -235,6 +223,22 @@ void GUI::Image(Texture* tex, Vector pos, Vector size, Vector origin)
 	{
 		GUI::_Image img;
 		img.vertices = GetQuad(pos - (size * origin), size, Colour(1,1,1));
+		img._tex = tex;
+		images.push_back(img);
+	}
+}
+
+void GUI::ImageAtlas(Texture* tex, Atlas atlas, float atlasDivisions, Vector pos, Vector size, Vector origin)
+{
+	pos = pos * GUIUNIT;
+	size = size * GUIUNIT;
+
+	{
+		GUI::_Image img;
+		img.vertices = GetQuad(pos - (size * origin), size, Colour(1,1,1),
+			{atlas.x / atlasDivisions, atlas.y  / atlasDivisions},
+			{atlas.x + atlas.sizex  / atlasDivisions, atlas.y + atlas.sizey  / atlasDivisions}
+		);
 		img._tex = tex;
 		images.push_back(img);
 	}

@@ -4,5 +4,6 @@ set(rendering_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/chunkmodel.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/model.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/modelrenderer.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/blocktexture.cpp
 	PARENT_SCOPE	
 )

@@ -1,4 +1,6 @@
 #include "texturemanager.h"
+#include "utility/direction.h"
+#include "world/blockdef.h"
 
 #pragma once
 
@@ -14,3 +16,5 @@ struct BlockTexture
 
 	int x, y, sizex, sizey;
 };
+
+BlockTexture GetDefaultBlockTextureSide(blocktype_t type, Direction side);
