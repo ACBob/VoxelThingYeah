@@ -31,5 +31,11 @@ BlockTexture GetDefaultBlockTextureSide(blocktype_t type, Direction side)
 		case COBBLE:
 			return {4,0, 1,1};
 		break;
+		case PLANKS:
+			return {5,0, 1,1};
+		break;
+		case BEDROCK:
+			return {6,0, 1,1};
+		break;
 	}
 }

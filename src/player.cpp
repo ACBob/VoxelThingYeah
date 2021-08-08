@@ -57,14 +57,14 @@ void Player::Update(ChunkManager *chunkMan)
 	if (inputMan->mouseState & IN_WHEEL_UP)
 	{
 		selectedBlockType = blocktype_t(selectedBlockType + 1);
-		if (selectedBlockType > blocktype_t::COBBLE)
-			selectedBlockType = blocktype_t::STONE;
+		if (selectedBlockType > blocktype_t::PLANKS)
+			selectedBlockType = blocktype_t::PLANKS;
 	}
 	else if (inputMan->mouseState & IN_WHEEL_DOWN)
 	{
 		selectedBlockType = blocktype_t(selectedBlockType - 1);
 		if (selectedBlockType <= blocktype_t::AIR)
-			selectedBlockType = blocktype_t::COBBLE;
+			selectedBlockType = blocktype_t::PLANKS;
 	}
 }
 
