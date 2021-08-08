@@ -1,25 +1,25 @@
-#include "chunkmodel.h"
 #include "shadermanager.h"
 
 #pragma once
 
-class ChunkRenderer {
+class ModelRenderer {
 	public:
-		ChunkRenderer(ChunkModel *mdl);
-		~ChunkRenderer();
+		ModelRenderer();
+		~ModelRenderer();
 		// Updated the index buffer and vertex buffer
-		void Populate();
+		void Populate(void *mdl);
 
 		void Render();
 	
 	private:
-		// Internal model (pointer to chunk model)
-		ChunkModel *_mdl;
-
 		// Vertex Buffer
 		unsigned int vbo;
 		// Array buffer
 		unsigned int vao;
 		// Element buffer
 		unsigned int ebo;
+
+		// Holds the amount of faces/vertices we have
+		int nFaces;
+		int nVertices;
 };

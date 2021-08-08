@@ -74,6 +74,8 @@ int main (int argc, char* args[]) {
 	Player plyr = Player();
 	plyr.inputMan = &input;
 
+	// Model blockHilighter(Vector(1,1,1));
+
 	TextureManager texman;
 	Texture* terrainpng = texman.LoadTexture("terrain.png");
 	Texture* crosshairpng = texman.LoadTexture("crosshair.png");

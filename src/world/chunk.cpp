@@ -21,7 +21,6 @@ Vector ChunkPos::ToWorld()
 
 Chunk::Chunk() :
 	mdl(this),
-	rend(&mdl),
 	worldPos(Vector())
 {
 }
@@ -56,13 +55,12 @@ Chunk* Chunk::Neighbour(Direction dir)
 
 void Chunk::Render()
 {
-	rend.Render();
+	mdl.Render();
 }
 
 void Chunk::RebuildMdl()
 {
 	mdl.Build(blocks, worldPos.ToWorld());
-	rend.Populate();
 }
 
 // Takes a coordinate and returns a vector in world coordinates relative to this chunk

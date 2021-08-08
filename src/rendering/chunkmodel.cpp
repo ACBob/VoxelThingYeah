@@ -145,4 +145,6 @@ void ChunkModel::Build(Block blocks[], Vector pos)
 			}
 		}
 	}
+
+	Update();
 }

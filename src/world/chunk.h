@@ -3,7 +3,7 @@
 #include "world/block.h"
 
 #include "rendering/chunkmodel.h"
-#include "rendering/chunkrenderer.h"
+#include "rendering/modelrenderer.h"
 #include "rendering/shadermanager.h"
 
 #define CHUNKSIZE_X 16
@@ -54,8 +54,6 @@ class Chunk
 		Block blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 
 		ChunkModel mdl;
-		// Given the model to replace its' index buffers and such
-		ChunkRenderer rend;
 
 		// ChunkManager pointer (can't set type because circular include :lenny:)
 		void* chunkMan = nullptr;
