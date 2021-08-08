@@ -14,23 +14,23 @@ ChunkManager::ChunkManager()
 				Chunk *c = new Chunk();
 				c->worldPos = pos;
 				c->chunkMan = this;
-				chunks.insert(std::make_pair(pos, c));
+				chunks.push_back(c);
 			}
 		}
 	}
 
 	// Now that all the chunks exist, generate and rebuild their models
-	for (auto c : chunks)
+	for (Chunk *c : chunks)
 	{
-		c.second->Generate();
-		c.second->RebuildMdl();
+		c->Generate();
+		c->RebuildMdl();
 	}
 }
 ChunkManager::~ChunkManager()
 {
 	// Destroy chunks
-	for (auto &c : chunks)
-		delete c.second;
+	for (Chunk *c : chunks)
+		delete c;
 }
 
 // Return in good faith that it's a valid position
@@ -39,7 +39,8 @@ Chunk* ChunkManager::ChunkAtChunkPos(Vector pos)
 	if (!ValidChunkPos(pos))
 		return nullptr;
 
-	return chunks.at(pos);
+	for (Chunk* c : chunks)
+		if (c->worldPos.pos == pos) return c;
 }
 
 
@@ -73,15 +74,15 @@ Block *ChunkManager::BlockAtWorldPos(Vector pos)
 
 bool ChunkManager::ValidChunkPos(const Vector pos)
 {
-	if (chunks.count(pos) > 0)
-		return true;
+	for (Chunk* c : chunks)
+		if (c->worldPos.pos == pos) return true;
 	return false;
 }
 
 void ChunkManager::Render()
 {
-	for (auto &chunk : chunks)
+	for (Chunk* c : chunks)
 	{
-		chunk.second->Render();
+		c->Render();
 	}
 }
