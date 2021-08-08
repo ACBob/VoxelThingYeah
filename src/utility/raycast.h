@@ -11,6 +11,7 @@ class PointedThing
 
 		Block *block;
 		Vector position;
+		Vector normal;
 };
 
 class VoxRaycast

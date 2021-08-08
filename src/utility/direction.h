@@ -3,13 +3,13 @@
 #include "vector.h"
 
 enum Direction {	
-	NORTH = 0,
-	EAST = 1,
-	SOUTH = 2,
-	WEST = 3,
+	NORTH = 0, // +Z
+	EAST = 1,  // -X
+	SOUTH = 2, // -Z
+	WEST = 3,  // +X
 
-	UP = 4,
-	DOWN = 5
+	UP = 4, // +Y
+	DOWN = 5 // -Y
 };
 
 const Vector DirectionVector[] = {

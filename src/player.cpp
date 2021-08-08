@@ -44,6 +44,15 @@ void Player::Update(ChunkManager *chunkMan)
 		pointed.block->blockType = blocktype_t::AIR;
 		pointed.block->Update();
 	}
+	if (inputMan->mouseState & IN_RIGHT_MOUSE && inputMan->oldMouseState == 0 && pointed.block != nullptr)
+	{
+		Block *b = chunkMan->BlockAtWorldPos((pointed.position - 0.5) + pointed.normal);
+		if (b != nullptr)
+		{
+			b->blockType = selectedBlockType;
+			b->Update();
+		}
+	}
 }
 
 void Player::MouseInput(float xrel, float yrel)

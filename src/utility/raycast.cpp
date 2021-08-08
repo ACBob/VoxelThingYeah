@@ -41,6 +41,7 @@ PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 		step.y / dir.y,
 		step.z / dir.z
 	};
+	Vector normal;
 
 	float radius = length / dir.Magnitude();
 
@@ -54,12 +55,14 @@ PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 				if (t.x > radius) break;
 				ray.x += step.x;
 				t.x += delta.x;
+				normal = DirectionVector[step.x > 0 ? Direction::WEST : Direction::EAST];
 			}
 			else
 			{
 				if (t.z > radius) break;
 				ray.z += step.z;
 				t.z += delta.z;
+				normal = DirectionVector[step.z > 0 ? Direction::SOUTH : Direction::NORTH];
 			}
 		}
 		else
@@ -69,12 +72,14 @@ PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 				if (t.y > radius) break;
 				ray.y += step.y;
 				t.y += delta.y;
+				normal = DirectionVector[step.y > 0 ? Direction::DOWN : Direction::UP];
 			}
 			else
 			{
 				if (t.z > radius) break;
 				ray.z += step.z;
 				t.z += delta.z;
+				normal = DirectionVector[step.z > 0 ? Direction::SOUTH : Direction::NORTH];
 			}
 		}
 
@@ -90,5 +95,6 @@ PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 		ceil(ray.z)
 	);
 	p.block = b;
+	p.normal = normal;
 	return p;
 }
