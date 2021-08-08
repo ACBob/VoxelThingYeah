@@ -126,8 +126,11 @@ int main (int argc, char* args[]) {
 
 		chunkMan.Render();
 
-		blockHilighter.pos = plyr.pointed.position - Vector(0.5, 0.5, 0.5);
-		blockHilighter.Render();
+		if (plyr.pointed.block != nullptr && plyr.pointed.block->blockType != blocktype_t::AIR)
+		{
+			blockHilighter.pos = plyr.pointed.position - Vector(0.5, 0.5, 0.5);
+			blockHilighter.Render();
+		}
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 		projection = glm::ortho(0.0f, static_cast<float>(WIDTH), 0.0f, static_cast<float>(HEIGHT));
