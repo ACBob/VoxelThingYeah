@@ -2,6 +2,9 @@
 #include "model.h"
 #include "chunkmodel.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include <glad/glad.h>
 
 #include <memory>
@@ -54,11 +57,29 @@ ModelRenderer::~ModelRenderer()
 	glDeleteBuffers(1, &ebo);
 }
 
-void ModelRenderer::Render()
+void ModelRenderer::SetShader(Shader *shader)
 {
+	this->shader = shader;
+}
+Shader *ModelRenderer::GetShader()
+{
+	return shader;
+}
+
+void ModelRenderer::Render(Vector pos)
+{
+
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, {pos.x, pos.y, pos.z});
+	shader->SetMat4("model", model);
+	shader->Use();
+
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glDrawElements(GL_TRIANGLES, nFaces * sizeof(Model::Face), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
+
+	// model = glm::mat4(1.0f);
+	// shader->SetMat4("model", model);
 }

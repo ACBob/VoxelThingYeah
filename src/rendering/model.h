@@ -1,6 +1,7 @@
 #include <vector>
 
 #include "modelrenderer.h"
+#include "utility/vector.h"
 
 #pragma once
 
@@ -9,6 +10,9 @@ class Model {
 		Model();
 		void Update();
 		void Render();
+
+		void SetShader(Shader *shader);
+		Shader *GetShader();
 
 		struct Vertex {
 			float x, y, z; // Position
@@ -24,4 +28,8 @@ class Model {
 		std::vector<Vertex> vertices;
 		std::vector<Face> faces;
 		ModelRenderer renderer;
+
+		Vector pos;
 };
+
+Model GetCubeModel(Vector size = Vector(1,1,1));

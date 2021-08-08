@@ -129,7 +129,7 @@ void ChunkModel::Build(Block blocks[], Vector pos)
 							}
 						}
 
-						std::vector<Vertex> g = sampleFace(Direction(i), block, pos.x + x, pos.y + y, pos.z + z);
+						std::vector<Vertex> g = sampleFace(Direction(i), block, x, y, z);
 						std::copy(g.begin(), g.end(), std::back_inserter(vertices));
 
 						int nVertices = vertices.size();

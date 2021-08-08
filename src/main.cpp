@@ -69,12 +69,9 @@ int main (int argc, char* args[]) {
 	InputManager input;
 	window.inputMan = &input;
 
-	ChunkManager chunkMan;
 
 	Player plyr = Player();
 	plyr.inputMan = &input;
-
-	// Model blockHilighter(Vector(1,1,1));
 
 	TextureManager texman;
 	Texture* terrainpng = texman.LoadTexture("terrain.png");
@@ -82,6 +79,11 @@ int main (int argc, char* args[]) {
 
 	Shader genericShader = Shader("shaders/generic.vert", "shaders/generic.frag");
 	Shader textShader = Shader("shaders/text.vert", "shaders/text.frag");
+
+	ChunkManager chunkMan(&genericShader);
+
+	Model blockHilighter = GetCubeModel(Vector(1.1, 1.1, 1.1));
+	blockHilighter.SetShader(&genericShader);
 
 	GUI gui(&texman, WIDTH, HEIGHT);
 	gui.inputMan = &input;
@@ -123,6 +125,9 @@ int main (int argc, char* args[]) {
 		genericShader.SetMat4("view", view);
 
 		chunkMan.Render();
+
+		blockHilighter.pos = plyr.pointed.position;
+		blockHilighter.Render();
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 		projection = glm::ortho(0.0f, static_cast<float>(WIDTH), 0.0f, static_cast<float>(HEIGHT));

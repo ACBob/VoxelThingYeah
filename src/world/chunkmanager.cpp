@@ -1,6 +1,7 @@
 #include "chunkmanager.h"
 
-ChunkManager::ChunkManager()
+ChunkManager::ChunkManager(Shader *shader) :
+	worldShader(shader)
 {
 	chunks = {};
 
@@ -14,6 +15,8 @@ ChunkManager::ChunkManager()
 				Chunk *c = new Chunk();
 				c->worldPos = pos;
 				c->chunkMan = this;
+				c->mdl.pos = c->worldPos.ToWorld();
+				c->mdl.SetShader(worldShader);
 				chunks.push_back(c);
 			}
 		}

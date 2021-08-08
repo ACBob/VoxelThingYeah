@@ -19,7 +19,7 @@
 class ChunkManager {
 	public:
 
-		ChunkManager();
+		ChunkManager(Shader *shader);
 		~ChunkManager();
 
 		void Render();
@@ -34,6 +34,9 @@ class ChunkManager {
 
 		// Is the position within our place
 		bool ValidChunkPos(const Vector pos);
+
+		// Shader we render with
+		Shader *worldShader;
 
 		std::vector<Chunk*> chunks;
 };
