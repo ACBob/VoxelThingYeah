@@ -39,7 +39,7 @@ void Player::Update(ChunkManager *chunkMan)
 	hand.dir = forward;
 	pointed = hand.Cast(chunkMan);
 
-	if (inputMan->mouseState & IN_LEFT_MOUSE && inputMan->oldMouseState == 0 && pointed.block != nullptr)
+	if (inputMan->mouseState & IN_LEFT_MOUSE && inputMan->oldMouseState == 0 && pointed.block != nullptr && pointed.block->blockType != blocktype_t::BEDROCK)
 	{
 		pointed.block->blockType = blocktype_t::AIR;
 		pointed.block->Update();

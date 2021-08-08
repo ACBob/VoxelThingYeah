@@ -40,8 +40,12 @@ void Chunk::Generate()
 
 		if (Worldposition.y == 8)
 			blocks[i].blockType = blocktype_t::GRASS;
+		else if (Worldposition.y == -32)
+			blocks[i].blockType = blocktype_t::BEDROCK;
+		else if (Worldposition.y < 6)
+			blocks[i].blockType = blocktype_t::STONE;
 		else if (Worldposition.y < 8)
-			blocks[i].blockType = /*random() % 2 > 0 ?*/ blocktype_t::COBBLE /*: blocktype_t::AIR*/;
+			blocks[i].blockType = blocktype_t::DIRT;
 		else
 			blocks[i].blockType = blocktype_t::AIR;
 	}
