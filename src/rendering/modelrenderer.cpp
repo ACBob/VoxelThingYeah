@@ -13,6 +13,11 @@ ModelRenderer::ModelRenderer() :
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
 	glGenBuffers(1, &ebo);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	
 	glBindVertexArray(vao);
 
 	// Position

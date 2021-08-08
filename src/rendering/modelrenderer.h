@@ -20,6 +20,6 @@ class ModelRenderer {
 		unsigned int ebo;
 
 		// Holds the amount of faces/vertices we have
-		int nFaces;
-		int nVertices;
+		std::size_t nFaces;
+		std::size_t nVertices;
 };
