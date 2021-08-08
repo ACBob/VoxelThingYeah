@@ -82,7 +82,7 @@ int main (int argc, char* args[]) {
 
 	ChunkManager chunkMan(&genericShader);
 
-	Model blockHilighter = GetCubeModel(Vector(1.1, 1.1, 1.1));
+	Model blockHilighter = GetCubeModel(Vector(0.55, 0.55, 0.55));
 	blockHilighter.SetShader(&genericShader);
 
 	GUI gui(&texman, WIDTH, HEIGHT);
@@ -126,7 +126,7 @@ int main (int argc, char* args[]) {
 
 		chunkMan.Render();
 
-		blockHilighter.pos = plyr.pointed.position;
+		blockHilighter.pos = plyr.pointed.position - Vector(0.5, 0.5, 0.5);
 		blockHilighter.Render();
 
 		glBindTexture(GL_TEXTURE_2D, 0);

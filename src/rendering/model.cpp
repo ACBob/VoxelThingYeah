@@ -31,15 +31,15 @@ Model GetCubeModel(Vector size)
 	Model m; // tesla
 	m.vertices = {
 		// NORTH +Z
-		{ size.x, size.y, size.z},
-		{ 0,      size.y, size.z},
-		{ 0,      0,      size.z},
-		{ size.x, 0,      size.z},
+		{  size.x,  size.y,  size.z},
+		{ -size.x,  size.y,  size.z},
+		{ -size.x, -size.y,  size.z},
+		{  size.x, -size.y,  size.z},
 		// SOUTH -Z
-		{ 0,      size.y, 0},
-		{ size.x, size.y, 0},
-		{ size.x, 0,      0},
-		{ 0,      0,      0}
+		{ -size.x,  size.y, -size.z},
+		{  size.x,  size.y, -size.z},
+		{  size.x, -size.y, -size.z},
+		{ -size.x, -size.y, -size.z},
 	};
 	m.faces = {
 		{0, 1, 2},
