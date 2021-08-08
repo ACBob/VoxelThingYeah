@@ -11,6 +11,11 @@
 
 #include <vector>
 
+// World coords are - to + these values
+#define MAXCOORD_X 65535
+#define MAXCOORD_Y 65535
+#define MAXCOORD_Z 65535
+
 class ChunkManager {
 	public:
 
@@ -23,7 +28,7 @@ class ChunkManager {
 		Chunk *ChunkAtChunkPos(Vector chunkPos);
 
 		// Returns the block at the position in world coords
-		// The given position is rounded by ceil() before being used
+		// The given position is rounded by floor() before being used
 		// If outside the world it returns a nullptr
 		Block *BlockAtWorldPos(Vector pos);
 

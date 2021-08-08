@@ -10,7 +10,7 @@ Player::Player() :
 	forward(0.0f, 0.0f, 1.0f)
 {
 	pitch = yaw = 0.0f;
-	hand.length = 4;
+	hand.length = 5;
 	hand.dir = forward;
 	hand.pos = pos;
 }

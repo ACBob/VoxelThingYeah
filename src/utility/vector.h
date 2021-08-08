@@ -14,6 +14,8 @@ class Vector
 	Vector Rotate(int axis, float degrees) const; // Returns this vector rotated around axis (1=x,3=z) by degrees
 	float Magnitude() const; // Returns the length (or magnitude) of this vector
 	Vector Normal() const; // Returns the normal
+	Vector Floor() const; // returns a floored vector
+	Vector Ceil() const; // returns a ceiled vector
 
 	// Operators
 	// Math, with other vectors

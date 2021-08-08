@@ -140,7 +140,7 @@ int main (int argc, char* args[]) {
 		snprintf(buf, sizeof(buf), "Pointed Position: (%f,%f,%f)", plyr.pointed.position.x, plyr.pointed.position.y, plyr.pointed.position.z);
 		gui.Label(buf, Vector(0,5));
 		gui.Update();
-
+		
 		// TextRendering::RenderText("HELLO WORLD", Vector(0), &texman);
 
 		window.SwapBuffers();

@@ -60,16 +60,12 @@ Chunk* ChunkManager::ChunkAtWorldPos(Vector pos)
 
 Block *ChunkManager::BlockAtWorldPos(Vector pos)
 {
-	const Vector ThePos = Vector(
-		ceil(pos.x),
-		ceil(pos.y),
-		ceil(pos.z)
-	);
-	Chunk *chunk = ChunkAtWorldPos(ThePos);
+	pos = pos.Floor();
+	Chunk *chunk = ChunkAtWorldPos(pos);
 	if (chunk == nullptr) return nullptr;
-	const Vector BlockPos = (ThePos - chunk->worldPos.ToWorld());
+	Vector localPos = (pos - chunk->worldPos.ToWorld());
 
-	return chunk->GetBlockAtLocal(BlockPos);
+	return chunk->GetBlockAtLocal(localPos);
 }
 
 bool ChunkManager::ValidChunkPos(const Vector pos)

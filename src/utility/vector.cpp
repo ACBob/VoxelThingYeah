@@ -52,6 +52,16 @@ Vector Vector::Normal() const
 
 	return g;
 }
+Vector Vector::Floor() const
+{
+	Vector g = Vector(floor(x), floor(y), floor(z));
+	return g;
+}
+Vector Vector::Ceil() const
+{
+	Vector g = Vector(ceil(x), ceil(y), ceil(z));
+	return g;
+}
 
 // Operators
 // Math, with other vectors

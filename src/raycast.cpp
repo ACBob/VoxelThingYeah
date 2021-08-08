@@ -20,20 +20,23 @@ VoxRaycast::VoxRaycast() :
 // Based on "A Fast Voxel Traversal Algorithm for Ray Tracing
 // By John Amanatides & Andrew Woo
 // http://www.cse.yorku.ca/~amana/research/grid.pdf
+// Refernce for implementation based on 'Keven Reid's javascript one
+// https://gamedev.stackexchange.com/a/49423
 
 int intbound(float s, float ds) {
-	if (ds < 0)
-		return intbound(-s, -ds);
-	
-	s = int(s) % 1;
-	return (1-s)/ds;
+	// Edge case
+	bool isInt = floor(s) == s;
+	if (ds < 0 && isInt)
+		return 0;
+
+	return (ds > 0 ? ceil(s) - s : s - floor(s)) / abs(ds);
 }
 
 PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 {
 	bool search = true;
 
-	Vector ray(pos);
+	Vector ray = pos.Floor();
 
 	Vector step(
 		dir.x > 0 ? 1 : dir.x < 0 ? -1 : 0,
@@ -48,9 +51,9 @@ PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 	);
 
 	Vector delta(
-		step.x / dir.x,
-		step.y / dir.y,
-		step.z / dir.z
+		int(step.x / dir.x),
+		int(step.y / dir.y),
+		int(step.z / dir.z)
 	);
 
 
@@ -61,8 +64,14 @@ PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 	float radius = length / dir.Magnitude();
 
 	Block *b = nullptr;
-	while (search)
+	while (search && ray.x > -MAXCOORD_X && ray.x < MAXCOORD_X && ray.y -MAXCOORD_Y && ray.y < MAXCOORD_Y && ray.z > -MAXCOORD_Z && ray.z < MAXCOORD_Z)
 	{
+		b = chunkMan->BlockAtWorldPos(ray);
+		if (b == nullptr)
+			break;
+		else if (b->blockType != blocktype_t::AIR)
+			break;
+
 		if (tMax.x < tMax.y)
 		{
 			if (tMax.x < tMax.z)
@@ -70,8 +79,7 @@ PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 				ray.x = ray.x + step.x;
 				if (tMax.x > radius)
 				{
-					search = false;
-					goto end;
+					break;
 				}
 				tMax.x = tMax.x + delta.x;
 			}
@@ -80,8 +88,7 @@ PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 				ray.z = ray.z + step.z;
 				if (tMax.z > radius)
 				{
-					search = false;
-					goto end;
+					break;
 				}
 				tMax.z = tMax.z + delta.z;
 			}
@@ -93,8 +100,7 @@ PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 				ray.y = ray.y + step.y;
 				if (tMax.y > radius)
 				{
-					search = false;
-					goto end;
+					break;
 				}
 				tMax.y = tMax.y + delta.y;
 			}
@@ -103,19 +109,11 @@ PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 				ray.z = ray.z + step.z;
 				if (tMax.z > radius)
 				{
-					search = false;
-					goto end;
+					break;
 				}
 				tMax.z = tMax.z + delta.z;
 			}
 		}
-
-		end:
-		b = chunkMan->BlockAtWorldPos(ray);
-		if (b == nullptr)
-			search = false;
-		else if (b->blockType == blocktype_t::AIR)
-			search = false;
 	}
 
 	PointedThing p;
@@ -124,8 +122,8 @@ PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 		ceil(ray.y),
 		ceil(ray.z)
 	);
-	if (b == nullptr)
-		b = chunkMan->BlockAtWorldPos(p.position);
+	// if (b == nullptr)
+	// 	b = chunkMan->BlockAtWorldPos(p.position);
 	p.block = b;
 	return p;
 }
