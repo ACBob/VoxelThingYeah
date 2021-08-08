@@ -1,6 +1,6 @@
 #include "utility/vector.h"
 #include "inputmanager.h"
-#include "raycast.h"
+#include "utility/raycast.h"
 #include "world/chunkmanager.h"
 
 #pragma once

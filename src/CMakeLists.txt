@@ -14,6 +14,5 @@ set(game_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/inputmanager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/player.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/raycast.cpp
 	PARENT_SCOPE
 )

@@ -1,5 +1,6 @@
 set(utility_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/glad.c
 	${CMAKE_CURRENT_SOURCE_DIR}/vector.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/raycast.cpp
 	PARENT_SCOPE
 )
