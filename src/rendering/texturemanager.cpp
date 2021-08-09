@@ -37,3 +37,9 @@ Texture *TextureManager::LoadTexture(const char* path)
 
 	return loadedTextures.back();
 }
+TextureManager::~TextureManager()
+{
+	// Unload textures
+	for (Texture *t : loadedTextures)
+		delete t;
+}

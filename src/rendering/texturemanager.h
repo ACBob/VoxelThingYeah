@@ -16,6 +16,7 @@ class TextureManager
 {
 	public:
 		TextureManager();
+		~TextureManager();
 
 		Texture* LoadTexture(const char* path);
 

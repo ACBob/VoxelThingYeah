@@ -78,17 +78,18 @@ int main (int argc, char* args[]) {
 	Texture* crosshairpng = texman.LoadTexture("crosshair.png");
 	Texture* testpng = texman.LoadTexture("test.png");
 
-	Shader genericShader = Shader("shaders/generic.vert", "shaders/generic.frag");
-	Shader textShader = Shader("shaders/text.vert", "shaders/text.frag");
-	Shader skyShader = Shader("shaders/sky.vert", "shaders/sky.frag");
+	ShaderManager shaderman;
+	Shader* genericShader = shaderman.LoadShader("shaders/generic.vert", "shaders/generic.frag");
+	Shader* textShader = shaderman.LoadShader("shaders/text.vert", "shaders/text.frag");
+	Shader* skyShader = shaderman.LoadShader("shaders/sky.vert", "shaders/sky.frag");
 
-	ChunkManager chunkMan(&genericShader);
+	ChunkManager chunkMan(genericShader);
 
 	Model blockHilighter = GetCubeModel(Vector(0.5025, 0.5025, 0.5025));
-	blockHilighter.SetShader(&genericShader);
+	blockHilighter.SetShader(genericShader);
 
 	Model Skybox = GetCubeModel(Vector(-1, -1, -1));
-	Skybox.SetShader(&skyShader);
+	Skybox.SetShader(skyShader);
 
 	GUI gui(&texman, WIDTH, HEIGHT);
 	gui.inputMan = &input;
@@ -119,21 +120,17 @@ int main (int argc, char* args[]) {
 
 		glm::mat4 projection = glm::perspective(glm::radians(70.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 10000.0f);
 		glm::mat4 view = glm::lookAt(glm::vec3(plyr.pos), glm::vec3(plyr.pos + plyr.forward), glm::vec3(VEC_UP));
+		shaderman.SetUniforms(view, projection);
 
 		glDisable(GL_DEPTH_TEST);
-		skyShader.Use();
-		genericShader.SetMat4("projection", projection);
-		genericShader.SetMat4("view", view);
+		skyShader->Use();
 		Skybox.pos = plyr.pos;
 		Skybox.Render();
 		glEnable(GL_DEPTH_TEST);
 
-		genericShader.Use();
+		genericShader->Use();
 
 		glBindTexture(GL_TEXTURE_2D, terrainpng->id);
-		genericShader.SetMat4("projection", projection);
-
-		genericShader.SetMat4("view", view);
 
 		chunkMan.Render();
 
@@ -152,8 +149,7 @@ int main (int argc, char* args[]) {
 		{
 			projection = glm::ortho(0.0f, static_cast<float>(WIDTH), 0.0f, static_cast<float>(HEIGHT));
 
-			textShader.Use();
-			textShader.SetMat4("projection", projection);
+			textShader->Use();
 
 			gui.Label("BobCraft NuDev", Vector(0,0));
 			char buf[100];

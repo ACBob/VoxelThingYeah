@@ -82,3 +82,32 @@ void Shader::Use()
 {
 	glUseProgram(id);
 }
+
+ShaderManager::ShaderManager()
+{
+}
+
+// TODO: Uniform Buffer
+void ShaderManager::SetUniforms(glm::mat4 &view, glm::mat4 &projection)
+{
+	for (Shader *s : loadedShaders)
+	{
+		s->Use();
+		s->SetMat4("view", view);
+		s->SetMat4("projection", projection);
+	}
+}
+
+Shader *ShaderManager::LoadShader(const char* vs, const char* fs)
+{
+	Shader *shader = new Shader(vs, fs);
+	loadedShaders.push_back(shader);
+
+	return loadedShaders.back();
+}
+ShaderManager::~ShaderManager()
+{
+	// Unload shaders
+	for (Shader *s : loadedShaders)
+		delete s;
+}
