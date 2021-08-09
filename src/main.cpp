@@ -123,12 +123,12 @@ int main (int argc, char* args[]) {
 		// Rendering right at the end
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-		glm::mat4 view = glm::lookAt(glm::vec3(plyr.pos), glm::vec3(plyr.pos + plyr.forward), glm::vec3(VEC_UP));
+		glm::mat4 view = glm::lookAt(glm::vec3(plyr.camera.pos), glm::vec3(plyr.camera.pos + plyr.camera.forward), glm::vec3(VEC_UP));
 		shaderman.SetUniforms(view, projection, screen, window.GetMS());
 
 		glDisable(GL_DEPTH_TEST);
 		skyShader->Use();
-		Skybox.pos = plyr.pos;
+		Skybox.pos = plyr.camera.pos;
 		Skybox.Render();
 		glEnable(GL_DEPTH_TEST);
 

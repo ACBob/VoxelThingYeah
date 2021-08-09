@@ -4,6 +4,8 @@
 #include "world/chunkmanager.h"
 #include "world/block.h"
 
+#include "camera.h"
+
 #pragma once
 
 // TODO: generic entity class
@@ -20,6 +22,8 @@ class Player
 
 		Vector pos;
 		Vector velocity;
+
+		Camera camera;
 
 		float yaw;
 		float pitch;

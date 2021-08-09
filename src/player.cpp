@@ -3,8 +3,6 @@
 
 #include <iostream>
 
-// TODO: seperate player from camera
-
 Player::Player() :
 	pos(0.0f, 16.0f, 0.0f),
 	forward(0.0f, 0.0f, 1.0f),
@@ -44,10 +42,6 @@ void Player::Update(ChunkManager *chunkMan, double delta)
 
 	// Rotate our forward vector towards pitch/yaw
 	forward = Vector(0,0,1).Rotate(1, pitch).Rotate(2, yaw).Normal();
-
-	hand.pos = pos;
-	hand.dir = forward;
-	pointed = hand.Cast(chunkMan);
 
 	if (inputMan->mouseState & IN_LEFT_MOUSE && inputMan->oldMouseState == 0 && pointed.block != nullptr && pointed.block->blockType != blocktype_t::BEDROCK)
 	{
@@ -98,6 +92,13 @@ void Player::Update(ChunkManager *chunkMan, double delta)
 
 	velocity.x *= 0.5;
 	velocity.z *= 0.5;
+
+	camera.pos = pos + Vector(0,0.65,0);
+	camera.forward = forward;
+
+	hand.pos = camera.pos;
+	hand.dir = camera.forward;
+	pointed = hand.Cast(chunkMan);
 }
 
 void Player::MouseInput(float xrel, float yrel)
