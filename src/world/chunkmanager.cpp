@@ -89,3 +89,9 @@ bool ChunkManager::TestPointCollision(Vector pos)
 	Block *b = BlockAtWorldPos(pos);
 	return b != nullptr && b->TestPointCollision(pos);
 }
+
+bool ChunkManager::TestAABBCollision(Vector pos, Vector size)
+{
+	Block *b = BlockAtWorldPos(pos);
+	return b != nullptr && b->TestAABBCollision(pos, size);
+}

@@ -34,9 +34,14 @@ class GameWindow : public BobWindow
 
 		float GetSPF();
 
-		unsigned int ticks;
+		unsigned int tick;
+		unsigned int lastTick;
+
+		unsigned int frameTicks;
 		unsigned int framesInTheLastSecond;
 		float secondsPerFrame;
+
+		double delta;
 
 		unsigned int GetMS();
 

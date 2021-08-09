@@ -16,6 +16,8 @@ class Block {
 
 		// Pos is in world coords
 		bool TestPointCollision(Vector pos);
+		// Pos is in world coords
+		bool TestAABBCollision(Vector pos, Vector size);
 
 		Vector worldPos;
 

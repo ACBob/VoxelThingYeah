@@ -9,7 +9,9 @@
 
 GameWindow::GameWindow(const char *title, Vector size, bool resizeable) :
 	internalWindow(nullptr, &SDL_DestroyWindow),
-	ticks(0),
+	tick(0),
+	frameTicks(0),
+	delta(0),
 	framesInTheLastSecond(0),
 	secondsPerFrame(0.0f),
 	inputMan(nullptr),
@@ -89,9 +91,9 @@ void GameWindow::SetPos(Vector pos)
 float GameWindow::GetSPF()
 {
 	framesInTheLastSecond ++;
-	if (ticks < SDL_GetTicks() - 1000) // Has it been a second
+	if (frameTicks < SDL_GetTicks() - 1000) // Has it been a second
 	{
-		ticks = SDL_GetTicks();
+		frameTicks = tick;
 		secondsPerFrame = 1000.0f/float(framesInTheLastSecond);
 		framesInTheLastSecond = 0;
 	}
@@ -100,7 +102,7 @@ float GameWindow::GetSPF()
 
 unsigned int GameWindow::GetMS()
 {
-	return SDL_GetTicks();
+	return tick;
 }
 
 const int scancodeToStateIndex[] =
@@ -139,6 +141,10 @@ void GameWindow::PollEvents()
 
 	inputMan->oldMouseState = inputMan->mouseState;
 	inputMan->mouseState = 0;
+
+	delta = (double(tick - lastTick)) * 0.0001f;
+	lastTick = tick;
+	tick = SDL_GetTicks();
 
 	SDL_Event currentEvent;
 	while(SDL_PollEvent(&currentEvent) != 0) {

@@ -16,11 +16,15 @@ Player::Player() :
 	hand.pos = pos;
 }
 
-void Player::Update(ChunkManager *chunkMan)
+void Player::Update(ChunkManager *chunkMan, double delta)
 {
 	Vector right = forward.Rotate(2, 90);
 	right.y = 0;
 	right = right.Normal();
+
+	// HACK: since we reset it soon anyway....
+	forward.y = 0;
+	forward = forward.Normal();
 	// TODO: Custom Controls (inputMan properties?)
 	if (inputMan->keyboardState['W'])
 		velocity = velocity + (forward * 0.2);
@@ -30,6 +34,8 @@ void Player::Update(ChunkManager *chunkMan)
 		velocity = velocity + (right * -0.2);
 	else if(inputMan->keyboardState['D'])
 		velocity = velocity + (right * 0.2);
+	
+	velocity.y += -9.8 * delta;
 	
 	MouseInput(inputMan->mouseMovement.x, inputMan->mouseMovement.y);
 
@@ -59,7 +65,7 @@ void Player::Update(ChunkManager *chunkMan)
 	{
 		selectedBlockType = blocktype_t(selectedBlockType + 1);
 		if (selectedBlockType > blocktype_t::PLANKS)
-			selectedBlockType = blocktype_t::PLANKS;
+			selectedBlockType = blocktype_t::STONE;
 	}
 	else if (inputMan->mouseState & IN_WHEEL_DOWN)
 	{
@@ -68,17 +74,27 @@ void Player::Update(ChunkManager *chunkMan)
 			selectedBlockType = blocktype_t::PLANKS;
 	}
 
-	pos.x += velocity.x;
-	if (chunkMan->TestPointCollision(pos))
-		pos.x -= velocity.x;
-	pos.y += velocity.y;
-	if (chunkMan->TestPointCollision(pos))
-		pos.y -= velocity.y;
-	pos.z += velocity.z;
-	if (chunkMan->TestPointCollision(pos))
-		pos.z -= velocity.z;
-	
-	velocity = Vector(0,0,0);
+	pos.x += velocity.x * delta;
+	if (chunkMan->TestPointCollision(pos - Vector(0, 1, 0)))
+	{
+		pos.x -= velocity.x * delta;
+		velocity.x = 0;
+	}
+	pos.y += velocity.y * delta;
+	if (chunkMan->TestPointCollision(pos - Vector(0, 1, 0)))
+	{
+		pos.y -= velocity.y * delta;
+		velocity.y = 0;
+	}
+	pos.z += velocity.z * delta;
+	if (chunkMan->TestPointCollision(pos - Vector(0, 1, 0)))
+	{
+		pos.z -= velocity.z * delta;
+		velocity.z = 0;
+	}
+
+	velocity.x *= 0.5;
+	velocity.z *= 0.5;
 }
 
 void Player::MouseInput(float xrel, float yrel)

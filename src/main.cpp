@@ -115,10 +115,10 @@ int main (int argc, char* args[]) {
 
 		// Entity handling go here
 
-		plyr.Update(&chunkMan);
+		plyr.Update(&chunkMan, window.delta);
 
 		// Rendering right at the end
-		glClear(GL_DEPTH_BUFFER_BIT);
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 		glm::mat4 view = glm::lookAt(glm::vec3(plyr.pos), glm::vec3(plyr.pos + plyr.forward), glm::vec3(VEC_UP));
 		shaderman.SetUniforms(view, projection, screen, window.GetMS());
@@ -154,7 +154,7 @@ int main (int argc, char* args[]) {
 			char buf[100];
 			snprintf(buf, sizeof(buf), "Position: (%f, %f, %f)", plyr.pos.x, plyr.pos.y, plyr.pos.z);
 			gui.Label(buf, Vector(0,1));
-			snprintf(buf, sizeof(buf), "Forward: (%f, %f, %f)", plyr.forward.x, plyr.forward.y, plyr.forward.z);
+			snprintf(buf, sizeof(buf), "Velocity: (%f, %f, %f)", plyr.velocity.x, plyr.velocity.y, plyr.velocity.z);
 			gui.Label(buf, Vector(0,2));
 			snprintf(buf, sizeof(buf), "Angle: (%f, %f)", plyr.pitch, plyr.yaw);
 			gui.Label(buf, Vector(0,3));

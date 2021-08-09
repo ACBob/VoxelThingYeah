@@ -13,7 +13,7 @@ class Player
 	public:
 		Player();
 
-		void Update(ChunkManager *chunkMan);
+		void Update(ChunkManager *chunkMan, double delta);
 
 		void Input(bool e);
 		void MouseInput(float xrel, float yrel);

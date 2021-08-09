@@ -36,6 +36,8 @@ class BobWindow
 
 		bool shouldClose = false;
 
+		float delta = 0;
+
 		// Places the mouse in the middle of the screen
 		virtual void CaptureMouse() = 0;
 

@@ -32,7 +32,13 @@ class ChunkManager {
 		// If outside the world it returns a nullptr
 		Block *BlockAtWorldPos(Vector pos);
 
+		// Test against an infinitely small point centred on pos
+		// Tests in world coordinates
 		bool TestPointCollision(Vector pos);
+
+		// Tests against a box extended from pos by size
+		// Tests in world coordinates
+		bool TestAABBCollision(Vector pos, Vector size);
 
 		// Is the position within our place
 		bool ValidChunkPos(const Vector pos);
