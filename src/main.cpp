@@ -118,7 +118,7 @@ int main (int argc, char* args[]) {
 
 		// Entity handling go here
 
-		plyr.Update(&chunkMan, 1.0f/60.0f);
+		plyr.Update(&chunkMan, window.delta);
 
 		// Rendering right at the end
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -138,17 +138,14 @@ int main (int argc, char* args[]) {
 
 		chunkMan.Render();
 
-		glLineWidth(4.0);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		if (plyr.pointed.block != nullptr && plyr.pointed.block->blockType != blocktype_t::AIR)
 		{
+			glLineWidth(4.0);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			blockHilighter.pos = plyr.pointed.position - Vector(0.5, 0.5, 0.5);
 			blockHilighter.Render();
-			// Now draw the player hitbox for testing
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
-		playerHitbox.pos = plyr.pos;
-		playerHitbox.Render();
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 

@@ -28,6 +28,8 @@ class Player
 		float yaw;
 		float pitch;
 
+		bool onFloor = false;
+
 		// Gets rotated to our pitch/yaw
 		Vector forward;
 

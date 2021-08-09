@@ -25,18 +25,18 @@ void Player::Update(ChunkManager *chunkMan, double delta)
 	forward = forward.Normal();
 	// TODO: Custom Controls (inputMan properties?)
 	if (inputMan->keyboardState['W'])
-		velocity = velocity + (forward * 0.2);
+		velocity = velocity + (forward * 0.05);
 	else if(inputMan->keyboardState['S'])
-		velocity = velocity + (forward * -0.2);
+		velocity = velocity + (forward * -0.05);
 	if (inputMan->keyboardState['A'])
-		velocity = velocity + (right * -0.2);
+		velocity = velocity + (right * -0.05);
 	else if(inputMan->keyboardState['D'])
-		velocity = velocity + (right * 0.2);
+		velocity = velocity + (right * 0.05);
 	
 	velocity.y += -9.8 * delta;
 
-	if (inputMan->keyboardState[' '])
-		velocity.y = 9.8;
+	if (onFloor && inputMan->keyboardState[' '])
+		velocity.y = 0.22;
 	
 	MouseInput(inputMan->mouseMovement.x, inputMan->mouseMovement.y);
 
@@ -53,8 +53,12 @@ void Player::Update(ChunkManager *chunkMan, double delta)
 		Block *b = chunkMan->BlockAtWorldPos((pointed.position - 0.5) + pointed.normal);
 		if (b != nullptr && b->blockType == blocktype_t::AIR)
 		{
+			blocktype_t oldType = b->blockType;
 			b->blockType = selectedBlockType;
-			b->Update();
+			if (!chunkMan->TestAABBCollision(pos - Vector(0.5, 1, 0.5), Vector(1, 2, 1)))
+				b->Update();
+			else
+				b->blockType = oldType;
 		}
 	}
 
@@ -71,6 +75,8 @@ void Player::Update(ChunkManager *chunkMan, double delta)
 			selectedBlockType = blocktype_t::PLANKS;
 	}
 
+	onFloor = false;
+
 	pos.x += velocity.x;
 	if (chunkMan->TestAABBCollision(pos - Vector(0.5, 1, 0.5), Vector(1, 2, 1)))
 	{
@@ -82,6 +88,7 @@ void Player::Update(ChunkManager *chunkMan, double delta)
 	{
 		pos.y -= velocity.y;
 		velocity.y = 0;
+		onFloor = true;
 	}
 	pos.z += velocity.z;
 	if (chunkMan->TestAABBCollision(pos - Vector(0.5, 1, 0.5), Vector(1, 1, 1)))

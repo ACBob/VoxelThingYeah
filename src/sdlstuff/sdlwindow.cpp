@@ -107,6 +107,7 @@ unsigned int GameWindow::GetMS()
 
 const int scancodeToStateIndex[] =
 {
+	SDL_SCANCODE_SPACE, ' ',
 	SDL_SCANCODE_A, 'A',
     SDL_SCANCODE_B, 'B',
     SDL_SCANCODE_C, 'C',
@@ -132,9 +133,7 @@ const int scancodeToStateIndex[] =
     SDL_SCANCODE_W, 'W',
     SDL_SCANCODE_X, 'X',
     SDL_SCANCODE_Y, 'Y',
-    SDL_SCANCODE_Z, 'Z',
-
-	SDL_SCANCODE_SPACE, ' '
+    SDL_SCANCODE_Z, 'Z'
 };
 
 void GameWindow::PollEvents()
@@ -167,7 +166,7 @@ void GameWindow::PollEvents()
 
 	// Fill the input manager
 	const uint8_t *state = SDL_GetKeyboardState(NULL);
-	for (int i = 0; i < 52 - 2; i += 2)
+	for (int i = 0; i < 52; i += 2)
 	{
 		int scanCode = scancodeToStateIndex[i];
 		int convCode = scancodeToStateIndex[i+1];
