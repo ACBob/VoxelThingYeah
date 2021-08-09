@@ -38,6 +38,8 @@ void Chunk::Generate()
 		// Make the block aware of our existence
 		blocks[i].chunk = this;
 
+		blocks[i].worldPos = worldPos.ToWorld() + Vector(x,y,z);
+
 		if (Worldposition.y == 8)
 			blocks[i].blockType = blocktype_t::GRASS;
 		else if (Worldposition.y == -32)

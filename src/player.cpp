@@ -69,13 +69,13 @@ void Player::Update(ChunkManager *chunkMan)
 	}
 
 	pos.x += velocity.x;
-	if (chunkMan->TestCollision(pos))
+	if (chunkMan->TestPointCollision(pos))
 		pos.x -= velocity.x;
 	pos.y += velocity.y;
-	if (chunkMan->TestCollision(pos))
+	if (chunkMan->TestPointCollision(pos))
 		pos.y -= velocity.y;
 	pos.z += velocity.z;
-	if (chunkMan->TestCollision(pos))
+	if (chunkMan->TestPointCollision(pos))
 		pos.z -= velocity.z;
 	
 	velocity = Vector(0,0,0);
