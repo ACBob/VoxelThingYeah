@@ -6,11 +6,11 @@
 // TODO: seperate player from camera
 
 Player::Player() :
-	pos(0.0f, 0.0f, 5.0f),
+	pos(0.0f, 16.0f, 0.0f),
 	forward(0.0f, 0.0f, 1.0f)
 {
 	pitch = yaw = 0.0f;
-	hand.length = 8;
+	hand.length = 4.123;
 	hand.dir = forward;
 	hand.pos = pos;
 }
@@ -44,10 +44,10 @@ void Player::Update(ChunkManager *chunkMan)
 		pointed.block->blockType = blocktype_t::AIR;
 		pointed.block->Update();
 	}
-	if (inputMan->mouseState & IN_RIGHT_MOUSE && inputMan->oldMouseState == 0 && pointed.block != nullptr)
+	if (inputMan->mouseState & IN_RIGHT_MOUSE && inputMan->oldMouseState == 0 && pointed.block != nullptr && pointed.block->blockType != blocktype_t::AIR)
 	{
 		Block *b = chunkMan->BlockAtWorldPos((pointed.position - 0.5) + pointed.normal);
-		if (b != nullptr)
+		if (b != nullptr && b->blockType == blocktype_t::AIR)
 		{
 			b->blockType = selectedBlockType;
 			b->Update();

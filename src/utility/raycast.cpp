@@ -29,7 +29,9 @@ PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 		// dir.x > 0.0f ? 1.0f : dir.x < 0.0f ? -1.0f : 0.0f,6
 		// dir.y > 0.0f ? 1.0f : dir.y < 0.0f ? -1.0f : 0.0f,
 		// dir.z > 0.0f ? 1.0f : dir.z < 0.0f ? -1.0f : 0.0f
-		dir
+		float(floor(dir.x * 1000) / 1000),
+		float(floor(dir.y * 1000) / 1000),
+		float(floor(dir.z * 1000) / 1000)
 	};
 
 	if (step.x == 0 || step.y == 0 || step.z == 0)
@@ -45,9 +47,14 @@ PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 
 	float radius = length / dir.Magnitude();
 
+	int i = 0;
 	Block *b = nullptr;
 	while (ray.x > -MAXCOORD_X && ray.x < MAXCOORD_X && ray.y -MAXCOORD_Y && ray.y < MAXCOORD_Y && ray.z > -MAXCOORD_Z && ray.z < MAXCOORD_Z)
 	{
+		// Only ever try to cast 1,024 times before quitting (help avoid crash)
+		i++;
+		if (i > 1024) break;
+
 		if (t.x < t.y)
 		{
 			if (t.x < t.z)
