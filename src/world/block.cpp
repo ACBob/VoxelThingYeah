@@ -31,12 +31,14 @@ bool Block::TestAABBCollision(Vector pos, Vector size)
 	if (blockType == blocktype_t::AIR)
 		return false;
 
-	Vector maxA = pos + size;
-	Vector maxB = worldPos + Vector(BLOCKUNIT, BLOCKUNIT, BLOCKUNIT);
+	Vector minA = pos;
+	Vector maxA = minA + size;
+	Vector minB = worldPos;
+	Vector maxB = minB + Vector(BLOCKUNIT, BLOCKUNIT, BLOCKUNIT);
 	if (
-		(pos.x <= maxB.x && maxA.x >= worldPos.x) &&
-		(pos.y <= maxB.y && maxA.y >= worldPos.y) &&
-		(pos.z <= maxB.z && maxA.z >= worldPos.z)
+		(minA.x <= maxB.x && maxA.x >= minB.x) &&
+		(minA.y <= maxB.y && maxA.y >= minB.y) &&
+		(minA.z <= maxB.z && maxA.z >= minB.z)
 	)
 		return true;
 	

@@ -92,6 +92,14 @@ bool ChunkManager::TestPointCollision(Vector pos)
 
 bool ChunkManager::TestAABBCollision(Vector pos, Vector size)
 {
-	Block *b = BlockAtWorldPos(pos);
-	return b != nullptr && b->TestAABBCollision(pos, size);
+	Chunk *chunk = ChunkAtWorldPos(pos);
+	if (chunk == nullptr) return false;
+
+	// Test A (pos)
+	for (int i = 0; i < sizeof(chunk->blocks); i ++)
+	{
+		if (chunk->blocks[i].TestAABBCollision(pos, size)) return true;
+	}
+
+	return false;
 }

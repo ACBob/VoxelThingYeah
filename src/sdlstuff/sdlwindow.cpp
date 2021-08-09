@@ -132,7 +132,9 @@ const int scancodeToStateIndex[] =
     SDL_SCANCODE_W, 'W',
     SDL_SCANCODE_X, 'X',
     SDL_SCANCODE_Y, 'Y',
-    SDL_SCANCODE_Z, 'Z'
+    SDL_SCANCODE_Z, 'Z',
+
+	SDL_SCANCODE_SPACE, ' '
 };
 
 void GameWindow::PollEvents()
