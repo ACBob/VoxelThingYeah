@@ -2,6 +2,9 @@
 
 #pragma once
 
+// size of X,Y,Z of blocks
+#define BLOCKUNIT 1.0f
+
 enum blocktype_t {
 	AIR      = 0,
 	STONE    = 1,

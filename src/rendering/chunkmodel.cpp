@@ -17,15 +17,15 @@ ChunkModel::ChunkModel(void* chunk)
 
 const ChunkModel::Vertex vertices[] = {
 	// NORTH +Z
-	{ 1,  1, 1},
-	{ 0,  1, 1},
-	{ 0,  0, 1},
-	{ 1,  0, 1},
+	{  BLOCKUNIT,  BLOCKUNIT,  BLOCKUNIT},
+	{  0        ,  BLOCKUNIT,  BLOCKUNIT},
+	{  0        ,  0        ,  BLOCKUNIT},
+	{  BLOCKUNIT,  0        ,  BLOCKUNIT},
 	// SOUTH -Z
-	{ 0,  1,  0},
-	{ 1,  1,  0},
-	{ 1,  0,  0},
-	{ 0,  0,  0},	
+	{  0        ,  BLOCKUNIT,  0        },
+	{  BLOCKUNIT,  BLOCKUNIT,  0        },
+	{  BLOCKUNIT,  0        ,  0        },
+	{  0        ,  0        ,  0        },
 };
 
 // D-d-d-d-double vector
