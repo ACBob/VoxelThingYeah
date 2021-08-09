@@ -36,7 +36,7 @@ void Player::Update(ChunkManager *chunkMan, double delta)
 	velocity.y += -9.8 * delta;
 
 	if (onFloor && inputMan->keyboardState[' '])
-		velocity.y = 0.22;
+		velocity.y = 0.24;
 	
 	MouseInput(inputMan->mouseMovement.x, inputMan->mouseMovement.y);
 
@@ -55,7 +55,7 @@ void Player::Update(ChunkManager *chunkMan, double delta)
 		{
 			blocktype_t oldType = b->blockType;
 			b->blockType = selectedBlockType;
-			if (!chunkMan->TestAABBCollision(pos - Vector(0.5, 1, 0.5), Vector(1, 2, 1)))
+			if (!chunkMan->TestAABBCollision(pos - Vector(0.5, 0.35, 0.5), Vector(1, 0.7, 1)))
 				b->Update();
 			else
 				b->blockType = oldType;
@@ -78,20 +78,20 @@ void Player::Update(ChunkManager *chunkMan, double delta)
 	onFloor = false;
 
 	pos.x += velocity.x;
-	if (chunkMan->TestAABBCollision(pos - Vector(0.5, 1, 0.5), Vector(1, 2, 1)))
+	if (chunkMan->TestAABBCollision(pos - Vector(0.25, 1, 0.25), Vector(0.5, 2, 0.5)))
 	{
 		pos.x -= velocity.x;
 		velocity.x = 0;
 	}
 	pos.y += velocity.y;
-	if (chunkMan->TestAABBCollision(pos - Vector(0.5, 1, 0.5), Vector(1, 2, 1)))
+	if (chunkMan->TestAABBCollision(pos - Vector(0.25, 1, 0.25), Vector(0.5, 2, 0.5)))
 	{
 		pos.y -= velocity.y;
 		velocity.y = 0;
 		onFloor = true;
 	}
 	pos.z += velocity.z;
-	if (chunkMan->TestAABBCollision(pos - Vector(0.5, 1, 0.5), Vector(1, 1, 1)))
+	if (chunkMan->TestAABBCollision(pos - Vector(0.25, 1, 0.25), Vector(0.5, 2, 0.5)))
 	{
 		pos.z -= velocity.z;
 		velocity.z = 0;

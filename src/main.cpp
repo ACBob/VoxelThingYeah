@@ -87,10 +87,7 @@ int main (int argc, char* args[]) {
 
 	Model blockHilighter = GetCubeModel(Vector(0.5025, 0.5025, 0.5025));
 	blockHilighter.SetShader(genericShader);
-
-	Model playerHitbox = GetCubeModel(Vector(-0.5, -1, -0.5));
-	playerHitbox.SetShader(genericShader);
-
+	
 	Model Skybox = GetCubeModel(Vector(-1, -1, -1));
 	Skybox.SetShader(skyShader);
 
