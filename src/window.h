@@ -31,6 +31,9 @@ class BobWindow
 		// Poll events
 		virtual void PollEvents() = 0;
 
+		// Returns the milliseconds since the beginning of the program
+		virtual unsigned int GetMS() = 0;
+
 		bool shouldClose = false;
 
 		// Places the mouse in the middle of the screen

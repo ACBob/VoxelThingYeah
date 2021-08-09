@@ -98,6 +98,11 @@ float GameWindow::GetSPF()
 	return secondsPerFrame;
 }
 
+unsigned int GameWindow::GetMS()
+{
+	return SDL_GetTicks();
+}
+
 const int scancodeToStateIndex[] =
 {
 	SDL_SCANCODE_A, 'A',

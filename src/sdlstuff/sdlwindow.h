@@ -38,6 +38,8 @@ class GameWindow : public BobWindow
 		unsigned int framesInTheLastSecond;
 		float secondsPerFrame;
 
+		unsigned int GetMS();
+
 		void PollEvents();
 
 		void CaptureMouse();

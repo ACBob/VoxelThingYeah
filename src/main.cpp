@@ -121,7 +121,7 @@ int main (int argc, char* args[]) {
 		glClear(GL_DEPTH_BUFFER_BIT);
 
 		glm::mat4 view = glm::lookAt(glm::vec3(plyr.pos), glm::vec3(plyr.pos + plyr.forward), glm::vec3(VEC_UP));
-		shaderman.SetUniforms(view, projection, screen);
+		shaderman.SetUniforms(view, projection, screen, window.GetMS());
 
 		glDisable(GL_DEPTH_TEST);
 		skyShader->Use();
@@ -137,11 +137,11 @@ int main (int argc, char* args[]) {
 
 		if (plyr.pointed.block != nullptr && plyr.pointed.block->blockType != blocktype_t::AIR)
 		{
-			glLineWidth(4.0);
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			// glLineWidth(4.0);
+			// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			blockHilighter.pos = plyr.pointed.position - Vector(0.5, 0.5, 0.5);
 			blockHilighter.Render();
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			// glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
 
 		glBindTexture(GL_TEXTURE_2D, 0);

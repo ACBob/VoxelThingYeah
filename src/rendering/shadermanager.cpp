@@ -77,6 +77,14 @@ void Shader::SetMat4(const char* name, glm::mat4 value)
 {
 	glUniformMatrix4fv(glGetUniformLocation(id, name), 1, false, glm::value_ptr(value));
 }
+void Shader::SetInt(const char* name, int value)
+{
+	glUniform1i(glGetUniformLocation(id, name), value);
+}
+void Shader::SetUInt(const char* name, unsigned int value)
+{
+	glUniform1ui(glGetUniformLocation(id, name), value);
+}
 
 void Shader::Use()
 {
@@ -88,7 +96,7 @@ ShaderManager::ShaderManager()
 }
 
 // TODO: Uniform Buffer
-void ShaderManager::SetUniforms(glm::mat4 &view, glm::mat4 &projection, glm::mat4 &screen)
+void ShaderManager::SetUniforms(glm::mat4 &view, glm::mat4 &projection, glm::mat4 &screen, unsigned int ticks)
 {
 	for (Shader *s : loadedShaders)
 	{
@@ -96,6 +104,7 @@ void ShaderManager::SetUniforms(glm::mat4 &view, glm::mat4 &projection, glm::mat
 		s->SetMat4("view", view);
 		s->SetMat4("projection", projection);
 		s->SetMat4("screen", screen);
+		s->SetInt("time", ticks);
 	}
 }
 
