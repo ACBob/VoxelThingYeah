@@ -7,7 +7,8 @@
 
 Player::Player() :
 	pos(0.0f, 16.0f, 0.0f),
-	forward(0.0f, 0.0f, 1.0f)
+	forward(0.0f, 0.0f, 1.0f),
+	velocity(0.0f, 0.0f, 0.0f)
 {
 	pitch = yaw = 0.0f;
 	hand.length = 4.123;
@@ -22,13 +23,13 @@ void Player::Update(ChunkManager *chunkMan)
 	right = right.Normal();
 	// TODO: Custom Controls (inputMan properties?)
 	if (inputMan->keyboardState['W'])
-		pos = pos + (forward * 0.2);
+		velocity = velocity + (forward * 0.2);
 	else if(inputMan->keyboardState['S'])
-		pos = pos + (forward * -0.2);
+		velocity = velocity + (forward * -0.2);
 	if (inputMan->keyboardState['A'])
-		pos = pos + (right * -0.2);
+		velocity = velocity + (right * -0.2);
 	else if(inputMan->keyboardState['D'])
-		pos = pos + (right * 0.2);
+		velocity = velocity + (right * 0.2);
 	
 	MouseInput(inputMan->mouseMovement.x, inputMan->mouseMovement.y);
 
@@ -66,6 +67,18 @@ void Player::Update(ChunkManager *chunkMan)
 		if (selectedBlockType <= blocktype_t::AIR)
 			selectedBlockType = blocktype_t::PLANKS;
 	}
+
+	pos.x += velocity.x;
+	if (chunkMan->TestCollision(pos))
+		pos.x -= velocity.x;
+	pos.y += velocity.y;
+	if (chunkMan->TestCollision(pos))
+		pos.y -= velocity.y;
+	pos.z += velocity.z;
+	if (chunkMan->TestCollision(pos))
+		pos.z -= velocity.z;
+	
+	velocity = Vector(0,0,0);
 }
 
 void Player::MouseInput(float xrel, float yrel)

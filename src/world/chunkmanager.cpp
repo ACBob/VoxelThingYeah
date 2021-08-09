@@ -83,3 +83,9 @@ void ChunkManager::Render()
 		c->Render();
 	}
 }
+
+bool ChunkManager::TestCollision(Vector pos)
+{
+	Block *b = BlockAtWorldPos(pos);
+	return b != nullptr && b->blockType != blocktype_t::AIR;
+}

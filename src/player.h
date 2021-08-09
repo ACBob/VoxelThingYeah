@@ -6,6 +6,8 @@
 
 #pragma once
 
+// TODO: generic entity class
+
 class Player
 {
 	public:
@@ -17,6 +19,7 @@ class Player
 		void MouseInput(float xrel, float yrel);
 
 		Vector pos;
+		Vector velocity;
 
 		float yaw;
 		float pitch;
