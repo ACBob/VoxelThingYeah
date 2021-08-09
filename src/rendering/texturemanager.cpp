@@ -26,22 +26,14 @@ Texture::Texture(const char* path)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &image[0]);
 }
 
-// Texture::~Texture()
-// {
-// }
-
-// TODO: hard-coded limit because of how fragile things are
-// You think this is bad? Look at the ChunkManager!
-#define MAX_TEXTURES 32
-
 TextureManager::TextureManager()
 {
-	loadedTextures.reserve(MAX_TEXTURES);
 }
 
 Texture *TextureManager::LoadTexture(const char* path)
 {
-	loadedTextures.emplace_back(path);
+	Texture *tex = new Texture(path);
+	loadedTextures.push_back(tex);
 
-	return &loadedTextures.back();
+	return loadedTextures.back();
 }
