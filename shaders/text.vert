@@ -9,10 +9,11 @@ out vec3 Color;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
+uniform mat4 screen;
 
 void main()
 {
-	gl_Position = projection * vec4(aPos.xy, 0.0, 1.0);
+	gl_Position = screen * vec4(aPos.xy, 0.0, 1.0);
 	TexCoord = vec2(aTexCoord.x, aTexCoord.y);
 	Color = aColor;
 }

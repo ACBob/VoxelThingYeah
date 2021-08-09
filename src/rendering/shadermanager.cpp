@@ -88,13 +88,14 @@ ShaderManager::ShaderManager()
 }
 
 // TODO: Uniform Buffer
-void ShaderManager::SetUniforms(glm::mat4 &view, glm::mat4 &projection)
+void ShaderManager::SetUniforms(glm::mat4 &view, glm::mat4 &projection, glm::mat4 &screen)
 {
 	for (Shader *s : loadedShaders)
 	{
 		s->Use();
 		s->SetMat4("view", view);
 		s->SetMat4("projection", projection);
+		s->SetMat4("screen", screen);
 	}
 }
 

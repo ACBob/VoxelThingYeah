@@ -104,6 +104,8 @@ int main (int argc, char* args[]) {
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	// Get relative mouse change from MouseMove
+	glm::mat4 projection = glm::perspective(glm::radians(70.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 10000.0f);
+	glm::mat4 screen = glm::ortho(0.0f, static_cast<float>(WIDTH), 0.0f, static_cast<float>(HEIGHT));
 	
 	while(!window.shouldClose) {
 		window.PollEvents();
@@ -118,9 +120,8 @@ int main (int argc, char* args[]) {
 		// Rendering right at the end
 		glClear(GL_DEPTH_BUFFER_BIT);
 
-		glm::mat4 projection = glm::perspective(glm::radians(70.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 10000.0f);
 		glm::mat4 view = glm::lookAt(glm::vec3(plyr.pos), glm::vec3(plyr.pos + plyr.forward), glm::vec3(VEC_UP));
-		shaderman.SetUniforms(view, projection);
+		shaderman.SetUniforms(view, projection, screen);
 
 		glDisable(GL_DEPTH_TEST);
 		skyShader->Use();
@@ -147,8 +148,6 @@ int main (int argc, char* args[]) {
 
 		// GUI
 		{
-			projection = glm::ortho(0.0f, static_cast<float>(WIDTH), 0.0f, static_cast<float>(HEIGHT));
-
 			textShader->Use();
 
 			gui.Label("BobCraft NuDev", Vector(0,0));
