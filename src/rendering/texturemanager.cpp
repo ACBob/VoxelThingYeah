@@ -7,14 +7,29 @@
 
 #include <glad/glad.h>
 
+#include "physfs.h"
+
 Texture::Texture(const char* path)
+		// TODO: Error Texture
 {
-	uint err = lodepng::decode(image, width, height, path);
+	PHYSFS_File *f = PHYSFS_openRead(path);
+	int64_t fl = PHYSFS_fileLength(f);
+	unsigned char buf[fl];
+
+	int64_t rl = PHYSFS_readBytes(f, &buf, fl);
+
+	if (rl != fl)
+	{
+		printf("PHYSFS Error!\n%s\n", PHYSFS_getLastError());
+	}
+
+	uint err = lodepng::decode(image, width, height, buf, fl);
+
+	PHYSFS_close(f);
 
 	if (err != 0)
 	{
 		printf("LodePNG Error: %s\n", lodepng_error_text(err));
-		// TODO: replace data with error data
 	}
 
 	glGenTextures(1, &id);

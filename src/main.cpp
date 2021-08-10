@@ -23,6 +23,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "physfs.h"
+
 void GLAPIENTRY GlMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
 	printf("GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
@@ -31,23 +33,40 @@ void GLAPIENTRY GlMessageCallback(GLenum source, GLenum type, GLuint id, GLenum 
 }
 
 int main (int argc, char* args[]) {
-	// Initialize SDL systems
-	if(SDL_Init( SDL_INIT_VIDEO )) {
-		printf("SDL could not initialize! SDL_Error: %s\n",
-					SDL_GetError());
+
+	// Initialise PhysFS first and foremost
+	if (!PHYSFS_init(args[0]))
+	{
+		printf("PHYSFS Error!\n%s\n", PHYSFS_getLastError());
 		return -1;
 	}
-	SDL_GL_LoadLibrary(NULL);
 
-	SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	if (!PHYSFS_mount("assets", NULL, 0))
+	{
+		printf("PHYSFS Error when mounting assets!\n%s\n", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+		return -1;
+	}
 
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+	// SDL Boilerplate
+	{
+		// Initialize SDL systems
+		if(SDL_Init( SDL_INIT_VIDEO )) {
+			printf("SDL could not initialize! SDL_Error: %s\n",
+						SDL_GetError());
+			return -1;
+		}
+		SDL_GL_LoadLibrary(NULL);
 
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+		SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+	}
 
 	GameWindow window("VoxelThingYeah", Vector(1280,720), true);
 	const int WIDTH = window.GetSize().x;
@@ -115,6 +134,8 @@ int main (int argc, char* args[]) {
 
 		// Entity handling go here
 
+		// TODO: this doesn't work in release (some of the optimisations disabled in debug?)
+		//       Consult https://www.gafferongames.com/post/fix_your_timestep/
 		plyr.Update(&chunkMan, window.delta);
 
 		// Rendering right at the end
@@ -180,6 +201,8 @@ int main (int argc, char* args[]) {
 	}
 	// Shutdown SDL
 	SDL_Quit();
+
+	PHYSFS_deinit();
 
 	return 0;
 }

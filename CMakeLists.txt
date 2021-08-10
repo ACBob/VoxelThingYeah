@@ -41,7 +41,7 @@ add_subdirectory(src)
 set(includes
 	${CMAKE_CURRENT_LIST_DIR}/src
 )
-include_directories(${includes} ${SDL2_INCLUDE_DIRS} "${CMAKE_CURRENT_LIST_DIR}/subprojects/lodepng" "${CMAKE_CURRENT_LIST_DIR}/include")
+include_directories(${includes} ${SDL2_INCLUDE_DIRS} "${CMAKE_CURRENT_LIST_DIR}/subprojects/lodepng" "${CMAKE_CURRENT_LIST_DIR}/subprojects/physfs/src" "${CMAKE_CURRENT_LIST_DIR}/include")
 
 
 add_executable(${PROJECT_NAME} ${game_SRCS})

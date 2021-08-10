@@ -8,37 +8,52 @@
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "physfs.h"
+
 Shader::Shader(const char* vs, const char* fs)
 {
-	// TODO: physfs filesystem
-	std::ifstream vsf(vs);
-	// not the free software foundation
-	std::ifstream fsf(fs);
+	PHYSFS_File *f = PHYSFS_openRead(vs);
+	int64_t fl = PHYSFS_fileLength(f);
+	char vsc[fl + 1];
 
-	std::string vsc(
-		(std::istreambuf_iterator<char>(vsf)),
-		(std::istreambuf_iterator<char>())
-	);
-	std::string fsc(
-		(std::istreambuf_iterator<char>(fsf)),
-		(std::istreambuf_iterator<char>())
-	);
+	int64_t rl = PHYSFS_readBytes(f, &vsc, fl);
 
-	fsf.close();
-	vsf.close();
+	vsc[fl] = '\0';
+
+	if (rl != fl)
+	{
+		printf("PHYSFS Error!\n%s\n", PHYSFS_getLastError());
+	}
+
+	const char *c = &vsc[0];
+	unsigned int vertSh = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertSh, 1, (const GLchar**)&c, NULL);
+
+	PHYSFS_close(f);
+
+	f = PHYSFS_openRead(fs);
+	fl = PHYSFS_fileLength(f);
+	char fsc[fl + 1];
+
+	rl = PHYSFS_readBytes(f, &fsc, fl);
+
+	fsc[fl] = '\0';
+
+	if (rl != fl)
+	{
+		printf("PHYSFS Error!\n%s\n", PHYSFS_getLastError());
+	}
+
+	const char *c1 = &fsc[0];
+	unsigned int fragSh = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragSh, 1, (const GLchar**)&c1, NULL);
+
+	PHYSFS_close(f);
 
 	char err[512];
 	int success;
 
-	unsigned int vertSh = glCreateShader(GL_VERTEX_SHADER);
-	const char* c = vsc.c_str();
-	glShaderSource(vertSh, 1, &c, NULL);
-
 	// printf("%s\n",c);
-
-	unsigned int fragSh = glCreateShader(GL_FRAGMENT_SHADER);
-	const char* c1 = fsc.c_str();
-	glShaderSource(fragSh, 1, &c1, NULL);
 	
 	// printf("%s\n",c1);
 
