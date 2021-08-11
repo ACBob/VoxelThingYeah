@@ -21,15 +21,6 @@ VoxRaycast::VoxRaycast() :
 // By John Amanatides & Andrew Woo
 // http://www.cse.yorku.ca/~amana/research/grid.pdf
 
-// This algorithm can suck my dick and beyond
-// it has been the worst and hardest thing to implement
-// I don't care that hblocklsdmkpsdamkp[sdamkp[das
-// asd/'#/ASDF fadks,#;'.fasd kl];',fasd l
-// ];.adfs .';]#pragma endregionasd#;'.sad .f
-// #;dsafasd.;#'/fas ,;l]#'.as ml;[]dfp[]jmknadfsnjkp[]adfs njikp[]fads jklp[]faklp[]
-// l']]
-// If you would like to fix this for me, please be my guest.
-
 PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 {
 
