@@ -20,11 +20,10 @@ Sound::Sound(const char* path)
 	}
 
 
-	size_t len = 0;
 	int channels, rate;
 	short *data = NULL;
 
-	unsigned int decode_len = stb_vorbis_decode_memory(reinterpret_cast<uint8*>(&buf), len, &channels, &rate, &data);
+	unsigned int decode_len = stb_vorbis_decode_memory(reinterpret_cast<uint8*>(&buf), fl, &channels, &rate, &data);
 	if (decode_len <= 0)
 	{
 		printf("OGG File %s failed to load!\n", path);
@@ -38,10 +37,10 @@ Sound::Sound(const char* path)
 	alSourcei(this->id, AL_SOURCE_TYPE, AL_STATIC);
 	alSourcei(this->id, AL_LOOPING, 0);
 
-	unsigned int l = decode_len * channels * (sizeof(int16) / sizeof(uint8));
+	uint32_t l = decode_len * channels * (sizeof(int16_t) / sizeof(uint8_t));
 	alGenBuffers(1, &buffer);
-	alBufferData(buffer, AL_FORMAT_STEREO16, data, l, rate / 2);
-	
+	alBufferData(buffer, AL_FORMAT_STEREO16, data, l, rate);
+
 	alSourcei(this->id, AL_BUFFER, buffer);
 }
 void Sound::Play(Vector src, float pitch, float gain)
