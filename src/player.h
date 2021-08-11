@@ -4,6 +4,8 @@
 #include "world/chunkmanager.h"
 #include "world/block.h"
 
+#include "sound/soundmanager.h"
+
 #include "camera.h"
 
 #pragma once
@@ -15,7 +17,7 @@ class Player
 	public:
 		Player();
 
-		void Update(ChunkManager *chunkMan, double delta);
+		void Update(ChunkManager *chunkMan, double delta, Sound *testSound);
 
 		void Input(bool e);
 		void MouseInput(float xrel, float yrel);

@@ -1,4 +1,3 @@
-// TODO: Seperate texture class?
 #pragma once
 
 #include <vector>

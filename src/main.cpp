@@ -25,6 +25,11 @@
 
 #include "physfs.h"
 
+#include <AL/al.h>
+#include <AL/alc.h>
+
+#include "sound/soundmanager.h"
+
 void GLAPIENTRY GlMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
 	printf("GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
@@ -84,6 +89,32 @@ int main (int argc, char* args[]) {
 	glEnable              ( GL_DEBUG_OUTPUT );
 	glDebugMessageCallback( GlMessageCallback, 0 );
 
+	// Now that GL is loaded, do AL
+	ALCdevice *openAlDevice = alcOpenDevice(NULL);
+	if (!openAlDevice)
+	{
+		printf("OpenAL Initialisation Failed!\n");
+		return -1;
+	}
+
+	ALCcontext *openAlContext = alcCreateContext(openAlDevice, NULL);
+	if (!openAlContext)
+	{
+		printf("OpenAL Intialisation Failed!\n");
+		return -1;
+	}
+	if (!alcMakeContextCurrent(openAlContext))
+	{	
+		printf("Could not make context current!\n");
+		return -1;
+	}
+
+	alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
+	alListener3f(AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+	float ori[] = {0.0, 0.0, -1.0, 0.0, 1.0, 0.0};
+	alListenerfv(AL_ORIENTATION, ori);
+	alListenerf(AL_GAIN, 1.0f);
+
 	// Create input manager and give the window a pointer to it
 	InputManager input;
 	window.inputMan = &input;
@@ -101,6 +132,10 @@ int main (int argc, char* args[]) {
 	Shader* genericShader = shaderman.LoadShader("shaders/generic.vert", "shaders/generic.frag");
 	Shader* textShader = shaderman.LoadShader("shaders/text.vert", "shaders/text.frag");
 	Shader* skyShader = shaderman.LoadShader("shaders/sky.vert", "shaders/sky.frag");
+
+	SoundManager soundMan;
+	Sound* testSound = soundMan.LoadSound("sound/test.ogg");
+	testSound->Play(Vector(0,0,0), 1.0f, 1.0f);
 
 	ChunkManager chunkMan(genericShader);
 
@@ -136,7 +171,7 @@ int main (int argc, char* args[]) {
 
 		// TODO: this doesn't work in release (some of the optimisations disabled in debug?)
 		//       Consult https://www.gafferongames.com/post/fix_your_timestep/
-		plyr.Update(&chunkMan, window.delta);
+		plyr.Update(&chunkMan, window.delta, testSound);
 
 		// Rendering right at the end
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -199,6 +234,10 @@ int main (int argc, char* args[]) {
 
 		window.SwapBuffers();
 	}
+	// Shutdown sound
+	alcDestroyContext(openAlContext);
+	alcCloseDevice(openAlDevice);
+
 	// Shutdown SDL
 	SDL_Quit();
 

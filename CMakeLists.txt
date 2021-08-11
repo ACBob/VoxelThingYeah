@@ -20,6 +20,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
 # TODO: windows :trollface:
 find_package(SDL2 REQUIRED)
+find_package(OpenAL REQUIRED)
 
 # LodePNG
 add_library(lodepng STATIC subprojects/lodepng/lodepng.cpp subprojects/lodepng/lodepng.h)
@@ -45,4 +46,4 @@ include_directories(${includes} ${SDL2_INCLUDE_DIRS} "${CMAKE_CURRENT_LIST_DIR}/
 
 
 add_executable(${PROJECT_NAME} ${game_SRCS})
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${CMAKE_DL_LIBS} lodepng GL glm::glm physfs-static)
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${OPENAL_LIBRARY} ${CMAKE_DL_LIBS} lodepng GL glm::glm physfs-static)

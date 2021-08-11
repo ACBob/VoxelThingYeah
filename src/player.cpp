@@ -14,7 +14,7 @@ Player::Player() :
 	hand.pos = pos;
 }
 
-void Player::Update(ChunkManager *chunkMan, double delta)
+void Player::Update(ChunkManager *chunkMan, double delta, Sound *testSound)
 {
 	Vector right = forward.Rotate(2, 90);
 	right.y = 0;
@@ -32,6 +32,12 @@ void Player::Update(ChunkManager *chunkMan, double delta)
 		velocity = velocity + (right * -0.05);
 	else if(inputMan->keyboardState['D'])
 		velocity = velocity + (right * 0.05);
+
+	if (inputMan->keyboardState['X'] && !inputMan->oldKeyboardState['X'])
+	{
+		printf("PLAY SOUND\n");
+		testSound->Play(Vector(0,0,0), 1.0f, 1.0f);
+	}
 	
 	velocity.y += -9.8 * delta;
 

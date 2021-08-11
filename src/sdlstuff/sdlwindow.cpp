@@ -170,6 +170,7 @@ void GameWindow::PollEvents()
 	{
 		int scanCode = scancodeToStateIndex[i];
 		int convCode = scancodeToStateIndex[i+1];
+		inputMan->oldKeyboardState[convCode] = inputMan->keyboardState[convCode];
 		inputMan->keyboardState[convCode] = (state[scanCode] == 1);
 	}
 	

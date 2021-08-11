@@ -17,6 +17,7 @@ class InputManager
 
 		// A -> Z (char) Is mapped directly to the keycode (so 65 = A on the keyboard)
 		bool keyboardState[255];
+		bool oldKeyboardState[255]; // See above, previous frame
 
 		// Mousepos is the current position of the mouse
 		// Mousemovement is the movement of the mouse since last frame
