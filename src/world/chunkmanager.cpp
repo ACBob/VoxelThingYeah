@@ -96,9 +96,10 @@ bool ChunkManager::TestAABBCollision(Vector pos, Vector size)
 	if (chunk == nullptr) return false;
 
 	// Test A (pos)
-	for (int i = 0; i < sizeof(chunk->blocks); i ++)
+	for (int i = 0; i < (CHUNKSIZE_X*CHUNKSIZE_Y*CHUNKSIZE_Z); i ++)
 	{
-		if (chunk->blocks[i].TestAABBCollision(pos, size)) return true;
+		if (chunk->blocks[i].TestAABBCollision(pos, size))
+			return true;
 	}
 
 	return false;
