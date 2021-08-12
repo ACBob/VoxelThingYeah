@@ -9,7 +9,7 @@ Player::Player() :
 	velocity(0.0f, 0.0f, 0.0f)
 {
 	pitch = yaw = 0.0f;
-	hand.length = 4.123;
+	hand.length = 4.25;
 	hand.dir = forward;
 	hand.pos = pos;
 }

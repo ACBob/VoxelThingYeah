@@ -25,11 +25,14 @@ PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 	float i = 0;
 	
 	Block *b = nullptr;
-	while((b == nullptr || b->blockType == AIR) && i <= length)
+	while(i <= length)
 	{
 		ray = pos + dir * i;
 		i += step;
 		b = chunkMan->BlockAtWorldPos(ray);
+
+		if (chunkMan->TestPointCollision(ray))
+			break;
 	}
 
 	PointedThing p;
