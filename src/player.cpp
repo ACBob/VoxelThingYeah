@@ -25,16 +25,16 @@ void Player::Update(ChunkManager *chunkMan, SoundManager *soundMan)
 	forward = forward.Normal();
 	// TODO: Custom Controls (inputMan properties?)
 	if (inputMan->keyboardState['W'])
-		velocity = velocity + (forward * 3);
+		velocity = velocity + (forward * 2.67);
 	else if(inputMan->keyboardState['S'])
-		velocity = velocity + (forward * -3);
+		velocity = velocity + (forward * -2.67);
 	if (inputMan->keyboardState['A'])
-		velocity = velocity + (right * -3);
+		velocity = velocity + (right * -2.67);
 	else if(inputMan->keyboardState['D'])
-		velocity = velocity + (right * 3);
+		velocity = velocity + (right * 2.67);
 
 	if (onFloor && inputMan->keyboardState[' '])
-		velocity.y = 3;
+		velocity.y = 7.5;
 	
 	MouseInput(inputMan->mouseMovement.x, inputMan->mouseMovement.y);
 
@@ -89,6 +89,9 @@ void Player::Physics(double delta, ChunkManager *chunkMan)
 {
 	onFloor = false;
 
+	delta *= delta;
+	delta *= 60;
+
 	pos.x += velocity.x * delta;
 	if (chunkMan->TestAABBCollision(pos - Vector(0.25, 1, 0.25), Vector(0.5, 0.9, 0.5)))
 	{
@@ -109,14 +112,14 @@ void Player::Physics(double delta, ChunkManager *chunkMan)
 		velocity.z = 0;
 	}
 	
-	velocity.x *= 0.7;
-	velocity.z *= 0.7;
+	velocity.x *= 0.3;
+	velocity.z *= 0.3;
 	if (onFloor)
 	{
 		velocity.x *= 0.95;
 		velocity.z *= 0.95;
 	}
-	velocity.y += -9.8 * delta;
+	velocity.y += -(25)  * delta;
 
 }
 

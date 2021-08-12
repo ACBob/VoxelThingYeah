@@ -167,7 +167,7 @@ int main (int argc, char* args[]) {
 	glm::mat4 screen = glm::ortho(0.0f, static_cast<float>(WIDTH), 0.0f, static_cast<float>(HEIGHT));
 
 	double time = 0.0;
-	const double timeStep = 1/60.0f;
+	const double timeStep = 1/20.0f;
 	double currentTime = window.GetTime();
 
 	while(!window.shouldClose) {
