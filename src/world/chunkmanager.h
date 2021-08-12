@@ -7,6 +7,8 @@
 
 #include "world/block.h"
 
+#include "fastnoise.h"
+
 #pragma once
 
 #include <vector>
@@ -47,4 +49,6 @@ class ChunkManager {
 		Shader *worldShader;
 
 		std::vector<Chunk*> chunks;
+
+		fnl_state noiseState;
 };

@@ -25,7 +25,7 @@ Chunk::Chunk() :
 {
 }
 
-void Chunk::Generate()
+void Chunk::Generate(fnl_state noise)
 {
 	// FOR NOW: start off filled with blocks
 	for (int i = 0; i < sizeof(blocks) / sizeof(Block); i++)
@@ -38,16 +38,21 @@ void Chunk::Generate()
 		// Make the block aware of our existence
 		blocks[i].chunk = this;
 
-		blocks[i].worldPos = worldPos.ToWorld() + Vector(x,y,z);
+		blocks[i].worldPos = Worldposition;
+
+		float noiseData = 0.1 + fnlGetNoise3D(&noise, Worldposition.x,Worldposition.y,Worldposition.z);
+		float percentToTopWorld = 1 - ((32 + Worldposition.y) / 64.0f);
+		noiseData *= (percentToTopWorld * 1000.0f);
+
 
 		if (Worldposition.y == 8)
-			blocks[i].blockType = blocktype_t::GRASS;
+			blocks[i].blockType = noiseData > 0.2 ? blocktype_t::GRASS : blocktype_t::AIR;
 		else if (Worldposition.y == -32)
 			blocks[i].blockType = blocktype_t::BEDROCK;
 		else if (Worldposition.y < 6)
-			blocks[i].blockType = blocktype_t::STONE;
+			blocks[i].blockType = noiseData > 0.2 ? blocktype_t::STONE : blocktype_t::AIR;
 		else if (Worldposition.y < 8)
-			blocks[i].blockType = blocktype_t::DIRT;
+			blocks[i].blockType = noiseData > 0.2 ? blocktype_t::DIRT : blocktype_t::AIR;
 		else
 			blocks[i].blockType = blocktype_t::AIR;
 	}

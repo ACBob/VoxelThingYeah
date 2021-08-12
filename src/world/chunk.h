@@ -6,6 +6,8 @@
 #include "rendering/modelrenderer.h"
 #include "rendering/shadermanager.h"
 
+#include "fastnoise.h"
+
 #define CHUNKSIZE_X 16
 #define CHUNKSIZE_Y 16
 #define CHUNKSIZE_Z 16
@@ -33,7 +35,7 @@ class Chunk
 		Chunk();
 		~Chunk();
 		
-		void Generate();
+		void Generate(fnl_state noise);
 
 		Chunk* Neighbour(Direction dir);
 

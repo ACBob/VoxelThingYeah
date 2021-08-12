@@ -5,6 +5,10 @@ ChunkManager::ChunkManager(Shader *shader) :
 {
 	chunks = {};
 
+	noiseState = fnlCreateState();
+	noiseState.noise_type = FNL_NOISE_OPENSIMPLEX2;
+	noiseState.frequency = 0.025;
+
 	Vector pos(0,0,0);
 	for (pos.x = -2; pos.x < 2; pos.x++)
 	{
@@ -25,7 +29,7 @@ ChunkManager::ChunkManager(Shader *shader) :
 	// Now that all the chunks exist, generate and rebuild their models
 	for (Chunk *c : chunks)
 	{
-		c->Generate();
+		c->Generate(noiseState);
 	}
 	for (Chunk *c : chunks)
 	{
