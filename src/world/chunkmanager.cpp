@@ -91,7 +91,10 @@ void ChunkManager::Render()
 bool ChunkManager::TestPointCollision(Vector pos)
 {
 	Block *b = BlockAtWorldPos(pos);
-	return b != nullptr && b->TestPointCollision(pos);
+	if (b == nullptr)
+		return false;
+	pos = pos - pos.Floor();
+	return b->TestPointCollision(pos);
 }
 
 bool ChunkManager::TestAABBCollision(Vector pos, Vector size)
@@ -99,9 +102,13 @@ bool ChunkManager::TestAABBCollision(Vector pos, Vector size)
 	Chunk *chunk = ChunkAtWorldPos(pos);
 	if (chunk == nullptr) return false;
 
+
 	// Test A (pos)
 	for (int i = 0; i < (CHUNKSIZE_X*CHUNKSIZE_Y*CHUNKSIZE_Z); i ++)
 	{
+		int x,y,z;
+		CHUNK1D_TO_3D(i, x,y,z);
+		pos = pos - Vector(x,y,z);
 		if (chunk->blocks[i].TestAABBCollision(pos, size))
 			return true;
 	}

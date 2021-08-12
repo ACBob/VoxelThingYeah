@@ -20,7 +20,7 @@ bool Block::TestPointCollision(Vector pos)
 	if (blockType == blocktype_t::AIR)
 		return false;
 
-	if (pos < worldPos || pos > worldPos + Vector(BLOCKUNIT, BLOCKUNIT, BLOCKUNIT))
+ 	if (pos < Vector(0,0,0) || pos > Vector(1, 1, 1))
 		return false;
 	
 	return true;
@@ -33,7 +33,7 @@ bool Block::TestAABBCollision(Vector pos, Vector size)
 
 	Vector minA = pos;
 	Vector maxA = minA + size;
-	Vector minB = worldPos;
+	Vector minB = Vector(0,0,0);
 	Vector maxB = minB + Vector(BLOCKUNIT, BLOCKUNIT, BLOCKUNIT);
 	if (
 		(minA.x <= maxB.x && maxA.x >= minB.x) &&

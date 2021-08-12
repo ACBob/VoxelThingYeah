@@ -38,11 +38,9 @@ void Chunk::Generate(fnl_state noise)
 		// Make the block aware of our existence
 		blocks[i].chunk = this;
 
-		blocks[i].worldPos = Worldposition;
-
-		float noiseData = 0.1 + fnlGetNoise3D(&noise, Worldposition.x,Worldposition.y,Worldposition.z);
+		float noiseData = 1 + fnlGetNoise3D(&noise, Worldposition.x,Worldposition.y,Worldposition.z);
 		float percentToTopWorld = 1 - ((32 + Worldposition.y) / 64.0f);
-		noiseData *= (percentToTopWorld * 1000.0f);
+		noiseData *= (percentToTopWorld * 1.0f);
 
 
 		if (Worldposition.y == 8)

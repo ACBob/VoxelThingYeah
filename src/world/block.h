@@ -14,12 +14,10 @@ class Block {
 
 		BlockTexture GetSideTexture(Direction side);
 
-		// Pos is in world coords
+		// Pos is in local coords
 		bool TestPointCollision(Vector pos);
-		// Pos is in world coords
+		// Pos is in local coords
 		bool TestAABBCollision(Vector pos, Vector size);
-
-		Vector worldPos;
 
 		// block update
 		// causes a mesh rebuild
