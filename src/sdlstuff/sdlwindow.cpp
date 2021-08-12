@@ -102,7 +102,13 @@ float GameWindow::GetSPF()
 
 unsigned int GameWindow::GetMS()
 {
+	tick = SDL_GetTicks();
 	return tick;
+}
+double GameWindow::GetTime()
+{
+	tick = SDL_GetTicks();
+	return tick / 1000.0f;
 }
 
 const int scancodeToStateIndex[] =
@@ -142,10 +148,6 @@ void GameWindow::PollEvents()
 
 	inputMan->oldMouseState = inputMan->mouseState;
 	inputMan->mouseState = 0;
-
-	delta = (double(tick - lastTick)) * 0.0001f;
-	lastTick = tick;
-	tick = SDL_GetTicks();
 
 	SDL_Event currentEvent;
 	while(SDL_PollEvent(&currentEvent) != 0) {

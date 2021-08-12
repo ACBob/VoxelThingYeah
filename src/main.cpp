@@ -71,6 +71,8 @@ int main (int argc, char* args[]) {
 
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+
+		SDL_LogSetPriority(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO);
 	}
 
 	GameWindow window("VoxelThingYeah", Vector(1280,720), true);
@@ -89,31 +91,36 @@ int main (int argc, char* args[]) {
 	glEnable              ( GL_DEBUG_OUTPUT );
 	glDebugMessageCallback( GlMessageCallback, 0 );
 
-	// Now that GL is loaded, do AL
-	ALCdevice *openAlDevice = alcOpenDevice(NULL);
-	if (!openAlDevice)
+	// OpenAL Boilerplate
+	ALCdevice *openAlDevice;
+	ALCcontext *openAlContext;
 	{
-		printf("OpenAL Initialisation Failed!\n");
-		return -1;
-	}
+		// Now that GL is loaded, do AL
+		openAlDevice = alcOpenDevice(NULL);
+		if (!openAlDevice)
+		{
+			printf("OpenAL Initialisation Failed!\n");
+			return -1;
+		}
 
-	ALCcontext *openAlContext = alcCreateContext(openAlDevice, NULL);
-	if (!openAlContext)
-	{
-		printf("OpenAL Intialisation Failed!\n");
-		return -1;
-	}
-	if (!alcMakeContextCurrent(openAlContext))
-	{	
-		printf("Could not make context current!\n");
-		return -1;
-	}
+		openAlContext = alcCreateContext(openAlDevice, NULL);
+		if (!openAlContext)
+		{
+			printf("OpenAL Intialisation Failed!\n");
+			return -1;
+		}
+		if (!alcMakeContextCurrent(openAlContext))
+		{	
+			printf("Could not make context current!\n");
+			return -1;
+		}
 
-	alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
-	alListener3f(AL_VELOCITY, 0.0f, 0.0f, 0.0f);
-	float ori[] = {0.0, 0.0, -1.0, 0.0, 1.0, 0.0};
-	alListenerfv(AL_ORIENTATION, ori);
-	alListenerf(AL_GAIN, 1.0f);
+		alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
+		alListener3f(AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+		float ori[] = {0.0, 0.0, -1.0, 0.0, 1.0, 0.0};
+		alListenerfv(AL_ORIENTATION, ori);
+		alListenerf(AL_GAIN, 1.0f);
+	}
 
 	// Create input manager and give the window a pointer to it
 	InputManager input;
@@ -156,12 +163,13 @@ int main (int argc, char* args[]) {
 	glEnable(GL_CULL_FACE); 
 	glCullFace(GL_FRONT);
 
-	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-	// Get relative mouse change from MouseMove
 	glm::mat4 projection = glm::perspective(glm::radians(70.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 10000.0f);
 	glm::mat4 screen = glm::ortho(0.0f, static_cast<float>(WIDTH), 0.0f, static_cast<float>(HEIGHT));
-	
+
+	double time = 0.0;
+	const double timeStep = 1/60.0f;
+	double currentTime = window.GetTime();
+
 	while(!window.shouldClose) {
 		window.PollEvents();
 
@@ -170,50 +178,64 @@ int main (int argc, char* args[]) {
 
 		// Entity handling go here
 
-		// TODO: this doesn't work in release (some of the optimisations disabled in debug?)
-		//       Consult https://www.gafferongames.com/post/fix_your_timestep/
+		plyr.Update(&chunkMan, &soundMan);
 
-		// TODO: not handle the sounds here
-		plyr.Update(&chunkMan, &soundMan, window.delta);
+		double newTime = window.GetTime();
+		double frameTime = newTime - currentTime;
+		currentTime = newTime;
 
-		alListener3f(AL_POSITION, plyr.camera.pos.x, plyr.camera.pos.y, plyr.camera.pos.z);
-		float orient[] = {
-			plyr.camera.forward.x,
-			plyr.camera.forward.y,
-			plyr.camera.forward.z,
-
-			0, 1, 0
-		};
-		alListenerfv(AL_ORIENTATION, orient);
-
-		// Rendering right at the end
-		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-
-		glm::mat4 view = glm::lookAt(glm::vec3(plyr.camera.pos), glm::vec3(plyr.camera.pos + plyr.camera.forward), glm::vec3(VEC_UP));
-		shaderman.SetUniforms(view, projection, screen, window.GetMS());
-
-		glDisable(GL_DEPTH_TEST);
-		skyShader->Use();
-		Skybox.pos = plyr.camera.pos;
-		Skybox.Render();
-		glEnable(GL_DEPTH_TEST);
-
-		genericShader->Use();
-
-		glBindTexture(GL_TEXTURE_2D, terrainpng->id);
-
-		chunkMan.Render();
-
-		if (plyr.pointed.block != nullptr && plyr.pointed.block->blockType != blocktype_t::AIR)
+		while (frameTime > 0.0)
 		{
-			glLineWidth(4.0);
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			blockHilighter.pos = plyr.pointed.position - Vector(0.5, 0.5, 0.5);
-			blockHilighter.Render();
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			float delta = std::min(frameTime, timeStep);
+			plyr.Physics(delta, &chunkMan);
+			frameTime -= delta;
+			time += delta;
 		}
 
-		glBindTexture(GL_TEXTURE_2D, 0);
+		// OpenAL updating (TODO: THIS BUT BETTER (Make soundMan handle EVERYTHING?))
+		{
+			alListener3f(AL_POSITION, plyr.camera.pos.x, plyr.camera.pos.y, plyr.camera.pos.z);
+			float orient[] = {
+				plyr.camera.forward.x,
+				plyr.camera.forward.y,
+				plyr.camera.forward.z,
+
+				0, 1, 0
+			};
+			alListenerfv(AL_ORIENTATION, orient);
+		}
+
+		// Rendering
+		{
+			// Rendering right at the end
+			glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+			glm::mat4 view = glm::lookAt(glm::vec3(plyr.camera.pos), glm::vec3(plyr.camera.pos + plyr.camera.forward), glm::vec3(VEC_UP));
+			shaderman.SetUniforms(view, projection, screen, window.GetMS());
+
+			glDisable(GL_DEPTH_TEST);
+			skyShader->Use();
+			Skybox.pos = plyr.camera.pos;
+			Skybox.Render();
+			glEnable(GL_DEPTH_TEST);
+
+			genericShader->Use();
+
+			glBindTexture(GL_TEXTURE_2D, terrainpng->id);
+
+			chunkMan.Render();
+
+			if (plyr.pointed.block != nullptr && plyr.pointed.block->blockType != blocktype_t::AIR)
+			{
+				glLineWidth(4.0);
+				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+				blockHilighter.pos = plyr.pointed.position - Vector(0.5, 0.5, 0.5);
+				blockHilighter.Render();
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			}
+
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
 
 		// GUI
 		{

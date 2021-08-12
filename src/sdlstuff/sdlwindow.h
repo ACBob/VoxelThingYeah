@@ -33,6 +33,7 @@ class GameWindow : public BobWindow
 		void SetPos(Vector p);
 
 		float GetSPF();
+		double GetTime();
 
 		unsigned int tick;
 		unsigned int lastTick;

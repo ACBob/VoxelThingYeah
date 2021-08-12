@@ -14,7 +14,7 @@ Player::Player() :
 	hand.pos = pos;
 }
 
-void Player::Update(ChunkManager *chunkMan, SoundManager *soundMan, double delta)
+void Player::Update(ChunkManager *chunkMan, SoundManager *soundMan)
 {
 	Vector right = forward.Rotate(2, 90);
 	right.y = 0;
@@ -25,18 +25,16 @@ void Player::Update(ChunkManager *chunkMan, SoundManager *soundMan, double delta
 	forward = forward.Normal();
 	// TODO: Custom Controls (inputMan properties?)
 	if (inputMan->keyboardState['W'])
-		velocity = velocity + (forward * 0.05);
+		velocity = velocity + (forward * 3);
 	else if(inputMan->keyboardState['S'])
-		velocity = velocity + (forward * -0.05);
+		velocity = velocity + (forward * -3);
 	if (inputMan->keyboardState['A'])
-		velocity = velocity + (right * -0.05);
+		velocity = velocity + (right * -3);
 	else if(inputMan->keyboardState['D'])
-		velocity = velocity + (right * 0.05);
-	
-	velocity.y += -9.8 * delta;
+		velocity = velocity + (right * 3);
 
 	if (onFloor && inputMan->keyboardState[' '])
-		velocity.y = 0.24;
+		velocity.y = 3;
 	
 	MouseInput(inputMan->mouseMovement.x, inputMan->mouseMovement.y);
 
@@ -79,37 +77,47 @@ void Player::Update(ChunkManager *chunkMan, SoundManager *soundMan, double delta
 			selectedBlockType = blocktype_t::PLANKS;
 	}
 
-	onFloor = false;
-
-	pos.x += velocity.x;
-	if (chunkMan->TestAABBCollision(pos - Vector(0.25, 1, 0.25), Vector(0.5, 0.9, 0.5)))
-	{
-		pos.x -= velocity.x;
-		velocity.x = 0;
-	}
-	pos.y += velocity.y;
-	if (chunkMan->TestAABBCollision(pos - Vector(0.25, 1, 0.25), Vector(0.5, 0.9, 0.5)))
-	{
-		pos.y -= velocity.y;
-		velocity.y = 0;
-		onFloor = true;
-	}
-	pos.z += velocity.z;
-	if (chunkMan->TestAABBCollision(pos - Vector(0.25, 1, 0.25), Vector(0.5, 0.9, 0.5)))
-	{
-		pos.z -= velocity.z;
-		velocity.z = 0;
-	}
-
-	velocity.x *= 0.5;
-	velocity.z *= 0.5;
-
 	camera.pos = pos + Vector(0,0.65,0);
 	camera.forward = forward;
 
 	hand.pos = camera.pos;
 	hand.dir = camera.forward;
 	pointed = hand.Cast(chunkMan);
+}
+
+void Player::Physics(double delta, ChunkManager *chunkMan)
+{
+	onFloor = false;
+
+	pos.x += velocity.x * delta;
+	if (chunkMan->TestAABBCollision(pos - Vector(0.25, 1, 0.25), Vector(0.5, 0.9, 0.5)))
+	{
+		pos.x -= velocity.x * delta;
+		velocity.x = 0;
+	}
+	pos.y += velocity.y * delta;
+	if (chunkMan->TestAABBCollision(pos - Vector(0.25, 1, 0.25), Vector(0.5, 0.9, 0.5)))
+	{
+		pos.y -= velocity.y * delta;
+		velocity.y = 0;
+		onFloor = true;
+	}
+	pos.z += velocity.z * delta;
+	if (chunkMan->TestAABBCollision(pos - Vector(0.25, 1, 0.25), Vector(0.5, 0.9, 0.5)))
+	{
+		pos.z -= velocity.z * delta;
+		velocity.z = 0;
+	}
+	
+	velocity.x *= 0.7;
+	velocity.z *= 0.7;
+	if (onFloor)
+	{
+		velocity.x *= 0.95;
+		velocity.z *= 0.95;
+	}
+	velocity.y += -9.8 * delta;
+
 }
 
 void Player::MouseInput(float xrel, float yrel)

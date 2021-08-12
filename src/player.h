@@ -17,7 +17,8 @@ class Player
 	public:
 		Player();
 
-		void Update(ChunkManager *chunkMan, SoundManager *soundMan, double delta);
+		void Update(ChunkManager *chunkMan, SoundManager *soundMan);
+		void Physics(double delta, ChunkManager *chunkMan);
 
 		void Input(bool e);
 		void MouseInput(float xrel, float yrel);
