@@ -14,7 +14,7 @@ Player::Player() :
 	hand.pos = pos;
 }
 
-void Player::Update(ChunkManager *chunkMan, double delta, Sound *breakSound, Sound *placeSound)
+void Player::Update(ChunkManager *chunkMan, SoundManager *soundMan, double delta)
 {
 	Vector right = forward.Rotate(2, 90);
 	right.y = 0;
@@ -45,14 +45,9 @@ void Player::Update(ChunkManager *chunkMan, double delta, Sound *breakSound, Sou
 
 	if (inputMan->mouseState & IN_LEFT_MOUSE && inputMan->oldMouseState == 0 && pointed.block != nullptr && pointed.block->blockType != blocktype_t::BEDROCK)
 	{
+		soundMan->PlayBreakSound(pointed.block->blockType, pointed.position - Vector(0.5, 0.5, 0.5));
 		pointed.block->blockType = blocktype_t::AIR;
 		pointed.block->Update();
-
-		breakSound->Play(
-			pointed.position - Vector(0.5, 0.5, 0.5),
-			0.5 + (random() % 50) / 100.0f,
-			0.5f
-		);
 	}
 	if (inputMan->mouseState & IN_RIGHT_MOUSE && inputMan->oldMouseState == 0 && pointed.block != nullptr && pointed.block->blockType != blocktype_t::AIR)
 	{
@@ -64,11 +59,7 @@ void Player::Update(ChunkManager *chunkMan, double delta, Sound *breakSound, Sou
 			if (!chunkMan->TestAABBCollision(pos - Vector(0.25, 1, 0.25), Vector(0.5, 0.9, 0.5)))
 			{
 				b->Update();
-				placeSound->Play(
-					pointed.position - Vector(0.5, 0.5, 0.5),
-					0.5 + (random() % 50) / 100.0f,
-					0.5f
-				);
+				soundMan->PlayPlaceSound(b->blockType, pointed.position - Vector(0.5, 0.5, 0.5));
 			}
 			else
 				b->blockType = oldType;

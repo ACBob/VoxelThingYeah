@@ -3,6 +3,10 @@
 #include "utility/vector.h"
 #include <vector>
 
+#include <map>
+
+#include "world/block.h"
+
 #define SOUNDBUFFERS 1
 
 class Sound
@@ -25,7 +29,8 @@ class SoundManager
 		Sound* LoadSound(const char* path);
 
 		std::vector<Sound*> loadedSounds;
+		std::map<const char*, Sound*> namedSounds;
 
-		// AL Sound buffer
-		unsigned int alBuffer;
+		void PlayBreakSound(blocktype_t blockType, Vector pos);
+		void PlayPlaceSound(blocktype_t blockType, Vector pos);
 };

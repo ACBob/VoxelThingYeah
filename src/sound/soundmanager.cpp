@@ -2,6 +2,10 @@
 
 #include "stb_vorbis.c"
 
+#include "world/blockdef.h"
+
+#include <random>
+
 #include <AL/al.h>
 #include "physfs.h"
 
@@ -54,7 +58,12 @@ void Sound::Play(Vector src, float pitch, float gain)
 
 SoundManager::SoundManager()
 {
-	alGenBuffers(1, &alBuffer);
+	namedSounds["breakStone"] = LoadSound("sound/breakstone.ogg");
+	namedSounds["breakWood"] = LoadSound("sound/breakwood.ogg");
+	namedSounds["breakLoose"] = LoadSound("sound/breakloose.ogg");
+	namedSounds["placeStone"] = LoadSound("sound/placestone.ogg");
+	namedSounds["placeWood"] = LoadSound("sound/placewood.ogg");
+	namedSounds["placeLoose"] = LoadSound("sound/placeloose.ogg");
 }
 SoundManager::~SoundManager()
 {
@@ -68,4 +77,42 @@ Sound *SoundManager::LoadSound(const char* path)
 	loadedSounds.push_back(snd);
 
 	return loadedSounds.back();
+}
+
+
+void SoundManager::PlayBreakSound(blocktype_t blockType, Vector pos)
+{
+	blockmaterial_t mat = GetBlockMaterial(blockType);
+	float pitch = 0.5 + (random() % 30) / 10.0f;
+
+	switch (mat)
+	{
+		case MAT_STONE:
+			namedSounds["breakStone"]->Play(pos, pitch, 1.0f);
+		break;
+		case MAT_WOOD:
+			namedSounds["breakWood"]->Play(pos, pitch, 1.0f);
+		break;
+		case MAT_LOOSE:
+			namedSounds["breakLoose"]->Play(pos, pitch, 1.0f);
+		break;
+	}
+}
+void SoundManager::PlayPlaceSound(blocktype_t blockType, Vector pos)
+{
+	blockmaterial_t mat = GetBlockMaterial(blockType);
+	float pitch = 0.5 + (random() % 30) / 10.0f;
+
+	switch (mat)
+	{
+		case MAT_STONE:
+			namedSounds["placeStone"]->Play(pos, pitch, 1.0f);
+		break;
+		case MAT_WOOD:
+			namedSounds["placeWood"]->Play(pos, pitch, 1.0f);
+		break;
+		case MAT_LOOSE:
+			namedSounds["placeLoose"]->Play(pos, pitch, 1.0f);
+		break;
+	}
 }

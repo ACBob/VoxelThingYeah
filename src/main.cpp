@@ -174,7 +174,7 @@ int main (int argc, char* args[]) {
 		//       Consult https://www.gafferongames.com/post/fix_your_timestep/
 
 		// TODO: not handle the sounds here
-		plyr.Update(&chunkMan, window.delta, breakSound, placeSound);
+		plyr.Update(&chunkMan, &soundMan, window.delta);
 
 		alListener3f(AL_POSITION, plyr.camera.pos.x, plyr.camera.pos.y, plyr.camera.pos.z);
 		float orient[] = {
