@@ -177,6 +177,14 @@ int main (int argc, char* args[]) {
 		plyr.Update(&chunkMan, window.delta, breakSound, placeSound);
 
 		alListener3f(AL_POSITION, plyr.camera.pos.x, plyr.camera.pos.y, plyr.camera.pos.z);
+		float orient[] = {
+			plyr.camera.forward.x,
+			plyr.camera.forward.y,
+			plyr.camera.forward.z,
+
+			0, 1, 0
+		};
+		alListenerfv(AL_ORIENTATION, orient);
 
 		// Rendering right at the end
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);

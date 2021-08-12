@@ -49,7 +49,7 @@ void Player::Update(ChunkManager *chunkMan, double delta, Sound *breakSound, Sou
 		pointed.block->Update();
 
 		breakSound->Play(
-			pointed.position,
+			pointed.position - Vector(0.5, 0.5, 0.5),
 			0.5 + (random() % 50) / 100.0f,
 			0.5f
 		);
@@ -61,11 +61,11 @@ void Player::Update(ChunkManager *chunkMan, double delta, Sound *breakSound, Sou
 		{
 			blocktype_t oldType = b->blockType;
 			b->blockType = selectedBlockType;
-			if (!chunkMan->TestAABBCollision(pos - Vector(0.5, 0.35, 0.5), Vector(1, 0.7, 1)))
+			if (!chunkMan->TestAABBCollision(pos - Vector(0.25, 1, 0.25), Vector(0.5, 0.9, 0.5)))
 			{
 				b->Update();
 				placeSound->Play(
-					pointed.position,
+					pointed.position - Vector(0.5, 0.5, 0.5),
 					0.5 + (random() % 50) / 100.0f,
 					0.5f
 				);
@@ -91,20 +91,20 @@ void Player::Update(ChunkManager *chunkMan, double delta, Sound *breakSound, Sou
 	onFloor = false;
 
 	pos.x += velocity.x;
-	if (chunkMan->TestAABBCollision(pos - Vector(0.25, 1, 0.25), Vector(0.5, 2, 0.5)))
+	if (chunkMan->TestAABBCollision(pos - Vector(0.25, 1, 0.25), Vector(0.5, 0.9, 0.5)))
 	{
 		pos.x -= velocity.x;
 		velocity.x = 0;
 	}
 	pos.y += velocity.y;
-	if (chunkMan->TestAABBCollision(pos - Vector(0.25, 1, 0.25), Vector(0.5, 2, 0.5)))
+	if (chunkMan->TestAABBCollision(pos - Vector(0.25, 1, 0.25), Vector(0.5, 0.9, 0.5)))
 	{
 		pos.y -= velocity.y;
 		velocity.y = 0;
 		onFloor = true;
 	}
 	pos.z += velocity.z;
-	if (chunkMan->TestAABBCollision(pos - Vector(0.25, 1, 0.25), Vector(0.5, 2, 0.5)))
+	if (chunkMan->TestAABBCollision(pos - Vector(0.25, 1, 0.25), Vector(0.5, 0.9, 0.5)))
 	{
 		pos.z -= velocity.z;
 		velocity.z = 0;

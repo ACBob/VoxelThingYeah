@@ -39,7 +39,7 @@ Sound::Sound(const char* path)
 
 	uint32_t l = decode_len * channels * (sizeof(int16_t) / sizeof(uint8_t));
 	alGenBuffers(1, &buffer);
-	alBufferData(buffer, AL_FORMAT_STEREO16, data, l, rate);
+	alBufferData(buffer, channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, data, l, rate);
 
 	alSourcei(this->id, AL_BUFFER, buffer);
 }
