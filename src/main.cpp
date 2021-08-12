@@ -135,7 +135,8 @@ int main (int argc, char* args[]) {
 
 	SoundManager soundMan;
 	Sound* testSound = soundMan.LoadSound("sound/test.ogg");
-	testSound->Play(Vector(0,0,0), 1.0f, 1.0f);
+	Sound* breakSound = soundMan.LoadSound("sound/break.ogg");
+	Sound* placeSound = soundMan.LoadSound("sound/place.ogg");
 
 	ChunkManager chunkMan(genericShader);
 
@@ -171,7 +172,11 @@ int main (int argc, char* args[]) {
 
 		// TODO: this doesn't work in release (some of the optimisations disabled in debug?)
 		//       Consult https://www.gafferongames.com/post/fix_your_timestep/
-		plyr.Update(&chunkMan, window.delta, testSound);
+
+		// TODO: not handle the sounds here
+		plyr.Update(&chunkMan, window.delta, breakSound, placeSound);
+
+		alListener3f(AL_POSITION, plyr.camera.pos.x, plyr.camera.pos.y, plyr.camera.pos.z);
 
 		// Rendering right at the end
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);

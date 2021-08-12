@@ -14,7 +14,7 @@ Player::Player() :
 	hand.pos = pos;
 }
 
-void Player::Update(ChunkManager *chunkMan, double delta, Sound *testSound)
+void Player::Update(ChunkManager *chunkMan, double delta, Sound *breakSound, Sound *placeSound)
 {
 	Vector right = forward.Rotate(2, 90);
 	right.y = 0;
@@ -32,12 +32,6 @@ void Player::Update(ChunkManager *chunkMan, double delta, Sound *testSound)
 		velocity = velocity + (right * -0.05);
 	else if(inputMan->keyboardState['D'])
 		velocity = velocity + (right * 0.05);
-
-	if (inputMan->keyboardState['X'] && !inputMan->oldKeyboardState['X'])
-	{
-		printf("PLAY SOUND\n");
-		testSound->Play(Vector(0,0,0), 1.0f, 1.0f);
-	}
 	
 	velocity.y += -9.8 * delta;
 
@@ -53,6 +47,12 @@ void Player::Update(ChunkManager *chunkMan, double delta, Sound *testSound)
 	{
 		pointed.block->blockType = blocktype_t::AIR;
 		pointed.block->Update();
+
+		breakSound->Play(
+			pointed.position,
+			0.5 + (random() % 50) / 100.0f,
+			0.5f
+		);
 	}
 	if (inputMan->mouseState & IN_RIGHT_MOUSE && inputMan->oldMouseState == 0 && pointed.block != nullptr && pointed.block->blockType != blocktype_t::AIR)
 	{
@@ -62,7 +62,14 @@ void Player::Update(ChunkManager *chunkMan, double delta, Sound *testSound)
 			blocktype_t oldType = b->blockType;
 			b->blockType = selectedBlockType;
 			if (!chunkMan->TestAABBCollision(pos - Vector(0.5, 0.35, 0.5), Vector(1, 0.7, 1)))
+			{
 				b->Update();
+				placeSound->Play(
+					pointed.position,
+					0.5 + (random() % 50) / 100.0f,
+					0.5f
+				);
+			}
 			else
 				b->blockType = oldType;
 		}
