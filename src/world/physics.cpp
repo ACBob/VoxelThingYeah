@@ -8,7 +8,9 @@ AABB::AABB(Vector origin, Vector size)
 
 bool AABB::TestCollide(AABB other)
 {
-	return ((pos + bounds) >= other.pos && pos <= (other.pos + other.bounds));
+	return (other.pos.x + other.bounds.x >= pos.x && other.pos.x <= pos.x + bounds.x) &&
+	       (other.pos.y + other.bounds.y >= pos.y && other.pos.y <= pos.y + bounds.y) &&
+	       (other.pos.z + other.bounds.z >= pos.z && other.pos.z <= pos.z + bounds.z);
 }
 
 bool AABB::TestPointCollide(Vector pos)

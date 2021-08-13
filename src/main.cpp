@@ -182,7 +182,7 @@ int main (int argc, char* args[]) {
 		// Entity handling go here
 
 		plyr.Update(&chunkMan, &soundMan);
-		playerVisualHitbox.pos = plyr.collision.pos;
+		playerVisualHitbox.pos = plyr.collision.pos + Vector(0.5, 1, 0.5);
 
 		double newTime = window.GetTime();
 		double frameTime = newTime - currentTime;

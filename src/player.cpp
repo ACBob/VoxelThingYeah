@@ -95,9 +95,11 @@ void Player::Update(ChunkManager *chunkMan, SoundManager *soundMan)
 	hand.pos = camera.pos;
 	hand.dir = camera.forward;
 	pointed = hand.Cast(chunkMan);
+}
 
-	collision.pos = pos - (collision.bounds / 2);
-	collision.pos.y = pos.y;
+void Player::UpdateCollision()
+{
+	collision.pos = pos - Vector(0.5, 1, 0.5);
 }
 
 void Player::Physics(double delta, ChunkManager *chunkMan)
@@ -105,15 +107,17 @@ void Player::Physics(double delta, ChunkManager *chunkMan)
 	onFloor = false;
 
 	delta *= delta;
-	delta *= 60;
+	delta *= 60.0f;
 
 	pos.x += velocity.x * delta;
+	UpdateCollision();
 	if (!noclipMode && chunkMan->TestAABBCollision(collision))
 	{
 		pos.x -= velocity.x * delta;
 		velocity.x = 0;
 	}
 	pos.y += velocity.y * delta;
+	UpdateCollision();
 	if (!noclipMode && chunkMan->TestAABBCollision(collision))
 	{
 		pos.y -= velocity.y * delta;
@@ -121,6 +125,7 @@ void Player::Physics(double delta, ChunkManager *chunkMan)
 		onFloor = true;
 	}
 	pos.z += velocity.z * delta;
+	UpdateCollision();
 	if (!noclipMode && chunkMan->TestAABBCollision(collision))
 	{
 		pos.z -= velocity.z * delta;
@@ -136,7 +141,9 @@ void Player::Physics(double delta, ChunkManager *chunkMan)
 			velocity.x *= 0.95;
 			velocity.z *= 0.95;
 		}
-		velocity.y += -(25)  * delta;
+
+		if (!onFloor)
+			velocity.y += -(25)  * delta;
 	}
 	else
 		velocity = velocity * 0.8;

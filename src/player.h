@@ -22,6 +22,8 @@ class Player
 		void Update(ChunkManager *chunkMan, SoundManager *soundMan);
 		void Physics(double delta, ChunkManager *chunkMan);
 
+		void UpdateCollision();
+
 		void Input(bool e);
 		void MouseInput(float xrel, float yrel);
 

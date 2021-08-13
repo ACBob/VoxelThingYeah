@@ -112,11 +112,14 @@ bool ChunkManager::TestAABBCollision(AABB col)
 		CHUNK1D_TO_3D(i, x,y,z);
 		
 		// Don't collide with air
-		if (chunk->blocks[i].blockType == blocktype_t::AIR) 
+		blocktype_t blockType = chunk->blocks[i].blockType;
+		if (blockType == blocktype_t::AIR) 
 			continue;
 
 		if (
-			AABB(Vector(x,y,z), Vector(1,1,1)).TestCollide(col)
+			col.TestCollide(
+				AABB(chunk->worldPos.ToWorld() + Vector(x,y,z), Vector(1,1,1))
+			)
 		)
 			return true;
 	}
