@@ -96,7 +96,7 @@ bool ChunkManager::TestPointCollision(Vector pos)
 	if (b == nullptr)
 		return false;
 	pos = pos - pos.Floor();
-	return b->blockType != blocktype_t::AIR && AABB(pos.Floor(), Vector(1,1,1)).TestPointCollide(pos);
+	return b->blockType != blocktype_t::AIR && AABB(pos.Floor(), Vector(1,1,1), Vector(0)).TestPointCollide(pos);
 }
 
 bool ChunkManager::TestAABBCollision(AABB col)
@@ -118,7 +118,7 @@ bool ChunkManager::TestAABBCollision(AABB col)
 
 		if (
 			col.TestCollide(
-				AABB(chunk->worldPos.ToWorld() + Vector(x,y,z), Vector(1,1,1))
+				AABB(chunk->worldPos.ToWorld() + Vector(x,y,z), Vector(1,1,1), Vector(0))
 			)
 		)
 			return true;

@@ -7,7 +7,7 @@ Player::Player() :
 	pos(0.0f, 16.0f, 0.0f),
 	forward(0.0f, 0.0f, 1.0f),
 	velocity(0.0f, 0.0f, 0.0f),
-	collision(pos, Vector(0.5, 0.95, 0.5))
+	collision(pos, Vector(0.5, 1, 0.5))
 {
 	pitch = yaw = 0.0f;
 	hand.length = 4.25;
@@ -89,7 +89,7 @@ void Player::Update(ChunkManager *chunkMan, SoundManager *soundMan)
 			selectedBlockType = blocktype_t::PLANKS;
 	}
 
-	camera.pos = pos + Vector(0,0.65,0);
+	camera.pos = pos + Vector(0,1,0);
 	camera.forward = forward;
 
 	hand.pos = camera.pos;
@@ -99,7 +99,7 @@ void Player::Update(ChunkManager *chunkMan, SoundManager *soundMan)
 
 void Player::UpdateCollision()
 {
-	collision.pos = pos - Vector(0.5, 1, 0.5);
+	collision.pos = pos;
 }
 
 void Player::Physics(double delta, ChunkManager *chunkMan)
