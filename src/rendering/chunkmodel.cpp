@@ -107,8 +107,9 @@ void ChunkModel::Build(Block blocks[], Vector pos)
 						Vector neighbour = Vector(x,y,z) + DirectionVector[i];
 						if (ValidChunkPosition(neighbour))
 						{
-							BlockFeatures bF = GetBlockFeatures(reinterpret_cast<Chunk*>(_chunk)->GetBlockAtLocal(neighbour)->blockType);
-							if (bF.solid) // Skip if neighbouring a block that obstructs
+							blocktype_t blockType = reinterpret_cast<Chunk*>(_chunk)->GetBlockAtLocal(neighbour)->blockType;
+							BlockFeatures bF = GetBlockFeatures(blockType);
+							if (bF.solid || blockType == block.blockType) // Skip if neighbouring a block that obstructs, or if it's the same as us
 							{
 								continue;
 							}
@@ -125,7 +126,7 @@ void ChunkModel::Build(Block blocks[], Vector pos)
 								if (b == nullptr)
 									continue;
 								BlockFeatures bF = GetBlockFeatures(b->blockType);
-								if (bF.solid)
+								if (bF.solid || b->blockType == block.blockType)
 									continue;
 							}
 						}
