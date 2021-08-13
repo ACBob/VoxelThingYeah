@@ -83,7 +83,7 @@ Sound *SoundManager::LoadSound(const char* path)
 void SoundManager::PlayBreakSound(blocktype_t blockType, Vector pos)
 {
 	blockmaterial_t mat = GetBlockMaterial(blockType);
-	float pitch = 0.5 + (random() % 30) / 10.0f;
+	float pitch = 0.2 + (random() % 20) / 10.0f;
 
 	switch (mat)
 	{
@@ -101,7 +101,7 @@ void SoundManager::PlayBreakSound(blocktype_t blockType, Vector pos)
 void SoundManager::PlayPlaceSound(blocktype_t blockType, Vector pos)
 {
 	blockmaterial_t mat = GetBlockMaterial(blockType);
-	float pitch = 0.5 + (random() % 30) / 10.0f;
+	float pitch = 0.2 + (random() % 30) / 10.0f;
 
 	switch (mat)
 	{
