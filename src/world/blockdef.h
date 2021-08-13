@@ -1,9 +1,8 @@
-// Holds all the block definitions
-#ifndef BLOCKDEF_H
-#define BLOCKDEF_H
-
+// Holds fancy block definition stuffy stuff
 // size of X,Y,Z of blocks
 #define BLOCKUNIT 1.0f
+
+#pragma once
 
 enum blocktype_t {
 	AIR      = 0,
@@ -22,26 +21,18 @@ enum blockmaterial_t {
 	MAT_WOOD     = 3
 };
 
-static blockmaterial_t GetBlockMaterial(blocktype_t blockType)
+blockmaterial_t GetBlockMaterial(blocktype_t blockType);
+
+struct BlockFeatures
 {
-	switch(blockType)
-	{
-		default:
-		case STONE:
-		case COBBLE:
-		case BEDROCK:
-			return blockmaterial_t::MAT_STONE;
-		break;
+	// Can Collide
+	bool walkable;
+	// Obscures faces
+	bool solid;
+	// Can select
+	bool selectable;
+	// Can break
+	bool breakable;
+};
 
-		case DIRT:
-		case GRASS:
-			return blockmaterial_t::MAT_LOOSE;
-		break;
-
-		case PLANKS:
-			return blockmaterial_t::MAT_WOOD;
-		break;
-	}
-}
-
-#endif
+BlockFeatures GetBlockFeatures(blocktype_t blockType);

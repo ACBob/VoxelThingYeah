@@ -95,8 +95,12 @@ bool ChunkManager::TestPointCollision(Vector pos)
 	Block *b = BlockAtWorldPos(pos);
 	if (b == nullptr)
 		return false;
+	BlockFeatures bF = GetBlockFeatures(b->blockType);
+	if (!bF.walkable) 
+		return false;
+	
 	pos = pos - pos.Floor();
-	return b->blockType != blocktype_t::AIR && AABB(pos.Floor(), Vector(1,1,1), Vector(0)).TestPointCollide(pos);
+	return AABB(pos.Floor(), Vector(1,1,1), Vector(0)).TestPointCollide(pos);
 }
 
 bool ChunkManager::TestAABBCollision(AABB col)
@@ -113,7 +117,8 @@ bool ChunkManager::TestAABBCollision(AABB col)
 		
 		// Don't collide with air
 		blocktype_t blockType = chunk->blocks[i].blockType;
-		if (blockType == blocktype_t::AIR) 
+		BlockFeatures bF = GetBlockFeatures(blockType);
+		if (!bF.walkable) 
 			continue;
 
 		if (

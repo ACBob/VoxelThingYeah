@@ -48,16 +48,21 @@ void Player::Update(ChunkManager *chunkMan, SoundManager *soundMan)
 	// Rotate our forward vector towards pitch/yaw
 	forward = Vector(0,0,1).Rotate(1, pitch).Rotate(2, yaw).Normal();
 
-	if (inputMan->mouseState & IN_LEFT_MOUSE && inputMan->oldMouseState == 0 && pointed.block != nullptr && pointed.block->blockType != blocktype_t::BEDROCK)
+	if (inputMan->mouseState & IN_LEFT_MOUSE && inputMan->oldMouseState == 0 && pointed.block != nullptr)
 	{
-		soundMan->PlayBreakSound(pointed.block->blockType, pointed.position - Vector(0.5, 0.5, 0.5));
-		pointed.block->blockType = blocktype_t::AIR;
-		pointed.block->Update();
+		BlockFeatures bF = GetBlockFeatures(pointed.block->blockType);
+		if (bF.breakable)
+		{
+			soundMan->PlayBreakSound(pointed.block->blockType, pointed.position - Vector(0.5, 0.5, 0.5));
+			pointed.block->blockType = blocktype_t::AIR;
+			pointed.block->Update();
+		}
 	}
-	if (inputMan->mouseState & IN_RIGHT_MOUSE && inputMan->oldMouseState == 0 && pointed.block != nullptr && pointed.block->blockType != blocktype_t::AIR)
+	if (inputMan->mouseState & IN_RIGHT_MOUSE && inputMan->oldMouseState == 0 && pointed.block != nullptr)
 	{
 		Block *b = chunkMan->BlockAtWorldPos((pointed.position - 0.5) + pointed.normal);
-		if (b != nullptr && b->blockType == blocktype_t::AIR)
+		BlockFeatures bF = GetBlockFeatures(pointed.block->blockType);
+		if (b != nullptr && bF.selectable)
 		{
 			blocktype_t oldType = b->blockType;
 			b->blockType = selectedBlockType;
