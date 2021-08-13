@@ -20,6 +20,7 @@ VoxRaycast::VoxRaycast() :
 PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 {
 	Vector ray = pos;
+	Vector oRay; // for figuring out normal
 
 	const float step = 0.01;
 	float i = 0;
@@ -27,6 +28,7 @@ PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 	Block *b = nullptr;
 	while(i <= length)
 	{
+		oRay = ray;
 		ray = pos + dir * i;
 		i += step;
 		b = chunkMan->BlockAtWorldPos(ray);
@@ -42,6 +44,6 @@ PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
 		ceil(ray.z)
 	);
 	p.block = b;
-	p.normal = Vector(0,1,0);
+	p.normal = oRay.Floor() - ray.Floor();
 	return p;
 }
