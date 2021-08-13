@@ -153,8 +153,8 @@ int main (int argc, char* args[]) {
 	Model Skybox = GetCubeModel(Vector(-1, -1, -1));
 	Skybox.SetShader(skyShader);
 
-	Model playerVisualHitbox = GetCubeModel(plyr.collision.bounds * -1);
-	playerVisualHitbox.SetShader(genericShader);
+	// Model playerVisualHitbox = GetCubeModel(plyr.collision.bounds * -1);
+	// playerVisualHitbox.SetShader(genericShader);
 
 	GUI gui(&texman, WIDTH, HEIGHT);
 	gui.inputMan = &input;
@@ -182,7 +182,7 @@ int main (int argc, char* args[]) {
 		// Entity handling go here
 
 		plyr.Update(&chunkMan, &soundMan);
-		playerVisualHitbox.pos = plyr.collision.pos;
+		// playerVisualHitbox.pos = plyr.collision.pos;
 
 		double newTime = window.GetTime();
 		double frameTime = newTime - currentTime;
@@ -229,16 +229,16 @@ int main (int argc, char* args[]) {
 
 			chunkMan.Render();
 
-			// if (plyr.pointed.block != nullptr && plyr.pointed.block->blockType != blocktype_t::AIR)
-			// {
+			if (plyr.pointed.block != nullptr && plyr.pointed.block->blockType != blocktype_t::AIR)
+			{
 				glLineWidth(4.0);
 				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 				blockHilighter.pos = plyr.pointed.position - Vector(0.5, 0.5, 0.5);
 				blockHilighter.Render();
 
-				playerVisualHitbox.Render();
+			// 	playerVisualHitbox.Render();
 				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			// }
+			}
 
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}

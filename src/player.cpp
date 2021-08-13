@@ -7,7 +7,7 @@ Player::Player() :
 	pos(0.0f, 16.0f, 0.0f),
 	forward(0.0f, 0.0f, 1.0f),
 	velocity(0.0f, 0.0f, 0.0f),
-	collision(pos, Vector(0.5, 1, 0.5))
+	collision(pos, Vector(0.5, 1.25, 0.5))
 {
 	pitch = yaw = 0.0f;
 	hand.length = 4.25;
@@ -120,9 +120,10 @@ void Player::Physics(double delta, ChunkManager *chunkMan)
 	UpdateCollision();
 	if (!noclipMode && chunkMan->TestAABBCollision(collision))
 	{
+		// Don't glue ourselves to ceilings!
+		if (velocity.y < 0) onFloor = true;
 		pos.y -= velocity.y * delta;
 		velocity.y = 0;
-		onFloor = true;
 	}
 	pos.z += velocity.z * delta;
 	UpdateCollision();
