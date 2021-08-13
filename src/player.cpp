@@ -84,14 +84,18 @@ void Player::Update(ChunkManager *chunkMan, SoundManager *soundMan)
 	if (inputMan->mouseState & IN_WHEEL_UP)
 	{
 		selectedBlockType = blocktype_t(selectedBlockType + 1);
-		if (selectedBlockType > blocktype_t::PLANKS)
+		if (selectedBlockType == blocktype_t::BEDROCK)
+			selectedBlockType = blocktype_t(selectedBlockType + 1);
+		if (selectedBlockType > blocktype_t::GLASS)
 			selectedBlockType = blocktype_t::STONE;
 	}
 	else if (inputMan->mouseState & IN_WHEEL_DOWN)
 	{
 		selectedBlockType = blocktype_t(selectedBlockType - 1);
+		if (selectedBlockType == blocktype_t::BEDROCK)
+			selectedBlockType = blocktype_t(selectedBlockType - 1);
 		if (selectedBlockType <= blocktype_t::AIR)
-			selectedBlockType = blocktype_t::PLANKS;
+			selectedBlockType = blocktype_t::GLASS;
 	}
 
 	camera.pos = pos + Vector(0,1,0);

@@ -38,6 +38,10 @@ BlockFeatures GetBlockFeatures(blocktype_t blockType)
 		case BEDROCK:
 			bF.breakable = false;
 		break;
+
+		case GLASS:
+			bF.solid = false;
+		break;
 		
 		case AIR:
 			bF.breakable = false;

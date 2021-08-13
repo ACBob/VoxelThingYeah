@@ -37,5 +37,8 @@ BlockTexture GetDefaultBlockTextureSide(blocktype_t type, Direction side)
 		case BEDROCK:
 			return {6,0, 1,1};
 		break;
+		case GLASS:
+			return {7,0, 1,1};
+		break;
 	}
 }
