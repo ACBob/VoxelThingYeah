@@ -2,5 +2,6 @@ set(world_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/block.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/chunk.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/chunkmanager.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/physics.cpp
 	PARENT_SCOPE
 )

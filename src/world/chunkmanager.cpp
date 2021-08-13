@@ -1,5 +1,7 @@
 #include "chunkmanager.h"
 
+#include "physics.h"
+
 ChunkManager::ChunkManager(Shader *shader) :
 	worldShader(shader)
 {
@@ -94,12 +96,12 @@ bool ChunkManager::TestPointCollision(Vector pos)
 	if (b == nullptr)
 		return false;
 	pos = pos - pos.Floor();
-	return b->TestPointCollision(pos);
+	return b->blockType != blocktype_t::AIR && AABB(pos.Floor(), Vector(1,1,1)).TestPointCollide(pos);
 }
 
-bool ChunkManager::TestAABBCollision(Vector pos, Vector size)
+bool ChunkManager::TestAABBCollision(AABB col)
 {
-	Chunk *chunk = ChunkAtWorldPos(pos);
+	Chunk *chunk = ChunkAtWorldPos(col.pos);
 	if (chunk == nullptr) return false;
 
 
@@ -108,8 +110,14 @@ bool ChunkManager::TestAABBCollision(Vector pos, Vector size)
 	{
 		int x,y,z;
 		CHUNK1D_TO_3D(i, x,y,z);
-		pos = pos - Vector(x,y,z);
-		if (chunk->blocks[i].TestAABBCollision(pos, size))
+		
+		// Don't collide with air
+		if (chunk->blocks[i].blockType == blocktype_t::AIR) 
+			continue;
+
+		if (
+			AABB(Vector(x,y,z), Vector(1,1,1)).TestCollide(col)
+		)
 			return true;
 	}
 

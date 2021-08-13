@@ -6,6 +6,8 @@
 
 #include "sound/soundmanager.h"
 
+#include "world/physics.h"
+
 #include "camera.h"
 
 #pragma once
@@ -26,12 +28,16 @@ class Player
 		Vector pos;
 		Vector velocity;
 
+		AABB collision;
+
 		Camera camera;
 
 		float yaw;
 		float pitch;
 
 		bool onFloor = false;
+
+		bool noclipMode = false;
 
 		// Gets rotated to our pitch/yaw
 		Vector forward;

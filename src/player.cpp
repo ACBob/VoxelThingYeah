@@ -6,7 +6,8 @@
 Player::Player() :
 	pos(0.0f, 16.0f, 0.0f),
 	forward(0.0f, 0.0f, 1.0f),
-	velocity(0.0f, 0.0f, 0.0f)
+	velocity(0.0f, 0.0f, 0.0f),
+	collision(pos, Vector(0.5, 0.95, 0.5))
 {
 	pitch = yaw = 0.0f;
 	hand.length = 4.25;
@@ -21,8 +22,11 @@ void Player::Update(ChunkManager *chunkMan, SoundManager *soundMan)
 	right = right.Normal();
 
 	// HACK: since we reset it soon anyway....
-	forward.y = 0;
-	forward = forward.Normal();
+	if (!noclipMode)
+	{
+		forward.y = 0;
+		forward = forward.Normal();
+	}
 	// TODO: Custom Controls (inputMan properties?)
 	if (inputMan->keyboardState['W'])
 		velocity = velocity + (forward * 2.67);
@@ -33,8 +37,11 @@ void Player::Update(ChunkManager *chunkMan, SoundManager *soundMan)
 	else if(inputMan->keyboardState['D'])
 		velocity = velocity + (right * 2.67);
 
-	if (onFloor && inputMan->keyboardState[' '])
+	if (onFloor && !noclipMode && inputMan->keyboardState[' '])
 		velocity.y = 7.5;
+	
+	if (inputMan->keyboardState['V'] && !inputMan->oldKeyboardState['V'])
+		noclipMode = !noclipMode;
 	
 	MouseInput(inputMan->mouseMovement.x, inputMan->mouseMovement.y);
 
@@ -54,10 +61,15 @@ void Player::Update(ChunkManager *chunkMan, SoundManager *soundMan)
 		{
 			blocktype_t oldType = b->blockType;
 			b->blockType = selectedBlockType;
-			if (!chunkMan->TestAABBCollision(pos - Vector(0.25, 1, 0.25), Vector(0.5, 0.9, 0.5)))
+			if (!noclipMode && !chunkMan->TestAABBCollision(collision))
 			{
 				b->Update();
-				soundMan->PlayPlaceSound(b->blockType, pointed.position - Vector(0.5, 0.5, 0.5));
+				soundMan->PlayPlaceSound(b->blockType, pointed.position + pointed.normal - Vector(0.5, 0.5, 0.5));
+			}
+			else if (noclipMode)
+			{
+				b->Update();
+				soundMan->PlayPlaceSound(b->blockType, pointed.position + pointed.normal - Vector(0.5, 0.5, 0.5));
 			}
 			else
 				b->blockType = oldType;
@@ -83,6 +95,9 @@ void Player::Update(ChunkManager *chunkMan, SoundManager *soundMan)
 	hand.pos = camera.pos;
 	hand.dir = camera.forward;
 	pointed = hand.Cast(chunkMan);
+
+	collision.pos = pos - (collision.bounds / 2);
+	collision.pos.y = pos.y;
 }
 
 void Player::Physics(double delta, ChunkManager *chunkMan)
@@ -93,33 +108,38 @@ void Player::Physics(double delta, ChunkManager *chunkMan)
 	delta *= 60;
 
 	pos.x += velocity.x * delta;
-	if (chunkMan->TestAABBCollision(pos - Vector(0.25, 1, 0.25), Vector(0.5, 0.9, 0.5)))
+	if (!noclipMode && chunkMan->TestAABBCollision(collision))
 	{
 		pos.x -= velocity.x * delta;
 		velocity.x = 0;
 	}
 	pos.y += velocity.y * delta;
-	if (chunkMan->TestAABBCollision(pos - Vector(0.25, 1, 0.25), Vector(0.5, 0.9, 0.5)))
+	if (!noclipMode && chunkMan->TestAABBCollision(collision))
 	{
 		pos.y -= velocity.y * delta;
 		velocity.y = 0;
 		onFloor = true;
 	}
 	pos.z += velocity.z * delta;
-	if (chunkMan->TestAABBCollision(pos - Vector(0.25, 1, 0.25), Vector(0.5, 0.9, 0.5)))
+	if (!noclipMode && chunkMan->TestAABBCollision(collision))
 	{
 		pos.z -= velocity.z * delta;
 		velocity.z = 0;
 	}
 	
-	velocity.x *= 0.3;
-	velocity.z *= 0.3;
-	if (onFloor)
+	if (!noclipMode)
 	{
-		velocity.x *= 0.95;
-		velocity.z *= 0.95;
+		velocity.x *= 0.3;
+		velocity.z *= 0.3;
+		if (onFloor)
+		{
+			velocity.x *= 0.95;
+			velocity.z *= 0.95;
+		}
+		velocity.y += -(25)  * delta;
 	}
-	velocity.y += -(25)  * delta;
+	else
+		velocity = velocity * 0.8;
 
 }
 

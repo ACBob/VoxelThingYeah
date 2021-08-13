@@ -6,6 +6,7 @@
 #include "rendering/shadermanager.h"
 
 #include "world/block.h"
+#include "physics.h"
 
 #include "fastnoise.h"
 
@@ -38,9 +39,8 @@ class ChunkManager {
 		// Tests in world coordinates
 		bool TestPointCollision(Vector pos);
 
-		// Tests against a box extended from pos by size
 		// Tests in world coordinates
-		bool TestAABBCollision(Vector pos, Vector size);
+		bool TestAABBCollision(AABB col);
 
 		// Is the position within our place
 		bool ValidChunkPos(const Vector pos);
