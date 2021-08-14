@@ -165,6 +165,9 @@ int main (int argc, char* args[]) {
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_CULL_FACE); 
 	glCullFace(GL_FRONT);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_ONE,  GL_ONE_MINUS_SRC_ALPHA);
+	glBlendEquation(GL_FUNC_ADD);
 
 	glm::mat4 projection = glm::perspective(glm::radians(70.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 10000.0f);
 	glm::mat4 screen = glm::ortho(0.0f, static_cast<float>(WIDTH), 0.0f, static_cast<float>(HEIGHT));
