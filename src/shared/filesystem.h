@@ -1,3 +1,5 @@
+#pragma once
+
 // Thin wrapper around PhysFS.
 // Functions that return int, return non-zero on failure.
 namespace fileSystem

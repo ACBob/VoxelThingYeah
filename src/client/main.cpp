@@ -1,15 +1,21 @@
 #include "enet/enet.h"
 
 #include "shared/filesystem.h"
+#include "shared/logging.h"
 
 #include <stdlib.h>
 #include <cstdio>
 
 int main (int argc, char* args[]) {
 
+	log::log(log::INFO, "Hello from Bobcraft!");
+	log::log(log::WARN, "Testing Log module...");
+	log::log(log::ERRR, "DON'T PANIC");
+	log::log(log::DBUG, "%d, Dudes!", 69);
+
 	if (fileSystem::Init(args[0]) != 0)
 	{
-		printf("FATAL: Cannot continue without filesystem");
+		log::log(log::ERRR, "Couldn't initialise filesystem! Fatal!");
 		return EXIT_FAILURE;
 	}
 	atexit(fileSystem::UnInit);
