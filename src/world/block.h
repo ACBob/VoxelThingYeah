@@ -12,7 +12,9 @@ class Block {
 
 		blocktype_t blockType = blocktype_t::AIR;
 
+#ifdef CLIENTEXE
 		BlockTexture GetSideTexture(Direction side);
+#endif
 
 		// Pos is in local coords
 		bool TestPointCollision(Vector pos);

@@ -161,14 +161,3 @@ bool Vector::operator<=( Vector oVec ) const
 {
 	return operator==( oVec ) || operator<( oVec );
 }
-
-Vector::operator glm::vec3() const
-{
-	return glm::vec3(x, y, z);
-}
-Vector::Vector(glm::vec3 glmVec)
-{
-	x = glmVec.x;
-	y = glmVec.y;
-	z = glmVec.z;
-}

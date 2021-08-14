@@ -2,8 +2,12 @@
 
 #include "physics.h"
 
+#ifdef CLIENTEXE
 ChunkManager::ChunkManager(Shader *shader) :
 	worldShader(shader)
+#elif SERVEREXE
+ChunkManager::ChunkManager()
+#endif
 {
 	chunks = {};
 
@@ -21,8 +25,10 @@ ChunkManager::ChunkManager(Shader *shader) :
 				Chunk *c = new Chunk();
 				c->worldPos = pos;
 				c->chunkMan = this;
+#ifdef CLIENTEXE
 				c->mdl.pos = c->worldPos.ToWorld();
 				c->mdl.SetShader(worldShader);
+#endif
 				chunks.push_back(c);
 			}
 		}
@@ -33,10 +39,12 @@ ChunkManager::ChunkManager(Shader *shader) :
 	{
 		c->Generate(noiseState);
 	}
+#ifdef CLIENTEXE
 	for (Chunk *c : chunks)
 	{
 		c->RebuildMdl();
 	}
+#endif
 }
 ChunkManager::~ChunkManager()
 {
@@ -82,6 +90,7 @@ bool ChunkManager::ValidChunkPos(const Vector pos)
 	return false;
 }
 
+#ifdef CLIENTEXE
 void ChunkManager::Render()
 {
 	for (Chunk* c : chunks)
@@ -89,6 +98,7 @@ void ChunkManager::Render()
 		c->Render();
 	}
 }
+#endif
 
 bool ChunkManager::TestPointCollision(Vector pos)
 {

@@ -3,7 +3,9 @@
 
 #include "utility/vector.h"
 
+#ifdef CLIENTEXE
 #include "rendering/shadermanager.h"
+#endif
 
 #include "world/block.h"
 #include "physics.h"
@@ -22,10 +24,12 @@
 class ChunkManager {
 	public:
 
+#ifdef CLIENTEXE
 		ChunkManager(Shader *shader);
+#elif SERVEREXE
+		ChunkManager();
+#endif
 		~ChunkManager();
-
-		void Render();
 
 		Chunk *ChunkAtWorldPos(Vector pos);
 		Chunk *ChunkAtChunkPos(Vector chunkPos);
@@ -48,8 +52,13 @@ class ChunkManager {
 		// Tick is (for now) The MS Since the start of the game
 		void WorldTick(int tickInMS);
 
+
+#ifdef CLIENTEXE
+		void Render();
+
 		// Shader we render with
 		Shader *worldShader;
+#endif
 
 		std::vector<Chunk*> chunks;
 

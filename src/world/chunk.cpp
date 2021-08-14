@@ -19,11 +19,18 @@ Vector ChunkPos::ToWorld()
 	return g;
 }
 
+#ifdef CLIENTEXE
 Chunk::Chunk() :
 	mdl(this),
 	worldPos(Vector())
 {
 }
+#elif SERVEREXE
+Chunk::Chunk() :
+	worldPos(Vector())
+{
+}
+#endif
 
 void Chunk::Generate(fnl_state noise)
 {
@@ -62,6 +69,7 @@ Chunk* Chunk::Neighbour(Direction dir)
 	return (reinterpret_cast<ChunkManager*>(chunkMan))->ChunkAtChunkPos(neighbourPos);
 }
 
+#ifdef CLIENTEXE
 void Chunk::Render()
 {
 	mdl.Render();
@@ -71,6 +79,7 @@ void Chunk::RebuildMdl()
 {
 	mdl.Build(blocks, worldPos.ToWorld());
 }
+#endif
 
 // Takes a coordinate and returns a vector in world coordinates relative to this chunk
 // Intended to be used by in-chunk coords but doesn't throw a hissyfit if it's not
@@ -85,6 +94,7 @@ Chunk::~Chunk()
 
 void Chunk::Update()
 {
+#ifdef CLIENTEXE
 	// Chunk update makes neighbours and ourself update our model
 	// Hahahahahahah slow
 	RebuildMdl();
@@ -94,6 +104,7 @@ void Chunk::Update()
 		if (neighbour != nullptr)
 			neighbour->RebuildMdl();
 	}
+#endif
 }
 
 Block *Chunk::GetBlockAtLocal(Vector pos)

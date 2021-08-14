@@ -2,9 +2,11 @@
 
 #include "world/block.h"
 
+#ifdef CLIENTEXE
 #include "rendering/chunkmodel.h"
 #include "rendering/modelrenderer.h"
 #include "rendering/shadermanager.h"
+#endif
 
 #include "fastnoise.h"
 
@@ -43,10 +45,11 @@ class Chunk
 
 		Block* GetBlockAtLocal(Vector pos);
 
+#ifdef CLIENTEXE
 		void RebuildMdl();
 
 		void Render();
-
+#endif
 		void Update();
 
 		Vector PosToWorld(Vector pos);
@@ -55,7 +58,9 @@ class Chunk
 		// Indexed with [x + SIZEX * (y + SIZEZ * z)]
 		Block blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 
+#ifdef CLIENTEXE
 		ChunkModel mdl;
+#endif
 
 		// ChunkManager pointer (can't set type because circular include :lenny:)
 		void* chunkMan = nullptr;

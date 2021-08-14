@@ -219,7 +219,8 @@ int main (int argc, char* args[]) {
 			// Rendering right at the end
 			glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-			glm::mat4 view = glm::lookAt(glm::vec3(plyr.camera.pos), glm::vec3(plyr.camera.pos + plyr.camera.forward), glm::vec3(VEC_UP));
+			Vector v = plyr.camera.pos + plyr.camera.forward;
+			glm::mat4 view = glm::lookAt(glm::vec3(plyr.camera.pos.x, plyr.camera.pos.y, plyr.camera.pos.z), glm::vec3(v.x, v.y, v.z), glm::vec3(VEC_UP.x, VEC_UP.y, VEC_UP.z));
 			shaderman.SetUniforms(view, projection, screen, window.GetMS());
 
 			glDisable(GL_DEPTH_TEST);

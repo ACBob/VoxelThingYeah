@@ -1,7 +1,5 @@
 #pragma once
 
-#include <glm/glm.hpp>
-
 class Vector
 {
 	public:
@@ -37,9 +35,6 @@ class Vector
 	bool operator< ( Vector oVec ) const;
 	bool operator>=( Vector oVec ) const;
 	bool operator<=( Vector oVec ) const;
-
-	operator glm::vec3() const;
-	Vector(glm::vec3 glmVec);
 };
 
 const Vector VEC_UP(0.0f, 1.0f, 0.0f);

@@ -15,7 +15,9 @@ void Block::Update()
 		reinterpret_cast<Chunk*>(chunk)->Update();
 }
 
+#ifdef CLIENTEXE
 BlockTexture Block::GetSideTexture(Direction side)
 {
 	return GetDefaultBlockTextureSide(this->blockType, side);
 }
+#endif

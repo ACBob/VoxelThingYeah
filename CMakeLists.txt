@@ -32,10 +32,10 @@ add_library(lodepng STATIC subprojects/lodepng/lodepng.cpp subprojects/lodepng/l
 set(PHYSFS_BUILD_SHARED FALSE)
 set(PHYSFS_BUILD_TEST FALSE)
 add_subdirectory(subprojects/physfs EXCLUDE_FROM_ALL)
-# GLM
-add_subdirectory(subprojects/glm EXCLUDE_FROM_ALL)
 # ENet
 add_subdirectory(subprojects/enet EXCLUDE_FROM_ALL)
+# GLM
+add_subdirectory(subprojects/glm EXCLUDE_FROM_ALL)
 
 # Game Sources
 add_subdirectory(src)
@@ -47,5 +47,10 @@ set(includes
 include_directories(${includes} ${SDL2_INCLUDE_DIRS} "${CMAKE_CURRENT_LIST_DIR}/subprojects/lodepng" "${CMAKE_CURRENT_LIST_DIR}/subprojects/physfs/src" "${CMAKE_CURRENT_LIST_DIR}/include")
 
 
-add_executable(${PROJECT_NAME} ${game_SRCS})
+add_executable(${PROJECT_NAME} ${gameClient_SRCS})
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${OPENAL_LIBRARY} ${CMAKE_DL_LIBS} lodepng GL glm::glm physfs-static enet)
+target_compile_definitions(${PROJECT_NAME} PUBLIC CLIENTEXE)
+
+add_executable(${PROJECT_NAME}_server ${gameServer_SRCS})
+target_link_libraries(${PROJECT_NAME}_server ${CMAKE_DL_LIBS} physfs-static enet)
+target_compile_definitions(${PROJECT_NAME}_server PUBLIC SERVEREXE)

@@ -15,7 +15,11 @@ Player::Player() :
 	hand.pos = pos;
 }
 
+#ifdef CLIENTEXE
 void Player::Update(ChunkManager *chunkMan, SoundManager *soundMan)
+#elif SERVEREXE
+void Player::Update(ChunkManager *chunkMan)
+#endif
 {
 	Vector right = forward.Rotate(2, 90);
 	right.y = 0;
@@ -27,6 +31,8 @@ void Player::Update(ChunkManager *chunkMan, SoundManager *soundMan)
 		forward.y = 0;
 		forward = forward.Normal();
 	}
+
+#ifdef CLIENTEXE
 	// TODO: Custom Controls (inputMan properties?)
 	if (inputMan->keyboardState['W'])
 		velocity = velocity + (forward * 2.67);
@@ -97,6 +103,7 @@ void Player::Update(ChunkManager *chunkMan, SoundManager *soundMan)
 		if (selectedBlockType <= blocktype_t::AIR)
 			selectedBlockType = blocktype_t::WATER;
 	}
+#endif
 
 	camera.pos = pos + Vector(0,1,0);
 	camera.forward = forward;
@@ -160,6 +167,7 @@ void Player::Physics(double delta, ChunkManager *chunkMan)
 
 }
 
+#ifdef CLIENTEXE
 void Player::MouseInput(float xrel, float yrel)
 {
 	// TODO: sensitivity
@@ -173,3 +181,4 @@ void Player::MouseInput(float xrel, float yrel)
 
 	pitch = pitch < -89.9 ? -89.9 : (pitch > 89.9 ? 89.9 : pitch);
 }
+#endif
