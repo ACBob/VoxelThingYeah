@@ -234,15 +234,19 @@ int main (int argc, char* args[]) {
 
 			chunkMan.Render();
 
-			if (plyr.pointed.block != nullptr && plyr.pointed.block->blockType != blocktype_t::AIR)
+			if (plyr.pointed.block != nullptr)
 			{
-				glLineWidth(4.0);
-				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-				blockHilighter.pos = plyr.pointed.position - Vector(0.5, 0.5, 0.5);
-				blockHilighter.Render();
+				BlockFeatures bF = GetBlockFeatures(plyr.pointed.block->blockType);
+				if (bF.selectable)
+				{
+					glLineWidth(4.0);
+					glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+					blockHilighter.pos = plyr.pointed.position - Vector(0.5, 0.5, 0.5);
+					blockHilighter.Render();
 
-			// 	playerVisualHitbox.Render();
-				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+				// 	playerVisualHitbox.Render();
+					glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+				}
 			}
 
 			glBindTexture(GL_TEXTURE_2D, 0);
