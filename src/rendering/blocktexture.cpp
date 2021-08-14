@@ -40,5 +40,15 @@ BlockTexture GetDefaultBlockTextureSide(blocktype_t type, Direction side)
 		case GLASS:
 			return {7,0, 1,1};
 		break;
+		case LOG:
+			if (side == Direction::UP || side == Direction::DOWN)
+			{
+				return {8,1, 1,1};
+			}
+			return {8,0, 1,1};
+		break;
+		case LEAVES:
+			return {9,0, 1,1};
+		break;
 	}
 }

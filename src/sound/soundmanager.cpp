@@ -58,12 +58,20 @@ void Sound::Play(Vector src, float pitch, float gain)
 
 SoundManager::SoundManager()
 {
-	namedSounds["breakStone"] = LoadSound("sound/breakstone.ogg");
-	namedSounds["breakWood"] = LoadSound("sound/breakwood.ogg");
-	namedSounds["breakLoose"] = LoadSound("sound/breakloose.ogg");
 	namedSounds["placeStone"] = LoadSound("sound/placestone.ogg");
+	namedSounds["breakStone"] = LoadSound("sound/breakstone.ogg");
+
 	namedSounds["placeWood"] = LoadSound("sound/placewood.ogg");
+	namedSounds["breakWood"] = LoadSound("sound/breakwood.ogg");
+
 	namedSounds["placeLoose"] = LoadSound("sound/placeloose.ogg");
+	namedSounds["breakLoose"] = LoadSound("sound/breakloose.ogg");
+
+	namedSounds["placeGlass"] = namedSounds["placeStone"];
+	namedSounds["breakGlass"] = LoadSound("sound/breakglass.ogg");
+	
+	namedSounds["placeOrganic"] = LoadSound("sound/placeorganic.ogg");
+	namedSounds["breakOrganic"] = LoadSound("sound/breakorganic.ogg");
 }
 SoundManager::~SoundManager()
 {
@@ -83,7 +91,7 @@ Sound *SoundManager::LoadSound(const char* path)
 void SoundManager::PlayBreakSound(blocktype_t blockType, Vector pos)
 {
 	blockmaterial_t mat = GetBlockMaterial(blockType);
-	float pitch = 0.2 + (random() % 20) / 10.0f;
+	float pitch = 0.5 + (random() % 15) / 10.0f;
 
 	switch (mat)
 	{
@@ -96,12 +104,18 @@ void SoundManager::PlayBreakSound(blocktype_t blockType, Vector pos)
 		case MAT_LOOSE:
 			namedSounds["breakLoose"]->Play(pos, pitch, 1.0f);
 		break;
+		case MAT_GLASS:
+			namedSounds["breakGlass"]->Play(pos, pitch, 1.0f);
+		break;
+		case MAT_ORGANIC:
+			namedSounds["breakOrganic"]->Play(pos, pitch, 1.0f);
+		break;
 	}
 }
 void SoundManager::PlayPlaceSound(blocktype_t blockType, Vector pos)
 {
 	blockmaterial_t mat = GetBlockMaterial(blockType);
-	float pitch = 0.2 + (random() % 30) / 10.0f;
+	float pitch = 0.5 + (random() % 15) / 10.0f;
 
 	switch (mat)
 	{
@@ -113,6 +127,12 @@ void SoundManager::PlayPlaceSound(blocktype_t blockType, Vector pos)
 		break;
 		case MAT_LOOSE:
 			namedSounds["placeLoose"]->Play(pos, pitch, 1.0f);
+		break;
+		case MAT_GLASS:
+			namedSounds["placeGlass"]->Play(pos, pitch, 1.0f);
+		break;
+		case MAT_ORGANIC:
+			namedSounds["placeOrganic"]->Play(pos, pitch, 1.0f);
 		break;
 	}
 }

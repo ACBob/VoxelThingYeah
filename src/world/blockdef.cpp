@@ -12,12 +12,20 @@ blockmaterial_t GetBlockMaterial(blocktype_t blockType)
 		break;
 
 		case DIRT:
-		case GRASS:
 			return blockmaterial_t::MAT_LOOSE;
 		break;
 
 		case PLANKS:
 			return blockmaterial_t::MAT_WOOD;
+		break;
+
+		case GLASS:
+			return blockmaterial_t::MAT_GLASS;
+		break;
+
+		case GRASS:
+		case LEAVES:
+			return blockmaterial_t::MAT_ORGANIC;
 		break;
 	}
 }
@@ -40,6 +48,7 @@ BlockFeatures GetBlockFeatures(blocktype_t blockType)
 		break;
 
 		case GLASS:
+		case LEAVES:
 			bF.solid = false;
 		break;
 		

@@ -13,6 +13,8 @@ enum blocktype_t {
 	PLANKS   = 5,
 	BEDROCK  = 6,
 	GLASS    = 7,
+	LOG      = 8,
+	LEAVES   = 9,
 };
 
 enum blockmaterial_t {
@@ -21,6 +23,7 @@ enum blockmaterial_t {
 	MAT_LOOSE    = 2,
 	MAT_WOOD     = 3,
 	MAT_GLASS    = 4,
+	MAT_ORGANIC  = 5,
 };
 
 blockmaterial_t GetBlockMaterial(blocktype_t blockType);
