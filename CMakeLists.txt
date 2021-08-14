@@ -34,6 +34,8 @@ set(PHYSFS_BUILD_TEST FALSE)
 add_subdirectory(subprojects/physfs EXCLUDE_FROM_ALL)
 # GLM
 add_subdirectory(subprojects/glm EXCLUDE_FROM_ALL)
+# ENet
+add_subdirectory(subprojects/enet EXCLUDE_FROM_ALL)
 
 # Game Sources
 add_subdirectory(src)
@@ -46,4 +48,4 @@ include_directories(${includes} ${SDL2_INCLUDE_DIRS} "${CMAKE_CURRENT_LIST_DIR}/
 
 
 add_executable(${PROJECT_NAME} ${game_SRCS})
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${OPENAL_LIBRARY} ${CMAKE_DL_LIBS} lodepng GL glm::glm physfs-static)
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${OPENAL_LIBRARY} ${CMAKE_DL_LIBS} lodepng GL glm::glm physfs-static enet)
