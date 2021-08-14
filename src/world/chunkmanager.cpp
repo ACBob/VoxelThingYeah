@@ -156,7 +156,17 @@ void ChunkManager::WorldTick(int tickInMS)
 
 					Vector dir = DirectionVector[i];
 					Block *b = chunk->GetBlockAtLocal(Vector(x,y,z)+dir);
-					if (b == nullptr) continue;
+					if (b == nullptr)
+					{
+						// It's not in *this* chunk
+						Chunk *oChunk = chunk->Neighbour((Direction)i);
+						if (oChunk == nullptr)
+							continue; // Ok yeah it's outside reality
+						Vector p = Vector(x + dir.x,y + dir.y,z + dir.z) + (dir * -16);
+						b = oChunk->GetBlockAtLocal(p);
+						if (b == nullptr) 
+							continue; //uh oh
+					}
 					BlockFeatures bF = GetBlockFeatures(b->blockType);
 					if (bF.floodable)
 					{
