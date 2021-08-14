@@ -16,6 +16,7 @@ blockmaterial_t GetBlockMaterial(blocktype_t blockType)
 		break;
 
 		case PLANKS:
+		case LOG:
 			return blockmaterial_t::MAT_WOOD;
 		break;
 
