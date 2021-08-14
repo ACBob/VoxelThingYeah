@@ -1,9 +1,19 @@
 #include "enet/enet.h"
 
+#include "shared/filesystem.h"
+
 #include <stdlib.h>
 #include <cstdio>
 
 int main (int argc, char* args[]) {
+
+	if (fileSystem::Init(args[0]) != 0)
+	{
+		printf("FATAL: Cannot continue without filesystem");
+		return EXIT_FAILURE;
+	}
+	atexit(fileSystem::UnInit);
+
 	if (enet_initialize() != 0)
 	{
 		printf("Couldn't init Enet!\n");
