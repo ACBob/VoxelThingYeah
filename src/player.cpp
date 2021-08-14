@@ -86,7 +86,7 @@ void Player::Update(ChunkManager *chunkMan, SoundManager *soundMan)
 		selectedBlockType = blocktype_t(selectedBlockType + 1);
 		if (selectedBlockType == blocktype_t::BEDROCK)
 			selectedBlockType = blocktype_t(selectedBlockType + 1);
-		if (selectedBlockType > blocktype_t::LEAVES)
+		if (selectedBlockType > blocktype_t::WATER)
 			selectedBlockType = blocktype_t::STONE;
 	}
 	else if (inputMan->mouseState & IN_WHEEL_DOWN)
@@ -95,7 +95,7 @@ void Player::Update(ChunkManager *chunkMan, SoundManager *soundMan)
 		if (selectedBlockType == blocktype_t::BEDROCK)
 			selectedBlockType = blocktype_t(selectedBlockType - 1);
 		if (selectedBlockType <= blocktype_t::AIR)
-			selectedBlockType = blocktype_t::LEAVES;
+			selectedBlockType = blocktype_t::WATER;
 	}
 
 	camera.pos = pos + Vector(0,1,0);

@@ -188,10 +188,12 @@ int main (int argc, char* args[]) {
 		double frameTime = newTime - currentTime;
 		currentTime = newTime;
 
+		// Tick
 		while (frameTime > 0.0)
 		{
 			float delta = std::min(frameTime, timeStep);
 			plyr.Physics(delta, &chunkMan);
+			chunkMan.WorldTick(window.GetMS());
 			frameTime -= delta;
 			time += delta;
 		}

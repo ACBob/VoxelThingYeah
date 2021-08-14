@@ -45,6 +45,9 @@ class ChunkManager {
 		// Is the position within our place
 		bool ValidChunkPos(const Vector pos);
 
+		// Tick is (for now) The MS Since the start of the game
+		void WorldTick(int tickInMS);
+
 		// Shader we render with
 		Shader *worldShader;
 

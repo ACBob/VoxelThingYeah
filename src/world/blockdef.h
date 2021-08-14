@@ -15,6 +15,7 @@ enum blocktype_t {
 	GLASS    = 7,
 	LOG      = 8,
 	LEAVES   = 9,
+	WATER    = 10,
 };
 
 enum blockmaterial_t {
@@ -38,6 +39,8 @@ struct BlockFeatures
 	bool selectable;
 	// Can break
 	bool breakable;
+	// Can replace with a liquid
+	bool floodable;
 };
 
 BlockFeatures GetBlockFeatures(blocktype_t blockType);

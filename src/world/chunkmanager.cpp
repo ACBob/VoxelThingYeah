@@ -131,3 +131,43 @@ bool ChunkManager::TestAABBCollision(AABB col)
 
 	return false;
 }
+
+void ChunkManager::WorldTick(int tickInMS)
+{
+
+	for (Chunk* chunk : chunks)
+	{
+		// Generally we should avoid rebuilding the universe every tick
+		bool rebuild = false;
+		for (int i = 0; i < (CHUNKSIZE_X*CHUNKSIZE_Y*CHUNKSIZE_Z); i ++)
+		{
+			int x,y,z;
+			CHUNK1D_TO_3D(i, x,y,z);
+
+			blocktype_t blockType = chunk->blocks[i].blockType;
+
+			// Every fifth tick
+			// TODO: this is buggy and can sometimes fill an entire chunk in a single tick
+			if (tickInMS % 5 == 0 && blockType == WATER)
+			{
+				for (int i = 0; i < 5; i++)
+				{
+					if (i == UP) i = DOWN;
+
+					Vector dir = DirectionVector[i];
+					Block *b = chunk->GetBlockAtLocal(Vector(x,y,z)+dir);
+					if (b == nullptr) continue;
+					BlockFeatures bF = GetBlockFeatures(b->blockType);
+					if (bF.floodable)
+					{
+						b->blockType = WATER;
+						rebuild = true;
+					}
+				}
+			}
+		}
+
+		if (rebuild)
+			chunk->Update();
+	}
+}
