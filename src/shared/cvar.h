@@ -1,0 +1,69 @@
+// Quake-Style Console Variable System
+#include <map>
+
+#pragma once
+namespace ConVar
+{
+	enum ConVarFlag
+	{
+		// 0
+		CVAR_NOFLAGS     = 0,
+		// Save the value of the variable between runs
+		CVAR_ARCHIVE     = 1 << 0,
+		// Do not allow setting during run-time (for stuff like hardware info)
+		CVAR_READONLY    = 1 << 1,
+		// Keep until a restart of the server (or client in the scope of it)
+		CVAR_SESSION     = 1 << 2,
+		// Cheat only
+		CVAR_CHEAT       = 1 << 3,
+	};
+
+	class ConVar
+	{
+		public:
+			ConVar(const char* name, const char* defval, ConVarFlag flags);
+
+			// Gets value as (c) string
+			const char* GetString();
+			// Gets value as float
+			float GetFloat();
+			// Gets value as integer
+			int GetInt();
+			// Gets value as boolean
+			bool GetBool();
+
+			// Sets value as (c) string
+			void SetString(const char *val);
+			// Sets value as float
+			void SetFloat(float val);
+			// Sets value as integer
+			void SetInt(int val);
+			// Sets value as boolean
+			void SetBool(bool val);
+
+		private:
+
+			ConVarFlag flags;
+
+			// Does the value differ from its' regular one
+			bool modified;
+
+			// Converted from to other types :trollface:
+			const char* val;
+			const char* defVal;
+
+			// Name
+			const char* name;
+	};
+
+	// Name -> ConVar
+	extern std::map<const char*, ConVar*> Cvars;
+
+	// Find Cvar by name
+	ConVar FindConVar(const char *name);
+}
+
+#define CVAR_NOFLAGS ConVar::ConVarFlag::CVAR_NOFLAGS
+
+#define CVarDecl(name, defVal, flags) \
+	const ConVar::ConVar convar_##name = ConVar::ConVar(#name, #defVal, flags)

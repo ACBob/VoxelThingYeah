@@ -2,6 +2,7 @@
 
 #include "shared/filesystem.h"
 #include "shared/network.h"
+#include "shared/cvar.h"
 
 #define LOG_LEVEL DEBUG
 #include "shared/seethe.h"
@@ -9,9 +10,14 @@
 #include <stdlib.h>
 #include <cstdio>
 
+
+ConVar::ConVar convar_test("convar_test", "test", CVAR_NOFLAGS);
+
 int main (int argc, char* args[]) {
 
 	info("Hello from bobcraft!");
+
+	debug("Value of CVar 'convar_test': %s", convar_test.GetString());
 
 	info("Init Filesystem...");
 	if (!fileSystem::Init(args[0]))
