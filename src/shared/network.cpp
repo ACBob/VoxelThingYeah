@@ -131,12 +131,12 @@ namespace network
 			switch(e.type)
 			{
 				case ENET_EVENT_TYPE_CONNECT:
-					printf("New Client Connection: %x:%u\n",
+					info("Hello %x:%u!\n",
 						e.peer->address.host,
 						e.peer->address.port);
 				break;
 				case ENET_EVENT_TYPE_DISCONNECT:
-					printf("Goodbye %x:%u!\n",
+					info("Goodbye %x:%u!\n",
 						e.peer->address.host,
 						e.peer->address.port);
 				break;
