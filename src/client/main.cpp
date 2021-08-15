@@ -1,28 +1,27 @@
 #include "enet/enet.h"
 
 #include "shared/filesystem.h"
-#include "shared/logging.h"
+
+#define LOG_LEVEL DEBUG
+#include "shared/seethe.h"
 
 #include <stdlib.h>
 #include <cstdio>
 
 int main (int argc, char* args[]) {
 
-	log::log(log::INFO, "Hello from Bobcraft!");
-	log::log(log::WARN, "Testing Log module...");
-	log::log(log::ERRR, "DON'T PANIC");
-	log::log(log::DBUG, "%d, Dudes!", 69);
+	info("Hello from bobcraft!");
 
 	if (fileSystem::Init(args[0]) != 0)
 	{
-		log::log(log::ERRR, "Couldn't initialise filesystem! Fatal!");
+		critical("Couldn't initialise Filesystem! Unrecoverable!");
 		return EXIT_FAILURE;
 	}
 	atexit(fileSystem::UnInit);
 
 	if (enet_initialize() != 0)
 	{
-		log::log(log::ERRR, "Couldn't init Enet!\n");
+		critical("Couldn't initialise Enet! Unrecoverable!");
 		return EXIT_FAILURE;
 	}
 	atexit(enet_deinitialize);
@@ -33,7 +32,7 @@ int main (int argc, char* args[]) {
 
 	if (client == NULL)
 	{
-		log::log(log::ERRR, "Couldn't create Enet Host\n");
+		critical("Couldn't create Enet host! Unrecoverable!");
 		return EXIT_FAILURE;
 	}
 
@@ -47,18 +46,18 @@ int main (int argc, char* args[]) {
 	peer = enet_host_connect(client, &addr, 1, 0);
 	if (peer == NULL)
 	{
-		log::log(log::ERRR, "No Peers\n");
+		error("No peers.");
 		return EXIT_FAILURE;
 	}
 
 	if (enet_host_service(client, &e, 5000) > 0 && e.type == ENET_EVENT_TYPE_CONNECT)
 	{
-		log::log(log::INFO, "Connected to server! Hello!\n");
+		info("Hello! We've connected to a server!");
 	}
 	else
 	{
 		enet_peer_reset(peer);
-		log::log(log::ERRR, "Connection failed :(\n");
+		error("No server responed. :(");
 		return EXIT_SUCCESS;
 	}
 
@@ -67,7 +66,7 @@ int main (int argc, char* args[]) {
 		switch(e.type)
 		{
 			case ENET_EVENT_TYPE_RECEIVE:
-				log::log(log::DBUG, "Packet (L: %u, C: %s) from %s.",
+				debug("Packet (L: %u, C: %s) from %s.",
 					e.packet->dataLength,
 					e.packet->data,
 					e.peer->data
@@ -86,7 +85,7 @@ int main (int argc, char* args[]) {
 				enet_packet_destroy(e.packet);
 			break;
 			case ENET_EVENT_TYPE_DISCONNECT:
-				log::log(log::INFO, "Disconnected. Bye bye! :)\n");
+				info("Disconnected. Bye bye server! :)");
 			break;
 		}
 	}
