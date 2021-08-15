@@ -20,8 +20,10 @@ namespace network
 			// Returning true if it can be
 			bool WorkingClient();
 
-			bool Connect(const char* address = "127.0.0.1", int port = 85005);
+			bool Connect(const char* address = "127.0.0.1", int port = 58008);
 			void Disconnect();
+
+			void Update();
 		private:
 			ENetHost *enetHost;
 			ENetAddress addr;
@@ -49,6 +51,8 @@ namespace network
 		public:
 			Server(int port = 58008, int maxClients = 8);
 			~Server();
+
+			void Update();
 
 			// The server will do its' best to determine if it can be used or not
 			// Returning true if it can be

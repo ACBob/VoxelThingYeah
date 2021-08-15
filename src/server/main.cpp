@@ -32,5 +32,10 @@ int main (int argc, char* args[]) {
 		return EXIT_FAILURE;
 	}
 
+	while (true)
+	{
+		server.Update();
+	}
+
 	return EXIT_SUCCESS;
 }

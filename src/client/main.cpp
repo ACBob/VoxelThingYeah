@@ -31,16 +31,20 @@ int main (int argc, char* args[]) {
 
 	info("Create Client...");
 	network::Client client;
-	if (client.WorkingClient())
-	{
-		client.Connect();
-		client.Disconnect();
-	}
-	else
+	if (!client.WorkingClient())
 	{
 		critical("Client ended up in invalid state!");
 		return EXIT_FAILURE;
 	}
+
+	if (!client.Connect())
+	{
+		error("Didn't connect to anybody so we've nothing to do!");
+		return EXIT_FAILURE;
+	}
+
+	client.Update();
+	client.Disconnect();
 
 	return EXIT_SUCCESS;
 }
