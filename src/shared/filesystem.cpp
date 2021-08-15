@@ -6,16 +6,16 @@
 
 namespace fileSystem
 {
-	int Init(const char* exePath)
+	bool Init(const char* exePath)
 	{
 		// Initialise PhysFS first and foremost
 		if (!PHYSFS_init(exePath))
 		{
 			printf("PHYSFS Error!\n%s\n", PHYSFS_getLastError());
-			return 1;
+			return false;
 		}
 
-		return 0;
+		return true;
 	}
 
 	void UnInit()
