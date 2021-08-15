@@ -35,7 +35,7 @@ namespace log
 	{
 		char buffer[512];
 		vsnprintf(buffer, 512, fmt, vlist);
-		printf("\x1B" "[%dm%s\n" "\x1B[0m", GetColor(color), buffer);
+		printf("\x1B" "[%dm%s\x1B[0m\n", GetColor(color), buffer);
 	}
 
 	// Logs based on color, always logs

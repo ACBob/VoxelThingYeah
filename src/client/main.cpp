@@ -22,7 +22,7 @@ int main (int argc, char* args[]) {
 
 	if (enet_initialize() != 0)
 	{
-		printf("Couldn't init Enet!\n");
+		log::log(log::ERRR, "Couldn't init Enet!\n");
 		return EXIT_FAILURE;
 	}
 	atexit(enet_deinitialize);
@@ -33,7 +33,7 @@ int main (int argc, char* args[]) {
 
 	if (client == NULL)
 	{
-		printf("Couldn't create Enet Host\n");
+		log::log(log::ERRR, "Couldn't create Enet Host\n");
 		return EXIT_FAILURE;
 	}
 
@@ -47,18 +47,18 @@ int main (int argc, char* args[]) {
 	peer = enet_host_connect(client, &addr, 1, 0);
 	if (peer == NULL)
 	{
-		printf("No Peers\n");
+		log::log(log::ERRR, "No Peers\n");
 		return EXIT_FAILURE;
 	}
 
 	if (enet_host_service(client, &e, 5000) > 0 && e.type == ENET_EVENT_TYPE_CONNECT)
 	{
-		printf("Connected to server! Hello!\n");
+		log::log(log::INFO, "Connected to server! Hello!\n");
 	}
 	else
 	{
 		enet_peer_reset(peer);
-		printf("Connection failed :(\n");
+		log::log(log::ERRR, "Connection failed :(\n");
 		return EXIT_SUCCESS;
 	}
 
@@ -67,7 +67,7 @@ int main (int argc, char* args[]) {
 		switch(e.type)
 		{
 			case ENET_EVENT_TYPE_RECEIVE:
-				printf("Packet (L: %u, C: %s) from %s.",
+				log::log(log::DBUG, "Packet (L: %u, C: %s) from %s.",
 					e.packet->dataLength,
 					e.packet->data,
 					e.peer->data
@@ -86,7 +86,7 @@ int main (int argc, char* args[]) {
 				enet_packet_destroy(e.packet);
 			break;
 			case ENET_EVENT_TYPE_DISCONNECT:
-				printf("Disconnected. Bye bye! :)\n");
+				log::log(log::INFO, "Disconnected. Bye bye! :)\n");
 			break;
 		}
 	}
