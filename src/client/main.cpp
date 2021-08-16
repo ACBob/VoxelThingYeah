@@ -19,11 +19,13 @@ int main (int argc, char* args[]) {
 	info("Setting up client-side convars...");
 	SetupClientSideConvars();
 
-	char *argstring = FlattenCharArray(args, argc);
-
+	char *argstring = FlattenCharArray(args, 1, argc-1);
 	debug("Args: %s", argstring);
+	info("Parsing command line convars...");
+	conVarHandle.Parse(argstring);
 
-	debug("Value of CVar 'convar_test': %s", convar_test->GetString());
+
+	debug("Value of CVar 'convar_test': %s", conVarHandle.FindConVar("convar_test")->GetString());
 
 	info("Init Filesystem...");
 	if (!fileSystem::Init(args[0]))

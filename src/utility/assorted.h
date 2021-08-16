@@ -4,12 +4,12 @@
 
 #include <cstring>
 
-char *FlattenCharArray(char *array[], int len, char sep=' ')
+char *FlattenCharArray(char *array[], int offset, int len, char sep=' ')
 {
 	int l = 0;
 	for (int i=0; i < len; i++)
 	{
-		l += strlen(array[i]);
+		l += strlen(array[i + offset]);
 	}
 	l++;
 	
@@ -17,9 +17,9 @@ char *FlattenCharArray(char *array[], int len, char sep=' ')
 	buf[l + len - 1] = '\0';
 	for (int i = 0, j = 0; i < len; i++)
 	{
-		memcpy(buf + j + i, array[i], strlen(array[i]));
-		buf[j + strlen(array[i]) + i] = sep;
-		j += strlen(array[i]);
+		memcpy(buf + j + i, array[i + offset], strlen(array[i + offset]));
+		buf[j + strlen(array[i + offset]) + i] = sep;
+		j += strlen(array[i + offset]);
 	}
 
 	return buf;

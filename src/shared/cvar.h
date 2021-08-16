@@ -1,6 +1,8 @@
 // Quake-Style Console Variable System
 #include <map>
 
+#include <cstring>
+
 #pragma once
 namespace ConVar
 {
@@ -60,7 +62,19 @@ namespace ConVar
 	{
 		private:
 			// Name -> ConVar
-			std::map<const char*, ConVar*> Cvars;
+
+			// https://stackoverflow.com/a/4157729
+			struct cmp_str
+			{
+				bool operator()(const char *a, const char *b) const
+				{
+					return strcmp(a, b) < 0;
+				}
+			};
+
+			std::map<const char*, ConVar*, cmp_str> Cvars;
+
+			void ParseConvarTokens(const char* cmd, const char *arg);
 
 		public:
 			ConVarHandler();
@@ -75,6 +89,8 @@ namespace ConVar
 			{
 				return FindConVar(name);
 			}
+
+			void Parse(const char *str);
 	};
 }
 
