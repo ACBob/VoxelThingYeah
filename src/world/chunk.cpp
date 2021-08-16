@@ -2,7 +2,7 @@
 
 #include <random>
 
-#include "chunkmanager.h"
+#include "world.h"
 
 
 ChunkPos::ChunkPos(Vector pos)
@@ -66,7 +66,7 @@ void Chunk::Generate(fnl_state noise)
 Chunk* Chunk::Neighbour(Direction dir)
 {
 	Vector neighbourPos = worldPos.pos + DirectionVector[dir];
-	return (reinterpret_cast<ChunkManager*>(chunkMan))->ChunkAtChunkPos(neighbourPos);
+	return (reinterpret_cast<World*>(chunkMan))->ChunkAtChunkPos(neighbourPos);
 }
 
 #ifdef CLIENTEXE

@@ -1,6 +1,6 @@
 #include "utility/vector.h"
 #include "world/block.h"
-#include "world/chunkmanager.h"
+#include "world/world.h"
 
 #pragma once
 
@@ -18,7 +18,7 @@ class VoxRaycast
 {
 	public:
 		VoxRaycast();
-		PointedThing Cast(ChunkManager *chunkMan);
+		PointedThing Cast(World *chunkMan);
 
 		Vector pos;
 		Vector dir;

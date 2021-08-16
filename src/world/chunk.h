@@ -62,7 +62,7 @@ class Chunk
 		ChunkModel mdl;
 #endif
 
-		// ChunkManager pointer (can't set type because circular include :lenny:)
+		// World pointer (can't set type because circular include :lenny:)
 		void* chunkMan = nullptr;
 };
 

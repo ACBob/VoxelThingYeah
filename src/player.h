@@ -1,6 +1,6 @@
 #include "utility/vector.h"
 #include "utility/raycast.h"
-#include "world/chunkmanager.h"
+#include "world/world.h"
 #include "world/block.h"
 
 
@@ -23,11 +23,11 @@ class Player
 		Player();
 
 #ifdef CLIENTEXE
-		void Update(ChunkManager *chunkMan, SoundManager *soundMan);
+		void Update(World *chunkMan, SoundManager *soundMan);
 #elif SERVEREXE
-		void Update(ChunkManager *chunkMan);
+		void Update(World *chunkMan);
 #endif
-		void Physics(double delta, ChunkManager *chunkMan);
+		void Physics(double delta, World *chunkMan);
 
 		void UpdateCollision();
 

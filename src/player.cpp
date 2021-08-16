@@ -16,9 +16,9 @@ Player::Player() :
 }
 
 #ifdef CLIENTEXE
-void Player::Update(ChunkManager *chunkMan, SoundManager *soundMan)
+void Player::Update(World *chunkMan, SoundManager *soundMan)
 #elif SERVEREXE
-void Player::Update(ChunkManager *chunkMan)
+void Player::Update(World *chunkMan)
 #endif
 {
 	Vector right = forward.Rotate(2, 90);
@@ -118,7 +118,7 @@ void Player::UpdateCollision()
 	collision.pos = pos;
 }
 
-void Player::Physics(double delta, ChunkManager *chunkMan)
+void Player::Physics(double delta, World *chunkMan)
 {
 	onFloor = false;
 

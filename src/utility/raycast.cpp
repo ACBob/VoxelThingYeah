@@ -1,5 +1,5 @@
 #include "utility/vector.h"
-#include "world/chunkmanager.h"
+#include "world/world.h"
 #include "raycast.h"
 
 PointedThing::PointedThing() :
@@ -17,7 +17,7 @@ VoxRaycast::VoxRaycast() :
 
 }
 
-PointedThing VoxRaycast::Cast(ChunkManager *chunkMan)
+PointedThing VoxRaycast::Cast(World *chunkMan)
 {
 	Vector ray = pos;
 	Vector oRay; // for figuring out normal

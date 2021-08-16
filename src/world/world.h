@@ -21,15 +21,15 @@
 #define MAXCOORD_Y 65535
 #define MAXCOORD_Z 65535
 
-class ChunkManager {
+class World {
 	public:
 
 #ifdef CLIENTEXE
-		ChunkManager(Shader *shader);
+		World(Shader *shader);
 #elif SERVEREXE
-		ChunkManager();
+		World();
 #endif
-		~ChunkManager();
+		~World();
 
 		Chunk *ChunkAtWorldPos(Vector pos);
 		Chunk *ChunkAtChunkPos(Vector chunkPos);

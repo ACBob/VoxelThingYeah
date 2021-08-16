@@ -1,12 +1,12 @@
-#include "chunkmanager.h"
+#include "world.h"
 
 #include "physics.h"
 
 #ifdef CLIENTEXE
-ChunkManager::ChunkManager(Shader *shader) :
+World::World(Shader *shader) :
 	worldShader(shader)
 #elif SERVEREXE
-ChunkManager::ChunkManager()
+World::World()
 #endif
 {
 	chunks = {};
@@ -46,7 +46,7 @@ ChunkManager::ChunkManager()
 	}
 #endif
 }
-ChunkManager::~ChunkManager()
+World::~World()
 {
 	// Destroy chunks
 	for (Chunk *c : chunks)
@@ -54,7 +54,7 @@ ChunkManager::~ChunkManager()
 }
 
 // Return in good faith that it's a valid position
-Chunk* ChunkManager::ChunkAtChunkPos(Vector pos)
+Chunk* World::ChunkAtChunkPos(Vector pos)
 {
 	if (!ValidChunkPos(pos))
 		return nullptr;
@@ -65,7 +65,7 @@ Chunk* ChunkManager::ChunkAtChunkPos(Vector pos)
 
 
 // Return in good faith that it's a valid position
-Chunk* ChunkManager::ChunkAtWorldPos(Vector pos)
+Chunk* World::ChunkAtWorldPos(Vector pos)
 {
 	pos = pos / Vector(CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z);
 	pos = pos.Floor();
@@ -73,7 +73,7 @@ Chunk* ChunkManager::ChunkAtWorldPos(Vector pos)
 	return ChunkAtChunkPos(pos);
 }
 
-Block *ChunkManager::BlockAtWorldPos(Vector pos)
+Block *World::BlockAtWorldPos(Vector pos)
 {
 	pos = pos.Floor();
 	Chunk *chunk = ChunkAtWorldPos(pos);
@@ -83,7 +83,7 @@ Block *ChunkManager::BlockAtWorldPos(Vector pos)
 	return chunk->GetBlockAtLocal(localPos);
 }
 
-bool ChunkManager::ValidChunkPos(const Vector pos)
+bool World::ValidChunkPos(const Vector pos)
 {
 	for (Chunk* c : chunks)
 		if (c->worldPos.pos == pos) return true;
@@ -91,7 +91,7 @@ bool ChunkManager::ValidChunkPos(const Vector pos)
 }
 
 #ifdef CLIENTEXE
-void ChunkManager::Render()
+void World::Render()
 {
 	for (Chunk* c : chunks)
 	{
@@ -100,7 +100,7 @@ void ChunkManager::Render()
 }
 #endif
 
-bool ChunkManager::TestPointCollision(Vector pos)
+bool World::TestPointCollision(Vector pos)
 {
 	Block *b = BlockAtWorldPos(pos);
 	if (b == nullptr)
@@ -113,7 +113,7 @@ bool ChunkManager::TestPointCollision(Vector pos)
 	return AABB(pos.Floor(), Vector(1,1,1), Vector(0)).TestPointCollide(pos);
 }
 
-bool ChunkManager::TestAABBCollision(AABB col)
+bool World::TestAABBCollision(AABB col)
 {
 	Chunk *chunk = ChunkAtWorldPos(col.pos);
 	if (chunk == nullptr) return false;
@@ -142,7 +142,7 @@ bool ChunkManager::TestAABBCollision(AABB col)
 	return false;
 }
 
-void ChunkManager::WorldTick(int tickN)
+void World::WorldTick(int tickN)
 {
 
 	for (Chunk* chunk : chunks)
