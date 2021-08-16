@@ -2,10 +2,11 @@
 
 #include <cstring>
 
+// Global Convar Handler
+ConVar::ConVarHandler conVarHandle;
+
 namespace ConVar
 {
-	std::map<const char*, ConVar*> Cvars;
-
 	ConVar::ConVar(const char* name, const char* defval, ConVarFlag flags)
 	{
 		this->name = name;
@@ -53,5 +54,28 @@ namespace ConVar
 	bool ConVar::GetBool()
 	{
 		return (strcmp(this->val, "true") != 0);
+	}
+
+	ConVarHandler::ConVarHandler()
+	{
+		Cvars = {};
+	}
+	ConVarHandler::~ConVarHandler()
+	{
+		for (auto &c : Cvars)
+			delete c.second;
+	}
+
+	ConVar *ConVarHandler::DeclareConvar(const char* name, const char* defVal, ConVarFlag flags)
+	{
+		ConVar *c = new ConVar(name, defVal, flags);
+		Cvars[name] = c;
+
+		return c;
+	}
+
+	ConVar *ConVarHandler::FindConVar(const char* name)
+	{
+		return Cvars[name];
 	}
 }

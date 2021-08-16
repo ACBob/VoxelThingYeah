@@ -56,14 +56,27 @@ namespace ConVar
 			const char* name;
 	};
 
-	// Name -> ConVar
-	extern std::map<const char*, ConVar*> Cvars;
+	class ConVarHandler
+	{
+		private:
+			// Name -> ConVar
+			std::map<const char*, ConVar*> Cvars;
 
-	// Find Cvar by name
-	ConVar FindConVar(const char *name);
+		public:
+			ConVarHandler();
+			~ConVarHandler();
+			
+			ConVar *DeclareConvar(const char* name, const char* defVal, ConVarFlag flags = ConVarFlag::CVAR_NOFLAGS);
+
+			// Find Cvar by name
+			ConVar *FindConVar(const char *name);
+
+			ConVar *operator[](const char *name)
+			{
+				return FindConVar(name);
+			}
+	};
 }
 
-#define CVAR_NOFLAGS ConVar::ConVarFlag::CVAR_NOFLAGS
-
-#define CVarDecl(name, defVal, flags) \
-	const ConVar::ConVar convar_##name = ConVar::ConVar(#name, #defVal, flags)
+// Global Convar Handler
+extern ConVar::ConVarHandler conVarHandle;
