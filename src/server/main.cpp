@@ -5,11 +5,22 @@
 #include "shared/filesystem.h"
 #include "shared/network.h"
 
+#include "utility/assorted.h"
+
+#include "cvar_serverside.h"
+
 #define LOG_LEVEL DEBUG
 #include "shared/seethe.h"
 
 int main (int argc, char* args[]) {
 	info("Hello from scenic bobcraft server!");
+	info("Setting up Server-side convars...");
+	SetupServerSideConvars();
+
+	char *argstring = FlattenCharArray(args, 1, argc-1);
+	debug("Args: %s", argstring);
+	info("Parsing command line convars...");
+	conVarHandle.Parse(argstring);
 
 	info("Init Filesystem...");
 	if (!fileSystem::Init(args[0]))
