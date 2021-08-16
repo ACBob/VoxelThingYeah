@@ -49,8 +49,9 @@ class ChunkManager {
 		// Is the position within our place
 		bool ValidChunkPos(const Vector pos);
 
-		// Tick is (for now) The MS Since the start of the game
-		void WorldTick(int tickInMS);
+		// Tick is the tick since the start of the game
+		// FIXME: depending on if I got my calculation right, this will shit itself either in 1,000 or so years or 3.
+		void WorldTick(int tick);
 
 
 #ifdef CLIENTEXE

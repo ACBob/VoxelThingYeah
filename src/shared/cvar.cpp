@@ -11,7 +11,7 @@ ConVar::ConVarHandler conVarHandle;
 
 namespace ConVar
 {
-	ConVar::ConVar(const char* name, const char* defval, ConVarFlag flags)
+	ConVar::ConVar(const char* name, const char* defval, int flags)
 	{
 		this->name = name;
 		this->val = defval;
@@ -74,7 +74,7 @@ namespace ConVar
 			delete c.second;
 	}
 
-	ConVar *ConVarHandler::DeclareConvar(const char* name, const char* defVal, ConVarFlag flags)
+	ConVar *ConVarHandler::DeclareConvar(const char* name, const char* defVal, int flags)
 	{
 		ConVar *c = new ConVar(name, defVal, flags);
 		Cvars[name] = c;
@@ -176,6 +176,10 @@ namespace ConVar
 
 	void ConVarHandler::ParseConvarTokens(const char *cmd, const char *args)
 	{
+		// It's empty, bum run, don't do anything
+		if (strlen(cmd) == 0 && strlen(args) == 0)
+			return;
+
 		debug("SET %s TO %s", cmd, args);
 
 		ConVar *conv = Cvars[cmd];

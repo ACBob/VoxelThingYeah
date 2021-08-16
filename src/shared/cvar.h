@@ -20,10 +20,13 @@ namespace ConVar
 		CVAR_CHEAT       = 1 << 3,
 	};
 
+	// Shorthand
+	typedef ConVarFlag F;
+
 	class ConVar
 	{
 		public:
-			ConVar(const char* name, const char* defval, ConVarFlag flags);
+			ConVar(const char* name, const char* defval, int flags);
 
 			// Gets value as (c) string
 			const char* GetString();
@@ -45,7 +48,7 @@ namespace ConVar
 
 		private:
 
-			ConVarFlag flags;
+			int flags;
 
 			// Does the value differ from its' regular one
 			bool modified;
@@ -80,7 +83,7 @@ namespace ConVar
 			ConVarHandler();
 			~ConVarHandler();
 			
-			ConVar *DeclareConvar(const char* name, const char* defVal, ConVarFlag flags = ConVarFlag::CVAR_NOFLAGS);
+			ConVar *DeclareConvar(const char* name, const char* defVal, int flags = F::CVAR_NOFLAGS);
 
 			// Find Cvar by name
 			ConVar *FindConVar(const char *name);

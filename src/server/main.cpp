@@ -5,12 +5,16 @@
 #include "shared/filesystem.h"
 #include "shared/network.h"
 
+#include <chrono>
+
 #include "utility/assorted.h"
 
 #include "cvar_serverside.h"
 
 #define LOG_LEVEL DEBUG
 #include "shared/seethe.h"
+
+#include "world/chunkmanager.h"
 
 int main (int argc, char* args[]) {
 	info("Hello from scenic bobcraft server!");
@@ -46,10 +50,31 @@ int main (int argc, char* args[]) {
 		return EXIT_FAILURE;
 	}
 
+	info("Begin server chunkManager");
+	ChunkManager chunkman;
+
 	info("Begin server main loop...");
+	int64_t then = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
+	int64_t now = then;
+	int i = 0;
 	while (true)
 	{
+		// Networking
 		server.Update();
+
+		now = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
+		int64_t delta = now - then;
+
+		if (now >= then)
+		{
+			then = now + sv_tickms->GetInt();
+			// TICK
+			info("%dth tick", i);
+			i++;
+
+			chunkman.WorldTick(i);
+		}
+
 	}
 
 	return EXIT_SUCCESS;

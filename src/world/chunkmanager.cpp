@@ -142,7 +142,7 @@ bool ChunkManager::TestAABBCollision(AABB col)
 	return false;
 }
 
-void ChunkManager::WorldTick(int tickInMS)
+void ChunkManager::WorldTick(int tickN)
 {
 
 	for (Chunk* chunk : chunks)
@@ -157,8 +157,9 @@ void ChunkManager::WorldTick(int tickInMS)
 			blocktype_t blockType = chunk->blocks[i].blockType;
 
 			// Every fifth tick
-			// TODO: this is buggy and can sometimes fill an entire chunk in a single tick
-			if (tickInMS % 5 == 0 && blockType == WATER)
+			// TODO: Search for all water THEN put it into a list easy to handle later (so we don't progressively fill existing water)
+			// TODO: maybe liquid type? could be slow...
+			if (tickN % 5 == 0 && blockType == WATER)
 			{
 				for (int i = 0; i < 5; i++)
 				{
