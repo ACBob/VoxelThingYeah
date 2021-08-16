@@ -10,12 +10,18 @@
 #include <stdlib.h>
 #include <cstdio>
 
+#include "utility/assorted.h"
+
 
 ConVar::ConVar convar_test("convar_test", "test", CVAR_NOFLAGS);
 
 int main (int argc, char* args[]) {
 
 	info("Hello from bobcraft!");
+
+	char *argstring = FlattenCharArray(args, argc);
+
+	debug("Args: %s", argstring);
 
 	debug("Value of CVar 'convar_test': %s", convar_test.GetString());
 
