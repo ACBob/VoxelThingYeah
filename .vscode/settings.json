@@ -69,7 +69,10 @@
 		"typeinfo": "cpp",
 		"valarray": "cpp",
 		"variant": "cpp",
-		"*.ipp": "cpp"
+		"*.ipp": "cpp",
+		"csetjmp": "cpp",
+		"codecvt": "cpp",
+		"forward_list": "cpp"
 	},
 	"C_Cpp.errorSquiggles": "Enabled"
 }

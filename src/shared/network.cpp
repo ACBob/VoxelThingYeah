@@ -3,13 +3,19 @@
 #define LOG_LEVEL DEBUG
 #include "seethe.h"
 
+#include <bitsery/bitsery.h>
+#include <bitsery/adapter/buffer.h>
+#include <bitsery/traits/vector.h>
+
+#include <sstream>
+
 namespace network
 {
 	bool Init()
 	{
 		if(enet_initialize() != 0)
 		{
-			error("ENet failed to initialise");
+			con_error("ENet failed to initialise");
 			return false;
 		}
 		return true;
@@ -26,7 +32,7 @@ namespace network
 
 		if (enetHost == NULL)
 		{
-			error("Couldn't create ENet client object");
+			con_error("Couldn't create ENet client object");
 			return;
 		}
 	}
@@ -48,29 +54,29 @@ namespace network
 		peer = enet_host_connect(enetHost, &addr, 1, 0);
 		if (!peer)
 		{
-			error("No peers available.");
+			con_error("No peers available.");
 			return false;
 		}
 
-		info("We've found a peer!");
-		info("Giving server 2.5 seconds to respond...");
+		con_info("We've found a peer!");
+		con_info("Giving server 2.5 seconds to respond...");
 		if (enet_host_service(enetHost, &e, 2500) > 0 && e.type == ENET_EVENT_TYPE_CONNECT)
 		{
-			info("Hello! We've connected to a server!");
+			con_info("Hello! We've connected to a server!");
 			return true;
 		}
 		else
 		{
-			error("Nobody said hello back :(");
+			con_error("Nobody said hello back :(");
 			return false;
 		}
 	}
 	void Client::Disconnect()
 	{
-		info("Disconnecting");
+		con_info("Disconnecting");
 		enet_peer_disconnect(peer, 0);
 
-		info("Taking some time to ignore packets sent our way...");
+		con_info("Taking some time to ignore packets sent our way...");
 		while (enet_host_service(enetHost, &e, 3000) > 0)
 		{
 			switch (e.type)
@@ -79,7 +85,7 @@ namespace network
 					enet_packet_destroy(e.packet);
 				break;
 				case ENET_EVENT_TYPE_DISCONNECT:
-					info("Disconnected. Bye bye server! :)");
+					con_info("Disconnected. Bye bye server! :)");
 				break;
 			}
 		}
@@ -90,7 +96,7 @@ namespace network
 		ENetEvent e;
 		if (!peer) 
 		{
-			warning("Attempt to update server without a peer!");
+			con_warning("Attempt to update server without a peer!");
 			return; // Can't update w/out a peer
 		}
 
@@ -99,10 +105,23 @@ namespace network
 			switch (e.type)
 			{
 				case ENET_EVENT_TYPE_RECEIVE:
-
+					con_info("We've recieved something, assuming it's chunk data :trollface:");
+					DecodeChunkData(e.packet->data, e.packet->dataLength);
 				break;
 			}
 		}
+	}
+
+	void Client::DecodeChunkData(unsigned char *data, unsigned long length)
+	{
+		std::vector<unsigned char> buf(data, data + length);
+		World::PortableChunkRepresentation crep;
+		auto state = bitsery::quickDeserialization(
+			bitsery::InputBufferAdapter<std::vector<unsigned char>>{buf.begin(), length}, crep
+		);
+
+		// Woot, data!
+
 	}
 #elif SERVEREXE
 	Server::Server(int port, int maxClients)
@@ -114,7 +133,7 @@ namespace network
 
 		if (enetHost == NULL)
 		{
-			error("Couldn't create ENet server object");
+			con_error("Couldn't create ENet server object");
 			return;
 		}
 	}
@@ -123,7 +142,7 @@ namespace network
 		enet_host_destroy(enetHost);
 	}
 
-	void Server::Update()
+	void Server::Update(World *world)
 	{
 		ENetEvent e;
 		while(enet_host_service(enetHost, &e, 0) > 0)
@@ -131,12 +150,14 @@ namespace network
 			switch(e.type)
 			{
 				case ENET_EVENT_TYPE_CONNECT:
-					info("Hello %x:%u!\n",
+					con_info("Hello %x:%u!\n",
 						e.peer->address.host,
 						e.peer->address.port);
+					con_info("Sending them 0,0");
+					SendWorld(world, e.peer, Vector(0));
 				break;
 				case ENET_EVENT_TYPE_DISCONNECT:
-					info("Goodbye %x:%u!\n",
+					con_info("Goodbye %x:%u!\n",
 						e.peer->address.host,
 						e.peer->address.port);
 				break;
@@ -147,6 +168,18 @@ namespace network
 	bool Server::WorkingServer()
 	{
 		return enetHost != NULL;
+	}
+
+	void Server::SendWorld(World *world, ENetPeer *peer, Vector pos)
+	{
+		World::PortableChunkRepresentation chunkRep = world->GetWorldRepresentation(pos);
+		
+		std::vector<uint8_t> buf;
+
+		size_t writtenSize = bitsery::quickSerialization<bitsery::OutputBufferAdapter<std::vector<uint8_t>>>(buf, chunkRep);
+
+		ENetPacket *packet = enet_packet_create(&buf[0], writtenSize, ENET_PACKET_FLAG_RELIABLE);
+		enet_peer_send(peer, 0, packet);
 	}
 #endif
 }

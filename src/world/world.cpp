@@ -2,6 +2,8 @@
 
 #include "physics.h"
 
+#include "shared/seethe.h"
+
 #ifdef CLIENTEXE
 World::World(Shader *shader) :
 	worldShader(shader)
@@ -191,4 +193,27 @@ void World::WorldTick(int tickN)
 		if (rebuild)
 			chunk->Update();
 	}
+}
+
+World::PortableChunkRepresentation World::GetWorldRepresentation(Vector pos)
+{
+	PortableChunkRepresentation crep;
+
+	if (!ValidChunkPos(pos))
+	{
+		con_critical("We've just returned garbage data for the portable chunk!");
+		return crep;
+	}
+
+	Chunk *c = ChunkAtWorldPos(pos);
+	crep.x = c->worldPos.pos.x;
+	crep.y = c->worldPos.pos.y;
+	crep.z = c->worldPos.pos.z;
+
+	for (int j = 0; j < CHUNKSIZE_X*CHUNKSIZE_Y*CHUNKSIZE_Z; j++)
+	{
+		crep.blocks[j] = c->blocks[j].blockType;
+	}
+
+	return crep;
 }

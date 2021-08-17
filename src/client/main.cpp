@@ -15,49 +15,54 @@
 
 int main (int argc, char* args[]) {
 
-	info("Hello from bobcraft!");
-	info("Setting up client-side convars...");
+	con_info("Hello from bobcraft!");
+	con_info("Setting up client-side convars...");
 	SetupClientSideConvars();
 
 	char *argstring = FlattenCharArray(args, 1, argc-1);
-	debug("Args: %s", argstring);
-	info("Parsing command line convars...");
+	con_debug("Args: %s", argstring);
+	con_info("Parsing command line convars...");
 	conVarHandle.Parse(argstring);
 
 
-	debug("Value of CVar 'convar_test': %s", conVarHandle.FindConVar("convar_test")->GetString());
+	con_debug("Value of CVar 'convar_test': %s", conVarHandle.FindConVar("convar_test")->GetString());
 
-	info("Init Filesystem...");
+	con_info("Init Filesystem...");
 	if (!fileSystem::Init(args[0]))
 	{
-		critical("Couldn't initialise Filesystem! Unrecoverable!");
+		con_critical("Couldn't initialise Filesystem! Unrecoverable!");
 		return EXIT_FAILURE;
 	}
 	atexit(fileSystem::UnInit);
 
-	info("Init Network...");
+	con_info("Init Network...");
 	if (!network::Init())
 	{
-		critical("Couldn't initialise Network! Unrecoverable!");
+		con_critical("Couldn't initialise Network! Unrecoverable!");
 		return EXIT_FAILURE;
 	}
 	atexit(network::Uninit);
 
-	info("Create Client...");
+	con_info("Create Client...");
 	network::Client client;
 	if (!client.WorkingClient())
 	{
-		critical("Client ended up in invalid state!");
+		con_critical("Client ended up in invalid state!");
 		return EXIT_FAILURE;
 	}
 
 	if (!client.Connect())
 	{
-		error("Didn't connect to anybody so we've nothing to do!");
+		con_error("Didn't connect to anybody so we've nothing to do!");
 		return EXIT_FAILURE;
 	}
 
-	client.Update();
+	while (true)
+	{
+		client.Update();
+	}
+
+
 	client.Disconnect();
 
 	return EXIT_SUCCESS;

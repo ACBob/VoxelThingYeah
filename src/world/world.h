@@ -1,6 +1,8 @@
 #include "world/chunk.h"
 #include "world/block.h"
 
+#include <bitsery/bitsery.h>
+
 #include "utility/vector.h"
 
 #ifdef CLIENTEXE
@@ -52,6 +54,24 @@ class World {
 		// Tick is the tick since the start of the game
 		// FIXME: depending on if I got my calculation right, this will shit itself either in 1,000 or so years or 3.
 		void WorldTick(int tick);
+
+		
+		struct PortableChunkRepresentation
+		{
+			uint32_t x,y,z;
+			uint32_t blocks[CHUNKSIZE_X*CHUNKSIZE_Y*CHUNKSIZE_Z];
+
+			template <typename S>
+			void serialize(S& s)
+			{
+				s.value4b(x);
+				s.value4b(y);
+				s.value4b(z);
+				s.container4b(blocks);
+			};
+		};
+		PortableChunkRepresentation GetWorldRepresentation(Vector pos);
+		
 
 
 #ifdef CLIENTEXE

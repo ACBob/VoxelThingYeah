@@ -164,7 +164,7 @@ namespace ConVar
 		if (quoted)
 		{
 			// Only a warning as we can continue anyway
-			warning("Syntax warning: Unclosed String!");
+			con_warning("Syntax warning: Unclosed String!");
 		}
 
 		
@@ -180,12 +180,12 @@ namespace ConVar
 		if (strlen(cmd) == 0 && strlen(args) == 0)
 			return;
 
-		debug("SET %s TO %s", cmd, args);
+		con_debug("SET %s TO %s", cmd, args);
 
 		ConVar *conv = Cvars[cmd];
 		if (conv == nullptr)
 		{
-			error("Unknown ConVar %s", cmd);
+			con_error("Unknown ConVar %s", cmd);
 		}
 		else
 		{

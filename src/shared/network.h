@@ -2,6 +2,8 @@
 
 #include "enet/enet.h"
 
+#include "world/world.h"
+
 namespace network
 {
 
@@ -24,6 +26,8 @@ namespace network
 			void Disconnect();
 
 			void Update();
+
+			void DecodeChunkData(unsigned char *data, unsigned long length);
 		private:
 			ENetHost *enetHost;
 			ENetAddress addr;
@@ -52,7 +56,7 @@ namespace network
 			Server(int port = 58008, int maxClients = 8);
 			~Server();
 
-			void Update();
+			void Update(World *world);
 
 			// The server will do its' best to determine if it can be used or not
 			// Returning true if it can be
@@ -62,6 +66,8 @@ namespace network
 			ENetAddress addr;
 			ENetEvent e;
 			ENetHost *enetHost;
+
+			void SendWorld(World *world, ENetPeer *peer, Vector pos);
 	};
 #endif
 
