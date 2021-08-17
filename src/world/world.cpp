@@ -217,3 +217,20 @@ World::PortableChunkRepresentation World::GetWorldRepresentation(Vector pos)
 
 	return crep;
 }
+
+void World::UsePortable(PortableChunkRepresentation rep)
+{
+	Chunk *c = ChunkAtChunkPos(Vector(rep.x, rep.y, rep.z));
+	if (c == nullptr)
+	{
+		con_error("WEE WOO WEE WOO");
+		return;
+	}
+
+	for (int j = 0; j < CHUNKSIZE_X*CHUNKSIZE_Y*CHUNKSIZE_Z; j++)
+	{
+		c->blocks[j].blockType = (blocktype_t)rep.blocks[j];
+	}
+	
+	c->Update();
+}

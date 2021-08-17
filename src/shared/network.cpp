@@ -121,7 +121,7 @@ namespace network
 		);
 
 		// Woot, data!
-
+		localWorld->UsePortable(crep);
 	}
 #elif SERVEREXE
 	Server::Server(int port, int maxClients)

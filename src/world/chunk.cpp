@@ -45,6 +45,7 @@ void Chunk::Generate(fnl_state noise)
 		// Make the block aware of our existence
 		blocks[i].chunk = this;
 
+#ifdef SERVEREXE
 		float noiseData = 1 + fnlGetNoise3D(&noise, Worldposition.x,Worldposition.y,Worldposition.z);
 		float percentToTopWorld = 1 - ((32 + Worldposition.y) / 64.0f);
 		noiseData *= (percentToTopWorld * 1.0f);
@@ -60,6 +61,9 @@ void Chunk::Generate(fnl_state noise)
 			blocks[i].blockType = noiseData > 0.2 ? blocktype_t::DIRT : blocktype_t::AIR;
 		else
 			blocks[i].blockType = blocktype_t::AIR;
+#elif CLIENTEXE
+		blocks[i].blockType = blocktype_t::AIR;
+#endif
 	}
 }
 

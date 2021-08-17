@@ -21,6 +21,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "player.h"
 
 int main (int argc, char* args[]) {
 
@@ -79,7 +80,7 @@ int main (int argc, char* args[]) {
 
 		SDL_LogSetPriority(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO);
 	}
-	GameWindow window("VoxelThingYeah", Vector(1280,720), true);
+	GameWindow window("VoxelThingYeah", Vector(scr_width->GetFloat(),scr_height->GetFloat()), true);
 	InputManager inputMan;
 	window.inputMan = &inputMan;
 	{
@@ -98,6 +99,10 @@ int main (int argc, char* args[]) {
 	ShaderManager shaderMan;
 	Shader* worldShader = shaderMan.LoadShader("shaders/generic.vert", "shaders/generic.frag");
 
+	con_info("Load default textures");
+	TextureManager texMan;
+	Texture* terrainPng = texMan.LoadTexture("terrain.png");
+
 	con_info("Create Client...");
 	World localWorld(worldShader);
 
@@ -115,13 +120,47 @@ int main (int argc, char* args[]) {
 		return EXIT_FAILURE;
 	}
 
+	Player plyr;
+	plyr.inputMan = &inputMan;
+
+	glm::mat4 projection = glm::perspective(glm::radians(70.0f), scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f);
+	glm::mat4 screen = glm::ortho(0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat());
+	
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+	glEnable(GL_CULL_FACE); 
+	glCullFace(GL_FRONT);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_ONE,  GL_ONE_MINUS_SRC_ALPHA);
+	glBlendEquation(GL_FUNC_ADD);
+
 	while (!window.shouldClose)
 	{
+		client.Update();
 		window.PollEvents();
 		if (window.IsVisible())
 			window.CaptureMouse();
 		
-		client.Update();
+		plyr.Update(&localWorld, nullptr);
+		plyr.Physics(1/60.0f, &localWorld);
+
+		// Rendering
+		{
+			// Rendering right at the end
+			glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+			Vector v = plyr.camera.pos + plyr.camera.forward;
+			glm::mat4 view = glm::lookAt(glm::vec3(plyr.camera.pos.x, plyr.camera.pos.y, plyr.camera.pos.z), glm::vec3(v.x, v.y, v.z), glm::vec3(VEC_UP.x, VEC_UP.y, VEC_UP.z));
+			shaderMan.SetUniforms(view, projection, screen, window.GetMS());
+
+			worldShader->Use();
+
+			glBindTexture(GL_TEXTURE_2D, terrainPng->id);
+
+			localWorld.Render();
+		}
+
+		window.SwapBuffers();
 	}
 	window.SetVisible(false);
 
