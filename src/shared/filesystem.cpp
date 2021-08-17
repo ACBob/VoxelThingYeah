@@ -3,15 +3,20 @@
 #include <cstdio>
 
 #include "physfs.h"
+#include "seethe.h"
+
+#define PRINTPHYSFSERR \
+		con_error("PhysFS Error: %s", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()))
 
 namespace fileSystem
 {
+
 	bool Init(const char* exePath)
 	{
 		// Initialise PhysFS first and foremost
-		if (!PHYSFS_init(exePath))
+		if (PHYSFS_init(exePath) == 0)
 		{
-			printf("PHYSFS Error!\n%s\n", PHYSFS_getLastError());
+			PRINTPHYSFSERR;
 			return false;
 		}
 
@@ -35,10 +40,21 @@ namespace fileSystem
 
 		if (rl != len)
 		{
-			printf("PHYSFS File Error!\n%s\n", PHYSFS_getLastError());
+			PRINTPHYSFSERR;
 			success = false;
 		}
 
 		return buf;
+	}
+
+	bool Mount(const char* realPath, const char* virtualPath, bool prepend)
+	{
+		if (PHYSFS_mount(realPath, virtualPath, prepend ? 0 : 1) == 0)
+		{
+			PRINTPHYSFSERR;
+			return false;
+		}
+
+		return true;
 	}
 }

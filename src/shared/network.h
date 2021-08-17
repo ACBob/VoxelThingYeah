@@ -28,6 +28,10 @@ namespace network
 			void Update();
 
 			void DecodeChunkData(unsigned char *data, unsigned long length);
+
+			// Pointer to the local world
+			World* localWorld = nullptr;
+
 		private:
 			ENetHost *enetHost;
 			ENetAddress addr;
