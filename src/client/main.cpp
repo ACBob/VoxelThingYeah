@@ -123,9 +123,9 @@ int main (int argc, char* args[]) {
 	Player plyr;
 	plyr.inputMan = &inputMan;
 
-	glm::mat4 projection = glm::perspective(glm::radians(70.0f), scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f);
+	glm::mat4 projection = glm::perspective(glm::radians(fov->GetFloat()), scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f);
 	glm::mat4 screen = glm::ortho(0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat());
-	
+
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_CULL_FACE); 
