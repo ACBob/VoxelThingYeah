@@ -160,6 +160,8 @@ int main (int argc, char* args[]) {
 			localWorld.Render();
 		}
 
+		con_info("<%f,%f,%f>", plyr.pos.x, plyr.pos.y, plyr.pos.z);
+
 		window.SwapBuffers();
 	}
 	window.SetVisible(false);

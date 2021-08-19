@@ -4,6 +4,9 @@
 
 #include "world/world.h"
 
+// TODO: a nicer place for these
+typedef std::vector<uint8_t> BitseryBuf;
+
 namespace network
 {
 
@@ -27,7 +30,7 @@ namespace network
 
 			void Update();
 
-			void DecodeChunkData(unsigned char *data, unsigned long length);
+			void DecodeChunkData(std::vector<uint> data);
 
 			// Pointer to the local world
 			World* localWorld = nullptr;
@@ -75,4 +78,24 @@ namespace network
 	};
 #endif
 
+	struct NetworkPacket
+	{
+		enum type_t
+		{
+			CHUNKDATA = 1,
+		};
+
+		uint32_t type;
+		std::vector<uint> data;
+
+		template <typename S>
+		void serialize(S& s)
+		{
+			s.value4b(type);
+			s.container4b(data, data.size());
+		};
+	};
+
+	void SendPacket(ENetPeer *peer, NetworkPacket::type_t type, BitseryBuf data);
+	NetworkPacket GetPacketBack(ENetPacket *packet);
 }

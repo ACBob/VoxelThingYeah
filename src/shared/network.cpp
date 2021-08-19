@@ -6,11 +6,15 @@
 #include <bitsery/bitsery.h>
 #include <bitsery/adapter/buffer.h>
 #include <bitsery/traits/vector.h>
+#include <bitsery/brief_syntax.h>
 
 #include <sstream>
 
 namespace network
 {
+	// Forward decl
+	struct NetworkPacket;
+
 	bool Init()
 	{
 		if(enet_initialize() != 0)
@@ -106,18 +110,25 @@ namespace network
 			{
 				case ENET_EVENT_TYPE_RECEIVE:
 					con_info("We've recieved something, assuming it's chunk data :trollface:");
-					DecodeChunkData(e.packet->data, e.packet->dataLength);
+					NetworkPacket p = GetPacketBack(e.packet);
+					
+					switch (p.type)
+					{
+						case NetworkPacket::CHUNKDATA:
+							DecodeChunkData(p.data);
+						break;
+					}
 				break;
 			}
 		}
 	}
 
-	void Client::DecodeChunkData(unsigned char *data, unsigned long length)
+	void Client::DecodeChunkData(std::vector<uint> data)
 	{
-		std::vector<unsigned char> buf(data, data + length);
+		std::vector<unsigned char> buf(data.begin(), data.end());
 		World::PortableChunkRepresentation crep;
 		auto state = bitsery::quickDeserialization(
-			bitsery::InputBufferAdapter<std::vector<unsigned char>>{buf.begin(), length}, crep
+			bitsery::InputBufferAdapter<std::vector<unsigned char>>{buf.begin(), data.size()}, crep
 		);
 
 		// Woot, data!
@@ -174,12 +185,35 @@ namespace network
 	{
 		World::PortableChunkRepresentation chunkRep = world->GetWorldRepresentation(pos);
 		
-		std::vector<uint8_t> buf;
+		BitseryBuf buf;
 
-		size_t writtenSize = bitsery::quickSerialization<bitsery::OutputBufferAdapter<std::vector<uint8_t>>>(buf, chunkRep);
+		size_t writtenSize = bitsery::quickSerialization<bitsery::OutputBufferAdapter<BitseryBuf>>(buf, chunkRep);
 
+		SendPacket(peer, NetworkPacket::CHUNKDATA, buf);
+	}
+#endif
+
+	void SendPacket(ENetPeer *peer, NetworkPacket::type_t type, BitseryBuf data)
+	{		
+		BitseryBuf buf;
+		size_t writtenSize = bitsery::quickSerialization<bitsery::OutputBufferAdapter<BitseryBuf>>(buf, 
+			NetworkPacket{
+				(uint8_t)type,
+				std::vector<uint>(data.begin(), data.end())
+			}
+		);
 		ENetPacket *packet = enet_packet_create(&buf[0], writtenSize, ENET_PACKET_FLAG_RELIABLE);
 		enet_peer_send(peer, 0, packet);
 	}
-#endif
+	NetworkPacket GetPacketBack(ENetPacket *packet)
+	{
+		BitseryBuf buf(packet->data, packet->data + packet->dataLength);
+		NetworkPacket p;
+
+		auto state = bitsery::quickDeserialization<
+			bitsery::InputBufferAdapter<BitseryBuf>
+		>({buf.begin(), packet->dataLength}, p);
+
+		return p;
+	}
 }
