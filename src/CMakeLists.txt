@@ -7,6 +7,7 @@ add_subdirectory(sound)
 add_subdirectory(client)
 add_subdirectory(server)
 add_subdirectory(shared)
+add_subdirectory(entities)
 
 set(gameClient_SRCS
 	${rendering_SRCS}
@@ -17,6 +18,7 @@ set(gameClient_SRCS
 	${sound_SRCS}
 	${client_SRCS}
 	${shared_SRCS}
+	${ent_SRCS}
 
 	${CMAKE_CURRENT_SOURCE_DIR}/inputmanager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/player.cpp
@@ -28,6 +30,7 @@ set(gameServer_SRCS
 	${world_SRCS}
 	${server_SRCS}
 	${shared_SRCS}
+	${ent_SRCS}
 
 	${CMAKE_CURRENT_SOURCE_DIR}/player.cpp
 	PARENT_SCOPE

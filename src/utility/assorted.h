@@ -4,7 +4,7 @@
 
 #include <cstring>
 
-char *FlattenCharArray(char *array[], int offset, int len, char sep=' ')
+inline char *FlattenCharArray(char *array[], int offset, int len, char sep=' ')
 {
 	int l = 0;
 	for (int i=0; i < len; i++)
@@ -24,3 +24,6 @@ char *FlattenCharArray(char *array[], int offset, int len, char sep=' ')
 
 	return buf;
 }
+
+#define DeclBaseClass(baseClass) \
+	typedef baseClass BaseClass

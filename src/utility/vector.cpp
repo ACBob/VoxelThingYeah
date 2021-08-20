@@ -35,6 +35,15 @@ Vector Vector::Rotate(int axis, float degrees) const
 	
 	return g;
 }
+Vector Vector::Rotate(Vector oVec) const
+{
+	Vector g(x,y,z);
+	for (int i = 1; i < 3; i++)
+	{
+		g = g.Rotate(i, oVec[i]);
+	}
+	return g;
+}
 float Vector::Magnitude() const
 {
 	return sqrt((x*x) + (y*y) + (z*z));

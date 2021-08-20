@@ -21,7 +21,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "player.h"
+
+#include "entities/entityplayer.h"
 
 int main (int argc, char* args[]) {
 
@@ -120,7 +121,7 @@ int main (int argc, char* args[]) {
 		return EXIT_FAILURE;
 	}
 
-	Player plyr;
+	EntityPlayer plyr;
 	plyr.inputMan = &inputMan;
 
 	glm::mat4 projection = glm::perspective(glm::radians(fov->GetFloat()), scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f);
@@ -141,8 +142,7 @@ int main (int argc, char* args[]) {
 		if (window.IsVisible())
 			window.CaptureMouse();
 		
-		plyr.Update(&localWorld, nullptr);
-		plyr.Physics(1/60.0f, &localWorld);
+		plyr.UpdateClient(client.localWorld);
 
 		// Rendering
 		{
@@ -152,6 +152,11 @@ int main (int argc, char* args[]) {
 			Vector v = plyr.camera.pos + plyr.camera.forward;
 			glm::mat4 view = glm::lookAt(glm::vec3(plyr.camera.pos.x, plyr.camera.pos.y, plyr.camera.pos.z), glm::vec3(v.x, v.y, v.z), glm::vec3(VEC_UP.x, VEC_UP.y, VEC_UP.z));
 			shaderMan.SetUniforms(view, projection, screen, window.GetMS());
+
+			con_info("%f,%f,%f", plyr.position.x, plyr.position.y, plyr.position.z);
+			con_info("%f,%f,%f", plyr.velocity.x, plyr.velocity.y, plyr.velocity.z);
+			con_info("%f,%f,%f", plyr.rotation.x, plyr.rotation.y, plyr.rotation.z);
+			con_info("%f,%f,%f", plyr.camera.forward.x, plyr.camera.forward.y, plyr.camera.forward.z);
 
 			worldShader->Use();
 
