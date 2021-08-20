@@ -198,8 +198,8 @@ namespace network
 		BitseryBuf buf;
 		size_t writtenSize = bitsery::quickSerialization<bitsery::OutputBufferAdapter<BitseryBuf>>(buf, 
 			NetworkPacket{
-				(uint8_t)type,
-				std::vector<uint>(data.begin(), data.end())
+				(uint32_t)type,
+				std::vector<uint32_t>(data.begin(), data.end())
 			}
 		);
 		ENetPacket *packet = enet_packet_create(&buf[0], writtenSize, ENET_PACKET_FLAG_RELIABLE);

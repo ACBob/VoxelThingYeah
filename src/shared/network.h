@@ -86,13 +86,13 @@ namespace network
 		};
 
 		uint32_t type;
-		std::vector<uint> data;
+		std::vector<uint32_t> data;
 
 		template <typename S>
 		void serialize(S& s)
 		{
 			s.value4b(type);
-			s.container4b(data, data.size());
+			s.container4b(data, INT16_MAX);
 		};
 	};
 
