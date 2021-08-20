@@ -153,7 +153,7 @@ namespace network
 		enet_host_destroy(enetHost);
 	}
 
-	void Server::Update(World *world)
+	void Server::Update()
 	{
 		ENetEvent e;
 		while(enet_host_service(enetHost, &e, 0) > 0)
@@ -165,7 +165,7 @@ namespace network
 						e.peer->address.host,
 						e.peer->address.port);
 					con_info("Sending them 0,0");
-					SendWorld(world, e.peer, Vector(0));
+					SendWorld(e.peer, Vector(0));
 				break;
 				case ENET_EVENT_TYPE_DISCONNECT:
 					con_info("Goodbye %x:%u!\n",
@@ -181,9 +181,9 @@ namespace network
 		return enetHost != NULL;
 	}
 
-	void Server::SendWorld(World *world, ENetPeer *peer, Vector pos)
+	void Server::SendWorld(ENetPeer *peer, Vector pos)
 	{
-		World::PortableChunkRepresentation chunkRep = world->GetWorldRepresentation(pos);
+		World::PortableChunkRepresentation chunkRep = world.GetWorldRepresentation(pos);
 		
 		BitseryBuf buf;
 

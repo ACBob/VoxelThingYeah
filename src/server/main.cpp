@@ -50,9 +50,6 @@ int main (int argc, char* args[]) {
 		return EXIT_FAILURE;
 	}
 
-	con_info("Begin server chunkManager");
-	World testWorld;
-
 	con_info("Begin server main loop...");
 	int64_t then = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
 	int64_t now = then;
@@ -60,7 +57,7 @@ int main (int argc, char* args[]) {
 	while (true)
 	{
 		// Networking
-		server.Update(&testWorld);
+		server.Update();
 
 
 		now = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();

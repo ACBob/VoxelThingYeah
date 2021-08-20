@@ -63,18 +63,20 @@ namespace network
 			Server(int port = 58008, int maxClients = 8);
 			~Server();
 
-			void Update(World *world);
+			void Update();
 
 			// The server will do its' best to determine if it can be used or not
 			// Returning true if it can be
 			bool WorkingServer();
+
+			World world;
 
 		private:
 			ENetAddress addr;
 			ENetEvent e;
 			ENetHost *enetHost;
 
-			void SendWorld(World *world, ENetPeer *peer, Vector pos);
+			void SendWorld(ENetPeer *peer, Vector pos);
 	};
 #endif
 
