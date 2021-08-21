@@ -34,7 +34,7 @@ class EntityBase
 		// Gets a forward vector based on the rotation
 		Vector GetForward()
 		{
-			return Vector(0, 0, -1).Rotate(1, rotation.x).Rotate(2, rotation.y).Normal();
+			return Vector(0, 0, -1).Rotate(rotation).Normal();
 		}
 
 		// Updates the collision box to the new position

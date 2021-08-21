@@ -37,10 +37,10 @@ void EntityPlayer::UpdateClient(World *clientSideWorld)
 	// Mouse Input
 	{
 		// TODO: sensitivity
-		float pitch = rotation.y;
-		float yaw = rotation.x;
+		float pitch = rotation.x;
+		float yaw = rotation.y;
 
-		pitch += inputMan->mouseMovement.y * 0.1;
+		pitch -= inputMan->mouseMovement.y * 0.1;
 		yaw += inputMan->mouseMovement.x * 0.1;
 
 		while (yaw > 360)
@@ -50,8 +50,8 @@ void EntityPlayer::UpdateClient(World *clientSideWorld)
 
 		pitch = pitch < -89.9 ? -89.9 : (pitch > 89.9 ? 89.9 : pitch);
 
-		rotation.x = yaw;
-		rotation.y = pitch;
+		rotation.x = pitch;
+		rotation.y = yaw;
 	}
 	
 	camera.forward = GetForward();
