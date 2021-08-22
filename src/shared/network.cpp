@@ -155,6 +155,7 @@ namespace network
 
 	void Server::Update()
 	{
+		// Spend some time checking if anybody joins/leaves
 		ENetEvent e;
 		while(enet_host_service(enetHost, &e, 0) > 0)
 		{
@@ -174,6 +175,9 @@ namespace network
 				break;
 			}
 		}
+	
+		// send entity information to peers
+		
 	}
 	
 	bool Server::WorkingServer()

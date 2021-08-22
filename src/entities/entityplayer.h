@@ -12,10 +12,20 @@ class EntityPlayer : public EntityBase
 		~EntityPlayer();
 
 		void Tick();
-		void Spawn() {};
+		void Spawn()
+		{
+#ifdef CLIENTEXE
+			this->mdl = GetCubeModel();
+#endif
+		};
 
 #ifdef CLIENTEXE
 		void UpdateClient(World *clientSideWorld);
+
+		void Render()
+		{
+			BaseClass::Render();
+		}
 #endif
 
 #ifdef SERVEREXE

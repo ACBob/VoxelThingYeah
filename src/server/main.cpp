@@ -56,17 +56,17 @@ int main (int argc, char* args[]) {
 	int i = 0;
 	while (true)
 	{
-		// Networking
-		server.Update();
-
-
 		now = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
 		int64_t delta = now - then;
 
-		if (now >= then)
+		if (now >= then) // TICK
 		{
 			then = now + sv_tickms->GetInt();
 			i++;
+
+
+			// Networking
+			server.Update();
 		}
 
 	}

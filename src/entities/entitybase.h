@@ -5,6 +5,12 @@
 
 #include "world/world.h"
 
+#ifdef CLIENTEXE
+#include "rendering/model.h"
+#include "rendering/shadermanager.h"
+#endif
+
+
 class EntityBase
 {
 	public:
@@ -22,13 +28,26 @@ class EntityBase
 		// Called every tick (usually 1/20th of a second)
 		// Gets handed the delta time to help work out physics-related stuff
 		// Also gets given the world for collision reasons
-		void PhysicsTick(float delta, World *world);
+		virtual void PhysicsTick(float delta, World *world) = 0;
 #endif
 
 #ifdef CLIENTEXE
 		// Update any client-side things we may have, called every frame rather than per tick
 		// Uses the client-side version of the world for testing things (i.e player hand)
-		void UpdateClient(World *clientSideWorld);
+		virtual void UpdateClient(World *clientSideWorld) = 0;
+
+		// Renders our Model.
+		virtual void Render()
+		{
+			mdl.Render();
+		}
+
+		virtual void SetShader(Shader* shader)
+		{
+			mdl.SetShader(shader);
+		}
+
+		Model mdl;
 #endif
 
 		// Gets a forward vector based on the rotation
@@ -48,4 +67,14 @@ class EntityBase
 		Vector velocity;
 
 		AABB collisionBox;
+
+
+		template <typename S>
+		void serialize(S& s)
+		{
+			s.container4b(position, 3);
+			s.container4b(rotation, 3);
+			s.container4b(velocity, 3);
+			s.class4b(collisionBox);
+		};
 };

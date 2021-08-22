@@ -18,10 +18,7 @@
 
 #include <vector>
 
-// World coords are - to + these values
-#define MAXCOORD_X 65535
-#define MAXCOORD_Y 65535
-#define MAXCOORD_Z 65535
+// #include "entities/entitybase.h"
 
 class World {
 	public:
@@ -73,6 +70,8 @@ class World {
 
 		// Merges the PortableChunkRepresentation into us :)
 		void UsePortable(PortableChunkRepresentation rep);
+
+		std::vector<void*> ents;
 
 #ifdef CLIENTEXE
 		void Render();

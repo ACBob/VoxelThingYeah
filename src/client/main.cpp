@@ -123,6 +123,8 @@ int main (int argc, char* args[]) {
 
 	EntityPlayer plyr;
 	plyr.inputMan = &inputMan;
+	plyr.Spawn();
+	plyr.SetShader(worldShader);
 
 	glm::mat4 projection = glm::perspective(glm::radians(fov->GetFloat()), scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f);
 	glm::mat4 screen = glm::ortho(0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat());
@@ -153,14 +155,14 @@ int main (int argc, char* args[]) {
 			glm::mat4 view = glm::lookAt(glm::vec3(plyr.camera.pos.x, plyr.camera.pos.y, plyr.camera.pos.z), glm::vec3(v.x, v.y, v.z), glm::vec3(VEC_UP.x, VEC_UP.y, VEC_UP.z));
 			shaderMan.SetUniforms(view, projection, screen, window.GetMS());
 
-			con_info("%f,%f,%f", plyr.position.x, plyr.position.y, plyr.position.z);
-			con_info("%f,%f,%f", plyr.velocity.x, plyr.velocity.y, plyr.velocity.z);
-			con_info("%f,%f,%f", plyr.rotation.x, plyr.rotation.y, plyr.rotation.z);
-			con_info("%f,%f,%f", plyr.camera.forward.x, plyr.camera.forward.y, plyr.camera.forward.z);
-
 			worldShader->Use();
 
 			glBindTexture(GL_TEXTURE_2D, terrainPng->id);
+
+			for (void *ent : localWorld.ents)
+			{
+				reinterpret_cast<EntityBase*>(ent)->Render();
+			}
 
 			localWorld.Render();
 		}
