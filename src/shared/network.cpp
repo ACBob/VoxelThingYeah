@@ -106,6 +106,7 @@ namespace network
 			switch (e.type)
 			{
 				case ENET_EVENT_TYPE_RECEIVE:
+				{
 					con_info("We've recieved something, assuming it's chunk data :trollface:");
 					NetworkPacket p = GetPacketBack(e.packet);
 					
@@ -115,6 +116,13 @@ namespace network
 							DecodeChunkData(p.data);
 						break;
 					}
+				}
+				break;
+				case ENET_EVENT_TYPE_DISCONNECT:
+				{
+					con_info("Oh, the server has said goodbye... :(");
+					// TODO: Boot from game
+				}
 				break;
 			}
 		}
@@ -147,6 +155,8 @@ namespace network
 	}
 	Server::~Server()
 	{
+		for (auto c : players)
+			enet_peer_disconnect_now(c.first, NULL); // TODO go away message
 		enet_host_destroy(enetHost);
 	}
 
@@ -159,16 +169,29 @@ namespace network
 			switch(e.type)
 			{
 				case ENET_EVENT_TYPE_CONNECT:
+				{
 					con_info("Hello %x:%u!\n",
 						e.peer->address.host,
 						e.peer->address.port);
+					// Create a client object
+					EntityPlayer* p = new EntityPlayer();
+					world.ents.push_back(p);
+					Client* c = new Client{e.peer, p};
+					players[e.peer] = c;
 					con_info("Sending them 0,0");
 					SendWorld(e.peer, Vector(0));
+				}
 				break;
 				case ENET_EVENT_TYPE_DISCONNECT:
+				{
 					con_info("Goodbye %x:%u!\n",
 						e.peer->address.host,
 						e.peer->address.port);
+					// Destroy the client object AND player
+					Client* c = players[e.peer];
+					c->entity->Kill();
+					players.erase(players.find(e.peer));
+				}
 				break;
 			}
 		}

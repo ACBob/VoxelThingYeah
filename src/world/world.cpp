@@ -1,5 +1,7 @@
 #include "world.h"
 
+#include "entities/entitybase.h"
+
 #include "physics.h"
 
 #include "shared/seethe.h"
@@ -146,6 +148,20 @@ bool World::TestAABBCollision(AABB col)
 
 void World::WorldTick(int tickN)
 {
+	for (int i = 0; i < 0; i++)
+	{
+		void* ent = ents[i];
+
+		if (reinterpret_cast<EntityBase*>(ent)->isKilled)
+		{
+			// Clear from world
+			con_debug("removing entity");
+			ents.erase(ents.begin()+i);
+
+			continue;
+		}
+		reinterpret_cast<EntityBase*>(ent)->Tick();
+	}
 
 	for (Chunk* chunk : chunks)
 	{

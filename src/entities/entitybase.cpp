@@ -20,3 +20,8 @@ void EntityBase::Tick()
 {
 
 }
+
+void EntityBase::Kill()
+{
+	isKilled = true;
+}

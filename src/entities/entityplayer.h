@@ -3,6 +3,8 @@
 #include "inputmanager.h"
 #include "camera.h"
 
+#pragma once
+
 class EntityPlayer : public EntityBase
 {
 	DeclBaseClass(EntityBase);
@@ -18,6 +20,10 @@ class EntityPlayer : public EntityBase
 			this->mdl = GetCubeModel();
 #endif
 		};
+		void Kill()
+		{
+			BaseClass::Kill();
+		}
 
 #ifdef CLIENTEXE
 		void UpdateClient(World *clientSideWorld);

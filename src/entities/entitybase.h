@@ -20,6 +20,9 @@ class EntityBase
 		// Called right after the entity is added to the world
 		// Position and rotation are handled already
 		virtual void Spawn() = 0;
+
+		// Called when told to remove from the world
+		virtual void Kill() = 0;
 		
 		// Called every tick (usually 1/20th of a second)
 		virtual void Tick() = 0;
@@ -77,4 +80,7 @@ class EntityBase
 			s.container4b(velocity, 3);
 			s.class4b(collisionBox);
 		};
+
+		// if isKilled, is removed from the entity list and not processed otherwise
+		bool isKilled = false;
 };

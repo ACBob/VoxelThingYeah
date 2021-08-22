@@ -4,7 +4,10 @@
 
 #include "world/world.h"
 
+#include "entities/entityplayer.h"
+
 #include <sstream>
+#include <map>
 
 // TODO: a nicer place for these
 typedef std::stringstream ArchiveBuf;
@@ -48,7 +51,9 @@ namespace network
 	// A player in the server.
 	class Client
 	{
-		// TODO:
+		public:
+			ENetPeer *peer;
+			EntityPlayer *entity;
 	};
 #endif
 
@@ -73,6 +78,8 @@ namespace network
 			bool WorkingServer();
 
 			World world;
+
+			std::map<ENetPeer*, Client*> players;
 
 		private:
 			ENetAddress addr;
