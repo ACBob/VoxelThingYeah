@@ -3,10 +3,7 @@
 #define LOG_LEVEL DEBUG
 #include "seethe.h"
 
-#include <bitsery/bitsery.h>
-#include <bitsery/adapter/buffer.h>
-#include <bitsery/traits/vector.h>
-#include <bitsery/brief_syntax.h>
+#include "archive.h"
 
 #include <sstream>
 
@@ -123,13 +120,13 @@ namespace network
 		}
 	}
 
-	void Client::DecodeChunkData(std::vector<uint> data)
+	void Client::DecodeChunkData(ArchiveIntermediary data)
 	{
-		std::vector<unsigned char> buf(data.begin(), data.end());
 		World::PortableChunkRepresentation crep;
-		auto state = bitsery::quickDeserialization(
-			bitsery::InputBufferAdapter<std::vector<unsigned char>>{buf.begin(), data.size()}, crep
-		);
+		ArchiveBuf buf(data);
+		Archive<ArchiveBuf> bufAccess(buf);
+
+		bufAccess >> crep;
 
 		// Woot, data!
 		localWorld->UsePortable(crep);
@@ -189,35 +186,36 @@ namespace network
 	{
 		World::PortableChunkRepresentation chunkRep = world.GetWorldRepresentation(pos);
 		
-		BitseryBuf buf;
+		ArchiveBuf buf;
+		Archive<ArchiveBuf> bufAccess(buf);
+		bufAccess << chunkRep;
 
-		size_t writtenSize = bitsery::quickSerialization<bitsery::OutputBufferAdapter<BitseryBuf>>(buf, chunkRep);
-
-		SendPacket(peer, NetworkPacket::CHUNKDATA, buf);
+		SendPacket(peer, NetworkPacket::CHUNKDATA, buf.str());
 	}
 #endif
 
-	void SendPacket(ENetPeer *peer, NetworkPacket::type_t type, BitseryBuf data)
+	void SendPacket(ENetPeer *peer, NetworkPacket::type_t type, ArchiveIntermediary data)
 	{		
-		BitseryBuf buf;
-		size_t writtenSize = bitsery::quickSerialization<bitsery::OutputBufferAdapter<BitseryBuf>>(buf, 
-			NetworkPacket{
-				(uint32_t)type,
-				std::vector<uint32_t>(data.begin(), data.end())
-			}
-		);
-		ENetPacket *packet = enet_packet_create(&buf[0], writtenSize, ENET_PACKET_FLAG_RELIABLE);
+		ArchiveBuf buf;
+		Archive<ArchiveBuf> bufAccess(buf);
+		bufAccess << NetworkPacket{
+			(uint)type,
+			data
+		};
+
+		ArchiveIntermediary g = buf.str();
+
+		ENetPacket *packet = enet_packet_create(&g.begin()[0], g.size(), ENET_PACKET_FLAG_RELIABLE);
 		enet_peer_send(peer, 0, packet);
 	}
 	NetworkPacket GetPacketBack(ENetPacket *packet)
 	{
-		BitseryBuf buf(packet->data, packet->data + packet->dataLength);
 		NetworkPacket p;
+		ArchiveIntermediary g(packet->data, packet->data + packet->dataLength);
+		ArchiveBuf buf(g);
+		Archive<ArchiveBuf> bufAccess(buf);
 
-		auto state = bitsery::quickDeserialization<
-			bitsery::InputBufferAdapter<BitseryBuf>
-		>({buf.begin(), packet->dataLength}, p);
-
+		bufAccess >> p;
 		return p;
 	}
 }

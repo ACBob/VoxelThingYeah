@@ -4,8 +4,11 @@
 
 #include "world/world.h"
 
+#include <sstream>
+
 // TODO: a nicer place for these
-typedef std::vector<uint8_t> BitseryBuf;
+typedef std::stringstream ArchiveBuf;
+typedef std::string ArchiveIntermediary;
 
 namespace network
 {
@@ -30,7 +33,7 @@ namespace network
 
 			void Update();
 
-			void DecodeChunkData(std::vector<uint> data);
+			void DecodeChunkData(ArchiveIntermediary data);
 
 			// Pointer to the local world
 			World* localWorld = nullptr;
@@ -87,17 +90,16 @@ namespace network
 			CHUNKDATA = 1,
 		};
 
-		uint32_t type;
-		std::vector<uint32_t> data;
+		uint type;
+		ArchiveIntermediary data;
 
 		template <typename S>
 		void serialize(S& s)
 		{
-			s.value4b(type);
-			s.container4b(data, INT16_MAX);
+			s & type & data;
 		};
 	};
 
-	void SendPacket(ENetPeer *peer, NetworkPacket::type_t type, BitseryBuf data);
+	void SendPacket(ENetPeer *peer, NetworkPacket::type_t type, ArchiveIntermediary data);
 	NetworkPacket GetPacketBack(ENetPacket *packet);
 }

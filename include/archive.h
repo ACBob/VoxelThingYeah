@@ -184,14 +184,14 @@ class Archive
         template <class T>
             Archive& operator&(T& v)
             {
-                v.Serialize(*this);
+                v.serialize(*this);
                 return *this;
             }
 
         template <class T>
             const Archive& operator&(const T& v) const
             {
-                ((T&)v).Serialize(*this);
+                ((T&)v).serialize(*this);
                 return *this;
             }
 

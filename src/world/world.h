@@ -1,8 +1,6 @@
 #include "world/chunk.h"
 #include "world/block.h"
 
-#include <bitsery/bitsery.h>
-
 #include "utility/vector.h"
 
 #ifdef CLIENTEXE
@@ -60,10 +58,7 @@ class World {
 			template <typename S>
 			void serialize(S& s)
 			{
-				s.value4b(x);
-				s.value4b(y);
-				s.value4b(z);
-				s.container4b(blocks);
+				s & x & y & z & blocks;
 			};
 		};
 		PortableChunkRepresentation GetWorldRepresentation(Vector pos);
