@@ -20,8 +20,6 @@ set(gameClient_SRCS
 	${shared_SRCS}
 	${ent_SRCS}
 
-	${CMAKE_CURRENT_SOURCE_DIR}/inputmanager.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/player.cpp
 	PARENT_SCOPE
 )
 
@@ -32,6 +30,5 @@ set(gameServer_SRCS
 	${shared_SRCS}
 	${ent_SRCS}
 
-	${CMAKE_CURRENT_SOURCE_DIR}/player.cpp
 	PARENT_SCOPE
 )

@@ -107,7 +107,6 @@ namespace network
 			{
 				case ENET_EVENT_TYPE_RECEIVE:
 				{
-					con_info("We've recieved something, assuming it's chunk data :trollface:");
 					NetworkPacket p = GetPacketBack(e.packet);
 					
 					switch (p.type)
@@ -162,7 +161,7 @@ namespace network
 
 	void Server::Update()
 	{
-		// Spend some time checking if anybody joins/leaves
+		// Spend some time checking if anybody joins/leaves, or we get some client data
 		ENetEvent e;
 		while(enet_host_service(enetHost, &e, 0) > 0)
 		{
@@ -191,6 +190,32 @@ namespace network
 					Client* c = players[e.peer];
 					c->entity->Kill();
 					players.erase(players.find(e.peer));
+				}
+				break;
+				case ENET_EVENT_TYPE_RECEIVE:
+				{
+					NetworkPacket p = GetPacketBack(e.packet);
+					
+					switch (p.type)
+					{
+						case NetworkPacket::CHUNKDATA:
+						case NetworkPacket::ENTITIES:
+						{
+							con_warning("Haha nice try");
+						}
+						break;
+						case NetworkPacket::INPUT:
+						{
+							EntityPlayer *plyr = players[e.peer]->entity;
+							InputManager inp;
+
+							ArchiveBuf buf(p.data);
+							Archive<ArchiveBuf> bufAccess(buf);
+							bufAccess >> inp;
+							plyr->inputMan = inp;
+						}
+						break;
+					}
 				}
 				break;
 			}

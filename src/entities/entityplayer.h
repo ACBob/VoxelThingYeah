@@ -1,6 +1,6 @@
 #include "entitybase.h"
 #include "utility/raycast.h"
-#include "inputmanager.h"
+#include "shared/inputmanager.h"
 #include "camera.h"
 
 #pragma once
@@ -36,6 +36,9 @@ class EntityPlayer : public EntityBase
 
 #ifdef SERVEREXE
 		void PhysicsTick(float delta, World *world);
+
+		// Not a pointer in the server case
+		InputManager inputMan;
 #endif
 
 #ifdef CLIENTEXE

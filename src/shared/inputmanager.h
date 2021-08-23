@@ -11,10 +11,22 @@
 
 class InputManager
 {
+	enum INKEY
+	{
+		INKEY_NOTHING = -1,
+
+		INKEY_FRONT = 0,
+		INKEY_RIGHT = 1,
+		INKEY_BACK = 2,
+		INKEY_LEFT = 3,
+
+		INKEY_LAST // used only to get the possible inkeys
+	};
 	public:
 		InputManager();
 		~InputManager();
 
+#ifdef CLIENTEXE
 		// A -> Z (char) Is mapped directly to the keycode (so 65 = A on the keyboard)
 		bool keyboardState[255];
 		bool oldKeyboardState[255]; // See above, previous frame
@@ -27,4 +39,14 @@ class InputManager
 		int mouseState = 0;
 		int oldMouseState = 0; // stores mouseState from the last frame
 
+		void Update();
+#endif
+
+		bool inputState[INKEY_LAST];
+
+		template <typename S>
+		void serialize(S& s)
+		{
+			s & inputState;
+		};
 };

@@ -95,6 +95,8 @@ namespace network
 		enum type_t
 		{
 			CHUNKDATA = 1,
+			ENTITIES = 2,
+			INPUT = 3,
 		};
 
 		uint type;
