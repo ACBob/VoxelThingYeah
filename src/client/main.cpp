@@ -145,6 +145,7 @@ int main (int argc, char* args[]) {
 			window.CaptureMouse();
 		
 		plyr.UpdateClient(client.localWorld);
+		client.SendInput(plyr.inputMan);
 
 		// Rendering
 		{

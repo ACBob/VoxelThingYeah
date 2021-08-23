@@ -15,25 +15,7 @@ EntityPlayer::~EntityPlayer()
 
 #ifdef CLIENTEXE
 void EntityPlayer::UpdateClient(World *clientSideWorld)
-{
-	// Movement
-	{
-		// TODO: Custom Controls (inputMan properties?)
-		Vector forward = GetForward();
-		Vector right = forward.Rotate(2, 90);
-		if (inputMan->keyboardState['W'])
-			velocity = velocity + (forward * 2.67);
-		else if(inputMan->keyboardState['S'])
-			velocity = velocity + (forward * -2.67);
-		if (inputMan->keyboardState['A'])
-			velocity = velocity + (right * -2.67);
-		else if(inputMan->keyboardState['D'])
-			velocity = velocity + (right * 2.67);
-
-		if (onFloor && inputMan->keyboardState[' '])
-			velocity.y = 7.5;
-	}
-	
+{	
 	// Mouse Input
 	{
 		// TODO: sensitivity
@@ -110,11 +92,24 @@ void EntityPlayer::UpdateClient(World *clientSideWorld)
 
 void EntityPlayer::Tick()
 {
+#ifdef SERVEREXE
+	Vector forward = GetForward();
+	Vector right = forward.Rotate(2, 90);
+	if (inputMan.inputState[INKEY_FRONT])
+		velocity = velocity + (forward * 2.67);
+	else if(inputMan.inputState[INKEY_BACK])
+		velocity = velocity + (forward * -2.67);
+	else if(inputMan.inputState[INKEY_LEFT])
+		velocity = velocity + (right * -2.67);
+	else if(inputMan.inputState[INKEY_RIGHT])
+		velocity = velocity + (right * 2.67);
+#endif
 }
 
 #ifdef SERVEREXE
 void EntityPlayer::PhysicsTick(float delta, World *world)
 {
+	position.x += velocity.x * delta;
 	UpdateCollision();
 	if (world->TestAABBCollision(collisionBox))
 	{

@@ -38,6 +38,8 @@ namespace network
 
 			void DecodeChunkData(ArchiveIntermediary data);
 
+			void SendInput(InputManager *inp);
+
 			// Pointer to the local world
 			World* localWorld = nullptr;
 

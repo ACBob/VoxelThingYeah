@@ -1,6 +1,6 @@
 
 #include "utility/vector.h"
-#include "../inputmanager.h"
+#include "shared/inputmanager.h"
 #include "rendering/texturemanager.h"
 
 #include <vector>

@@ -9,19 +9,20 @@
 #define IN_WHEEL_UP 1 << 3
 #define IN_WHEEL_DOWN 1 << 4
 
+enum INKEY
+{
+	INKEY_NOTHING = -1,
+
+	INKEY_FRONT = 0,
+	INKEY_RIGHT = 1,
+	INKEY_BACK = 2,
+	INKEY_LEFT = 3,
+
+	INKEY_LAST // used only to get the possible inkeys
+};
+
 class InputManager
 {
-	enum INKEY
-	{
-		INKEY_NOTHING = -1,
-
-		INKEY_FRONT = 0,
-		INKEY_RIGHT = 1,
-		INKEY_BACK = 2,
-		INKEY_LEFT = 3,
-
-		INKEY_LAST // used only to get the possible inkeys
-	};
 	public:
 		InputManager();
 		~InputManager();

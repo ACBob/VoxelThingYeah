@@ -21,6 +21,8 @@ void InputManager::Update()
 {
 	for (int i = 0; i < INKEY_LAST; i++)
 		inputState[i] = false;
+
+	// TODO: Custom Controls (ConVars?)
 	
 	inputState[INKEY_FRONT] = keyboardState['W'];
 	inputState[INKEY_LEFT] = keyboardState['A'];

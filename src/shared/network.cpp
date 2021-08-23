@@ -64,6 +64,7 @@ namespace network
 		if (enet_host_service(enetHost, &e, 2500) > 0 && e.type == ENET_EVENT_TYPE_CONNECT)
 		{
 			con_info("Hello! We've connected to a server!");
+			peer = e.peer;
 			return true;
 		}
 		else
@@ -90,6 +91,8 @@ namespace network
 				break;
 			}
 		}
+
+		peer = nullptr;
 	}
 
 	void Client::Update()
@@ -138,6 +141,16 @@ namespace network
 		// Woot, data!
 		localWorld->UsePortable(crep);
 	}
+
+	void Client::SendInput(InputManager *inp)
+	{
+		ArchiveBuf buf;
+		Archive<ArchiveBuf> bufAccess(buf);
+		bufAccess << *inp;
+
+		SendPacket(peer, NetworkPacket::INPUT, buf.str());
+	}
+
 #elif SERVEREXE
 	Server::Server(int port, int maxClients)
 	{

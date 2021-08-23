@@ -67,6 +67,9 @@ int main (int argc, char* args[]) {
 
 			// Networking
 			server.Update();
+
+			// World
+			server.world.WorldTick(i);
 		}
 
 	}

@@ -6,6 +6,10 @@
 
 #include "shared/seethe.h"
 
+#ifdef SERVEREXE
+#include "server/cvar_serverside.h"
+#endif
+
 #ifdef CLIENTEXE
 World::World(Shader *shader) :
 	worldShader(shader)
@@ -148,7 +152,7 @@ bool World::TestAABBCollision(AABB col)
 
 void World::WorldTick(int tickN)
 {
-	for (int i = 0; i < 0; i++)
+	for (int i = 0; i < ents.size(); i++)
 	{
 		void* ent = ents[i];
 
@@ -161,6 +165,9 @@ void World::WorldTick(int tickN)
 			continue;
 		}
 		reinterpret_cast<EntityBase*>(ent)->Tick();
+#ifdef SERVEREXE
+		reinterpret_cast<EntityBase*>(ent)->PhysicsTick(sv_tickms->GetInt() / 1000.0f, this);
+#endif
 	}
 
 	for (Chunk* chunk : chunks)
