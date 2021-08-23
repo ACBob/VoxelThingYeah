@@ -141,7 +141,7 @@ int main (int argc, char* args[]) {
 	{
 		client.Update();
 		window.PollEvents();
-		if (window.IsVisible())
+		if (window.IsFocused())
 			window.CaptureMouse();
 		
 		plyr.UpdateClient(client.localWorld);

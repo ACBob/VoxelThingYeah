@@ -47,7 +47,7 @@ void GameWindow::SwapBuffers()
 
 bool GameWindow::IsVisible()
 {
-	return (SDL_GetWindowFlags(internalWindow.get()) & SDL_WINDOW_HIDDEN) == SDL_WINDOW_HIDDEN;
+	return !((SDL_GetWindowFlags(internalWindow.get()) & SDL_WINDOW_HIDDEN) == SDL_WINDOW_HIDDEN);
 }
 void GameWindow::SetVisible(bool visible)
 {
@@ -55,6 +55,11 @@ void GameWindow::SetVisible(bool visible)
 		SDL_HideWindow(internalWindow.get());
 	else
 		SDL_ShowWindow(internalWindow.get());
+}
+
+bool GameWindow::IsFocused()
+{
+	return IsVisible() && (SDL_GetWindowFlags(internalWindow.get()) & SDL_WINDOW_INPUT_FOCUS) == SDL_WINDOW_INPUT_FOCUS;
 }
 
 const char* GameWindow::GetTitle()
@@ -157,6 +162,8 @@ void GameWindow::PollEvents()
 				shouldClose = true;
 			break;
 			case SDL_MOUSEMOTION:
+				// HACK HACK HACK HACK: ignore mouse events while invisible
+				if (!IsFocused()) continue;
 				inputMan->mouseMovement = inputMan->mouseMovement + Vector(currentEvent.motion.xrel, currentEvent.motion.yrel);
 				inputMan->mousePos = Vector(currentEvent.motion.x, currentEvent.motion.y);
 			break;

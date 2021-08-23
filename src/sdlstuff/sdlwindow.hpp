@@ -19,6 +19,8 @@ class GameWindow : public BobWindow
 		bool IsVisible(); // getter(?)
 		void SetVisible(bool v); // setter(?)
 
+		bool IsFocused();
+
 		// SDL_SetWindowTitle / SDL_GetWindowTitle
 		void SetTitle(const char *title);
 		const char *GetTitle();
