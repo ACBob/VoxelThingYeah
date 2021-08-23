@@ -1,5 +1,5 @@
-#include "model.h"
-#include "utility/direction.h"
+#include "model.hpp"
+#include "utility/direction.hpp"
 
 Model::Model() :
 	renderer()

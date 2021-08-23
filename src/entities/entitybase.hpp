@@ -1,13 +1,13 @@
 #pragma once
 
-#include "utility/vector.h"
-#include "utility/assorted.h"
+#include "utility/vector.hpp"
+#include "utility/assorted.hpp"
 
-#include "world/world.h"
+#include "world/world.hpp"
 
 #ifdef CLIENTEXE
-#include "rendering/model.h"
-#include "rendering/shadermanager.h"
+#include "rendering/model.hpp"
+#include "rendering/shadermanager.hpp"
 #endif
 
 

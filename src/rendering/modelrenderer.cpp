@@ -1,6 +1,6 @@
-#include "modelrenderer.h"
-#include "model.h"
-#include "chunkmodel.h"
+#include "modelrenderer.hpp"
+#include "model.hpp"
+#include "chunkmodel.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

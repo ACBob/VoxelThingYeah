@@ -1,5 +1,5 @@
-#include "player.h"
-#include "SDL/SDL.h"
+#include "player.hpp"
+#include "SDL/SDL.hpp"
 
 #include <iostream>
 

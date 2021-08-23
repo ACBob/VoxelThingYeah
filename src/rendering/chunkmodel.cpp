@@ -1,7 +1,7 @@
-#include "rendering/chunkmodel.h"
+#include "rendering/chunkmodel.hpp"
 
-#include "world/chunk.h" // CHUNKSIZE definitions
-#include "world/world.h"
+#include "world/chunk.hpp" // CHUNKSIZE definitions
+#include "world/world.hpp"
 
 #include <iostream>
 

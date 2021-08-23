@@ -1,6 +1,6 @@
-#include "utility/vector.h"
-#include "world/block.h"
-#include "world/world.h"
+#include "utility/vector.hpp"
+#include "world/block.hpp"
+#include "world/world.hpp"
 
 #pragma once
 

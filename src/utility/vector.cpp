@@ -1,4 +1,4 @@
-#include "vector.h"
+#include "vector.hpp"
 #include <math.h>
 
 Vector::Vector( float x, float y, float z )

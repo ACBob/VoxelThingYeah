@@ -1,14 +1,14 @@
-#include "world/chunk.h"
-#include "world/block.h"
+#include "world/chunk.hpp"
+#include "world/block.hpp"
 
-#include "utility/vector.h"
+#include "utility/vector.hpp"
 
 #ifdef CLIENTEXE
-#include "rendering/shadermanager.h"
+#include "rendering/shadermanager.hpp"
 #endif
 
-#include "world/block.h"
-#include "physics.h"
+#include "world/block.hpp"
+#include "physics.hpp"
 
 #include "fastnoise.h"
 

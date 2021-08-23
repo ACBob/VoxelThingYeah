@@ -1,4 +1,4 @@
-#include "cvar_serverside.h"
+#include "cvar_serverside.hpp"
 
 void SetupServerSideConvars()
 {

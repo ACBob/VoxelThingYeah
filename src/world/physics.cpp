@@ -1,4 +1,4 @@
-#include "physics.h"
+#include "physics.hpp"
 
 AABB::AABB(Vector pos, Vector size, Vector origin)
 {

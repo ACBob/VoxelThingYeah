@@ -1,4 +1,4 @@
-#include "cvar.h"
+#include "cvar.hpp"
 
 #define LOG_LEVEL DEBUG
 #include "seethe.h"

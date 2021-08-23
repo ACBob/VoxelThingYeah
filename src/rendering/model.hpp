@@ -1,7 +1,7 @@
 #include <vector>
 
-#include "modelrenderer.h"
-#include "utility/vector.h"
+#include "modelrenderer.hpp"
+#include "utility/vector.hpp"
 
 #pragma once
 

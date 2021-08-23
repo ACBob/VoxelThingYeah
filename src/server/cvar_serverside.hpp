@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "shared/cvar.h"
+#include "shared/cvar.hpp"
 
 inline ConVar::ConVar *sv_timescale;
 inline ConVar::ConVar *sv_tickms;

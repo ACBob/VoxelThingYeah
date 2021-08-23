@@ -1,13 +1,13 @@
-#include "world.h"
+#include "world.hpp"
 
-#include "entities/entitybase.h"
+#include "entities/entitybase.hpp"
 
-#include "physics.h"
+#include "physics.hpp"
 
 #include "shared/seethe.h"
 
 #ifdef SERVEREXE
-#include "server/cvar_serverside.h"
+#include "server/cvar_serverside.hpp"
 #endif
 
 #ifdef CLIENTEXE

@@ -1,4 +1,4 @@
-#include "blocktexture.h"
+#include "blocktexture.hpp"
 
 BlockTexture GetDefaultBlockTextureSide(blocktype_t type, Direction side)
 {

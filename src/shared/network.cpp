@@ -1,4 +1,4 @@
-#include "network.h"
+#include "network.hpp"
 
 #define LOG_LEVEL DEBUG
 #include "seethe.h"

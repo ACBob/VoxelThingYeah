@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "shared/cvar.h"
+#include "shared/cvar.hpp"
 
 ConVar::ConVar *convar_test;
 

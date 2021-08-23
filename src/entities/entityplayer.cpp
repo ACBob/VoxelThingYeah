@@ -1,4 +1,4 @@
-#include "entityplayer.h"
+#include "entityplayer.hpp"
 
 EntityPlayer::EntityPlayer()
 {

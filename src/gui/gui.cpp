@@ -2,7 +2,7 @@
 // TODO: Abstract OpenGL away from this, making it renderer agnostic
 //       (Store like a mesh, have some kind of renderer)
 
-#include "gui.h"
+#include "gui.hpp"
 
 #include <glad/glad.h>
 

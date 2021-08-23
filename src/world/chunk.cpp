@@ -1,8 +1,8 @@
-#include "chunk.h"
+#include "chunk.hpp"
 
 #include <random>
 
-#include "world.h"
+#include "world.hpp"
 
 
 ChunkPos::ChunkPos(Vector pos)

@@ -1,11 +1,11 @@
-#include "utility/vector.h"
+#include "utility/vector.hpp"
 
-#include "world/block.h"
+#include "world/block.hpp"
 
 #ifdef CLIENTEXE
-#include "rendering/chunkmodel.h"
-#include "rendering/modelrenderer.h"
-#include "rendering/shadermanager.h"
+#include "rendering/chunkmodel.hpp"
+#include "rendering/modelrenderer.hpp"
+#include "rendering/shadermanager.hpp"
 #endif
 
 #include "fastnoise.h"

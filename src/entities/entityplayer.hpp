@@ -1,7 +1,7 @@
-#include "entitybase.h"
-#include "utility/raycast.h"
-#include "shared/inputmanager.h"
-#include "camera.h"
+#include "entitybase.hpp"
+#include "utility/raycast.hpp"
+#include "shared/inputmanager.hpp"
+#include "camera.hpp"
 
 #pragma once
 

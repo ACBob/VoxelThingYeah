@@ -1,8 +1,8 @@
-#include "soundmanager.h"
+#include "soundmanager.hpp"
 
 #include "stb_vorbis.c"
 
-#include "world/blockdef.h"
+#include "world/blockdef.hpp"
 
 #include <random>
 

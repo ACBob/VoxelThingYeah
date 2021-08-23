@@ -1,5 +1,5 @@
-#include "block.h"
-#include "chunk.h"
+#include "block.hpp"
+#include "chunk.hpp"
 
 #include <stdio.h>
 

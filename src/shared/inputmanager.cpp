@@ -1,4 +1,4 @@
-#include "inputmanager.h"
+#include "inputmanager.hpp"
 
 // Usually set/handled by the window on the client
 // Or by the network in the case of the server

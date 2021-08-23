@@ -1,4 +1,4 @@
-#include "blockdef.h"
+#include "blockdef.hpp"
 
 blockmaterial_t GetBlockMaterial(blocktype_t blockType)
 {

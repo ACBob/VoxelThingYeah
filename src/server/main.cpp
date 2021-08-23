@@ -2,19 +2,19 @@
 
 #include <cstdio>
 
-#include "shared/filesystem.h"
-#include "shared/network.h"
+#include "shared/filesystem.hpp"
+#include "shared/network.hpp"
 
 #include <chrono>
 
-#include "utility/assorted.h"
+#include "utility/assorted.hpp"
 
-#include "cvar_serverside.h"
+#include "cvar_serverside.hpp"
 
 #define LOG_LEVEL DEBUG
 #include "shared/seethe.h"
 
-#include "world/world.h"
+#include "world/world.hpp"
 
 int main (int argc, char* args[]) {
 	con_info("Hello from scenic bobcraft server!");

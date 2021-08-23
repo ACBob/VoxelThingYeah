@@ -1,11 +1,11 @@
 #pragma once
 
-#include "utility/vector.h"
+#include "utility/vector.hpp"
 #include <vector>
 
 #include <map>
 
-#include "world/block.h"
+#include "world/block.hpp"
 
 #define SOUNDBUFFERS 1
 

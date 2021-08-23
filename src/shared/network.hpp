@@ -2,9 +2,9 @@
 
 #include "enet/enet.h"
 
-#include "world/world.h"
+#include "world/world.hpp"
 
-#include "entities/entityplayer.h"
+#include "entities/entityplayer.hpp"
 
 #include <sstream>
 #include <map>

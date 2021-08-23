@@ -1,7 +1,7 @@
 
-#include "utility/vector.h"
-#include "shared/inputmanager.h"
-#include "rendering/texturemanager.h"
+#include "utility/vector.hpp"
+#include "shared/inputmanager.hpp"
+#include "rendering/texturemanager.hpp"
 
 #include <vector>
 

@@ -1,6 +1,6 @@
-#include "shadermanager.h"
+#include "shadermanager.hpp"
 
-#include "utility/vector.h"
+#include "utility/vector.hpp"
 
 #pragma once
 

@@ -1,4 +1,4 @@
-#include "entitybase.h"
+#include "entitybase.hpp"
 
 EntityBase::EntityBase() :
 	collisionBox({Vector(0), Vector(1,1,1)})

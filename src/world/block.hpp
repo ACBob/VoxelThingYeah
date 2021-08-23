@@ -1,8 +1,8 @@
-#include "utility/direction.h"
-#include "utility/vector.h"
-#include "blockdef.h"
+#include "utility/direction.hpp"
+#include "utility/vector.hpp"
+#include "blockdef.hpp"
 
-#include "rendering/blocktexture.h"
+#include "rendering/blocktexture.hpp"
 
 #pragma once
 

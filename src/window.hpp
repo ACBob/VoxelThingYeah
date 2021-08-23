@@ -1,5 +1,5 @@
-#include "utility/vector.h"
-#include "shared/inputmanager.h"
+#include "utility/vector.hpp"
+#include "shared/inputmanager.hpp"
 
 class BobWindow
 {

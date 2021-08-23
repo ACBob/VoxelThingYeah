@@ -1,8 +1,8 @@
 #include "enet/enet.h"
 
-#include "shared/filesystem.h"
-#include "shared/network.h"
-#include "shared/cvar.h"
+#include "shared/filesystem.hpp"
+#include "shared/network.hpp"
+#include "shared/cvar.hpp"
 
 #define LOG_LEVEL DEBUG
 #include "shared/seethe.h"
@@ -10,19 +10,19 @@
 #include <stdlib.h>
 #include <cstdio>
 
-#include "utility/assorted.h"
-#include "cvar_clientside.h"
+#include "utility/assorted.hpp"
+#include "cvar_clientside.hpp"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_syswm.h>
 #include <SDL2/SDL_keyboard.h>
-#include "sdlstuff/sdlwindow.h"
+#include "sdlstuff/sdlwindow.hpp"
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "entities/entityplayer.h"
+#include "entities/entityplayer.hpp"
 
 int main (int argc, char* args[]) {
 

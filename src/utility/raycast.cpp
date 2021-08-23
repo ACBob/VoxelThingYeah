@@ -1,6 +1,6 @@
-#include "utility/vector.h"
-#include "world/world.h"
-#include "raycast.h"
+#include "utility/vector.hpp"
+#include "world/world.hpp"
+#include "raycast.hpp"
 
 PointedThing::PointedThing() :
 	block(nullptr),

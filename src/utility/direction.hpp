@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vector.h"
+#include "vector.hpp"
 
 enum Direction {	
 	NORTH = 0, // +Z

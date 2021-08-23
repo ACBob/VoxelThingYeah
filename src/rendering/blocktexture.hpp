@@ -1,6 +1,6 @@
-#include "texturemanager.h"
-#include "utility/direction.h"
-#include "world/blockdef.h"
+#include "texturemanager.hpp"
+#include "utility/direction.hpp"
+#include "world/blockdef.hpp"
 
 #pragma once
 

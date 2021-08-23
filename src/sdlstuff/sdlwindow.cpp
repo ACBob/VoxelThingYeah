@@ -1,6 +1,6 @@
 // Implements window with SDL
 
-#include "sdlwindow.h"
+#include "sdlwindow.hpp"
 #include <cstdio>
 #include <iostream>
 #include <memory>
