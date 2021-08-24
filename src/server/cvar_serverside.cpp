@@ -1,5 +1,8 @@
 #include "cvar_serverside.hpp"
 
+ConVar::ConVar *sv_timescale = nullptr;
+ConVar::ConVar *sv_tickms = nullptr;
+
 void SetupServerSideConvars()
 {
 	// TODO: How quickly time progresses

@@ -4,7 +4,7 @@
 
 #include "shared/cvar.hpp"
 
-inline ConVar::ConVar *sv_timescale;
-inline ConVar::ConVar *sv_tickms;
+extern ConVar::ConVar *sv_timescale;
+extern ConVar::ConVar *sv_tickms;
 
 void SetupServerSideConvars();

@@ -35,9 +35,6 @@ int main (int argc, char* args[]) {
 	con_info("Parsing command line convars...");
 	conVarHandle.Parse(argstring);
 
-
-	con_debug("Value of CVar 'convar_test': %s", conVarHandle.FindConVar("convar_test")->GetString());
-
 	con_info("Init Filesystem...");
 	if (!fileSystem::Init(args[0]))
 	{

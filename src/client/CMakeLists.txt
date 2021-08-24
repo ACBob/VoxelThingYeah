@@ -10,5 +10,6 @@ set(client_SRCS
 	${sound_SRCS}
 
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/cvar_clientside.cpp
 	PARENT_SCOPE
 )
