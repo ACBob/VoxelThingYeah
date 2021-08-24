@@ -6,3 +6,5 @@ bin/
 # Compiled shaders
 shaders/*.bin
 shaders/*.spv
+
+.vscode/
