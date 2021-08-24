@@ -1,7 +1,7 @@
 #ifndef SDLWINDOWK_H
 #define SDLWINDOWK_H
 
-#include "../window.hpp"
+#include "window.hpp"
 
 #pragma once
 

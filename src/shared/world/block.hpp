@@ -2,7 +2,9 @@
 #include "utility/vector.hpp"
 #include "blockdef.hpp"
 
+#ifdef CLIENTEXE
 #include "rendering/blocktexture.hpp"
+#endif
 
 #pragma once
 
