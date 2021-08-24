@@ -11,6 +11,8 @@ class BobWindow
 		virtual bool IsVisible() = 0; // getter(?)
 		virtual void SetVisible(bool v) = 0; // setter(?)
 
+		virtual bool IsFocused() = 0;
+
 		// SDL_SetWindowTitle / SDL_GetWindowTitle
 		virtual void SetTitle(const char *title) = 0;
 		virtual const char *GetTitle() = 0;
