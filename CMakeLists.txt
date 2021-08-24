@@ -50,13 +50,21 @@ include_directories(${includes}
 	"${CMAKE_CURRENT_LIST_DIR}/subprojects/physfs/src" 
 	"${CMAKE_CURRENT_LIST_DIR}/subprojects/enet/include"
 	"${CMAKE_CURRENT_LIST_DIR}/include"
+	
+	"${CMAKE_CURRENT_LIST_DIR}/src/shared"
+	"${CMAKE_CURRENT_LIST_DIR}/src/utility"
 )
 
 
-add_executable(${PROJECT_NAME} ${gameClient_SRCS})
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${OPENAL_LIBRARY} ${CMAKE_DL_LIBS} lodepng GL glm::glm physfs-static enet)
-target_compile_definitions(${PROJECT_NAME} PUBLIC CLIENTEXE)
+set(CLIENT_BIN "${PROJECT_NAME}_client")
+set(SERVER_BIN "${PROJECT_NAME}_server)
 
-add_executable(${PROJECT_NAME}_server ${gameServer_SRCS})
-target_link_libraries(${PROJECT_NAME}_server ${CMAKE_DL_LIBS} physfs-static enet)
-target_compile_definitions(${PROJECT_NAME}_server PUBLIC SERVEREXE)
+add_executable(${CLIENT_BIN} ${gameClient_SRCS})
+target_link_libraries(${CLIENT_BIN} ${SDL2_LIBRARIES} ${OPENAL_LIBRARY} ${CMAKE_DL_LIBS} lodepng GL glm::glm physfs-static enet)
+target_compile_definitions(${CLIENT_BIN} PUBLIC CLIENTEXE)
+target_include_directories(${CLIENT_BIN} "${CMAKE_CURRENT_LIST_DIR}/src/client")
+
+add_executable(${SERVER_BIN} ${gameServer_SRCS})
+target_link_libraries(${SERVER_BIN} ${CMAKE_DL_LIBS} physfs-static enet)
+target_compile_definitions(${SERVER_BIN} PUBLIC SERVEREXE)
+target_include_directories(${SERVER_BIN} "${CMAKE_CURRENT_LIST_DIR}/src/server")
