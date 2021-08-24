@@ -2,7 +2,7 @@
 
 #include "stb_vorbis.c"
 
-#include "world/blockdef.hpp"
+#include "blockdef.hpp"
 
 #include <random>
 

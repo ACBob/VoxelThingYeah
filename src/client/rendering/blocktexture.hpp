@@ -1,6 +1,6 @@
 #include "texturemanager.hpp"
 #include "utility/direction.hpp"
-#include "world/blockdef.hpp"
+#include "blockdef.hpp"
 
 #pragma once
 

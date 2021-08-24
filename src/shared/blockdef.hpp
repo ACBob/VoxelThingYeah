@@ -1,4 +1,6 @@
 // Holds fancy block definition stuffy stuff
+// TODO: more OOP way?
+
 // size of X,Y,Z of blocks
 #define BLOCKUNIT 1.0f
 
@@ -19,12 +21,12 @@ enum blocktype_t {
 };
 
 enum blockmaterial_t {
-	MAT_NONE     = 0,
-	MAT_STONE    = 1,
-	MAT_LOOSE    = 2,
-	MAT_WOOD     = 3,
-	MAT_GLASS    = 4,
-	MAT_ORGANIC  = 5,
+	MAT_NONE     = 0, // Invalid
+	MAT_STONE    = 1, // Stone, Rock
+	MAT_LOOSE    = 2, // Dirt, Gravel
+	MAT_WOOD     = 3, // It's wood
+	MAT_GLASS    = 4, // It's glass
+	MAT_ORGANIC  = 5, // Grass, Leaves, Plants
 };
 
 blockmaterial_t GetBlockMaterial(blocktype_t blockType);

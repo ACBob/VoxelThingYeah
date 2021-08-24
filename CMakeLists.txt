@@ -50,6 +50,9 @@ include_directories(${includes}
 	"${CMAKE_CURRENT_LIST_DIR}/subprojects/physfs/src" 
 	"${CMAKE_CURRENT_LIST_DIR}/subprojects/enet/include"
 	"${CMAKE_CURRENT_LIST_DIR}/include"
+	
+	"${CMAKE_CURRENT_LIST_DIR}/src/shared"
+	"${CMAKE_CURRENT_LIST_DIR}/src/utility"
 )
 
 
