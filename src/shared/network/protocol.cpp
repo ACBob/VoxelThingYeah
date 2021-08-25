@@ -32,7 +32,7 @@ namespace protocol
 		enet_peer_send(peer, 0, packet);
 	}
 
-	void UncompressAndDealWithPacket(ArchiveIntermediary packetData, void *side)
+	void UncompressAndDealWithPacket(ArchiveIntermediary packetData, void *side, ENetPeer *peer)
 	{
 		NetworkPacket p;
 		ArchiveBuf buf(packetData);
@@ -43,7 +43,7 @@ namespace protocol
 		if (p.server)
 			DealWithPacket(reinterpret_cast<ServerPacket*>(&p), side);
 		else
-			DealWithPacket(reinterpret_cast<ClientPacket*>(&p), side);
+			DealWithPacket(reinterpret_cast<ClientPacket*>(&p), side, peer);
 	}
 
 #ifdef CLIENTEXE
@@ -171,7 +171,7 @@ namespace protocol
 #endif
 
 #ifdef SERVEREXE
-	void DealWithPacket(ClientPacket *p, void *side)
+	void DealWithPacket(ClientPacket *p, void *side, ENetPeer *peer)
 	{
 		ArchiveBuf buf(p->data);
 		Archive<ArchiveBuf> bufAccess(buf);
@@ -192,13 +192,14 @@ namespace protocol
 				if (protocolVersion != PROTOCOL_VERSION)
 				{
 					con_error("User %s attempted to join unsupported protocol version (%#010x) (Expected %#010x)", username.c_str(), protocolVersion, PROTOCOL_VERSION);
-					// TODO: Kick
+					server->KickPlayer(peer, "Protocol version Mismatch!");
 					return;
 				}
 
 				// TODO: do something with this info
 			}
-
+			break;
+			
 			case ClientPacket::SET_BLOCK:
 			{
 				int x, y, z;
@@ -251,7 +252,7 @@ namespace protocol
 		}
 	}
 #elif CLIENTEXE
-	void DealWithPacket(ClientPacket *p, void *side)
+	void DealWithPacket(ClientPacket *p, void *side, ENetPeer *peer)
 	{
 		con_error("DealWithPacket(ClientPacket) called on client!!!");
 	}

@@ -168,13 +168,13 @@ struct ServerPacket : public NetworkPacket
 
 namespace protocol
 {
-	void DealWithPacket(ClientPacket *p, void *side);
+	void DealWithPacket(ClientPacket *p, void *side, ENetPeer *peer);
 	void DealWithPacket(ServerPacket *p, void *side);
 
 	// side is a badly named pointer to whoever called this
 	// Be them client or server
 	// What they're interpereted as is down to the packet's server flag
-	void UncompressAndDealWithPacket(ArchiveIntermediary packetData, void *side);
+	void UncompressAndDealWithPacket(ArchiveIntermediary packetData, void *side, ENetPeer *p = nullptr);
 
 	// Pew pew
 	void SendPacket(ENetPeer *peer, ClientPacket &p);

@@ -59,6 +59,16 @@ namespace network
 		if (enet_host_service(enetHost, &e, 2500) > 0 && e.type == ENET_EVENT_TYPE_CONNECT)
 		{
 			con_info("Hello! We've connected to a server!");
+			con_info("Sending the neccesary information");
+			{
+				ClientPacket p;
+				p.type = ClientPacket::PLAYER_ID;
+				Archive<ArchiveBuf> bufAccess = p.GetAccess();
+				bufAccess << PROTOCOL_VERSION;
+				bufAccess << "Player";
+
+				protocol::SendPacket(e.peer, p);
+			}
 			peer = e.peer;
 			connected = true;
 			return true;
@@ -149,6 +159,10 @@ namespace network
 		enet_host_destroy(enetHost);
 	}
 
+	void Server::KickPlayer(ENetPeer *peer, const char* reason)
+	{
+		KickPlayer(players[peer], reason);
+	}
 	void Server::KickPlayer(Client *player, const char* reason)
 	{
 		ServerPacket p;
@@ -161,6 +175,7 @@ namespace network
 		con_info("Kicking player for reason %s", reason);
 
 		protocol::SendPacket(player->peer, p);
+		enet_peer_disconnect_now(player->peer, NULL);
 	}
 
 	void Server::Update()
@@ -198,6 +213,10 @@ namespace network
 				break;
 				case ENET_EVENT_TYPE_RECEIVE:
 				{
+					protocol::UncompressAndDealWithPacket(
+						ArchiveIntermediary(e.packet->data, e.packet->data + e.packet->dataLength),
+						this,
+						e.peer);
 				}
 				break;
 			}

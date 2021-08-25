@@ -85,6 +85,7 @@ namespace network
 			std::map<ENetPeer*, Client*> players;
 
 			void KickPlayer(Client *c, const char *reason);
+			void KickPlayer(ENetPeer *p, const char *reason);
 
 		private:
 			ENetAddress addr;
