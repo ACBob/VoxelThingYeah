@@ -3,15 +3,10 @@
 #define LOG_LEVEL DEBUG
 #include "seethe.h"
 
-#include "archive.h"
-
 #include <sstream>
 
 namespace network
 {
-	// Forward decl
-	struct NetworkPacket;
-
 	bool Init()
 	{
 		if(enet_initialize() != 0)
@@ -132,14 +127,6 @@ namespace network
 
 	void Client::DecodeChunkData(ArchiveIntermediary data)
 	{
-		World::PortableChunkRepresentation crep;
-		ArchiveBuf buf(data);
-		Archive<ArchiveBuf> bufAccess(buf);
-
-		bufAccess >> crep;
-
-		// Woot, data!
-		localWorld->UsePortable(crep);
 	}
 
 	void Client::SendInput(InputManager *inp)

@@ -9,9 +9,8 @@
 #include <sstream>
 #include <map>
 
-// TODO: a nicer place for these
-typedef std::stringstream ArchiveBuf;
-typedef std::string ArchiveIntermediary;
+#include "protocol.hpp"
+
 
 namespace network
 {
@@ -91,25 +90,6 @@ namespace network
 			void SendWorld(ENetPeer *peer, Vector pos);
 	};
 #endif
-
-	struct NetworkPacket
-	{
-		enum type_t
-		{
-			CHUNKDATA = 1,
-			ENTITIES = 2,
-			INPUT = 3,
-		};
-
-		uint type;
-		ArchiveIntermediary data;
-
-		template <typename S>
-		void serialize(S& s)
-		{
-			s & type & data;
-		};
-	};
 
 	void SendPacket(ENetPeer *peer, NetworkPacket::type_t type, ArchiveIntermediary data);
 	NetworkPacket GetPacketBack(ENetPacket *packet);
