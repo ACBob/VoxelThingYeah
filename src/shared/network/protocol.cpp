@@ -5,6 +5,12 @@
 #define LOG_LEVEL DEBUG
 #include "seethe.h"
 
+#ifdef CLIENTEXE
+#include "cvar_clientside.hpp"
+#elif SERVEREXE
+#include "cvar_serverside.hpp"
+#endif
+
 namespace protocol
 {
 	void SendPacket(ENetPeer *peer, ClientPacket &p)
@@ -75,6 +81,9 @@ namespace protocol
 					client->Disconnect();
 					return;
 				}
+
+				con_info("Connected to server %s.", serverName.c_str());
+
 
 				// TODO: do something with this info
 			}
@@ -195,11 +204,22 @@ namespace protocol
 					server->KickPlayer(peer, "Protocol version Mismatch!");
 					return;
 				}
+				
+				// Send them our info
+				ServerPacket pp;
+				pp.type = ServerPacket::PLAYER_ID;
+				Archive<ArchiveBuf> bufAcc = pp.GetAccess();
+				bufAcc << PROTOCOL_VERSION;
+				bufAcc << std::string(sv_name->GetString());
+				bufAcc << std::string(sv_desc->GetString());
+				bufAcc << false;
+
+				SendPacket(peer, pp);
 
 				// TODO: do something with this info
 			}
 			break;
-			
+
 			case ClientPacket::SET_BLOCK:
 			{
 				int x, y, z;
