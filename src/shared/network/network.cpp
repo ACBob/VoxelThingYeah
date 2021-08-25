@@ -105,6 +105,9 @@ namespace network
 			{
 				case ENET_EVENT_TYPE_RECEIVE:
 				{
+					protocol::UncompressAndDealWithPacket(
+						ArchiveIntermediary(e.packet->data, e.packet->data + e.packet->dataLength),
+						this);
 				}
 				break;
 				case ENET_EVENT_TYPE_DISCONNECT:
@@ -135,8 +138,21 @@ namespace network
 	Server::~Server()
 	{
 		for (auto c : players)
-			enet_peer_disconnect_now(c.first, NULL); // TODO go away message
+			KickPlayer(c.second, "Server is closing!");
 		enet_host_destroy(enetHost);
+	}
+
+	void Server::KickPlayer(Client *player, const char* reason)
+	{
+		ServerPacket p;
+		p.type = ServerPacket::PLAYER_DISCONNECT;
+		
+		p._bufAccess << true;
+		p._bufAccess << std::string(reason);
+
+		con_info("Kicking player for reason %s", reason);
+
+		protocol::SendPacket(player->peer, p);
 	}
 
 	void Server::Update()
@@ -153,12 +169,14 @@ namespace network
 						e.peer->address.host,
 						e.peer->address.port);
 					// Create a client object
+
 					EntityPlayer* p = new EntityPlayer();
 					world.ents.push_back(p);
 					Client* c = new Client{e.peer, p};
 					players[e.peer] = c;
 					con_info("Sending them 0,0");
-					// SendWorld(e.peer, Vector(0));
+					
+					KickPlayer(c, "We're closed, go away");
 				}
 				break;
 				case ENET_EVENT_TYPE_DISCONNECT:

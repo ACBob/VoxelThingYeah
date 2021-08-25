@@ -2,5 +2,5 @@
 #include <string>
 #include <sstream>
 
-typedef std::stringstream ArchiveBuf;
-typedef std::string ArchiveIntermediary;
+using ArchiveBuf = std::stringstream;
+using ArchiveIntermediary = std::string;

@@ -4,21 +4,33 @@
 
 #include "netarchive.hpp"
 #include "world/world.hpp"
+#include "archive.h"
+
+#include "enet/enet.h"
 
 #define PROTOCOL_VERSION 0x01
 
 struct NetworkPacket
 {
+	NetworkPacket() :
+		_buf(data),
+		_bufAccess(_buf)
+	{
+
+	}
+
 	unsigned int type;
 	ArchiveIntermediary data;
-
-	bool server;
+	ArchiveBuf _buf;
+	Archive<ArchiveBuf> _bufAccess;
 
 	template <typename S>
 	void serialize(S& s)
 	{
 		s & type & data & server;
 	};
+
+	bool server;
 };
 
 // Both ClientPacket and ServerPacket are compiled into the Client/Server
@@ -42,7 +54,6 @@ struct ClientPacket : public NetworkPacket
 		/*
 			{
 				X, Y, Z,
-				breakOrPlace (1 for break),
 				blockID
 			}
 		*/
@@ -69,7 +80,11 @@ struct ClientPacket : public NetworkPacket
 		PONG = 0x04,
 	};
 
-	bool server = false;
+	template <typename S>
+	void serialize(S& s)
+	{
+		s & type & data & false;
+	};
 };
 
 // *FROM* Server
@@ -144,10 +159,14 @@ struct ServerPacket : public NetworkPacket
 				kickReason (string message)
 			}
 		*/
-		PLAYER_DISONNECT = 0x06
+		PLAYER_DISCONNECT = 0x06
 	};
 
-	bool server = true;
+	template <typename S>
+	void serialize(S& s)
+	{
+		s & type & data & true;
+	};
 };
 
 namespace protocol
@@ -159,4 +178,14 @@ namespace protocol
 	// Be them client or server
 	// What they're interpereted as is down to the packet's server flag
 	void UncompressAndDealWithPacket(ArchiveIntermediary packetData, void *side);
+
+	// Pew pew
+	void SendPacket(ENetPeer *peer, ClientPacket &p);
+	void SendPacket(ENetPeer *peer, ServerPacket &p);
+
+#ifdef CLIENTEXE
+	ServerPacket GetPacketBack(ENetPacket *p);
+#elif SERVEREXE
+	ClientPacket GetPacketBack(ENetPacket *p);
+#endif
 }

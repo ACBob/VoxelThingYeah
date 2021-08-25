@@ -1,12 +1,38 @@
 #include "protocol.hpp"
-#include "archive.h"
 
 #include "network.hpp"
 
+#define LOG_LEVEL DEBUG
 #include "seethe.h"
 
 namespace protocol
 {
+	void SendPacket(ENetPeer *peer, ClientPacket &p)
+	{
+		ArchiveBuf buf;
+		Archive<ArchiveBuf> bufAccess(buf);
+		bufAccess << p;
+
+		ArchiveIntermediary g = buf.str();
+
+		ENetPacket *packet = enet_packet_create(&g.begin()[0], g.size(), ENET_PACKET_FLAG_RELIABLE);
+		enet_peer_send(peer, 0, packet);
+	}
+	void SendPacket(ENetPeer *peer, ServerPacket &p)
+	{
+		ArchiveBuf buf;
+		Archive<ArchiveBuf> bufAccess(buf);
+		bufAccess << p;
+
+		std::string g = buf.str();
+
+		con_info("Size of g: %zu", g.size());
+		con_info("g: %s", g.c_str());
+
+		ENetPacket *packet = enet_packet_create(&g.begin()[0], g.size(), ENET_PACKET_FLAG_RELIABLE);
+		enet_peer_send(peer, 0, packet);
+	}
+
 	void UncompressAndDealWithPacket(ArchiveIntermediary packetData, void *side)
 	{
 		NetworkPacket p;
@@ -58,7 +84,8 @@ namespace protocol
 			case ServerPacket::KEEPALIVE:
 			{
 				// TODO: Immediately send a message back
-				ClientPacket pp{ClientPacket::PONG};
+				ClientPacket pp;
+				pp.type = ClientPacket::PONG;
 			}
 			break;
 
@@ -114,7 +141,7 @@ namespace protocol
 			}
 			break;
 
-			case ServerPacket::PLAYER_DISONNECT:
+			case ServerPacket::PLAYER_DISCONNECT:
 			{
 				bool isKick = false;
 				std::string message;
