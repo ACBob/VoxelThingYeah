@@ -71,7 +71,7 @@ namespace network
 	}
 	void Client::Disconnect()
 	{
-		if (!connected)
+		if (!connected || peer == nullptr)
 		{
 			con_warning("Disconnect without connection");
 			return;
@@ -183,8 +183,6 @@ namespace network
 					Client* c = new Client{e.peer, p};
 					players[e.peer] = c;
 					con_info("Sending them 0,0");
-					
-					KickPlayer(c, "We're closed, go away");
 				}
 				break;
 				case ENET_EVENT_TYPE_DISCONNECT:
