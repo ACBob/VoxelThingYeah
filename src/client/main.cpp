@@ -137,6 +137,9 @@ int main (int argc, char* args[]) {
 	while (!window.shouldClose)
 	{
 		client.Update();
+		if (!client.connected)
+			break;
+			
 		window.PollEvents();
 		if (window.IsFocused())
 			window.CaptureMouse();

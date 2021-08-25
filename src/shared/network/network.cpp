@@ -60,6 +60,7 @@ namespace network
 		{
 			con_info("Hello! We've connected to a server!");
 			peer = e.peer;
+			connected = true;
 			return true;
 		}
 		else
@@ -70,6 +71,11 @@ namespace network
 	}
 	void Client::Disconnect()
 	{
+		if (!connected)
+		{
+			con_warning("Disconnect without connection");
+			return;
+		}
 		con_info("Disconnecting");
 		enet_peer_disconnect(peer, 0);
 
@@ -88,6 +94,7 @@ namespace network
 		}
 
 		peer = nullptr;
+		connected = false;
 	}
 
 	void Client::Update()

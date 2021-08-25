@@ -40,6 +40,10 @@ namespace network
 			// Pointer to the local world
 			World* localWorld = nullptr;
 
+			// Please don't modify
+			// Returns if we're connected or not
+			bool connected;
+
 		private:
 			ENetHost *enetHost;
 			ENetAddress addr;
