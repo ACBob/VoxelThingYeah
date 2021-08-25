@@ -11,6 +11,7 @@ namespace protocol
 	{
 		ArchiveBuf buf;
 		Archive<ArchiveBuf> bufAccess(buf);
+		p.data = p.buffer.str();
 		bufAccess << p;
 
 		ArchiveIntermediary g = buf.str();
@@ -22,12 +23,10 @@ namespace protocol
 	{
 		ArchiveBuf buf;
 		Archive<ArchiveBuf> bufAccess(buf);
+		p.data = p.buffer.str();
 		bufAccess << p;
 
-		std::string g = buf.str();
-
-		con_info("Size of g: %zu", g.size());
-		con_info("g: %s", g.c_str());
+		ArchiveIntermediary g = buf.str();
 
 		ENetPacket *packet = enet_packet_create(&g.begin()[0], g.size(), ENET_PACKET_FLAG_RELIABLE);
 		enet_peer_send(peer, 0, packet);
@@ -155,6 +154,7 @@ namespace protocol
 					client->Disconnect();
 				}
 			}
+			break;
 			
 			default:
 			{

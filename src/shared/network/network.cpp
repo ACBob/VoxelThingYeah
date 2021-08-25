@@ -145,10 +145,11 @@ namespace network
 	void Server::KickPlayer(Client *player, const char* reason)
 	{
 		ServerPacket p;
+		Archive<ArchiveBuf> bufAccess = p.GetAccess();
 		p.type = ServerPacket::PLAYER_DISCONNECT;
 		
-		p._bufAccess << true;
-		p._bufAccess << std::string(reason);
+		bufAccess << true;
+		bufAccess << std::string(reason);
 
 		con_info("Kicking player for reason %s", reason);
 

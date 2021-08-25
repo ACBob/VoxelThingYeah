@@ -12,17 +12,14 @@
 
 struct NetworkPacket
 {
-	NetworkPacket() :
-		_buf(data),
-		_bufAccess(_buf)
-	{
-
-	}
-
 	unsigned int type;
+	ArchiveBuf buffer;
 	ArchiveIntermediary data;
-	ArchiveBuf _buf;
-	Archive<ArchiveBuf> _bufAccess;
+
+	Archive<ArchiveBuf> GetAccess()
+	{
+		return Archive<ArchiveBuf>(buffer);
+	}
 
 	template <typename S>
 	void serialize(S& s)
