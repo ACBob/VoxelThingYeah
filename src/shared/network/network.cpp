@@ -87,7 +87,14 @@ namespace network
 			return;
 		}
 		con_info("Disconnecting");
-		enet_peer_disconnect(peer, 0);
+		{
+			ClientPacket p;
+			Archive<ArchiveBuf> bufAccess = p.GetAccess();
+			p.type = ClientPacket::LEAVE;
+
+			protocol::SendPacket(peer, p);
+			enet_peer_disconnect(peer, 0);
+		}
 
 		con_info("Taking some time to ignore packets sent our way...");
 		while (enet_host_service(enetHost, &e, 3000) > 0)

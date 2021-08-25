@@ -75,6 +75,11 @@ struct ClientPacket : public NetworkPacket
 			Sorry nothing
 		*/
 		PONG = 0x04,
+		// Sent to the server to say goodbye
+		/*
+			Sorry nothing
+		*/
+		LEAVE = 0x05,
 	};
 
 	template <typename S>

@@ -264,6 +264,20 @@ namespace protocol
 			}
 			break;
 
+			case ClientPacket::LEAVE:
+			{
+				ServerPacket p;
+				Archive<ArchiveBuf> bufAccess = p.GetAccess();
+				p.type = ServerPacket::PLAYER_DISCONNECT;
+				
+				bufAccess << false;
+				bufAccess << std::string("");
+				con_info("Goodbye");
+
+				SendPacket(peer, p);
+			}
+			break;
+
 			default:
 			{
 				con_error("Unknown packet of type %#010x", p->type);
