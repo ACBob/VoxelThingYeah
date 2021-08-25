@@ -21,7 +21,7 @@ namespace protocol
 			DealWithPacket(reinterpret_cast<ClientPacket*>(&p), side);
 	}
 
-
+#ifdef CLIENTEXE
 	void DealWithPacket(ServerPacket *p, void *side)
 	{
 		ArchiveBuf buf(p->data);
@@ -75,7 +75,7 @@ namespace protocol
 			case ServerPacket::UPDATE_BLOCK:
 			{
 				int x, y, z;
-				blocktype_t blockType;
+				uint blockType;
 				bufAccess >> x;
 				bufAccess >> y;
 				bufAccess >> z;
@@ -84,7 +84,7 @@ namespace protocol
 				// Woot, data!
 				// TODO: make sure the server isn't being malicious
 				Block *b = client->localWorld->BlockAtWorldPos(Vector(x,y,z));
-				b->blockType = blockType;
+				b->blockType = (blocktype_t)blockType;
 				b->Update();
 			}
 			break;
@@ -124,7 +124,7 @@ namespace protocol
 
 				if (isKick)
 				{
-					con_warning("Kicked from server for: %s", message);
+					con_warning("Kicked from server for: %s", message.c_str());
 					client->Disconnect();
 				}
 			}
@@ -136,7 +136,14 @@ namespace protocol
 			break;
 		}
 	}
+#elif SERVEREXE
+	void DealWithPacket(ServerPacket *p, void *side)
+	{
+		con_error("DealWithPacket(ServerPacket) called on server!!!");
+	}
+#endif
 
+#ifdef SERVEREXE
 	void DealWithPacket(ClientPacket *p, void *side)
 	{
 		ArchiveBuf buf(p->data);
@@ -157,7 +164,7 @@ namespace protocol
 				// Ideally impossible (as the server should check it itself)
 				if (protocolVersion != PROTOCOL_VERSION)
 				{
-					con_error("User %s attempted to join unsupported protocol version (%#010x) (Expected %#010x)", username, protocolVersion, PROTOCOL_VERSION);
+					con_error("User %s attempted to join unsupported protocol version (%#010x) (Expected %#010x)", username.c_str(), protocolVersion, PROTOCOL_VERSION);
 					// TODO: Kick
 					return;
 				}
@@ -167,8 +174,8 @@ namespace protocol
 
 			case ClientPacket::SET_BLOCK:
 			{
-				int x,y,z;
-				blocktype_t blockType;
+				int x, y, z;
+				uint blockType;
 				bufAccess >> x;
 				bufAccess >> y;
 				bufAccess >> z;
@@ -197,7 +204,7 @@ namespace protocol
 				std::string message;
 				bufAccess >> message;
 
-				con_info("%s", message);
+				con_info("%s", message.c_str());
 
 				// TODO:
 			}
@@ -216,4 +223,10 @@ namespace protocol
 			break;
 		}
 	}
+#elif CLIENTEXE
+	void DealWithPacket(ClientPacket *p, void *side)
+	{
+		con_error("DealWithPacket(ClientPacket) called on client!!!");
+	}
+#endif
 }

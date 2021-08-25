@@ -1,7 +1,7 @@
 #include "enet/enet.h"
 
 #include "shared/filesystem.hpp"
-#include "shared/network.hpp"
+#include "network/network.hpp"
 #include "shared/cvar.hpp"
 
 #define LOG_LEVEL DEBUG
@@ -142,7 +142,6 @@ int main (int argc, char* args[]) {
 			window.CaptureMouse();
 		
 		plyr.UpdateClient(client.localWorld);
-		client.SendInput(plyr.inputMan);
 
 		// Rendering
 		{

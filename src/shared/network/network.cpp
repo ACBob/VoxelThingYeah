@@ -105,37 +105,17 @@ namespace network
 			{
 				case ENET_EVENT_TYPE_RECEIVE:
 				{
-					NetworkPacket p = GetPacketBack(e.packet);
-					
-					switch (p.type)
-					{
-						case NetworkPacket::CHUNKDATA:
-							DecodeChunkData(p.data);
-						break;
-					}
 				}
 				break;
 				case ENET_EVENT_TYPE_DISCONNECT:
 				{
 					con_info("Oh, the server has said goodbye... :(");
-					// TODO: Boot from game
+					Disconnect();
+					return;
 				}
 				break;
 			}
 		}
-	}
-
-	void Client::DecodeChunkData(ArchiveIntermediary data)
-	{
-	}
-
-	void Client::SendInput(InputManager *inp)
-	{
-		ArchiveBuf buf;
-		Archive<ArchiveBuf> bufAccess(buf);
-		bufAccess << *inp;
-
-		SendPacket(peer, NetworkPacket::INPUT, buf.str());
 	}
 
 #elif SERVEREXE
@@ -178,7 +158,7 @@ namespace network
 					Client* c = new Client{e.peer, p};
 					players[e.peer] = c;
 					con_info("Sending them 0,0");
-					SendWorld(e.peer, Vector(0));
+					// SendWorld(e.peer, Vector(0));
 				}
 				break;
 				case ENET_EVENT_TYPE_DISCONNECT:
@@ -194,28 +174,6 @@ namespace network
 				break;
 				case ENET_EVENT_TYPE_RECEIVE:
 				{
-					NetworkPacket p = GetPacketBack(e.packet);
-					
-					switch (p.type)
-					{
-						case NetworkPacket::CHUNKDATA:
-						case NetworkPacket::ENTITIES:
-						{
-							con_warning("Haha nice try");
-						}
-						break;
-						case NetworkPacket::INPUT:
-						{
-							EntityPlayer *plyr = players[e.peer]->entity;
-							InputManager inp;
-
-							ArchiveBuf buf(p.data);
-							Archive<ArchiveBuf> bufAccess(buf);
-							bufAccess >> inp;
-							plyr->inputMan = inp;
-						}
-						break;
-					}
 				}
 				break;
 			}
@@ -229,41 +187,5 @@ namespace network
 	{
 		return enetHost != NULL;
 	}
-
-	void Server::SendWorld(ENetPeer *peer, Vector pos)
-	{
-		World::PortableChunkRepresentation chunkRep = world.GetWorldRepresentation(pos);
-		
-		ArchiveBuf buf;
-		Archive<ArchiveBuf> bufAccess(buf);
-		bufAccess << chunkRep;
-
-		SendPacket(peer, NetworkPacket::CHUNKDATA, buf.str());
-	}
 #endif
-
-	void SendPacket(ENetPeer *peer, NetworkPacket::type_t type, ArchiveIntermediary data)
-	{		
-		ArchiveBuf buf;
-		Archive<ArchiveBuf> bufAccess(buf);
-		bufAccess << NetworkPacket{
-			(uint)type,
-			data
-		};
-
-		ArchiveIntermediary g = buf.str();
-
-		ENetPacket *packet = enet_packet_create(&g.begin()[0], g.size(), ENET_PACKET_FLAG_RELIABLE);
-		enet_peer_send(peer, 0, packet);
-	}
-	NetworkPacket GetPacketBack(ENetPacket *packet)
-	{
-		NetworkPacket p;
-		ArchiveIntermediary g(packet->data, packet->data + packet->dataLength);
-		ArchiveBuf buf(g);
-		Archive<ArchiveBuf> bufAccess(buf);
-
-		bufAccess >> p;
-		return p;
-	}
 }

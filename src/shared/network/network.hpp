@@ -37,8 +37,6 @@ namespace network
 
 			void DecodeChunkData(ArchiveIntermediary data);
 
-			void SendInput(InputManager *inp);
-
 			// Pointer to the local world
 			World* localWorld = nullptr;
 
@@ -82,15 +80,12 @@ namespace network
 
 			std::map<ENetPeer*, Client*> players;
 
+			void KickPlayer(Client *c, const char *reason);
+
 		private:
 			ENetAddress addr;
 			ENetEvent e;
 			ENetHost *enetHost;
-
-			void SendWorld(ENetPeer *peer, Vector pos);
 	};
 #endif
-
-	void SendPacket(ENetPeer *peer, NetworkPacket::type_t type, ArchiveIntermediary data);
-	NetworkPacket GetPacketBack(ENetPacket *packet);
 }
