@@ -39,6 +39,8 @@ namespace network
 
 			// Pointer to the local world
 			World* localWorld = nullptr;
+			// Pointer to the local player
+			EntityPlayer *localPlayer;
 
 			// Please don't modify
 			// Returns if we're connected or not

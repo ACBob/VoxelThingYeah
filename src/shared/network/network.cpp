@@ -204,11 +204,9 @@ namespace network
 				break;
 				case ENET_EVENT_TYPE_DISCONNECT:
 				{
-					con_info("Goodbye %x:%u!\n",
-						e.peer->address.host,
-						e.peer->address.port);
-					// Destroy the client object AND player
 					Client* c = players[e.peer];
+					con_info("Goodbye %s!", c->entity->name.c_str());
+					// Destroy the client object AND player
 					players.erase(players.find(e.peer));
 					if (c->entity != nullptr) //! This is GOING to shoot me in the foot later
 					{
