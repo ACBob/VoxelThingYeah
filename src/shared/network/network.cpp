@@ -205,12 +205,11 @@ namespace network
 				case ENET_EVENT_TYPE_DISCONNECT:
 				{
 					Client* c = players[e.peer];
-					con_info("Goodbye %s!", c->entity->name.c_str());
+					con_info("Goodbye %s!", c->username.c_str());
 					// Destroy the client object AND player
 					players.erase(players.find(e.peer));
 					if (c->entity != nullptr) //! This is GOING to shoot me in the foot later
 					{
-						namesToPlayer.erase(namesToPlayer.find(c->entity->name));
 						c->entity->Kill();
 					}
 				}

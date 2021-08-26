@@ -42,6 +42,9 @@ namespace network
 			// Pointer to the local player
 			EntityPlayer *localPlayer;
 
+			std::map<std::string, EntityPlayer*> namesToPlayer;
+			std::map<EntityPlayer::PlayerId, EntityPlayer*> idsToPlayer;
+
 			// Please don't modify
 			// Returns if we're connected or not
 			bool connected;
@@ -59,6 +62,8 @@ namespace network
 		public:
 			ENetPeer *peer;
 			EntityPlayer *entity;
+			std::string username;
+			EntityPlayer::PlayerId id;
 	};
 #endif
 
@@ -86,6 +91,7 @@ namespace network
 
 			std::map<ENetPeer*, Client*> players;
 			std::map<std::string, Client*> namesToPlayer;
+			std::map<EntityPlayer::PlayerId, Client*> idsToPlayer;
 
 			void KickPlayer(Client *c, const char *reason);
 			void KickPlayer(ENetPeer *p, const char *reason);

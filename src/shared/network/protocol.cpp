@@ -153,7 +153,23 @@ namespace protocol
 				}
 				else
 				{
-					// TODO:
+					con_info("Player at <%d,%d,%d>", x,y,z);
+					if (client->idsToPlayer.count(id))
+					{
+						EntityPlayer *plyr = client->idsToPlayer[id];
+						plyr->position = Vector(x,y,z);
+						plyr->rotation = Vector(pitch, yaw, 0);
+					}
+					else
+					{
+						// New player
+						EntityPlayer *plyr = new EntityPlayer();
+						plyr->position = Vector(x,y,z);
+						plyr->rotation = Vector(pitch, yaw, 0);
+						plyr->playerId = id;
+
+						client->localWorld->AddEntity(plyr);
+					}
 				}
 			}
 			break;
@@ -254,10 +270,15 @@ namespace protocol
 				EntityPlayer* p = new EntityPlayer();
 				server->world.AddEntity(p);
 				c->entity = p;
-				p->name = username;
+				c->username = username;
+				p->name = c->username;
+				c->id = random() % 255;
+				p->playerId = c->id;
 
 				// Then send it to spawn
-				p->position = Vector(0,16,0);
+				int x = 8 + random() % 8;
+				int z = 8 + random() % 8;
+				p->position = Vector(x,10,z);
 				p->rotation = Vector(0,0,0);
 
 				{
@@ -265,9 +286,9 @@ namespace protocol
 					pp.type = ServerPacket::PLAYER_SPAWN;
 					Archive<ArchiveBuf> bufAcc = pp.GetAccess();
 					bufAcc << -1;
-					bufAcc << 0;
-					bufAcc << 16;
-					bufAcc << 0;
+					bufAcc << x;
+					bufAcc << 10;
+					bufAcc << z;
 					bufAcc << 0;
 					bufAcc << 0;
 
@@ -316,7 +337,9 @@ namespace protocol
 				bufAccess >> pitch;
 				bufAccess >> yaw;
 
-				// TODO:
+				EntityPlayer *p = server->players[peer]->entity;
+				p->position = Vector(x,y,z);
+				p->rotation = Vector(pitch, yaw, 0);
 			}
 			break;
 
