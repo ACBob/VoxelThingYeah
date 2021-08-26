@@ -126,8 +126,10 @@ namespace protocol
 
 			case ServerPacket::PLAYER_SPAWN:
 			{
+				EntityPlayer::PlayerId id;
 				int x, y, z;
 				float pitch, yaw;
+				bufAccess >> id;
 				bufAccess >> x;
 				bufAccess >> y;
 				bufAccess >> z;
@@ -191,11 +193,16 @@ namespace protocol
 		{
 			case ClientPacket::PLAYER_ID:
 			{
+				network::Client* c = new network::Client{peer, nullptr};
+				server->players[peer] = c;
+
 				// we've been given a few things here, decomp them
 				uint protocolVersion = 0x0;
 				std::string username;
 				bufAccess >> protocolVersion;
 				bufAccess >> username;
+
+				con_info("user %s joined", username.c_str());
 
 				// Ideally impossible (as the server should check it itself)
 				if (protocolVersion != PROTOCOL_VERSION)
@@ -204,6 +211,13 @@ namespace protocol
 					server->KickPlayer(peer, "Protocol version Mismatch!");
 					return;
 				}
+				if (server->namesToPlayer.count(username))
+				{
+					con_error("Duplicate username %s!", username.c_str());
+					server->KickPlayer(peer, "Someone already has your username. Change it!");
+					return;
+				}
+				server->namesToPlayer[username] = c;
 				
 				// Send them our info
 				ServerPacket pp;
@@ -215,6 +229,12 @@ namespace protocol
 				bufAcc << false;
 
 				SendPacket(peer, pp);
+
+				// Create an entity for them
+				EntityPlayer* p = new EntityPlayer();
+				server->world.AddEntity(p);
+				c->entity = p;
+				p->name = username;
 
 				// TODO: do something with this info
 			}

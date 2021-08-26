@@ -9,4 +9,6 @@ extern ConVar::ConVar *fov;
 extern ConVar::ConVar *scr_width;
 extern ConVar::ConVar *scr_height;
 
+extern ConVar::ConVar *username;
+
 void SetupClientSideConvars();

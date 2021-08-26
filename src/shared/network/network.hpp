@@ -83,6 +83,7 @@ namespace network
 			World world;
 
 			std::map<ENetPeer*, Client*> players;
+			std::map<std::string, Client*> namesToPlayer;
 
 			void KickPlayer(Client *c, const char *reason);
 			void KickPlayer(ENetPeer *p, const char *reason);

@@ -67,6 +67,7 @@ class World {
 		void UsePortable(PortableChunkRepresentation rep);
 
 		std::vector<void*> ents;
+		void AddEntity(void* e);
 
 #ifdef CLIENTEXE
 		void Render();

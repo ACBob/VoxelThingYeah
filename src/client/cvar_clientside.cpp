@@ -5,10 +5,14 @@ ConVar::ConVar *fov;
 ConVar::ConVar *scr_width;
 ConVar::ConVar *scr_height;
 
+ConVar::ConVar *username;
+
 void SetupClientSideConvars()
 {
 	fov = conVarHandle.DeclareConvar("fov", "70", ConVar::CVAR_ARCHIVE);
 
 	scr_width = conVarHandle.DeclareConvar("scr_width", "856", ConVar::CVAR_ARCHIVE);
 	scr_height = conVarHandle.DeclareConvar("scr_height", "482", ConVar::CVAR_ARCHIVE);
+
+	username = conVarHandle.DeclareConvar("username", "Player", ConVar::CVAR_ARCHIVE);
 }

@@ -3,6 +3,12 @@
 #define LOG_LEVEL DEBUG
 #include "seethe.h"
 
+#ifdef CLIENTEXE
+#include "cvar_clientside.hpp"
+#elif SERVEREXE
+#include "cvar_serverside.hpp"
+#endif
+
 #include <sstream>
 
 namespace network
@@ -65,7 +71,7 @@ namespace network
 				p.type = ClientPacket::PLAYER_ID;
 				Archive<ArchiveBuf> bufAccess = p.GetAccess();
 				bufAccess << PROTOCOL_VERSION;
-				bufAccess << "Player";
+				bufAccess << std::string(username->GetString());
 
 				protocol::SendPacket(e.peer, p);
 			}
@@ -172,6 +178,8 @@ namespace network
 	}
 	void Server::KickPlayer(Client *player, const char* reason)
 	{
+		ENetPeer *peer = player->peer;
+
 		ServerPacket p;
 		Archive<ArchiveBuf> bufAccess = p.GetAccess();
 		p.type = ServerPacket::PLAYER_DISCONNECT;
@@ -181,8 +189,8 @@ namespace network
 
 		con_info("Kicking player for reason %s", reason);
 
-		protocol::SendPacket(player->peer, p);
-		enet_peer_disconnect_now(player->peer, NULL);
+		protocol::SendPacket(peer, p);
+		enet_peer_disconnect_later(peer, NULL);
 	}
 
 	void Server::Update()
@@ -193,19 +201,6 @@ namespace network
 		{
 			switch(e.type)
 			{
-				case ENET_EVENT_TYPE_CONNECT:
-				{
-					con_info("Hello %x:%u!\n",
-						e.peer->address.host,
-						e.peer->address.port);
-					// Create a client object
-
-					EntityPlayer* p = new EntityPlayer();
-					world.ents.push_back(p);
-					Client* c = new Client{e.peer, p};
-					players[e.peer] = c;
-					con_info("Sending them 0,0");
-				}
 				break;
 				case ENET_EVENT_TYPE_DISCONNECT:
 				{
@@ -214,8 +209,12 @@ namespace network
 						e.peer->address.port);
 					// Destroy the client object AND player
 					Client* c = players[e.peer];
-					c->entity->Kill();
 					players.erase(players.find(e.peer));
+					if (c->entity != nullptr) //! This is GOING to shoot me in the foot later
+					{
+						namesToPlayer.erase(namesToPlayer.find(c->entity->name));
+						c->entity->Kill();
+					}
 				}
 				break;
 				case ENET_EVENT_TYPE_RECEIVE:

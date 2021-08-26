@@ -2,7 +2,7 @@
 
 EntityPlayer::EntityPlayer()
 {
-	position = Vector(0,16,0);
+	position = Vector(0,0,0);
 #ifdef CLIENTEXE
 	hand.length = 4;
 	hand.dir = GetForward();

@@ -10,6 +10,8 @@
 #include "rendering/shadermanager.hpp"
 #endif
 
+#include <string>
+
 
 class EntityBase
 {
@@ -52,6 +54,8 @@ class EntityBase
 
 		Model mdl;
 #endif
+
+		std::string name;
 
 		// Gets a forward vector based on the rotation
 		Vector GetForward()

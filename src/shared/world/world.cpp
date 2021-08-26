@@ -98,6 +98,11 @@ bool World::ValidChunkPos(const Vector pos)
 	return false;
 }
 
+void World::AddEntity(void *e)
+{
+	ents.push_back(e);
+}
+
 #ifdef CLIENTEXE
 void World::Render()
 {

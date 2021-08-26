@@ -138,6 +138,7 @@ struct ServerPacket : public NetworkPacket
 		// Reserved for *FIRST JOIN* or *RESPAWN*
 		/*
 			{
+				playerId,
 				X,Y,Z,
 				pitch,
 				yaw
