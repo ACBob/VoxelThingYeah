@@ -54,12 +54,6 @@ class World {
 		{
 			uint32_t x,y,z;
 			uint32_t blocks[CHUNKSIZE_X*CHUNKSIZE_Y*CHUNKSIZE_Z];
-
-			template <typename S>
-			void serialize(S& s)
-			{
-				s & x & y & z & blocks;
-			};
 		};
 		PortableChunkRepresentation GetWorldRepresentation(Vector pos);
 

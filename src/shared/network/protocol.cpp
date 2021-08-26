@@ -100,7 +100,15 @@ namespace protocol
 			case ServerPacket::CHUNKDATA:
 			{
 				World::PortableChunkRepresentation crep;
-				bufAccess >> crep;
+				int numBlocks;
+				bufAccess >> crep.x;
+				bufAccess >> crep.y;
+				bufAccess >> crep.z;
+				bufAccess >> numBlocks;
+				bufAccess >> crep.blocks;
+
+				con_info("ChunkData at <%d,%d,%d>", crep.x, crep.y, crep.z);
+				con_info("%d Blocks", numBlocks);
 
 				// Woot, data!
 				client->localWorld->UsePortable(crep);
@@ -136,7 +144,17 @@ namespace protocol
 				bufAccess >> pitch;
 				bufAccess >> yaw;
 
-				// TODO:
+				if (id == -1)
+				{
+					// Then it's us
+					con_info("Spawning at <%d,%d,%d> <%d,%d>", x, y, z, pitch, yaw);
+					client->localPlayer->position = Vector(x,y,z);
+					client->localPlayer->rotation = Vector(pitch, yaw, 0);
+				}
+				else
+				{
+					// TODO:
+				}
 			}
 			break;
 
@@ -220,15 +238,17 @@ namespace protocol
 				server->namesToPlayer[username] = c;
 				
 				// Send them our info
-				ServerPacket pp;
-				pp.type = ServerPacket::PLAYER_ID;
-				Archive<ArchiveBuf> bufAcc = pp.GetAccess();
-				bufAcc << PROTOCOL_VERSION;
-				bufAcc << std::string(sv_name->GetString());
-				bufAcc << std::string(sv_desc->GetString());
-				bufAcc << false;
+				{
+					ServerPacket pp;
+					pp.type = ServerPacket::PLAYER_ID;
+					Archive<ArchiveBuf> bufAcc = pp.GetAccess();
+					bufAcc << PROTOCOL_VERSION;
+					bufAcc << std::string(sv_name->GetString());
+					bufAcc << std::string(sv_desc->GetString());
+					bufAcc << false;
 
-				SendPacket(peer, pp);
+					SendPacket(peer, pp);
+				}
 
 				// Create an entity for them
 				EntityPlayer* p = new EntityPlayer();
@@ -236,7 +256,40 @@ namespace protocol
 				c->entity = p;
 				p->name = username;
 
-				// TODO: do something with this info
+				// Then send it to spawn
+				p->position = Vector(0,16,0);
+				p->rotation = Vector(0,0,0);
+
+				{
+					ServerPacket pp;
+					pp.type = ServerPacket::PLAYER_SPAWN;
+					Archive<ArchiveBuf> bufAcc = pp.GetAccess();
+					bufAcc << -1;
+					bufAcc << 0;
+					bufAcc << 16;
+					bufAcc << 0;
+					bufAcc << 0;
+					bufAcc << 0;
+
+					SendPacket(peer, pp);
+				}
+
+				// Now send them 0,0
+				{
+					World::PortableChunkRepresentation crep;
+					crep = server->world.GetWorldRepresentation(Vector(0));
+
+					ServerPacket pp;
+					pp.type = ServerPacket::CHUNKDATA;
+					Archive<ArchiveBuf> bufAcc = pp.GetAccess();
+					bufAcc << crep.x;
+					bufAcc << crep.y;
+					bufAcc << crep.z;
+					bufAcc << CHUNKSIZE_X*CHUNKSIZE_Y*CHUNKSIZE_Z;
+					bufAcc << crep.blocks;
+
+					SendPacket(peer, pp);
+				}
 			}
 			break;
 
