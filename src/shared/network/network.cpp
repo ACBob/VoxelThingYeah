@@ -104,8 +104,7 @@ namespace network
 			enet_peer_disconnect(peer, 0);
 		}
 
-		con_info("Taking some time to ignore packets sent our way...");
-		while (enet_host_service(enetHost, &e, 3000) > 0)
+		while (enet_host_service(enetHost, &e, 0) > 0)
 		{
 			switch (e.type)
 			{
