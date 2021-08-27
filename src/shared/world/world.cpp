@@ -11,8 +11,9 @@
 #endif
 
 #ifdef CLIENTEXE
-World::World(Shader *shader) :
-	worldShader(shader)
+World::World(Shader *shader, Shader *entShader) :
+	worldShader(shader),
+	entityShader(entShader)
 #elif SERVEREXE
 World::World()
 #endif
@@ -101,6 +102,21 @@ bool World::ValidChunkPos(const Vector pos)
 void World::AddEntity(void *e)
 {
 	ents.push_back(e);
+	((EntityBase*)e)->Spawn();
+#ifdef CLIENTEXE
+	((EntityBase*)e)->SetShader(entityShader);
+#endif
+}
+
+void* World::GetEntityByName(const char *name)
+{
+	for (void *e : ents)
+	{
+		EntityBase *ent = reinterpret_cast<EntityBase*>(e);
+		if (ent->name == name)
+			return e;
+	}
+	return nullptr;
 }
 
 #ifdef CLIENTEXE
@@ -172,7 +188,6 @@ void World::WorldTick(int tickN)
 		reinterpret_cast<EntityBase*>(ent)->Tick();
 #ifdef SERVEREXE
 		reinterpret_cast<EntityBase*>(ent)->PhysicsTick(sv_tickms->GetInt() / 1000.0f, this);
-#endif
 	}
 
 	for (Chunk* chunk : chunks)
@@ -221,6 +236,9 @@ void World::WorldTick(int tickN)
 		if (rebuild)
 			chunk->Update();
 	}
+#else
+	}
+#endif
 }
 
 World::PortableChunkRepresentation World::GetWorldRepresentation(Vector pos)

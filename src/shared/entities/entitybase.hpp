@@ -27,7 +27,12 @@ class EntityBase
 		virtual void Kill() = 0;
 		
 		// Called every tick (usually 1/20th of a second)
-		virtual void Tick() = 0;
+		virtual void Tick()
+		{
+#ifdef CLIENTEXE
+			mdl.pos = position;
+#endif
+		};
 
 #ifdef SERVEREXE
 		// Called every tick (usually 1/20th of a second)

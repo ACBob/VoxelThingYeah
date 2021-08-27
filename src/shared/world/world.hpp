@@ -22,7 +22,7 @@ class World {
 	public:
 
 #ifdef CLIENTEXE
-		World(Shader *shader);
+		World(Shader *shader, Shader *entShader);
 #elif SERVEREXE
 		World();
 #endif
@@ -63,11 +63,15 @@ class World {
 		std::vector<void*> ents;
 		void AddEntity(void* e);
 
+		void* GetEntityByName(const char* name);
+
 #ifdef CLIENTEXE
 		void Render();
 
 		// Shader we render with
 		Shader *worldShader;
+		// Shader entities render with
+		Shader *entityShader;
 #endif
 
 		std::vector<Chunk*> chunks;

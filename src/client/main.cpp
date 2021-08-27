@@ -97,13 +97,14 @@ int main (int argc, char* args[]) {
 	ShaderManager shaderMan;
 	Shader* worldShader = shaderMan.LoadShader("shaders/generic.vert", "shaders/generic.frag");
 	Shader* skyShader = shaderMan.LoadShader("shaders/sky.vert", "shaders/sky.frag");
+	Shader* entityShader = worldShader;
 
 	con_info("Load default textures");
 	TextureManager texMan;
 	Texture* terrainPng = texMan.LoadTexture("terrain.png");
 
 	con_info("Create Client...");
-	World localWorld(worldShader);
+	World localWorld(worldShader, entityShader);
 
 	network::Client client;
 	client.localWorld = &localWorld;
@@ -152,6 +153,8 @@ int main (int argc, char* args[]) {
 		
 		plyr.UpdateClient(client.localWorld);
 
+		localWorld.WorldTick(0);
+
 		// Rendering
 		{
 			// Rendering right at the end
@@ -174,7 +177,7 @@ int main (int argc, char* args[]) {
 
 			for (void *ent : localWorld.ents)
 			{
-				reinterpret_cast<EntityBase*>(ent)->Render();
+				((EntityBase*)ent)->Render();
 			}
 
 			localWorld.Render();

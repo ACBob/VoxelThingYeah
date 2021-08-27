@@ -144,33 +144,34 @@ namespace protocol
 				bufAccess >> pitch;
 				bufAccess >> yaw;
 
-				// if (id == "<YOU>")
-				// {
+				// Empty username is taken to mean us
+				if (username == "")
+				{
 					// Then it's us
-					con_info("Spawning at <%d,%d,%d> <%d,%d>", x, y, z, pitch, yaw);
+					con_info("Spawning at <%d,%d,%d> <%f,%f>", x, y, z, pitch, yaw);
 					client->localPlayer->position = Vector(x,y,z);
 					client->localPlayer->rotation = Vector(pitch, yaw, 0);
-				// }
-				// else
-				// {
-				// 	con_info("Player at <%d,%d,%d>", x,y,z);
-				// 	if (client->idsToPlayer.count(id))
-				// 	{
-				// 		EntityPlayer *plyr = client->idsToPlayer[id];
-				// 		plyr->position = Vector(x,y,z);
-				// 		plyr->rotation = Vector(pitch, yaw, 0);
-				// 	}
-				// 	else
-				// 	{
-				// 		// New player
-				// 		EntityPlayer *plyr = new EntityPlayer();
-				// 		plyr->position = Vector(x,y,z);
-				// 		plyr->rotation = Vector(pitch, yaw, 0);
-				// 		plyr->playerId = id;
+				}
+				else
+				{
+					con_info("Player at <%d,%d,%d>", x,y,z);
+					if (client->localWorld->GetEntityByName(username.c_str()) != nullptr)
+					{
+						EntityPlayer *plyr = (EntityPlayer*)client->localWorld->GetEntityByName(username.c_str());
+						plyr->position = Vector(x,y,z);
+						plyr->rotation = Vector(pitch, yaw, 0);
+					}
+					else
+					{
+						// New player
+						EntityPlayer *plyr = new EntityPlayer();
+						plyr->position = Vector(x,y,z);
+						plyr->rotation = Vector(pitch, yaw, 0);
+						plyr->name = username;
 
-				// 		client->localWorld->AddEntity(plyr);
-				// 	}
-				// }
+						client->localWorld->AddEntity(plyr);
+					}
+				}
 			}
 			break;
 
@@ -282,7 +283,7 @@ namespace protocol
 					ServerPacket pp;
 					pp.type = ServerPacket::PLAYER_SPAWN;
 					Archive<ArchiveBuf> bufAcc = pp.GetAccess();
-					bufAcc << std::string("<YOU>");
+					bufAcc << std::string("");
 					bufAcc << x;
 					bufAcc << 10;
 					bufAcc << z;
@@ -290,6 +291,23 @@ namespace protocol
 					bufAcc << 0;
 
 					SendPacket(peer, pp);
+				}
+
+				for (network::Client* c : server->players)
+				{
+					{
+						ServerPacket pp;
+						pp.type = ServerPacket::PLAYER_SPAWN;
+						Archive<ArchiveBuf> bufAcc = pp.GetAccess();
+						bufAcc << username;
+						bufAcc << x;
+						bufAcc << 10;
+						bufAcc << z;
+						bufAcc << 0;
+						bufAcc << 0;
+
+						SendPacket(peer, pp);
+					}
 				}
 
 				// Now send them 0,0

@@ -16,11 +16,6 @@ void EntityBase::Spawn()
 
 }
 
-void EntityBase::Tick()
-{
-
-}
-
 void EntityBase::Kill()
 {
 	isKilled = true;
