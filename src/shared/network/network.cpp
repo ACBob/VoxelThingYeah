@@ -9,6 +9,8 @@
 #include "cvar_serverside.hpp"
 #endif
 
+#include <algorithm>
+
 #include <sstream>
 
 namespace network
@@ -167,14 +169,53 @@ namespace network
 	}
 	Server::~Server()
 	{
-		for (auto c : players)
-			KickPlayer(c.second, "Server is closing!");
+		for (Client *c : players)
+			KickPlayer(c, "Server is closing!");
 		enet_host_destroy(enetHost);
+	}
+
+	Client *Server::ClientFromUsername(const char *name)
+	{
+		for (Client *c : players)
+		{
+			if (c->username == name)
+				return c;
+		}
+
+		return nullptr;
+	}
+	Client *Server::ClientFromPeer(ENetPeer *peer)
+	{
+		for (Client *c : players)
+		{
+			if (c->peer == peer)
+				return c;
+		}
+
+		return nullptr;
 	}
 
 	void Server::KickPlayer(ENetPeer *peer, const char* reason)
 	{
-		KickPlayer(players[peer], reason);
+		Client *c = ClientFromPeer(peer);
+		if (c == nullptr)
+		{
+			con_critical("Tried to kick a peer without a client! What!");
+			return;
+		}
+
+		KickPlayer(c, reason);
+	}
+	void Server::KickPlayer(const char *username, const char* reason)
+	{
+		Client *c = ClientFromUsername(username);
+		if (c == nullptr)
+		{
+			con_warning("Tried to kick invalid username %s", username);
+			return;
+		}
+
+		KickPlayer(c, reason);
 	}
 	void Server::KickPlayer(Client *player, const char* reason)
 	{
@@ -204,14 +245,18 @@ namespace network
 				break;
 				case ENET_EVENT_TYPE_DISCONNECT:
 				{
-					Client* c = players[e.peer];
+					Client* c = ClientFromPeer(e.peer);
 					con_info("Goodbye %s!", c->username.c_str());
 					// Destroy the client object AND player
-					players.erase(players.find(e.peer));
+					players.erase(
+						std::remove(players.begin(), players.end(), c), players.end()
+					);
 					if (c->entity != nullptr) //! This is GOING to shoot me in the foot later
 					{
 						c->entity->Kill();
 					}
+
+					delete c;
 				}
 				break;
 				case ENET_EVENT_TYPE_RECEIVE:

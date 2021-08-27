@@ -7,7 +7,6 @@
 #include "entities/entityplayer.hpp"
 
 #include <sstream>
-#include <map>
 
 #include "protocol.hpp"
 
@@ -42,9 +41,6 @@ namespace network
 			// Pointer to the local player
 			EntityPlayer *localPlayer;
 
-			std::map<std::string, EntityPlayer*> namesToPlayer;
-			std::map<EntityPlayer::PlayerId, EntityPlayer*> idsToPlayer;
-
 			// Please don't modify
 			// Returns if we're connected or not
 			bool connected;
@@ -63,7 +59,6 @@ namespace network
 			ENetPeer *peer;
 			EntityPlayer *entity;
 			std::string username;
-			EntityPlayer::PlayerId id;
 	};
 #endif
 
@@ -89,11 +84,13 @@ namespace network
 
 			World world;
 
-			std::map<ENetPeer*, Client*> players;
-			std::map<std::string, Client*> namesToPlayer;
-			std::map<EntityPlayer::PlayerId, Client*> idsToPlayer;
+			std::vector<Client*> players;
+			
+			Client *ClientFromPeer(ENetPeer* p);
+			Client *ClientFromUsername(const char *name);
 
 			void KickPlayer(Client *c, const char *reason);
+			void KickPlayer(const char *str, const char *reason);
 			void KickPlayer(ENetPeer *p, const char *reason);
 
 		private:

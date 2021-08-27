@@ -52,8 +52,5 @@ class EntityPlayer : public EntityBase
 		Camera camera;
 #endif
 
-		using PlayerId = uint;
-		PlayerId playerId;
-
 		bool onFloor;
 };

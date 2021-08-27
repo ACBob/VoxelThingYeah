@@ -134,43 +134,43 @@ namespace protocol
 
 			case ServerPacket::PLAYER_SPAWN:
 			{
-				EntityPlayer::PlayerId id;
+				std::string username;
 				int x, y, z;
 				float pitch, yaw;
-				bufAccess >> id;
+				bufAccess >> username;
 				bufAccess >> x;
 				bufAccess >> y;
 				bufAccess >> z;
 				bufAccess >> pitch;
 				bufAccess >> yaw;
 
-				if (id == -1)
-				{
+				// if (id == "<YOU>")
+				// {
 					// Then it's us
 					con_info("Spawning at <%d,%d,%d> <%d,%d>", x, y, z, pitch, yaw);
 					client->localPlayer->position = Vector(x,y,z);
 					client->localPlayer->rotation = Vector(pitch, yaw, 0);
-				}
-				else
-				{
-					con_info("Player at <%d,%d,%d>", x,y,z);
-					if (client->idsToPlayer.count(id))
-					{
-						EntityPlayer *plyr = client->idsToPlayer[id];
-						plyr->position = Vector(x,y,z);
-						plyr->rotation = Vector(pitch, yaw, 0);
-					}
-					else
-					{
-						// New player
-						EntityPlayer *plyr = new EntityPlayer();
-						plyr->position = Vector(x,y,z);
-						plyr->rotation = Vector(pitch, yaw, 0);
-						plyr->playerId = id;
+				// }
+				// else
+				// {
+				// 	con_info("Player at <%d,%d,%d>", x,y,z);
+				// 	if (client->idsToPlayer.count(id))
+				// 	{
+				// 		EntityPlayer *plyr = client->idsToPlayer[id];
+				// 		plyr->position = Vector(x,y,z);
+				// 		plyr->rotation = Vector(pitch, yaw, 0);
+				// 	}
+				// 	else
+				// 	{
+				// 		// New player
+				// 		EntityPlayer *plyr = new EntityPlayer();
+				// 		plyr->position = Vector(x,y,z);
+				// 		plyr->rotation = Vector(pitch, yaw, 0);
+				// 		plyr->playerId = id;
 
-						client->localWorld->AddEntity(plyr);
-					}
-				}
+				// 		client->localWorld->AddEntity(plyr);
+				// 	}
+				// }
 			}
 			break;
 
@@ -228,7 +228,7 @@ namespace protocol
 			case ClientPacket::PLAYER_ID:
 			{
 				network::Client* c = new network::Client{peer, nullptr};
-				server->players[peer] = c;
+				server->players.push_back(c);
 
 				// we've been given a few things here, decomp them
 				uint protocolVersion = 0x0;
@@ -245,13 +245,12 @@ namespace protocol
 					server->KickPlayer(peer, "Protocol version Mismatch!");
 					return;
 				}
-				if (server->namesToPlayer.count(username))
+				if (server->ClientFromUsername(username.c_str()) != nullptr)
 				{
 					con_error("Duplicate username %s!", username.c_str());
 					server->KickPlayer(peer, "Someone already has your username. Change it!");
 					return;
 				}
-				server->namesToPlayer[username] = c;
 				
 				// Send them our info
 				{
@@ -272,8 +271,6 @@ namespace protocol
 				c->entity = p;
 				c->username = username;
 				p->name = c->username;
-				c->id = random() % 255;
-				p->playerId = c->id;
 
 				// Then send it to spawn
 				int x = 8 + random() % 8;
@@ -285,7 +282,7 @@ namespace protocol
 					ServerPacket pp;
 					pp.type = ServerPacket::PLAYER_SPAWN;
 					Archive<ArchiveBuf> bufAcc = pp.GetAccess();
-					bufAcc << -1;
+					bufAcc << std::string("<YOU>");
 					bufAcc << x;
 					bufAcc << 10;
 					bufAcc << z;
@@ -337,7 +334,7 @@ namespace protocol
 				bufAccess >> pitch;
 				bufAccess >> yaw;
 
-				EntityPlayer *p = server->players[peer]->entity;
+				EntityPlayer *p = server->ClientFromPeer(peer)->entity;
 				p->position = Vector(x,y,z);
 				p->rotation = Vector(pitch, yaw, 0);
 			}
