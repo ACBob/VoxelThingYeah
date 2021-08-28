@@ -9,6 +9,7 @@
 
 #include <stdlib.h>
 #include <cstdio>
+#include <chrono>
 
 #include "utility/assorted.hpp"
 #include "cvar_clientside.hpp"
@@ -142,6 +143,9 @@ int main (int argc, char* args[]) {
 	Model skyboxModel = GetCubeModel(Vector(-1,-1,-1));
 	skyboxModel.SetShader(skyShader);
 
+	int64_t then = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
+	int64_t now = then;
+	int i = 0;
 	while (!window.shouldClose)
 	{
 		client.Update();
@@ -152,9 +156,8 @@ int main (int argc, char* args[]) {
 		if (window.IsFocused())
 			window.CaptureMouse();
 		
+		inputMan.Update();
 		plyr.UpdateClient(client.localWorld);
-
-		localWorld.WorldTick(0);
 
 		// Rendering
 		{
@@ -185,6 +188,17 @@ int main (int argc, char* args[]) {
 		}
 
 		window.SwapBuffers();
+
+		now = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
+		int64_t delta = now - then;
+		if (now >= then) // TICK
+		{
+			i++;
+			then = now + 50;
+			localWorld.WorldTick(i);
+
+			protocol::messages::SendClientPlayerPos(client.peer, plyr.position, plyr.rotation);
+		}
 	}
 	window.SetVisible(false);
 

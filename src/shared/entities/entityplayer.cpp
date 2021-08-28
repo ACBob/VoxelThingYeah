@@ -98,21 +98,22 @@ void EntityPlayer::UpdateClient(World *clientSideWorld)
 
 void EntityPlayer::Tick()
 {
-#ifdef SERVEREXE
+#ifdef CLIENTEXE
 	Vector forward = GetForward();
 	Vector right = forward.Rotate(2, 90);
-	if (inputMan.inputState[INKEY_FRONT])
+	right.y = 0;
+	right = right.Normal();
+	if (inputMan->inputState[INKEY_FRONT])
 		velocity = velocity + (forward * 2.67);
-	else if(inputMan.inputState[INKEY_BACK])
+	else if(inputMan->inputState[INKEY_BACK])
 		velocity = velocity + (forward * -2.67);
-	else if(inputMan.inputState[INKEY_LEFT])
+	else if(inputMan->inputState[INKEY_LEFT])
 		velocity = velocity + (right * -2.67);
-	else if(inputMan.inputState[INKEY_RIGHT])
+	else if(inputMan->inputState[INKEY_RIGHT])
 		velocity = velocity + (right * 2.67);
 #endif
 }
 
-#ifdef SERVEREXE
 void EntityPlayer::PhysicsTick(float delta, World *world)
 {
 	position.x += velocity.x * delta;
@@ -141,4 +142,3 @@ void EntityPlayer::PhysicsTick(float delta, World *world)
 
 	velocity = velocity * 0.8;
 }
-#endif

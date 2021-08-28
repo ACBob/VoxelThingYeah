@@ -34,12 +34,7 @@ class EntityPlayer : public EntityBase
 		}
 #endif
 
-#ifdef SERVEREXE
 		void PhysicsTick(float delta, World *world);
-
-		// Not a pointer in the server case
-		InputManager inputMan;
-#endif
 
 #ifdef CLIENTEXE
 		InputManager *inputMan;

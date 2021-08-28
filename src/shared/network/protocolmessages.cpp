@@ -66,6 +66,20 @@ namespace protocol
 
 			SendPacket(peer, p);
 		}
+		void SendServerPlayerPos          (ENetPeer *peer, std::string username, Vector pos, Vector rot)
+		{
+			ServerPacket p;
+			p.type = ServerPacket::PLAYERPOSORT;
+			Archive<ArchiveBuf> bufAcc = p.GetAccess();
+			bufAcc << username;
+			bufAcc << pos.x;
+			bufAcc << pos.y;
+			bufAcc << pos.z;
+			bufAcc << rot.x;
+			bufAcc << rot.y;
+
+			SendPacket(peer, p);
+		}
 		void SendServerPlayerMessage(ENetPeer *peer, std::string username, std::string message)
 		{
 
@@ -106,7 +120,16 @@ namespace protocol
 		}
 		void SendClientPlayerPos          (ENetPeer *peer, Vector pos, Vector rot)
 		{
+			ClientPacket p;
+			p.type = ClientPacket::PLAYERPOSORT;
+			Archive<ArchiveBuf> bufAcc = p.GetAccess();
+			bufAcc << pos.x;
+			bufAcc << pos.y;
+			bufAcc << pos.z;
+			bufAcc << rot.x;
+			bufAcc << rot.y;
 
+			SendPacket(peer, p);
 		}
 		void SendClientChatMessage        (ENetPeer *peer, std::string message)
 		{

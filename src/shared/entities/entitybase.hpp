@@ -34,12 +34,10 @@ class EntityBase
 #endif
 		};
 
-#ifdef SERVEREXE
 		// Called every tick (usually 1/20th of a second)
 		// Gets handed the delta time to help work out physics-related stuff
 		// Also gets given the world for collision reasons
 		virtual void PhysicsTick(float delta, World *world) = 0;
-#endif
 
 #ifdef CLIENTEXE
 		// Update any client-side things we may have, called every frame rather than per tick

@@ -188,8 +188,13 @@ void World::WorldTick(int tickN)
 		reinterpret_cast<EntityBase*>(ent)->Tick();
 #ifdef SERVEREXE
 		reinterpret_cast<EntityBase*>(ent)->PhysicsTick(sv_tickms->GetInt() / 1000.0f, this);
+#else
+		// TODO: get tick speed from server
+		reinterpret_cast<EntityBase*>(ent)->PhysicsTick(0.05, this);
+#endif
 	}
 
+#ifdef SERVEREXE
 	for (Chunk* chunk : chunks)
 	{
 		// Generally we should avoid rebuilding the universe every tick
@@ -235,8 +240,6 @@ void World::WorldTick(int tickN)
 
 		if (rebuild)
 			chunk->Update();
-	}
-#else
 	}
 #endif
 }

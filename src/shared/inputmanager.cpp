@@ -7,8 +7,10 @@ InputManager::InputManager()
 {
 #ifdef CLIENTEXE
 	// Fill the array
-	for (int i = 0; i < sizeof(keyboardState); i++)
+	for (int i = 0; i < sizeof(keyboardState) / sizeof(bool); i++)
 		keyboardState[i] = false;
+	for (int i = 0; i < sizeof(inputState) / sizeof(bool); i++)
+		inputState[i] = false;
 #endif
 }
 InputManager::~InputManager()

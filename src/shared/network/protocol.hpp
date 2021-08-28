@@ -144,6 +144,16 @@ struct ServerPacket : public NetworkPacket
 			}
 		*/
 		PLAYER_SPAWN = 0x04,
+		// Move Pkl
+		// Reserved for *FIRST JOIN* or *RESPAWN*
+		/*
+			{
+				playerUsername,
+				X,Y,Z, (floats)
+				pitch, yaw (floats)
+			}
+		*/
+		PLAYERPOSORT = 0x05,
 		// When a client sends a message, send this out to all clients (including original sender)
 		/*
 			{
@@ -151,7 +161,7 @@ struct ServerPacket : public NetworkPacket
 				message
 			}
 		*/
-		PLAYER_MESSAGE = 0x05,
+		PLAYER_MESSAGE = 0x06,
 		// Tells the player we no longer serve their kind 'round these parts
 		// Can be sent as a kick (just set the flag) or a disconnect confirmation
 		// There isn't really much use for the regular disconnect confirmation as 
@@ -161,7 +171,7 @@ struct ServerPacket : public NetworkPacket
 				kickReason (string message)
 			}
 		*/
-		PLAYER_DISCONNECT = 0x06
+		PLAYER_DISCONNECT = 0x07
 	};
 
 	template <typename S>
@@ -192,6 +202,7 @@ namespace protocol
 		void SendServerChunkData          (ENetPeer *peer, World *world, Vector pos);
 		void SendServerUpdateBlock        (ENetPeer *peer, Vector pos, blocktype_t blockType);
 		void SendServerPlayerSpawn        (ENetPeer *peer, std::string username, Vector pos, Vector rot);
+		void SendServerPlayerPos          (ENetPeer *peer, std::string username, Vector pos, Vector rot);
 		void SendServerPlayerMessage      (ENetPeer *peer, std::string username, std::string message);
 		void SendServerPlayerDisconnect   (ENetPeer *peer, bool isKick, std::string reason = "");
 #elif CLIENTEXE

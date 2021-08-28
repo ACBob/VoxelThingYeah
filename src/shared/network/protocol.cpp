@@ -176,6 +176,35 @@ namespace protocol
 			}
 			break;
 
+			case ServerPacket::PLAYERPOSORT:
+			{
+				std::string username;
+				float x, y, z;
+				float pitch, yaw;
+				bufAccess >> username;
+				bufAccess >> x;
+				bufAccess >> y;
+				bufAccess >> z;
+				bufAccess >> pitch;
+				bufAccess >> yaw;
+
+				// Empty username is taken to mean us
+				if (username == "")
+				{
+					client->localPlayer->position = Vector(x,y,z);
+				}
+				else
+				{
+					if (client->localWorld->GetEntityByName(username.c_str()) != nullptr)
+					{
+						EntityPlayer *plyr = (EntityPlayer*)client->localWorld->GetEntityByName(username.c_str());
+						plyr->position = Vector(x,y,z);
+						plyr->rotation = Vector(pitch, yaw, 0);
+					}
+				}
+			}
+			break;
+
 			case ServerPacket::PLAYER_MESSAGE:
 			{
 				std::string username;
@@ -274,6 +303,8 @@ namespace protocol
 
 				for (network::Client* c : server->players)
 				{
+					if (c->peer == peer)
+						continue;
 					messages::SendServerPlayerSpawn(c->peer, p->name, p->position, p->rotation);
 				}
 
@@ -309,7 +340,7 @@ namespace protocol
 
 			case ClientPacket::PLAYERPOSORT:
 			{
-				int x, y, z;
+				float x, y, z;
 				float pitch, yaw;
 				bufAccess >> x;
 				bufAccess >> y;
@@ -320,6 +351,19 @@ namespace protocol
 				EntityPlayer *p = server->ClientFromPeer(peer)->entity;
 				p->position = Vector(x,y,z);
 				p->rotation = Vector(pitch, yaw, 0);
+
+				for (network::Client *c : server->players)
+				{
+					std::string name = p->name;
+					if (c->peer == peer)
+					{
+						name = "";
+
+						// TODO: check if position is legal
+						if (true) continue;
+					}
+					messages::SendServerPlayerPos(c->peer, name, p->position, p->rotation);
+				}
 			}
 			break;
 
