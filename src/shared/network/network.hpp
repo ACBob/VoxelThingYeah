@@ -44,12 +44,12 @@ namespace network
 			// Please don't modify
 			// Returns if we're connected or not
 			bool connected;
+			ENetPeer* peer;
 
 		private:
 			ENetHost *enetHost;
 			ENetAddress addr;
 			ENetEvent e;
-			ENetPeer* peer;
 	};
 #elif SERVEREXE
 	// A player in the server.

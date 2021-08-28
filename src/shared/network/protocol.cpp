@@ -117,7 +117,7 @@ namespace protocol
 
 			case ServerPacket::UPDATE_BLOCK:
 			{
-				int x, y, z;
+				float x, y, z;
 				uint blockType;
 				bufAccess >> x;
 				bufAccess >> y;
@@ -127,7 +127,8 @@ namespace protocol
 				// Woot, data!
 				// TODO: make sure the server isn't being malicious
 				Block *b = client->localWorld->BlockAtWorldPos(Vector(x,y,z));
-				b->blockType = (blocktype_t)blockType;
+				con_info("Update Block At <%f,%f,%f>", x,y,z);
+				b->blockType = blocktype_t(blockType);
 				b->Update();
 			}
 			break;
@@ -148,13 +149,13 @@ namespace protocol
 				if (username == "")
 				{
 					// Then it's us
-					con_info("Spawning at <%d,%d,%d> <%f,%f>", x, y, z, pitch, yaw);
+					con_info("Spawning at <%f,%f,%f> <%f,%f>", x, y, z, pitch, yaw);
 					client->localPlayer->position = Vector(x,y,z);
 					client->localPlayer->rotation = Vector(pitch, yaw, 0);
 				}
 				else
 				{
-					con_info("Player at <%d,%d,%d>", x,y,z);
+					con_info("Player %s at <%f,%f,%f>", username.c_str(), x,y,z);
 					if (client->localWorld->GetEntityByName(username.c_str()) != nullptr)
 					{
 						EntityPlayer *plyr = (EntityPlayer*)client->localWorld->GetEntityByName(username.c_str());
@@ -273,7 +274,7 @@ namespace protocol
 
 				for (network::Client* c : server->players)
 				{
-					messages::SendServerPlayerSpawn(peer, p->name, p->position, p->rotation);
+					messages::SendServerPlayerSpawn(c->peer, p->name, p->position, p->rotation);
 				}
 
 				// Now send them 0,0
@@ -283,14 +284,26 @@ namespace protocol
 
 			case ClientPacket::SET_BLOCK:
 			{
-				int x, y, z;
+				float x, y, z;
 				uint blockType;
 				bufAccess >> x;
 				bufAccess >> y;
 				bufAccess >> z;
 				bufAccess >> blockType;
 
-				// TODO:
+				Block *b = server->world.BlockAtWorldPos(Vector(x,y,z));
+				if (true) // If it's a valid block placement (for now no check)
+				{
+					b->blockType = (blocktype_t)blockType;
+					con_info("Update Block At <%f,%f,%f>", x,y,z);
+					b->Update();
+				}
+				blockType = b->blockType;
+
+				for (network::Client *c : server->players)
+				{
+					messages::SendServerUpdateBlock(c->peer, Vector(x,y,z), blocktype_t(blockType));
+				}
 			}
 			break;
 

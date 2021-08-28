@@ -50,6 +50,8 @@ class EntityPlayer : public EntityBase
 		blocktype_t selectedBlockType = blocktype_t::DIRT;
 
 		Camera camera;
+
+		void *client;
 #endif
 
 		bool onFloor;

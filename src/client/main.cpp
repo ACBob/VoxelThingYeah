@@ -126,6 +126,7 @@ int main (int argc, char* args[]) {
 	plyr.SetShader(worldShader);
 	client.localPlayer = &plyr;
 	localWorld.AddEntity(&plyr);
+	plyr.client = &client;
 
 	glm::mat4 projection = glm::perspective(glm::radians(fov->GetFloat()), scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f);
 	glm::mat4 screen = glm::ortho(0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat());

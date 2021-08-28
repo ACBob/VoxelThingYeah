@@ -42,7 +42,15 @@ namespace protocol
 		}
 		void SendServerUpdateBlock  (ENetPeer *peer, Vector pos, blocktype_t blockType)
 		{
+			ServerPacket p;
+			p.type = ServerPacket::UPDATE_BLOCK;
+			Archive<ArchiveBuf> bufAcc = p.GetAccess();
+			bufAcc << pos.x;
+			bufAcc << pos.y;
+			bufAcc << pos.z;
+			bufAcc << (uint)blockType;
 
+			protocol::SendPacket(peer, p);
 		}
 		void SendServerPlayerSpawn  (ENetPeer *peer, std::string username, Vector pos, Vector rot)
 		{
@@ -86,7 +94,15 @@ namespace protocol
 		}
 		void SendClientSetBlock           (ENetPeer *peer, Vector pos, blocktype_t blockType)
 		{
+			ClientPacket p;
+			p.type = ClientPacket::SET_BLOCK;
+			Archive<ArchiveBuf> bufAcc = p.GetAccess();
+			bufAcc << pos.x;
+			bufAcc << pos.y;
+			bufAcc << pos.z;
+			bufAcc << (uint)blockType;
 
+			protocol::SendPacket(peer, p);
 		}
 		void SendClientPlayerPos          (ENetPeer *peer, Vector pos, Vector rot)
 		{

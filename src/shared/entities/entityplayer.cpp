@@ -1,5 +1,7 @@
 #include "entityplayer.hpp"
 
+#include "network/network.hpp"
+
 EntityPlayer::EntityPlayer()
 {
 	position = Vector(0,0,0);
@@ -51,6 +53,8 @@ void EntityPlayer::UpdateClient(World *clientSideWorld)
 			// soundMan->PlayBreakSound(pointed.block->blockType, pointed.position - Vector(0.5, 0.5, 0.5));
 			pointed.block->blockType = blocktype_t::AIR;
 			pointed.block->Update();
+
+			protocol::messages::SendClientSetBlock(((network::Client*)client)->peer, pointed.position - 0.5, blocktype_t::AIR);
 		}
 	}
 	if (inputMan->mouseState & IN_RIGHT_MOUSE && inputMan->oldMouseState == 0 && pointed.block != nullptr)
@@ -68,6 +72,8 @@ void EntityPlayer::UpdateClient(World *clientSideWorld)
 			}
 			else
 				b->blockType = oldType;
+
+			protocol::messages::SendClientSetBlock(((network::Client*)client)->peer, (pointed.position - 0.5) + pointed.normal, b->blockType);
 		}
 	}
 
