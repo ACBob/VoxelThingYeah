@@ -74,7 +74,37 @@ namespace protocol
 			protocol::SendPacket(peer, p);
 		}
 #elif CLIENTEXE
+		void SendClientPlayerID           (ENetPeer *peer)
+		{
+			ClientPacket p;
+			p.type = ClientPacket::PLAYER_ID;
+			Archive<ArchiveBuf> bufAccess = p.GetAccess();
+			bufAccess << PROTOCOL_VERSION;
+			bufAccess << std::string(username->GetString());
 
+			protocol::SendPacket(peer, p);
+		}
+		void SendClientSetBlock           (ENetPeer *peer, Vector pos, blocktype_t blockType)
+		{
+
+		}
+		void SendClientPlayerPos          (ENetPeer *peer, Vector pos, Vector rot)
+		{
+
+		}
+		void SendClientChatMessage        (ENetPeer *peer, std::string message)
+		{
+			
+		}
+		void SendClientLeave              (ENetPeer *peer)
+		{
+			ClientPacket p;
+			Archive<ArchiveBuf> bufAccess = p.GetAccess();
+			p.type = ClientPacket::LEAVE;
+
+			protocol::SendPacket(peer, p);
+			enet_peer_disconnect(peer, 0);
+		}
 #endif
 	}
 }

@@ -195,7 +195,11 @@ namespace protocol
 		void SendServerPlayerMessage      (ENetPeer *peer, std::string username, std::string message);
 		void SendServerPlayerDisconnect   (ENetPeer *peer, bool isKick, std::string reason = "");
 #elif CLIENTEXE
-
+		void SendClientPlayerID           (ENetPeer *peer);
+		void SendClientSetBlock           (ENetPeer *peer, Vector pos, blocktype_t blockType);
+		void SendClientPlayerPos          (ENetPeer *peer, Vector pos, Vector rot);
+		void SendClientChatMessage        (ENetPeer *peer, std::string message);
+		void SendClientLeave              (ENetPeer *peer);
 #endif
 	}
 

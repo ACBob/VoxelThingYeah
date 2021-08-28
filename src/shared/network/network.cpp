@@ -68,15 +68,7 @@ namespace network
 		{
 			con_info("Hello! We've connected to a server!");
 			con_info("Sending the neccesary information");
-			{
-				ClientPacket p;
-				p.type = ClientPacket::PLAYER_ID;
-				Archive<ArchiveBuf> bufAccess = p.GetAccess();
-				bufAccess << PROTOCOL_VERSION;
-				bufAccess << std::string(username->GetString());
-
-				protocol::SendPacket(e.peer, p);
-			}
+			protocol::messages::SendClientPlayerID(e.peer);
 			peer = e.peer;
 			connected = true;
 			return true;
@@ -95,14 +87,7 @@ namespace network
 			return;
 		}
 		con_info("Disconnecting");
-		{
-			ClientPacket p;
-			Archive<ArchiveBuf> bufAccess = p.GetAccess();
-			p.type = ClientPacket::LEAVE;
-
-			protocol::SendPacket(peer, p);
-			enet_peer_disconnect(peer, 0);
-		}
+		protocol::messages::SendClientLeave(peer);
 
 		while (enet_host_service(enetHost, &e, 0) > 0)
 		{
