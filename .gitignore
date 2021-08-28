@@ -1,5 +1,6 @@
 # CMake builddir
 build/
+winbuild/
 # Runtime output dir
 bin/
 
