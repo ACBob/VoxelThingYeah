@@ -24,7 +24,7 @@ class ModelRenderer {
 		// Element buffer
 		unsigned int ebo;
 
-		Shader *shader;
+		Shader *shader = nullptr;
 
 		// Holds the amount of faces/vertices we have
 		std::size_t nFaces;

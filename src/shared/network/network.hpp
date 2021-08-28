@@ -39,7 +39,7 @@ namespace network
 			// Pointer to the local world
 			World* localWorld = nullptr;
 			// Pointer to the local player
-			EntityPlayer *localPlayer;
+			EntityPlayer *localPlayer = nullptr;
 
 			// Please don't modify
 			// Returns if we're connected or not
@@ -47,7 +47,7 @@ namespace network
 			ENetPeer* peer;
 
 		private:
-			ENetHost *enetHost;
+			ENetHost *enetHost = nullptr;
 			ENetAddress addr;
 			ENetEvent e;
 	};
@@ -56,8 +56,8 @@ namespace network
 	class Client
 	{
 		public:
-			ENetPeer *peer;
-			EntityPlayer *entity;
+			ENetPeer *peer = nullptr;
+			EntityPlayer *entity = nullptr;
 			std::string username;
 	};
 #endif
@@ -96,7 +96,7 @@ namespace network
 		private:
 			ENetAddress addr;
 			ENetEvent e;
-			ENetHost *enetHost;
+			ENetHost *enetHost = nullptr;
 	};
 #endif
 }

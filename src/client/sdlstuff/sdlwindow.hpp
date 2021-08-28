@@ -60,7 +60,7 @@ class GameWindow : public BobWindow
 		bool shouldClose;
 
 		// Pointer to Input manager
-		InputManager *inputMan;
+		InputManager *inputMan = nullptr;
 };
 
 #endif

@@ -12,7 +12,7 @@ class ChunkModel : public Model {
 		ChunkModel(void* parent);
 
 		// Parent Chunk
-		void *_chunk;
+		void *_chunk = nullptr;
 
 		void Build(Block blocks[], Vector pos);
 };

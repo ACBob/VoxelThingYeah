@@ -20,7 +20,7 @@ class GUI
 		};
 
 		struct _Image {
-			Texture *_tex;
+			Texture *_tex = nullptr;
 			std::vector<Vertex> vertices;
 		};
 
@@ -32,7 +32,7 @@ class GUI
 		std::vector<_Image> images;
 
 		// Teh epic textTex
-		Texture* textTex;
+		Texture* textTex = nullptr;
 	public:
 		GUI(TextureManager *texMan, int screenW, int screenH);
 		~GUI();
@@ -54,7 +54,7 @@ class GUI
 		Vector mousePos;
 
 		// Used to get the input
-		InputManager* inputMan;
+		InputManager* inputMan = nullptr;
 
 		// Update
 		void Update();

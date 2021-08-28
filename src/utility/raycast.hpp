@@ -9,7 +9,7 @@ class PointedThing
 	public:
 		PointedThing();
 
-		Block *block;
+		Block *block = nullptr;
 		Vector position;
 		Vector normal;
 };

@@ -69,9 +69,9 @@ class World {
 		void Render();
 
 		// Shader we render with
-		Shader *worldShader;
+		Shader *worldShader = nullptr;
 		// Shader entities render with
-		Shader *entityShader;
+		Shader *entityShader = nullptr;
 #endif
 
 		std::vector<Chunk*> chunks;

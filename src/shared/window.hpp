@@ -46,5 +46,5 @@ class BobWindow
 		virtual void SwapBuffers() = 0;
 
 		// Pointer to Input manager
-		InputManager *inputMan;
+		InputManager *inputMan = nullptr;
 };
