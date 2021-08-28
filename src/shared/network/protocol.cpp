@@ -135,7 +135,7 @@ namespace protocol
 			case ServerPacket::PLAYER_SPAWN:
 			{
 				std::string username;
-				int x, y, z;
+				float x, y, z;
 				float pitch, yaw;
 				bufAccess >> username;
 				bufAccess >> x;
@@ -254,17 +254,7 @@ namespace protocol
 				}
 				
 				// Send them our info
-				{
-					ServerPacket pp;
-					pp.type = ServerPacket::PLAYER_ID;
-					Archive<ArchiveBuf> bufAcc = pp.GetAccess();
-					bufAcc << PROTOCOL_VERSION;
-					bufAcc << std::string(sv_name->GetString());
-					bufAcc << std::string(sv_desc->GetString());
-					bufAcc << false;
-
-					SendPacket(peer, pp);
-				}
+				messages::SendServerPlayerID(peer, false);
 
 				// Create an entity for them
 				EntityPlayer* p = new EntityPlayer();
@@ -279,53 +269,15 @@ namespace protocol
 				p->position = Vector(x,10,z);
 				p->rotation = Vector(0,0,0);
 
-				{
-					ServerPacket pp;
-					pp.type = ServerPacket::PLAYER_SPAWN;
-					Archive<ArchiveBuf> bufAcc = pp.GetAccess();
-					bufAcc << std::string("");
-					bufAcc << x;
-					bufAcc << 10;
-					bufAcc << z;
-					bufAcc << 0;
-					bufAcc << 0;
-
-					SendPacket(peer, pp);
-				}
+				messages::SendServerPlayerSpawn(peer, "", p->position, p->rotation);
 
 				for (network::Client* c : server->players)
 				{
-					{
-						ServerPacket pp;
-						pp.type = ServerPacket::PLAYER_SPAWN;
-						Archive<ArchiveBuf> bufAcc = pp.GetAccess();
-						bufAcc << username;
-						bufAcc << x;
-						bufAcc << 10;
-						bufAcc << z;
-						bufAcc << 0;
-						bufAcc << 0;
-
-						SendPacket(peer, pp);
-					}
+					messages::SendServerPlayerSpawn(peer, p->name, p->position, p->rotation);
 				}
 
 				// Now send them 0,0
-				{
-					World::PortableChunkRepresentation crep;
-					crep = server->world.GetWorldRepresentation(Vector(0));
-
-					ServerPacket pp;
-					pp.type = ServerPacket::CHUNKDATA;
-					Archive<ArchiveBuf> bufAcc = pp.GetAccess();
-					bufAcc << crep.x;
-					bufAcc << crep.y;
-					bufAcc << crep.z;
-					bufAcc << CHUNKSIZE_X*CHUNKSIZE_Y*CHUNKSIZE_Z;
-					bufAcc << crep.blocks;
-
-					SendPacket(peer, pp);
-				}
+				messages::SendServerChunkData(peer, &server->world, Vector(0,0,0));
 			}
 			break;
 
@@ -377,15 +329,8 @@ namespace protocol
 
 			case ClientPacket::LEAVE:
 			{
-				ServerPacket p;
-				Archive<ArchiveBuf> bufAccess = p.GetAccess();
-				p.type = ServerPacket::PLAYER_DISCONNECT;
-				
-				bufAccess << false;
-				bufAccess << std::string("");
 				con_info("Goodbye");
-
-				SendPacket(peer, p);
+				messages::SendServerPlayerDisconnect(peer, false);
 			}
 			break;
 

@@ -219,17 +219,10 @@ namespace network
 	void Server::KickPlayer(Client *player, const char* reason)
 	{
 		ENetPeer *peer = player->peer;
-
-		ServerPacket p;
-		Archive<ArchiveBuf> bufAccess = p.GetAccess();
-		p.type = ServerPacket::PLAYER_DISCONNECT;
-		
-		bufAccess << true;
-		bufAccess << std::string(reason);
+		protocol::messages::SendServerPlayerDisconnect(peer, true, reason);
 
 		con_info("Kicking player for reason %s", reason);
 
-		protocol::SendPacket(peer, p);
 		enet_peer_disconnect_later(peer, NULL);
 	}
 
