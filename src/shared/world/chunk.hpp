@@ -64,6 +64,8 @@ class Chunk
 
 		// World pointer (can't set type because circular include :lenny:)
 		void* chunkMan = nullptr;
+
+		bool outdated = false;
 };
 
 bool ValidChunkPosition(Vector pos);

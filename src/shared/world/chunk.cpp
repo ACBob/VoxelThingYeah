@@ -109,6 +109,8 @@ void Chunk::Update()
 			neighbour->RebuildMdl();
 	}
 #endif
+
+	outdated = true;
 }
 
 Block *Chunk::GetBlockAtLocal(Vector pos)

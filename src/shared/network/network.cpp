@@ -247,7 +247,16 @@ namespace network
 			}
 		}
 	
-		// send entity information to peers
+		// Check for outdated chunks and resend them to joined clients
+		for (Chunk *c : world.chunks)
+		{
+			if (c->outdated)
+			{
+				for (Client *cl : players)
+					protocol::messages::SendServerChunkData(cl->peer, &world, c->worldPos.ToWorld());
+				c->outdated = false;
+			}
+		}
 		
 	}
 	
