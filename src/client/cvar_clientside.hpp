@@ -11,4 +11,7 @@ extern ConVar::ConVar *scr_height;
 
 extern ConVar::ConVar *username;
 
+extern ConVar::ConVar *cl_ip;
+extern ConVar::ConVar *cl_port;
+
 void SetupClientSideConvars();

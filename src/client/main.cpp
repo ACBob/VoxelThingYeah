@@ -115,7 +115,7 @@ int main (int argc, char* args[]) {
 		return EXIT_FAILURE;
 	}
 
-	if (!client.Connect())
+	if (!client.Connect(cl_ip->GetString(), cl_port->GetInt()))
 	{
 		con_error("Didn't connect to anybody so we've nothing to do!");
 		return EXIT_FAILURE;

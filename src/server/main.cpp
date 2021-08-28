@@ -43,7 +43,7 @@ int main (int argc, char* args[]) {
 	atexit(network::Uninit);
 
 	con_info("Create Server...");
-	network::Server server;
+	network::Server server(sv_port->GetInt());
 	if (!server.WorkingServer())
 	{
 		con_critical("Server became invalid");
