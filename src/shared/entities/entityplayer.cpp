@@ -99,6 +99,8 @@ void EntityPlayer::UpdateClient(World *clientSideWorld)
 void EntityPlayer::Tick()
 {
 #ifdef CLIENTEXE
+	if (inputMan == nullptr) return; // This isn't owned by us, don't do anything
+	
 	Vector forward = GetForward();
 	Vector right = forward.Rotate(2, 90);
 	right.y = 0;

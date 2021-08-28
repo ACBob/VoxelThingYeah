@@ -306,6 +306,7 @@ namespace protocol
 					if (c->peer == peer)
 						continue;
 					messages::SendServerPlayerSpawn(c->peer, p->name, p->position, p->rotation);
+					messages::SendServerPlayerSpawn(peer, c->entity->name, c->entity->position, c->entity->rotation);
 				}
 
 				// Now send them 0,0
