@@ -33,7 +33,7 @@ class EntityPlayer : public EntityBase
 		void PhysicsTick(float delta, World *world);
 
 #ifdef CLIENTEXE
-		InputManager *inputMan;
+		InputManager *inputMan = nullptr;
 		VoxRaycast hand;
 		PointedThing pointed;
 
@@ -42,7 +42,7 @@ class EntityPlayer : public EntityBase
 
 		Camera camera;
 
-		void *client;
+		void *client = nullptr;
 #endif
 
 		bool onFloor;

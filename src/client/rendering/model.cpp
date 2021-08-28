@@ -1,31 +1,31 @@
 #include "model.hpp"
 #include "utility/direction.hpp"
 
-Model::Model() :
-	renderer()
+Model::Model()
 {
-	renderer.Populate(this);
+	renderer = new ModelRenderer();
+	renderer->Populate(this);
 }
 
 void Model::Update()
 {
-	renderer.Populate(this);
+	renderer->Populate(this);
 }
 
 void Model::Render()
 {
 	// Don't waste time trying to render
 	if (vertices.size() == 0) return;
-	renderer.Render(pos, rotation);
+	renderer->Render(pos, rotation);
 }
 
 void Model::SetShader(Shader *shader)
 {
-	renderer.SetShader(shader);
+	renderer->SetShader(shader);
 }
 Shader *Model::GetShader()
 {
-	return renderer.GetShader();
+	return renderer->GetShader();
 }
 
 

@@ -27,7 +27,7 @@ class Model {
 		};
 		std::vector<Vertex> vertices;
 		std::vector<Face> faces;
-		ModelRenderer renderer;
+		ModelRenderer *renderer = nullptr;
 
 		Vector pos;
 		Vector rotation;
