@@ -14,9 +14,9 @@ void Model::Update()
 
 void Model::Render()
 {
-	// Don't waste timet rying to render
+	// Don't waste time trying to render
 	if (vertices.size() == 0) return;
-	renderer.Render(pos);
+	renderer.Render(pos, rotation);
 }
 
 void Model::SetShader(Shader *shader)
@@ -31,7 +31,7 @@ Shader *Model::GetShader()
 
 Model GetCubeModel(Vector size)
 {
-	Model m; // tesla
+	Model m;
 	m.vertices = {
 		// NORTH +Z
 		{  size.x,  size.y,  size.z},

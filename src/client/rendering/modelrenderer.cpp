@@ -48,6 +48,9 @@ void ModelRenderer::Populate(void *_mdl)
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, nFaces * sizeof(Model::Face), mdl->faces.data(), GL_DYNAMIC_DRAW);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 ModelRenderer::~ModelRenderer()
@@ -66,11 +69,25 @@ Shader *ModelRenderer::GetShader()
 	return shader;
 }
 
-void ModelRenderer::Render(Vector pos)
+void ModelRenderer::Render(Vector pos, Vector rot)
 {
 
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, {pos.x, pos.y, pos.z});
+	model = glm::rotate(
+		glm::rotate(
+			glm::rotate(
+				model,
+				(float)(rot.z * DEG2RAD),
+				{0,0,-1}
+			),
+			(float)(rot.y * DEG2RAD),
+			{0,-1,0}
+		),
+		(float)(rot.x * DEG2RAD),
+		{1,0,0}
+	);
+
 	shader->SetMat4("model", model);
 	shader->Use();
 
@@ -79,6 +96,8 @@ void ModelRenderer::Render(Vector pos)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glDrawElements(GL_TRIANGLES, nFaces * sizeof(Model::Face), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	// model = glm::mat4(1.0f);
 	// shader->SetMat4("model", model);

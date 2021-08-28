@@ -143,6 +143,9 @@ int main (int argc, char* args[]) {
 	Model skyboxModel = GetCubeModel(Vector(-1,-1,-1));
 	skyboxModel.SetShader(skyShader);
 
+	Model playerFuckFuck = GetCubeModel();
+	playerFuckFuck.SetShader(entityShader);
+
 	int64_t then = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
 	int64_t now = then;
 	int i = 0;
@@ -179,12 +182,11 @@ int main (int argc, char* args[]) {
 
 			glBindTexture(GL_TEXTURE_2D, terrainPng->id);
 
-			for (void *ent : localWorld.ents)
-			{
-				((EntityBase*)ent)->Render();
-			}
-
 			localWorld.Render();
+
+			playerFuckFuck.pos = plyr.position;
+			playerFuckFuck.rotation = plyr.rotation;
+			playerFuckFuck.Render();
 		}
 
 		window.SwapBuffers();

@@ -30,6 +30,7 @@ class Model {
 		ModelRenderer renderer;
 
 		Vector pos;
+		Vector rotation;
 };
 
 Model GetCubeModel(Vector size = Vector(1,1,1));

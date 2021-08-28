@@ -126,6 +126,10 @@ void World::Render()
 	{
 		c->Render();
 	}
+	for (void *ent : ents)
+	{
+		((EntityBase*)ent)->Render();
+	}
 }
 #endif
 

@@ -16,8 +16,9 @@ class EntityPlayer : public EntityBase
 		void Tick();
 		void Spawn()
 		{
+			BaseClass::Spawn();
 #ifdef CLIENTEXE
-			mdl = GetCubeModel();
+			this->mdl = GetCubeModel();
 #endif
 		};
 		void Kill()
@@ -27,11 +28,6 @@ class EntityPlayer : public EntityBase
 
 #ifdef CLIENTEXE
 		void UpdateClient(World *clientSideWorld);
-
-		void Render()
-		{
-			BaseClass::Render();
-		}
 #endif
 
 		void PhysicsTick(float delta, World *world);

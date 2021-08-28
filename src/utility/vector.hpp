@@ -44,3 +44,5 @@ const Vector VEC_RIGHT(1.0f, 0.0f, 0.0f);
 // Trollface
 typedef Vector Color;
 typedef Color Colour;
+
+#define DEG2RAD (M_PI/180.0)

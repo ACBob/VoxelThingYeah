@@ -28,11 +28,7 @@ class EntityBase
 		
 		// Called every tick (usually 1/20th of a second)
 		virtual void Tick()
-		{
-#ifdef CLIENTEXE
-			mdl.pos = position;
-#endif
-		};
+		{};
 
 		// Called every tick (usually 1/20th of a second)
 		// Gets handed the delta time to help work out physics-related stuff
@@ -47,7 +43,9 @@ class EntityBase
 		// Renders our Model.
 		virtual void Render()
 		{
-			mdl.Render();
+			mdl.pos = position;
+			mdl.rotation = rotation;
+			mdl.Render(); 
 		}
 
 		virtual void SetShader(Shader* shader)

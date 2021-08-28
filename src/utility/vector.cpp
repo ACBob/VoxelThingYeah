@@ -8,8 +8,6 @@ Vector::Vector( float x, float y, float z )
 	this->z = z;
 }
 
-#define DEG2RAD (M_PI/180.0)
-
 // Methods
 Vector Vector::Rotate(int axis, float degrees) const
 {

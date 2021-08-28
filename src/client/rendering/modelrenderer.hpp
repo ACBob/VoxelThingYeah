@@ -11,7 +11,7 @@ class ModelRenderer {
 		// Updated the index buffer and vertex buffer
 		void Populate(void *mdl);
 
-		void Render(Vector pos);
+		void Render(Vector pos, Vector rot);
 
 		void SetShader(Shader *shader);
 		Shader *GetShader();
