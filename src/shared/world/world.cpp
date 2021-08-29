@@ -25,23 +25,14 @@ World::World()
 	noiseState.frequency = 0.025;
 
 	Vector pos(0,0,0);
-	for (pos.x = -2; pos.x < 2; pos.x++)
-	{
-		for (pos.y = -2; pos.y < 2; pos.y++)
-		{
-			for (pos.z = -2; pos.z < 2; pos.z++)
-			{
-				Chunk *c = new Chunk();
-				c->worldPos = pos;
-				c->chunkMan = this;
+	Chunk *c = new Chunk();
+	c->worldPos = pos;
+	c->chunkMan = this;
 #ifdef CLIENTEXE
-				c->mdl.position = c->worldPos.ToWorld();
-				c->mdl.SetShader(worldShader);
+	c->mdl.position = c->worldPos.ToWorld();
+	c->mdl.SetShader(worldShader);
 #endif
-				chunks.push_back(c);
-			}
-		}
-	}
+	chunks.push_back(c);
 
 	// Now that all the chunks exist, generate and rebuild their models
 	for (Chunk *c : chunks)
