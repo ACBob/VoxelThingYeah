@@ -10,6 +10,8 @@ ConVar::ConVar *username = nullptr;
 ConVar::ConVar *cl_ip = nullptr;
 ConVar::ConVar *cl_port = nullptr;
 
+ConVar::ConVar *cl_servername = nullptr;
+
 void SetupClientSideConvars()
 {
 	fov = conVarHandle.DeclareConvar("fov", "70", ConVar::CVAR_ARCHIVE);
@@ -21,4 +23,6 @@ void SetupClientSideConvars()
 
 	cl_ip = conVarHandle.DeclareConvar("cl_ip", "127.0.0.1");
 	cl_port = conVarHandle.DeclareConvar("cl_port", "58008");
+
+	cl_servername = conVarHandle.DeclareConvar("cl_servername", "", ConVar::CVAR_READONLY);
 }

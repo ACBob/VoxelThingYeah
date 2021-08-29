@@ -14,4 +14,6 @@ extern ConVar::ConVar *username;
 extern ConVar::ConVar *cl_ip;
 extern ConVar::ConVar *cl_port;
 
+extern ConVar::ConVar *cl_servername;
+
 void SetupClientSideConvars();

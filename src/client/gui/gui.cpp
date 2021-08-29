@@ -20,8 +20,9 @@
 // I am not supporting weird configurations
 #define TEXTTILES 16
 
-GUI::GUI(TextureManager *texMan, int screenW, int screenH) :
+GUI::GUI(TextureManager *texMan, ShaderManager *shaderMan, int screenW, int screenH) :
 	screenCentre((screenW * 0.5) / GUIUNIT, (screenH * 0.5) / GUIUNIT),
+	screenDimensions(screenW, screenH),
 	mouseState(IN_NO_MOUSE),
 	activeItem(0),
 	hotItem(0)
@@ -53,6 +54,7 @@ GUI::GUI(TextureManager *texMan, int screenW, int screenH) :
 	}
 
 	textTex = texMan->LoadTexture("font.png");
+	textShader = shaderMan->LoadShader("shaders/text.vert", "shaders/text.frag");
 }
 
 GUI::~GUI()
@@ -78,6 +80,12 @@ void GUI::Update()
 
 	// Render
 	{
+		int depthFunc;
+		glGetIntegerv(GL_DEPTH_FUNC, &depthFunc);
+		glDepthFunc(GL_ALWAYS);
+
+		textShader->Use();
+
 		glBindVertexArray(vao);
 		// Text
 		{
@@ -105,6 +113,8 @@ void GUI::Update()
 			}
 		}
 		glBindVertexArray(0);
+
+		glDepthFunc(depthFunc);
 	}
 
 
@@ -157,10 +167,21 @@ bool GUI::RegionHit(Vector pos, Vector size)
 	return true;
 }
 
+Vector GUI::GetInScreen(Vector pos)
+{
+	pos = pos * GUIUNIT;
+
+	if (pos.x < 0)
+		pos.x += screenDimensions.x;
+	if (pos.y < 0)
+		pos.y += screenDimensions.y;
+	
+	return pos;
+}
+
 int GUI::Button(int id, Vector pos, Vector size)
 {
-
-	pos = pos * GUIUNIT;
+	pos = GetInScreen(pos);
 	size = size * GUIUNIT;
 
 	int returnCode = 0;
@@ -199,7 +220,7 @@ int GUI::Button(int id, Vector pos, Vector size)
 
 void GUI::Label(const char* text, Vector pos, Colour color)
 {
-	pos = pos * GUIUNIT;
+	pos = GetInScreen(pos);
 
 	// Render
 	// OpenGl
@@ -234,7 +255,7 @@ void GUI::Image(Texture* tex, Vector pos, Vector size, Vector origin)
 
 void GUI::ImageAtlas(Texture* tex, Atlas atlas, float atlasDivisions, Vector pos, Vector size, Vector origin)
 {
-	pos = pos * GUIUNIT;
+	pos = GetInScreen(pos);
 	size = size * GUIUNIT;
 
 	{

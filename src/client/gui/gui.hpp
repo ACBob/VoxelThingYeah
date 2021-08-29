@@ -2,6 +2,7 @@
 #include "utility/vector.hpp"
 #include "shared/inputmanager.hpp"
 #include "rendering/texturemanager.hpp"
+#include "rendering/shadermanager.hpp"
 
 #include <vector>
 
@@ -33,8 +34,9 @@ class GUI
 
 		// Teh epic textTex
 		Texture* textTex = nullptr;
+		Shader *textShader = nullptr;
 	public:
-		GUI(TextureManager *texMan, int screenW, int screenH);
+		GUI(TextureManager *texMan, ShaderManager *shaderMan, int screenW, int screenH);
 		~GUI();
 
 		// TODO: Put this in a generic utility class and then make all atlas-based things (i.e text, blocks) inherit it
@@ -60,6 +62,7 @@ class GUI
 		void Update();
 
 		Vector screenCentre;
+		Vector screenDimensions;
 
 		// Current button pressed down
 		int mouseState;
@@ -70,6 +73,9 @@ class GUI
 
 		// Z Ignored!
 		bool RegionHit(Vector pos, Vector size);
+
+		// Converts positions to screen ones, including negatives being from the opposite side and stuff
+		Vector GetInScreen(Vector pos);
 
 		// Elements
 		int Button(int id, Vector pos, Vector size);

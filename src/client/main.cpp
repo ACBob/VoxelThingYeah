@@ -25,6 +25,8 @@
 
 #include "entities/entityplayer.hpp"
 
+#include "gui/gui.hpp"
+
 int main (int argc, char* args[]) {
 
 	con_info("Hello from bobcraft!");
@@ -103,6 +105,7 @@ int main (int argc, char* args[]) {
 	con_info("Load default textures");
 	TextureManager texMan;
 	Texture* terrainPng = texMan.LoadTexture("terrain.png");
+	Texture* crosshairTex = texMan.LoadTexture("crosshair.png");
 
 	con_info("Create Client...");
 	World localWorld(worldShader, entityShader);
@@ -144,6 +147,9 @@ int main (int argc, char* args[]) {
 	GetCubeModel(skyboxModel, Vector(-1,-1,-1));
 	skyboxModel.SetShader(skyShader);
 
+	GUI gui(&texMan, &shaderMan, scr_width->GetInt(), scr_height->GetInt());
+	gui.inputMan = &inputMan;
+
 	int64_t then = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
 	int64_t now = then;
 	int i = 0;
@@ -181,6 +187,25 @@ int main (int argc, char* args[]) {
 			glBindTexture(GL_TEXTURE_2D, terrainPng->id);
 
 			localWorld.Render();
+
+
+			char *buf = new char[100];
+			snprintf(buf, 100, "Connected to \"%s\"", cl_servername->GetString());
+			gui.Label(buf, Vector(0,0));
+
+			gui.Label("Bobcraft", Vector(0,1));
+
+			snprintf(buf, 100, "<%.2f,%.2f,%.2f>", plyr.position.x, plyr.position.y, plyr.position.z);
+			gui.Label(buf, Vector(0,-1));
+
+			BlockTexture bTex = GetDefaultBlockTextureSide(plyr.selectedBlockType, Direction::NORTH);
+			gui.ImageAtlas(terrainPng, {(float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey}, 
+				16, Vector(-1,-1), Vector(4,4), Vector(1,1));
+
+			gui.Image(crosshairTex, gui.screenCentre, Vector(2,2), Vector(0.5,0.5));
+			gui.Update();
+
+			delete buf;
 		}
 
 		window.SwapBuffers();

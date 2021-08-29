@@ -83,6 +83,7 @@ namespace protocol
 				}
 
 				con_info("Connected to server %s.", serverName.c_str());
+				cl_servername->SetString(serverName.c_str());
 
 
 				// TODO: do something with this info
