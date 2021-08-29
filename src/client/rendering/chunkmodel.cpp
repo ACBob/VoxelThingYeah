@@ -10,12 +10,7 @@ int indexArray(int x, int y, int z)
 	return CHUNK3D_TO_1D(x,y,z);
 }
 
-ChunkModel::ChunkModel(void* chunk)
-{
-	_chunk = chunk;
-}
-
-const ChunkModel::Vertex vertices[] = {
+const Model::Vertex vertices[] = {
 	// NORTH +Z
 	{  BLOCKUNIT,  BLOCKUNIT,  BLOCKUNIT},
 	{  0        ,  BLOCKUNIT,  BLOCKUNIT},
@@ -39,9 +34,9 @@ const std::vector<std::vector<int>> triangles = {
 	{6, 7, 2, 3} // DN
 };
 
-std::vector<ChunkModel::Vertex> sampleFace(Direction dir, Block block, int x = 0, int y = 0, int z = 0)
+std::vector<Model::Vertex> sampleFace(Direction dir, Block block, int x = 0, int y = 0, int z = 0)
 {
-	std::vector<ChunkModel::Vertex> g;
+	std::vector<Model::Vertex> g;
 	for (int i = 0; i < 4; i++)
 	{
 		g.push_back(vertices[triangles[dir][i]]);
@@ -83,12 +78,10 @@ std::vector<ChunkModel::Vertex> sampleFace(Direction dir, Block block, int x = 0
 }
 
 // We include the chunk manager here so we can test our neighbouring chunks
-void ChunkModel::Build(Block blocks[], Vector pos)
+void BuildChunkModel(Model &mdl, Block blocks[], Vector pos, void *chunk)
 {
-	vertices.clear();
-	faces.clear();
-	// Reserve enough space to have verticies inside all space
-	vertices.reserve(CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z * 4);
+	mdl.vertices.clear();
+	mdl.faces.clear();
 
 	for (int y = 0; y < CHUNKSIZE_Y; y++)
 	{
@@ -107,7 +100,7 @@ void ChunkModel::Build(Block blocks[], Vector pos)
 						Vector neighbour = Vector(x,y,z) + DirectionVector[i];
 						if (ValidChunkPosition(neighbour))
 						{
-							blocktype_t blockType = reinterpret_cast<Chunk*>(_chunk)->GetBlockAtLocal(neighbour)->blockType;
+							blocktype_t blockType = reinterpret_cast<Chunk*>(chunk)->GetBlockAtLocal(neighbour)->blockType;
 							BlockFeatures bF = GetBlockFeatures(blockType);
 							if (bF.solid || blockType == block.blockType) // Skip if neighbouring a block that obstructs, or if it's the same as us
 							{
@@ -117,7 +110,7 @@ void ChunkModel::Build(Block blocks[], Vector pos)
 						else
 						{
 							// Test a neighbour
-							Chunk *chunkNeighbour = reinterpret_cast<Chunk*>(_chunk)->Neighbour(Direction(i));
+							Chunk *chunkNeighbour = reinterpret_cast<Chunk*>(chunk)->Neighbour(Direction(i));
 							if (chunkNeighbour != nullptr)
 							{
 								neighbour = neighbour + (DirectionVector[i] * -16.0f);
@@ -131,15 +124,15 @@ void ChunkModel::Build(Block blocks[], Vector pos)
 							}
 						}
 
-						std::vector<Vertex> g = sampleFace(Direction(i), block, x, y, z);
-						std::copy(g.begin(), g.end(), std::back_inserter(vertices));
+						std::vector<Model::Vertex> g = sampleFace(Direction(i), block, x, y, z);
+						std::copy(g.begin(), g.end(), std::back_inserter(mdl.vertices));
 
-						int nVertices = vertices.size();
+						int nVertices = mdl.vertices.size();
 
-						faces.push_back(
+						mdl.faces.push_back(
 							{nVertices - 4, nVertices - 3, nVertices - 2}
 						);
-						faces.push_back(
+						mdl.faces.push_back(
 							{nVertices - 4, nVertices - 2, nVertices - 1}
 						);
 					}
@@ -148,5 +141,5 @@ void ChunkModel::Build(Block blocks[], Vector pos)
 		}
 	}
 
-	Update();
+	mdl.Update();
 }

@@ -21,13 +21,18 @@ Vector ChunkPos::ToWorld()
 
 #ifdef CLIENTEXE
 Chunk::Chunk() :
-	mdl(this),
 	worldPos(Vector())
+{
+}
+Chunk::~Chunk()
 {
 }
 #elif SERVEREXE
 Chunk::Chunk() :
 	worldPos(Vector())
+{
+}
+Chunk::~Chunk()
 {
 }
 #endif
@@ -81,7 +86,7 @@ void Chunk::Render()
 
 void Chunk::RebuildMdl()
 {
-	mdl.Build(blocks, worldPos.ToWorld());
+	BuildChunkModel(mdl, blocks, worldPos.ToWorld(), this);
 }
 #endif
 
@@ -90,10 +95,6 @@ void Chunk::RebuildMdl()
 Vector Chunk::PosToWorld(Vector pos)
 {
 	return worldPos.ToWorld() + pos;
-}
-
-Chunk::~Chunk()
-{
 }
 
 void Chunk::Update()

@@ -24,13 +24,13 @@ ModelRenderer::ModelRenderer() :
 	glBindVertexArray(vao);
 
 	// Position
-	glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * sizeof(float), (void*)offsetof(ChunkModel::Vertex, x));
+	glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * sizeof(float), (void*)offsetof(Model::Vertex, x));
 	glEnableVertexAttribArray(0);
 	// Normal
-	glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * sizeof(float), (void*)offsetof(ChunkModel::Vertex, nx));
+	glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * sizeof(float), (void*)offsetof(Model::Vertex, nx));
 	glEnableVertexAttribArray(1);
 	// texture coordinate
-	glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * sizeof(float), (void*)offsetof(ChunkModel::Vertex, u));
+	glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * sizeof(float), (void*)offsetof(Model::Vertex, u));
 	glEnableVertexAttribArray(2);
 
 	glBindVertexArray(0);

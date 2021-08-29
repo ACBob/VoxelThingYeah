@@ -58,7 +58,7 @@ class Chunk
 		Block blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 
 #ifdef CLIENTEXE
-		ChunkModel mdl;
+		Model mdl;
 #endif
 
 		// World pointer (can't set type because circular include :lenny:)

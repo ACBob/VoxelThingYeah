@@ -7,12 +7,4 @@
 
 #pragma once
 
-class ChunkModel : public Model {
-	public:
-		ChunkModel(void* parent);
-
-		// Parent Chunk
-		void *_chunk = nullptr;
-
-		void Build(Block blocks[], Vector pos);
-};
+void BuildChunkModel(Model &m, Block blocks[], Vector pos, void *chunk);
