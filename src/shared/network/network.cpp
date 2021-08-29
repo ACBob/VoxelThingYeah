@@ -52,8 +52,14 @@ namespace network
 
 	bool Client::Connect(const char* address, int port)
 	{
-		enet_address_set_host(&addr, address);
+		if(enet_address_set_host_ip(&addr, address) != 0)
+		{
+			con_error("Could not set the IP");
+			return false;
+		}
 		addr.port = port;
+
+		con_info("Connecting to %s:%i", address, port);
 
 		peer = enet_host_connect(enetHost, &addr, 1, 0);
 		if (!peer)
@@ -144,6 +150,8 @@ namespace network
 		addr.port = port;
 
 		enetHost = enet_host_create(&addr, maxClients, 1, 0, 0);
+
+		con_info("Creating with port %i", port);
 
 		if (enetHost == NULL)
 		{
