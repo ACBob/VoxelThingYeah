@@ -39,7 +39,7 @@ void EntityPlayer::UpdateClient(World *clientSideWorld)
 	}
 	
 	camera.forward = GetForward();
-	camera.pos = position + Vector(0, 1.6, 0);
+	camera.pos = position + Vector(0, 0, 0);
 
 	hand.pos = camera.pos;
 	hand.dir = camera.forward;
