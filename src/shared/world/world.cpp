@@ -24,16 +24,6 @@ World::World()
 	noiseState.noise_type = FNL_NOISE_OPENSIMPLEX2;
 	noiseState.frequency = 0.025;
 
-	Vector pos(0,0,0);
-	Chunk *c = new Chunk();
-	c->worldPos = pos;
-	c->chunkMan = this;
-#ifdef CLIENTEXE
-	c->mdl.position = c->worldPos.ToWorld();
-	c->mdl.SetShader(worldShader);
-#endif
-	chunks.push_back(c);
-
 	// Now that all the chunks exist, generate and rebuild their models
 	for (Chunk *c : chunks)
 	{
@@ -63,6 +53,26 @@ Chunk* World::ChunkAtChunkPos(Vector pos)
 		if (c->worldPos.pos == pos) return c;
 }
 
+// Tries to get a chunk and generates a new one if it can't find one
+Chunk* World::GetChunkGenerateAtWorldPos(Vector pos)
+{
+	Chunk *c = ChunkAtWorldPos(pos);
+	if (c != nullptr)
+		return c;
+	
+	c = new Chunk();
+	c->worldPos = pos;
+	c->chunkMan = this;
+#ifdef CLIENTEXE
+	c->mdl.position = c->worldPos.ToWorld();
+	c->mdl.SetShader(worldShader);
+#endif
+	c->Generate(noiseState);
+
+	chunks.push_back(c);
+
+	return c;
+}
 
 // Return in good faith that it's a valid position
 Chunk* World::ChunkAtWorldPos(Vector pos)
@@ -243,13 +253,13 @@ World::PortableChunkRepresentation World::GetWorldRepresentation(Vector pos)
 {
 	PortableChunkRepresentation crep;
 
-	if (!ValidChunkPos(pos))
-	{
-		con_critical("We've just returned garbage data for the portable chunk!");
-		return crep;
-	}
+	// if (!ValidChunkPos(pos))
+	// {
+	// 	con_critical("We've just returned garbage data for the portable chunk!");
+	// 	return crep;
+	// }
 
-	Chunk *c = ChunkAtWorldPos(pos);
+	Chunk *c = GetChunkGenerateAtWorldPos(pos);
 	crep.x = c->worldPos.pos.x;
 	crep.y = c->worldPos.pos.y;
 	crep.z = c->worldPos.pos.z;
@@ -264,7 +274,7 @@ World::PortableChunkRepresentation World::GetWorldRepresentation(Vector pos)
 
 void World::UsePortable(PortableChunkRepresentation rep)
 {
-	Chunk *c = ChunkAtChunkPos(Vector(rep.x, rep.y, rep.z));
+	Chunk *c = GetChunkGenerateAtWorldPos(Vector(rep.x, rep.y, rep.z));
 	if (c == nullptr)
 	{
 		con_error("WEE WOO WEE WOO");
