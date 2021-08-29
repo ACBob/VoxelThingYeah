@@ -61,6 +61,7 @@ BlockFeatures GetBlockFeatures(blocktype_t blockType)
 			bF.selectable = false;
 			bF.walkable = false;
 			bF.solid = false;
+			bF.rule = OBSCURERULE_SIMILAR;
 		break;
 		
 		case AIR:
