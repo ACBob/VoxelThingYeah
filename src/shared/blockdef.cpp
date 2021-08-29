@@ -39,6 +39,7 @@ BlockFeatures GetBlockFeatures(blocktype_t blockType)
 	bF.solid = true;
 	bF.walkable = true;
 	bF.floodable = false;
+	bF.rule = OBSCURERULE_ALWAYS;
 
 	switch(blockType)
 	{
@@ -49,8 +50,9 @@ BlockFeatures GetBlockFeatures(blocktype_t blockType)
 			bF.breakable = false;
 		break;
 
-		case GLASS:
 		case LEAVES:
+		case GLASS:
+			bF.rule = blockType == LEAVES ? OBSCURERULE_NEVER : OBSCURERULE_SIMILAR;
 			bF.solid = false;
 		break;
 
@@ -67,6 +69,7 @@ BlockFeatures GetBlockFeatures(blocktype_t blockType)
 			bF.solid = false;
 			bF.walkable = false;
 			bF.floodable = true;
+			bF.rule = OBSCURERULE_NEVER;
 		break;
 	}
 

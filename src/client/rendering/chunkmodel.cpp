@@ -102,7 +102,10 @@ void BuildChunkModel(Model &mdl, Block blocks[], Vector pos, void *chunk)
 						{
 							blocktype_t blockType = reinterpret_cast<Chunk*>(chunk)->GetBlockAtLocal(neighbour)->blockType;
 							BlockFeatures bF = GetBlockFeatures(blockType);
-							if (bF.solid || blockType == block.blockType) // Skip if neighbouring a block that obstructs, or if it's the same as us
+							if (
+								(bF.rule == OBSCURERULE_SIMILAR && blockType == block.blockType) &&
+								bF.rule != OBSCURERULE_NEVER
+							) // Skip if neighbouring a block that obstructs, or if it's the same as us
 							{
 								continue;
 							}

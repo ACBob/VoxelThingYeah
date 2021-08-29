@@ -29,6 +29,12 @@ enum blockmaterial_t {
 	MAT_ORGANIC  = 5, // Grass, Leaves, Plants
 };
 
+enum blockobscurerule_t {
+	OBSCURERULE_ALWAYS    = 0, // If we can, we do
+	OBSCURERULE_SIMILAR   = 1, // Only do it if it's the same as us
+	OBSCURERULE_NEVER     = 2 // Never obscure faces
+};
+
 blockmaterial_t GetBlockMaterial(blocktype_t blockType);
 
 struct BlockFeatures
@@ -43,6 +49,8 @@ struct BlockFeatures
 	bool breakable;
 	// Can replace with a liquid
 	bool floodable;
+	// Obscure Rule
+	blockobscurerule_t rule;
 };
 
 BlockFeatures GetBlockFeatures(blocktype_t blockType);
