@@ -18,7 +18,7 @@ class EntityPlayer : public EntityBase
 		{
 			BaseClass::Spawn();
 #ifdef CLIENTEXE
-			this->mdl = GetCubeModel();
+			GetCubeModel(this->mdl);
 #endif
 		};
 		void Kill()

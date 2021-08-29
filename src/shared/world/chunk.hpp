@@ -4,7 +4,6 @@
 
 #ifdef CLIENTEXE
 #include "rendering/chunkmodel.hpp"
-#include "rendering/modelrenderer.hpp"
 #include "rendering/shadermanager.hpp"
 #endif
 

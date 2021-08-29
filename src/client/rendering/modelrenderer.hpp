@@ -11,10 +11,7 @@ class ModelRenderer {
 		// Updated the index buffer and vertex buffer
 		void Populate(void *mdl);
 
-		void Render(Vector pos, Vector rot);
-
-		void SetShader(Shader *shader);
-		Shader *GetShader();
+		void Render(Vector pos, Vector rot, Shader *shader);
 	
 	private:
 		// Vertex Buffer
@@ -23,8 +20,6 @@ class ModelRenderer {
 		unsigned int vao;
 		// Element buffer
 		unsigned int ebo;
-
-		Shader *shader = nullptr;
 
 		// Holds the amount of faces/vertices we have
 		std::size_t nFaces;

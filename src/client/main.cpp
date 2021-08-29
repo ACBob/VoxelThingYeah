@@ -140,7 +140,8 @@ int main (int argc, char* args[]) {
 	glBlendFunc(GL_ONE,  GL_ONE_MINUS_SRC_ALPHA);
 	glBlendEquation(GL_FUNC_ADD);
 
-	Model skyboxModel = GetCubeModel(Vector(-1,-1,-1));
+	Model skyboxModel;
+	GetCubeModel(skyboxModel, Vector(-1,-1,-1));
 	skyboxModel.SetShader(skyShader);
 
 	int64_t then = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
@@ -170,7 +171,7 @@ int main (int argc, char* args[]) {
 
 			glDisable(GL_DEPTH_TEST); // Skybox
 			{
-				skyboxModel.pos = plyr.camera.pos;
+				skyboxModel.position = plyr.camera.pos;
 				skyboxModel.Render();
 			}
 			glEnable(GL_DEPTH_TEST);

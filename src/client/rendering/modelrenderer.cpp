@@ -60,16 +60,7 @@ ModelRenderer::~ModelRenderer()
 	glDeleteBuffers(1, &ebo);
 }
 
-void ModelRenderer::SetShader(Shader *shader)
-{
-	this->shader = shader;
-}
-Shader *ModelRenderer::GetShader()
-{
-	return shader;
-}
-
-void ModelRenderer::Render(Vector pos, Vector rot)
+void ModelRenderer::Render(Vector pos, Vector rot, Shader *shader)
 {
 
 	glm::mat4 model = glm::mat4(1.0f);
@@ -89,7 +80,6 @@ void ModelRenderer::Render(Vector pos, Vector rot)
 	);
 
 	shader->SetMat4("model", model);
-	shader->Use();
 
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);

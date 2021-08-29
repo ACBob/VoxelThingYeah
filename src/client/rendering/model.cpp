@@ -1,10 +1,16 @@
 #include "model.hpp"
 #include "utility/direction.hpp"
 
-Model::Model()
+Model::Model(std::vector<Vertex> verts, std::vector<Face> faces) :
+	vertices(verts),
+	faces(faces)
 {
 	renderer = new ModelRenderer();
-	renderer->Populate(this);
+}
+
+Model::~Model()
+{
+	delete renderer;
 }
 
 void Model::Update()
@@ -15,24 +21,25 @@ void Model::Update()
 void Model::Render()
 {
 	// Don't waste time trying to render
-	if (vertices.size() == 0) return;
-	renderer->Render(pos, rotation);
+	if (vertices.size() == 0 || faces.size() == 0) return;
+
+	shader->Use();
+	renderer->Render(position, rotation, shader);
 }
 
 void Model::SetShader(Shader *shader)
 {
-	renderer->SetShader(shader);
+	this->shader = shader;
 }
 Shader *Model::GetShader()
 {
-	return renderer->GetShader();
+	return shader;
 }
 
 
-Model GetCubeModel(Vector size)
+void GetCubeModel(Model &m, Vector size)
 {
-	Model m;
-	m.vertices = {
+	std::vector<Model::Vertex> vertices = {
 		// NORTH +Z
 		{  size.x,  size.y,  size.z},
 		{ -size.x,  size.y,  size.z},
@@ -44,7 +51,7 @@ Model GetCubeModel(Vector size)
 		{  size.x, -size.y, -size.z},
 		{ -size.x, -size.y, -size.z},
 	};
-	m.faces = {
+	std::vector<Model::Face> faces = {
 		// +Z
 		{2, 1, 0},
 		{3, 2, 0},
@@ -72,17 +79,18 @@ Model GetCubeModel(Vector size)
 	for (int i = 0; i < 6; i+=2)
 	{
 		Vector normal = DirectionVector[i];
-		m.vertices[m.faces[i].v].nx = normal.x;
-		m.vertices[m.faces[i].v].ny = normal.y;
-		m.vertices[m.faces[i].v].nz = normal.z;
-		m.vertices[m.faces[i].vv].nx = normal.x;
-		m.vertices[m.faces[i].vv].ny = normal.y;
-		m.vertices[m.faces[i].vv].nz = normal.z;
-		m.vertices[m.faces[i].vvv].nx = normal.x;
-		m.vertices[m.faces[i].vvv].ny = normal.y;
-		m.vertices[m.faces[i].vvv].nz = normal.z;
+		vertices[faces[i].v].nx = normal.x;
+		vertices[faces[i].v].ny = normal.y;
+		vertices[faces[i].v].nz = normal.z;
+		vertices[faces[i].vv].nx = normal.x;
+		vertices[faces[i].vv].ny = normal.y;
+		vertices[faces[i].vv].nz = normal.z;
+		vertices[faces[i].vvv].nx = normal.x;
+		vertices[faces[i].vvv].ny = normal.y;
+		vertices[faces[i].vvv].nz = normal.z;
 	}
+
+	m.vertices = vertices;
+	m.faces = faces;
 	m.Update();
-	
-	return m;
 }

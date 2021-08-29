@@ -43,7 +43,7 @@ class EntityBase
 		// Renders our Model.
 		virtual void Render()
 		{
-			mdl.pos = position;
+			mdl.position = position;
 			mdl.rotation = rotation;
 			mdl.Render(); 
 		}

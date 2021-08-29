@@ -35,7 +35,7 @@ World::World()
 				c->worldPos = pos;
 				c->chunkMan = this;
 #ifdef CLIENTEXE
-				c->mdl.pos = c->worldPos.ToWorld();
+				c->mdl.position = c->worldPos.ToWorld();
 				c->mdl.SetShader(worldShader);
 #endif
 				chunks.push_back(c);
