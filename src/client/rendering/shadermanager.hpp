@@ -2,6 +2,8 @@
 
 #include <glm/glm.hpp>
 
+#include "utility/vector.hpp"
+
 #include <vector>
 
 #pragma once
@@ -17,6 +19,7 @@ class Shader
 
 	// Uniforms
 	void SetMat4(const char* name, glm::mat4 value);
+	void SetVec(const char* name, Vector value);
 	void SetInt(const char* name, int value);
 	void SetUInt(const char* name, unsigned int value);
 
@@ -33,7 +36,9 @@ class ShaderManager
 			glm::mat4 &view,
 			glm::mat4 &projection,
 			glm::mat4 &screen,
-			unsigned int ticks
+			unsigned int ticks,
+			int timeOfDay,
+			Vector sunAngle
 		);
 
 		Shader* LoadShader(const char* vs, const char* fs);

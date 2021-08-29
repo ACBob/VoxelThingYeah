@@ -96,6 +96,10 @@ void Shader::SetInt(const char* name, int value)
 {
 	glUniform1i(glGetUniformLocation(id, name), value);
 }
+void Shader::SetVec(const char* name, Vector value)
+{
+	glUniform3f(glGetUniformLocation(id, name), value.x, value.y, value.z);
+}
 void Shader::SetUInt(const char* name, unsigned int value)
 {
 	glUniform1ui(glGetUniformLocation(id, name), value);
@@ -111,7 +115,7 @@ ShaderManager::ShaderManager()
 }
 
 // TODO: Uniform Buffer
-void ShaderManager::SetUniforms(glm::mat4 &view, glm::mat4 &projection, glm::mat4 &screen, unsigned int ticks)
+void ShaderManager::SetUniforms(glm::mat4 &view, glm::mat4 &projection, glm::mat4 &screen, unsigned int ticks, int timeOfDay, Vector sunAngle)
 {
 	for (Shader *s : loadedShaders)
 	{
@@ -120,6 +124,8 @@ void ShaderManager::SetUniforms(glm::mat4 &view, glm::mat4 &projection, glm::mat
 		s->SetMat4("projection", projection);
 		s->SetMat4("screen", screen);
 		s->SetInt("time", ticks);
+		s->SetInt("timeOfDay", timeOfDay);
+		s->SetVec("sunAngle", sunAngle);
 	}
 }
 

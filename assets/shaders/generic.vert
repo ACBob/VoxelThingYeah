@@ -10,10 +10,13 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
+uniform int timeOfDay;
+uniform vec3 sunAngle;
+
 void main()
 {
 	gl_Position = projection * view * model * vec4(aPos, 1.0f);
 	TexCoord = vec2(aTexCoord.x, aTexCoord.y);
 
-	Light = min(max(dot(aNormal, vec3(0,1,0)), 0.2) + (max(dot(aNormal, vec3(1,0,0)), 0.2) * 0.34), 1);
+	Light = 0.3 + (min(max(dot(aNormal, sunAngle), 0.0), 0.7) * abs(1 - (timeOfDay / 12000.0)));
 }

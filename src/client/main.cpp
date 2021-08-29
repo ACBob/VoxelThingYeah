@@ -153,6 +153,9 @@ int main (int argc, char* args[]) {
 	int64_t then = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
 	int64_t now = then;
 	int i = 0;
+
+	int timeOfDay = 0;
+	Vector sunAngle(0,1,0);
 	while (!window.shouldClose)
 	{
 		client.Update();
@@ -173,7 +176,7 @@ int main (int argc, char* args[]) {
 
 			Vector v = plyr.camera.pos + plyr.camera.forward;
 			glm::mat4 view = glm::lookAt(glm::vec3(plyr.camera.pos.x, plyr.camera.pos.y, plyr.camera.pos.z), glm::vec3(v.x, v.y, v.z), glm::vec3(VEC_UP.x, VEC_UP.y, VEC_UP.z));
-			shaderMan.SetUniforms(view, projection, screen, window.GetMS());
+			shaderMan.SetUniforms(view, projection, screen, window.GetMS(), timeOfDay, sunAngle);
 
 			glDisable(GL_DEPTH_TEST); // Skybox
 			{
@@ -197,6 +200,8 @@ int main (int argc, char* args[]) {
 
 			snprintf(buf, 100, "<%.2f,%.2f,%.2f>", plyr.position.x, plyr.position.y, plyr.position.z);
 			gui.Label(buf, Vector(0,-1));
+			snprintf(buf, 100, "Time %d", timeOfDay);
+			gui.Label(buf, Vector(0,-2));
 
 			BlockTexture bTex = GetDefaultBlockTextureSide(plyr.selectedBlockType, Direction::NORTH);
 			gui.ImageAtlas(terrainPng, {(float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey}, 
@@ -215,6 +220,12 @@ int main (int argc, char* args[]) {
 		if (now >= then) // TICK
 		{
 			i++;
+			timeOfDay ++;
+			if (timeOfDay > 24000)
+				timeOfDay = 0;
+			
+			sunAngle = Vector(0,1,0).Rotate(1, 180 * (timeOfDay / 12000.0f));
+
 			then = now + 50;
 			localWorld.WorldTick(i);
 

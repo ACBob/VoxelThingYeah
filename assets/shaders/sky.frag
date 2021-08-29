@@ -1,6 +1,7 @@
 #version 450 core
 out vec4 FragColor;
 in vec3 vPosition;
+in vec3 vSunAngle;
 
 // https://github.com/wwwtyro/glsl-atmosphere
 // Unlicense
@@ -118,7 +119,7 @@ void main()
 	vec3 color = atmosphere(
         normalize(vPosition),           // normalized ray direction
         vec3(0,6372e3,0),               // ray origin
-        vec3(0.42,0.9,0),                        // position of the sun
+        vSunAngle,                      // position of the sun
         88.0,                           // intensity of the sun
         6371e3,                         // radius of the planet in meters
         6471e3,                         // radius of the atmosphere in meters
