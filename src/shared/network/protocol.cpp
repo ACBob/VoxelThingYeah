@@ -294,7 +294,7 @@ namespace protocol
 				p->name = c->username;
 
 				// Then send it to spawn
-#ifdef UNIX
+#ifdef __linux__
 				int x = 8 + random() % 8;
 				int z = 8 + random() % 8;
 #elif _WIN32
