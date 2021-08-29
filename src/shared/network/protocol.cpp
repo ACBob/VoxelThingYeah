@@ -294,8 +294,13 @@ namespace protocol
 				p->name = c->username;
 
 				// Then send it to spawn
+#ifdef UNIX
 				int x = 8 + random() % 8;
 				int z = 8 + random() % 8;
+#elif _WIN32
+				int x = 8 + rand() % 8;
+				int z = 8 + rand() % 8;
+#endif
 				p->position = Vector(x,10,z);
 				p->rotation = Vector(0,0,0);
 

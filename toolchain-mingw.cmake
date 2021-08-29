@@ -4,8 +4,8 @@ set(CMAKE_SYSTEM_NAME Windows)
 
 # which compilers to use for C and C++
 include(CMakeForceCompiler)
-cmake_force_c_compiler(i686-w64-mingw32-gcc GNU)
-cmake_force_cxx_compiler(i686-w64-mingw32-g++ GNU)
+set(CMAKE_C_COMPILER i686-w64-mingw32-gcc)
+set(CMAKE_CXX_COMPILER i686-w64-mingw32-g++)
 set(CMAKE_RC_COMPILER i686-w64-mingw32-windres)
 set(CMAKE_RC_FLAGS -DGCC_WINDRES)
 

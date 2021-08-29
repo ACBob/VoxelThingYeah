@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include "utility/types.hpp"
+
 class Texture
 {
 	public:
