@@ -154,7 +154,7 @@ int main (int argc, char* args[]) {
 	int64_t now = then;
 	int i = 0;
 
-	int timeOfDay = 0;
+	int timeOfDay = 6890;
 	Vector sunAngle(0,1,0);
 	while (!window.shouldClose)
 	{
@@ -224,7 +224,7 @@ int main (int argc, char* args[]) {
 			if (timeOfDay > 24000)
 				timeOfDay = 0;
 			
-			sunAngle = Vector(0,1,0).Rotate(1, 180 * (timeOfDay / 12000.0f));
+			sunAngle = Vector(0,1,0).Rotate(3, 180 * (1 - (timeOfDay / 12000.0f)));
 
 			then = now + 50;
 			localWorld.WorldTick(i);
