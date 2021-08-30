@@ -200,7 +200,9 @@ int main (int argc, char* args[]) {
 
 			snprintf(buf, 100, "<%.2f,%.2f,%.2f>", plyr.position.x, plyr.position.y, plyr.position.z);
 			gui.Label(buf, Vector(0,-1));
-			snprintf(buf, 100, "Time %d", timeOfDay);
+			int hours = timeOfDay / 1000;
+			int minutes = (timeOfDay - (hours*1000)) / 16.6666;
+			snprintf(buf, 100, "Time %02i:%02i", hours, minutes);
 			gui.Label(buf, Vector(0,-2));
 
 			BlockTexture bTex = GetDefaultBlockTextureSide(plyr.selectedBlockType, Direction::NORTH);
