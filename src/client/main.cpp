@@ -154,7 +154,6 @@ int main (int argc, char* args[]) {
 	int64_t now = then;
 	int i = 0;
 
-	int timeOfDay = 6890;
 	Vector sunAngle(0,1,0);
 	while (!window.shouldClose)
 	{
@@ -176,7 +175,7 @@ int main (int argc, char* args[]) {
 
 			Vector v = plyr.camera.pos + plyr.camera.forward;
 			glm::mat4 view = glm::lookAt(glm::vec3(plyr.camera.pos.x, plyr.camera.pos.y, plyr.camera.pos.z), glm::vec3(v.x, v.y, v.z), glm::vec3(VEC_UP.x, VEC_UP.y, VEC_UP.z));
-			shaderMan.SetUniforms(view, projection, screen, window.GetMS(), timeOfDay, sunAngle);
+			shaderMan.SetUniforms(view, projection, screen, window.GetMS(), localWorld.timeOfDay, sunAngle);
 
 			glDisable(GL_DEPTH_TEST); // Skybox
 			{
@@ -200,8 +199,8 @@ int main (int argc, char* args[]) {
 
 			snprintf(buf, 100, "<%.2f,%.2f,%.2f>", plyr.position.x, plyr.position.y, plyr.position.z);
 			gui.Label(buf, Vector(0,-1));
-			int hours = timeOfDay / 1000;
-			int minutes = (timeOfDay - (hours*1000)) / 16.6666;
+			int hours = localWorld.timeOfDay / 1000;
+			int minutes = (localWorld.timeOfDay - (hours*1000)) / 16.6666;
 			snprintf(buf, 100, "Time %02i:%02i", hours, minutes);
 			gui.Label(buf, Vector(0,-2));
 
@@ -222,11 +221,8 @@ int main (int argc, char* args[]) {
 		if (now >= then) // TICK
 		{
 			i++;
-			timeOfDay ++;
-			if (timeOfDay > 24000)
-				timeOfDay = 0;
 			
-			sunAngle = Vector(0,1,0).Rotate(3, 180 * (1 - (timeOfDay / 12000.0f)));
+			sunAngle = Vector(0,1,0).Rotate(3, 180 * (1 - (localWorld.timeOfDay / 12000.0f)));
 
 			then = now + 50;
 			localWorld.WorldTick(i);

@@ -246,7 +246,14 @@ void World::WorldTick(int tickN)
 		if (rebuild)
 			chunk->Update();
 	}
+
+	// Progress time
+	timeOfDay ++;
 #endif
+	if (timeOfDay > 24000)
+	{
+		timeOfDay = 0;
+	}
 }
 
 World::PortableChunkRepresentation World::GetWorldRepresentation(Vector pos)

@@ -70,6 +70,12 @@ int main (int argc, char* args[]) {
 
 			// World
 			server.world.WorldTick(i);
+
+			if (i % 5 == 0)
+			{
+				for (network::Client *c : server.players)
+					protocol::messages::SendServerTimeOfDay(c->peer, server.world.timeOfDay);
+			}
 		}
 
 	}

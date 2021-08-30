@@ -232,6 +232,16 @@ namespace protocol
 				}
 			}
 			break;
+
+			case ServerPacket::TIMEOFDAY:
+			{
+				int ticks;
+
+				bufAccess >> ticks;
+
+				client->localWorld->timeOfDay = ticks;
+			}
+			break;
 			
 			default:
 			{

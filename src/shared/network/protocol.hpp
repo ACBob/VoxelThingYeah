@@ -171,7 +171,15 @@ struct ServerPacket : public NetworkPacket
 				kickReason (string message)
 			}
 		*/
-		PLAYER_DISCONNECT = 0x07
+		PLAYER_DISCONNECT = 0x07,
+		// Tells the time of day to the client
+		// Without this time does not change on individual clients
+		/*
+			{
+				ticks
+			}
+		*/
+		TIMEOFDAY = 0x08
 	};
 
 	template <typename S>
@@ -205,6 +213,7 @@ namespace protocol
 		void SendServerPlayerPos          (ENetPeer *peer, std::string username, Vector pos, Vector rot);
 		void SendServerPlayerMessage      (ENetPeer *peer, std::string username, std::string message);
 		void SendServerPlayerDisconnect   (ENetPeer *peer, bool isKick, std::string reason = "");
+		void SendServerTimeOfDay          (ENetPeer *peer, int ticks);
 #elif CLIENTEXE
 		void SendClientPlayerID           (ENetPeer *peer);
 		void SendClientSetBlock           (ENetPeer *peer, Vector pos, blocktype_t blockType);

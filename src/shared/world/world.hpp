@@ -80,4 +80,6 @@ class World {
 		std::vector<Chunk*> chunks;
 
 		fnl_state noiseState;
+
+		int timeOfDay = 6890;
 };

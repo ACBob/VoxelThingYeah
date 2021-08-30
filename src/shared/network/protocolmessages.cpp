@@ -95,6 +95,16 @@ namespace protocol
 
 			protocol::SendPacket(peer, p);
 		}
+		void SendServerTimeOfDay          (ENetPeer *peer, int ticks)
+		{
+			ServerPacket p;
+			Archive<ArchiveBuf> bufAccess = p.GetAccess();
+			p.type = ServerPacket::TIMEOFDAY;
+			
+			bufAccess << ticks;
+
+			protocol::SendPacket(peer, p);
+		}
 #elif CLIENTEXE
 		void SendClientPlayerID           (ENetPeer *peer)
 		{
