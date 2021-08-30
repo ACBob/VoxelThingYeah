@@ -27,6 +27,8 @@
 
 #include "gui/gui.hpp"
 
+#include "rendering/modelloader.hpp"
+
 int main (int argc, char* args[]) {
 
 	con_info("Hello from bobcraft!");
@@ -123,6 +125,11 @@ int main (int argc, char* args[]) {
 		con_error("Didn't connect to anybody so we've nothing to do!");
 		return EXIT_FAILURE;
 	}
+
+	con_info("Loading test model (sphere.obj)");
+	Model suzanne;
+	LoadModel(suzanne, "models/sphere.obj");
+	suzanne.position = Vector(8, 16, 8);
 
 	EntityPlayer plyr;
 	plyr.inputMan = &inputMan;

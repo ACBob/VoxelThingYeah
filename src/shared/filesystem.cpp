@@ -3,7 +3,13 @@
 #include <cstdio>
 
 #include "physfs.h"
+
+#define LOG_LEVEL DEBUG
 #include "seethe.h"
+
+#include "types.hpp"
+
+#include <cstring>
 
 #define PRINTPHYSFSERR \
 		con_error("PhysFS Error: %s", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()))
@@ -28,21 +34,34 @@ namespace fileSystem
 		PHYSFS_deinit();
 	}
 
-	const unsigned char* LoadFile(const char* virtualPath, unsigned int &len, bool &success)
+	const unsigned char* LoadFile(const char* virtualPath, int64_t& len, bool& success)
 	{
 		PHYSFS_File *f = PHYSFS_openRead(virtualPath);
-		len = PHYSFS_fileLength(f);
-		unsigned char buf[len];
 
-		unsigned int rl = PHYSFS_readBytes(f, &buf, len);
-
-		success = true;
-
-		if (rl != len)
+		if (!f)
 		{
 			PRINTPHYSFSERR;
+			PHYSFS_close(f);
+			len = 0;
 			success = false;
+			return nullptr;
 		}
+
+		int64_t fileLen = PHYSFS_fileLength(f);
+		unsigned char* buf = new unsigned char[fileLen + 1];
+		success = true;
+
+		if (PHYSFS_readBytes(f, buf, fileLen) < fileLen)
+		{
+			PRINTPHYSFSERR;
+			PHYSFS_close(f);
+			len = 0;
+			success = false;
+			return nullptr;
+		}
+
+		buf[fileLen] = '\0';
+		len = fileLen;
 
 		return buf;
 	}

@@ -12,6 +12,9 @@
 
 Shader::Shader(const char* vs, const char* fs)
 {
+	// TODO: Replace with FileSystem
+	// I tried for a bit in vain but it got in the way of fun bobj stuff...
+	
 	PHYSFS_File *f = PHYSFS_openRead(vs);
 	int64_t fl = PHYSFS_fileLength(f);
 	char vsc[fl + 1];

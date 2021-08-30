@@ -1,5 +1,7 @@
 #pragma once
 
+#include "types.hpp"
+
 // Thin wrapper around PhysFS.
 namespace fileSystem
 {
@@ -9,7 +11,7 @@ namespace fileSystem
 	// Len is set to the length of the file
 	// Returns loaded content (if any) even on error
 	// Success is set depending on if it succeeds or not
-	const unsigned char* LoadFile(const char* virtualPath, unsigned int &len, bool &success);
+	const unsigned char* LoadFile(const char* virtualPath, int64_t& len, bool& success);
 
 	// Mounts realPath at virtualPath in PhysFS
 	// Prepend will place the directory first in the search path, else at the end
