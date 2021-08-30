@@ -126,10 +126,11 @@ int main (int argc, char* args[]) {
 		return EXIT_FAILURE;
 	}
 
-	con_info("Loading test model (sphere.obj)");
+	con_info("Loading test model (test.obj)");
 	Model suzanne;
-	LoadModel(suzanne, "models/sphere.obj");
+	LoadModel(suzanne, "models/test.obj");
 	suzanne.position = Vector(8, 16, 8);
+	suzanne.SetShader(entityShader);
 
 	EntityPlayer plyr;
 	plyr.inputMan = &inputMan;
@@ -197,6 +198,8 @@ int main (int argc, char* args[]) {
 
 			localWorld.Render();
 
+			suzanne.position = v;
+			suzanne.Render();
 
 			char *buf = new char[100];
 			snprintf(buf, 100, "Connected to \"%s\"", cl_servername->GetString());
