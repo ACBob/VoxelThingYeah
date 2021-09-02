@@ -85,12 +85,16 @@ void ModelRenderer::Render(Vector pos, Vector rot, Shader *shader, Texture *tex)
 		glBindTexture(GL_TEXTURE_2D, tex->id);
 
 	glBindVertexArray(vao);
+
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	
 	glDrawElements(GL_TRIANGLES, nFaces * sizeof(Model::Face), GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	glBindVertexArray(0);
 
 	if (tex != nullptr)
 		glBindTexture(GL_TEXTURE_2D, 0);

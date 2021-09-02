@@ -103,13 +103,14 @@ int main (int argc, char* args[]) {
 	Shader* worldShader = shaderMan.LoadShader("shaders/generic.vert", "shaders/generic.frag");
 	Shader* skyShader = shaderMan.LoadShader("shaders/sky.vert", "shaders/sky.frag");
 	Shader* entityShader = worldShader;
+	Shader* unlitGeneric = shaderMan.LoadShader("shaders/generic.vert", "shaders/unlit.frag");
 
 	con_info("Load default textures");
 	TextureManager texMan;
 	Texture* terrainPng = texMan.LoadTexture("terrain.png");
 	Texture* crosshairTex = texMan.LoadTexture("crosshair.png");
 	Texture* testTexture = texMan.LoadTexture("test.png");
-	Texture* playerTexture = texMan.LoadTexture("player.png");
+	Texture* sunTexture = texMan.LoadTexture("sun.png");
 
 	con_info("Create Client...");
 	World localWorld(worldShader, entityShader);
@@ -127,13 +128,6 @@ int main (int argc, char* args[]) {
 		con_error("Didn't connect to anybody so we've nothing to do!");
 		return EXIT_FAILURE;
 	}
-
-	con_info("Loading player model (player.obj)");
-	Model playerModel;
-	LoadModel(playerModel, "models/player.obj");
-	playerModel.position = Vector(8, 16, 8);
-	playerModel.SetShader(entityShader);
-	playerModel.SetTexture(playerTexture);
 
 	EntityPlayer plyr;
 	plyr.inputMan = &inputMan;
@@ -155,8 +149,14 @@ int main (int argc, char* args[]) {
 	glBlendEquation(GL_FUNC_ADD);
 
 	Model skyboxModel;
-	GetCubeModel(skyboxModel, Vector(-1,-1,-1));
+	GetCubeModel(skyboxModel, Vector(-2,-2,-2));
 	skyboxModel.SetShader(skyShader);
+	skyboxModel.SetTexture(testTexture);
+
+	Model skyboxSunModel;
+	LoadModel(skyboxSunModel, "models/sun.obj");
+	skyboxSunModel.SetTexture(sunTexture);
+	skyboxSunModel.SetShader(unlitGeneric);
 
 	GUI gui(&texMan, &shaderMan, scr_width->GetInt(), scr_height->GetInt());
 	gui.inputMan = &inputMan;
@@ -165,7 +165,8 @@ int main (int argc, char* args[]) {
 	int64_t now = then;
 	int i = 0;
 
-	Vector sunAngle(0,1,0);
+	Vector sunForward(0,1,0);
+	float sunAngle = 0.0f;
 	while (!window.shouldClose)
 	{
 		client.Update();
@@ -186,12 +187,16 @@ int main (int argc, char* args[]) {
 
 			Vector v = plyr.camera.pos + plyr.camera.forward;
 			glm::mat4 view = glm::lookAt(glm::vec3(plyr.camera.pos.x, plyr.camera.pos.y, plyr.camera.pos.z), glm::vec3(v.x, v.y, v.z), glm::vec3(VEC_UP.x, VEC_UP.y, VEC_UP.z));
-			shaderMan.SetUniforms(view, projection, screen, window.GetMS(), localWorld.timeOfDay, sunAngle);
+			shaderMan.SetUniforms(view, projection, screen, window.GetMS(), localWorld.timeOfDay, sunForward);
 
 			glDisable(GL_DEPTH_TEST); // Skybox
 			{
 				skyboxModel.position = plyr.camera.pos;
 				skyboxModel.Render();
+
+				skyboxSunModel.position = skyboxModel.position;
+				skyboxSunModel.rotation = Vector(0,0,-sunAngle);
+				skyboxSunModel.Render();
 			}
 			glEnable(GL_DEPTH_TEST);
 
@@ -201,8 +206,9 @@ int main (int argc, char* args[]) {
 
 			localWorld.Render();
 
-			playerModel.position = v + plyr.camera.forward * 2;
-			playerModel.Render();
+			// skyboxSunModel.position = v;
+			// skyboxSunModel.rotation = Vector(0,0,0);
+			// skyboxSunModel.Render();
 
 			char *buf = new char[100];
 			snprintf(buf, 100, "Connected to \"%s\"", cl_servername->GetString());
@@ -235,7 +241,8 @@ int main (int argc, char* args[]) {
 		{
 			i++;
 			
-			sunAngle = Vector(0,1,0).Rotate(3, 180 * (1 - (localWorld.timeOfDay / 12000.0f)));
+			sunAngle = 180 * (1 - (localWorld.timeOfDay / 12000.0f));
+			sunForward = Vector(0,1,0).Rotate(3, sunAngle);
 
 			then = now + 50;
 			localWorld.WorldTick(i);
