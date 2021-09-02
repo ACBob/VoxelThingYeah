@@ -128,7 +128,7 @@ int main (int argc, char* args[]) {
 
 	con_info("Loading test model (test.obj)");
 	Model suzanne;
-	LoadModel(suzanne, "models/test.obj");
+	LoadModel(suzanne, "models/trianglesuzanne.obj");
 	suzanne.position = Vector(8, 16, 8);
 	suzanne.SetShader(entityShader);
 
@@ -198,7 +198,7 @@ int main (int argc, char* args[]) {
 
 			localWorld.Render();
 
-			suzanne.position = v;
+			suzanne.position = v + plyr.camera.forward * 2;
 			suzanne.Render();
 
 			char *buf = new char[100];

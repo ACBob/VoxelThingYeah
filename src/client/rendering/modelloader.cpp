@@ -73,10 +73,15 @@ void LoadModel(Model &m, const char *fp)
 
 			while (lineToken != NULL)
 			{
-				int vertIndex = atoi(lineToken) - 1;
-				lineToken = strtok_r(NULL, "/", &linesaveptr);
+				con_info(lineToken);
+
+				char *segPtr;
+				char *seg = strtok_r(lineToken, "/", &segPtr);
+
+				int vertIndex = atoi(seg) - 1;
+				seg = strtok_r(NULL, "/", &segPtr);
 				// int vertNormalIndex = atoi(lineToken);
-				lineToken = strtok_r(NULL, "/", &linesaveptr);
+				seg = strtok_r(NULL, "/", &segPtr);
 				// int vertTexCoord = atoi(lineToken);
 
 				m.vertices.at(vertIndex) =
@@ -96,9 +101,9 @@ void LoadModel(Model &m, const char *fp)
 				i ++;
 			}
 
-			f.v = idxs[0];
+			f.v = idxs[2];
 			f.vv = idxs[1];
-			f.vvv = idxs[2];
+			f.vvv = idxs[0];
 
 			m.faces.push_back(f);
 		}
