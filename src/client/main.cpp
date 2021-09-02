@@ -109,6 +109,7 @@ int main (int argc, char* args[]) {
 	Texture* terrainPng = texMan.LoadTexture("terrain.png");
 	Texture* crosshairTex = texMan.LoadTexture("crosshair.png");
 	Texture* testTexture = texMan.LoadTexture("test.png");
+	Texture* playerTexture = texMan.LoadTexture("player.png");
 
 	con_info("Create Client...");
 	World localWorld(worldShader, entityShader);
@@ -127,12 +128,12 @@ int main (int argc, char* args[]) {
 		return EXIT_FAILURE;
 	}
 
-	con_info("Loading test model (test.obj)");
-	Model suzanne;
-	LoadModel(suzanne, "models/trianglesuzanne.obj");
-	suzanne.position = Vector(8, 16, 8);
-	suzanne.SetShader(entityShader);
-	suzanne.SetTexture(testTexture);
+	con_info("Loading player model (player.obj)");
+	Model playerModel;
+	LoadModel(playerModel, "models/player.obj");
+	playerModel.position = Vector(8, 16, 8);
+	playerModel.SetShader(entityShader);
+	playerModel.SetTexture(playerTexture);
 
 	EntityPlayer plyr;
 	plyr.inputMan = &inputMan;
@@ -200,8 +201,8 @@ int main (int argc, char* args[]) {
 
 			localWorld.Render();
 
-			suzanne.position = v + plyr.camera.forward * 2;
-			suzanne.Render();
+			playerModel.position = v + plyr.camera.forward * 2;
+			playerModel.Render();
 
 			char *buf = new char[100];
 			snprintf(buf, 100, "Connected to \"%s\"", cl_servername->GetString());
