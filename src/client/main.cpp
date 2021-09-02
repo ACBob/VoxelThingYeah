@@ -108,6 +108,7 @@ int main (int argc, char* args[]) {
 	TextureManager texMan;
 	Texture* terrainPng = texMan.LoadTexture("terrain.png");
 	Texture* crosshairTex = texMan.LoadTexture("crosshair.png");
+	Texture* testTexture = texMan.LoadTexture("test.png");
 
 	con_info("Create Client...");
 	World localWorld(worldShader, entityShader);
@@ -131,6 +132,7 @@ int main (int argc, char* args[]) {
 	LoadModel(suzanne, "models/trianglesuzanne.obj");
 	suzanne.position = Vector(8, 16, 8);
 	suzanne.SetShader(entityShader);
+	suzanne.SetTexture(testTexture);
 
 	EntityPlayer plyr;
 	plyr.inputMan = &inputMan;
@@ -221,7 +223,7 @@ int main (int argc, char* args[]) {
 			gui.Image(crosshairTex, gui.screenCentre, Vector(2,2), Vector(0.5,0.5));
 			gui.Update();
 
-			delete buf;
+			delete[] buf;
 		}
 
 		window.SwapBuffers();

@@ -60,7 +60,7 @@ ModelRenderer::~ModelRenderer()
 	glDeleteBuffers(1, &ebo);
 }
 
-void ModelRenderer::Render(Vector pos, Vector rot, Shader *shader)
+void ModelRenderer::Render(Vector pos, Vector rot, Shader *shader, Texture *tex)
 {
 
 	glm::mat4 model = glm::mat4(1.0f);
@@ -81,6 +81,9 @@ void ModelRenderer::Render(Vector pos, Vector rot, Shader *shader)
 
 	shader->SetMat4("model", model);
 
+	if (tex != nullptr)
+		glBindTexture(GL_TEXTURE_2D, tex->id);
+
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
@@ -88,6 +91,9 @@ void ModelRenderer::Render(Vector pos, Vector rot, Shader *shader)
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	if (tex != nullptr)
+		glBindTexture(GL_TEXTURE_2D, 0);
 
 	// model = glm::mat4(1.0f);
 	// shader->SetMat4("model", model);

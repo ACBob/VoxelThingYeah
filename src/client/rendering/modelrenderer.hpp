@@ -2,6 +2,8 @@
 
 #include "utility/vector.hpp"
 
+#include "texturemanager.hpp"
+
 #pragma once
 
 class ModelRenderer {
@@ -11,7 +13,7 @@ class ModelRenderer {
 		// Updated the index buffer and vertex buffer
 		void Populate(void *mdl);
 
-		void Render(Vector pos, Vector rot, Shader *shader);
+		void Render(Vector pos, Vector rot, Shader *shader, Texture *tex);
 	
 	private:
 		// Vertex Buffer

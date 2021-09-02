@@ -29,6 +29,7 @@ void LoadModel(Model &m, const char *fp)
 	bool comment = false;
 
 	std::vector<Vector> vertPositions;
+	std::vector<Vector> uvCoords;
 
 	while (token != NULL)
 	{
@@ -39,6 +40,7 @@ void LoadModel(Model &m, const char *fp)
 		if (lineToken[0] == '#')
 			goto skip;
 
+		// Vertex
 		if (strcmp(lineToken, "v") == 0)
 		{
 			// v x y z
@@ -60,6 +62,23 @@ void LoadModel(Model &m, const char *fp)
 			vertPositions.push_back(v);
 			m.vertices.push_back({});
 		}
+		// Vertex Tex(?), U/V Coordinate!!
+		else if (strcmp(lineToken, "vt") == 0)
+		{
+			// vt x y
+			// Let's try and absorb those next 2 numbers
+
+			// Bump it, removing the 'vt'
+			lineToken = strtok_r(NULL, " ", &linesaveptr);
+
+			Vector uv;
+			uv.x = strtof(lineToken, NULL);
+			lineToken = strtok_r(NULL, " ", &linesaveptr);
+			uv.y = strtof(lineToken, NULL);
+
+			uvCoords.push_back(uv);
+		}
+		// Face
 		else if (strcmp(lineToken, "f") == 0)
 		{
 			// f vert/vertNormal/vertTexCoord vert/vertNormal/vertTexCoord vert/vertNormal/vertTexCoord
@@ -80,17 +99,17 @@ void LoadModel(Model &m, const char *fp)
 
 				int vertIndex = atoi(seg) - 1;
 				seg = strtok_r(NULL, "/", &segPtr);
-				// int vertNormalIndex = atoi(lineToken);
+				int vertNormalIndex = atoi(lineToken);
 				seg = strtok_r(NULL, "/", &segPtr);
-				// int vertTexCoord = atoi(lineToken);
+				int vertTexCoord = atoi(lineToken);
 
 				m.vertices.at(vertIndex) =
 					{
 						vertPositions[vertIndex].x, 
 						vertPositions[vertIndex].y, 
 						vertPositions[vertIndex].z,
-						0,0,
-						0,0
+						0,0,0,
+						uvCoords[vertTexCoord].x, uvCoords[vertTexCoord].y
 					};
 				idxs[i] = vertIndex;
 				
@@ -108,10 +127,12 @@ void LoadModel(Model &m, const char *fp)
 			m.faces.push_back(f);
 		}
 
-
 		skip:
 		token = strtok_r(NULL, sep, &saveptr);
 	}
+
+	vertPositions.clear();
+	uvCoords.clear();
 
 	m.Update();
 }

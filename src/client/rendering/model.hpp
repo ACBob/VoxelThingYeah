@@ -33,6 +33,9 @@ class Model {
 		void SetShader(Shader *shader);
 		Shader *GetShader();
 
+		void SetTexture(Texture *texture);
+		Texture *GetTexture();
+
 		std::vector<Vertex> vertices;
 		std::vector<Face> faces;
 

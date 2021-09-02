@@ -24,7 +24,7 @@ void Model::Render()
 	if (vertices.size() == 0 || faces.size() == 0) return;
 
 	shader->Use();
-	renderer->Render(position, rotation, shader);
+	renderer->Render(position, rotation, shader, tex);
 }
 
 void Model::SetShader(Shader *shader)
@@ -34,6 +34,14 @@ void Model::SetShader(Shader *shader)
 Shader *Model::GetShader()
 {
 	return shader;
+}
+void Model::SetTexture(Texture *tex)
+{
+	this->tex = tex;
+}
+Texture *Model::GetTexture()
+{
+	return tex;
 }
 
 
