@@ -99,9 +99,9 @@ void LoadModel(Model &m, const char *fp)
 
 				int vertIndex = atoi(seg) - 1;
 				seg = strtok_r(NULL, "/", &segPtr);
-				int vertNormalIndex = atoi(lineToken);
+				int vertNormalIndex = atoi(lineToken) - 1;
 				seg = strtok_r(NULL, "/", &segPtr);
-				int vertTexCoord = atoi(lineToken);
+				int vertTexCoord = atoi(lineToken) - 1;
 
 				m.vertices.at(vertIndex) =
 					{
