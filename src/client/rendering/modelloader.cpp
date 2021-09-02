@@ -58,7 +58,7 @@ void LoadModel(Model &m, const char *fp)
 			v.z = strtof(lineToken, NULL);
 			lineToken = strtok_r(NULL, " ", &linesaveptr);
 
-			printf("Vert: %f,%f,%f\n", v.x, v.y, v.z);
+			// printf("Vert: %f,%f,%f\n", v.x, v.y, v.z);
 			vertPositions.push_back(v);
 			m.vertices.push_back({});
 		}
@@ -92,7 +92,7 @@ void LoadModel(Model &m, const char *fp)
 
 			while (lineToken != NULL)
 			{
-				con_info(lineToken);
+				// con_info(lineToken);
 
 				char *segPtr;
 				char *seg = strtok_r(lineToken, "/", &segPtr);
@@ -113,7 +113,7 @@ void LoadModel(Model &m, const char *fp)
 					};
 				idxs[i] = vertIndex;
 				
-				printf("idx: %i\n", vertIndex);
+				// printf("idx: %i\n", vertIndex);
 
 				lineToken = strtok_r(NULL, " ", &linesaveptr);
 
