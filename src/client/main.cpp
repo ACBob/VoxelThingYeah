@@ -100,10 +100,9 @@ int main (int argc, char* args[]) {
 	con_info("*drumroll* and now... Your feature entertainment... Our internal rendering systems! :)");
 	con_info("Load default shaders");
 	ShaderManager shaderMan;
-	Shader* worldShader = shaderMan.LoadShader("shaders/generic.vert", "shaders/generic.frag");
+	Shader* diffuseShader = shaderMan.LoadShader("shaders/generic.vert", "shaders/generic.frag");
 	Shader* skyShader = shaderMan.LoadShader("shaders/sky.vert", "shaders/sky.frag");
-	Shader* entityShader = worldShader;
-	Shader* unlitGeneric = shaderMan.LoadShader("shaders/generic.vert", "shaders/unlit.frag");
+	Shader* unlitShader = shaderMan.LoadShader("shaders/generic.vert", "shaders/unlit.frag");
 
 	con_info("Load default textures");
 	TextureManager texMan;
@@ -113,7 +112,7 @@ int main (int argc, char* args[]) {
 	Texture* sunTexture = texMan.LoadTexture("sun.png");
 
 	con_info("Create Client...");
-	World localWorld(worldShader, entityShader);
+	World localWorld(diffuseShader, diffuseShader);
 
 	network::Client client;
 	client.localWorld = &localWorld;
@@ -132,7 +131,7 @@ int main (int argc, char* args[]) {
 	EntityPlayer plyr;
 	plyr.inputMan = &inputMan;
 	plyr.Spawn();
-	plyr.SetShader(worldShader);
+	plyr.SetShader(diffuseShader);
 	client.localPlayer = &plyr;
 	localWorld.AddEntity(&plyr);
 	plyr.client = &client;
@@ -156,7 +155,7 @@ int main (int argc, char* args[]) {
 	Model skyboxSunModel;
 	LoadModel(skyboxSunModel, "models/sun.obj");
 	skyboxSunModel.SetTexture(sunTexture);
-	skyboxSunModel.SetShader(unlitGeneric);
+	skyboxSunModel.SetShader(unlitShader);
 
 	GUI gui(&texMan, &shaderMan, scr_width->GetInt(), scr_height->GetInt());
 	gui.inputMan = &inputMan;
@@ -200,7 +199,7 @@ int main (int argc, char* args[]) {
 			}
 			glEnable(GL_DEPTH_TEST);
 
-			worldShader->Use();
+			diffuseShader->Use();
 
 			glBindTexture(GL_TEXTURE_2D, terrainPng->id);
 
