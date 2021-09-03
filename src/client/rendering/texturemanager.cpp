@@ -14,6 +14,8 @@ std::vector<Texture*> materialSystem::loadedTextures;
 Texture::Texture(const char* path)
 		// TODO: Error Texture
 {
+	fp = path;
+	
 	PHYSFS_File *f = PHYSFS_openRead(path);
 	int64_t fl = PHYSFS_fileLength(f);
 	unsigned char buf[fl];
@@ -49,6 +51,10 @@ void materialSystem::Init()
 
 Texture *materialSystem::LoadTexture(const char* path)
 {
+	for (Texture *t : loadedTextures)
+		if (t->fp == path)
+			return t;
+
 	Texture *tex = new Texture(path);
 	loadedTextures.push_back(tex);
 

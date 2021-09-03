@@ -13,6 +13,8 @@ namespace materialSystem
 
 			std::vector<unsigned char> image;
 			unsigned int width, height, id;
+
+			const char *fp = nullptr;
 	};
 
 	void Init();
