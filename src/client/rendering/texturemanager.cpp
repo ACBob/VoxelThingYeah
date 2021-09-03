@@ -9,7 +9,7 @@
 
 #include "physfs.h"
 
-std::vector<Texture*> textureManager::loadedTextures;
+std::vector<Texture*> materialSystem::loadedTextures;
 
 Texture::Texture(const char* path)
 		// TODO: Error Texture
@@ -43,18 +43,18 @@ Texture::Texture(const char* path)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &image[0]);
 }
 
-void textureManager::Init()
+void materialSystem::Init()
 {
 }
 
-Texture *textureManager::LoadTexture(const char* path)
+Texture *materialSystem::LoadTexture(const char* path)
 {
 	Texture *tex = new Texture(path);
 	loadedTextures.push_back(tex);
 
 	return loadedTextures.back();
 }
-void textureManager::UnInit()
+void materialSystem::UnInit()
 {
 	// Unload textures
 	for (Texture *t : loadedTextures)

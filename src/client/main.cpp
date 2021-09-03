@@ -106,14 +106,14 @@ int main (int argc, char* args[]) {
 	Shader* unlitShader = shaderSystem::LoadShader("shaders/generic.vert", "shaders/unlit.frag");
 
 	con_info("Load default textures");
-	textureManager::Init(); atexit(textureManager::UnInit);
+	materialSystem::Init(); atexit(materialSystem::UnInit);
 
-	Texture* terrainPng = textureManager::LoadTexture("terrain.png");
-	Texture* crosshairTex = textureManager::LoadTexture("crosshair.png");
-	Texture* testTexture = textureManager::LoadTexture("test.png");
-	Texture* sunTexture = textureManager::LoadTexture("sun.png");
+	Texture* terrainPng = materialSystem::LoadTexture("terrain.png");
+	Texture* crosshairTex = materialSystem::LoadTexture("crosshair.png");
+	Texture* testTexture = materialSystem::LoadTexture("test.png");
+	Texture* sunTexture = materialSystem::LoadTexture("sun.png");
 
-	models::Init(); atexit(models::UnInit);
+	modelSystem::Init(); atexit(modelSystem::UnInit);
 
 	con_info("Create Client...");
 	World localWorld(diffuseShader, diffuseShader);
@@ -156,7 +156,7 @@ int main (int argc, char* args[]) {
 	skyboxModel.SetShader(skyShader);
 	skyboxModel.SetTexture(testTexture);
 
-	Model *skyboxSunModel = models::LoadModel("models/sun.obj");
+	Model *skyboxSunModel = modelSystem::LoadModel("models/sun.obj");
 	skyboxSunModel->SetTexture(sunTexture);
 	skyboxSunModel->SetShader(unlitShader);
 

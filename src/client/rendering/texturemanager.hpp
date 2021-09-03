@@ -4,7 +4,7 @@
 
 #include "utility/types.hpp"
 
-namespace textureManager
+namespace materialSystem
 {
 	class Texture
 	{
@@ -23,4 +23,4 @@ namespace textureManager
 	extern std::vector<Texture*> loadedTextures;
 };
 
-using Texture = textureManager::Texture;
+using Texture = materialSystem::Texture;

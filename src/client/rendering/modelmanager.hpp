@@ -9,7 +9,7 @@
 
 #pragma once
 
-namespace models
+namespace modelSystem
 {
 	class Model {
 		public:
@@ -63,6 +63,6 @@ namespace models
 };
 
 // Laziness and Convenience
-using Model = models::Model;
+using Model = modelSystem::Model;
 
 void GetCubeModel(Model &m, Vector size = Vector(1,1,1));

@@ -3,7 +3,7 @@
 
 #include "modelloader.hpp"
 
-std::vector<Model*> models::loadedModels;
+std::vector<Model*> modelSystem::loadedModels;
 
 Model::Model(std::vector<Vertex> verts, std::vector<Face> faces) :
 	vertices(verts),
@@ -48,7 +48,7 @@ Texture *Model::GetTexture()
 	return tex;
 }
 
-Model *models::LoadModel(const char *fp)
+Model *modelSystem::LoadModel(const char *fp)
 {
 	Model *m = new Model();
 	loadedModels.push_back(m);
@@ -58,10 +58,10 @@ Model *models::LoadModel(const char *fp)
 	return m;
 }
 
-void models::Init()
+void modelSystem::Init()
 {
 }
-void models::UnInit()
+void modelSystem::UnInit()
 {
 	for (Model *m : loadedModels)
 		delete m;
