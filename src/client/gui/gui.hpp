@@ -61,6 +61,8 @@ class GUI
 		// Update
 		void Update();
 
+		void Resize(int x, int y);
+
 		Vector screenCentre;
 		Vector screenDimensions;
 

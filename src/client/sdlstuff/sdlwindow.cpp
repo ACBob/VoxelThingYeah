@@ -6,7 +6,6 @@
 #include <memory>
 
 
-
 GameWindow::GameWindow(const char *title, Vector size, bool resizeable) :
 	internalWindow(nullptr, &SDL_DestroyWindow),
 	tick(0),
@@ -161,12 +160,18 @@ void GameWindow::PollEvents()
 			case SDL_QUIT: // Handle quitting directly
 				shouldClose = true;
 			break;
+
 			case SDL_MOUSEMOTION:
 				// HACK HACK HACK HACK: ignore mouse events while invisible
 				if (!IsFocused()) continue;
 				inputMan->mouseMovement = inputMan->mouseMovement + Vector(currentEvent.motion.xrel, currentEvent.motion.yrel);
 				inputMan->mousePos = Vector(currentEvent.motion.x, currentEvent.motion.y);
 			break;
+
+			case SDL_WINDOWEVENT:
+				sizeChanged = true;
+			break;
+
 			case SDL_MOUSEWHEEL:
 				inputMan->mouseState |= (currentEvent.wheel.y > 0) ? IN_WHEEL_UP : IN_WHEEL_DOWN;
 			break;

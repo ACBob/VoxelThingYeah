@@ -178,6 +178,16 @@ int main (int argc, char* args[]) {
 		window.PollEvents();
 		if (window.IsFocused())
 			window.CaptureMouse();
+		if (window.sizeChanged)
+		{
+			Vector s = window.GetSize();
+			scr_width->SetInt(s.x);
+			scr_height->SetInt(s.y);
+			glViewport(0,0, s.x, s.y);
+			gui.Resize(s.x, s.y);
+			screen = glm::ortho(0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat());
+			window.sizeChanged = false;
+		}
 		
 		inputMan.Update();
 		plyr.UpdateClient(client.localWorld);

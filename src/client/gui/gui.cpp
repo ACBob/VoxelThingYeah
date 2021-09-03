@@ -21,8 +21,6 @@
 #define TEXTTILES 16
 
 GUI::GUI(int screenW, int screenH) :
-	screenCentre((screenW * 0.5) / GUIUNIT, (screenH * 0.5) / GUIUNIT),
-	screenDimensions(screenW, screenH),
 	mouseState(IN_NO_MOUSE),
 	activeItem(0),
 	hotItem(0)
@@ -55,7 +53,16 @@ GUI::GUI(int screenW, int screenH) :
 
 	textTex = materialSystem::LoadTexture("font.png");
 	textShader = shaderSystem::LoadShader("shaders/text.vert", "shaders/text.frag");
+
+	Resize(screenW, screenH);
 }
+
+void GUI::Resize(int x, int y)
+{
+	screenCentre = Vector((x * 0.5) / GUIUNIT, (y * 0.5) / GUIUNIT);
+	screenDimensions = Vector(x, y);
+}
+
 
 GUI::~GUI()
 {

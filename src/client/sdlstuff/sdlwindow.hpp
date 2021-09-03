@@ -54,10 +54,13 @@ class GameWindow : public BobWindow
 
 		void SwapBuffers();
 
+		void UpdateSize();
+
 		std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> internalWindow;
 		SDL_GLContext glctx;
 
 		bool shouldClose;
+		bool sizeChanged;
 
 		// Pointer to Input manager
 		InputManager *inputMan = nullptr;
