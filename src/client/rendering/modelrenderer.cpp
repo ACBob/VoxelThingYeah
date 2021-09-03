@@ -80,6 +80,7 @@ void ModelRenderer::Render(Vector pos, Vector rot, Shader *shader, Texture *tex)
 	);
 
 	shader->SetMat4("model", model);
+	shader->SetMat3("normalMat", glm::mat3(glm::transpose(glm::inverse(model))));
 
 	if (tex != nullptr)
 		glBindTexture(GL_TEXTURE_2D, tex->id);

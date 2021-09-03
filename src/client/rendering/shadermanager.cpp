@@ -97,6 +97,10 @@ void Shader::SetMat4(const char* name, glm::mat4 value)
 {
 	glUniformMatrix4fv(glGetUniformLocation(id, name), 1, false, glm::value_ptr(value));
 }
+void Shader::SetMat3(const char* name, glm::mat3 value)
+{
+	glUniformMatrix3fv(glGetUniformLocation(id, name), 1, false, glm::value_ptr(value));
+}
 void Shader::SetInt(const char* name, int value)
 {
 	glUniform1i(glGetUniformLocation(id, name), value);

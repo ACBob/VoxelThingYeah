@@ -21,6 +21,7 @@ namespace shaderSystem
 
 		// Uniforms
 		void SetMat4(const char* name, glm::mat4 value);
+		void SetMat3(const char* name, glm::mat3 value);
 		void SetVec(const char* name, Vector value);
 		void SetInt(const char* name, int value);
 		void SetUInt(const char* name, unsigned int value);

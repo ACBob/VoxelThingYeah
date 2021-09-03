@@ -30,6 +30,7 @@ void BOBJLoadModel(Model *m, const char *fp)
 
 	std::vector<Vector> vertPositions;
 	std::vector<Vector> uvCoords;
+	std::vector<Vector> normals;
 
 	while (token != NULL)
 	{
@@ -78,6 +79,26 @@ void BOBJLoadModel(Model *m, const char *fp)
 
 			uvCoords.push_back(uv);
 		}
+		// Vertex Normal
+		else if (strcmp(lineToken, "vn") == 0)
+		{
+			// vn x y z
+			// Let's try and absorb those next 3 numbers
+
+			// Bump it, removing the 'vn'
+			lineToken = strtok_r(NULL, " ", &linesaveptr);
+			int i = 0;
+
+			Vector v;
+			v.x = strtof(lineToken, NULL);
+			lineToken = strtok_r(NULL, " ", &linesaveptr);
+			v.y = strtof(lineToken, NULL);
+			lineToken = strtok_r(NULL, " ", &linesaveptr);
+			v.z = strtof(lineToken, NULL);
+			lineToken = strtok_r(NULL, " ", &linesaveptr);
+
+			normals.push_back(v);
+		}
 		// Face
 		else if (strcmp(lineToken, "f") == 0)
 		{
@@ -108,7 +129,7 @@ void BOBJLoadModel(Model *m, const char *fp)
 						vertPositions[vertIndex].x, 
 						vertPositions[vertIndex].y, 
 						vertPositions[vertIndex].z,
-						0,0,0,
+						normals[vertNormalIndex].x,normals[vertNormalIndex].y,normals[vertNormalIndex].z,
 						uvCoords[vertTexCoord].x, uvCoords[vertTexCoord].y
 					};
 				idxs[i] = vertIndex;
