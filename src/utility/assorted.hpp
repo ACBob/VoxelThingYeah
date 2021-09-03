@@ -4,6 +4,10 @@
 
 #include <cstring>
 
+#include "vector.hpp"
+
+#include <math.h>
+
 inline char *FlattenCharArray(char *array[], int offset, int len, char sep=' ')
 {
 	int l = 0;
@@ -27,3 +31,11 @@ inline char *FlattenCharArray(char *array[], int offset, int len, char sep=' ')
 
 #define DeclBaseClass(baseClass) \
 	typedef baseClass BaseClass
+
+
+inline void i1Dto3D(int i, int sizeX, int sizeY, int &x, int &y, int &z)
+{
+	z = round(i / (sizeX * sizeY));
+	y = round((i - z * sizeX * sizeY) / sizeX);
+	x = i - sizeX * (y + sizeY * z);
+}
