@@ -53,7 +53,7 @@ GUI::GUI(int screenW, int screenH) :
 		glBindVertexArray(0);
 	}
 
-	textTex = textureManager::LoadTexture("font.png");
+	textTex = materialSystem::LoadTexture("font.png");
 	textShader = shaderSystem::LoadShader("shaders/text.vert", "shaders/text.frag");
 }
 

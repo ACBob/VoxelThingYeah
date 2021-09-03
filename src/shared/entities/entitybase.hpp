@@ -43,17 +43,17 @@ class EntityBase
 		// Renders our Model.
 		virtual void Render()
 		{
-			mdl.position = position;
-			mdl.rotation = rotation;
-			mdl.Render(); 
+			mdl->position = position;
+			mdl->rotation = rotation;
+			mdl->Render(); 
 		}
 
 		virtual void SetShader(Shader* shader)
 		{
-			mdl.SetShader(shader);
+			mdl->SetShader(shader);
 		}
 
-		Model mdl;
+		Model *mdl;
 #endif
 
 		std::string name;
