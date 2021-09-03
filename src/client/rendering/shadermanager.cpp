@@ -10,6 +10,8 @@
 
 #include "physfs.h"
 
+std::vector<Shader*> shaderSystem::loadedShaders;
+
 Shader::Shader(const char* vs, const char* fs)
 {
 	// TODO: Replace with FileSystem
@@ -113,12 +115,12 @@ void Shader::Use()
 	glUseProgram(id);
 }
 
-ShaderManager::ShaderManager()
+void shaderSystem::Init()
 {
 }
 
 // TODO: Uniform Buffer
-void ShaderManager::SetUniforms(glm::mat4 &view, glm::mat4 &projection, glm::mat4 &screen, unsigned int ticks, int timeOfDay, Vector sunAngle)
+void shaderSystem::SetUniforms(glm::mat4 &view, glm::mat4 &projection, glm::mat4 &screen, unsigned int ticks, int timeOfDay, Vector sunAngle)
 {
 	for (Shader *s : loadedShaders)
 	{
@@ -132,14 +134,14 @@ void ShaderManager::SetUniforms(glm::mat4 &view, glm::mat4 &projection, glm::mat
 	}
 }
 
-Shader *ShaderManager::LoadShader(const char* vs, const char* fs)
+Shader *shaderSystem::LoadShader(const char* vs, const char* fs)
 {
 	Shader *shader = new Shader(vs, fs);
 	loadedShaders.push_back(shader);
 
 	return loadedShaders.back();
 }
-ShaderManager::~ShaderManager()
+void shaderSystem::UnInit()
 {
 	// Unload shaders
 	for (Shader *s : loadedShaders)

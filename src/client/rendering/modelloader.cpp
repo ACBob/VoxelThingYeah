@@ -11,7 +11,7 @@
 
 #include "vector.hpp"
 
-void LoadModel(Model &m, const char *fp)
+void BOBJLoadModel(Model *m, const char *fp)
 {
 	bool succeed;
 	int64_t l;
@@ -60,7 +60,7 @@ void LoadModel(Model &m, const char *fp)
 
 			// printf("Vert: %f,%f,%f\n", v.x, v.y, v.z);
 			vertPositions.push_back(v);
-			m.vertices.push_back({});
+			m->vertices.push_back({});
 		}
 		// Vertex Tex(?), U/V Coordinate!!
 		else if (strcmp(lineToken, "vt") == 0)
@@ -103,7 +103,7 @@ void LoadModel(Model &m, const char *fp)
 				seg = strtok_r(NULL, "/", &segPtr);
 				int vertTexCoord = atoi(lineToken) - 1;
 
-				m.vertices.at(vertIndex) =
+				m->vertices.at(vertIndex) =
 					{
 						vertPositions[vertIndex].x, 
 						vertPositions[vertIndex].y, 
@@ -124,7 +124,7 @@ void LoadModel(Model &m, const char *fp)
 			f.vv = idxs[1];
 			f.vvv = idxs[0];
 
-			m.faces.push_back(f);
+			m->faces.push_back(f);
 		}
 
 		skip:
@@ -134,5 +134,5 @@ void LoadModel(Model &m, const char *fp)
 	vertPositions.clear();
 	uvCoords.clear();
 
-	m.Update();
+	m->Update();
 }

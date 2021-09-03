@@ -1,5 +1,9 @@
-#include "model.hpp"
+#include "modelmanager.hpp"
 #include "utility/direction.hpp"
+
+#include "modelloader.hpp"
+
+std::vector<Model*> models::loadedModels;
 
 Model::Model(std::vector<Vertex> verts, std::vector<Face> faces) :
 	vertices(verts),
@@ -44,6 +48,24 @@ Texture *Model::GetTexture()
 	return tex;
 }
 
+Model *models::LoadModel(const char *fp)
+{
+	Model *m = new Model();
+	loadedModels.push_back(m);
+
+	BOBJLoadModel(m, fp);
+
+	return m;
+}
+
+void models::Init()
+{
+}
+void models::UnInit()
+{
+	for (Model *m : loadedModels)
+		delete m;
+}
 
 void GetCubeModel(Model &m, Vector size)
 {

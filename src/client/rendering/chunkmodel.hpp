@@ -2,7 +2,7 @@
 
 #include "utility/vector.hpp"
 #include "world/block.hpp"
-#include "model.hpp"
+#include "modelmanager.hpp"
 #include <vector>
 
 #pragma once

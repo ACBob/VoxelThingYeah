@@ -9,6 +9,8 @@
 
 #include "physfs.h"
 
+std::vector<Texture*> textureManager::loadedTextures;
+
 Texture::Texture(const char* path)
 		// TODO: Error Texture
 {
@@ -41,18 +43,18 @@ Texture::Texture(const char* path)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &image[0]);
 }
 
-TextureManager::TextureManager()
+void textureManager::Init()
 {
 }
 
-Texture *TextureManager::LoadTexture(const char* path)
+Texture *textureManager::LoadTexture(const char* path)
 {
 	Texture *tex = new Texture(path);
 	loadedTextures.push_back(tex);
 
 	return loadedTextures.back();
 }
-TextureManager::~TextureManager()
+void textureManager::UnInit()
 {
 	// Unload textures
 	for (Texture *t : loadedTextures)

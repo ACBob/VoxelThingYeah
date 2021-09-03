@@ -4,22 +4,23 @@
 
 #include "utility/types.hpp"
 
-class Texture
+namespace textureManager
 {
-	public:
-		Texture(const char* path);
+	class Texture
+	{
+		public:
+			Texture(const char* path);
 
-		std::vector<unsigned char> image;
-		unsigned int width, height, id;
+			std::vector<unsigned char> image;
+			unsigned int width, height, id;
+	};
+
+	void Init();
+	void UnInit();
+
+	Texture* LoadTexture(const char* path);
+
+	extern std::vector<Texture*> loadedTextures;
 };
 
-class TextureManager
-{
-	public:
-		TextureManager();
-		~TextureManager();
-
-		Texture* LoadTexture(const char* path);
-
-		std::vector<Texture*> loadedTextures;
-};
+using Texture = textureManager::Texture;

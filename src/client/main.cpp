@@ -99,17 +99,21 @@ int main (int argc, char* args[]) {
 
 	con_info("*drumroll* and now... Your feature entertainment... Our internal rendering systems! :)");
 	con_info("Load default shaders");
-	ShaderManager shaderMan;
-	Shader* diffuseShader = shaderMan.LoadShader("shaders/generic.vert", "shaders/generic.frag");
-	Shader* skyShader = shaderMan.LoadShader("shaders/sky.vert", "shaders/sky.frag");
-	Shader* unlitShader = shaderMan.LoadShader("shaders/generic.vert", "shaders/unlit.frag");
+	shaderSystem::Init(); atexit(shaderSystem::UnInit);
+
+	Shader* diffuseShader = shaderSystem::LoadShader("shaders/generic.vert", "shaders/generic.frag");
+	Shader* skyShader = shaderSystem::LoadShader("shaders/sky.vert", "shaders/sky.frag");
+	Shader* unlitShader = shaderSystem::LoadShader("shaders/generic.vert", "shaders/unlit.frag");
 
 	con_info("Load default textures");
-	TextureManager texMan;
-	Texture* terrainPng = texMan.LoadTexture("terrain.png");
-	Texture* crosshairTex = texMan.LoadTexture("crosshair.png");
-	Texture* testTexture = texMan.LoadTexture("test.png");
-	Texture* sunTexture = texMan.LoadTexture("sun.png");
+	textureManager::Init(); atexit(textureManager::UnInit);
+
+	Texture* terrainPng = textureManager::LoadTexture("terrain.png");
+	Texture* crosshairTex = textureManager::LoadTexture("crosshair.png");
+	Texture* testTexture = textureManager::LoadTexture("test.png");
+	Texture* sunTexture = textureManager::LoadTexture("sun.png");
+
+	models::Init(); atexit(models::UnInit);
 
 	con_info("Create Client...");
 	World localWorld(diffuseShader, diffuseShader);
@@ -152,12 +156,11 @@ int main (int argc, char* args[]) {
 	skyboxModel.SetShader(skyShader);
 	skyboxModel.SetTexture(testTexture);
 
-	Model skyboxSunModel;
-	LoadModel(skyboxSunModel, "models/sun.obj");
-	skyboxSunModel.SetTexture(sunTexture);
-	skyboxSunModel.SetShader(unlitShader);
+	Model *skyboxSunModel = models::LoadModel("models/sun.obj");
+	skyboxSunModel->SetTexture(sunTexture);
+	skyboxSunModel->SetShader(unlitShader);
 
-	GUI gui(&texMan, &shaderMan, scr_width->GetInt(), scr_height->GetInt());
+	GUI gui(scr_width->GetInt(), scr_height->GetInt());
 	gui.inputMan = &inputMan;
 
 	int64_t then = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
@@ -186,16 +189,16 @@ int main (int argc, char* args[]) {
 
 			Vector v = plyr.camera.pos + plyr.camera.forward;
 			glm::mat4 view = glm::lookAt(glm::vec3(plyr.camera.pos.x, plyr.camera.pos.y, plyr.camera.pos.z), glm::vec3(v.x, v.y, v.z), glm::vec3(VEC_UP.x, VEC_UP.y, VEC_UP.z));
-			shaderMan.SetUniforms(view, projection, screen, window.GetMS(), localWorld.timeOfDay, sunForward);
+			shaderSystem::SetUniforms(view, projection, screen, window.GetMS(), localWorld.timeOfDay, sunForward);
 
 			glDisable(GL_DEPTH_TEST); // Skybox
 			{
 				skyboxModel.position = plyr.camera.pos;
 				skyboxModel.Render();
 
-				skyboxSunModel.position = skyboxModel.position;
-				skyboxSunModel.rotation = Vector(0,0,-sunAngle);
-				skyboxSunModel.Render();
+				skyboxSunModel->position = skyboxModel.position;
+				skyboxSunModel->rotation = Vector(0,0,-sunAngle);
+				skyboxSunModel->Render();
 			}
 			glEnable(GL_DEPTH_TEST);
 

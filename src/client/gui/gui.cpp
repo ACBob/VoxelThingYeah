@@ -20,7 +20,7 @@
 // I am not supporting weird configurations
 #define TEXTTILES 16
 
-GUI::GUI(TextureManager *texMan, ShaderManager *shaderMan, int screenW, int screenH) :
+GUI::GUI(int screenW, int screenH) :
 	screenCentre((screenW * 0.5) / GUIUNIT, (screenH * 0.5) / GUIUNIT),
 	screenDimensions(screenW, screenH),
 	mouseState(IN_NO_MOUSE),
@@ -53,8 +53,8 @@ GUI::GUI(TextureManager *texMan, ShaderManager *shaderMan, int screenW, int scre
 		glBindVertexArray(0);
 	}
 
-	textTex = texMan->LoadTexture("font.png");
-	textShader = shaderMan->LoadShader("shaders/text.vert", "shaders/text.frag");
+	textTex = textureManager::LoadTexture("font.png");
+	textShader = shaderSystem::LoadShader("shaders/text.vert", "shaders/text.frag");
 }
 
 GUI::~GUI()

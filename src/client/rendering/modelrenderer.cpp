@@ -1,5 +1,5 @@
 #include "modelrenderer.hpp"
-#include "model.hpp"
+#include "modelmanager.hpp"
 #include "chunkmodel.hpp"
 
 #include <glm/glm.hpp>

@@ -6,7 +6,7 @@
 #include "world/world.hpp"
 
 #ifdef CLIENTEXE
-#include "rendering/model.hpp"
+#include "rendering/modelmanager.hpp"
 #include "rendering/shadermanager.hpp"
 #endif
 

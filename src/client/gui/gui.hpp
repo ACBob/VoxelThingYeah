@@ -36,7 +36,7 @@ class GUI
 		Texture* textTex = nullptr;
 		Shader *textShader = nullptr;
 	public:
-		GUI(TextureManager *texMan, ShaderManager *shaderMan, int screenW, int screenH);
+		GUI(int screenW, int screenH);
 		~GUI();
 
 		// TODO: Put this in a generic utility class and then make all atlas-based things (i.e text, blocks) inherit it
