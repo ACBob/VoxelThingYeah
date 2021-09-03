@@ -19,6 +19,7 @@ class EntityPlayer : public EntityBase
 			BaseClass::Spawn();
 #ifdef CLIENTEXE
 			mdl = modelSystem::LoadModel("models/player.obj");
+			mdl->SetTexture(materialSystem::LoadTexture("player.png"));
 #endif
 		};
 		void Kill()
