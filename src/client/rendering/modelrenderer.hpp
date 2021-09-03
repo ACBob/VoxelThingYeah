@@ -13,7 +13,7 @@ class ModelRenderer {
 		// Updated the index buffer and vertex buffer
 		void Populate(void *mdl);
 
-		void Render(Vector pos, Vector rot, Shader *shader, Texture *tex);
+		void Render(Vector pos, Vector rot, Vector size, Shader *shader, Texture *tex);
 	
 	private:
 		// Vertex Buffer

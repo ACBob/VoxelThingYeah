@@ -41,8 +41,9 @@ namespace modelSystem
 			std::vector<Vertex> vertices;
 			std::vector<Face> faces;
 
-			Vector position;
-			Vector rotation;
+			Vector position = {0,0,0};
+			Vector rotation = {0,0,0};
+			Vector size = {1,1,1};
 
 			private:
 				Shader *shader = nullptr;

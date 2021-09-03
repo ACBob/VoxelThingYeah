@@ -160,6 +160,10 @@ int main (int argc, char* args[]) {
 	skyboxSunModel->SetTexture(sunTexture);
 	skyboxSunModel->SetShader(unlitShader);
 
+	Model *suzanne = modelSystem::LoadModel("models/suzanne.obj");
+	suzanne->SetTexture(testTexture);
+	suzanne->SetShader(diffuseShader);
+
 	GUI gui(scr_width->GetInt(), scr_height->GetInt());
 	gui.inputMan = &inputMan;
 
@@ -208,9 +212,10 @@ int main (int argc, char* args[]) {
 
 			localWorld.Render();
 
-			// skyboxSunModel.position = v;
-			// skyboxSunModel.rotation = Vector(0,0,0);
-			// skyboxSunModel.Render();
+			suzanne->position = plyr.camera.pos + plyr.camera.forward * 3;
+			suzanne->rotation = {(float)(90.0f * sin(i / 100.0f)), (float)(360.0f * sin(i / 100.0f + 2)), (float)(90.0f * sin(i / 100.0f + 1))};
+			suzanne->size = {(float)(1.5f * sin(i / 100.0f)), (float)(1.5f * sin(i / 100.0f + 2)), (float)(1.5f * sin(i / 100.0f + 1))};
+			suzanne->Render();
 
 			char *buf = new char[100];
 			snprintf(buf, 100, "Connected to \"%s\"", cl_servername->GetString());

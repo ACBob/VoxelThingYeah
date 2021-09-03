@@ -60,11 +60,12 @@ ModelRenderer::~ModelRenderer()
 	glDeleteBuffers(1, &ebo);
 }
 
-void ModelRenderer::Render(Vector pos, Vector rot, Shader *shader, Texture *tex)
+void ModelRenderer::Render(Vector pos, Vector rot, Vector size, Shader *shader, Texture *tex)
 {
 
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, {pos.x, pos.y, pos.z});
+	model = glm::scale(model, {size.x, size.y, size.z});
 	model = glm::rotate(
 		glm::rotate(
 			glm::rotate(

@@ -28,7 +28,7 @@ void Model::Render()
 	if (vertices.size() == 0 || faces.size() == 0) return;
 
 	shader->Use();
-	renderer->Render(position, rotation, shader, tex);
+	renderer->Render(position, rotation, size, shader, tex);
 }
 
 void Model::SetShader(Shader *shader)
