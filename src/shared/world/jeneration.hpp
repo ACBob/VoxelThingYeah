@@ -2,6 +2,8 @@
 #include "block.hpp"
 #include "chunk.hpp"
 
+#pragma once
+
 class OverworldJeneration
 {
 	public:
