@@ -212,11 +212,9 @@ void World::WorldTick(int tickN)
 
 			blocktype_t blockType = chunk->blocks[i].blockType;
 
-			// Every fifth tick
-			// TODO: Search for all water THEN put it into a list easy to handle later (so we don't progressively fill existing water)
-			// TODO: maybe liquid type? could be slow...
+			// Every liquidSpeedth tick
 			BlockFeatures bF = GetBlockFeatures(blockType);
-			if (tickN % 5 == 0 && bF.isLiquid)
+			if (bF.isLiquid && tickN % bF.liquidSpeed == 0)
 			{
 				liquidBlocks.push_back(Vector(x,y,z));
 			}

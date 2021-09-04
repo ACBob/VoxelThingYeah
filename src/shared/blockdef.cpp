@@ -40,6 +40,7 @@ BlockFeatures GetBlockFeatures(blocktype_t blockType)
 	bF.walkable = true;
 	bF.floodable = false;
 	bF.isLiquid = false;
+	bF.liquidSpeed = 0;
 	bF.rule = OBSCURERULE_ALWAYS;
 
 	switch(blockType)
@@ -64,6 +65,7 @@ BlockFeatures GetBlockFeatures(blocktype_t blockType)
 			bF.walkable = false;
 			bF.solid = false;
 			bF.isLiquid = true;
+			bF.liquidSpeed = blockType == LAVA ? 7 : 5;
 			bF.rule = OBSCURERULE_SIMILAR;
 		break;
 		

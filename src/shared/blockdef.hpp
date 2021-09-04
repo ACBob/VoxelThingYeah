@@ -52,6 +52,8 @@ struct BlockFeatures
 	bool floodable;
 	// IS a liquid
 	bool isLiquid;
+	// Every THIS tick, flow
+	int liquidSpeed;
 	// Obscure Rule
 	blockobscurerule_t rule;
 };
