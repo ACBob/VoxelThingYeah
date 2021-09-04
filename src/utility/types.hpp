@@ -1,7 +1,13 @@
 #ifdef __linux__
 
 #include <stdint.h>
+#include <inttypes.h>
 
 #else
-#error TODO
+
+#include <stdint.h>
+#include <inttypes.h>
+
+using uint = unsigned int;
+
 #endif
