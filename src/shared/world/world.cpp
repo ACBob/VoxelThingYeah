@@ -204,6 +204,7 @@ void World::WorldTick(int tickN)
 	{
 		// Generally we should avoid rebuilding the universe every tick
 		bool rebuild = false;
+		std::vector<Vector> liquidBlocks = {};
 		for (int i = 0; i < (CHUNKSIZE_X*CHUNKSIZE_Y*CHUNKSIZE_Z); i ++)
 		{
 			int x,y,z;
@@ -214,31 +215,38 @@ void World::WorldTick(int tickN)
 			// Every fifth tick
 			// TODO: Search for all water THEN put it into a list easy to handle later (so we don't progressively fill existing water)
 			// TODO: maybe liquid type? could be slow...
-			if (tickN % 5 == 0 && blockType == WATER)
+			BlockFeatures bF = GetBlockFeatures(blockType);
+			if (tickN % 5 == 0 && bF.isLiquid)
 			{
-				for (int i = 0; i < 5; i++)
-				{
-					if (i == UP) i = DOWN;
+				liquidBlocks.push_back(Vector(x,y,z));
+			}
+		}
 
-					Vector dir = DirectionVector[i];
-					Block *b = chunk->GetBlockAtLocal(Vector(x,y,z)+dir);
-					if (b == nullptr)
-					{
-						// It's not in *this* chunk
-						Chunk *oChunk = chunk->Neighbour((Direction)i);
-						if (oChunk == nullptr)
-							continue; // Ok yeah it's outside reality
-						Vector p = Vector(x + dir.x,y + dir.y,z + dir.z) + (dir * -16);
-						b = oChunk->GetBlockAtLocal(p);
-						if (b == nullptr) 
-							continue; //uh oh
-					}
-					BlockFeatures bF = GetBlockFeatures(b->blockType);
-					if (bF.floodable)
-					{
-						b->blockType = WATER;
-						rebuild = true;
-					}
+		for (Vector pos : liquidBlocks)
+		{
+			blocktype_t blockType = chunk->GetBlockAtLocal(pos)->blockType;
+			for (int i = 0; i < 5; i++)
+			{
+				if (i == UP) i = DOWN;
+
+				Vector dir = DirectionVector[i];
+				Block *b = chunk->GetBlockAtLocal(Vector(pos.x,pos.y,pos.z)+dir);
+				if (b == nullptr)
+				{
+					// It's not in *this* chunk
+					Chunk *oChunk = chunk->Neighbour((Direction)i);
+					if (oChunk == nullptr)
+						continue; // Ok yeah it's outside reality
+					Vector p = Vector(pos.x + dir.x,pos.y + dir.y,pos.z + dir.z) + (dir * -16);
+					b = oChunk->GetBlockAtLocal(p);
+					if (b == nullptr) 
+						continue; //uh oh
+				}
+				BlockFeatures bF = GetBlockFeatures(b->blockType);
+				if (bF.floodable)
+				{
+					b->blockType = blockType;
+					rebuild = true;
 				}
 			}
 		}

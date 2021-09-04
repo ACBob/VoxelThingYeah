@@ -18,6 +18,7 @@ enum blocktype_t {
 	LOG      = 8,
 	LEAVES   = 9,
 	WATER    = 10,
+	LAVA     = 11,
 };
 
 enum blockmaterial_t {
@@ -49,6 +50,8 @@ struct BlockFeatures
 	bool breakable;
 	// Can replace with a liquid
 	bool floodable;
+	// IS a liquid
+	bool isLiquid;
 	// Obscure Rule
 	blockobscurerule_t rule;
 };

@@ -82,7 +82,7 @@ void EntityPlayer::UpdateClient(World *clientSideWorld)
 		selectedBlockType = blocktype_t(selectedBlockType + 1);
 		if (selectedBlockType == blocktype_t::BEDROCK)
 			selectedBlockType = blocktype_t(selectedBlockType + 1);
-		if (selectedBlockType > blocktype_t::WATER)
+		if (selectedBlockType > blocktype_t::LAVA)
 			selectedBlockType = blocktype_t::STONE;
 	}
 	else if (inputMan->mouseState & IN_WHEEL_DOWN)
@@ -91,7 +91,7 @@ void EntityPlayer::UpdateClient(World *clientSideWorld)
 		if (selectedBlockType == blocktype_t::BEDROCK)
 			selectedBlockType = blocktype_t(selectedBlockType - 1);
 		if (selectedBlockType <= blocktype_t::AIR)
-			selectedBlockType = blocktype_t::WATER;
+			selectedBlockType = blocktype_t::LAVA;
 	}
 }
 #endif

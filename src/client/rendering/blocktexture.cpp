@@ -53,5 +53,8 @@ BlockTexture GetDefaultBlockTextureSide(blocktype_t type, Direction side)
 		case WATER:
 			return {10,0, 1,1};
 		break;
+		case LAVA:
+			return {11,0, 1,1};
+		break;
 	}
 }
