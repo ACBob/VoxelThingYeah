@@ -22,7 +22,7 @@ void OverworldJeneration::Generate(Chunk *c)
 		Vector WorldPosition = c->PosToWorld(Vector(x,y,z));
 
 		// Make the block aware of our existence
-		c->blocks[i].chunk = this;
+		c->blocks[i].chunk = c;
 
 		float noiseData = 1 + fnlGetNoise3D(&noise, WorldPosition.x,WorldPosition.y,WorldPosition.z);
 		float percentToTopWorld = 1.0f - (WorldPosition.y/32.0f);
