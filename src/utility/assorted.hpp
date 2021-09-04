@@ -35,6 +35,10 @@ inline char *FlattenCharArray(char *array[], int offset, int len, char sep=' ')
 
 inline void i1Dto3D(int i, int sizeX, int sizeY, int &x, int &y, int &z)
 {
+	// z = round(i / (CHUNKSIZE_X * CHUNKSIZE_Y));
+	// y = round((i - z * CHUNKSIZE_X * CHUNKSIZE_Y) / CHUNKSIZE_X);
+	// x = i - CHUNKSIZE_X * (y + CHUNKSIZE_Y * z)
+
 	z = round(i / (sizeX * sizeY));
 	y = round((i - z * sizeX * sizeY) / sizeX);
 	x = i - sizeX * (y + sizeY * z);

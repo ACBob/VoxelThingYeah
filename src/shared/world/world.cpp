@@ -61,7 +61,7 @@ Chunk* World::GetChunkGenerateAtWorldPos(Vector pos)
 		return c;
 	
 	c = new Chunk();
-	c->position = pos;
+	c->position = (pos / Vector(CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z)).Floor();
 	c->chunkMan = this;
 #ifdef CLIENTEXE
 	c->mdl.position = c->GetPosInWorld();
@@ -266,7 +266,7 @@ World::PortableChunkRepresentation World::GetWorldRepresentation(Vector pos)
 	// 	return crep;
 	// }
 
-	Chunk *c = GetChunkGenerateAtWorldPos(pos);
+	Chunk *c = GetChunkGenerateAtWorldPos(pos * Vector(CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z));
 	crep.x = c->position.x;
 	crep.y = c->position.y;
 	crep.z = c->position.z;
@@ -281,7 +281,7 @@ World::PortableChunkRepresentation World::GetWorldRepresentation(Vector pos)
 
 void World::UsePortable(PortableChunkRepresentation rep)
 {
-	Chunk *c = GetChunkGenerateAtWorldPos(Vector(rep.x * 16, rep.y * 16, rep.z * 16));
+	Chunk *c = GetChunkGenerateAtWorldPos(Vector(rep.x * CHUNKSIZE_X, rep.y * CHUNKSIZE_Y, rep.z * CHUNKSIZE_Z));
 	if (c == nullptr)
 	{
 		con_error("WEE WOO WEE WOO");

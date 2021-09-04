@@ -268,12 +268,14 @@ namespace network
 
 		for (Client *c : players)
 		{
-			if (c->loadedChunkIDX > (4*4*4) || c->nextChunkLoadTick > currentTick)
+			if (c->loadedChunkIDX > (16*16*16) || c->nextChunkLoadTick > currentTick)
 				continue;
 			
-			int x, y, z;
-			i1Dto3D(c->loadedChunkIDX, 4, 4, x,y,z);
-			Vector p(x - 2,y - 2,z - 2);
+			int x = 0;
+			int y = 0;
+			int z = 0;
+			i1Dto3D(c->loadedChunkIDX, 16, 16, x,y,z);
+			Vector p(x - 8,y - 8,z - 8);
 
 			protocol::messages::SendServerChunkData(c->peer, &world, p);
 

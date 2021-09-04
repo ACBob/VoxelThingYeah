@@ -55,7 +55,7 @@ class World {
 		
 		struct PortableChunkRepresentation
 		{
-			uint32_t x,y,z;
+			int32_t x,y,z;
 			uint32_t blocks[CHUNKSIZE_X*CHUNKSIZE_Y*CHUNKSIZE_Z];
 		};
 		PortableChunkRepresentation GetWorldRepresentation(Vector pos);
