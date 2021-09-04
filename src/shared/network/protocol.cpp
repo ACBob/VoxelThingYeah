@@ -108,8 +108,8 @@ namespace protocol
 				bufAccess >> numBlocks;
 				bufAccess >> crep.blocks;
 
-				con_info("ChunkData at <%d,%d,%d>", crep.x, crep.y, crep.z);
-				con_info("%d Blocks", numBlocks);
+				// con_info("ChunkData at <%d,%d,%d>", crep.x, crep.y, crep.z);
+				// con_info("%d Blocks", numBlocks);
 
 				// Woot, data!
 				client->localWorld->UsePortable(crep);
