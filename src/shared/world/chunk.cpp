@@ -7,6 +7,8 @@
 #ifdef CLIENTEXE
 Chunk::Chunk()
 {
+	for (int i = 0; i < CHUNKSIZE_X*CHUNKSIZE_Y*CHUNKSIZE_Z; i++)
+		blocks[i].blockType = blocktype_t::AIR;
 }
 Chunk::~Chunk()
 {
@@ -14,46 +16,13 @@ Chunk::~Chunk()
 #elif SERVEREXE
 Chunk::Chunk()
 {
+	for (int i = 0; i < CHUNKSIZE_X*CHUNKSIZE_Y*CHUNKSIZE_Z; i++)
+		blocks[i].blockType = blocktype_t::AIR;
 }
 Chunk::~Chunk()
 {
 }
 #endif
-
-void Chunk::Generate(fnl_state noise)
-{
-	// FOR NOW: start off filled with blocks
-	for (int i = 0; i < sizeof(blocks) / sizeof(Block); i++)
-	{
-		// blocks[i].blockType = blocktype_t(random() % 4);
-		int x, y, z;
-		CHUNK1D_TO_3D(i, x, y, z);
-		Vector Worldposition = PosToWorld(Vector(x,y,z));
-
-		// Make the block aware of our existence
-		blocks[i].chunk = this;
-
-#ifdef SERVEREXE
-		float noiseData = 1 + fnlGetNoise3D(&noise, Worldposition.x,Worldposition.y,Worldposition.z);
-		float percentToTopWorld = 1 - ((32 + Worldposition.y) / 64.0f);
-		noiseData *= (percentToTopWorld * 1.0f);
-
-
-		if (Worldposition.y == 8)
-			blocks[i].blockType = noiseData > 0.2 ? blocktype_t::GRASS : blocktype_t::AIR;
-		else if (Worldposition.y == -32)
-			blocks[i].blockType = blocktype_t::BEDROCK;
-		else if (Worldposition.y < 6)
-			blocks[i].blockType = noiseData > 0.2 ? blocktype_t::STONE : blocktype_t::AIR;
-		else if (Worldposition.y < 8)
-			blocks[i].blockType = noiseData > 0.2 ? blocktype_t::DIRT : blocktype_t::AIR;
-		else
-			blocks[i].blockType = blocktype_t::AIR;
-#elif CLIENTEXE
-		blocks[i].blockType = blocktype_t::AIR;
-#endif
-	}
-}
 
 Chunk* Chunk::Neighbour(Direction dir)
 {

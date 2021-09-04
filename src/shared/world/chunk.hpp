@@ -24,8 +24,6 @@ class Chunk
 	public:
 		Chunk();
 		~Chunk();
-		
-		void Generate(fnl_state noise);
 
 		Chunk* Neighbour(Direction dir);
 

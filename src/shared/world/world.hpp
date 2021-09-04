@@ -10,7 +10,7 @@
 #include "world/block.hpp"
 #include "physics.hpp"
 
-#include "fastnoise.h"
+#include "jeneration.hpp"
 
 #pragma once
 
@@ -79,7 +79,7 @@ class World {
 
 		std::vector<Chunk*> chunks;
 
-		fnl_state noiseState;
-
 		int timeOfDay = 6890;
+
+		OverworldJeneration jenerator;
 };

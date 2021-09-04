@@ -20,14 +20,10 @@ World::World()
 {
 	chunks = {};
 
-	noiseState = fnlCreateState();
-	noiseState.noise_type = FNL_NOISE_OPENSIMPLEX2;
-	noiseState.frequency = 0.025;
-
 	// Now that all the chunks exist, generate and rebuild their models
 	for (Chunk *c : chunks)
 	{
-		c->Generate(noiseState);
+		jenerator.Generate(c);
 	}
 #ifdef CLIENTEXE
 	for (Chunk *c : chunks)
@@ -46,11 +42,10 @@ World::~World()
 // Return in good faith that it's a valid position
 Chunk* World::ChunkAtChunkPos(Vector pos)
 {
-	if (!ValidChunkPos(pos))
-		return nullptr;
-
 	for (Chunk* c : chunks)
 		if (c->position == pos) return c;
+	
+	return nullptr;
 }
 
 // Tries to get a chunk and generates a new one if it can't find one
@@ -67,7 +62,7 @@ Chunk* World::GetChunkGenerateAtWorldPos(Vector pos)
 	c->mdl.position = c->GetPosInWorld();
 	c->mdl.SetShader(worldShader);
 #endif
-	c->Generate(noiseState);
+	jenerator.Generate(c);
 
 	chunks.push_back(c);
 
