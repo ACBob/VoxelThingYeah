@@ -27,7 +27,7 @@ namespace protocol
 		void SendServerChunkData    (ENetPeer *peer, World *world, Vector pos)
 		{
 			World::PortableChunkRepresentation crep;
-			crep = world->GetWorldRepresentation(Vector(0));
+			crep = world->GetWorldRepresentation(pos);
 
 			ServerPacket p;
 			p.type = ServerPacket::CHUNKDATA;

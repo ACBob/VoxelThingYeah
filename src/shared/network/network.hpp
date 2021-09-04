@@ -59,6 +59,9 @@ namespace network
 			ENetPeer *peer = nullptr;
 			EntityPlayer *entity = nullptr;
 			std::string username;
+
+			int loadedChunkIDX = 0;
+			unsigned int nextChunkLoadTick = 0;
 	};
 #endif
 
@@ -92,6 +95,8 @@ namespace network
 			void KickPlayer(Client *c, const char *reason);
 			void KickPlayer(const char *str, const char *reason);
 			void KickPlayer(ENetPeer *p, const char *reason);
+
+			unsigned int currentTick;
 
 		private:
 			ENetAddress addr;

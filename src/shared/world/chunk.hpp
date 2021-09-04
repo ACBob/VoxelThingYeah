@@ -19,17 +19,6 @@
 
 #pragma once
 
-class ChunkPos
-{
-	public:
-		ChunkPos(Vector pos);
-
-		// Converts it to block coordinates
-		Vector ToWorld();
-
-		Vector pos;
-};
-
 class Chunk
 {
 	public:
@@ -40,7 +29,11 @@ class Chunk
 
 		Chunk* Neighbour(Direction dir);
 
-		ChunkPos worldPos;
+		Vector position;
+		Vector GetPosInWorld()
+		{
+			return position * Vector(CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z);
+		}
 
 		Block* GetBlockAtLocal(Vector pos);
 

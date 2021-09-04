@@ -53,7 +53,7 @@ int main (int argc, char* args[]) {
 	con_info("Begin server main loop...");
 	int64_t then = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
 	int64_t now = then;
-	int i = 0;
+	unsigned int i = 0;
 	while (true)
 	{
 		now = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
@@ -63,10 +63,9 @@ int main (int argc, char* args[]) {
 		{
 			then = now + sv_tickms->GetInt();
 			i++;
-
-
 			// Networking
 			server.Update();
+			server.currentTick = i;
 
 			// World
 			server.world.WorldTick(i);

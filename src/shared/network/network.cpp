@@ -261,9 +261,24 @@ namespace network
 			if (c->outdated)
 			{
 				for (Client *cl : players)
-					protocol::messages::SendServerChunkData(cl->peer, &world, c->worldPos.ToWorld());
+					protocol::messages::SendServerChunkData(cl->peer, &world, c->position);
 				c->outdated = false;
 			}
+		}
+
+		for (Client *c : players)
+		{
+			if (c->loadedChunkIDX > (4*4*4) || c->nextChunkLoadTick > currentTick)
+				continue;
+			
+			int x, y, z;
+			i1Dto3D(c->loadedChunkIDX, 4, 4, x,y,z);
+			Vector p(x - 2,y - 2,z - 2);
+
+			protocol::messages::SendServerChunkData(c->peer, &world, p);
+
+			c->nextChunkLoadTick = currentTick + 5;
+			c->loadedChunkIDX ++;
 		}
 		
 	}

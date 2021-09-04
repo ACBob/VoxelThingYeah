@@ -4,32 +4,15 @@
 
 #include "world.hpp"
 
-
-ChunkPos::ChunkPos(Vector pos)
-{
-	this->pos = pos;
-}
-
-Vector ChunkPos::ToWorld()
-{
-	Vector g = Vector(pos);
-	g.x *= CHUNKSIZE_X;
-	g.y *= CHUNKSIZE_Y;
-	g.z *= CHUNKSIZE_Z;
-	return g;
-}
-
 #ifdef CLIENTEXE
-Chunk::Chunk() :
-	worldPos(Vector())
+Chunk::Chunk()
 {
 }
 Chunk::~Chunk()
 {
 }
 #elif SERVEREXE
-Chunk::Chunk() :
-	worldPos(Vector())
+Chunk::Chunk()
 {
 }
 Chunk::~Chunk()
@@ -74,7 +57,7 @@ void Chunk::Generate(fnl_state noise)
 
 Chunk* Chunk::Neighbour(Direction dir)
 {
-	Vector neighbourPos = worldPos.pos + DirectionVector[dir];
+	Vector neighbourPos = position + DirectionVector[dir];
 	return (reinterpret_cast<World*>(chunkMan))->ChunkAtChunkPos(neighbourPos);
 }
 
@@ -86,7 +69,7 @@ void Chunk::Render()
 
 void Chunk::RebuildMdl()
 {
-	BuildChunkModel(mdl, blocks, worldPos.ToWorld(), this);
+	BuildChunkModel(mdl, blocks, GetPosInWorld(), this);
 }
 #endif
 
@@ -94,7 +77,7 @@ void Chunk::RebuildMdl()
 // Intended to be used by in-chunk coords but doesn't throw a hissyfit if it's not
 Vector Chunk::PosToWorld(Vector pos)
 {
-	return worldPos.ToWorld() + pos;
+	return GetPosInWorld() + pos;
 }
 
 void Chunk::Update()

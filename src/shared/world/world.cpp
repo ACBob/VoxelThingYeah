@@ -50,7 +50,7 @@ Chunk* World::ChunkAtChunkPos(Vector pos)
 		return nullptr;
 
 	for (Chunk* c : chunks)
-		if (c->worldPos.pos == pos) return c;
+		if (c->position == pos) return c;
 }
 
 // Tries to get a chunk and generates a new one if it can't find one
@@ -61,10 +61,10 @@ Chunk* World::GetChunkGenerateAtWorldPos(Vector pos)
 		return c;
 	
 	c = new Chunk();
-	c->worldPos = pos;
+	c->position = pos;
 	c->chunkMan = this;
 #ifdef CLIENTEXE
-	c->mdl.position = c->worldPos.ToWorld();
+	c->mdl.position = c->GetPosInWorld();
 	c->mdl.SetShader(worldShader);
 #endif
 	c->Generate(noiseState);
@@ -88,7 +88,7 @@ Block *World::BlockAtWorldPos(Vector pos)
 	pos = pos.Floor();
 	Chunk *chunk = ChunkAtWorldPos(pos);
 	if (chunk == nullptr) return nullptr;
-	Vector localPos = (pos - chunk->worldPos.ToWorld());
+	Vector localPos = (pos - chunk->GetPosInWorld());
 
 	return chunk->GetBlockAtLocal(localPos);
 }
@@ -96,7 +96,7 @@ Block *World::BlockAtWorldPos(Vector pos)
 bool World::ValidChunkPos(const Vector pos)
 {
 	for (Chunk* c : chunks)
-		if (c->worldPos.pos == pos) return true;
+		if (c->position == pos) return true;
 	return false;
 }
 
@@ -167,7 +167,7 @@ bool World::TestAABBCollision(AABB col)
 
 		if (
 			col.TestCollide(
-				AABB(chunk->worldPos.ToWorld() + Vector(x,y,z), Vector(1,1,1), Vector(0))
+				AABB(chunk->GetPosInWorld() + Vector(x,y,z), Vector(1,1,1), Vector(0))
 			)
 		)
 			return true;
@@ -267,9 +267,9 @@ World::PortableChunkRepresentation World::GetWorldRepresentation(Vector pos)
 	// }
 
 	Chunk *c = GetChunkGenerateAtWorldPos(pos);
-	crep.x = c->worldPos.pos.x;
-	crep.y = c->worldPos.pos.y;
-	crep.z = c->worldPos.pos.z;
+	crep.x = c->position.x;
+	crep.y = c->position.y;
+	crep.z = c->position.z;
 
 	for (int j = 0; j < CHUNKSIZE_X*CHUNKSIZE_Y*CHUNKSIZE_Z; j++)
 	{
@@ -281,7 +281,7 @@ World::PortableChunkRepresentation World::GetWorldRepresentation(Vector pos)
 
 void World::UsePortable(PortableChunkRepresentation rep)
 {
-	Chunk *c = GetChunkGenerateAtWorldPos(Vector(rep.x, rep.y, rep.z));
+	Chunk *c = GetChunkGenerateAtWorldPos(Vector(rep.x * 16, rep.y * 16, rep.z * 16));
 	if (c == nullptr)
 	{
 		con_error("WEE WOO WEE WOO");
