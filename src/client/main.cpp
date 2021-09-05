@@ -248,7 +248,21 @@ int main (int argc, char* args[]) {
 			{
 				const char *chat = gui.TextInput(0, Vector(0,2));
 				if (chat != nullptr)
-					con_info("%s", chat);
+				{
+					protocol::messages::SendClientChatMessage(client.peer, chat);
+					chatting = false;
+					inputMan.inGui = false;
+				}
+			}
+
+			for (int i = 0; i < 5; i++)
+			{
+				int j = client.chatBuffer.size() - i;
+				if (j < 0 || j >= client.chatBuffer.size()) continue;
+				
+				std::string msg = client.chatBuffer.at(j);
+
+				gui.Label(msg.c_str(), Vector(0, 2+i));
 			}
 
 			snprintf(buf, 100, "<%.2f,%.2f,%.2f>", plyr.position.x, plyr.position.y, plyr.position.z);

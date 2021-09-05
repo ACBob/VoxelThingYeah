@@ -82,7 +82,14 @@ namespace protocol
 		}
 		void SendServerPlayerMessage(ENetPeer *peer, std::string username, std::string message)
 		{
+			ServerPacket p;
+			p.type = ServerPacket::CHATMESSAGE;
+			Archive<ArchiveBuf> bufAccess = p.GetAccess();
 
+			bufAccess << username;
+			bufAccess << message;
+
+			SendPacket(peer, p);			
 		}
 		void SendServerPlayerDisconnect   (ENetPeer *peer, bool isKick, std::string reason)
 		{
@@ -143,7 +150,12 @@ namespace protocol
 		}
 		void SendClientChatMessage        (ENetPeer *peer, std::string message)
 		{
-			
+			ClientPacket p;
+			p.type = ClientPacket::CHATMESSAGE;
+			Archive<ArchiveBuf> bufAccess = p.GetAccess();
+			bufAccess << message;
+
+			SendPacket(peer, p);
 		}
 		void SendClientLeave              (ENetPeer *peer)
 		{

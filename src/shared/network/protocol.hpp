@@ -69,7 +69,7 @@ struct ClientPacket : public NetworkPacket
 				message
 			}
 		*/
-		CHAT_MESSAGE = 0x03,
+		CHATMESSAGE = 0x03,
 		// Sent back to the server in response to KEEPALIVE
 		/*
 			Sorry nothing
@@ -161,7 +161,7 @@ struct ServerPacket : public NetworkPacket
 				message
 			}
 		*/
-		PLAYER_MESSAGE = 0x06,
+		CHATMESSAGE = 0x06,
 		// Tells the player we no longer serve their kind 'round these parts
 		// Can be sent as a kick (just set the flag) or a disconnect confirmation
 		// There isn't really much use for the regular disconnect confirmation as 

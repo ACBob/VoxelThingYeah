@@ -206,14 +206,16 @@ namespace protocol
 			}
 			break;
 
-			case ServerPacket::PLAYER_MESSAGE:
+			case ServerPacket::CHATMESSAGE:
 			{
 				std::string username;
 				std::string message;
 				bufAccess >> username;
 				bufAccess >> message;
 
-				// TODO:
+				con_info("%s: %s", username.c_str(), message.c_str());
+
+				client->chatBuffer.push_back(username + ": " + message);
 			}
 			break;
 
@@ -384,14 +386,19 @@ namespace protocol
 			}
 			break;
 
-			case ClientPacket::CHAT_MESSAGE:
+			case ClientPacket::CHATMESSAGE:
 			{
 				std::string message;
 				bufAccess >> message;
 
-				con_info("%s", message.c_str());
+				std::string username = server->ClientFromPeer(peer)->username;
 
-				// TODO:
+				con_info("%s: %s", username.c_str(), message.c_str());
+
+				for (network::Client *c : server->players)
+				{
+					messages::SendServerPlayerMessage(c->peer, username, message);
+				}
 			}
 			break;
 

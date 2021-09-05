@@ -46,6 +46,8 @@ namespace network
 			bool connected;
 			ENetPeer* peer;
 
+			std::vector<std::string> chatBuffer;
+
 		private:
 			ENetHost *enetHost = nullptr;
 			ENetAddress addr;
