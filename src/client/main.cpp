@@ -14,9 +14,9 @@
 #include "utility/assorted.hpp"
 #include "cvar_clientside.hpp"
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_syswm.h>
-#include <SDL2/SDL_keyboard.h>
+#include <SDL.h>
+#include <SDL_syswm.h>
+#include <SDL_keyboard.h>
 #include "sdlstuff/sdlwindow.hpp"
 #include <glad/glad.h>
 #include <glm/glm.hpp>

@@ -13,7 +13,7 @@ project(VoxelThingYeah VERSION 0.0.0)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Wno-unused-parameter -Wno-missing-field-initializers")
 
 if (WIN32)
-	set(CMAKE_CXX_FLAGS "-static -static-libgcc -static-libstdc++ -fpermissive ${CMAKE_CXX_FLAGS}")
+	set(CMAKE_CXX_FLAGS "-static-libgcc -static-libstdc++ ${CMAKE_CXX_FLAGS}")
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
@@ -25,6 +25,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 # TODO: windows :trollface:
 find_package(SDL2 REQUIRED)
 find_package(OpenAL REQUIRED)
+find_package(OpenGL REQUIRED)
 
 # LodePNG
 add_library(lodepng STATIC subprojects/lodepng/lodepng.cpp subprojects/lodepng/lodepng.h)
@@ -64,7 +65,7 @@ set(CLIENT_BIN "${PROJECT_NAME}_client")
 set(SERVER_BIN "${PROJECT_NAME}_server")
 
 add_executable(${CLIENT_BIN} ${gameClient_SRCS})
-target_link_libraries(${CLIENT_BIN} ${SDL2_LIBRARIES} ${OPENAL_LIBRARY} ${CMAKE_DL_LIBS} lodepng GL glm::glm physfs-static enet)
+target_link_libraries(${CLIENT_BIN} ${SDL2_LIBRARIES} ${OPENAL_LIBRARY} ${CMAKE_DL_LIBS} lodepng ${OPENGL_LIBRARIES} glm::glm physfs-static enet)
 target_compile_definitions(${CLIENT_BIN} PUBLIC CLIENTEXE)
 target_include_directories(${CLIENT_BIN} PRIVATE "${CMAKE_CURRENT_LIST_DIR}/src/client")
 
