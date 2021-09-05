@@ -141,6 +141,15 @@ namespace network
 				break;
 			}
 		}
+	
+		Vector cP = (localPlayer->position / Vector(CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z)).Floor();
+		for (Chunk *c : localWorld->chunks)
+		{
+			if ((c->position - cP).Magnitude() > 4)
+			{
+				localWorld->UnloadChunk(c->position);
+			}
+		}
 	}
 
 #elif SERVEREXE
@@ -268,6 +277,17 @@ namespace network
 
 		for (Client *c : players)
 		{
+			// Update chunk pos
+			// Unfortunate name
+			Vector cP = (c->entity->position / Vector(CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z)).Floor();
+			if (cP != c->chunkPos)
+			{
+				c->loadedChunkIDX = 0;
+				c->nextChunkLoadTick = currentTick;
+			}
+			c->chunkPos = cP;
+
+
 			if (c->loadedChunkIDX >= (4*4*4) || c->nextChunkLoadTick > currentTick)
 				continue;
 			
@@ -276,6 +296,8 @@ namespace network
 			int z = 0;
 			i1Dto3D(c->loadedChunkIDX, 4, 4, x,y,z);
 			Vector p(x - 2,y - 2,z - 2);
+
+			p = p + c->chunkPos;
 
 			protocol::messages::SendServerChunkData(c->peer, &world, p);
 

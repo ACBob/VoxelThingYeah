@@ -69,6 +69,22 @@ Chunk* World::GetChunkGenerateAtWorldPos(Vector pos)
 	return c;
 }
 
+void World::UnloadChunk(Vector pos)
+{
+	Chunk *c = ChunkAtChunkPos(pos);
+	if (c == nullptr)
+		return;
+	
+	for (auto i = chunks.begin(); i != chunks.end(); ++i)
+	{
+		if (*i == c)
+		{
+			chunks.erase(i);
+			return;
+		}
+	}
+}
+
 // Return in good faith that it's a valid position
 Chunk* World::ChunkAtWorldPos(Vector pos)
 {

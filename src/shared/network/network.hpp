@@ -62,6 +62,7 @@ namespace network
 
 			int loadedChunkIDX = 0;
 			unsigned int nextChunkLoadTick = 0;
+			Vector chunkPos; // the chunk we're in
 	};
 #endif
 

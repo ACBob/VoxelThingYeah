@@ -34,6 +34,9 @@ class World {
 		// Tries to get a chunk and generates a new one if it can't find one
 		Chunk* GetChunkGenerateAtWorldPos(Vector pos);
 
+		// Deletes the chunk at the chunk position
+		void UnloadChunk(Vector pos);
+
 		// Returns the block at the position in world coords
 		// The given position is rounded by floor() before being used
 		// If outside the world it returns a nullptr
