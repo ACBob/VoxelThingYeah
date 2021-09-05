@@ -111,7 +111,7 @@ void EntityPlayer::Tick()
 		velocity = velocity + (forward * 2.67);
 	else if(inputMan->inputState[INKEY_BACK])
 		velocity = velocity + (forward * -2.67);
-	else if(inputMan->inputState[INKEY_LEFT])
+	if(inputMan->inputState[INKEY_LEFT])
 		velocity = velocity + (right * -2.67);
 	else if(inputMan->inputState[INKEY_RIGHT])
 		velocity = velocity + (right * 2.67);
