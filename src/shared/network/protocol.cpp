@@ -128,9 +128,12 @@ namespace protocol
 				// Woot, data!
 				// TODO: make sure the server isn't being malicious
 				Block *b = client->localWorld->BlockAtWorldPos(Vector(x,y,z));
-				con_info("Update Block At <%f,%f,%f>", x,y,z);
-				b->blockType = blocktype_t(blockType);
-				b->Update();
+				if (b != nullptr)
+				{
+					con_info("Update Block At <%f,%f,%f>", x,y,z);
+					b->blockType = blocktype_t(blockType);
+					b->Update();
+				}
 			}
 			break;
 
