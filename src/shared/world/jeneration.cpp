@@ -6,10 +6,15 @@
 
 OverworldJeneration::OverworldJeneration()
 {
-	noise = fnlCreateState();
-	noise.seed = seed;
-	noise.noise_type = FNL_NOISE_OPENSIMPLEX2;
-	noise.frequency = 0.025;
+	baseNoise = fnlCreateState();
+	baseNoise.seed = seed;
+	baseNoise.noise_type = FNL_NOISE_OPENSIMPLEX2;
+	baseNoise.frequency = 0.025;
+
+	dirtNoise = fnlCreateState();
+	dirtNoise.seed = seed + 230;
+	dirtNoise.noise_type = FNL_NOISE_PERLIN;
+	dirtNoise.frequency = 0.0125;
 }
 
 void OverworldJeneration::GenBase(Chunk *c)
@@ -24,7 +29,7 @@ void OverworldJeneration::GenBase(Chunk *c)
 		// Make the block aware of our existence
 		c->blocks[i].chunk = c;
 
-		float noiseData = 1 + fnlGetNoise3D(&noise, WorldPosition.x,WorldPosition.y,WorldPosition.z);
+		float noiseData = 1 + fnlGetNoise3D(&baseNoise, WorldPosition.x,WorldPosition.y,WorldPosition.z);
 		float percentToTopSurface = 1.0f - (WorldPosition.y/32.0f);
 		noiseData *= percentToTopSurface;
 
@@ -40,8 +45,7 @@ void OverworldJeneration::BiomeBlocks(Chunk *c)
 	{
 		for (int z = 0; z < CHUNKSIZE_Z; z++)
 		{
-
-			int grassDepth = 3;
+			int grassDepth = 2 + (2 * (1+fnlGetNoise2D(&dirtNoise, x, z)));
 
 			// We follow down to -1 so we can alter the blocks in the chunk below
 			for (int y = CHUNKSIZE_Y; y > -1; y--)

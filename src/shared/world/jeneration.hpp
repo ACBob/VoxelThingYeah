@@ -15,7 +15,8 @@ class OverworldJeneration
 		void BiomeBlocks(Chunk *c);
 
 	private:
-		fnl_state noise;
+		fnl_state baseNoise;
+		fnl_state dirtNoise;
 
 		int seed = 69;
 };
