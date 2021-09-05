@@ -52,7 +52,7 @@ namespace protocol
 
 			protocol::SendPacket(peer, p);
 		}
-		void SendServerPlayerSpawn  (ENetPeer *peer, std::string username, Vector pos, Vector rot)
+		void SendServerPlayerSpawn  (ENetPeer *peer, std::string username, Vector pos, Vector rot, bool join)
 		{
 			ServerPacket p;
 			p.type = ServerPacket::PLAYER_SPAWN;
@@ -63,6 +63,7 @@ namespace protocol
 			bufAcc << pos.z;
 			bufAcc << rot.x;
 			bufAcc << rot.y;
+			bufAcc << join;
 
 			SendPacket(peer, p);
 		}

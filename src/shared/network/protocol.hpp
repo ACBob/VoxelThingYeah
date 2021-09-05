@@ -150,7 +150,8 @@ struct ServerPacket : public NetworkPacket
 			{
 				playerUsername,
 				X,Y,Z, (floats)
-				pitch, yaw (floats)
+				pitch, yaw, (floats)
+				joined (True if the player joined the game)
 			}
 		*/
 		PLAYERPOSORT = 0x05,
@@ -209,7 +210,7 @@ namespace protocol
 		void SendServerPlayerID           (ENetPeer *peer, bool isOp);
 		void SendServerChunkData          (ENetPeer *peer, World *world, Vector pos);
 		void SendServerUpdateBlock        (ENetPeer *peer, Vector pos, blocktype_t blockType);
-		void SendServerPlayerSpawn        (ENetPeer *peer, std::string username, Vector pos, Vector rot);
+		void SendServerPlayerSpawn        (ENetPeer *peer, std::string username, Vector pos, Vector rot, bool join);
 		void SendServerPlayerPos          (ENetPeer *peer, std::string username, Vector pos, Vector rot);
 		void SendServerPlayerMessage      (ENetPeer *peer, std::string username, std::string message);
 		void SendServerPlayerDisconnect   (ENetPeer *peer, bool isKick, std::string reason = "");

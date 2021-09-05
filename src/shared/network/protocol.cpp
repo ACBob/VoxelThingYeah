@@ -139,12 +139,14 @@ namespace protocol
 				std::string username;
 				float x, y, z;
 				float pitch, yaw;
+				bool joined;
 				bufAccess >> username;
 				bufAccess >> x;
 				bufAccess >> y;
 				bufAccess >> z;
 				bufAccess >> pitch;
 				bufAccess >> yaw;
+				bufAccess >> joined;
 
 				// Empty username is taken to mean us
 				if (username == "")
@@ -157,6 +159,10 @@ namespace protocol
 				else
 				{
 					con_info("Player %s at <%f,%f,%f>", username.c_str(), x,y,z);
+					
+					if (joined)
+						client->chatBuffer.push_back(username + " joined.");
+
 					if (client->localWorld->GetEntityByName(username.c_str()) != nullptr)
 					{
 						EntityPlayer *plyr = (EntityPlayer*)client->localWorld->GetEntityByName(username.c_str());
@@ -317,14 +323,14 @@ namespace protocol
 				p->position = Vector(x,10,z);
 				p->rotation = Vector(0,0,0);
 
-				messages::SendServerPlayerSpawn(peer, "", p->position, p->rotation);
+				messages::SendServerPlayerSpawn(peer, "", p->position, p->rotation, false);
 
 				for (network::Client* c : server->players)
 				{
 					if (c->peer == peer)
 						continue;
-					messages::SendServerPlayerSpawn(c->peer, p->name, p->position, p->rotation);
-					messages::SendServerPlayerSpawn(peer, c->entity->name, c->entity->position, c->entity->rotation);
+					messages::SendServerPlayerSpawn(c->peer, p->name, p->position, p->rotation, true);
+					messages::SendServerPlayerSpawn(peer, c->entity->name, c->entity->position, c->entity->rotation, false);
 				}
 
 				// Now send them 0,0
