@@ -12,7 +12,7 @@ OverworldJeneration::OverworldJeneration()
 	noise.frequency = 0.025;
 }
 
-void OverworldJeneration::Generate(Chunk *c)
+void OverworldJeneration::GenBase(Chunk *c)
 {
 	for (int i = 0; i < sizeof(c->blocks) / sizeof(Block); i++)
 	{
@@ -25,33 +25,53 @@ void OverworldJeneration::Generate(Chunk *c)
 		c->blocks[i].chunk = c;
 
 		float noiseData = 1 + fnlGetNoise3D(&noise, WorldPosition.x,WorldPosition.y,WorldPosition.z);
-		float percentToTopWorld = 1.0f - (WorldPosition.y/32.0f);
-		noiseData *= percentToTopWorld;
+		float percentToTopSurface = 1.0f - (WorldPosition.y/32.0f);
+		noiseData *= percentToTopSurface;
 
 
 		c->blocks[i].blockType = noiseData > 0.7 ? blocktype_t::STONE : blocktype_t::AIR;
 	}
+}
 
+void OverworldJeneration::BiomeBlocks(Chunk *c)
+{
 	// Grassification
 	for (int x = 0; x < CHUNKSIZE_X; x++)
 	{
 		for (int z = 0; z < CHUNKSIZE_Z; z++)
 		{
-			for (int y = CHUNKSIZE_Y; y > 0; y--)
+
+			int grassDepth = 3;
+
+			// We follow down to -1 so we can alter the blocks in the chunk below
+			for (int y = CHUNKSIZE_Y; y > -1; y--)
 			{
-				int i = CHUNK3D_TO_1D(x,y,z);
-				if (c->blocks[i].blockType == AIR)
+				Block *blk = c->GetBlockAtLocal(Vector(x,y,z));
+				if (blk != nullptr && blk->blockType == AIR)
 					continue;
 				
 				Block *b = c->GetBlockAtLocal(Vector(x,y+1,z));
-				if (b == nullptr) continue;
+				if (b == nullptr)
+					continue;
 
 				if (b->blockType == AIR)
-					c->blocks[i].blockType = GRASS;
-				else if (b->blockType == GRASS)
-					c->blocks[i].blockType = DIRT;
+				{
+					blk->blockType = GRASS;
+					grassDepth --;
+				}
+				else if (b->blockType == GRASS || b->blockType == DIRT && grassDepth > 0)
+				{
+					blk->blockType = DIRT;
+					grassDepth --;
+				}
 				
 			}
 		}
 	}
+}
+
+void OverworldJeneration::Generate(Chunk *c)
+{
+	GenBase(c);
+	BiomeBlocks(c);
 }

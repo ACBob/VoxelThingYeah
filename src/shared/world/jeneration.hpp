@@ -8,8 +8,12 @@ class OverworldJeneration
 {
 	public:
 		OverworldJeneration();
+
 		void Generate(Chunk *c);
-	
+
+		void GenBase(Chunk *c);
+		void BiomeBlocks(Chunk *c);
+
 	private:
 		fnl_state noise;
 
