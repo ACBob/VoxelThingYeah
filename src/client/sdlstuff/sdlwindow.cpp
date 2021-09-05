@@ -118,6 +118,20 @@ double GameWindow::GetTime()
 const int scancodeToStateIndex[] =
 {
 	SDL_SCANCODE_SPACE, ' ',
+
+	SDL_SCANCODE_0, '0',
+	SDL_SCANCODE_1, '1',
+	SDL_SCANCODE_2, '2',
+	SDL_SCANCODE_3, '3',
+	SDL_SCANCODE_4, '4',
+	SDL_SCANCODE_5, '5',
+	SDL_SCANCODE_6, '6',
+	SDL_SCANCODE_7, '7',
+	SDL_SCANCODE_8, '8',
+	SDL_SCANCODE_9, '9',
+
+	SDL_SCANCODE_SEMICOLON, ';',
+
 	SDL_SCANCODE_A, 'A',
     SDL_SCANCODE_B, 'B',
     SDL_SCANCODE_C, 'C',
@@ -146,6 +160,9 @@ const int scancodeToStateIndex[] =
     SDL_SCANCODE_Z, 'Z',
 
 	SDL_SCANCODE_ESCAPE, KBD_ESCAPE,
+	SDL_SCANCODE_LSHIFT, KBD_SHIFT,
+	SDL_SCANCODE_BACKSPACE, KBD_BACKSPACE,
+	SDL_SCANCODE_RETURN, KBD_RETURN,
 };
 
 void GameWindow::PollEvents()

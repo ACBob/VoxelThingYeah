@@ -54,6 +54,8 @@ GUI::GUI(int screenW, int screenH) :
 	textTex = materialSystem::LoadTexture("font.png");
 	textShader = shaderSystem::LoadShader("shaders/text.vert", "shaders/text.frag");
 
+	textBuffers = {};
+
 	Resize(screenW, screenH);
 }
 
@@ -274,4 +276,34 @@ void GUI::ImageAtlas(Texture* tex, Atlas atlas, float atlasDivisions, Vector pos
 		img._tex = tex;
 		images.push_back(img);
 	}
+}
+
+// Returns the string in the event that 'RETURN' is pressed.
+// Outputs nullptr if nothing.
+// id can be shared between multiple text inputs if they're for the same data.
+const char *GUI::TextInput(int id, Vector pos)
+{
+	std::string text = textBuffers[id];
+
+	Label(text.c_str(), pos);
+
+	for (int i = ' '; i < 'Z'; i++)
+	{
+		if (inputMan->keyboardState[i] && !inputMan->oldKeyboardState[i])
+		{
+			text += i;
+		}
+	} 
+
+	if (inputMan->keyboardState[KBD_BACKSPACE] && !inputMan->oldKeyboardState[KBD_BACKSPACE])
+	{
+		text.pop_back();
+	}
+
+	textBuffers[id] = text;
+
+	if (inputMan->keyboardState[KBD_RETURN] && !inputMan->oldKeyboardState[KBD_RETURN])
+		return text.c_str();
+	else
+		return nullptr;
 }

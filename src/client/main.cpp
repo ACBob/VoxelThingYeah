@@ -244,6 +244,13 @@ int main (int argc, char* args[]) {
 
 			gui.Label(!chatting ? "Bobcraft" : "...", Vector(0,1));
 
+			if (chatting)
+			{
+				const char *chat = gui.TextInput(0, Vector(0,2));
+				if (chat != nullptr)
+					con_info("%s", chat);
+			}
+
 			snprintf(buf, 100, "<%.2f,%.2f,%.2f>", plyr.position.x, plyr.position.y, plyr.position.z);
 			gui.Label(buf, Vector(0,-1));
 			int hours = localWorld.timeOfDay / 1000;

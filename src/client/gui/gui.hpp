@@ -5,6 +5,7 @@
 #include "rendering/shadermanager.hpp"
 
 #include <vector>
+#include <map>
 
 // Reference taken / tutorial followed
 // https://sol.gfxile.net/imgui/
@@ -35,6 +36,9 @@ class GUI
 		// Teh epic textTex
 		Texture* textTex = nullptr;
 		Shader *textShader = nullptr;
+
+		std::map<int, std::string> textBuffers;
+
 	public:
 		GUI(int screenW, int screenH);
 		~GUI();
@@ -84,4 +88,5 @@ class GUI
 		void Label(const char* text, Vector pos, Colour color = Color(1,1,1));
 		void Image(Texture* tex, Vector pos, Vector size, Vector origin = Vector(0,0));
 		void ImageAtlas(Texture* tex, Atlas atlas, float atlasDivisions, Vector pos, Vector size, Vector origin = Vector(0,0));
+		const char *TextInput(int id, Vector pos);
 };
