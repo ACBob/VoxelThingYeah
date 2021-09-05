@@ -21,6 +21,7 @@ enum blocktype_t {
 	LAVA     = 11,
 	ORE_COAL = 12,
 	ORE_IRON = 13,
+	FLOWER   = 14,
 };
 
 enum blockmaterial_t {
@@ -36,6 +37,11 @@ enum blockobscurerule_t {
 	OBSCURERULE_ALWAYS    = 0, // If we can, we do
 	OBSCURERULE_SIMILAR   = 1, // Only do it if it's the same as us
 	OBSCURERULE_NEVER     = 2 // Never obscure faces
+};
+
+enum blockmodel_t {
+	BLOCKMODEL_CUBE    = 0, // Default cube
+	BLOCKMODEL_PLANT   = 1, // X-Shape
 };
 
 blockmaterial_t GetBlockMaterial(blocktype_t blockType);
@@ -56,6 +62,8 @@ struct BlockFeatures
 	bool isLiquid;
 	// Every THIS tick, flow
 	int liquidSpeed;
+	// Model to use
+	blockmodel_t model;
 	// Obscure Rule
 	blockobscurerule_t rule;
 };

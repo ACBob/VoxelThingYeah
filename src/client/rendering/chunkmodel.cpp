@@ -10,7 +10,7 @@ int indexArray(int x, int y, int z)
 	return CHUNK3D_TO_1D(x,y,z);
 }
 
-const Model::Vertex vertices[] = {
+const Model::Vertex cubeVertices[] = {
 	// NORTH +Z
 	{  BLOCKUNIT,  BLOCKUNIT,  BLOCKUNIT},
 	{  0        ,  BLOCKUNIT,  BLOCKUNIT},
@@ -22,9 +22,20 @@ const Model::Vertex vertices[] = {
 	{  BLOCKUNIT,  0        ,  0        },
 	{  0        ,  0        ,  0        },
 };
+const Model::Vertex plantVertices[] = {
+	{  0        ,  BLOCKUNIT,  0        },
+	{  BLOCKUNIT,  0        ,  BLOCKUNIT},
+	{  0        ,  0        ,  0        },
+	{  BLOCKUNIT,  BLOCKUNIT,  BLOCKUNIT},
+
+	{  BLOCKUNIT,  BLOCKUNIT,  0        },
+	{  0        ,  0        ,  BLOCKUNIT},
+	{  BLOCKUNIT,  0        ,  0        },
+	{  0        ,  BLOCKUNIT,  BLOCKUNIT},
+};
 
 // D-d-d-d-double vector
-const std::vector<std::vector<int>> triangles = {
+const std::vector<std::vector<int>> cubeTris = {
 	{3, 2, 1, 0}, // N
 	{6, 3, 0, 5}, // E
 	{7, 6, 5, 4}, // S
@@ -34,12 +45,17 @@ const std::vector<std::vector<int>> triangles = {
 	{6, 7, 2, 3} // DN
 };
 
-std::vector<Model::Vertex> sampleFace(Direction dir, Block block, int x = 0, int y = 0, int z = 0)
+const std::vector<std::vector<int>> plantTris = {
+	{2, 1, 3, 0},
+	// {6, 5, 7, 4},
+};
+
+std::vector<Model::Vertex> sampleCubeFace(Direction dir, Block block, int x = 0, int y = 0, int z = 0)
 {
 	std::vector<Model::Vertex> g;
 	for (int i = 0; i < 4; i++)
 	{
-		g.push_back(vertices[triangles[dir][i]]);
+		g.push_back(cubeVertices[cubeTris[dir][i]]);
 
 		g[i].x += x;
 		g[i].y += y;
@@ -77,6 +93,52 @@ std::vector<Model::Vertex> sampleFace(Direction dir, Block block, int x = 0, int
 	return g;
 }
 
+std::vector<Model::Vertex> samplePlant(Block block, int x = 0, int y = 0, int z = 0)
+{
+	std::vector<Model::Vertex> g;
+	for (int j = 0; j < 1; j++)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			g.push_back(plantVertices[plantTris[j][i]]);
+
+			g[i].x += x;
+			g[i].y += y;
+			g[i].z += z;
+
+			Vector normal = Vector(0,1,0);
+
+			g[i].nx = normal.x;
+			g[i].ny = normal.y;
+			g[i].nz = normal.z;
+
+			BlockTexture tex = block.GetSideTexture(NORTH);
+
+			switch(i)
+			{
+				case 0:
+					g[i].u = (float)tex.x / 16.0f;
+					g[i].v = (float)tex.y / 16.0f;
+				break;
+				case 1:
+					g[i].u = (float)(tex.x + tex.sizex) / 16.0f;
+					g[i].v = (float)tex.y / 16.0f;
+				break;
+				case 2:
+					g[i].u = (float)(tex.x + tex.sizex) / 16.0f;
+					g[i].v = (float)(tex.y + tex.sizey) / 16.0f;
+				break;
+				case 3:
+					g[i].u = (float)tex.x / 16.0f;
+					g[i].v = (float)(tex.y + tex.sizey) / 16.0f;
+				break;
+			}
+		}
+	}
+
+	return g;
+}
+
 // We include the chunk manager here so we can test our neighbouring chunks
 void BuildChunkModel(Model &mdl, Block blocks[], Vector pos, void *chunk)
 {
@@ -94,47 +156,66 @@ void BuildChunkModel(Model &mdl, Block blocks[], Vector pos, void *chunk)
 				// block here! Construct!
 				if (block.blockType != AIR)
 				{
-					for (int i = 0; i < 6; i++)
+					BlockFeatures blockFeatures = GetBlockFeatures(block.blockType);
+					switch(blockFeatures.model)
 					{
-						// TODO: Test against other chunks
-						Vector neighbour = Vector(x,y,z) + DirectionVector[i];
-						if (ValidChunkPosition(neighbour))
-						{
-							blocktype_t blockType = reinterpret_cast<Chunk*>(chunk)->GetBlockAtLocal(neighbour)->blockType;
-							BlockFeatures bF = GetBlockFeatures(blockType);
-							if (bF.rule == OBSCURERULE_ALWAYS ||
-								(bF.rule == OBSCURERULE_SIMILAR && blockType == block.blockType))
-								continue;
-						}
-						else
-						{
-							// Test a neighbour
-							Chunk *chunkNeighbour = reinterpret_cast<Chunk*>(chunk)->Neighbour(Direction(i));
-							if (chunkNeighbour != nullptr)
+						case BLOCKMODEL_CUBE:
+							for (int i = 0; i < 6; i++)
 							{
-								neighbour = neighbour + (DirectionVector[i] * -16.0f);
+								Vector neighbour = Vector(x,y,z) + DirectionVector[i];
+								if (ValidChunkPosition(neighbour))
+								{
+									blocktype_t blockType = reinterpret_cast<Chunk*>(chunk)->GetBlockAtLocal(neighbour)->blockType;
+									BlockFeatures bF = GetBlockFeatures(blockType);
+									if (bF.rule == OBSCURERULE_ALWAYS ||
+										(bF.rule == OBSCURERULE_SIMILAR && blockType == block.blockType))
+										continue;
+								}
+								else
+								{
+									// Test a neighbour
+									Chunk *chunkNeighbour = reinterpret_cast<Chunk*>(chunk)->Neighbour(Direction(i));
+									if (chunkNeighbour != nullptr)
+									{
+										neighbour = neighbour + (DirectionVector[i] * -16.0f);
 
-								Block *b = chunkNeighbour->GetBlockAtLocal(neighbour);
-								if (b == nullptr)
-									continue;
-								BlockFeatures bF = GetBlockFeatures(b->blockType);
-								if (bF.rule == OBSCURERULE_ALWAYS ||
-									(bF.rule == OBSCURERULE_SIMILAR && b->blockType == block.blockType))
-									continue;
+										Block *b = chunkNeighbour->GetBlockAtLocal(neighbour);
+										if (b == nullptr)
+											continue;
+										BlockFeatures bF = GetBlockFeatures(b->blockType);
+										if (bF.rule == OBSCURERULE_ALWAYS ||
+											(bF.rule == OBSCURERULE_SIMILAR && b->blockType == block.blockType))
+											continue;
+									}
+								}
+
+								std::vector<Model::Vertex> g = sampleCubeFace(Direction(i), block, x, y, z);
+								std::copy(g.begin(), g.end(), std::back_inserter(mdl.vertices));
+
+								int nVertices = mdl.vertices.size();
+
+								mdl.faces.push_back(
+									{nVertices - 4, nVertices - 3, nVertices - 2}
+								);
+								mdl.faces.push_back(
+									{nVertices - 4, nVertices - 2, nVertices - 1}
+								);
 							}
-						}
+						break;
 
-						std::vector<Model::Vertex> g = sampleFace(Direction(i), block, x, y, z);
-						std::copy(g.begin(), g.end(), std::back_inserter(mdl.vertices));
+						case BLOCKMODEL_PLANT:
+							std::vector<Model::Vertex> g = samplePlant(block, x, y, z);
+							std::copy(g.begin(), g.end(), std::back_inserter(mdl.vertices));
 
-						int nVertices = mdl.vertices.size();
+							int nVertices = mdl.vertices.size();
 
-						mdl.faces.push_back(
-							{nVertices - 4, nVertices - 3, nVertices - 2}
-						);
-						mdl.faces.push_back(
-							{nVertices - 4, nVertices - 2, nVertices - 1}
-						);
+							mdl.faces.push_back(
+								{nVertices - 4, nVertices - 3, nVertices - 2}
+							);
+							mdl.faces.push_back(
+								{nVertices - 4, nVertices - 2, nVertices - 1}
+							);
+						break;
 					}
 				}
 			}

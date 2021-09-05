@@ -62,5 +62,8 @@ BlockTexture GetDefaultBlockTextureSide(blocktype_t type, Direction side)
 		case ORE_IRON:
 			return {13,0, 1,1};
 		break;
+		case FLOWER:
+			return {14,0, 1,1};
+		break;
 	}
 }

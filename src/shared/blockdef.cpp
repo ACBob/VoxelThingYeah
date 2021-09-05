@@ -8,6 +8,8 @@ blockmaterial_t GetBlockMaterial(blocktype_t blockType)
 		case STONE:
 		case COBBLE:
 		case BEDROCK:
+		case ORE_COAL:
+		case ORE_IRON:
 			return blockmaterial_t::MAT_STONE;
 		break;
 
@@ -26,6 +28,7 @@ blockmaterial_t GetBlockMaterial(blocktype_t blockType)
 
 		case GRASS:
 		case LEAVES:
+		case FLOWER:
 			return blockmaterial_t::MAT_ORGANIC;
 		break;
 	}
@@ -42,6 +45,7 @@ BlockFeatures GetBlockFeatures(blocktype_t blockType)
 	bF.isLiquid = false;
 	bF.liquidSpeed = 0;
 	bF.rule = OBSCURERULE_ALWAYS;
+	bF.model = BLOCKMODEL_CUBE;
 
 	switch(blockType)
 	{
@@ -56,6 +60,12 @@ BlockFeatures GetBlockFeatures(blocktype_t blockType)
 		case GLASS:
 			bF.rule = blockType == LEAVES ? OBSCURERULE_NEVER : OBSCURERULE_SIMILAR;
 			bF.solid = false;
+		break;
+
+		case FLOWER:
+			bF.rule = OBSCURERULE_NEVER;
+			bF.solid = false;
+			bF.model = BLOCKMODEL_PLANT;
 		break;
 
 		case WATER:
