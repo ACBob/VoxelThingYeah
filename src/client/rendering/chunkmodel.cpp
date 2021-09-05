@@ -45,9 +45,9 @@ const std::vector<std::vector<int>> cubeTris = {
 	{6, 7, 2, 3} // DN
 };
 
-const std::vector<std::vector<int>> plantTris = {
-	{2, 1, 3, 0},
-	// {6, 5, 7, 4},
+const std::vector<int> plantTris = {
+	2, 1, 3, 0,
+	6, 5, 7, 4
 };
 
 std::vector<Model::Vertex> sampleCubeFace(Direction dir, Block block, int x = 0, int y = 0, int z = 0)
@@ -96,43 +96,44 @@ std::vector<Model::Vertex> sampleCubeFace(Direction dir, Block block, int x = 0,
 std::vector<Model::Vertex> samplePlant(Block block, int x = 0, int y = 0, int z = 0)
 {
 	std::vector<Model::Vertex> g;
-	for (int j = 0; j < 1; j++)
+	for (int i = 0; i < 8; i++)
 	{
-		for (int i = 0; i < 4; i++)
+		g.push_back(plantVertices[plantTris[i]]);
+
+		g[i].x += x;
+		g[i].y += y;
+		g[i].z += z;
+
+		Vector normal = DirectionVector[i > 4 ? SOUTH : NORTH];
+
+		g[i].nx = normal.x;
+		g[i].ny = normal.y;
+		g[i].nz = normal.z;
+
+		BlockTexture tex = block.GetSideTexture(NORTH);
+
+		switch(i)
 		{
-			g.push_back(plantVertices[plantTris[j][i]]);
-
-			g[i].x += x;
-			g[i].y += y;
-			g[i].z += z;
-
-			Vector normal = Vector(0,1,0);
-
-			g[i].nx = normal.x;
-			g[i].ny = normal.y;
-			g[i].nz = normal.z;
-
-			BlockTexture tex = block.GetSideTexture(NORTH);
-
-			switch(i)
-			{
-				case 0:
-					g[i].u = (float)tex.x / 16.0f;
-					g[i].v = (float)tex.y / 16.0f;
-				break;
-				case 1:
-					g[i].u = (float)(tex.x + tex.sizex) / 16.0f;
-					g[i].v = (float)tex.y / 16.0f;
-				break;
-				case 2:
-					g[i].u = (float)(tex.x + tex.sizex) / 16.0f;
-					g[i].v = (float)(tex.y + tex.sizey) / 16.0f;
-				break;
-				case 3:
-					g[i].u = (float)tex.x / 16.0f;
-					g[i].v = (float)(tex.y + tex.sizey) / 16.0f;
-				break;
-			}
+			case 0:
+			case 4:
+				g[i].u = (float)tex.x / 16.0f;
+				g[i].v = (float)tex.y / 16.0f;
+			break;
+			case 1:
+			case 5:
+				g[i].u = (float)(tex.x + tex.sizex) / 16.0f;
+				g[i].v = (float)tex.y / 16.0f;
+			break;
+			case 2:
+			case 6:
+				g[i].u = (float)(tex.x + tex.sizex) / 16.0f;
+				g[i].v = (float)(tex.y + tex.sizey) / 16.0f;
+			break;
+			case 3:
+			case 7:
+				g[i].u = (float)tex.x / 16.0f;
+				g[i].v = (float)(tex.y + tex.sizey) / 16.0f;
+			break;
 		}
 	}
 
@@ -214,6 +215,25 @@ void BuildChunkModel(Model &mdl, Block blocks[], Vector pos, void *chunk)
 							);
 							mdl.faces.push_back(
 								{nVertices - 4, nVertices - 2, nVertices - 1}
+							);
+							mdl.faces.push_back(
+								{nVertices - 2, nVertices - 3, nVertices - 4}
+							);
+							mdl.faces.push_back(
+								{nVertices - 1, nVertices - 2, nVertices - 4}
+							);
+
+							mdl.faces.push_back(
+								{nVertices - 8, nVertices - 7, nVertices - 6}
+							);
+							mdl.faces.push_back(
+								{nVertices - 8, nVertices - 6, nVertices - 5}
+							);
+							mdl.faces.push_back(
+								{nVertices - 6, nVertices - 7, nVertices - 8}
+							);
+							mdl.faces.push_back(
+								{nVertices - 5, nVertices - 6, nVertices - 8}
 							);
 						break;
 					}
