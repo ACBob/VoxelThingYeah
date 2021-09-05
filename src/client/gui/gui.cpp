@@ -287,11 +287,44 @@ const char *GUI::TextInput(int id, Vector pos)
 
 	Label(text.c_str(), pos);
 
+	// TODO: I hate this
+	// FIXME: Doesn't account for keyboard, get input manager to have some kind of built-in thing that talks to the window and does it for us!
+	// AHJSDHJASHJKDASJKDJKASDHKAHKJDSJk
 	for (int i = ' '; i < 'Z'; i++)
 	{
 		if (inputMan->keyboardState[i] && !inputMan->oldKeyboardState[i])
 		{
-			text += i;
+			if (inputMan->keyboardState[KBD_SHIFT])
+			{
+				switch(i)
+				{
+					case ';':
+						text += ':';
+						continue;
+					break;
+					case '1':
+						text += '!';
+						continue;
+					break;
+					case '2':
+						text += '"';
+						continue;
+					break;
+					case '9':
+						text += '(';
+						continue;
+					break;
+					case '0':
+						text += ')';
+						continue;
+					break;
+				}
+				text += i;
+			}
+			else if (i >= 'A' && i <= 'Z')
+				text += i + 32;
+			else
+				text += i;
 		}
 	} 
 
