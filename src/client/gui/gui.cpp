@@ -330,13 +330,14 @@ const char *GUI::TextInput(int id, Vector pos)
 
 	if (inputMan->keyboardState[KBD_BACKSPACE] && !inputMan->oldKeyboardState[KBD_BACKSPACE])
 	{
-		text.pop_back();
+		if (text.length())
+			text.pop_back();
 	}
 
 	textBuffers[id] = text;
 
 	if (inputMan->keyboardState[KBD_RETURN] && !inputMan->oldKeyboardState[KBD_RETURN])
-		return text.c_str();
+		return textBuffers[id].c_str();
 	else
 		return nullptr;
 }
