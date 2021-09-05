@@ -290,7 +290,7 @@ const char *GUI::TextInput(int id, Vector pos)
 	// TODO: I hate this
 	// FIXME: Doesn't account for keyboard, get input manager to have some kind of built-in thing that talks to the window and does it for us!
 	// AHJSDHJASHJKDASJKDJKASDHKAHKJDSJk
-	for (int i = ' '; i < 'Z'; i++)
+	for (int i = ' '; i <= 'Z'; i++)
 	{
 		if (inputMan->keyboardState[i] && !inputMan->oldKeyboardState[i])
 		{
