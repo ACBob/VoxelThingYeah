@@ -167,6 +167,8 @@ int main (int argc, char* args[]) {
 	int64_t now = then;
 	int i = 0;
 
+	bool chatting = false;
+
 	Vector sunForward(0,1,0);
 	float sunAngle = 0.0f;
 	while (!window.shouldClose)
@@ -176,8 +178,9 @@ int main (int argc, char* args[]) {
 			break;
 			
 		window.PollEvents();
-		if (window.IsFocused())
+		if (window.IsFocused() && !chatting)
 			window.CaptureMouse();
+
 		if (window.sizeChanged)
 		{
 			Vector s = window.GetSize();
@@ -191,6 +194,23 @@ int main (int argc, char* args[]) {
 		
 		inputMan.Update();
 		plyr.UpdateClient(client.localWorld);
+
+		if (inputMan.inputState[INKEY_CHAT] && !inputMan.oldInputState[INKEY_CHAT])
+		{
+			chatting = true;
+			inputMan.inGui = true;
+		}
+
+		if (inputMan.inputState[INKEY_OUT] && !inputMan.oldInputState[INKEY_OUT])
+		{
+			if (chatting)
+			{
+				chatting = false;
+				inputMan.inGui = false;
+			}
+			else // TODO: PAUSE MENU
+				window.shouldClose = true;
+		}
 
 		// Rendering
 		{
@@ -222,7 +242,7 @@ int main (int argc, char* args[]) {
 			snprintf(buf, 100, "Connected to \"%s\"", cl_servername->GetString());
 			gui.Label(buf, Vector(0,0));
 
-			gui.Label("Bobcraft", Vector(0,1));
+			gui.Label(!chatting ? "Bobcraft" : "...", Vector(0,1));
 
 			snprintf(buf, 100, "<%.2f,%.2f,%.2f>", plyr.position.x, plyr.position.y, plyr.position.z);
 			gui.Label(buf, Vector(0,-1));

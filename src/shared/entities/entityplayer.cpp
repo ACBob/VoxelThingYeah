@@ -19,6 +19,7 @@ EntityPlayer::~EntityPlayer()
 void EntityPlayer::UpdateClient(World *clientSideWorld)
 {	
 	// Mouse Input
+	if (!inputMan->inGui)
 	{
 		// TODO: sensitivity
 		float pitch = rotation.x;
@@ -102,6 +103,9 @@ void EntityPlayer::Tick()
 
 #ifdef CLIENTEXE
 	if (inputMan == nullptr) return; // This isn't owned by us, don't do anything
+
+	if (inputMan->inGui)
+		return;
 
 	Vector forward = GetForward();
 	Vector right = forward.Rotate(2, 90);

@@ -22,7 +22,10 @@ InputManager::~InputManager()
 void InputManager::Update()
 {
 	for (int i = 0; i < INKEY_LAST; i++)
+	{
+		oldInputState[i] = inputState[i];
 		inputState[i] = false;
+	}
 
 	// TODO: Custom Controls (ConVars?)
 	
@@ -30,5 +33,8 @@ void InputManager::Update()
 	inputState[INKEY_LEFT] = keyboardState['A'];
 	inputState[INKEY_BACK] = keyboardState['S'];
 	inputState[INKEY_RIGHT] = keyboardState['D'];
+
+	inputState[INKEY_CHAT] = keyboardState['T'];
+	inputState[INKEY_OUT] = keyboardState[KBD_ESCAPE];
 }
 #endif

@@ -18,7 +18,15 @@ enum INKEY
 	INKEY_BACK = 2,
 	INKEY_LEFT = 3,
 
+	INKEY_CHAT = 4,
+	INKEY_OUT  = 5, // Escape
+
 	INKEY_LAST // used only to get the possible inkeys
+};
+
+enum KBDKEY
+{
+	KBD_ESCAPE = 0,
 };
 
 class InputManager
@@ -29,6 +37,7 @@ class InputManager
 
 #ifdef CLIENTEXE
 		// A -> Z (char) Is mapped directly to the keycode (so 65 = A on the keyboard)
+		// For other keys (Shift, Escape, etc.) use KBD_*
 		bool keyboardState[255];
 		bool oldKeyboardState[255]; // See above, previous frame
 
@@ -40,14 +49,17 @@ class InputManager
 		int mouseState = 0;
 		int oldMouseState = 0; // stores mouseState from the last frame
 
+		bool inGui = false; // If we're in a GUI menu (i.e pause, chat)
+
 		void Update();
 #endif
 
 		bool inputState[INKEY_LAST];
+		bool oldInputState[INKEY_LAST];
 
 		template <typename S>
 		void serialize(S& s)
 		{
-			s & inputState;
+			s & inputState & oldInputState;
 		};
 };
