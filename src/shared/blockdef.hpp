@@ -19,6 +19,8 @@ enum blocktype_t {
 	LEAVES   = 9,
 	WATER    = 10,
 	LAVA     = 11,
+	ORE_COAL = 12,
+	ORE_IRON = 13,
 };
 
 enum blockmaterial_t {
