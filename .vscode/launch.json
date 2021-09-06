@@ -5,7 +5,9 @@
 			"type": "cppdbg",
 			"request": "launch",
 			"program": "${workspaceFolder}/bin/VoxelThingYeah_client",
-			"args": [],
+			"args": [
+				"username VScodePlayer; fov 90"
+			],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",
 			"environment": [],
