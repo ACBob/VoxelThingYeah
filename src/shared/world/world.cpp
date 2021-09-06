@@ -24,13 +24,10 @@ World::World()
 	for (Chunk *c : chunks)
 	{
 		jenerator.Generate(c);
-	}
 #ifdef CLIENTEXE
-	for (Chunk *c : chunks)
-	{
 		c->RebuildMdl();
-	}
 #endif
+	}
 }
 World::~World()
 {
@@ -106,9 +103,7 @@ Block *World::BlockAtWorldPos(Vector pos)
 
 bool World::ValidChunkPos(const Vector pos)
 {
-	for (Chunk* c : chunks)
-		if (c->position == pos) return true;
-	return false;
+	return ChunkAtWorldPos(pos) != nullptr;
 }
 
 void World::AddEntity(void *e)
