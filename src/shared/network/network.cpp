@@ -270,7 +270,12 @@ namespace network
 			if (c->outdated)
 			{
 				for (Client *cl : players)
-					protocol::messages::SendServerChunkData(cl->peer, &world, c->position);
+				{
+					if (cl->nextChunkLoadTick < currentTick)
+					{
+						protocol::messages::SendServerChunkData(cl->peer, &world, c->position);
+					}
+				}
 				c->outdated = false;
 			}
 		}
@@ -288,7 +293,12 @@ namespace network
 			c->chunkPos = cP;
 
 
-			if (c->loadedChunkIDX >= (4*4*4) || c->nextChunkLoadTick > currentTick)
+			if (c->nextChunkLoadTick < currentTick)
+				c->nextChunkLoadTick = currentTick + 1;
+			else
+				continue;
+
+			if (c->loadedChunkIDX >= (4*4*4))
 				continue;
 			
 			int x = 0;
@@ -300,8 +310,7 @@ namespace network
 			p = p + c->chunkPos;
 
 			protocol::messages::SendServerChunkData(c->peer, &world, p);
-
-			c->nextChunkLoadTick = currentTick + 1;
+			
 			c->loadedChunkIDX ++;
 		}
 		
