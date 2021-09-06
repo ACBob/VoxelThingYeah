@@ -29,6 +29,10 @@ namespace protocol
 			World::PortableChunkRepresentation crep;
 			crep = world->GetWorldRepresentation(pos);
 
+			SendServerChunkDataFromRep(peer, crep);	
+		}
+		void SendServerChunkDataFromRep(ENetPeer *peer, World::PortableChunkRepresentation crep)
+		{
 			ServerPacket p;
 			p.type = ServerPacket::CHUNKDATA;
 			Archive<ArchiveBuf> bufAcc = p.GetAccess();

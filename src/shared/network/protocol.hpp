@@ -209,6 +209,7 @@ namespace protocol
 #ifdef SERVEREXE
 		void SendServerPlayerID           (ENetPeer *peer, bool isOp);
 		void SendServerChunkData          (ENetPeer *peer, World *world, Vector pos);
+		void SendServerChunkDataFromRep   (ENetPeer *peer, World::PortableChunkRepresentation crep);
 		void SendServerUpdateBlock        (ENetPeer *peer, Vector pos, blocktype_t blockType);
 		void SendServerPlayerSpawn        (ENetPeer *peer, std::string username, Vector pos, Vector rot, bool join);
 		void SendServerPlayerPos          (ENetPeer *peer, std::string username, Vector pos, Vector rot);

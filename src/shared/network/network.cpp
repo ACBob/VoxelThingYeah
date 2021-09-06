@@ -269,11 +269,13 @@ namespace network
 		{
 			if (c->outdated)
 			{
+				World::PortableChunkRepresentation crep = world.GetWorldRepresentation(c->position);
+
 				for (Client *cl : players)
 				{
 					if (cl->nextChunkLoadTick < currentTick)
 					{
-						protocol::messages::SendServerChunkData(cl->peer, &world, c->position);
+						protocol::messages::SendServerChunkDataFromRep(cl->peer, crep);
 					}
 				}
 				c->outdated = false;
