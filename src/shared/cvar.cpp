@@ -21,7 +21,7 @@ namespace ConVar
 
 	void ConVar::SetString(const char* val)
 	{
-		char *cval = new char(strlen(val) + 1);
+		char *cval = new char[strlen(val) + 1];
 		strcpy(cval, val);
 		cval[strlen(val) + 1] = '\0';
 
@@ -42,9 +42,7 @@ namespace ConVar
 	}
 	void ConVar::SetBool(bool val)
 	{
-		char buf[256];
-		snprintf(buf, 256, "%s", val ? "true" : "false");
-		SetString(buf);
+		SetString(val ? "true" : "false");
 	}
 
 	const char *ConVar::GetString()
@@ -127,8 +125,9 @@ namespace ConVar
 				delete[] oToken;
 				oToken = nullptr;
 			}
-			oToken = new char[strlen(token)];
+			oToken = new char[strlen(token) + 1];
 			strcpy(oToken, token);
+			oToken[strlen(token) + 1] = '\0';
 
 			token = strtok_r(NULL, sep, &saveptr);
 		}
