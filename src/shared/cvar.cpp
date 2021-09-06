@@ -135,6 +135,7 @@ namespace ConVar
 
 		delete[] oToken;
 		delete[] token;
+		delete[] in;
 	}
 
 	void ConVarHandler::ParseConvarTokens(const char *cmd, const char *args)
