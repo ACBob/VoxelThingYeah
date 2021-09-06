@@ -93,85 +93,48 @@ namespace ConVar
 		if (strlen(str) == 0)
 			return;
 
-		char c = '\0';
-		char lc = '\0';
+		char *in = new char[strlen(str)];
+		strcpy(in, str);
 
-		char *token = new char(1);
+		char *token = new char[1];
 		token[0] = '\0';
-		// Despite being called token, it's parsed with "secondToken token"
-		char *secondToken = new char(1);
-		secondToken[0] = '\0'; 
+		char *oToken = new char[1];
+		oToken[0] = '\0';
+		char *saveptr;
+		const char sep[4] = "\n; ";
+		token = strtok_r(in, sep, &saveptr);
 
-		bool quoted;
-		bool escaping;
-		int quotes;
-		for (int i = 0; i < strlen(str); i++)
+		while (token != NULL)
 		{
-			lc = c;
-			c = str[i];
+			con_debug("%s", token);
 
-			switch (c)
+			if (oToken != nullptr && strlen(token) && strlen(oToken))
 			{
-				case '"':
-					quotes++;
-					quoted = quotes & 1;
-				break;
+				ParseConvarTokens(oToken, token);
 
-				case '\\':
-					escaping = lc != '\\';
-				break;
-
-
-				case '\n':
-				case ' ':
-				case ';':
-					if (!quoted && !escaping)
-					{
-						if (strlen(secondToken) == 0)
-						{
-							secondToken = new char(strlen(token) + 1);
-							strcpy(secondToken, token);
-
-							token = new char(1);
-							token[0] = '\0';
-						}
-						else
-						{
-							ParseConvarTokens(secondToken, token);
-
-							delete token;
-							delete secondToken;
-
-							token = new char(1);
-							token[0] = '\0';
-							secondToken = new char(1);
-							secondToken[0] = '\0';
-						}
-					}			
-				break;
-
-				default:
-					char *buf = new char(strlen(token) + 2);
-					strcpy(buf, token);
-					buf[strlen(token)] = c;
-					buf[strlen(token) + 1] = '\0';
-					delete token;
-					token = buf;
-				break;
+				if (oToken != nullptr)
+				{
+					delete[] oToken;
+					oToken = nullptr;
+				}
+				
+				token = strtok_r(NULL, sep, &saveptr);
+				continue;
 			}
+
+			if (oToken != nullptr)
+			{
+				delete[] oToken;
+				oToken = nullptr;
+			}
+			oToken = new char[strlen(token)];
+			strcpy(oToken, token);
+
+			token = strtok_r(NULL, sep, &saveptr);
 		}
 
-		if (quoted)
-		{
-			// Only a warning as we can continue anyway
-			con_warning("Syntax warning: Unclosed String!");
-		}
-
-		
-		ParseConvarTokens(secondToken, token);
-
-		delete token;
-		delete secondToken;
+		delete[] oToken;
+		delete[] token;
 	}
 
 	void ConVarHandler::ParseConvarTokens(const char *cmd, const char *args)
