@@ -14,7 +14,7 @@ namespace modelSystem
 	class CModel
 	{
 	  public:
-		struct Vertex
+		struct sVertex
 		{
 			float x, y, z;	  // Position
 			float nx, ny, nz; // Normal
@@ -22,7 +22,7 @@ namespace modelSystem
 							  // TODO: Texture, Lighting, Etc.
 		};
 
-		struct Face
+		struct sFace
 		{
 			Face( int a = 0, int b = 0, int c = 0 )
 			{
@@ -33,32 +33,32 @@ namespace modelSystem
 			unsigned int v, vv, vvv;
 		};
 
-		CModel( std::vector<Vertex> verts = {}, std::vector<Face> faces = {} );
+		CModel( std::vector<sVertex> verts = {}, std::vector<sFace> faces = {} );
 		~CModel();
 
 		void Update();
 		void Render();
 
-		void SetShader( CShader *shader );
+		void SetShader( CShader *pShader );
 		CShader *GetShader();
 
-		void SetTexture( CTexture *texture );
+		void SetTexture( CTexture *pTexture );
 		CTexture *GetTexture();
 
-		std::vector<Vertex> vertices;
-		std::vector<Face> faces;
+		std::vector<Vertex> m_vertices;
+		std::vector<Face> m_faces;
 
-		CVector position = { 0, 0, 0 };
-		CVector rotation = { 0, 0, 0 };
-		CVector size		= { 1, 1, 1 };
+		CVector m_vPosition = { 0, 0, 0 };
+		CVector m_vRotation = { 0, 0, 0 };
+		CVector m_vSize		= { 1, 1, 1 };
 
 	  private:
-		CShader *shader = nullptr;
-		CTexture *tex   = nullptr;
+		CShader *pShader = nullptr;
+		CTexture *pTex   = nullptr;
 
-		CModelRenderer *renderer = nullptr;
+		CModelRenderer *pRenderer = nullptr;
 
-		const char *fp = nullptr;
+		const char *cFilepath = nullptr;
 	};
 
 	extern std::vector<CModel *> loadedModels;

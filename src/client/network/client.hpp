@@ -14,7 +14,7 @@ class CNetworkClient
 	// Returning true if it can be
 	bool WorkingClient();
 
-	bool Connect( const char *address = "127.0.0.1", int port = 58008 );
+	bool Connect( const char *cAddress = "127.0.0.1", int iPort = 58008 );
 	void Disconnect();
 
 	void Update();
@@ -22,19 +22,19 @@ class CNetworkClient
 	void DecodeChunkData( ArchiveIntermediary data );
 
 	// Pointer to the local world
-	CWorld *localWorld = nullptr;
+	CWorld *m_pLocalWorld = nullptr;
 	// Pointer to the local player
-	CEntityPlayer *localPlayer = nullptr;
+	CEntityPlayer *m_pLocalPlayer = nullptr;
 
 	// Please don't modify
 	// Returns if we're connected or not
-	bool connected;
-	ENetPeer *peer;
+	bool bConnected;
+	ENetPeer *m_pPeer;
 
-	std::vector<std::string> chatBuffer;
+	std::vector<std::string> m_chatBuffer;
 
   private:
-	ENetHost *enetHost = nullptr;
-	ENetAddress addr;
-	ENetEvent e;
+	ENetHost *m_pEnetHost = nullptr;
+	ENetAddress m_addr;
+	ENetEvent m_e;
 };

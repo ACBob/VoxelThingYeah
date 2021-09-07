@@ -41,17 +41,17 @@ class CEntityBase
 	// Renders our Model.
 	virtual void Render()
 	{
-		mdl->position = position;
-		mdl->rotation = rotation;
-		mdl->Render();
+		m_pMdl->position = position;
+		m_pMdl->rotation = rotation;
+		m_pMdl->Render();
 	}
 
-	virtual void SetShader( CShader *shader ) { mdl->SetShader( shader ); }
+	virtual void SetShader( CShader *shader ) { m_pMdl->SetShader( shader ); }
 
-	CModel *mdl;
+	CModel *m_pMdl;
 #endif
 
-	std::string name;
+	std::string m_name;
 
 	// Gets a forward vector based on the rotation
 	CVector GetForward() { return CVector( 0, 0, -1 ).Rotate( rotation ).Normal(); }
@@ -59,20 +59,20 @@ class CEntityBase
 	// Updates the collision box to the new position
 	void UpdateCollision() { collisionBox.pos = position; }
 
-	CVector position;
-	CVector rotation;
-	CVector velocity;
+	CVector m_vPosition;
+	CVector m_vRotation;
+	CVector m_vVelocity;
 
-	CBoundingBox collisionBox;
+	CBoundingBox m_collisionBox;
 
 	template <typename S> void serialize( S &s )
 	{
-		s.container4b( position, 3 );
-		s.container4b( rotation, 3 );
-		s.container4b( velocity, 3 );
-		s.class4b( collisionBox );
+		s.container4b( m_vPosition, 3 );
+		s.container4b( m_vRotation, 3 );
+		s.container4b( m_vVelocity, 3 );
+		s.class4b( m_collisionBox );
 	};
 
 	// if isKilled, is removed from the entity list and not processed otherwise
-	bool isKilled = false;
+	bool m_bIsKilled = false;
 };

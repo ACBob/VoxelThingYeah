@@ -15,7 +15,7 @@ namespace shaderSystem
 	  public:
 		// Opengl Id
 		// TODO: abstract
-		unsigned int id;
+		unsigned int m_iId;
 
 		CShader( const char *vs, const char *fs );
 

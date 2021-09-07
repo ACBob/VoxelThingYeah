@@ -46,17 +46,17 @@ namespace ConVar
 		void SetBool( bool val );
 
 	  private:
-		int flags;
+		int m_iFlags;
 
 		// Does the value differ from its' regular one
-		bool modified;
+		bool m_bModified;
 
 		// Converted from to other types :trollface:
-		const char *val;
-		const char *defVal;
+		const char *m_cVal;
+		const char *m_cDefVal;
 
 		// Name
-		const char *name;
+		const char *m_cName;
 	};
 
 	class CConVarHandler

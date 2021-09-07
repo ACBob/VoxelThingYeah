@@ -7,8 +7,8 @@ class CParticle
 	CParticle();
 	~CParticle();
 
-	CVector position;
-	CVector size; // Z Ignored!!!
+	CVector m_vPosition;
+	CVector m_vSize; // Z Ignored!!!
 
-	bool shouldDie;
+	bool bShouldDie;
 };

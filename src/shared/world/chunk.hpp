@@ -30,8 +30,8 @@ class CChunk
 
 	CChunk *Neighbour( Direction dir );
 
-	CVector position;
-	CVector GetPosInWorld() { return position * CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ); }
+	CVector m_vPosition;
+	CVector GetPosInWorld() { return m_vPosition * CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ); }
 
 	CBlock *GetBlockAtLocal( CVector pos );
 
@@ -46,16 +46,16 @@ class CChunk
 
 	// Flat array of blocks, access with
 	// Indexed with [x + SIZEX * (y + SIZEZ * z)]
-	CBlock blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
+	CBlock m_blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 
 #ifdef CLIENTEXE
-	CModel mdl;
+	CModel m_mdl;
 #endif
 
 	// World pointer (can't set type because circular include :lenny:)
-	void *chunkMan = nullptr;
+	void *m_pChunkMan = nullptr;
 
-	bool outdated = false;
+	bool m_bOutdated = false;
 };
 
 bool ValidChunkPosition( CVector pos );

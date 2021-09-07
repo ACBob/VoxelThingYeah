@@ -6,13 +6,13 @@
 class CNetworkPlayer
 {
   public:
-	ENetPeer *peer		 = nullptr;
-	CEntityPlayer *entity = nullptr;
-	std::string username;
+	ENetPeer *m_pPeer		 = nullptr;
+	CEntityPlayer *m_pEntity = nullptr;
+	std::string m_username;
 
-	int loadedChunkIDX			   = 0;
-	unsigned int nextChunkLoadTick = 0;
-	CVector chunkPos; // the chunk we're in
+	int m_iLoadedChunkIDX			   = 0;
+	unsigned int m_iNextChunkLoadTick = 0;
+	CVector m_vChunkPos; // the chunk we're in
 };
 
 class CNetworkServer
@@ -27,9 +27,9 @@ class CNetworkServer
 	// Returning true if it can be
 	bool WorkingServer();
 
-	CWorld world;
+	CWorld m_world;
 
-	std::vector<CNetworkPlayer *> players;
+	std::vector<CNetworkPlayer *> m_players;
 
 	CNetworkPlayer *ClientFromPeer( ENetPeer *p );
 	CNetworkPlayer *ClientFromUsername( const char *name );
@@ -38,10 +38,10 @@ class CNetworkServer
 	void KickPlayer( const char *str, const char *reason );
 	void KickPlayer( ENetPeer *p, const char *reason );
 
-	unsigned int currentTick;
+	unsigned int m_iCurrentTick;
 
   private:
-	ENetAddress addr;
-	ENetEvent e;
-	ENetHost *enetHost = nullptr;
+	ENetAddress m_addr;
+	ENetEvent m_e;
+	ENetHost *m_pEnetHost = nullptr;
 };

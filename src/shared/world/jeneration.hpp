@@ -16,9 +16,9 @@ class COverworldJeneration
 	void Decorate( CChunk *c );
 
   private:
-	fnl_state baseNoise;
-	fnl_state dirtNoise;
-	fnl_state oreNoise;
+	fnl_state m_baseNoise;
+	fnl_state m_dirtNoise;
+	fnl_state m_oreNoise;
 
-	int seed = 69;
+	int m_iSeed = 69;
 };

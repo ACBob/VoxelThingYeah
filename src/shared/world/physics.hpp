@@ -9,7 +9,7 @@ class CBoundingBox
 	bool TestCollide( CBoundingBox other );
 	bool TestPointCollide( CVector other );
 
-	CVector pos;
-	CVector bounds;
-	CVector origin;
+	CVector m_vPosition;
+	CVector m_vBounds;
+	CVector m_vOrigin;
 };

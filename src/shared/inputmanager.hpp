@@ -45,18 +45,18 @@ class CInputManager
 	// Mousepos is the current position of the mouse
 	// Mousemovement is the movement of the mouse since last frame
 	// Z is ignored
-	CVector mousePos, mouseMovement;
+	CVector m_vMousePos, m_vMouseMovement;
 
-	int mouseState	  = 0;
-	int oldMouseState = 0; // stores mouseState from the last frame
+	int m_iMouseState	  = 0;
+	int m_iOldMouseState = 0; // stores mouseState from the last frame
 
-	bool inGui = false; // If we're in a GUI menu (i.e pause, chat)
+	bool m_bInGui = false; // If we're in a GUI menu (i.e pause, chat)
 
 	void Update();
 #endif
 
-	bool inputState[INKEY_LAST];
-	bool oldInputState[INKEY_LAST];
+	bool m_bInputState[INKEY_LAST];
+	bool m_bOldInputState[INKEY_LAST];
 
 	template <typename S> void serialize( S &s ) { s &inputState &oldInputState; };
 };

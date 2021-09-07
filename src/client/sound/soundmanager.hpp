@@ -9,6 +9,8 @@
 
 #define SOUNDBUFFERS 1
 
+// TODO: namespace-ify like the other managers
+
 class CSound
 {
   public:
@@ -17,7 +19,7 @@ class CSound
 	// Src = location of sound src
 	void Play( CVector src, float pitch, float gain );
 
-	unsigned int id, buffer;
+	unsigned int m_iId, m_iBuffer;
 };
 
 class CSoundManager
@@ -28,8 +30,8 @@ class CSoundManager
 
 	CSound *LoadSound( const char *path );
 
-	std::vector<CSound *> loadedSounds;
-	std::map<const char *, CSound *> namedSounds;
+	std::vector<CSound *> m_loadedSounds;
+	std::map<const char *, CSound *> m_namedSounds;
 
 	void PlayBreakSound( blocktype_t blockType, CVector pos );
 	void PlayPlaceSound( blocktype_t blockType, CVector pos );

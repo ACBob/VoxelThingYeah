@@ -11,10 +11,10 @@ namespace materialSystem
 	  public:
 		CTexture( const char *path );
 
-		std::vector<unsigned char> image;
-		unsigned int width, height, id;
+		std::vector<unsigned char> m_imageData;
+		unsigned int m_iWidth, m_iHeight, m_iId;
 
-		const char *fp = nullptr;
+		const char *m_cFilePath = nullptr;
 	};
 
 	void Init();

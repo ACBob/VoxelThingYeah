@@ -9,18 +9,18 @@ class CPointedThing
   public:
 	CPointedThing();
 
-	CBlock *block = nullptr;
-	CVector position;
-	CVector normal;
+	CBlock *m_pBlock = nullptr;
+	CVector m_vPosition;
+	CVector m_vNormal;
 };
 
 class CVoxRaycast
 {
   public:
 	CVoxRaycast();
-	CPointedThing Cast( CWorld *chunkMan );
+	CPointedThing Cast( CWorld *pChunkMan );
 
-	CVector pos;
-	CVector dir;
-	float length;
+	CVector m_vPosition;
+	CVector m_vDirection;
+	float m_fLength;
 };

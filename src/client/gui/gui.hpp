@@ -14,7 +14,7 @@
 class CGui
 {
   private:
-	struct Vertex
+	struct sVertex
 	{
 		float x, y, z; //! Z always 0!!
 		float u, v;
@@ -22,75 +22,75 @@ class CGui
 		float r, g, b;
 	};
 
-	struct _Image
+	struct sImage
 	{
-		CTexture *_tex = nullptr;
-		std::vector<Vertex> vertices;
+		CTexture *m_pTex = nullptr;
+		std::vector<sVertex> m_vertices;
 	};
 
-	std::vector<Vertex> GetQuad( CVector pos, CVector size, Colour color, CVector uStart = CVector( 0, 0 ),
-								 CVector uEnd = CVector( 1, 1 ) );
-	std::vector<Vertex> GetCharQuad( const char *c, CVector pos, CVector size, Colour color );
+	std::vector<Vertex> GetQuad( CVector vPosition, CVector vSize, Colour colour, CVector vStart = CVector( 0, 0 ),
+								 CVector vEnd = CVector( 1, 1 ) );
+	std::vector<Vertex> GetCharQuad( const char *cChar, CVector vPosition, CVector vSize, Colour colour );
 
-	unsigned int vbo, vao;
-	std::vector<Vertex> textVertiecs;
-	std::vector<_Image> images;
+	unsigned int m_iVbo, m_iVao;
+	std::vector<sVertex> m_textVertiecs;
+	std::vector<Image> m_images;
 
 	// Teh epic textTex
-	CTexture *textTex   = nullptr;
-	CShader *textShader = nullptr;
+	CTexture *m_pTextTex   = nullptr;
+	CShader *m_pTextShader = nullptr;
 
-	std::map<int, std::string> textBuffers;
+	std::map<int, std::string> m_textBuffers;
 
   public:
 	CGui( int screenW, int screenH );
 	~CGui();
 
 	// TODO: Put this in a generic utility class and then make all atlas-based things (i.e text, blocks) inherit it
-	struct Atlas
+	struct sAtlas
 	{
-		Atlas( float x, float y, float sizex, float sizey )
+		sAtlas( float x, float y, float sizex, float sizey )
 		{
 			this->x		= x;
 			this->y		= y;
-			this->sizex = sizex;
-			this->sizey = sizey;
+			this->sizeX = sizex;
+			this->sizeY = sizey;
 		};
-		float x, y, sizex, sizey;
+		float m_x, m_y, m_sizeX, m_sizeY;
 	};
 
 	// Z Ignored
-	CVector mousePos;
+	CVector m_vMousePos;
 
 	// Used to get the input
-	CInputManager *inputMan = nullptr;
+	CInputManager *m_pInputMan = nullptr;
 
 	// Update
 	void Update();
 
 	void Resize( int x, int y );
 
-	CVector screenCentre;
-	CVector screenDimensions;
+	CVector m_vScreenCentre;
+	CVector m_vScreenDimensions;
 
 	// Current button pressed down
-	int mouseState;
+	int m_iMouseState;
 	// Item under the mouse
-	int hotItem;
+	int m_iHotItem;
 	// Current interaction
-	int activeItem;
+	int m_iActiveItem;
 
 	// Z Ignored!
-	bool RegionHit( CVector pos, CVector size );
+	bool RegionHit( CVector vPosition, CVector vSize );
 
 	// Converts positions to screen ones, including negatives being from the opposite side and stuff
-	CVector GetInScreen( CVector pos );
+	CVector GetInScreen( CVector vPosition );
 
 	// Elements
-	int Button( int id, CVector pos, CVector size );
-	void Label( const char *text, CVector pos, Colour color = Color( 1, 1, 1 ) );
-	void Image( CTexture *tex, CVector pos, CVector size, CVector origin = CVector( 0, 0 ) );
-	void ImageAtlas( CTexture *tex, Atlas atlas, float atlasDivisions, CVector pos, CVector size,
-					 CVector origin = CVector( 0, 0 ) );
-	const char *TextInput( int id, CVector pos );
+	int Button( int iId, CVector vPosition, CVector vSize );
+	void Label( const char *cText, CVector vPosition, Colour colour = Color( 1, 1, 1 ) );
+	void Image( CTexture *pTex, CVector vPosition, CVector vSize, CVector vOrigin = CVector( 0, 0 ) );
+	void ImageAtlas( CTexture *pTex, Atlas atlas, float fAtlasDivisions, CVector vPosition, CVector vSize,
+					 CVector vOrigin = CVector( 0, 0 ) );
+	const char *TextInput( int iId, CVector vPosition );
 };

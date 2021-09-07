@@ -8,5 +8,5 @@ class CParticleEmitter
 	CParticleEmitter();
 	~CParticleEmitter();
 
-	std::vector<CParticle> particles;
+	std::vector<CParticle> m_particles;
 };

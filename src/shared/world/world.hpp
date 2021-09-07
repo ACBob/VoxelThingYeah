@@ -56,17 +56,17 @@ class CWorld
 	// FIXME: depending on if I got my calculation right, this will shit itself either in 1,000 or so years or 3.
 	void WorldTick( int tick );
 
-	struct PortableChunkRepresentation
+	struct sPortableChunkRepresentation
 	{
 		int32_t x, y, z;
 		uint32_t blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 	};
-	PortableChunkRepresentation GetWorldRepresentation( CVector pos );
+	sPortableChunkRepresentation GetWorldRepresentation( CVector pos );
 
 	// Merges the PortableChunkRepresentation into us :)
-	void UsePortable( PortableChunkRepresentation rep );
+	void UsePortable( sPortableChunkRepresentation rep );
 
-	std::vector<void *> ents;
+	std::vector<void *> m_ents;
 	void AddEntity( void *e );
 
 	void *GetEntityByName( const char *name );
@@ -75,14 +75,14 @@ class CWorld
 	void Render();
 
 	// Shader we render with
-	CShader *worldShader = nullptr;
+	CShader *m_pWorldShader = nullptr;
 	// Shader entities render with
-	CShader *entityShader = nullptr;
+	CShader *m_pEntityShader = nullptr;
 #endif
 
-	std::vector<CChunk *> chunks;
+	std::vector<CChunk *> m_chunks;
 
-	int timeOfDay = 6890;
+	int m_iTimeOfDay = 6890;
 
-	COverworldJeneration jenerator;
+	COverworldJeneration m_jenerator;
 };

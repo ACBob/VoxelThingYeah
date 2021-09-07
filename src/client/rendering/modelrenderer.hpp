@@ -18,13 +18,13 @@ class CModelRenderer
 
   private:
 	// Vertex Buffer
-	unsigned int vbo;
+	unsigned int m_iVbo;
 	// Array buffer
-	unsigned int vao;
+	unsigned int m_iVao;
 	// Element buffer
-	unsigned int ebo;
+	unsigned int m_iEbo;
 
 	// Holds the amount of faces/vertices we have
-	std::size_t nFaces;
-	std::size_t nVertices;
+	std::size_t m_nFaces;
+	std::size_t m_nVertices;
 };

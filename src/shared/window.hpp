@@ -36,16 +36,16 @@ class CBobWindow
 	// Returns the milliseconds since the beginning of the program
 	virtual unsigned int GetMS() = 0;
 
-	bool shouldClose = false;
+	bool m_bShouldClose = false;
 
-	float delta = 0;
+	float m_fDelta = 0;
 
 	// Places the mouse in the middle of the screen
 	virtual void CaptureMouse() = 0;
 
 	virtual void SwapBuffers() = 0;
 
-	bool sizeChanged = false;
+	bool m_bSizeChanged = false;
 
 	// Pointer to Input manager
 	CInputManager *inputMan = nullptr;

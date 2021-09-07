@@ -38,14 +38,14 @@ class CGameWindow : public CBobWindow
 	float GetSPF();
 	double GetTime();
 
-	unsigned int tick;
-	unsigned int lastTick;
+	unsigned int m_iTick;
+	unsigned int m_iLastTick;
 
-	unsigned int frameTicks;
-	unsigned int framesInTheLastSecond;
-	float secondsPerFrame;
+	unsigned int m_iFrameTicks;
+	unsigned int m_iFramesInTheLastSecond;
+	float m_fSecondsPerFrame;
 
-	double delta;
+	double m_dDelta;
 
 	unsigned int GetMS();
 
@@ -57,14 +57,14 @@ class CGameWindow : public CBobWindow
 
 	void UpdateSize();
 
-	std::unique_ptr<SDL_Window, decltype( &SDL_DestroyWindow )> internalWindow;
-	SDL_GLContext glctx;
+	std::unique_ptr<SDL_Window, decltype( &SDL_DestroyWindow )> m_pInternalWindow;
+	SDL_GLContext m_glctx;
 
-	bool shouldClose;
-	bool sizeChanged;
+	bool m_bShouldClose;
+	bool m_bSizeChanged;
 
 	// Pointer to Input manager
-	CInputManager *inputMan = nullptr;
+	CInputManager *m_pInputMan = nullptr;
 };
 
 #endif

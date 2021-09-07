@@ -2,33 +2,33 @@
 #include "utility/vector.hpp"
 #include "world/world.hpp"
 
-CPointedThing::CPointedThing() : block( nullptr ), position( 0 ) {}
+CPointedThing::CPointedThing() : m_pBlock( nullptr ), m_vPosition( 0 ) {}
 
-CVoxRaycast::CVoxRaycast() : pos( 0 ), dir( 0 ), length( 0 ) {}
+CVoxRaycast::CVoxRaycast() : m_vPosition( 0 ), m_vDirection( 0 ), m_fLength( 0 ) {}
 
 CPointedThing CVoxRaycast::Cast( CWorld *chunkMan )
 {
-	CVector ray = pos;
-	CVector oRay; // for figuring out normal
+	CVector vRay = pos;
+	CVector vOtherRay; // for figuring out normal
 
 	const float step = 0.01;
 	float i			 = 0;
 
-	CBlock *b = nullptr;
+	CBlock *pBlock = nullptr;
 	while ( i <= length )
 	{
-		oRay = ray;
-		ray	 = pos + dir * i;
+		vOtherRay = vRay;
+		vRay	 = m_vPosition + m_vDirection * i;
 		i += step;
-		b = chunkMan->BlockAtWorldPos( ray );
+		b = chunkMan->BlockAtWorldPos( vRay );
 
-		if ( chunkMan->TestPointCollision( ray ) )
+		if ( chunkMan->TestPointCollision( vRay ) )
 			break;
 	}
 
-	CPointedThing p;
-	p.position = CVector( ceil( ray.x ), ceil( ray.y ), ceil( ray.z ) );
-	p.block	   = b;
-	p.normal   = oRay.Floor() - ray.Floor();
-	return p;
+	CPointedThing pointedThing;
+	p.m_vPosition = CVector( ceil( vRay.x ), ceil( vRay.y ), ceil( vRay.z ) );
+	p.m_pBlock	   = b;
+	p.m_vNormal   = vOtherRay.Floor() - vRay.Floor();
+	return pointedThing;
 }

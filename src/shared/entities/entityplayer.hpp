@@ -18,8 +18,8 @@ class CEntityPlayer : public CEntityBase
 	{
 		BaseClass::Spawn();
 #ifdef CLIENTEXE
-		mdl = modelSystem::LoadModel( "models/player.obj" );
-		mdl->SetTexture( materialSystem::LoadTexture( "player.png" ) );
+		m_pMdl = modelSystem::LoadModel( "models/player.obj" );
+		m_pMdl->SetTexture( materialSystem::LoadTexture( "player.png" ) );
 #endif
 	};
 	void Kill() { BaseClass::Kill(); }
@@ -31,17 +31,17 @@ class CEntityPlayer : public CEntityBase
 	void PhysicsTick( float delta, CWorld *world );
 
 #ifdef CLIENTEXE
-	CInputManager *inputMan = nullptr;
-	CVoxRaycast hand;
-	CPointedThing pointed;
+	CInputManager *m_pInputMan = nullptr;
+	CVoxRaycast m_hand;
+	CPointedThing m_pointed;
 
 	// Block type we're gonna place
-	blocktype_t selectedBlockType = blocktype_t::DIRT;
+	blocktype_t m_iSelectedBlockType = blocktype_t::DIRT;
 
-	CCamera camera;
+	CCamera m_camera;
 
-	void *client = nullptr;
+	void *m_pClient = nullptr;
 #endif
 
-	bool onFloor;
+	bool m_bOnFloor;
 };

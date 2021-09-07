@@ -13,7 +13,7 @@ class CBlock
   public:
 	CBlock();
 
-	blocktype_t blockType = blocktype_t::AIR;
+	blocktype_t m_iBlockType = blocktype_t::AIR;
 
 #ifdef CLIENTEXE
 	BlockTexture GetSideTexture( Direction side );
@@ -29,5 +29,5 @@ class CBlock
 	void Update();
 
 	// Pointer to chunk that holds us
-	void *chunk;
+	void *m_pChunk;
 };
