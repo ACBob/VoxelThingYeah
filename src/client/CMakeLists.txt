@@ -3,6 +3,7 @@ add_subdirectory(rendering)
 add_subdirectory(sdlstuff)
 add_subdirectory(sound)
 add_subdirectory(particles)
+add_subdirectory(network)
 
 set(client_SRCS
 	${rendering_SRCS}
@@ -10,6 +11,7 @@ set(client_SRCS
 	${gui_SRCS}
 	${sound_SRCS}
 	${particle_SRCS}
+	${net_SRCS}
 
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/cvar_clientside.cpp
