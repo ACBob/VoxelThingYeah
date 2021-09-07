@@ -19,6 +19,8 @@ AlignOperands: true
 AllowShortIfStatementsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: All
 
+AlignConsecutiveAssignments: true
+
 SpacesInParentheses: true
 
 PointerAlignment: Right
