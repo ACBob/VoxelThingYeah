@@ -1,6 +1,6 @@
 #include "network/protocol.hpp"
 
-namespace network
+namespace protocol
 {
 	void DealWithPacket(NetworkPacket &p, void *side, ENetPeer *peer)
 	{

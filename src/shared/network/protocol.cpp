@@ -13,19 +13,7 @@
 
 namespace protocol
 {
-	void SendPacket(ENetPeer *peer, ClientPacket &p)
-	{
-		ArchiveBuf buf;
-		Archive<ArchiveBuf> bufAccess(buf);
-		p.data = p.buffer.str();
-		bufAccess << p;
-
-		ArchiveIntermediary g = buf.str();
-
-		ENetPacket *packet = enet_packet_create(&g.begin()[0], g.size(), ENET_PACKET_FLAG_RELIABLE);
-		enet_peer_send(peer, 0, packet);
-	}
-	void SendPacket(ENetPeer *peer, ServerPacket &p)
+	void SendPacket(ENetPeer *peer, NetworkPacket &p)
 	{
 		ArchiveBuf buf;
 		Archive<ArchiveBuf> bufAccess(buf);

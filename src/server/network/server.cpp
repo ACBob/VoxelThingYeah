@@ -68,10 +68,10 @@ void NetworkServer::KickPlayer(const char *username, const char* reason)
 
 	KickPlayer(c, reason);
 }
-void NetworkServer::KickPlayer(Client *player, const char* reason)
+void NetworkServer::KickPlayer(NetworkPlayer *player, const char* reason)
 {
 	ENetPeer *peer = player->peer;
-	protocol::messages::SendServerPlayerDisconnect(peer, true, reason);
+	protocol::SendServerPlayerDisconnect(peer, true, reason);
 
 	con_info("Kicking player for reason %s", reason);
 
@@ -89,7 +89,7 @@ void NetworkServer::Update()
 			break;
 			case ENET_EVENT_TYPE_DISCONNECT:
 			{
-				Client* c = ClientFromPeer(e.peer);
+				NetworkPlayer* c = ClientFromPeer(e.peer);
 				con_info("Goodbye %s!", c->username.c_str());
 				// Destroy the client object AND player
 				players.erase(
@@ -121,18 +121,18 @@ void NetworkServer::Update()
 		{
 			World::PortableChunkRepresentation crep = world.GetWorldRepresentation(c->position);
 
-			for (Client *cl : players)
+			for (NetworkPlayer *cl : players)
 			{
 				if (cl->nextChunkLoadTick < currentTick)
 				{
-					protocol::messages::SendServerChunkDataFromRep(cl->peer, crep);
+					protocol::SendServerChunkDataFromRep(cl->peer, crep);
 				}
 			}
 			c->outdated = false;
 		}
 	}
 
-	for (Client *c : players)
+	for (NetworkPlayer *c : players)
 	{
 		// Update chunk pos
 		// Unfortunate name
@@ -161,7 +161,7 @@ void NetworkServer::Update()
 
 		p = p + c->chunkPos;
 
-		protocol::messages::SendServerChunkData(c->peer, &world, p);
+		protocol::SendServerChunkData(c->peer, &world, p);
 		
 		c->loadedChunkIDX ++;
 	}

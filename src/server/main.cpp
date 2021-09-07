@@ -4,6 +4,7 @@
 
 #include "shared/filesystem.hpp"
 #include "network/network.hpp"
+#include "network/server.hpp"
 
 #include <chrono>
 
@@ -43,7 +44,7 @@ int main (int argc, char* args[]) {
 	atexit(network::Uninit);
 
 	con_info("Create Server...");
-	network::Server server(sv_port->GetInt());
+	NetworkServer server(sv_port->GetInt());
 	if (!server.WorkingServer())
 	{
 		con_critical("Server became invalid");
@@ -72,8 +73,8 @@ int main (int argc, char* args[]) {
 
 			if (i % 5 == 0)
 			{
-				for (network::Client *c : server.players)
-					protocol::messages::SendServerTimeOfDay(c->peer, server.world.timeOfDay);
+				for (NetworkPlayer *c : server.players)
+					protocol::SendServerTimeOfDay(c->peer, server.world.timeOfDay);
 			}
 		}
 

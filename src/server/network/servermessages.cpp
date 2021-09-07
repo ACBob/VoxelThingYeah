@@ -1,5 +1,5 @@
-#include "network/protocolmessages.hpp"
-#include "cvar_serverside.h"
+#include "network/protocol.hpp"
+#include "cvar_serverside.hpp"
 
 namespace protocol
 {

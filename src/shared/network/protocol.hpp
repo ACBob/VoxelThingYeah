@@ -197,10 +197,10 @@ namespace protocol
 	// side is a badly named pointer to whoever called this
 	// Be them client or server
 	// What they're interpereted as is down to the packet's server flag
-	void UncompressAndDealWithPacket(ArchiveIntermediary packetData, void *side, ENetPeer *p = nullptr);
+	void UncompressAndDealWithPacket(ArchiveIntermediary packetData, void *side, ENetPeer *p);
 
 	// Pew pew
-	void SendPacket(ENetPeer *peer, Packet &p);
+	void SendPacket(ENetPeer *peer, NetworkPacket &p);
 
 	/****************************************************/
 	/******************* SERVER *************************/

@@ -1,5 +1,7 @@
 #include "client.hpp"
 
+#define LOG_LEVEL DEBUG
+#include "seethe.h"
 
 NetworkClient::NetworkClient()
 {
@@ -45,7 +47,7 @@ bool NetworkClient::Connect(const char* address, int port)
 	{
 		con_info("Hello! We've connected to a server!");
 		con_info("Sending the neccesary information");
-		protocol::messages::SendClientPlayerID(e.peer);
+		protocol::SendClientPlayerID(e.peer);
 		peer = e.peer;
 		connected = true;
 		return true;
@@ -64,7 +66,7 @@ void NetworkClient::Disconnect()
 		return;
 	}
 	con_info("Disconnecting");
-	protocol::messages::SendClientLeave(peer);
+	protocol::SendClientLeave(peer);
 
 	while (enet_host_service(enetHost, &e, 0) > 0)
 	{

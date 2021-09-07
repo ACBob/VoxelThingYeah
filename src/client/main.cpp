@@ -249,7 +249,7 @@ int main (int argc, char* args[]) {
 				const char *chat = gui.TextInput(0, Vector(0,2));
 				if (chat != nullptr)
 				{
-					protocol::messages::SendClientChatMessage(client.peer, chat);
+					protocol::SendClientChatMessage(client.peer, chat);
 					chatting = false;
 					inputMan.inGui = false;
 				}
@@ -296,7 +296,7 @@ int main (int argc, char* args[]) {
 			then = now + 50;
 			localWorld.WorldTick(i);
 
-			protocol::messages::SendClientPlayerPos(client.peer, plyr.position, plyr.rotation);
+			protocol::SendClientPlayerPos(client.peer, plyr.position, plyr.rotation);
 		}
 	}
 	window.SetVisible(false);

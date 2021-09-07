@@ -1,13 +1,14 @@
 #include "network/protocol.hpp"
+#include "client.hpp"
 
-namespace network
+namespace protocol
 {
 	void DealWithPacket(NetworkPacket &p, void *side, ENetPeer *peer)
 	{
 		ArchiveBuf buf(p.data);
 		Archive<ArchiveBuf> bufAccess(buf);
 
-		network::Client *client = reinterpret_cast<network::Client*>(side);
+		NetworkClient *client = reinterpret_cast<NetworkClient*>(side);
 
 		switch (p->type)
 		{

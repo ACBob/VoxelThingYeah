@@ -1,7 +1,7 @@
 #include "enet/enet.h"
 #include "world/world.hpp"
 #include "entities/entityplayer.hpp"
-#include "protocol.hpp"
+#include "network/protocol.hpp"
 
 // This is us.
 class NetworkClient
