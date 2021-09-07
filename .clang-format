@@ -1,0 +1,31 @@
+BasedOnStyle: Microsoft
+
+FixNamespaceComments: true
+
+IndentCaseLabels: true
+IndentPPDirectives: BeforeHash
+IndentWidth: 4
+NamespaceIndentation: All
+
+BraceWrapping:
+ AfterClass: true
+ AfterStruct: true
+ AfterEnum: false
+BreakBeforeBraces: Custom
+
+AlignConsecutiveAssignments: true
+AlignOperands: true
+
+AllowShortIfStatementsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: All
+
+SpacesInParentheses: true
+
+PointerAlignment: Right
+
+SortIncludes: true
+
+Standard: Cpp11
+
+TabWidth: 4
+UseTab: Always

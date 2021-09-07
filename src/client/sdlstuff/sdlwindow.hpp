@@ -11,59 +11,60 @@
 
 class GameWindow : public BobWindow
 {
-	public:
-		GameWindow(const char *title = "GameWindow", Vector size = Vector(800,600), bool resizeable = false); // SDL_CreateWindow
-		~GameWindow(); // SDL_DestroyWindow
+  public:
+	GameWindow( const char *title = "GameWindow", Vector size = Vector( 800, 600 ),
+				bool resizeable = false ); // SDL_CreateWindow
+	~GameWindow();						   // SDL_DestroyWindow
 
-		// SDL_HideWindow / SDL_ShowWindow
-		bool IsVisible(); // getter(?)
-		void SetVisible(bool v); // setter(?)
+	// SDL_HideWindow / SDL_ShowWindow
+	bool IsVisible();		   // getter(?)
+	void SetVisible( bool v ); // setter(?)
 
-		bool IsFocused();
+	bool IsFocused();
 
-		// SDL_SetWindowTitle / SDL_GetWindowTitle
-		void SetTitle(const char *title);
-		const char *GetTitle();
+	// SDL_SetWindowTitle / SDL_GetWindowTitle
+	void SetTitle( const char *title );
+	const char *GetTitle();
 
-		// Z Ignored
-		// SDL_SetWindowSize / SDL_GetWindowSize
-		Vector GetSize();
-		void SetSize(Vector s);
-		// Z Ignored
-		// SDL_SetWindowPos / SDL_GetWindowPos
-		Vector GetPos();
-		void SetPos(Vector p);
+	// Z Ignored
+	// SDL_SetWindowSize / SDL_GetWindowSize
+	Vector GetSize();
+	void SetSize( Vector s );
+	// Z Ignored
+	// SDL_SetWindowPos / SDL_GetWindowPos
+	Vector GetPos();
+	void SetPos( Vector p );
 
-		float GetSPF();
-		double GetTime();
+	float GetSPF();
+	double GetTime();
 
-		unsigned int tick;
-		unsigned int lastTick;
+	unsigned int tick;
+	unsigned int lastTick;
 
-		unsigned int frameTicks;
-		unsigned int framesInTheLastSecond;
-		float secondsPerFrame;
+	unsigned int frameTicks;
+	unsigned int framesInTheLastSecond;
+	float secondsPerFrame;
 
-		double delta;
+	double delta;
 
-		unsigned int GetMS();
+	unsigned int GetMS();
 
-		void PollEvents();
+	void PollEvents();
 
-		void CaptureMouse();
+	void CaptureMouse();
 
-		void SwapBuffers();
+	void SwapBuffers();
 
-		void UpdateSize();
+	void UpdateSize();
 
-		std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> internalWindow;
-		SDL_GLContext glctx;
+	std::unique_ptr<SDL_Window, decltype( &SDL_DestroyWindow )> internalWindow;
+	SDL_GLContext glctx;
 
-		bool shouldClose;
-		bool sizeChanged;
+	bool shouldClose;
+	bool sizeChanged;
 
-		// Pointer to Input manager
-		InputManager *inputMan = nullptr;
+	// Pointer to Input manager
+	InputManager *inputMan = nullptr;
 };
 
 #endif

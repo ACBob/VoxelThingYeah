@@ -11,26 +11,26 @@
 
 class Sound
 {
-	public:
-		Sound(const char* path);
-		// Listen = location of listener
-		// Src = location of sound src
-		void Play(Vector src, float pitch, float gain);
+  public:
+	Sound( const char *path );
+	// Listen = location of listener
+	// Src = location of sound src
+	void Play( Vector src, float pitch, float gain );
 
-		unsigned int id, buffer;
+	unsigned int id, buffer;
 };
 
 class SoundManager
 {
-	public:
-		SoundManager();
-		~SoundManager();
+  public:
+	SoundManager();
+	~SoundManager();
 
-		Sound* LoadSound(const char* path);
+	Sound *LoadSound( const char *path );
 
-		std::vector<Sound*> loadedSounds;
-		std::map<const char*, Sound*> namedSounds;
+	std::vector<Sound *> loadedSounds;
+	std::map<const char *, Sound *> namedSounds;
 
-		void PlayBreakSound(blocktype_t blockType, Vector pos);
-		void PlayPlaceSound(blocktype_t blockType, Vector pos);
+	void PlayBreakSound( blocktype_t blockType, Vector pos );
+	void PlayPlaceSound( blocktype_t blockType, Vector pos );
 };

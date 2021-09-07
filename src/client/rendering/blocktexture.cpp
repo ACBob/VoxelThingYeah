@@ -1,69 +1,69 @@
 #include "blocktexture.hpp"
 
-BlockTexture GetDefaultBlockTextureSide(blocktype_t type, Direction side)
+BlockTexture GetDefaultBlockTextureSide( blocktype_t type, Direction side )
 {
-	switch (type)
+	switch ( type )
 	{
 		case AIR: // Shouldn't be possible
-			return {0,0,0,0};
-		break;
+			return { 0, 0, 0, 0 };
+			break;
 
 		case STONE:
-			return {0,0, 1,1};
-		break;
+			return { 0, 0, 1, 1 };
+			break;
 
 		case DIRT:
-			return {1,0, 1,1};
-		break;
+			return { 1, 0, 1, 1 };
+			break;
 
 		case GRASS:
-			if (side == Direction::UP)
+			if ( side == Direction::UP )
 			{
-				return {2,0, 1,1};
+				return { 2, 0, 1, 1 };
 			}
-			if (side == Direction::DOWN)
+			if ( side == Direction::DOWN )
 			{
-				return {1,0, 1,1};
+				return { 1, 0, 1, 1 };
 			}
-			return {3,0, 1,1};
-		break;
+			return { 3, 0, 1, 1 };
+			break;
 
 		case COBBLE:
-			return {4,0, 1,1};
-		break;
+			return { 4, 0, 1, 1 };
+			break;
 		case PLANKS:
-			return {5,0, 1,1};
-		break;
+			return { 5, 0, 1, 1 };
+			break;
 		case BEDROCK:
-			return {6,0, 1,1};
-		break;
+			return { 6, 0, 1, 1 };
+			break;
 		case GLASS:
-			return {7,0, 1,1};
-		break;
+			return { 7, 0, 1, 1 };
+			break;
 		case LOG:
-			if (side == Direction::UP || side == Direction::DOWN)
+			if ( side == Direction::UP || side == Direction::DOWN )
 			{
-				return {8,1, 1,1};
+				return { 8, 1, 1, 1 };
 			}
-			return {8,0, 1,1};
-		break;
+			return { 8, 0, 1, 1 };
+			break;
 		case LEAVES:
-			return {9,0, 1,1};
-		break;
+			return { 9, 0, 1, 1 };
+			break;
 		case WATER:
-			return {10,0, 1,1};
-		break;
+			return { 10, 0, 1, 1 };
+			break;
 		case LAVA:
-			return {11,0, 1,1};
-		break;
+			return { 11, 0, 1, 1 };
+			break;
 		case ORE_COAL:
-			return {12,0, 1,1};
-		break;
+			return { 12, 0, 1, 1 };
+			break;
 		case ORE_IRON:
-			return {13,0, 1,1};
-		break;
+			return { 13, 0, 1, 1 };
+			break;
 		case FLOWER:
-			return {14,0, 1,1};
-		break;
+			return { 14, 0, 1, 1 };
+			break;
 	}
 }

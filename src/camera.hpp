@@ -4,9 +4,9 @@
 
 class Camera
 {
-	public:
-		Vector pos;
+  public:
+	Vector pos;
 
-		// what direction the camera points
-		Vector forward;
+	// what direction the camera points
+	Vector forward;
 };

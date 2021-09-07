@@ -4,9 +4,9 @@
 
 class ParticleEmitter
 {
-	public:
-		ParticleEmitter();
-		~ParticleEmitter();
+  public:
+	ParticleEmitter();
+	~ParticleEmitter();
 
-		std::vector<Particle> particles;
+	std::vector<Particle> particles;
 };

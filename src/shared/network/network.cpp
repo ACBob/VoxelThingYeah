@@ -7,15 +7,12 @@ namespace network
 {
 	bool Init()
 	{
-		if(enet_initialize() != 0)
+		if ( enet_initialize() != 0 )
 		{
-			con_error("ENet failed to initialise");
+			con_error( "ENet failed to initialise" );
 			return false;
 		}
 		return true;
 	}
-	void Uninit()
-	{
-		enet_deinitialize();
-	}
-}
+	void Uninit() { enet_deinitialize(); }
+} // namespace network

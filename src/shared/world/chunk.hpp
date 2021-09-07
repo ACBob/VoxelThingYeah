@@ -3,8 +3,8 @@
 #include "world/block.hpp"
 
 #ifdef CLIENTEXE
-#include "rendering/chunkmodel.hpp"
-#include "rendering/shadermanager.hpp"
+	#include "rendering/chunkmodel.hpp"
+	#include "rendering/shadermanager.hpp"
 #endif
 
 #include "fastnoise.h"
@@ -14,48 +14,48 @@
 #define CHUNKSIZE_Z 16
 
 // Why yes, I am a C++ Programmer, how could you tell?
-#define CHUNK3D_TO_1D(x, y, z) x + y*CHUNKSIZE_X + z*CHUNKSIZE_X*CHUNKSIZE_Z
-#define CHUNK1D_TO_3D(i, x, y, z) z = round(i / (CHUNKSIZE_X * CHUNKSIZE_Y)); y = round((i - z * CHUNKSIZE_X * CHUNKSIZE_Y) / CHUNKSIZE_X); x = i - CHUNKSIZE_X * (y + CHUNKSIZE_Y * z)
+#define CHUNK3D_TO_1D( x, y, z ) x + y *CHUNKSIZE_X + z *CHUNKSIZE_X *CHUNKSIZE_Z
+#define CHUNK1D_TO_3D( i, x, y, z )                                                                                    \
+	z = round( i / ( CHUNKSIZE_X * CHUNKSIZE_Y ) );                                                                    \
+	y = round( ( i - z * CHUNKSIZE_X * CHUNKSIZE_Y ) / CHUNKSIZE_X );                                                  \
+	x = i - CHUNKSIZE_X * ( y + CHUNKSIZE_Y * z )
 
 #pragma once
 
 class Chunk
 {
-	public:
-		Chunk();
-		~Chunk();
+  public:
+	Chunk();
+	~Chunk();
 
-		Chunk* Neighbour(Direction dir);
+	Chunk *Neighbour( Direction dir );
 
-		Vector position;
-		Vector GetPosInWorld()
-		{
-			return position * Vector(CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z);
-		}
+	Vector position;
+	Vector GetPosInWorld() { return position * Vector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ); }
 
-		Block* GetBlockAtLocal(Vector pos);
+	Block *GetBlockAtLocal( Vector pos );
 
 #ifdef CLIENTEXE
-		void RebuildMdl();
+	void RebuildMdl();
 
-		void Render();
+	void Render();
 #endif
-		void Update();
+	void Update();
 
-		Vector PosToWorld(Vector pos);
+	Vector PosToWorld( Vector pos );
 
-		// Flat array of blocks, access with
-		// Indexed with [x + SIZEX * (y + SIZEZ * z)]
-		Block blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
+	// Flat array of blocks, access with
+	// Indexed with [x + SIZEX * (y + SIZEZ * z)]
+	Block blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 
 #ifdef CLIENTEXE
-		Model mdl;
+	Model mdl;
 #endif
 
-		// World pointer (can't set type because circular include :lenny:)
-		void* chunkMan = nullptr;
+	// World pointer (can't set type because circular include :lenny:)
+	void *chunkMan = nullptr;
 
-		bool outdated = false;
+	bool outdated = false;
 };
 
-bool ValidChunkPosition(Vector pos);
+bool ValidChunkPosition( Vector pos );

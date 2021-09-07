@@ -1,50 +1,47 @@
-#include "entitybase.hpp"
-#include "utility/raycast.hpp"
-#include "shared/inputmanager.hpp"
 #include "camera.hpp"
+#include "entitybase.hpp"
+#include "shared/inputmanager.hpp"
+#include "utility/raycast.hpp"
 
 #pragma once
 
 class EntityPlayer : public EntityBase
 {
-	DeclBaseClass(EntityBase);
+	DeclBaseClass( EntityBase );
 
-	public:
-		EntityPlayer();
-		~EntityPlayer();
+  public:
+	EntityPlayer();
+	~EntityPlayer();
 
-		void Tick();
-		void Spawn()
-		{
-			BaseClass::Spawn();
+	void Tick();
+	void Spawn()
+	{
+		BaseClass::Spawn();
 #ifdef CLIENTEXE
-			mdl = modelSystem::LoadModel("models/player.obj");
-			mdl->SetTexture(materialSystem::LoadTexture("player.png"));
+		mdl = modelSystem::LoadModel( "models/player.obj" );
+		mdl->SetTexture( materialSystem::LoadTexture( "player.png" ) );
 #endif
-		};
-		void Kill()
-		{
-			BaseClass::Kill();
-		}
+	};
+	void Kill() { BaseClass::Kill(); }
 
 #ifdef CLIENTEXE
-		void UpdateClient(World *clientSideWorld);
+	void UpdateClient( World *clientSideWorld );
 #endif
 
-		void PhysicsTick(float delta, World *world);
+	void PhysicsTick( float delta, World *world );
 
 #ifdef CLIENTEXE
-		InputManager *inputMan = nullptr;
-		VoxRaycast hand;
-		PointedThing pointed;
+	InputManager *inputMan = nullptr;
+	VoxRaycast hand;
+	PointedThing pointed;
 
-		// Block type we're gonna place
-		blocktype_t selectedBlockType = blocktype_t::DIRT;
+	// Block type we're gonna place
+	blocktype_t selectedBlockType = blocktype_t::DIRT;
 
-		Camera camera;
+	Camera camera;
 
-		void *client = nullptr;
+	void *client = nullptr;
 #endif
 
-		bool onFloor;
+	bool onFloor;
 };

@@ -3,12 +3,12 @@
 class Particle
 {
 
-	public:
-		Particle();
-		~Particle();
+  public:
+	Particle();
+	~Particle();
 
-		Vector position;
-		Vector size; // Z Ignored!!!
+	Vector position;
+	Vector size; // Z Ignored!!!
 
-		bool shouldDie;
+	bool shouldDie;
 };

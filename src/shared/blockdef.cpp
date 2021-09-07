@@ -1,8 +1,8 @@
 #include "blockdef.hpp"
 
-blockmaterial_t GetBlockMaterial(blocktype_t blockType)
+blockmaterial_t GetBlockMaterial( blocktype_t blockType )
 {
-	switch(blockType)
+	switch ( blockType )
 	{
 		default:
 		case STONE:
@@ -11,82 +11,82 @@ blockmaterial_t GetBlockMaterial(blocktype_t blockType)
 		case ORE_COAL:
 		case ORE_IRON:
 			return blockmaterial_t::MAT_STONE;
-		break;
+			break;
 
 		case DIRT:
 			return blockmaterial_t::MAT_LOOSE;
-		break;
+			break;
 
 		case PLANKS:
 		case LOG:
 			return blockmaterial_t::MAT_WOOD;
-		break;
+			break;
 
 		case GLASS:
 			return blockmaterial_t::MAT_GLASS;
-		break;
+			break;
 
 		case GRASS:
 		case LEAVES:
 		case FLOWER:
 			return blockmaterial_t::MAT_ORGANIC;
-		break;
+			break;
 	}
 }
 
-BlockFeatures GetBlockFeatures(blocktype_t blockType)
+BlockFeatures GetBlockFeatures( blocktype_t blockType )
 {
 	BlockFeatures bF;
-	bF.breakable = true;
-	bF.selectable = true;
-	bF.solid = true;
-	bF.walkable = true;
-	bF.floodable = false;
-	bF.isLiquid = false;
+	bF.breakable   = true;
+	bF.selectable  = true;
+	bF.solid	   = true;
+	bF.walkable	   = true;
+	bF.floodable   = false;
+	bF.isLiquid	   = false;
 	bF.liquidSpeed = 0;
-	bF.rule = OBSCURERULE_ALWAYS;
-	bF.model = BLOCKMODEL_CUBE;
+	bF.rule		   = OBSCURERULE_ALWAYS;
+	bF.model	   = BLOCKMODEL_CUBE;
 
-	switch(blockType)
+	switch ( blockType )
 	{
 		default:
-		break;
+			break;
 
 		case BEDROCK:
 			bF.breakable = false;
-		break;
+			break;
 
 		case LEAVES:
 		case GLASS:
-			bF.rule = blockType == LEAVES ? OBSCURERULE_NEVER : OBSCURERULE_SIMILAR;
+			bF.rule	 = blockType == LEAVES ? OBSCURERULE_NEVER : OBSCURERULE_SIMILAR;
 			bF.solid = false;
-		break;
+			break;
 
 		case FLOWER:
-			bF.rule = OBSCURERULE_NEVER;
+			bF.rule	 = OBSCURERULE_NEVER;
 			bF.solid = false;
 			bF.model = BLOCKMODEL_PLANT;
-		break;
+			break;
 
 		case WATER:
 		case LAVA:
-			bF.breakable = false;
-			bF.selectable = false;
-			bF.walkable = false;
-			bF.solid = false;
-			bF.isLiquid = true;
+			bF.breakable   = false;
+			bF.selectable  = false;
+			bF.walkable	   = false;
+			bF.solid	   = false;
+			bF.isLiquid	   = true;
 			bF.liquidSpeed = blockType == LAVA ? 29 : 5;
-			bF.rule = OBSCURERULE_SIMILAR;
-		break;
-		
+			bF.rule		   = OBSCURERULE_SIMILAR;
+			break;
+
 		case AIR:
-			bF.breakable = false;
+			bF.breakable  = false;
 			bF.selectable = false;
-			bF.solid = false;
-			bF.walkable = false;
-			bF.floodable = true;
-			bF.rule = OBSCURERULE_NEVER;
-		break;
+			bF.solid	  = false;
+			bF.walkable	  = false;
+			bF.floodable  = true;
+			bF.rule		  = OBSCURERULE_NEVER;
+			break;
 	}
 
 	return bF;

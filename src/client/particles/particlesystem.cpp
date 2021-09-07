@@ -2,11 +2,9 @@
 
 namespace particleSystem
 {
-	void Init()
-	{}
-	void UnInit()
-	{}
+	void Init() {}
+	void UnInit() {}
 
 	std::vector<Particle> particles;
 	std::vector<ParticleEmitter> particleEmitters;
-}
+} // namespace particleSystem

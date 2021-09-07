@@ -1,14 +1,14 @@
-#include "world/chunk.hpp"
 #include "world/block.hpp"
+#include "world/chunk.hpp"
 
 #include "utility/vector.hpp"
 
 #ifdef CLIENTEXE
-#include "rendering/shadermanager.hpp"
+	#include "rendering/shadermanager.hpp"
 #endif
 
-#include "world/block.hpp"
 #include "physics.hpp"
+#include "world/block.hpp"
 
 #include "jeneration.hpp"
 
@@ -18,71 +18,71 @@
 
 // #include "entities/entitybase.h"
 
-class World {
-	public:
-
+class World
+{
+  public:
 #ifdef CLIENTEXE
-		World(Shader *shader, Shader *entShader);
+	World( Shader *shader, Shader *entShader );
 #elif SERVEREXE
-		World();
+	World();
 #endif
-		~World();
+	~World();
 
-		Chunk *ChunkAtWorldPos(Vector pos);
-		Chunk *ChunkAtChunkPos(Vector chunkPos);
+	Chunk *ChunkAtWorldPos( Vector pos );
+	Chunk *ChunkAtChunkPos( Vector chunkPos );
 
-		// Tries to get a chunk and generates a new one if it can't find one
-		Chunk* GetChunkGenerateAtWorldPos(Vector pos);
+	// Tries to get a chunk and generates a new one if it can't find one
+	Chunk *GetChunkGenerateAtWorldPos( Vector pos );
 
-		// Deletes the chunk at the chunk position
-		void UnloadChunk(Vector pos);
+	// Deletes the chunk at the chunk position
+	void UnloadChunk( Vector pos );
 
-		// Returns the block at the position in world coords
-		// The given position is rounded by floor() before being used
-		// If outside the world it returns a nullptr
-		Block *BlockAtWorldPos(Vector pos);
+	// Returns the block at the position in world coords
+	// The given position is rounded by floor() before being used
+	// If outside the world it returns a nullptr
+	Block *BlockAtWorldPos( Vector pos );
 
-		// Test against an infinitely small point centred on pos
-		// Tests in world coordinates
-		bool TestPointCollision(Vector pos);
+	// Test against an infinitely small point centred on pos
+	// Tests in world coordinates
+	bool TestPointCollision( Vector pos );
 
-		// Tests in world coordinates
-		bool TestAABBCollision(AABB col);
+	// Tests in world coordinates
+	bool TestAABBCollision( AABB col );
 
-		// Is the position within our place
-		bool ValidChunkPos(const Vector pos);
+	// Is the position within our place
+	bool ValidChunkPos( const Vector pos );
 
-		// Tick is the tick since the start of the game
-		// FIXME: depending on if I got my calculation right, this will shit itself either in 1,000 or so years or 3.
-		void WorldTick(int tick);
-		
-		struct PortableChunkRepresentation
-		{
-			int32_t x,y,z;
-			uint32_t blocks[CHUNKSIZE_X*CHUNKSIZE_Y*CHUNKSIZE_Z];
-		};
-		PortableChunkRepresentation GetWorldRepresentation(Vector pos);
+	// Tick is the tick since the start of the game
+	// FIXME: depending on if I got my calculation right, this will shit itself either in 1,000 or so years or 3.
+	void WorldTick( int tick );
 
-		// Merges the PortableChunkRepresentation into us :)
-		void UsePortable(PortableChunkRepresentation rep);
+	struct PortableChunkRepresentation
+	{
+		int32_t x, y, z;
+		uint32_t blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
+	};
+	PortableChunkRepresentation GetWorldRepresentation( Vector pos );
 
-		std::vector<void*> ents;
-		void AddEntity(void* e);
+	// Merges the PortableChunkRepresentation into us :)
+	void UsePortable( PortableChunkRepresentation rep );
 
-		void* GetEntityByName(const char* name);
+	std::vector<void *> ents;
+	void AddEntity( void *e );
+
+	void *GetEntityByName( const char *name );
 
 #ifdef CLIENTEXE
-		void Render();
+	void Render();
 
-		// Shader we render with
-		Shader *worldShader = nullptr;
-		// Shader entities render with
-		Shader *entityShader = nullptr;
+	// Shader we render with
+	Shader *worldShader = nullptr;
+	// Shader entities render with
+	Shader *entityShader = nullptr;
 #endif
 
-		std::vector<Chunk*> chunks;
+	std::vector<Chunk *> chunks;
 
-		int timeOfDay = 6890;
+	int timeOfDay = 6890;
 
-		OverworldJeneration jenerator;
+	OverworldJeneration jenerator;
 };

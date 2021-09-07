@@ -2,9 +2,9 @@
 
 #include <cstdio>
 
-#include "shared/filesystem.hpp"
 #include "network/network.hpp"
 #include "network/server.hpp"
+#include "shared/filesystem.hpp"
 
 #include <chrono>
 
@@ -17,50 +17,55 @@
 
 #include "world/world.hpp"
 
-int main (int argc, char* args[]) {
-	con_info("Hello from scenic bobcraft server!");
-	con_info("Setting up Server-side convars...");
+int main( int argc, char *args[] )
+{
+	con_info( "Hello from scenic bobcraft server!" );
+	con_info( "Setting up Server-side convars..." );
 	SetupServerSideConvars();
 
-	char *argstring = FlattenCharArray(args, 1, argc-1);
-	con_debug("Args: %s", argstring);
-	con_info("Parsing command line convars...");
-	conVarHandle.Parse(argstring);
+	char *argstring = FlattenCharArray( args, 1, argc - 1 );
+	con_debug( "Args: %s", argstring );
+	con_info( "Parsing command line convars..." );
+	conVarHandle.Parse( argstring );
 
-	con_info("Init Filesystem...");
-	if (!fileSystem::Init(args[0]))
+	con_info( "Init Filesystem..." );
+	if ( !fileSystem::Init( args[0] ) )
 	{
-		con_critical("Couldn't initialise Filesystem! Unrecoverable!");
+		con_critical( "Couldn't initialise Filesystem! Unrecoverable!" );
 		return EXIT_FAILURE;
 	}
-	atexit(fileSystem::UnInit);
+	atexit( fileSystem::UnInit );
 
-	con_info("Init Network...");
-	if (!network::Init())
+	con_info( "Init Network..." );
+	if ( !network::Init() )
 	{
-		con_critical("Couldn't initialise Network! Unrecoverable!");
+		con_critical( "Couldn't initialise Network! Unrecoverable!" );
 		return EXIT_FAILURE;
 	}
-	atexit(network::Uninit);
+	atexit( network::Uninit );
 
-	con_info("Create Server...");
-	NetworkServer server(sv_port->GetInt());
-	if (!server.WorkingServer())
+	con_info( "Create Server..." );
+	NetworkServer server( sv_port->GetInt() );
+	if ( !server.WorkingServer() )
 	{
-		con_critical("Server became invalid");
+		con_critical( "Server became invalid" );
 		return EXIT_FAILURE;
 	}
 
-	con_info("Begin server main loop...");
-	int64_t then = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
-	int64_t now = then;
+	con_info( "Begin server main loop..." );
+	int64_t then =
+		std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() )
+			.count();
+	int64_t now	   = then;
 	unsigned int i = 0;
-	while (true)
+	while ( true )
 	{
-		now = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
+		now =
+			std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() )
+				.count();
 		int64_t delta = now - then;
 
-		if (now >= then) // TICK
+		if ( now >= then ) // TICK
 		{
 			then = now + sv_tickms->GetInt();
 			i++;
@@ -69,15 +74,14 @@ int main (int argc, char* args[]) {
 			server.currentTick = i;
 
 			// World
-			server.world.WorldTick(i);
+			server.world.WorldTick( i );
 
-			if (i % 5 == 0)
+			if ( i % 5 == 0 )
 			{
-				for (NetworkPlayer *c : server.players)
-					protocol::SendServerTimeOfDay(c->peer, server.world.timeOfDay);
+				for ( NetworkPlayer *c : server.players )
+					protocol::SendServerTimeOfDay( c->peer, server.world.timeOfDay );
 			}
 		}
-
 	}
 
 	return EXIT_SUCCESS;

@@ -2,22 +2,22 @@
 
 #include "vector.hpp"
 
-enum Direction {	
+enum Direction {
 	NORTH = 0, // +Z
-	EAST = 1,  // -X
+	EAST  = 1, // -X
 	SOUTH = 2, // -Z
-	WEST = 3,  // +X
+	WEST  = 3, // +X
 
-	UP = 4, // +Y
-	DOWN = 5 // -Y
+	UP	 = 4, // +Y
+	DOWN = 5  // -Y
 };
 
 const Vector DirectionVector[] = {
-	{0, 0, 1}, // NORTH
-	{1, 0, 0}, // EAST
-	{0, 0, -1}, // SOUTH
-	{-1, 0, 0}, // WEST
+	{ 0, 0, 1 },  // NORTH
+	{ 1, 0, 0 },  // EAST
+	{ 0, 0, -1 }, // SOUTH
+	{ -1, 0, 0 }, // WEST
 
-	{0, 1, 0}, // UP
-	{0, -1, 0} // DOWN
+	{ 0, 1, 0 }, // UP
+	{ 0, -1, 0 } // DOWN
 };

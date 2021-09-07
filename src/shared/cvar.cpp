@@ -11,125 +11,104 @@ ConVar::ConVarHandler conVarHandle;
 
 namespace ConVar
 {
-	ConVar::ConVar(const char* name, const char* defval, int flags)
+	ConVar::ConVar( const char *name, const char *defval, int flags )
 	{
-		this->name = name;
-		this->val = defval;
+		this->name	 = name;
+		this->val	 = defval;
 		this->defVal = defval;
-		this->flags = flags;
+		this->flags	 = flags;
 	}
 
-	void ConVar::SetString(const char* val)
+	void ConVar::SetString( const char *val )
 	{
-		char *cval = new char[strlen(val) + 1];
-		strcpy(cval, val);
-		cval[strlen(val) + 1] = '\0';
+		char *cval = new char[strlen( val ) + 1];
+		strcpy( cval, val );
+		cval[strlen( val ) + 1] = '\0';
 
-		modified = (strcmp(cval, defVal) != 0);
+		modified  = ( strcmp( cval, defVal ) != 0 );
 		this->val = cval;
 	}
-	void ConVar::SetInt(int val)
+	void ConVar::SetInt( int val )
 	{
 		char buf[256];
-		snprintf(buf, 256, "%d", val);
-		SetString(buf);
+		snprintf( buf, 256, "%d", val );
+		SetString( buf );
 	}
-	void ConVar::SetFloat(float val)
+	void ConVar::SetFloat( float val )
 	{
 		char buf[256];
-		snprintf(buf, 256, "%f", val);
-		SetString(buf);
+		snprintf( buf, 256, "%f", val );
+		SetString( buf );
 	}
-	void ConVar::SetBool(bool val)
-	{
-		SetString(val ? "true" : "false");
-	}
+	void ConVar::SetBool( bool val ) { SetString( val ? "true" : "false" ); }
 
-	const char *ConVar::GetString()
-	{
-		return this->val;
-	}
-	int ConVar::GetInt()
-	{
-		return atoi(this->val);
-	}
-	float ConVar::GetFloat()
-	{
-		return atof(this->val);
-	}
-	bool ConVar::GetBool()
-	{
-		return (strcmp(this->val, "true") != 0);
-	}
+	const char *ConVar::GetString() { return this->val; }
+	int ConVar::GetInt() { return atoi( this->val ); }
+	float ConVar::GetFloat() { return atof( this->val ); }
+	bool ConVar::GetBool() { return ( strcmp( this->val, "true" ) != 0 ); }
 
-	ConVarHandler::ConVarHandler()
-	{
-		Cvars = {};
-	}
+	ConVarHandler::ConVarHandler() { Cvars = {}; }
 	ConVarHandler::~ConVarHandler()
 	{
-		for (auto &c : Cvars)
+		for ( auto &c : Cvars )
 			delete c.second;
 	}
 
-	ConVar *ConVarHandler::DeclareConvar(const char* name, const char* defVal, int flags)
+	ConVar *ConVarHandler::DeclareConvar( const char *name, const char *defVal, int flags )
 	{
-		ConVar *c = new ConVar(name, defVal, flags);
+		ConVar *c	= new ConVar( name, defVal, flags );
 		Cvars[name] = c;
 
 		return c;
 	}
 
-	ConVar *ConVarHandler::FindConVar(const char* name)
-	{
-		return Cvars[name];
-	}
+	ConVar *ConVarHandler::FindConVar( const char *name ) { return Cvars[name]; }
 
-	void ConVarHandler::Parse(const char* str)
+	void ConVarHandler::Parse( const char *str )
 	{
 		// Don't try parsing empty string
-		if (strlen(str) == 0)
+		if ( strlen( str ) == 0 )
 			return;
 
-		char *in = new char[strlen(str)];
-		strcpy(in, str);
+		char *in = new char[strlen( str )];
+		strcpy( in, str );
 
-		char *token = new char[1];
-		token[0] = '\0';
+		char *token	 = new char[1];
+		token[0]	 = '\0';
 		char *oToken = new char[1];
-		oToken[0] = '\0';
+		oToken[0]	 = '\0';
 		char *saveptr;
 		const char sep[4] = "\n; ";
-		token = strtok_r(in, sep, &saveptr);
+		token			  = strtok_r( in, sep, &saveptr );
 
-		while (token != NULL)
+		while ( token != NULL )
 		{
-			con_debug("%s", token);
+			con_debug( "%s", token );
 
-			if (oToken != nullptr && strlen(token) && strlen(oToken))
+			if ( oToken != nullptr && strlen( token ) && strlen( oToken ) )
 			{
-				ParseConvarTokens(oToken, token);
+				ParseConvarTokens( oToken, token );
 
-				if (oToken != nullptr)
+				if ( oToken != nullptr )
 				{
 					delete[] oToken;
 					oToken = nullptr;
 				}
-				
-				token = strtok_r(NULL, sep, &saveptr);
+
+				token = strtok_r( NULL, sep, &saveptr );
 				continue;
 			}
 
-			if (oToken != nullptr)
+			if ( oToken != nullptr )
 			{
 				delete[] oToken;
 				oToken = nullptr;
 			}
-			oToken = new char[strlen(token) + 1];
-			strcpy(oToken, token);
-			oToken[strlen(token) + 1] = '\0';
+			oToken = new char[strlen( token ) + 1];
+			strcpy( oToken, token );
+			oToken[strlen( token ) + 1] = '\0';
 
-			token = strtok_r(NULL, sep, &saveptr);
+			token = strtok_r( NULL, sep, &saveptr );
 		}
 
 		delete[] oToken;
@@ -137,22 +116,22 @@ namespace ConVar
 		delete[] in;
 	}
 
-	void ConVarHandler::ParseConvarTokens(const char *cmd, const char *args)
+	void ConVarHandler::ParseConvarTokens( const char *cmd, const char *args )
 	{
 		// It's empty, bum run, don't do anything
-		if (strlen(cmd) == 0 && strlen(args) == 0)
+		if ( strlen( cmd ) == 0 && strlen( args ) == 0 )
 			return;
 
-		con_debug("SET %s TO %s", cmd, args);
+		con_debug( "SET %s TO %s", cmd, args );
 
 		ConVar *conv = Cvars[cmd];
-		if (conv == nullptr)
+		if ( conv == nullptr )
 		{
-			con_error("Unknown ConVar %s", cmd);
+			con_error( "Unknown ConVar %s", cmd );
 		}
 		else
 		{
-			conv->SetString(args);
+			conv->SetString( args );
 		}
 	}
-}
+} // namespace ConVar

@@ -11,20 +11,19 @@
 
 #include "vector.hpp"
 
-void BOBJLoadModel(Model *m, const char *fp)
+void BOBJLoadModel( Model *m, const char *fp )
 {
 	bool succeed;
 	int64_t l;
-	char *file = (char*)fileSystem::LoadFile(fp, l, succeed);
+	char *file = (char *)fileSystem::LoadFile( fp, l, succeed );
 
-	if (!succeed)
+	if ( !succeed )
 		return;
-	
 
 	char *token;
 	char *saveptr;
 	const char sep[2] = "\n";
-	token = strtok_r(file, sep, &saveptr);
+	token			  = strtok_r( file, sep, &saveptr );
 
 	bool comment = false;
 
@@ -32,124 +31,120 @@ void BOBJLoadModel(Model *m, const char *fp)
 	std::vector<Vector> uvCoords;
 	std::vector<Vector> normals;
 
-	while (token != NULL)
+	while ( token != NULL )
 	{
 		char *linesaveptr;
-		char *lineToken = strtok_r(token, " ", &linesaveptr);
+		char *lineToken = strtok_r( token, " ", &linesaveptr );
 
 		// Skip Comments
-		if (lineToken[0] == '#')
+		if ( lineToken[0] == '#' )
 			goto skip;
 
 		// Vertex
-		if (strcmp(lineToken, "v") == 0)
+		if ( strcmp( lineToken, "v" ) == 0 )
 		{
 			// v x y z
 			// Let's try and absorb those next 3 numbers
 
 			// Bump it, removing the 'v'
-			lineToken = strtok_r(NULL, " ", &linesaveptr);
-			int i = 0;
+			lineToken = strtok_r( NULL, " ", &linesaveptr );
+			int i	  = 0;
 
 			Vector v;
-			v.x = strtof(lineToken, NULL);
-			lineToken = strtok_r(NULL, " ", &linesaveptr);
-			v.y = strtof(lineToken, NULL);
-			lineToken = strtok_r(NULL, " ", &linesaveptr);
-			v.z = strtof(lineToken, NULL);
-			lineToken = strtok_r(NULL, " ", &linesaveptr);
+			v.x		  = strtof( lineToken, NULL );
+			lineToken = strtok_r( NULL, " ", &linesaveptr );
+			v.y		  = strtof( lineToken, NULL );
+			lineToken = strtok_r( NULL, " ", &linesaveptr );
+			v.z		  = strtof( lineToken, NULL );
+			lineToken = strtok_r( NULL, " ", &linesaveptr );
 
 			// printf("Vert: %f,%f,%f\n", v.x, v.y, v.z);
-			vertPositions.push_back(v);
-			m->vertices.push_back({});
+			vertPositions.push_back( v );
+			m->vertices.push_back( {} );
 		}
 		// Vertex Tex(?), U/V Coordinate!!
-		else if (strcmp(lineToken, "vt") == 0)
+		else if ( strcmp( lineToken, "vt" ) == 0 )
 		{
 			// vt x y
 			// Let's try and absorb those next 2 numbers
 
 			// Bump it, removing the 'vt'
-			lineToken = strtok_r(NULL, " ", &linesaveptr);
+			lineToken = strtok_r( NULL, " ", &linesaveptr );
 
 			Vector uv;
-			uv.x = strtof(lineToken, NULL);
-			lineToken = strtok_r(NULL, " ", &linesaveptr);
-			uv.y = strtof(lineToken, NULL);
+			uv.x	  = strtof( lineToken, NULL );
+			lineToken = strtok_r( NULL, " ", &linesaveptr );
+			uv.y	  = strtof( lineToken, NULL );
 
-			uvCoords.push_back(uv);
+			uvCoords.push_back( uv );
 		}
 		// Vertex Normal
-		else if (strcmp(lineToken, "vn") == 0)
+		else if ( strcmp( lineToken, "vn" ) == 0 )
 		{
 			// vn x y z
 			// Let's try and absorb those next 3 numbers
 
 			// Bump it, removing the 'vn'
-			lineToken = strtok_r(NULL, " ", &linesaveptr);
-			int i = 0;
+			lineToken = strtok_r( NULL, " ", &linesaveptr );
+			int i	  = 0;
 
 			Vector v;
-			v.x = strtof(lineToken, NULL);
-			lineToken = strtok_r(NULL, " ", &linesaveptr);
-			v.y = strtof(lineToken, NULL);
-			lineToken = strtok_r(NULL, " ", &linesaveptr);
-			v.z = strtof(lineToken, NULL);
-			lineToken = strtok_r(NULL, " ", &linesaveptr);
+			v.x		  = strtof( lineToken, NULL );
+			lineToken = strtok_r( NULL, " ", &linesaveptr );
+			v.y		  = strtof( lineToken, NULL );
+			lineToken = strtok_r( NULL, " ", &linesaveptr );
+			v.z		  = strtof( lineToken, NULL );
+			lineToken = strtok_r( NULL, " ", &linesaveptr );
 
-			normals.push_back(v);
+			normals.push_back( v );
 		}
 		// Face
-		else if (strcmp(lineToken, "f") == 0)
+		else if ( strcmp( lineToken, "f" ) == 0 )
 		{
 			// f vert/vertNormal/vertTexCoord vert/vertNormal/vertTexCoord vert/vertNormal/vertTexCoord
-			
+
 			// Bump it, removing the 'f'
-			lineToken = strtok_r(NULL, " ", &linesaveptr);
+			lineToken = strtok_r( NULL, " ", &linesaveptr );
 
 			Model::Face f;
-			int idxs[3] = {0,0,0};
-			int i = 0;
+			int idxs[3] = { 0, 0, 0 };
+			int i		= 0;
 
-			while (lineToken != NULL)
+			while ( lineToken != NULL )
 			{
 				// con_info(lineToken);
 
 				char *segPtr;
-				char *seg = strtok_r(lineToken, "/", &segPtr);
+				char *seg = strtok_r( lineToken, "/", &segPtr );
 
-				int vertIndex = atoi(seg) - 1;
-				seg = strtok_r(NULL, "/", &segPtr);
-				int vertNormalIndex = atoi(lineToken) - 1;
-				seg = strtok_r(NULL, "/", &segPtr);
-				int vertTexCoord = atoi(lineToken) - 1;
+				int vertIndex		= atoi( seg ) - 1;
+				seg					= strtok_r( NULL, "/", &segPtr );
+				int vertNormalIndex = atoi( lineToken ) - 1;
+				seg					= strtok_r( NULL, "/", &segPtr );
+				int vertTexCoord	= atoi( lineToken ) - 1;
 
-				m->vertices.at(vertIndex) =
-					{
-						vertPositions[vertIndex].x, 
-						vertPositions[vertIndex].y, 
-						vertPositions[vertIndex].z,
-						normals[vertNormalIndex].x,normals[vertNormalIndex].y,normals[vertNormalIndex].z,
-						uvCoords[vertTexCoord].x, uvCoords[vertTexCoord].y
-					};
-				idxs[i] = vertIndex;
-				
+				m->vertices.at( vertIndex ) = { vertPositions[vertIndex].x, vertPositions[vertIndex].y,
+												vertPositions[vertIndex].z, normals[vertNormalIndex].x,
+												normals[vertNormalIndex].y, normals[vertNormalIndex].z,
+												uvCoords[vertTexCoord].x,	uvCoords[vertTexCoord].y };
+				idxs[i]						= vertIndex;
+
 				// printf("idx: %i\n", vertIndex);
 
-				lineToken = strtok_r(NULL, " ", &linesaveptr);
+				lineToken = strtok_r( NULL, " ", &linesaveptr );
 
-				i ++;
+				i++;
 			}
 
-			f.v = idxs[2];
-			f.vv = idxs[1];
+			f.v	  = idxs[2];
+			f.vv  = idxs[1];
 			f.vvv = idxs[0];
 
-			m->faces.push_back(f);
+			m->faces.push_back( f );
 		}
 
-		skip:
-		token = strtok_r(NULL, sep, &saveptr);
+	skip:
+		token = strtok_r( NULL, sep, &saveptr );
 	}
 
 	vertPositions.clear();

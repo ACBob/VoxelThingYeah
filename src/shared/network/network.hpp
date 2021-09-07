@@ -5,4 +5,4 @@ namespace network
 {
 	bool Init();
 	void Uninit();
-}
+} // namespace network

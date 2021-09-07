@@ -7,44 +7,44 @@
 #pragma once
 
 enum blocktype_t {
-	AIR      = 0,
-	STONE    = 1,
-	DIRT     = 2,
-	GRASS    = 3,
-	COBBLE   = 4,
-	PLANKS   = 5,
-	BEDROCK  = 6,
-	GLASS    = 7,
-	LOG      = 8,
-	LEAVES   = 9,
-	WATER    = 10,
-	LAVA     = 11,
+	AIR		 = 0,
+	STONE	 = 1,
+	DIRT	 = 2,
+	GRASS	 = 3,
+	COBBLE	 = 4,
+	PLANKS	 = 5,
+	BEDROCK	 = 6,
+	GLASS	 = 7,
+	LOG		 = 8,
+	LEAVES	 = 9,
+	WATER	 = 10,
+	LAVA	 = 11,
 	ORE_COAL = 12,
 	ORE_IRON = 13,
-	FLOWER   = 14,
+	FLOWER	 = 14,
 };
 
 enum blockmaterial_t {
-	MAT_NONE     = 0, // Invalid
-	MAT_STONE    = 1, // Stone, Rock
-	MAT_LOOSE    = 2, // Dirt, Gravel
-	MAT_WOOD     = 3, // It's wood
-	MAT_GLASS    = 4, // It's glass
-	MAT_ORGANIC  = 5, // Grass, Leaves, Plants
+	MAT_NONE	= 0, // Invalid
+	MAT_STONE	= 1, // Stone, Rock
+	MAT_LOOSE	= 2, // Dirt, Gravel
+	MAT_WOOD	= 3, // It's wood
+	MAT_GLASS	= 4, // It's glass
+	MAT_ORGANIC = 5, // Grass, Leaves, Plants
 };
 
 enum blockobscurerule_t {
-	OBSCURERULE_ALWAYS    = 0, // If we can, we do
-	OBSCURERULE_SIMILAR   = 1, // Only do it if it's the same as us
-	OBSCURERULE_NEVER     = 2 // Never obscure faces
+	OBSCURERULE_ALWAYS	= 0, // If we can, we do
+	OBSCURERULE_SIMILAR = 1, // Only do it if it's the same as us
+	OBSCURERULE_NEVER	= 2	 // Never obscure faces
 };
 
 enum blockmodel_t {
-	BLOCKMODEL_CUBE    = 0, // Default cube
-	BLOCKMODEL_PLANT   = 1, // X-Shape
+	BLOCKMODEL_CUBE	 = 0, // Default cube
+	BLOCKMODEL_PLANT = 1, // X-Shape
 };
 
-blockmaterial_t GetBlockMaterial(blocktype_t blockType);
+blockmaterial_t GetBlockMaterial( blocktype_t blockType );
 
 struct BlockFeatures
 {
@@ -68,4 +68,4 @@ struct BlockFeatures
 	blockobscurerule_t rule;
 };
 
-BlockFeatures GetBlockFeatures(blocktype_t blockType);
+BlockFeatures GetBlockFeatures( blocktype_t blockType );

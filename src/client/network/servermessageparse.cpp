@@ -1,5 +1,5 @@
-#include "network/protocol.hpp"
 #include "client.hpp"
+#include "network/protocol.hpp"
 
 #include "cvar_clientside.hpp"
 
@@ -8,17 +8,16 @@
 
 namespace protocol
 {
-	void DealWithPacket(NetworkPacket &p, void *side, ENetPeer *peer)
+	void DealWithPacket( NetworkPacket &p, void *side, ENetPeer *peer )
 	{
-		ArchiveBuf buf(p.data);
-		Archive<ArchiveBuf> bufAccess(buf);
+		ArchiveBuf buf( p.data );
+		Archive<ArchiveBuf> bufAccess( buf );
 
-		NetworkClient *client = reinterpret_cast<NetworkClient*>(side);
+		NetworkClient *client = reinterpret_cast<NetworkClient *>( side );
 
-		switch (p.type)
+		switch ( p.type )
 		{
-			case ServerPacket::PLAYER_ID:
-			{
+			case ServerPacket::PLAYER_ID: {
 				// we've been given a few things here, decomp them
 				uint protocolVersion = 0x0;
 				std::string serverName;
@@ -30,31 +29,29 @@ namespace protocol
 				bufAccess >> isOp;
 
 				// Ideally impossible (as the server should check it itself)
-				if (protocolVersion != PROTOCOL_VERSION)
+				if ( protocolVersion != PROTOCOL_VERSION )
 				{
-					con_error("Attempt to join unsupported protocol version (%#010x) (Expected %#010x)", protocolVersion, PROTOCOL_VERSION);
+					con_error( "Attempt to join unsupported protocol version (%#010x) (Expected %#010x)",
+							   protocolVersion, PROTOCOL_VERSION );
 					client->Disconnect();
 					return;
 				}
 
-				con_info("Connected to server %s.", serverName.c_str());
-				cl_servername->SetString(serverName.c_str());
-
+				con_info( "Connected to server %s.", serverName.c_str() );
+				cl_servername->SetString( serverName.c_str() );
 
 				// TODO: do something with this info
 			}
 			break;
 
-			case ServerPacket::KEEPALIVE:
-			{
+			case ServerPacket::KEEPALIVE: {
 				// TODO: Immediately send a message back
 				ClientPacket pp;
 				pp.type = ClientPacket::PONG;
 			}
 			break;
 
-			case ServerPacket::CHUNKDATA:
-			{
+			case ServerPacket::CHUNKDATA: {
 				World::PortableChunkRepresentation crep;
 				int numBlocks;
 				bufAccess >> crep.x;
@@ -67,12 +64,11 @@ namespace protocol
 				// con_info("%d Blocks", numBlocks);
 
 				// Woot, data!
-				client->localWorld->UsePortable(crep);
+				client->localWorld->UsePortable( crep );
 			}
 			break;
 
-			case ServerPacket::UPDATE_BLOCK:
-			{
+			case ServerPacket::UPDATE_BLOCK: {
 				float x, y, z;
 				uint blockType;
 				bufAccess >> x;
@@ -82,18 +78,17 @@ namespace protocol
 
 				// Woot, data!
 				// TODO: make sure the server isn't being malicious
-				Block *b = client->localWorld->BlockAtWorldPos(Vector(x,y,z));
-				if (b != nullptr)
+				Block *b = client->localWorld->BlockAtWorldPos( Vector( x, y, z ) );
+				if ( b != nullptr )
 				{
-					con_info("Update Block At <%f,%f,%f>", x,y,z);
-					b->blockType = blocktype_t(blockType);
+					con_info( "Update Block At <%f,%f,%f>", x, y, z );
+					b->blockType = blocktype_t( blockType );
 					b->Update();
 				}
 			}
 			break;
 
-			case ServerPacket::PLAYER_SPAWN:
-			{
+			case ServerPacket::PLAYER_SPAWN: {
 				std::string username;
 				float x, y, z;
 				float pitch, yaw;
@@ -107,42 +102,41 @@ namespace protocol
 				bufAccess >> joined;
 
 				// Empty username is taken to mean us
-				if (username == "")
+				if ( username == "" )
 				{
 					// Then it's us
-					con_info("Spawning at <%f,%f,%f> <%f,%f>", x, y, z, pitch, yaw);
-					client->localPlayer->position = Vector(x,y,z);
-					client->localPlayer->rotation = Vector(pitch, yaw, 0);
+					con_info( "Spawning at <%f,%f,%f> <%f,%f>", x, y, z, pitch, yaw );
+					client->localPlayer->position = Vector( x, y, z );
+					client->localPlayer->rotation = Vector( pitch, yaw, 0 );
 				}
 				else
 				{
-					con_info("Player %s at <%f,%f,%f>", username.c_str(), x,y,z);
-					
-					if (joined)
-						client->chatBuffer.push_back(username + " joined.");
+					con_info( "Player %s at <%f,%f,%f>", username.c_str(), x, y, z );
 
-					if (client->localWorld->GetEntityByName(username.c_str()) != nullptr)
+					if ( joined )
+						client->chatBuffer.push_back( username + " joined." );
+
+					if ( client->localWorld->GetEntityByName( username.c_str() ) != nullptr )
 					{
-						EntityPlayer *plyr = (EntityPlayer*)client->localWorld->GetEntityByName(username.c_str());
-						plyr->position = Vector(x,y,z);
-						plyr->rotation = Vector(pitch, yaw, 0);
+						EntityPlayer *plyr = (EntityPlayer *)client->localWorld->GetEntityByName( username.c_str() );
+						plyr->position	   = Vector( x, y, z );
+						plyr->rotation	   = Vector( pitch, yaw, 0 );
 					}
 					else
 					{
 						// New player
 						EntityPlayer *plyr = new EntityPlayer();
-						plyr->position = Vector(x,y,z);
-						plyr->rotation = Vector(pitch, yaw, 0);
-						plyr->name = username;
+						plyr->position	   = Vector( x, y, z );
+						plyr->rotation	   = Vector( pitch, yaw, 0 );
+						plyr->name		   = username;
 
-						client->localWorld->AddEntity(plyr);
+						client->localWorld->AddEntity( plyr );
 					}
 				}
 			}
 			break;
 
-			case ServerPacket::PLAYERPOSORT:
-			{
+			case ServerPacket::PLAYERPOSORT: {
 				std::string username;
 				float x, y, z;
 				float pitch, yaw;
@@ -154,53 +148,50 @@ namespace protocol
 				bufAccess >> yaw;
 
 				// Empty username is taken to mean us
-				if (username == "")
+				if ( username == "" )
 				{
-					client->localPlayer->position = Vector(x,y,z);
+					client->localPlayer->position = Vector( x, y, z );
 				}
 				else
 				{
-					if (client->localWorld->GetEntityByName(username.c_str()) != nullptr)
+					if ( client->localWorld->GetEntityByName( username.c_str() ) != nullptr )
 					{
-						EntityPlayer *plyr = (EntityPlayer*)client->localWorld->GetEntityByName(username.c_str());
-						plyr->position = Vector(x,y,z);
-						plyr->rotation = Vector(pitch, yaw, 0);
+						EntityPlayer *plyr = (EntityPlayer *)client->localWorld->GetEntityByName( username.c_str() );
+						plyr->position	   = Vector( x, y, z );
+						plyr->rotation	   = Vector( pitch, yaw, 0 );
 					}
 				}
 			}
 			break;
 
-			case ServerPacket::CHATMESSAGE:
-			{
+			case ServerPacket::CHATMESSAGE: {
 				std::string username;
 				std::string message;
 				bufAccess >> username;
 				bufAccess >> message;
 
-				con_info("%s: %s", username.c_str(), message.c_str());
+				con_info( "%s: %s", username.c_str(), message.c_str() );
 
-				client->chatBuffer.push_back(username + ": " + message);
+				client->chatBuffer.push_back( username + ": " + message );
 			}
 			break;
 
-			case ServerPacket::PLAYER_DISCONNECT:
-			{
+			case ServerPacket::PLAYER_DISCONNECT: {
 				bool isKick = false;
 				std::string message;
 
 				bufAccess >> isKick;
 				bufAccess >> message;
 
-				if (isKick)
+				if ( isKick )
 				{
-					con_warning("Kicked from server for: %s", message.c_str());
+					con_warning( "Kicked from server for: %s", message.c_str() );
 					client->Disconnect();
 				}
 			}
 			break;
 
-			case ServerPacket::TIMEOFDAY:
-			{
+			case ServerPacket::TIMEOFDAY: {
 				int ticks;
 
 				bufAccess >> ticks;
@@ -208,12 +199,11 @@ namespace protocol
 				client->localWorld->timeOfDay = ticks;
 			}
 			break;
-			
-			default:
-			{
-				con_error("Unknown packet of type %#010x", p.type);
+
+			default: {
+				con_error( "Unknown packet of type %#010x", p.type );
 			}
 			break;
 		}
 	}
-}
+} // namespace protocol

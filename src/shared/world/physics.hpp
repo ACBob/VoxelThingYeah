@@ -2,14 +2,14 @@
 
 #pragma once
 
-class AABB 
+class AABB
 {
-	public:
-		AABB(Vector pos, Vector size, Vector origin = Vector(0.5, 0.5, 0.5));
-		bool TestCollide(AABB other);
-		bool TestPointCollide(Vector other);
+  public:
+	AABB( Vector pos, Vector size, Vector origin = Vector( 0.5, 0.5, 0.5 ) );
+	bool TestCollide( AABB other );
+	bool TestPointCollide( Vector other );
 
-		Vector pos;
-		Vector bounds;
-		Vector origin;
+	Vector pos;
+	Vector bounds;
+	Vector origin;
 };

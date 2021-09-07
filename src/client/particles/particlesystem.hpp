@@ -9,4 +9,4 @@ namespace particleSystem
 
 	extern std::vector<Particle> particles;
 	extern std::vector<ParticleEmitter> particleEmitters;
-}
+} // namespace particleSystem

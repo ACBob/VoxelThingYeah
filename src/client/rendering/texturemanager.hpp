@@ -8,21 +8,21 @@ namespace materialSystem
 {
 	class Texture
 	{
-		public:
-			Texture(const char* path);
+	  public:
+		Texture( const char *path );
 
-			std::vector<unsigned char> image;
-			unsigned int width, height, id;
+		std::vector<unsigned char> image;
+		unsigned int width, height, id;
 
-			const char *fp = nullptr;
+		const char *fp = nullptr;
 	};
 
 	void Init();
 	void UnInit();
 
-	Texture* LoadTexture(const char* path);
+	Texture *LoadTexture( const char *path );
 
-	extern std::vector<Texture*> loadedTextures;
-};
+	extern std::vector<Texture *> loadedTextures;
+}; // namespace materialSystem
 
 using Texture = materialSystem::Texture;

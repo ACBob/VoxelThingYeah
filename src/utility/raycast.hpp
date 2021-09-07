@@ -6,22 +6,21 @@
 
 class PointedThing
 {
-	public:
-		PointedThing();
+  public:
+	PointedThing();
 
-		Block *block = nullptr;
-		Vector position;
-		Vector normal;
+	Block *block = nullptr;
+	Vector position;
+	Vector normal;
 };
 
 class VoxRaycast
 {
-	public:
-		VoxRaycast();
-		PointedThing Cast(World *chunkMan);
+  public:
+	VoxRaycast();
+	PointedThing Cast( World *chunkMan );
 
-		Vector pos;
-		Vector dir;
-		float length;
-
+	Vector pos;
+	Vector dir;
+	float length;
 };

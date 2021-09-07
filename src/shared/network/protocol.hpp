@@ -2,9 +2,9 @@
 
 #pragma once
 
+#include "archive.h"
 #include "netarchive.hpp"
 #include "world/world.hpp"
-#include "archive.h"
 
 #include "enet/enet.h"
 
@@ -16,16 +16,9 @@ struct NetworkPacket
 	ArchiveBuf buffer;
 	ArchiveIntermediary data;
 
-	Archive<ArchiveBuf> GetAccess()
-	{
-		return Archive<ArchiveBuf>(buffer);
-	}
+	Archive<ArchiveBuf> GetAccess() { return Archive<ArchiveBuf>( buffer ); }
 
-	template <typename S>
-	void serialize(S& s)
-	{
-		s & type & data & server;
-	};
+	template <typename S> void serialize( S &s ) { s &type &data &server; };
 
 	bool server;
 };
@@ -37,8 +30,7 @@ struct NetworkPacket
 // *TO* Server
 struct ClientPacket : public NetworkPacket
 {
-	enum type_t
-	{
+	enum type_t {
 		// Identifies the player
 		/*
 			{
@@ -46,7 +38,7 @@ struct ClientPacket : public NetworkPacket
 				setUsername,
 			}
 		*/
-		PLAYER_ID    = 0x00,
+		PLAYER_ID = 0x00,
 		// We wish to set a block
 		/*
 			{
@@ -54,7 +46,7 @@ struct ClientPacket : public NetworkPacket
 				blockID
 			}
 		*/
-		SET_BLOCK    = 0x01,
+		SET_BLOCK = 0x01,
 		// We wish to set our position and orientation
 		/*
 			{
@@ -82,19 +74,14 @@ struct ClientPacket : public NetworkPacket
 		LEAVE = 0x05,
 	};
 
-	template <typename S>
-	void serialize(S& s)
-	{
-		s & type & data & false;
-	};
+	template <typename S> void serialize( S &s ) { s &type &data & false; };
 };
 
 // *FROM* Server
 // *TO* Client
 struct ServerPacket : public NetworkPacket
 {
-	enum type_t
-	{
+	enum type_t {
 		// Some info the player needs from the server
 		//! DO NOT CONFUSE WITH ClientPacket::PLAYER_ID
 		// TODO: Better name
@@ -106,13 +93,13 @@ struct ServerPacket : public NetworkPacket
 				isOp
 			}
 		*/
-		PLAYER_ID    = 0x00,
+		PLAYER_ID = 0x00,
 		// Sent occasionally to make sure that other clients are still connected
 		// Doesn't contain any data of its' own
 		/*
 			Sorry nothing
 		*/
-		KEEPALIVE    = 0x01,
+		KEEPALIVE = 0x01,
 		// Sends the chunk data at X,Y,Z
 		// TODO: Compression?
 		/*
@@ -122,7 +109,7 @@ struct ServerPacket : public NetworkPacket
 				chunkData[amountOfBlocks] (1D array of BlockTypes)
 			}
 		*/
-		CHUNKDATA    = 0x02,
+		CHUNKDATA = 0x02,
 		// Updates block at position
 		// Used to confirm a block break or to tell the clients that a block has changed due to physics
 		// Reserved for singular blocks, if you have modified a large portion of the world (say, water)
@@ -165,7 +152,7 @@ struct ServerPacket : public NetworkPacket
 		CHATMESSAGE = 0x06,
 		// Tells the player we no longer serve their kind 'round these parts
 		// Can be sent as a kick (just set the flag) or a disconnect confirmation
-		// There isn't really much use for the regular disconnect confirmation as 
+		// There isn't really much use for the regular disconnect confirmation as
 		/*
 			{
 				isKick,
@@ -183,11 +170,7 @@ struct ServerPacket : public NetworkPacket
 		TIMEOFDAY = 0x08
 	};
 
-	template <typename S>
-	void serialize(S& s)
-	{
-		s & type & data & true;
-	};
+	template <typename S> void serialize( S &s ) { s &type &data & true; };
 };
 
 namespace protocol
@@ -195,32 +178,32 @@ namespace protocol
 	// side is a badly named pointer to whoever called this
 	// Be them client or server
 	// What they're interpereted as is down to the packet's server flag
-	void UncompressAndDealWithPacket(ArchiveIntermediary packetData, void *side, ENetPeer *p);
+	void UncompressAndDealWithPacket( ArchiveIntermediary packetData, void *side, ENetPeer *p );
 
-	void DealWithPacket(NetworkPacket &p, void *side, ENetPeer *peer);
+	void DealWithPacket( NetworkPacket &p, void *side, ENetPeer *peer );
 
 	// Pew pew
-	void SendPacket(ENetPeer *peer, NetworkPacket &p);
+	void SendPacket( ENetPeer *peer, NetworkPacket &p );
 
 	/****************************************************/
 	/******************* SERVER *************************/
 	/****************************************************/
-	void SendServerPlayerID           (ENetPeer *peer, bool isOp);
-	void SendServerChunkData          (ENetPeer *peer, World *world, Vector pos);
-	void SendServerChunkDataFromRep   (ENetPeer *peer, World::PortableChunkRepresentation crep);
-	void SendServerUpdateBlock        (ENetPeer *peer, Vector pos, blocktype_t blockType);
-	void SendServerPlayerSpawn        (ENetPeer *peer, std::string username, Vector pos, Vector rot, bool join);
-	void SendServerPlayerPos          (ENetPeer *peer, std::string username, Vector pos, Vector rot);
-	void SendServerPlayerMessage      (ENetPeer *peer, std::string username, std::string message);
-	void SendServerPlayerDisconnect   (ENetPeer *peer, bool isKick, std::string reason = "");
-	void SendServerTimeOfDay          (ENetPeer *peer, int ticks);
-	
+	void SendServerPlayerID( ENetPeer *peer, bool isOp );
+	void SendServerChunkData( ENetPeer *peer, World *world, Vector pos );
+	void SendServerChunkDataFromRep( ENetPeer *peer, World::PortableChunkRepresentation crep );
+	void SendServerUpdateBlock( ENetPeer *peer, Vector pos, blocktype_t blockType );
+	void SendServerPlayerSpawn( ENetPeer *peer, std::string username, Vector pos, Vector rot, bool join );
+	void SendServerPlayerPos( ENetPeer *peer, std::string username, Vector pos, Vector rot );
+	void SendServerPlayerMessage( ENetPeer *peer, std::string username, std::string message );
+	void SendServerPlayerDisconnect( ENetPeer *peer, bool isKick, std::string reason = "" );
+	void SendServerTimeOfDay( ENetPeer *peer, int ticks );
+
 	/****************************************************/
 	/******************* CLIENT *************************/
 	/****************************************************/
-	void SendClientPlayerID           (ENetPeer *peer);
-	void SendClientSetBlock           (ENetPeer *peer, Vector pos, blocktype_t blockType);
-	void SendClientPlayerPos          (ENetPeer *peer, Vector pos, Vector rot);
-	void SendClientChatMessage        (ENetPeer *peer, std::string message);
-	void SendClientLeave              (ENetPeer *peer);
-}
+	void SendClientPlayerID( ENetPeer *peer );
+	void SendClientSetBlock( ENetPeer *peer, Vector pos, blocktype_t blockType );
+	void SendClientPlayerPos( ENetPeer *peer, Vector pos, Vector rot );
+	void SendClientChatMessage( ENetPeer *peer, std::string message );
+	void SendClientLeave( ENetPeer *peer );
+} // namespace protocol
