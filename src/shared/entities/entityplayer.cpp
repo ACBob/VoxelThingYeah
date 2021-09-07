@@ -128,6 +128,11 @@ void CEntityPlayer::Tick()
 		m_vVelocity = m_vVelocity + ( right * -2.67 );
 	else if ( m_pInputMan->m_bInputState[INKEY_RIGHT] )
 		m_vVelocity = m_vVelocity + ( right * 2.67 );
+
+	if ( m_pInputMan->m_bInputState[INKEY_UP] )
+		m_vVelocity = m_vVelocity + ( VEC_UP * 2.67 );
+	else if ( m_pInputMan->m_bInputState[INKEY_DOWN] )
+		m_vVelocity = m_vVelocity + ( VEC_UP * -2.67 );
 #endif
 }
 

@@ -31,6 +31,9 @@ void CInputManager::Update()
 	m_bInputState[INKEY_BACK]  = m_bOldKeyboardState['S'];
 	m_bInputState[INKEY_RIGHT] = m_bOldKeyboardState['D'];
 
+	m_bInputState[INKEY_UP]	  = m_bOldKeyboardState[' '];
+	m_bInputState[INKEY_DOWN] = m_bOldKeyboardState[KBD_SHIFT];
+
 	m_bInputState[INKEY_CHAT] = m_bOldKeyboardState['T'];
 	m_bInputState[INKEY_OUT]  = m_bOldKeyboardState[KBD_ESCAPE];
 }

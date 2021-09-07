@@ -17,8 +17,11 @@ enum INKEY {
 	INKEY_BACK	= 2,
 	INKEY_LEFT	= 3,
 
-	INKEY_CHAT = 4,
-	INKEY_OUT  = 5, // Escape
+	INKEY_UP   = 4,
+	INKEY_DOWN = 5,
+
+	INKEY_CHAT = 6,
+	INKEY_OUT  = 7, // Escape
 
 	INKEY_LAST // used only to get the possible inkeys
 };
