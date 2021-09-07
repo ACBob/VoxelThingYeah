@@ -192,12 +192,12 @@ struct ServerPacket : public NetworkPacket
 
 namespace protocol
 {
-	void DealWithPacket(NetworkPacket &p, void *side, ENetPeer *peer);
-
 	// side is a badly named pointer to whoever called this
 	// Be them client or server
 	// What they're interpereted as is down to the packet's server flag
 	void UncompressAndDealWithPacket(ArchiveIntermediary packetData, void *side, ENetPeer *p);
+
+	void DealWithPacket(NetworkPacket &p, void *side, ENetPeer *peer);
 
 	// Pew pew
 	void SendPacket(ENetPeer *peer, NetworkPacket &p);
@@ -216,7 +216,7 @@ namespace protocol
 	void SendServerTimeOfDay          (ENetPeer *peer, int ticks);
 	
 	/****************************************************/
-	/******************* CLEINT *************************/
+	/******************* CLIENT *************************/
 	/****************************************************/
 	void SendClientPlayerID           (ENetPeer *peer);
 	void SendClientSetBlock           (ENetPeer *peer, Vector pos, blocktype_t blockType);

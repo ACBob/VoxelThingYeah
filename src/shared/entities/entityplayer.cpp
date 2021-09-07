@@ -2,6 +2,11 @@
 
 #include "network/network.hpp"
 
+#ifdef CLIENTEXE
+#include "network/client.hpp"
+#endif
+
+
 EntityPlayer::EntityPlayer()
 {
 	position = Vector(0,0,0);
@@ -55,7 +60,7 @@ void EntityPlayer::UpdateClient(World *clientSideWorld)
 			pointed.block->blockType = blocktype_t::AIR;
 			pointed.block->Update();
 
-			protocol::SendClientSetBlock(((network::Client*)client)->peer, pointed.position - 0.5, blocktype_t::AIR);
+			protocol::SendClientSetBlock(((NetworkClient*)client)->peer, pointed.position - 0.5, blocktype_t::AIR);
 		}
 	}
 	if (inputMan->mouseState & IN_RIGHT_MOUSE && inputMan->oldMouseState == 0 && pointed.block != nullptr)
@@ -74,7 +79,7 @@ void EntityPlayer::UpdateClient(World *clientSideWorld)
 			else
 				b->blockType = oldType;
 
-			protocol::SendClientSetBlock(((network::Client*)client)->peer, (pointed.position - 0.5) + pointed.normal, b->blockType);
+			protocol::SendClientSetBlock(((NetworkClient*)client)->peer, (pointed.position - 0.5) + pointed.normal, b->blockType);
 		}
 	}
 

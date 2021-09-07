@@ -1,4 +1,10 @@
 #include "network/protocol.hpp"
+#include "server.hpp"
+
+#include "cvar_serverside.hpp"
+
+#define LOG_LEVEL DEBUG
+#include "seethe.h"
 
 namespace protocol
 {
@@ -7,13 +13,13 @@ namespace protocol
 		ArchiveBuf buf(p.data);
 		Archive<ArchiveBuf> bufAccess(buf);
 
-		network::Server *server = reinterpret_cast<network::Server*>(side);
+		NetworkServer *server = reinterpret_cast<NetworkServer*>(side);
 
-		switch (p->type)
+		switch (p.type)
 		{
 			case ClientPacket::PLAYER_ID:
 			{
-				network::Client* c = new network::Client{peer, nullptr};
+				NetworkPlayer* c = new NetworkPlayer{peer, nullptr};
 				server->players.push_back(c);
 
 				// we've been given a few things here, decomp them
@@ -39,7 +45,7 @@ namespace protocol
 				}
 				
 				// Send them our info
-				messages::SendServerPlayerID(peer, false);
+				SendServerPlayerID(peer, false);
 
 				// Create an entity for them
 				EntityPlayer* p = new EntityPlayer();
@@ -59,18 +65,18 @@ namespace protocol
 				p->position = Vector(x,10,z);
 				p->rotation = Vector(0,0,0);
 
-				messages::SendServerPlayerSpawn(peer, "", p->position, p->rotation, false);
+				SendServerPlayerSpawn(peer, "", p->position, p->rotation, false);
 
-				for (network::Client* c : server->players)
+				for (NetworkPlayer* c : server->players)
 				{
 					if (c->peer == peer)
 						continue;
-					messages::SendServerPlayerSpawn(c->peer, p->name, p->position, p->rotation, true);
-					messages::SendServerPlayerSpawn(peer, c->entity->name, c->entity->position, c->entity->rotation, false);
+					SendServerPlayerSpawn(c->peer, p->name, p->position, p->rotation, true);
+					SendServerPlayerSpawn(peer, c->entity->name, c->entity->position, c->entity->rotation, false);
 				}
 
 				// Now send them 0,0
-				messages::SendServerChunkData(peer, &server->world, Vector(0,0,0));
+				SendServerChunkData(peer, &server->world, Vector(0,0,0));
 			}
 			break;
 
@@ -92,9 +98,9 @@ namespace protocol
 				}
 				blockType = b->blockType;
 
-				for (network::Client *c : server->players)
+				for (NetworkPlayer *c : server->players)
 				{
-					messages::SendServerUpdateBlock(c->peer, Vector(x,y,z), blocktype_t(blockType));
+					SendServerUpdateBlock(c->peer, Vector(x,y,z), blocktype_t(blockType));
 				}
 			}
 			break;
@@ -113,7 +119,7 @@ namespace protocol
 				p->position = Vector(x,y,z);
 				p->rotation = Vector(pitch, yaw, 0);
 
-				for (network::Client *c : server->players)
+				for (NetworkPlayer *c : server->players)
 				{
 					std::string name = p->name;
 					if (c->peer == peer)
@@ -123,7 +129,7 @@ namespace protocol
 						// TODO: check if position is legal
 						if (true) continue;
 					}
-					messages::SendServerPlayerPos(c->peer, name, p->position, p->rotation);
+					SendServerPlayerPos(c->peer, name, p->position, p->rotation);
 				}
 			}
 			break;
@@ -137,9 +143,9 @@ namespace protocol
 
 				con_info("%s: %s", username.c_str(), message.c_str());
 
-				for (network::Client *c : server->players)
+				for (NetworkPlayer *c : server->players)
 				{
-					messages::SendServerPlayerMessage(c->peer, username, message);
+					SendServerPlayerMessage(c->peer, username, message);
 				}
 			}
 			break;
@@ -153,13 +159,13 @@ namespace protocol
 			case ClientPacket::LEAVE:
 			{
 				con_info("Goodbye");
-				messages::SendServerPlayerDisconnect(peer, false);
+				SendServerPlayerDisconnect(peer, false);
 			}
 			break;
 
 			default:
 			{
-				con_error("Unknown packet of type %#010x", p->type);
+				con_error("Unknown packet of type %#010x", p.type);
 			}
 			break;
 		}

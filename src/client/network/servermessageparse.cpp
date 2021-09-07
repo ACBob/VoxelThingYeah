@@ -1,6 +1,11 @@
 #include "network/protocol.hpp"
 #include "client.hpp"
 
+#include "cvar_clientside.hpp"
+
+#define LOG_LEVEL DEBUG
+#include "seethe.h"
+
 namespace protocol
 {
 	void DealWithPacket(NetworkPacket &p, void *side, ENetPeer *peer)
@@ -10,7 +15,7 @@ namespace protocol
 
 		NetworkClient *client = reinterpret_cast<NetworkClient*>(side);
 
-		switch (p->type)
+		switch (p.type)
 		{
 			case ServerPacket::PLAYER_ID:
 			{
@@ -206,7 +211,7 @@ namespace protocol
 			
 			default:
 			{
-				con_error("Unknown packet of type %#010x", p->type);
+				con_error("Unknown packet of type %#010x", p.type);
 			}
 			break;
 		}

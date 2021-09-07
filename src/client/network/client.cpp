@@ -102,7 +102,7 @@ void NetworkClient::Update()
 			{
 				protocol::UncompressAndDealWithPacket(
 					ArchiveIntermediary(e.packet->data, e.packet->data + e.packet->dataLength),
-					this);
+					this, peer);
 			}
 			break;
 			case ENET_EVENT_TYPE_DISCONNECT:

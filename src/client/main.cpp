@@ -2,6 +2,7 @@
 
 #include "shared/filesystem.hpp"
 #include "network/network.hpp"
+#include "network/client.hpp"
 #include "shared/cvar.hpp"
 
 #define LOG_LEVEL DEBUG
@@ -118,7 +119,7 @@ int main (int argc, char* args[]) {
 	con_info("Create Client...");
 	World localWorld(diffuseShader, diffuseShader);
 
-	network::Client client;
+	NetworkClient client;
 	client.localWorld = &localWorld;
 	if (!client.WorkingClient())
 	{

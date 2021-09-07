@@ -1,5 +1,5 @@
 #include "network/protocol.hpp"
-#include "cvar_clientside.h"
+#include "cvar_clientside.hpp"
 
 namespace protocol
 {
