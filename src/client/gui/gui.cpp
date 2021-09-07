@@ -20,7 +20,7 @@
 // I am not supporting weird configurations
 #define TEXTTILES 16
 
-GUI::GUI( int screenW, int screenH ) : mouseState( IN_NO_MOUSE ), activeItem( 0 ), hotItem( 0 )
+CGui::CGui( int screenW, int screenH ) : mouseState( IN_NO_MOUSE ), activeItem( 0 ), hotItem( 0 )
 {
 	// OpenGl
 	{
@@ -38,10 +38,10 @@ GUI::GUI( int screenW, int screenH ) : mouseState( IN_NO_MOUSE ), activeItem( 0 
 		glVertexAttribPointer( 0, 3, GL_FLOAT, false, 8 * sizeof( float ), (void *)0 );
 		glEnableVertexAttribArray( 0 );
 		// texture coordinate
-		glVertexAttribPointer( 1, 2, GL_FLOAT, false, 8 * sizeof( float ), (void *)offsetof( GUI::Vertex, u ) );
+		glVertexAttribPointer( 1, 2, GL_FLOAT, false, 8 * sizeof( float ), (void *)offsetof( CGui::Vertex, u ) );
 		glEnableVertexAttribArray( 1 );
 		// colour
-		glVertexAttribPointer( 2, 3, GL_FLOAT, false, 8 * sizeof( float ), (void *)offsetof( GUI::Vertex, r ) );
+		glVertexAttribPointer( 2, 3, GL_FLOAT, false, 8 * sizeof( float ), (void *)offsetof( CGui::Vertex, r ) );
 		glEnableVertexAttribArray( 2 );
 
 		glBindVertexArray( 0 );
@@ -55,13 +55,13 @@ GUI::GUI( int screenW, int screenH ) : mouseState( IN_NO_MOUSE ), activeItem( 0 
 	Resize( screenW, screenH );
 }
 
-void GUI::Resize( int x, int y )
+void CGui::Resize( int x, int y )
 {
-	screenCentre	 = Vector( ( x * 0.5 ) / GUIUNIT, ( y * 0.5 ) / GUIUNIT );
-	screenDimensions = Vector( x, y );
+	screenCentre	 = CVector( ( x * 0.5 ) / GUIUNIT, ( y * 0.5 ) / GUIUNIT );
+	screenDimensions = CVector( x, y );
 }
 
-GUI::~GUI()
+CGui::~CGui()
 {
 	// OpenGl
 	{
@@ -70,7 +70,7 @@ GUI::~GUI()
 	}
 }
 
-void GUI::Update()
+void CGui::Update()
 {
 	if ( mouseState == IN_NO_MOUSE )
 		activeItem = 0;
@@ -96,7 +96,7 @@ void GUI::Update()
 			glBindTexture( GL_TEXTURE_2D, textTex->id );
 
 			glBindBuffer( GL_ARRAY_BUFFER, vbo );
-			glBufferData( GL_ARRAY_BUFFER, textVertiecs.size() * sizeof( GUI::Vertex ), textVertiecs.data(),
+			glBufferData( GL_ARRAY_BUFFER, textVertiecs.size() * sizeof( CGui::Vertex ), textVertiecs.data(),
 						  GL_DYNAMIC_DRAW );
 			glBindBuffer( GL_ARRAY_BUFFER, 0 );
 			glDrawArrays( GL_TRIANGLES, 0, textVertiecs.size() );
@@ -107,11 +107,11 @@ void GUI::Update()
 		// Images
 		glBindVertexArray( vao );
 		{
-			for ( GUI::_Image img : images )
+			for ( CGui::_Image img : images )
 			{
 				glBindTexture( GL_TEXTURE_2D, img._tex->id );
 				glBindBuffer( GL_ARRAY_BUFFER, vbo );
-				glBufferData( GL_ARRAY_BUFFER, img.vertices.size() * sizeof( GUI::Vertex ), img.vertices.data(),
+				glBufferData( GL_ARRAY_BUFFER, img.vertices.size() * sizeof( CGui::Vertex ), img.vertices.data(),
 							  GL_DYNAMIC_DRAW );
 				glBindBuffer( GL_ARRAY_BUFFER, 0 );
 				glDrawArrays( GL_TRIANGLES, 0, img.vertices.size() );
@@ -129,7 +129,7 @@ void GUI::Update()
 	images.clear();
 }
 
-std::vector<GUI::Vertex> GUI::GetQuad( Vector pos, Vector size, Colour color, Vector uStart, Vector uEnd )
+std::vector<CGui::Vertex> CGui::GetQuad( CVector pos, CVector size, Colour color, CVector uStart, CVector uEnd )
 {
 	return {
 		{ pos.x + size.x, pos.y, 0, uEnd.x, uEnd.y, color.x, color.y, color.z },
@@ -141,17 +141,17 @@ std::vector<GUI::Vertex> GUI::GetQuad( Vector pos, Vector size, Colour color, Ve
 		{ pos.x, pos.y + size.y, 0, uStart.x, uStart.y, color.x, color.y, color.z },
 	};
 }
-std::vector<GUI::Vertex> GUI::GetCharQuad( const char *c, Vector pos, Vector size, Colour color )
+std::vector<CGui::Vertex> CGui::GetCharQuad( const char *c, CVector pos, CVector size, Colour color )
 {
 	float x, y;
 	x = ( int( *c - ' ' ) % TEXTTILES ) * TEXTINTEXWIDTH;
 	y = ( int( *c - ' ' ) / TEXTTILES ) * TEXTINTEXHEIGHT;
 
-	Vector uStart = {
+	CVector uStart = {
 		x / ( 16.0f * TEXTINTEXWIDTH ),
 		y / ( 16.0f * TEXTINTEXHEIGHT ),
 	};
-	Vector uEnd = {
+	CVector uEnd = {
 		( x + TEXTINTEXWIDTH ) / ( 16.0f * TEXTINTEXWIDTH ),
 		( y + TEXTINTEXHEIGHT ) / ( 16.0f * TEXTINTEXHEIGHT ),
 	};
@@ -159,7 +159,7 @@ std::vector<GUI::Vertex> GUI::GetCharQuad( const char *c, Vector pos, Vector siz
 	return GetQuad( pos, size, color, uStart, uEnd );
 }
 
-bool GUI::RegionHit( Vector pos, Vector size )
+bool CGui::RegionHit( CVector pos, CVector size )
 {
 	if ( mousePos.x < pos.x || mousePos.y < pos.y ||
 
@@ -168,7 +168,7 @@ bool GUI::RegionHit( Vector pos, Vector size )
 	return true;
 }
 
-Vector GUI::GetInScreen( Vector pos )
+CVector CGui::GetInScreen( CVector pos )
 {
 	pos = pos * GUIUNIT;
 
@@ -180,7 +180,7 @@ Vector GUI::GetInScreen( Vector pos )
 	return pos;
 }
 
-int GUI::Button( int id, Vector pos, Vector size )
+int CGui::Button( int id, CVector pos, CVector size )
 {
 	pos	 = GetInScreen( pos );
 	size = size * GUIUNIT;
@@ -212,14 +212,14 @@ int GUI::Button( int id, Vector pos, Vector size )
 	// OpenGl
 	{
 		// Get vertices
-		std::vector<GUI::Vertex> g = GetQuad( pos, size, color );
+		std::vector<CGui::Vertex> g = GetQuad( pos, size, color );
 		std::copy( g.begin(), g.end(), std::back_inserter( textVertiecs ) );
 	}
 
 	return returnCode;
 }
 
-void GUI::Label( const char *text, Vector pos, Colour color )
+void CGui::Label( const char *text, CVector pos, Colour color )
 {
 	pos = GetInScreen( pos );
 
@@ -231,36 +231,36 @@ void GUI::Label( const char *text, Vector pos, Colour color )
 		while ( text[i] != '\0' )
 		{
 			// Get vertices
-			std::vector<GUI::Vertex> g = GetCharQuad( &text[i], pos, Vector( TEXTWIDTH, TEXTHEIGHT ), color );
+			std::vector<CGui::Vertex> g = GetCharQuad( &text[i], pos, CVector( TEXTWIDTH, TEXTHEIGHT ), color );
 			std::copy( g.begin(), g.end(), std::back_inserter( textVertiecs ) );
 
-			pos = pos + Vector( TEXTWIDTH, 0 );
+			pos = pos + CVector( TEXTWIDTH, 0 );
 
 			i++;
 		}
 	}
 }
 
-void GUI::Image( Texture *tex, Vector pos, Vector size, Vector origin )
+void CGui::Image( CTexture *tex, CVector pos, CVector size, CVector origin )
 {
 	pos	 = pos * GUIUNIT;
 	size = size * GUIUNIT;
 
 	{
-		GUI::_Image img;
+		CGui::_Image img;
 		img.vertices = GetQuad( pos - ( size * origin ), size, Colour( 1, 1, 1 ) );
 		img._tex	 = tex;
 		images.push_back( img );
 	}
 }
 
-void GUI::ImageAtlas( Texture *tex, Atlas atlas, float atlasDivisions, Vector pos, Vector size, Vector origin )
+void CGui::ImageAtlas( CTexture *tex, Atlas atlas, float atlasDivisions, CVector pos, CVector size, CVector origin )
 {
 	pos	 = GetInScreen( pos );
 	size = size * GUIUNIT;
 
 	{
-		GUI::_Image img;
+		CGui::_Image img;
 		img.vertices = GetQuad(
 			pos - ( size * origin ), size, Colour( 1, 1, 1 ), { atlas.x / atlasDivisions, atlas.y / atlasDivisions },
 			{ ( atlas.x + atlas.sizex ) / atlasDivisions, ( atlas.y + atlas.sizey ) / atlasDivisions } );
@@ -272,7 +272,7 @@ void GUI::ImageAtlas( Texture *tex, Atlas atlas, float atlasDivisions, Vector po
 // Returns the string in the event that 'RETURN' is pressed.
 // Outputs nullptr if nothing.
 // id can be shared between multiple text inputs if they're for the same data.
-const char *GUI::TextInput( int id, Vector pos )
+const char *CGui::TextInput( int id, CVector pos )
 {
 	std::string text = textBuffers[id];
 

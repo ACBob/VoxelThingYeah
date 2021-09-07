@@ -12,11 +12,11 @@
 
 #include <string>
 
-class EntityBase
+class CEntityBase
 {
   public:
-	EntityBase(); // stub
-	~EntityBase();
+	CEntityBase(); // stub
+	~CEntityBase();
 
 	// Called right after the entity is added to the world
 	// Position and rotation are handled already
@@ -31,12 +31,12 @@ class EntityBase
 	// Called every tick (usually 1/20th of a second)
 	// Gets handed the delta time to help work out physics-related stuff
 	// Also gets given the world for collision reasons
-	virtual void PhysicsTick( float delta, World *world ) = 0;
+	virtual void PhysicsTick( float delta, CWorld *world ) = 0;
 
 #ifdef CLIENTEXE
 	// Update any client-side things we may have, called every frame rather than per tick
 	// Uses the client-side version of the world for testing things (i.e player hand)
-	virtual void UpdateClient( World *clientSideWorld ) = 0;
+	virtual void UpdateClient( CWorld *clientSideWorld ) = 0;
 
 	// Renders our Model.
 	virtual void Render()
@@ -46,24 +46,24 @@ class EntityBase
 		mdl->Render();
 	}
 
-	virtual void SetShader( Shader *shader ) { mdl->SetShader( shader ); }
+	virtual void SetShader( CShader *shader ) { mdl->SetShader( shader ); }
 
-	Model *mdl;
+	CModel *mdl;
 #endif
 
 	std::string name;
 
 	// Gets a forward vector based on the rotation
-	Vector GetForward() { return Vector( 0, 0, -1 ).Rotate( rotation ).Normal(); }
+	CVector GetForward() { return CVector( 0, 0, -1 ).Rotate( rotation ).Normal(); }
 
 	// Updates the collision box to the new position
 	void UpdateCollision() { collisionBox.pos = position; }
 
-	Vector position;
-	Vector rotation;
-	Vector velocity;
+	CVector position;
+	CVector rotation;
+	CVector velocity;
 
-	AABB collisionBox;
+	CBoundingBox collisionBox;
 
 	template <typename S> void serialize( S &s )
 	{

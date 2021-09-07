@@ -8,10 +8,10 @@
 
 #pragma once
 
-class Block
+class CBlock
 {
   public:
-	Block();
+	CBlock();
 
 	blocktype_t blockType = blocktype_t::AIR;
 
@@ -20,9 +20,9 @@ class Block
 #endif
 
 	// Pos is in local coords
-	bool TestPointCollision( Vector pos );
+	bool TestPointCollision( CVector pos );
 	// Pos is in local coords
-	bool TestAABBCollision( Vector pos, Vector size );
+	bool TestAABBCollision( CVector pos, CVector size );
 
 	// block update
 	// causes a mesh rebuild

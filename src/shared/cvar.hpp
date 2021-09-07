@@ -22,10 +22,10 @@ namespace ConVar
 	// Shorthand
 	typedef ConVarFlag F;
 
-	class ConVar
+	class CConVar
 	{
 	  public:
-		ConVar( const char *name, const char *defval, int flags );
+		CConVar( const char *name, const char *defval, int flags );
 
 		// Gets value as (c) string
 		const char *GetString();
@@ -59,7 +59,7 @@ namespace ConVar
 		const char *name;
 	};
 
-	class ConVarHandler
+	class CConVarHandler
 	{
 	  private:
 		// Name -> ConVar
@@ -70,24 +70,24 @@ namespace ConVar
 			bool operator()( const char *a, const char *b ) const { return strcmp( a, b ) < 0; }
 		};
 
-		std::map<const char *, ConVar *, cmp_str> Cvars;
+		std::map<const char *, CConVar *, cmp_str> Cvars;
 
 		void ParseConvarTokens( const char *cmd, const char *arg );
 
 	  public:
-		ConVarHandler();
-		~ConVarHandler();
+		CConVarHandler();
+		~CConVarHandler();
 
-		ConVar *DeclareConvar( const char *name, const char *defVal, int flags = F::CVAR_NOFLAGS );
+		CConVar *DeclareConvar( const char *name, const char *defVal, int flags = F::CVAR_NOFLAGS );
 
 		// Find Cvar by name
-		ConVar *FindConVar( const char *name );
+		CConVar *FindConVar( const char *name );
 
-		ConVar *operator[]( const char *name ) { return FindConVar( name ); }
+		CConVar *operator[]( const char *name ) { return FindConVar( name ); }
 
 		void Parse( const char *str );
 	};
 } // namespace ConVar
 
 // Global Convar Handler
-extern ConVar::ConVarHandler conVarHandle;
+extern ConVar::CConVarHandler conVarHandle;

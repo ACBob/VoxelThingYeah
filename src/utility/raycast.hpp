@@ -4,23 +4,23 @@
 
 #pragma once
 
-class PointedThing
+class CPointedThing
 {
   public:
-	PointedThing();
+	CPointedThing();
 
-	Block *block = nullptr;
-	Vector position;
-	Vector normal;
+	CBlock *block = nullptr;
+	CVector position;
+	CVector normal;
 };
 
-class VoxRaycast
+class CVoxRaycast
 {
   public:
-	VoxRaycast();
-	PointedThing Cast( World *chunkMan );
+	CVoxRaycast();
+	CPointedThing Cast( CWorld *chunkMan );
 
-	Vector pos;
-	Vector dir;
+	CVector pos;
+	CVector dir;
 	float length;
 };

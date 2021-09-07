@@ -5,6 +5,6 @@ namespace particleSystem
 	void Init() {}
 	void UnInit() {}
 
-	std::vector<Particle> particles;
-	std::vector<ParticleEmitter> particleEmitters;
+	std::vector<CParticle> particles;
+	std::vector<CParticleEmitter> particleEmitters;
 } // namespace particleSystem

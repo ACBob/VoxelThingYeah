@@ -3,7 +3,7 @@
 // Usually set/handled by the window on the client
 // Or by the network in the case of the server
 
-InputManager::InputManager()
+CInputManager::CInputManager()
 {
 #ifdef CLIENTEXE
 	// Fill the array
@@ -13,10 +13,10 @@ InputManager::InputManager()
 		inputState[i] = false;
 #endif
 }
-InputManager::~InputManager() {}
+CInputManager::~CInputManager() {}
 
 #ifdef CLIENTEXE
-void InputManager::Update()
+void CInputManager::Update()
 {
 	for ( int i = 0; i < INKEY_LAST; i++ )
 	{

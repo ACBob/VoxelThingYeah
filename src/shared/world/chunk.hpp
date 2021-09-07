@@ -22,18 +22,18 @@
 
 #pragma once
 
-class Chunk
+class CChunk
 {
   public:
-	Chunk();
-	~Chunk();
+	CChunk();
+	~CChunk();
 
-	Chunk *Neighbour( Direction dir );
+	CChunk *Neighbour( Direction dir );
 
-	Vector position;
-	Vector GetPosInWorld() { return position * Vector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ); }
+	CVector position;
+	CVector GetPosInWorld() { return position * CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ); }
 
-	Block *GetBlockAtLocal( Vector pos );
+	CBlock *GetBlockAtLocal( CVector pos );
 
 #ifdef CLIENTEXE
 	void RebuildMdl();
@@ -42,14 +42,14 @@ class Chunk
 #endif
 	void Update();
 
-	Vector PosToWorld( Vector pos );
+	CVector PosToWorld( CVector pos );
 
 	// Flat array of blocks, access with
 	// Indexed with [x + SIZEX * (y + SIZEZ * z)]
-	Block blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
+	CBlock blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 
 #ifdef CLIENTEXE
-	Model mdl;
+	CModel mdl;
 #endif
 
 	// World pointer (can't set type because circular include :lenny:)
@@ -58,4 +58,4 @@ class Chunk
 	bool outdated = false;
 };
 
-bool ValidChunkPosition( Vector pos );
+bool ValidChunkPosition( CVector pos );

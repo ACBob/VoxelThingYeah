@@ -4,11 +4,11 @@
 #include "world/world.hpp"
 
 // This is us.
-class NetworkClient
+class CNetworkClient
 {
   public:
-	NetworkClient();
-	~NetworkClient();
+	CNetworkClient();
+	~CNetworkClient();
 
 	// The client will do its' best to determine if it can be used or not
 	// Returning true if it can be
@@ -22,9 +22,9 @@ class NetworkClient
 	void DecodeChunkData( ArchiveIntermediary data );
 
 	// Pointer to the local world
-	World *localWorld = nullptr;
+	CWorld *localWorld = nullptr;
 	// Pointer to the local player
-	EntityPlayer *localPlayer = nullptr;
+	CEntityPlayer *localPlayer = nullptr;
 
 	// Please don't modify
 	// Returns if we're connected or not

@@ -2,11 +2,11 @@
 
 #pragma once
 
-class Camera
+class CCamera
 {
   public:
-	Vector pos;
+	CVector pos;
 
 	// what direction the camera points
-	Vector forward;
+	CVector forward;
 };

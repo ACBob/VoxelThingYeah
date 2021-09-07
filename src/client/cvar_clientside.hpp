@@ -4,16 +4,16 @@
 
 #include "shared/cvar.hpp"
 
-extern ConVar::ConVar *fov;
+extern ConVar::CConVar *fov;
 
-extern ConVar::ConVar *scr_width;
-extern ConVar::ConVar *scr_height;
+extern ConVar::CConVar *scr_width;
+extern ConVar::CConVar *scr_height;
 
-extern ConVar::ConVar *username;
+extern ConVar::CConVar *username;
 
-extern ConVar::ConVar *cl_ip;
-extern ConVar::ConVar *cl_port;
+extern ConVar::CConVar *cl_ip;
+extern ConVar::CConVar *cl_port;
 
-extern ConVar::ConVar *cl_servername;
+extern ConVar::CConVar *cl_servername;
 
 void SetupClientSideConvars();

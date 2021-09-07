@@ -1,9 +1,9 @@
 #include "entitybase.hpp"
 
-EntityBase::EntityBase() : collisionBox( { Vector( 0 ), Vector( 1, 1, 1 ), Vector( 0.5, 0.5, 0.5 ) } ) {}
+CEntityBase::CEntityBase() : collisionBox( { CVector( 0 ), CVector( 1, 1, 1 ), CVector( 0.5, 0.5, 0.5 ) } ) {}
 
-EntityBase::~EntityBase() {}
+CEntityBase::~CEntityBase() {}
 
-void EntityBase::Spawn() {}
+void CEntityBase::Spawn() {}
 
-void EntityBase::Kill() { isKilled = true; }
+void CEntityBase::Kill() { isKilled = true; }

@@ -11,7 +11,7 @@
 
 #include "vector.hpp"
 
-void BOBJLoadModel( Model *m, const char *fp )
+void BOBJLoadModel( CModel *m, const char *fp )
 {
 	bool succeed;
 	int64_t l;
@@ -27,9 +27,9 @@ void BOBJLoadModel( Model *m, const char *fp )
 
 	bool comment = false;
 
-	std::vector<Vector> vertPositions;
-	std::vector<Vector> uvCoords;
-	std::vector<Vector> normals;
+	std::vector<CVector> vertPositions;
+	std::vector<CVector> uvCoords;
+	std::vector<CVector> normals;
 
 	while ( token != NULL )
 	{
@@ -50,7 +50,7 @@ void BOBJLoadModel( Model *m, const char *fp )
 			lineToken = strtok_r( NULL, " ", &linesaveptr );
 			int i	  = 0;
 
-			Vector v;
+			CVector v;
 			v.x		  = strtof( lineToken, NULL );
 			lineToken = strtok_r( NULL, " ", &linesaveptr );
 			v.y		  = strtof( lineToken, NULL );
@@ -71,7 +71,7 @@ void BOBJLoadModel( Model *m, const char *fp )
 			// Bump it, removing the 'vt'
 			lineToken = strtok_r( NULL, " ", &linesaveptr );
 
-			Vector uv;
+			CVector uv;
 			uv.x	  = strtof( lineToken, NULL );
 			lineToken = strtok_r( NULL, " ", &linesaveptr );
 			uv.y	  = strtof( lineToken, NULL );
@@ -88,7 +88,7 @@ void BOBJLoadModel( Model *m, const char *fp )
 			lineToken = strtok_r( NULL, " ", &linesaveptr );
 			int i	  = 0;
 
-			Vector v;
+			CVector v;
 			v.x		  = strtof( lineToken, NULL );
 			lineToken = strtok_r( NULL, " ", &linesaveptr );
 			v.y		  = strtof( lineToken, NULL );
@@ -106,7 +106,7 @@ void BOBJLoadModel( Model *m, const char *fp )
 			// Bump it, removing the 'f'
 			lineToken = strtok_r( NULL, " ", &linesaveptr );
 
-			Model::Face f;
+			CModel::Face f;
 			int idxs[3] = { 0, 0, 0 };
 			int i		= 0;
 

@@ -6,15 +6,15 @@
 
 #pragma once
 
-class ModelRenderer
+class CModelRenderer
 {
   public:
-	ModelRenderer();
-	~ModelRenderer();
+	CModelRenderer();
+	~CModelRenderer();
 	// Updated the index buffer and vertex buffer
 	void Populate( void *mdl );
 
-	void Render( Vector pos, Vector rot, Vector size, Shader *shader, Texture *tex );
+	void Render( CVector pos, CVector rot, CVector size, CShader *shader, CTexture *tex );
 
   private:
 	// Vertex Buffer

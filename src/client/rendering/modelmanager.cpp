@@ -3,18 +3,18 @@
 
 #include "modelloader.hpp"
 
-std::vector<Model *> modelSystem::loadedModels;
+std::vector<CModel *> modelSystem::loadedModels;
 
-Model::Model( std::vector<Vertex> verts, std::vector<Face> faces ) : vertices( verts ), faces( faces )
+CModel::CModel( std::vector<Vertex> verts, std::vector<Face> faces ) : vertices( verts ), faces( faces )
 {
-	renderer = new ModelRenderer();
+	renderer = new CModelRenderer();
 }
 
-Model::~Model() { delete renderer; }
+CModel::~CModel() { delete renderer; }
 
-void Model::Update() { renderer->Populate( this ); }
+void CModel::Update() { renderer->Populate( this ); }
 
-void Model::Render()
+void CModel::Render()
 {
 	// Don't waste time trying to render
 	if ( vertices.size() == 0 || faces.size() == 0 )
@@ -24,14 +24,14 @@ void Model::Render()
 	renderer->Render( position, rotation, size, shader, tex );
 }
 
-void Model::SetShader( Shader *shader ) { this->shader = shader; }
-Shader *Model::GetShader() { return shader; }
-void Model::SetTexture( Texture *tex ) { this->tex = tex; }
-Texture *Model::GetTexture() { return tex; }
+void CModel::SetShader( CShader *shader ) { this->shader = shader; }
+CShader *CModel::GetShader() { return shader; }
+void CModel::SetTexture( CTexture *tex ) { this->tex = tex; }
+CTexture *CModel::GetTexture() { return tex; }
 
-Model *modelSystem::LoadModel( const char *fp )
+CModel *modelSystem::LoadModel( const char *fp )
 {
-	Model *m = new Model();
+	CModel *m = new CModel();
 	loadedModels.push_back( m );
 
 	BOBJLoadModel( m, fp );
@@ -42,13 +42,13 @@ Model *modelSystem::LoadModel( const char *fp )
 void modelSystem::Init() {}
 void modelSystem::UnInit()
 {
-	for ( Model *m : loadedModels )
+	for ( CModel *m : loadedModels )
 		delete m;
 }
 
-void GetCubeModel( Model &m, Vector size )
+void GetCubeModel( CModel &m, CVector size )
 {
-	std::vector<Model::Vertex> vertices = {
+	std::vector<CModel::Vertex> vertices = {
 		// NORTH +Z
 		{ size.x, size.y, size.z },
 		{ -size.x, size.y, size.z },
@@ -60,7 +60,7 @@ void GetCubeModel( Model &m, Vector size )
 		{ size.x, -size.y, -size.z },
 		{ -size.x, -size.y, -size.z },
 	};
-	std::vector<Model::Face> faces = { // +Z
+	std::vector<CModel::Face> faces = { // +Z
 									   { 2, 1, 0 },
 									   { 3, 2, 0 },
 
@@ -85,7 +85,7 @@ void GetCubeModel( Model &m, Vector size )
 									   { 6, 7, 3 } };
 	for ( int i = 0; i < 6; i += 2 )
 	{
-		Vector normal			  = DirectionVector[i];
+		CVector normal			  = DirectionVector[i];
 		vertices[faces[i].v].nx	  = normal.x;
 		vertices[faces[i].v].ny	  = normal.y;
 		vertices[faces[i].v].nz	  = normal.z;

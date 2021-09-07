@@ -12,7 +12,7 @@ enum Direction {
 	DOWN = 5  // -Y
 };
 
-const Vector DirectionVector[] = {
+const CVector DirectionVector[] = {
 	{ 0, 0, 1 },  // NORTH
 	{ 1, 0, 0 },  // EAST
 	{ 0, 0, -1 }, // SOUTH

@@ -45,7 +45,7 @@ int main( int argc, char *args[] )
 	atexit( network::Uninit );
 
 	con_info( "Create Server..." );
-	NetworkServer server( sv_port->GetInt() );
+	CNetworkServer server( sv_port->GetInt() );
 	if ( !server.WorkingServer() )
 	{
 		con_critical( "Server became invalid" );
@@ -78,7 +78,7 @@ int main( int argc, char *args[] )
 
 			if ( i % 5 == 0 )
 			{
-				for ( NetworkPlayer *c : server.players )
+				for ( CNetworkPlayer *c : server.players )
 					protocol::SendServerTimeOfDay( c->peer, server.world.timeOfDay );
 			}
 		}

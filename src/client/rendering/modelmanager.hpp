@@ -11,7 +11,7 @@
 
 namespace modelSystem
 {
-	class Model
+	class CModel
 	{
 	  public:
 		struct Vertex
@@ -33,37 +33,37 @@ namespace modelSystem
 			unsigned int v, vv, vvv;
 		};
 
-		Model( std::vector<Vertex> verts = {}, std::vector<Face> faces = {} );
-		~Model();
+		CModel( std::vector<Vertex> verts = {}, std::vector<Face> faces = {} );
+		~CModel();
 
 		void Update();
 		void Render();
 
-		void SetShader( Shader *shader );
-		Shader *GetShader();
+		void SetShader( CShader *shader );
+		CShader *GetShader();
 
-		void SetTexture( Texture *texture );
-		Texture *GetTexture();
+		void SetTexture( CTexture *texture );
+		CTexture *GetTexture();
 
 		std::vector<Vertex> vertices;
 		std::vector<Face> faces;
 
-		Vector position = { 0, 0, 0 };
-		Vector rotation = { 0, 0, 0 };
-		Vector size		= { 1, 1, 1 };
+		CVector position = { 0, 0, 0 };
+		CVector rotation = { 0, 0, 0 };
+		CVector size		= { 1, 1, 1 };
 
 	  private:
-		Shader *shader = nullptr;
-		Texture *tex   = nullptr;
+		CShader *shader = nullptr;
+		CTexture *tex   = nullptr;
 
-		ModelRenderer *renderer = nullptr;
+		CModelRenderer *renderer = nullptr;
 
 		const char *fp = nullptr;
 	};
 
-	extern std::vector<Model *> loadedModels;
+	extern std::vector<CModel *> loadedModels;
 
-	Model *LoadModel( const char *fp );
+	CModel *LoadModel( const char *fp );
 
 	void Init();
 	void UnInit();
@@ -71,6 +71,6 @@ namespace modelSystem
 }; // namespace modelSystem
 
 // Laziness and Convenience
-using Model = modelSystem::Model;
+using CModel = modelSystem::CModel;
 
-void GetCubeModel( Model &m, Vector size = Vector( 1, 1, 1 ) );
+void GetCubeModel( CModel &m, CVector size = CVector( 1, 1, 1 ) );

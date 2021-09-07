@@ -1,14 +1,14 @@
 #include "vector.hpp"
 
-class Particle
+class CParticle
 {
 
   public:
-	Particle();
-	~Particle();
+	CParticle();
+	~CParticle();
 
-	Vector position;
-	Vector size; // Z Ignored!!!
+	CVector position;
+	CVector size; // Z Ignored!!!
 
 	bool shouldDie;
 };

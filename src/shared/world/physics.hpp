@@ -2,14 +2,14 @@
 
 #pragma once
 
-class AABB
+class CBoundingBox
 {
   public:
-	AABB( Vector pos, Vector size, Vector origin = Vector( 0.5, 0.5, 0.5 ) );
-	bool TestCollide( AABB other );
-	bool TestPointCollide( Vector other );
+	CBoundingBox( CVector pos, CVector size, CVector origin = CVector( 0.5, 0.5, 0.5 ) );
+	bool TestCollide( CBoundingBox other );
+	bool TestPointCollide( CVector other );
 
-	Vector pos;
-	Vector bounds;
-	Vector origin;
+	CVector pos;
+	CVector bounds;
+	CVector origin;
 };

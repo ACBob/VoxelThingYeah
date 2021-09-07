@@ -10,7 +10,7 @@
 #include <AL/al.h>
 
 // TODO: Error sound
-Sound::Sound( const char *path )
+CSound::CSound( const char *path )
 {
 	PHYSFS_File *f = PHYSFS_openRead( path );
 	int64_t fl	   = PHYSFS_fileLength( f );
@@ -47,7 +47,7 @@ Sound::Sound( const char *path )
 
 	alSourcei( this->id, AL_BUFFER, buffer );
 }
-void Sound::Play( Vector src, float pitch, float gain )
+void CSound::Play( CVector src, float pitch, float gain )
 {
 	alSourcef( this->id, AL_PITCH, pitch );
 	alSourcef( this->id, AL_GAIN, gain );
@@ -56,7 +56,7 @@ void Sound::Play( Vector src, float pitch, float gain )
 	alSourcePlay( id );
 }
 
-SoundManager::SoundManager()
+CSoundManager::CSoundManager()
 {
 	namedSounds["placeStone"] = LoadSound( "sound/placestone.ogg" );
 	namedSounds["breakStone"] = LoadSound( "sound/breakstone.ogg" );
@@ -73,21 +73,21 @@ SoundManager::SoundManager()
 	namedSounds["placeOrganic"] = LoadSound( "sound/placeorganic.ogg" );
 	namedSounds["breakOrganic"] = LoadSound( "sound/breakorganic.ogg" );
 }
-SoundManager::~SoundManager()
+CSoundManager::~CSoundManager()
 {
-	for ( Sound *s : loadedSounds )
+	for ( CSound *s : loadedSounds )
 		delete s;
 }
 
-Sound *SoundManager::LoadSound( const char *path )
+CSound *CSoundManager::LoadSound( const char *path )
 {
-	Sound *snd = new Sound( path );
+	CSound *snd = new CSound( path );
 	loadedSounds.push_back( snd );
 
 	return loadedSounds.back();
 }
 
-void SoundManager::PlayBreakSound( blocktype_t blockType, Vector pos )
+void CSoundManager::PlayBreakSound( blocktype_t blockType, CVector pos )
 {
 	blockmaterial_t mat = GetBlockMaterial( blockType );
 	float pitch			= 0.5 + ( random() % 15 ) / 10.0f;
@@ -111,7 +111,7 @@ void SoundManager::PlayBreakSound( blocktype_t blockType, Vector pos )
 			break;
 	}
 }
-void SoundManager::PlayPlaceSound( blocktype_t blockType, Vector pos )
+void CSoundManager::PlayPlaceSound( blocktype_t blockType, CVector pos )
 {
 	blockmaterial_t mat = GetBlockMaterial( blockType );
 	float pitch			= 0.5 + ( random() % 15 ) / 10.0f;

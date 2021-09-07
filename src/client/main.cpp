@@ -85,8 +85,8 @@ int main( int argc, char *args[] )
 
 		SDL_LogSetPriority( SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO );
 	}
-	GameWindow window( "VoxelThingYeah", Vector( scr_width->GetFloat(), scr_height->GetFloat() ), true );
-	InputManager inputMan;
+	CGameWindow window( "VoxelThingYeah", CVector( scr_width->GetFloat(), scr_height->GetFloat() ), true );
+	CInputManager inputMan;
 	window.inputMan = &inputMan;
 	{
 		if ( !gladLoadGLLoader( SDL_GL_GetProcAddress ) )
@@ -104,26 +104,26 @@ int main( int argc, char *args[] )
 	shaderSystem::Init();
 	atexit( shaderSystem::UnInit );
 
-	Shader *diffuseShader = shaderSystem::LoadShader( "shaders/generic.vert", "shaders/generic.frag" );
-	Shader *skyShader	  = shaderSystem::LoadShader( "shaders/sky.vert", "shaders/sky.frag" );
-	Shader *unlitShader	  = shaderSystem::LoadShader( "shaders/generic.vert", "shaders/unlit.frag" );
+	CShader *diffuseShader = shaderSystem::LoadShader( "shaders/generic.vert", "shaders/generic.frag" );
+	CShader *skyShader	  = shaderSystem::LoadShader( "shaders/sky.vert", "shaders/sky.frag" );
+	CShader *unlitShader	  = shaderSystem::LoadShader( "shaders/generic.vert", "shaders/unlit.frag" );
 
 	con_info( "Load default textures" );
 	materialSystem::Init();
 	atexit( materialSystem::UnInit );
 
-	Texture *terrainPng	  = materialSystem::LoadTexture( "terrain.png" );
-	Texture *crosshairTex = materialSystem::LoadTexture( "crosshair.png" );
-	Texture *testTexture  = materialSystem::LoadTexture( "test.png" );
-	Texture *sunTexture	  = materialSystem::LoadTexture( "sun.png" );
+	CTexture *terrainPng	  = materialSystem::LoadTexture( "terrain.png" );
+	CTexture *crosshairTex = materialSystem::LoadTexture( "crosshair.png" );
+	CTexture *testTexture  = materialSystem::LoadTexture( "test.png" );
+	CTexture *sunTexture	  = materialSystem::LoadTexture( "sun.png" );
 
 	modelSystem::Init();
 	atexit( modelSystem::UnInit );
 
 	con_info( "Create Client..." );
-	World localWorld( diffuseShader, diffuseShader );
+	CWorld localWorld( diffuseShader, diffuseShader );
 
-	NetworkClient client;
+	CNetworkClient client;
 	client.localWorld = &localWorld;
 	if ( !client.WorkingClient() )
 	{
@@ -137,7 +137,7 @@ int main( int argc, char *args[] )
 		return EXIT_FAILURE;
 	}
 
-	EntityPlayer plyr;
+	CEntityPlayer plyr;
 	plyr.inputMan = &inputMan;
 	plyr.Spawn();
 	plyr.SetShader( diffuseShader );
@@ -157,16 +157,16 @@ int main( int argc, char *args[] )
 	glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
 	glBlendEquation( GL_FUNC_ADD );
 
-	Model skyboxModel;
-	GetCubeModel( skyboxModel, Vector( -2, -2, -2 ) );
+	CModel skyboxModel;
+	GetCubeModel( skyboxModel, CVector( -2, -2, -2 ) );
 	skyboxModel.SetShader( skyShader );
 	skyboxModel.SetTexture( testTexture );
 
-	Model *skyboxSunModel = modelSystem::LoadModel( "models/sun.obj" );
+	CModel *skyboxSunModel = modelSystem::LoadModel( "models/sun.obj" );
 	skyboxSunModel->SetTexture( sunTexture );
 	skyboxSunModel->SetShader( unlitShader );
 
-	GUI gui( scr_width->GetInt(), scr_height->GetInt() );
+	CGui gui( scr_width->GetInt(), scr_height->GetInt() );
 	gui.inputMan = &inputMan;
 
 	int64_t then =
@@ -177,7 +177,7 @@ int main( int argc, char *args[] )
 
 	bool chatting = false;
 
-	Vector sunForward( 0, 1, 0 );
+	CVector sunForward( 0, 1, 0 );
 	float sunAngle = 0.0f;
 	while ( !window.shouldClose )
 	{
@@ -191,7 +191,7 @@ int main( int argc, char *args[] )
 
 		if ( window.sizeChanged )
 		{
-			Vector s = window.GetSize();
+			CVector s = window.GetSize();
 			scr_width->SetInt( s.x );
 			scr_height->SetInt( s.y );
 			glViewport( 0, 0, s.x, s.y );
@@ -225,7 +225,7 @@ int main( int argc, char *args[] )
 			// Rendering right at the end
 			glClear( GL_DEPTH_BUFFER_BIT );
 
-			Vector v	   = plyr.camera.pos + plyr.camera.forward;
+			CVector v	   = plyr.camera.pos + plyr.camera.forward;
 			glm::mat4 view = glm::lookAt( glm::vec3( plyr.camera.pos.x, plyr.camera.pos.y, plyr.camera.pos.z ),
 										  glm::vec3( v.x, v.y, v.z ), glm::vec3( VEC_UP.x, VEC_UP.y, VEC_UP.z ) );
 			shaderSystem::SetUniforms( view, projection, screen, window.GetMS(), localWorld.timeOfDay, sunForward );
@@ -236,7 +236,7 @@ int main( int argc, char *args[] )
 				skyboxModel.Render();
 
 				skyboxSunModel->position = skyboxModel.position;
-				skyboxSunModel->rotation = Vector( 0, 0, -sunAngle );
+				skyboxSunModel->rotation = CVector( 0, 0, -sunAngle );
 				skyboxSunModel->Render();
 			}
 			glEnable( GL_DEPTH_TEST );
@@ -249,13 +249,13 @@ int main( int argc, char *args[] )
 
 			char *buf = new char[100];
 			snprintf( buf, 100, "Connected to \"%s\"", cl_servername->GetString() );
-			gui.Label( buf, Vector( 0, 0 ) );
+			gui.Label( buf, CVector( 0, 0 ) );
 
-			gui.Label( !chatting ? "Bobcraft" : "...", Vector( 0, 1 ) );
+			gui.Label( !chatting ? "Bobcraft" : "...", CVector( 0, 1 ) );
 
 			if ( chatting )
 			{
-				const char *chat = gui.TextInput( 0, Vector( 0, 2 ) );
+				const char *chat = gui.TextInput( 0, CVector( 0, 2 ) );
 				if ( chat != nullptr )
 				{
 					protocol::SendClientChatMessage( client.peer, chat );
@@ -272,21 +272,21 @@ int main( int argc, char *args[] )
 
 				std::string msg = client.chatBuffer.at( j );
 
-				gui.Label( msg.c_str(), Vector( 0, 2 + i ) );
+				gui.Label( msg.c_str(), CVector( 0, 2 + i ) );
 			}
 
 			snprintf( buf, 100, "<%.2f,%.2f,%.2f>", plyr.position.x, plyr.position.y, plyr.position.z );
-			gui.Label( buf, Vector( 0, -1 ) );
+			gui.Label( buf, CVector( 0, -1 ) );
 			int hours	= localWorld.timeOfDay / 1000;
 			int minutes = ( localWorld.timeOfDay - ( hours * 1000 ) ) / 16.6666;
 			snprintf( buf, 100, "Time %02i:%02i", hours, minutes );
-			gui.Label( buf, Vector( 0, -2 ) );
+			gui.Label( buf, CVector( 0, -2 ) );
 
 			BlockTexture bTex = GetDefaultBlockTextureSide( plyr.selectedBlockType, Direction::NORTH );
 			gui.ImageAtlas( terrainPng, { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey },
-							16, Vector( -1, -1 ), Vector( 4, 4 ), Vector( 1, 1 ) );
+							16, CVector( -1, -1 ), CVector( 4, 4 ), CVector( 1, 1 ) );
 
-			gui.Image( crosshairTex, gui.screenCentre, Vector( 2, 2 ), Vector( 0.5, 0.5 ) );
+			gui.Image( crosshairTex, gui.screenCentre, CVector( 2, 2 ), CVector( 0.5, 0.5 ) );
 			gui.Update();
 
 			delete[] buf;
@@ -303,7 +303,7 @@ int main( int argc, char *args[] )
 			i++;
 
 			sunAngle   = 180 * ( 1 - ( localWorld.timeOfDay / 12000.0f ) );
-			sunForward = Vector( 0, 1, 0 ).Rotate( 3, sunAngle );
+			sunForward = CVector( 0, 1, 0 ).Rotate( 3, sunAngle );
 
 			then = now + 50;
 			localWorld.WorldTick( i );

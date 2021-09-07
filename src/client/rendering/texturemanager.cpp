@@ -9,9 +9,9 @@
 
 #include "physfs.h"
 
-std::vector<Texture *> materialSystem::loadedTextures;
+std::vector<CTexture *> materialSystem::loadedTextures;
 
-Texture::Texture( const char *path )
+CTexture::CTexture( const char *path )
 // TODO: Error Texture
 {
 	fp = path;
@@ -47,13 +47,13 @@ Texture::Texture( const char *path )
 
 void materialSystem::Init() {}
 
-Texture *materialSystem::LoadTexture( const char *path )
+CTexture *materialSystem::LoadTexture( const char *path )
 {
-	for ( Texture *t : loadedTextures )
+	for ( CTexture *t : loadedTextures )
 		if ( t->fp == path )
 			return t;
 
-	Texture *tex = new Texture( path );
+	CTexture *tex = new CTexture( path );
 	loadedTextures.push_back( tex );
 
 	return loadedTextures.back();
@@ -61,6 +61,6 @@ Texture *materialSystem::LoadTexture( const char *path )
 void materialSystem::UnInit()
 {
 	// Unload textures
-	for ( Texture *t : loadedTextures )
+	for ( CTexture *t : loadedTextures )
 		delete t;
 }

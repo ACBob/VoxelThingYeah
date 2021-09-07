@@ -1,5 +1,5 @@
 #include "particleemitter.hpp"
 
-ParticleEmitter::ParticleEmitter() {}
+CParticleEmitter::CParticleEmitter() {}
 
-ParticleEmitter::~ParticleEmitter() {}
+CParticleEmitter::~CParticleEmitter() {}

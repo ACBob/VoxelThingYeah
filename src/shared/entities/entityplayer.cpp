@@ -6,19 +6,19 @@
 	#include "network/client.hpp"
 #endif
 
-EntityPlayer::EntityPlayer()
+CEntityPlayer::CEntityPlayer()
 {
-	position = Vector( 0, 0, 0 );
+	position = CVector( 0, 0, 0 );
 #ifdef CLIENTEXE
 	hand.length = 4;
 	hand.dir	= GetForward();
 	hand.pos	= position;
 #endif
 }
-EntityPlayer::~EntityPlayer() {}
+CEntityPlayer::~CEntityPlayer() {}
 
 #ifdef CLIENTEXE
-void EntityPlayer::UpdateClient( World *clientSideWorld )
+void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 {
 	// Mouse Input
 	if ( !inputMan->inGui )
@@ -42,7 +42,7 @@ void EntityPlayer::UpdateClient( World *clientSideWorld )
 	}
 
 	camera.forward = GetForward();
-	camera.pos	   = position + Vector( 0, 0, 0 );
+	camera.pos	   = position + CVector( 0, 0, 0 );
 
 	hand.pos = camera.pos;
 	hand.dir = camera.forward;
@@ -57,12 +57,12 @@ void EntityPlayer::UpdateClient( World *clientSideWorld )
 			pointed.block->blockType = blocktype_t::AIR;
 			pointed.block->Update();
 
-			protocol::SendClientSetBlock( ( (NetworkClient *)client )->peer, pointed.position - 0.5, blocktype_t::AIR );
+			protocol::SendClientSetBlock( ( (CNetworkClient *)client )->peer, pointed.position - 0.5, blocktype_t::AIR );
 		}
 	}
 	if ( inputMan->mouseState & IN_RIGHT_MOUSE && inputMan->oldMouseState == 0 && pointed.block != nullptr )
 	{
-		Block *b		 = clientSideWorld->BlockAtWorldPos( ( pointed.position - 0.5 ) + pointed.normal );
+		CBlock *b		 = clientSideWorld->BlockAtWorldPos( ( pointed.position - 0.5 ) + pointed.normal );
 		BlockFeatures bF = GetBlockFeatures( pointed.block->blockType );
 		if ( b != nullptr && bF.selectable )
 		{
@@ -76,7 +76,7 @@ void EntityPlayer::UpdateClient( World *clientSideWorld )
 			else
 				b->blockType = oldType;
 
-			protocol::SendClientSetBlock( ( (NetworkClient *)client )->peer,
+			protocol::SendClientSetBlock( ( (CNetworkClient *)client )->peer,
 										  ( pointed.position - 0.5 ) + pointed.normal, b->blockType );
 		}
 	}
@@ -100,7 +100,7 @@ void EntityPlayer::UpdateClient( World *clientSideWorld )
 }
 #endif
 
-void EntityPlayer::Tick()
+void CEntityPlayer::Tick()
 {
 	BaseClass::Tick();
 
@@ -111,8 +111,8 @@ void EntityPlayer::Tick()
 	if ( inputMan->inGui )
 		return;
 
-	Vector forward = GetForward();
-	Vector right   = forward.Rotate( 2, 90 );
+	CVector forward = GetForward();
+	CVector right   = forward.Rotate( 2, 90 );
 	right.y		   = 0;
 	right		   = right.Normal();
 	if ( inputMan->inputState[INKEY_FRONT] )
@@ -126,7 +126,7 @@ void EntityPlayer::Tick()
 #endif
 }
 
-void EntityPlayer::PhysicsTick( float delta, World *world )
+void CEntityPlayer::PhysicsTick( float delta, CWorld *world )
 {
 	position.x += velocity.x * delta;
 	UpdateCollision();

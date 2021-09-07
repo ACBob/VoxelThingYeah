@@ -6,10 +6,10 @@
 
 namespace materialSystem
 {
-	class Texture
+	class CTexture
 	{
 	  public:
-		Texture( const char *path );
+		CTexture( const char *path );
 
 		std::vector<unsigned char> image;
 		unsigned int width, height, id;
@@ -20,9 +20,9 @@ namespace materialSystem
 	void Init();
 	void UnInit();
 
-	Texture *LoadTexture( const char *path );
+	CTexture *LoadTexture( const char *path );
 
-	extern std::vector<Texture *> loadedTextures;
+	extern std::vector<CTexture *> loadedTextures;
 }; // namespace materialSystem
 
-using Texture = materialSystem::Texture;
+using CTexture = materialSystem::CTexture;

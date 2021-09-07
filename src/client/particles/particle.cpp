@@ -1,5 +1,5 @@
 #include "particle.hpp"
 
-Particle::Particle() {}
+CParticle::CParticle() {}
 
-Particle::~Particle() {}
+CParticle::~CParticle() {}

@@ -3,23 +3,23 @@
 #include "network/protocol.hpp"
 #include "world/world.hpp"
 
-class NetworkPlayer
+class CNetworkPlayer
 {
   public:
 	ENetPeer *peer		 = nullptr;
-	EntityPlayer *entity = nullptr;
+	CEntityPlayer *entity = nullptr;
 	std::string username;
 
 	int loadedChunkIDX			   = 0;
 	unsigned int nextChunkLoadTick = 0;
-	Vector chunkPos; // the chunk we're in
+	CVector chunkPos; // the chunk we're in
 };
 
-class NetworkServer
+class CNetworkServer
 {
   public:
-	NetworkServer( int port = 58008, int maxClients = 8 );
-	~NetworkServer();
+	CNetworkServer( int port = 58008, int maxClients = 8 );
+	~CNetworkServer();
 
 	void Update();
 
@@ -27,14 +27,14 @@ class NetworkServer
 	// Returning true if it can be
 	bool WorkingServer();
 
-	World world;
+	CWorld world;
 
-	std::vector<NetworkPlayer *> players;
+	std::vector<CNetworkPlayer *> players;
 
-	NetworkPlayer *ClientFromPeer( ENetPeer *p );
-	NetworkPlayer *ClientFromUsername( const char *name );
+	CNetworkPlayer *ClientFromPeer( ENetPeer *p );
+	CNetworkPlayer *ClientFromUsername( const char *name );
 
-	void KickPlayer( NetworkPlayer *c, const char *reason );
+	void KickPlayer( CNetworkPlayer *c, const char *reason );
 	void KickPlayer( const char *str, const char *reason );
 	void KickPlayer( ENetPeer *p, const char *reason );
 

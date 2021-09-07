@@ -189,11 +189,11 @@ namespace protocol
 	/******************* SERVER *************************/
 	/****************************************************/
 	void SendServerPlayerID( ENetPeer *peer, bool isOp );
-	void SendServerChunkData( ENetPeer *peer, World *world, Vector pos );
-	void SendServerChunkDataFromRep( ENetPeer *peer, World::PortableChunkRepresentation crep );
-	void SendServerUpdateBlock( ENetPeer *peer, Vector pos, blocktype_t blockType );
-	void SendServerPlayerSpawn( ENetPeer *peer, std::string username, Vector pos, Vector rot, bool join );
-	void SendServerPlayerPos( ENetPeer *peer, std::string username, Vector pos, Vector rot );
+	void SendServerChunkData( ENetPeer *peer, CWorld *world, CVector pos );
+	void SendServerChunkDataFromRep( ENetPeer *peer, CWorld::PortableChunkRepresentation crep );
+	void SendServerUpdateBlock( ENetPeer *peer, CVector pos, blocktype_t blockType );
+	void SendServerPlayerSpawn( ENetPeer *peer, std::string username, CVector pos, CVector rot, bool join );
+	void SendServerPlayerPos( ENetPeer *peer, std::string username, CVector pos, CVector rot );
 	void SendServerPlayerMessage( ENetPeer *peer, std::string username, std::string message );
 	void SendServerPlayerDisconnect( ENetPeer *peer, bool isKick, std::string reason = "" );
 	void SendServerTimeOfDay( ENetPeer *peer, int ticks );
@@ -202,8 +202,8 @@ namespace protocol
 	/******************* CLIENT *************************/
 	/****************************************************/
 	void SendClientPlayerID( ENetPeer *peer );
-	void SendClientSetBlock( ENetPeer *peer, Vector pos, blocktype_t blockType );
-	void SendClientPlayerPos( ENetPeer *peer, Vector pos, Vector rot );
+	void SendClientSetBlock( ENetPeer *peer, CVector pos, blocktype_t blockType );
+	void SendClientPlayerPos( ENetPeer *peer, CVector pos, CVector rot );
 	void SendClientChatMessage( ENetPeer *peer, std::string message );
 	void SendClientLeave( ENetPeer *peer );
 } // namespace protocol

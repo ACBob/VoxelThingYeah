@@ -13,7 +13,7 @@ namespace protocol
 		ArchiveBuf buf( p.data );
 		Archive<ArchiveBuf> bufAccess( buf );
 
-		NetworkClient *client = reinterpret_cast<NetworkClient *>( side );
+		CNetworkClient *client = reinterpret_cast<CNetworkClient *>( side );
 
 		switch ( p.type )
 		{
@@ -52,7 +52,7 @@ namespace protocol
 			break;
 
 			case ServerPacket::CHUNKDATA: {
-				World::PortableChunkRepresentation crep;
+				CWorld::PortableChunkRepresentation crep;
 				int numBlocks;
 				bufAccess >> crep.x;
 				bufAccess >> crep.y;
@@ -78,7 +78,7 @@ namespace protocol
 
 				// Woot, data!
 				// TODO: make sure the server isn't being malicious
-				Block *b = client->localWorld->BlockAtWorldPos( Vector( x, y, z ) );
+				CBlock *b = client->localWorld->BlockAtWorldPos( CVector( x, y, z ) );
 				if ( b != nullptr )
 				{
 					con_info( "Update Block At <%f,%f,%f>", x, y, z );
@@ -106,8 +106,8 @@ namespace protocol
 				{
 					// Then it's us
 					con_info( "Spawning at <%f,%f,%f> <%f,%f>", x, y, z, pitch, yaw );
-					client->localPlayer->position = Vector( x, y, z );
-					client->localPlayer->rotation = Vector( pitch, yaw, 0 );
+					client->localPlayer->position = CVector( x, y, z );
+					client->localPlayer->rotation = CVector( pitch, yaw, 0 );
 				}
 				else
 				{
@@ -118,16 +118,16 @@ namespace protocol
 
 					if ( client->localWorld->GetEntityByName( username.c_str() ) != nullptr )
 					{
-						EntityPlayer *plyr = (EntityPlayer *)client->localWorld->GetEntityByName( username.c_str() );
-						plyr->position	   = Vector( x, y, z );
-						plyr->rotation	   = Vector( pitch, yaw, 0 );
+						CEntityPlayer *plyr = (CEntityPlayer *)client->localWorld->GetEntityByName( username.c_str() );
+						plyr->position	   = CVector( x, y, z );
+						plyr->rotation	   = CVector( pitch, yaw, 0 );
 					}
 					else
 					{
 						// New player
-						EntityPlayer *plyr = new EntityPlayer();
-						plyr->position	   = Vector( x, y, z );
-						plyr->rotation	   = Vector( pitch, yaw, 0 );
+						CEntityPlayer *plyr = new CEntityPlayer();
+						plyr->position	   = CVector( x, y, z );
+						plyr->rotation	   = CVector( pitch, yaw, 0 );
 						plyr->name		   = username;
 
 						client->localWorld->AddEntity( plyr );
@@ -150,15 +150,15 @@ namespace protocol
 				// Empty username is taken to mean us
 				if ( username == "" )
 				{
-					client->localPlayer->position = Vector( x, y, z );
+					client->localPlayer->position = CVector( x, y, z );
 				}
 				else
 				{
 					if ( client->localWorld->GetEntityByName( username.c_str() ) != nullptr )
 					{
-						EntityPlayer *plyr = (EntityPlayer *)client->localWorld->GetEntityByName( username.c_str() );
-						plyr->position	   = Vector( x, y, z );
-						plyr->rotation	   = Vector( pitch, yaw, 0 );
+						CEntityPlayer *plyr = (CEntityPlayer *)client->localWorld->GetEntityByName( username.c_str() );
+						plyr->position	   = CVector( x, y, z );
+						plyr->rotation	   = CVector( pitch, yaw, 0 );
 					}
 				}
 			}

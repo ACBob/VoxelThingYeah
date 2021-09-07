@@ -2,11 +2,11 @@
 
 #include <vector>
 
-class ParticleEmitter
+class CParticleEmitter
 {
   public:
-	ParticleEmitter();
-	~ParticleEmitter();
+	CParticleEmitter();
+	~CParticleEmitter();
 
-	std::vector<Particle> particles;
+	std::vector<CParticle> particles;
 };

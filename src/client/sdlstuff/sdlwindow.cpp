@@ -5,7 +5,7 @@
 #include <iostream>
 #include <memory>
 
-GameWindow::GameWindow( const char *title, Vector size, bool resizeable )
+CGameWindow::CGameWindow( const char *title, CVector size, bool resizeable )
 	: internalWindow( nullptr, &SDL_DestroyWindow ), tick( 0 ), frameTicks( 0 ), delta( 0 ), framesInTheLastSecond( 0 ),
 	  secondsPerFrame( 0.0f ), inputMan( nullptr ), shouldClose( false )
 {
@@ -25,15 +25,15 @@ GameWindow::GameWindow( const char *title, Vector size, bool resizeable )
 
 	SDL_SetRelativeMouseMode( SDL_TRUE );
 }
-GameWindow::~GameWindow() {}
+CGameWindow::~CGameWindow() {}
 
-void GameWindow::SwapBuffers() { SDL_GL_SwapWindow( internalWindow.get() ); }
+void CGameWindow::SwapBuffers() { SDL_GL_SwapWindow( internalWindow.get() ); }
 
-bool GameWindow::IsVisible()
+bool CGameWindow::IsVisible()
 {
 	return !( ( SDL_GetWindowFlags( internalWindow.get() ) & SDL_WINDOW_HIDDEN ) == SDL_WINDOW_HIDDEN );
 }
-void GameWindow::SetVisible( bool visible )
+void CGameWindow::SetVisible( bool visible )
 {
 	if ( !visible )
 		SDL_HideWindow( internalWindow.get() );
@@ -41,32 +41,32 @@ void GameWindow::SetVisible( bool visible )
 		SDL_ShowWindow( internalWindow.get() );
 }
 
-bool GameWindow::IsFocused()
+bool CGameWindow::IsFocused()
 {
 	return IsVisible() &&
 		   ( SDL_GetWindowFlags( internalWindow.get() ) & SDL_WINDOW_INPUT_FOCUS ) == SDL_WINDOW_INPUT_FOCUS;
 }
 
-const char *GameWindow::GetTitle() { return SDL_GetWindowTitle( internalWindow.get() ); }
-void GameWindow::SetTitle( const char *title ) { SDL_SetWindowTitle( internalWindow.get(), title ); }
+const char *CGameWindow::GetTitle() { return SDL_GetWindowTitle( internalWindow.get() ); }
+void CGameWindow::SetTitle( const char *title ) { SDL_SetWindowTitle( internalWindow.get(), title ); }
 
-Vector GameWindow::GetSize()
+CVector CGameWindow::GetSize()
 {
 	int x, y;
 	SDL_GetWindowSize( internalWindow.get(), &x, &y );
-	return Vector( x, y );
+	return CVector( x, y );
 }
-void GameWindow::SetSize( Vector size ) { SDL_SetWindowSize( internalWindow.get(), size.x, size.y ); }
+void CGameWindow::SetSize( CVector size ) { SDL_SetWindowSize( internalWindow.get(), size.x, size.y ); }
 
-Vector GameWindow::GetPos()
+CVector CGameWindow::GetPos()
 {
 	int x, y;
 	SDL_GetWindowPosition( internalWindow.get(), &x, &y );
-	return Vector( x, y );
+	return CVector( x, y );
 }
-void GameWindow::SetPos( Vector pos ) { SDL_SetWindowPosition( internalWindow.get(), pos.x, pos.y ); }
+void CGameWindow::SetPos( CVector pos ) { SDL_SetWindowPosition( internalWindow.get(), pos.x, pos.y ); }
 
-float GameWindow::GetSPF()
+float CGameWindow::GetSPF()
 {
 	framesInTheLastSecond++;
 	if ( frameTicks < SDL_GetTicks() - 1000 ) // Has it been a second
@@ -78,12 +78,12 @@ float GameWindow::GetSPF()
 	return secondsPerFrame;
 }
 
-unsigned int GameWindow::GetMS()
+unsigned int CGameWindow::GetMS()
 {
 	tick = SDL_GetTicks();
 	return tick;
 }
-double GameWindow::GetTime()
+double CGameWindow::GetTime()
 {
 	tick = SDL_GetTicks();
 	return tick / 1000.0f;
@@ -113,9 +113,9 @@ const int scancodeToStateIndex[] = {
 	SDL_SCANCODE_RETURN,	KBD_RETURN,
 };
 
-void GameWindow::PollEvents()
+void CGameWindow::PollEvents()
 {
-	inputMan->mouseMovement = Vector( 0, 0 );
+	inputMan->mouseMovement = CVector( 0, 0 );
 
 	inputMan->oldMouseState = inputMan->mouseState;
 	inputMan->mouseState	= 0;
@@ -134,8 +134,8 @@ void GameWindow::PollEvents()
 				if ( !IsFocused() )
 					continue;
 				inputMan->mouseMovement =
-					inputMan->mouseMovement + Vector( currentEvent.motion.xrel, currentEvent.motion.yrel );
-				inputMan->mousePos = Vector( currentEvent.motion.x, currentEvent.motion.y );
+					inputMan->mouseMovement + CVector( currentEvent.motion.xrel, currentEvent.motion.yrel );
+				inputMan->mousePos = CVector( currentEvent.motion.x, currentEvent.motion.y );
 				break;
 
 			case SDL_WINDOWEVENT:
@@ -170,8 +170,8 @@ void GameWindow::PollEvents()
 	}
 }
 
-void GameWindow::CaptureMouse()
+void CGameWindow::CaptureMouse()
 {
-	Vector size = GetSize();
+	CVector size = GetSize();
 	SDL_WarpMouseInWindow( internalWindow.get(), size.x / 2, size.y / 2 );
 }

@@ -1,16 +1,16 @@
 #include "cvar_clientside.hpp"
 
-ConVar::ConVar *fov = nullptr;
+ConVar::CConVar *fov = nullptr;
 
-ConVar::ConVar *scr_width  = nullptr;
-ConVar::ConVar *scr_height = nullptr;
+ConVar::CConVar *scr_width  = nullptr;
+ConVar::CConVar *scr_height = nullptr;
 
-ConVar::ConVar *username = nullptr;
+ConVar::CConVar *username = nullptr;
 
-ConVar::ConVar *cl_ip	= nullptr;
-ConVar::ConVar *cl_port = nullptr;
+ConVar::CConVar *cl_ip	= nullptr;
+ConVar::CConVar *cl_port = nullptr;
 
-ConVar::ConVar *cl_servername = nullptr;
+ConVar::CConVar *cl_servername = nullptr;
 
 void SetupClientSideConvars()
 {

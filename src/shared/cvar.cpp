@@ -7,11 +7,11 @@
 #include <memory>
 
 // Global Convar Handler
-ConVar::ConVarHandler conVarHandle;
+ConVar::CConVarHandler conVarHandle;
 
 namespace ConVar
 {
-	ConVar::ConVar( const char *name, const char *defval, int flags )
+	CConVar::CConVar( const char *name, const char *defval, int flags )
 	{
 		this->name	 = name;
 		this->val	 = defval;
@@ -19,7 +19,7 @@ namespace ConVar
 		this->flags	 = flags;
 	}
 
-	void ConVar::SetString( const char *val )
+	void CConVar::SetString( const char *val )
 	{
 		char *cval = new char[strlen( val ) + 1];
 		strcpy( cval, val );
@@ -28,43 +28,43 @@ namespace ConVar
 		modified  = ( strcmp( cval, defVal ) != 0 );
 		this->val = cval;
 	}
-	void ConVar::SetInt( int val )
+	void CConVar::SetInt( int val )
 	{
 		char buf[256];
 		snprintf( buf, 256, "%d", val );
 		SetString( buf );
 	}
-	void ConVar::SetFloat( float val )
+	void CConVar::SetFloat( float val )
 	{
 		char buf[256];
 		snprintf( buf, 256, "%f", val );
 		SetString( buf );
 	}
-	void ConVar::SetBool( bool val ) { SetString( val ? "true" : "false" ); }
+	void CConVar::SetBool( bool val ) { SetString( val ? "true" : "false" ); }
 
-	const char *ConVar::GetString() { return this->val; }
-	int ConVar::GetInt() { return atoi( this->val ); }
-	float ConVar::GetFloat() { return atof( this->val ); }
-	bool ConVar::GetBool() { return ( strcmp( this->val, "true" ) != 0 ); }
+	const char *CConVar::GetString() { return this->val; }
+	int CConVar::GetInt() { return atoi( this->val ); }
+	float CConVar::GetFloat() { return atof( this->val ); }
+	bool CConVar::GetBool() { return ( strcmp( this->val, "true" ) != 0 ); }
 
-	ConVarHandler::ConVarHandler() { Cvars = {}; }
-	ConVarHandler::~ConVarHandler()
+	CConVarHandler::CConVarHandler() { Cvars = {}; }
+	CConVarHandler::~CConVarHandler()
 	{
 		for ( auto &c : Cvars )
 			delete c.second;
 	}
 
-	ConVar *ConVarHandler::DeclareConvar( const char *name, const char *defVal, int flags )
+	CConVar *CConVarHandler::DeclareConvar( const char *name, const char *defVal, int flags )
 	{
-		ConVar *c	= new ConVar( name, defVal, flags );
+		CConVar *c	= new CConVar( name, defVal, flags );
 		Cvars[name] = c;
 
 		return c;
 	}
 
-	ConVar *ConVarHandler::FindConVar( const char *name ) { return Cvars[name]; }
+	CConVar *CConVarHandler::FindConVar( const char *name ) { return Cvars[name]; }
 
-	void ConVarHandler::Parse( const char *str )
+	void CConVarHandler::Parse( const char *str )
 	{
 		// Don't try parsing empty string
 		if ( strlen( str ) == 0 )
@@ -116,7 +116,7 @@ namespace ConVar
 		delete[] in;
 	}
 
-	void ConVarHandler::ParseConvarTokens( const char *cmd, const char *args )
+	void CConVarHandler::ParseConvarTokens( const char *cmd, const char *args )
 	{
 		// It's empty, bum run, don't do anything
 		if ( strlen( cmd ) == 0 && strlen( args ) == 0 )
@@ -124,7 +124,7 @@ namespace ConVar
 
 		con_debug( "SET %s TO %s", cmd, args );
 
-		ConVar *conv = Cvars[cmd];
+		CConVar *conv = Cvars[cmd];
 		if ( conv == nullptr )
 		{
 			con_error( "Unknown ConVar %s", cmd );

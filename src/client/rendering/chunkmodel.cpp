@@ -7,7 +7,7 @@
 
 int indexArray( int x, int y, int z ) { return CHUNK3D_TO_1D( x, y, z ); }
 
-const Model::Vertex cubeVertices[] = {
+const CModel::Vertex cubeVertices[] = {
 	// NORTH +Z
 	{ BLOCKUNIT, BLOCKUNIT, BLOCKUNIT },
 	{ 0, BLOCKUNIT, BLOCKUNIT },
@@ -19,7 +19,7 @@ const Model::Vertex cubeVertices[] = {
 	{ BLOCKUNIT, 0, 0 },
 	{ 0, 0, 0 },
 };
-const Model::Vertex plantVertices[] = {
+const CModel::Vertex plantVertices[] = {
 	{ 0, BLOCKUNIT, 0 },		 { BLOCKUNIT, 0, BLOCKUNIT }, { 0, 0, 0 },		   { BLOCKUNIT, BLOCKUNIT, BLOCKUNIT },
 
 	{ BLOCKUNIT, BLOCKUNIT, 0 }, { 0, 0, BLOCKUNIT },		  { BLOCKUNIT, 0, 0 }, { 0, BLOCKUNIT, BLOCKUNIT },
@@ -38,9 +38,9 @@ const std::vector<std::vector<int>> cubeTris = {
 
 const std::vector<int> plantTris = { 2, 1, 3, 0, 6, 5, 7, 4 };
 
-std::vector<Model::Vertex> sampleCubeFace( Direction dir, Block block, int x = 0, int y = 0, int z = 0 )
+std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlock block, int x = 0, int y = 0, int z = 0 )
 {
-	std::vector<Model::Vertex> g;
+	std::vector<CModel::Vertex> g;
 	for ( int i = 0; i < 4; i++ )
 	{
 		g.push_back( cubeVertices[cubeTris[dir][i]] );
@@ -49,7 +49,7 @@ std::vector<Model::Vertex> sampleCubeFace( Direction dir, Block block, int x = 0
 		g[i].y += y;
 		g[i].z += z;
 
-		Vector normal = DirectionVector[dir];
+		CVector normal = DirectionVector[dir];
 
 		g[i].nx = normal.x;
 		g[i].ny = normal.y;
@@ -81,9 +81,9 @@ std::vector<Model::Vertex> sampleCubeFace( Direction dir, Block block, int x = 0
 	return g;
 }
 
-std::vector<Model::Vertex> samplePlant( Block block, int x = 0, int y = 0, int z = 0 )
+std::vector<CModel::Vertex> samplePlant( CBlock block, int x = 0, int y = 0, int z = 0 )
 {
-	std::vector<Model::Vertex> g;
+	std::vector<CModel::Vertex> g;
 	for ( int i = 0; i < 8; i++ )
 	{
 		g.push_back( plantVertices[plantTris[i]] );
@@ -92,7 +92,7 @@ std::vector<Model::Vertex> samplePlant( Block block, int x = 0, int y = 0, int z
 		g[i].y += y;
 		g[i].z += z;
 
-		Vector normal = DirectionVector[i > 4 ? SOUTH : NORTH];
+		CVector normal = DirectionVector[i > 4 ? SOUTH : NORTH];
 
 		g[i].nx = normal.x;
 		g[i].ny = normal.y;
@@ -129,7 +129,7 @@ std::vector<Model::Vertex> samplePlant( Block block, int x = 0, int y = 0, int z
 }
 
 // We include the chunk manager here so we can test our neighbouring chunks
-void BuildChunkModel( Model &mdl, Block blocks[], Vector pos, void *chunk )
+void BuildChunkModel( CModel &mdl, CBlock blocks[], CVector pos, void *chunk )
 {
 	mdl.vertices.clear();
 	mdl.faces.clear();
@@ -140,7 +140,7 @@ void BuildChunkModel( Model &mdl, Block blocks[], Vector pos, void *chunk )
 		{
 			for ( int z = 0; z < CHUNKSIZE_Z; z++ )
 			{
-				Block block = blocks[indexArray( x, y, z )];
+				CBlock block = blocks[indexArray( x, y, z )];
 
 				// block here! Construct!
 				if ( block.blockType != AIR )
@@ -151,11 +151,11 @@ void BuildChunkModel( Model &mdl, Block blocks[], Vector pos, void *chunk )
 						case BLOCKMODEL_CUBE:
 							for ( int i = 0; i < 6; i++ )
 							{
-								Vector neighbour = Vector( x, y, z ) + DirectionVector[i];
+								CVector neighbour = CVector( x, y, z ) + DirectionVector[i];
 								if ( ValidChunkPosition( neighbour ) )
 								{
 									blocktype_t blockType =
-										reinterpret_cast<Chunk *>( chunk )->GetBlockAtLocal( neighbour )->blockType;
+										reinterpret_cast<CChunk *>( chunk )->GetBlockAtLocal( neighbour )->blockType;
 									BlockFeatures bF = GetBlockFeatures( blockType );
 									if ( bF.rule == OBSCURERULE_ALWAYS ||
 										 ( bF.rule == OBSCURERULE_SIMILAR && blockType == block.blockType ) )
@@ -164,13 +164,13 @@ void BuildChunkModel( Model &mdl, Block blocks[], Vector pos, void *chunk )
 								else
 								{
 									// Test a neighbour
-									Chunk *chunkNeighbour =
-										reinterpret_cast<Chunk *>( chunk )->Neighbour( Direction( i ) );
+									CChunk *chunkNeighbour =
+										reinterpret_cast<CChunk *>( chunk )->Neighbour( Direction( i ) );
 									if ( chunkNeighbour != nullptr )
 									{
 										neighbour = neighbour + ( DirectionVector[i] * -16.0f );
 
-										Block *b = chunkNeighbour->GetBlockAtLocal( neighbour );
+										CBlock *b = chunkNeighbour->GetBlockAtLocal( neighbour );
 										if ( b == nullptr )
 											continue;
 										BlockFeatures bF = GetBlockFeatures( b->blockType );
@@ -180,7 +180,7 @@ void BuildChunkModel( Model &mdl, Block blocks[], Vector pos, void *chunk )
 									}
 								}
 
-								std::vector<Model::Vertex> g = sampleCubeFace( Direction( i ), block, x, y, z );
+								std::vector<CModel::Vertex> g = sampleCubeFace( Direction( i ), block, x, y, z );
 								std::copy( g.begin(), g.end(), std::back_inserter( mdl.vertices ) );
 
 								int nVertices = mdl.vertices.size();
@@ -191,7 +191,7 @@ void BuildChunkModel( Model &mdl, Block blocks[], Vector pos, void *chunk )
 							break;
 
 						case BLOCKMODEL_PLANT:
-							std::vector<Model::Vertex> g = samplePlant( block, x, y, z );
+							std::vector<CModel::Vertex> g = samplePlant( block, x, y, z );
 							std::copy( g.begin(), g.end(), std::back_inserter( mdl.vertices ) );
 
 							int nVertices = mdl.vertices.size();

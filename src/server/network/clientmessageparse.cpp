@@ -13,12 +13,12 @@ namespace protocol
 		ArchiveBuf buf( p.data );
 		Archive<ArchiveBuf> bufAccess( buf );
 
-		NetworkServer *server = reinterpret_cast<NetworkServer *>( side );
+		CNetworkServer *server = reinterpret_cast<CNetworkServer *>( side );
 
 		switch ( p.type )
 		{
 			case ClientPacket::PLAYER_ID: {
-				NetworkPlayer *c = new NetworkPlayer{ peer, nullptr };
+				CNetworkPlayer *c = new CNetworkPlayer{ peer, nullptr };
 				server->players.push_back( c );
 
 				// we've been given a few things here, decomp them
@@ -48,7 +48,7 @@ namespace protocol
 				SendServerPlayerID( peer, false );
 
 				// Create an entity for them
-				EntityPlayer *p = new EntityPlayer();
+				CEntityPlayer *p = new CEntityPlayer();
 				server->world.AddEntity( p );
 				c->entity	= p;
 				c->username = username;
@@ -62,12 +62,12 @@ namespace protocol
 				int x = 8 + rand() % 8;
 				int z = 8 + rand() % 8;
 #endif
-				p->position = Vector( x, 10, z );
-				p->rotation = Vector( 0, 0, 0 );
+				p->position = CVector( x, 10, z );
+				p->rotation = CVector( 0, 0, 0 );
 
 				SendServerPlayerSpawn( peer, "", p->position, p->rotation, false );
 
-				for ( NetworkPlayer *c : server->players )
+				for ( CNetworkPlayer *c : server->players )
 				{
 					if ( c->peer == peer )
 						continue;
@@ -76,7 +76,7 @@ namespace protocol
 				}
 
 				// Now send them 0,0
-				SendServerChunkData( peer, &server->world, Vector( 0, 0, 0 ) );
+				SendServerChunkData( peer, &server->world, CVector( 0, 0, 0 ) );
 			}
 			break;
 
@@ -88,7 +88,7 @@ namespace protocol
 				bufAccess >> z;
 				bufAccess >> blockType;
 
-				Block *b = server->world.BlockAtWorldPos( Vector( x, y, z ) );
+				CBlock *b = server->world.BlockAtWorldPos( CVector( x, y, z ) );
 				if ( true ) // If it's a valid block placement (for now no check)
 				{
 					b->blockType = (blocktype_t)blockType;
@@ -97,9 +97,9 @@ namespace protocol
 				}
 				blockType = b->blockType;
 
-				for ( NetworkPlayer *c : server->players )
+				for ( CNetworkPlayer *c : server->players )
 				{
-					SendServerUpdateBlock( c->peer, Vector( x, y, z ), blocktype_t( blockType ) );
+					SendServerUpdateBlock( c->peer, CVector( x, y, z ), blocktype_t( blockType ) );
 				}
 			}
 			break;
@@ -113,11 +113,11 @@ namespace protocol
 				bufAccess >> pitch;
 				bufAccess >> yaw;
 
-				EntityPlayer *p = server->ClientFromPeer( peer )->entity;
-				p->position		= Vector( x, y, z );
-				p->rotation		= Vector( pitch, yaw, 0 );
+				CEntityPlayer *p = server->ClientFromPeer( peer )->entity;
+				p->position		= CVector( x, y, z );
+				p->rotation		= CVector( pitch, yaw, 0 );
 
-				for ( NetworkPlayer *c : server->players )
+				for ( CNetworkPlayer *c : server->players )
 				{
 					std::string name = p->name;
 					if ( c->peer == peer )
@@ -141,7 +141,7 @@ namespace protocol
 
 				con_info( "%s: %s", username.c_str(), message.c_str() );
 
-				for ( NetworkPlayer *c : server->players )
+				for ( CNetworkPlayer *c : server->players )
 				{
 					SendServerPlayerMessage( c->peer, username, message );
 				}

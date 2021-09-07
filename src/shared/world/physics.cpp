@@ -1,13 +1,13 @@
 #include "physics.hpp"
 
-AABB::AABB( Vector pos, Vector size, Vector origin )
+CBoundingBox::CBoundingBox( CVector pos, CVector size, CVector origin )
 {
 	this->pos	 = pos;
 	this->bounds = size;
 	this->origin = origin;
 }
 
-bool AABB::TestCollide( AABB other )
+bool CBoundingBox::TestCollide( CBoundingBox other )
 {
 	// This is silly.
 	return ( ( other.pos.x - ( other.bounds.x * other.origin.x ) ) + other.bounds.x >=
@@ -24,7 +24,7 @@ bool AABB::TestCollide( AABB other )
 				 ( pos.z - ( other.bounds.z * other.origin.z ) + bounds.z ) );
 }
 
-bool AABB::TestPointCollide( Vector pos )
+bool CBoundingBox::TestPointCollide( CVector pos )
 {
 	if ( pos < this->pos || pos > ( this->pos + this->bounds ) )
 		return false; // Out of bounds

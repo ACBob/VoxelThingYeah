@@ -13,7 +13,7 @@ namespace protocol
 
 		protocol::SendPacket( peer, p );
 	}
-	void SendClientSetBlock( ENetPeer *peer, Vector pos, blocktype_t blockType )
+	void SendClientSetBlock( ENetPeer *peer, CVector pos, blocktype_t blockType )
 	{
 		ClientPacket p;
 		p.type					   = ClientPacket::SET_BLOCK;
@@ -25,7 +25,7 @@ namespace protocol
 
 		protocol::SendPacket( peer, p );
 	}
-	void SendClientPlayerPos( ENetPeer *peer, Vector pos, Vector rot )
+	void SendClientPlayerPos( ENetPeer *peer, CVector pos, CVector rot )
 	{
 		ClientPacket p;
 		p.type					   = ClientPacket::PLAYERPOSORT;

@@ -15,14 +15,14 @@ namespace protocol
 
 		protocol::SendPacket( peer, p );
 	}
-	void SendServerChunkData( ENetPeer *peer, World *world, Vector pos )
+	void SendServerChunkData( ENetPeer *peer, CWorld *world, CVector pos )
 	{
-		World::PortableChunkRepresentation crep;
+		CWorld::PortableChunkRepresentation crep;
 		crep = world->GetWorldRepresentation( pos );
 
 		SendServerChunkDataFromRep( peer, crep );
 	}
-	void SendServerChunkDataFromRep( ENetPeer *peer, World::PortableChunkRepresentation crep )
+	void SendServerChunkDataFromRep( ENetPeer *peer, CWorld::PortableChunkRepresentation crep )
 	{
 		ServerPacket p;
 		p.type					   = ServerPacket::CHUNKDATA;
@@ -35,7 +35,7 @@ namespace protocol
 
 		SendPacket( peer, p );
 	}
-	void SendServerUpdateBlock( ENetPeer *peer, Vector pos, blocktype_t blockType )
+	void SendServerUpdateBlock( ENetPeer *peer, CVector pos, blocktype_t blockType )
 	{
 		ServerPacket p;
 		p.type					   = ServerPacket::UPDATE_BLOCK;
@@ -47,7 +47,7 @@ namespace protocol
 
 		protocol::SendPacket( peer, p );
 	}
-	void SendServerPlayerSpawn( ENetPeer *peer, std::string username, Vector pos, Vector rot, bool join )
+	void SendServerPlayerSpawn( ENetPeer *peer, std::string username, CVector pos, CVector rot, bool join )
 	{
 		ServerPacket p;
 		p.type					   = ServerPacket::PLAYER_SPAWN;
@@ -62,7 +62,7 @@ namespace protocol
 
 		SendPacket( peer, p );
 	}
-	void SendServerPlayerPos( ENetPeer *peer, std::string username, Vector pos, Vector rot )
+	void SendServerPlayerPos( ENetPeer *peer, std::string username, CVector pos, CVector rot )
 	{
 		ServerPacket p;
 		p.type					   = ServerPacket::PLAYERPOSORT;

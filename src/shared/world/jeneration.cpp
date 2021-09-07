@@ -4,7 +4,7 @@
 
 #include <math.h>
 
-OverworldJeneration::OverworldJeneration()
+COverworldJeneration::COverworldJeneration()
 {
 	baseNoise			 = fnlCreateState();
 	baseNoise.seed		 = seed;
@@ -27,14 +27,14 @@ OverworldJeneration::OverworldJeneration()
 }
 
 // Generates the base stone skeleton
-void OverworldJeneration::GenBase( Chunk *c )
+void COverworldJeneration::GenBase( CChunk *c )
 {
-	for ( int i = 0; i < sizeof( c->blocks ) / sizeof( Block ); i++ )
+	for ( int i = 0; i < sizeof( c->blocks ) / sizeof( CBlock ); i++ )
 	{
 		// blocks[i].blockType = blocktype_t(random() % 4);
 		int x, y, z;
 		CHUNK1D_TO_3D( i, x, y, z );
-		Vector WorldPosition = c->PosToWorld( Vector( x, y, z ) );
+		CVector WorldPosition = c->PosToWorld( CVector( x, y, z ) );
 
 		// Make the block aware of our existence
 		c->blocks[i].chunk = c;
@@ -48,7 +48,7 @@ void OverworldJeneration::GenBase( Chunk *c )
 }
 
 // Replaces the surface and sometimes under that with block suiteable for the biome
-void OverworldJeneration::BiomeBlocks( Chunk *c )
+void COverworldJeneration::BiomeBlocks( CChunk *c )
 {
 	// Grassification
 	for ( int x = 0; x < CHUNKSIZE_X; x++ )
@@ -61,11 +61,11 @@ void OverworldJeneration::BiomeBlocks( Chunk *c )
 			// We follow down to -1 so we can alter the blocks in the chunk below
 			for ( int y = CHUNKSIZE_Y; y > -1; y-- )
 			{
-				Block *blk = c->GetBlockAtLocal( Vector( x, y, z ) );
+				CBlock *blk = c->GetBlockAtLocal( CVector( x, y, z ) );
 				if ( blk != nullptr && blk->blockType == AIR )
 					continue;
 
-				Block *b = c->GetBlockAtLocal( Vector( x, y + 1, z ) );
+				CBlock *b = c->GetBlockAtLocal( CVector( x, y + 1, z ) );
 				if ( b == nullptr )
 					continue;
 
@@ -85,17 +85,17 @@ void OverworldJeneration::BiomeBlocks( Chunk *c )
 }
 
 // Decorates with ores, plants, etc.
-void OverworldJeneration::Decorate( Chunk *c )
+void COverworldJeneration::Decorate( CChunk *c )
 {
 	// Ore
-	for ( int i = 0; i < sizeof( c->blocks ) / sizeof( Block ); i++ )
+	for ( int i = 0; i < sizeof( c->blocks ) / sizeof( CBlock ); i++ )
 	{
 		if ( c->blocks[i].blockType != STONE )
 			continue;
 
 		int x, y, z;
 		CHUNK1D_TO_3D( i, x, y, z );
-		Vector WorldPosition = c->PosToWorld( Vector( x, y, z ) );
+		CVector WorldPosition = c->PosToWorld( CVector( x, y, z ) );
 
 		float noiseData = fnlGetNoise3D( &oreNoise, WorldPosition.x, WorldPosition.y, WorldPosition.z ) * 1.1;
 
@@ -104,7 +104,7 @@ void OverworldJeneration::Decorate( Chunk *c )
 	}
 }
 
-void OverworldJeneration::Generate( Chunk *c )
+void COverworldJeneration::Generate( CChunk *c )
 {
 	GenBase( c );
 	BiomeBlocks( c );

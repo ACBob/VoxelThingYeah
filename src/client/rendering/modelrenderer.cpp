@@ -9,7 +9,7 @@
 
 #include <memory>
 
-ModelRenderer::ModelRenderer() : nFaces( 0 ), nVertices( 0 )
+CModelRenderer::CModelRenderer() : nFaces( 0 ), nVertices( 0 )
 {
 	glGenVertexArrays( 1, &vao );
 	glGenBuffers( 1, &vbo );
@@ -22,43 +22,43 @@ ModelRenderer::ModelRenderer() : nFaces( 0 ), nVertices( 0 )
 	glBindVertexArray( vao );
 
 	// Position
-	glVertexAttribPointer( 0, 3, GL_FLOAT, false, 8 * sizeof( float ), (void *)offsetof( Model::Vertex, x ) );
+	glVertexAttribPointer( 0, 3, GL_FLOAT, false, 8 * sizeof( float ), (void *)offsetof( CModel::Vertex, x ) );
 	glEnableVertexAttribArray( 0 );
 	// Normal
-	glVertexAttribPointer( 1, 3, GL_FLOAT, false, 8 * sizeof( float ), (void *)offsetof( Model::Vertex, nx ) );
+	glVertexAttribPointer( 1, 3, GL_FLOAT, false, 8 * sizeof( float ), (void *)offsetof( CModel::Vertex, nx ) );
 	glEnableVertexAttribArray( 1 );
 	// texture coordinate
-	glVertexAttribPointer( 2, 2, GL_FLOAT, false, 8 * sizeof( float ), (void *)offsetof( Model::Vertex, u ) );
+	glVertexAttribPointer( 2, 2, GL_FLOAT, false, 8 * sizeof( float ), (void *)offsetof( CModel::Vertex, u ) );
 	glEnableVertexAttribArray( 2 );
 
 	glBindVertexArray( 0 );
 }
 
-void ModelRenderer::Populate( void *_mdl )
+void CModelRenderer::Populate( void *_mdl )
 {
-	Model *mdl = reinterpret_cast<Model *>( _mdl );
+	CModel *mdl = reinterpret_cast<CModel *>( _mdl );
 
 	nVertices = mdl->vertices.size();
 	nFaces	  = mdl->faces.size();
 
 	glBindBuffer( GL_ARRAY_BUFFER, vbo );
-	glBufferData( GL_ARRAY_BUFFER, nVertices * sizeof( Model::Vertex ), mdl->vertices.data(), GL_DYNAMIC_DRAW );
+	glBufferData( GL_ARRAY_BUFFER, nVertices * sizeof( CModel::Vertex ), mdl->vertices.data(), GL_DYNAMIC_DRAW );
 
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
-	glBufferData( GL_ELEMENT_ARRAY_BUFFER, nFaces * sizeof( Model::Face ), mdl->faces.data(), GL_DYNAMIC_DRAW );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, nFaces * sizeof( CModel::Face ), mdl->faces.data(), GL_DYNAMIC_DRAW );
 
 	glBindBuffer( GL_ARRAY_BUFFER, 0 );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
 }
 
-ModelRenderer::~ModelRenderer()
+CModelRenderer::~CModelRenderer()
 {
 	glDeleteVertexArrays( 1, &vao );
 	glDeleteBuffers( 1, &vbo );
 	glDeleteBuffers( 1, &ebo );
 }
 
-void ModelRenderer::Render( Vector pos, Vector rot, Vector size, Shader *shader, Texture *tex )
+void CModelRenderer::Render( CVector pos, CVector rot, CVector size, CShader *shader, CTexture *tex )
 {
 
 	glm::mat4 model = glm::mat4( 1.0f );
@@ -79,7 +79,7 @@ void ModelRenderer::Render( Vector pos, Vector rot, Vector size, Shader *shader,
 	glBindBuffer( GL_ARRAY_BUFFER, vbo );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
 
-	glDrawElements( GL_TRIANGLES, nFaces * sizeof( Model::Face ), GL_UNSIGNED_INT, 0 );
+	glDrawElements( GL_TRIANGLES, nFaces * sizeof( CModel::Face ), GL_UNSIGNED_INT, 0 );
 
 	glBindBuffer( GL_ARRAY_BUFFER, 0 );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );

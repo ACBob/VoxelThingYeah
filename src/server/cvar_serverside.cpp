@@ -1,12 +1,12 @@
 #include "cvar_serverside.hpp"
 
-ConVar::ConVar *sv_timescale = nullptr;
-ConVar::ConVar *sv_tickms	 = nullptr;
+ConVar::CConVar *sv_timescale = nullptr;
+ConVar::CConVar *sv_tickms	 = nullptr;
 
-ConVar::ConVar *sv_name = nullptr;
-ConVar::ConVar *sv_desc = nullptr;
+ConVar::CConVar *sv_name = nullptr;
+ConVar::CConVar *sv_desc = nullptr;
 
-ConVar::ConVar *sv_port = nullptr;
+ConVar::CConVar *sv_port = nullptr;
 
 void SetupServerSideConvars()
 {

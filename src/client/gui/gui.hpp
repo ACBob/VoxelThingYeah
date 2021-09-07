@@ -11,7 +11,7 @@
 // https://sol.gfxile.net/imgui/
 
 // OOP POO
-class GUI
+class CGui
 {
   private:
 	struct Vertex
@@ -24,27 +24,27 @@ class GUI
 
 	struct _Image
 	{
-		Texture *_tex = nullptr;
+		CTexture *_tex = nullptr;
 		std::vector<Vertex> vertices;
 	};
 
-	std::vector<Vertex> GetQuad( Vector pos, Vector size, Colour color, Vector uStart = Vector( 0, 0 ),
-								 Vector uEnd = Vector( 1, 1 ) );
-	std::vector<Vertex> GetCharQuad( const char *c, Vector pos, Vector size, Colour color );
+	std::vector<Vertex> GetQuad( CVector pos, CVector size, Colour color, CVector uStart = CVector( 0, 0 ),
+								 CVector uEnd = CVector( 1, 1 ) );
+	std::vector<Vertex> GetCharQuad( const char *c, CVector pos, CVector size, Colour color );
 
 	unsigned int vbo, vao;
 	std::vector<Vertex> textVertiecs;
 	std::vector<_Image> images;
 
 	// Teh epic textTex
-	Texture *textTex   = nullptr;
-	Shader *textShader = nullptr;
+	CTexture *textTex   = nullptr;
+	CShader *textShader = nullptr;
 
 	std::map<int, std::string> textBuffers;
 
   public:
-	GUI( int screenW, int screenH );
-	~GUI();
+	CGui( int screenW, int screenH );
+	~CGui();
 
 	// TODO: Put this in a generic utility class and then make all atlas-based things (i.e text, blocks) inherit it
 	struct Atlas
@@ -60,18 +60,18 @@ class GUI
 	};
 
 	// Z Ignored
-	Vector mousePos;
+	CVector mousePos;
 
 	// Used to get the input
-	InputManager *inputMan = nullptr;
+	CInputManager *inputMan = nullptr;
 
 	// Update
 	void Update();
 
 	void Resize( int x, int y );
 
-	Vector screenCentre;
-	Vector screenDimensions;
+	CVector screenCentre;
+	CVector screenDimensions;
 
 	// Current button pressed down
 	int mouseState;
@@ -81,16 +81,16 @@ class GUI
 	int activeItem;
 
 	// Z Ignored!
-	bool RegionHit( Vector pos, Vector size );
+	bool RegionHit( CVector pos, CVector size );
 
 	// Converts positions to screen ones, including negatives being from the opposite side and stuff
-	Vector GetInScreen( Vector pos );
+	CVector GetInScreen( CVector pos );
 
 	// Elements
-	int Button( int id, Vector pos, Vector size );
-	void Label( const char *text, Vector pos, Colour color = Color( 1, 1, 1 ) );
-	void Image( Texture *tex, Vector pos, Vector size, Vector origin = Vector( 0, 0 ) );
-	void ImageAtlas( Texture *tex, Atlas atlas, float atlasDivisions, Vector pos, Vector size,
-					 Vector origin = Vector( 0, 0 ) );
-	const char *TextInput( int id, Vector pos );
+	int Button( int id, CVector pos, CVector size );
+	void Label( const char *text, CVector pos, Colour color = Color( 1, 1, 1 ) );
+	void Image( CTexture *tex, CVector pos, CVector size, CVector origin = CVector( 0, 0 ) );
+	void ImageAtlas( CTexture *tex, Atlas atlas, float atlasDivisions, CVector pos, CVector size,
+					 CVector origin = CVector( 0, 0 ) );
+	const char *TextInput( int id, CVector pos );
 };

@@ -1,7 +1,7 @@
 #include "shared/inputmanager.hpp"
 #include "utility/vector.hpp"
 
-class BobWindow
+class CBobWindow
 {
   public:
 	// BobWindow(const char *title = "BobWindow", Vector size = Vector(800,600)); // SDL_CreateWindow
@@ -19,12 +19,12 @@ class BobWindow
 
 	// Z Ignored
 	// SDL_SetWindowSize / SDL_GetWindowSize
-	virtual Vector GetSize()		 = 0;
-	virtual void SetSize( Vector s ) = 0;
+	virtual CVector GetSize()		 = 0;
+	virtual void SetSize( CVector s ) = 0;
 	// Z Ignored
 	// SDL_SetWindowPos / SDL_GetWindowPos
-	virtual Vector GetPos()			= 0;
-	virtual void SetPos( Vector p ) = 0;
+	virtual CVector GetPos()			= 0;
+	virtual void SetPos( CVector p ) = 0;
 
 	// Returns the (milli)seconds per frame
 	// To get the FPS, 1000/this
@@ -48,5 +48,5 @@ class BobWindow
 	bool sizeChanged = false;
 
 	// Pointer to Input manager
-	InputManager *inputMan = nullptr;
+	CInputManager *inputMan = nullptr;
 };

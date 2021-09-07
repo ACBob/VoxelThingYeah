@@ -3,7 +3,7 @@
 #define LOG_LEVEL DEBUG
 #include "seethe.h"
 
-NetworkClient::NetworkClient()
+CNetworkClient::CNetworkClient()
 {
 	enetHost = enet_host_create( NULL, 1, 1, 0, 0 );
 
@@ -13,11 +13,11 @@ NetworkClient::NetworkClient()
 		return;
 	}
 }
-NetworkClient::~NetworkClient() { enet_host_destroy( enetHost ); }
+CNetworkClient::~CNetworkClient() { enet_host_destroy( enetHost ); }
 
-bool NetworkClient::WorkingClient() { return enetHost != NULL; }
+bool CNetworkClient::WorkingClient() { return enetHost != NULL; }
 
-bool NetworkClient::Connect( const char *address, int port )
+bool CNetworkClient::Connect( const char *address, int port )
 {
 	if ( enet_address_set_host_ip( &addr, address ) != 0 )
 	{
@@ -52,7 +52,7 @@ bool NetworkClient::Connect( const char *address, int port )
 		return false;
 	}
 }
-void NetworkClient::Disconnect()
+void CNetworkClient::Disconnect()
 {
 	if ( !connected || peer == nullptr )
 	{
@@ -79,7 +79,7 @@ void NetworkClient::Disconnect()
 	connected = false;
 }
 
-void NetworkClient::Update()
+void CNetworkClient::Update()
 {
 	ENetEvent e;
 	if ( !peer )
@@ -106,8 +106,8 @@ void NetworkClient::Update()
 		}
 	}
 
-	Vector cP = ( localPlayer->position / Vector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
-	for ( Chunk *c : localWorld->chunks )
+	CVector cP = ( localPlayer->position / CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
+	for ( CChunk *c : localWorld->chunks )
 	{
 		if ( ( c->position - cP ).Magnitude() > 4 )
 		{

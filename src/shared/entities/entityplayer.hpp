@@ -5,13 +5,13 @@
 
 #pragma once
 
-class EntityPlayer : public EntityBase
+class CEntityPlayer : public CEntityBase
 {
-	DeclBaseClass( EntityBase );
+	DeclBaseClass( CEntityBase );
 
   public:
-	EntityPlayer();
-	~EntityPlayer();
+	CEntityPlayer();
+	~CEntityPlayer();
 
 	void Tick();
 	void Spawn()
@@ -25,20 +25,20 @@ class EntityPlayer : public EntityBase
 	void Kill() { BaseClass::Kill(); }
 
 #ifdef CLIENTEXE
-	void UpdateClient( World *clientSideWorld );
+	void UpdateClient( CWorld *clientSideWorld );
 #endif
 
-	void PhysicsTick( float delta, World *world );
+	void PhysicsTick( float delta, CWorld *world );
 
 #ifdef CLIENTEXE
-	InputManager *inputMan = nullptr;
-	VoxRaycast hand;
-	PointedThing pointed;
+	CInputManager *inputMan = nullptr;
+	CVoxRaycast hand;
+	CPointedThing pointed;
 
 	// Block type we're gonna place
 	blocktype_t selectedBlockType = blocktype_t::DIRT;
 
-	Camera camera;
+	CCamera camera;
 
 	void *client = nullptr;
 #endif

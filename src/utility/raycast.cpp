@@ -2,19 +2,19 @@
 #include "utility/vector.hpp"
 #include "world/world.hpp"
 
-PointedThing::PointedThing() : block( nullptr ), position( 0 ) {}
+CPointedThing::CPointedThing() : block( nullptr ), position( 0 ) {}
 
-VoxRaycast::VoxRaycast() : pos( 0 ), dir( 0 ), length( 0 ) {}
+CVoxRaycast::CVoxRaycast() : pos( 0 ), dir( 0 ), length( 0 ) {}
 
-PointedThing VoxRaycast::Cast( World *chunkMan )
+CPointedThing CVoxRaycast::Cast( CWorld *chunkMan )
 {
-	Vector ray = pos;
-	Vector oRay; // for figuring out normal
+	CVector ray = pos;
+	CVector oRay; // for figuring out normal
 
 	const float step = 0.01;
 	float i			 = 0;
 
-	Block *b = nullptr;
+	CBlock *b = nullptr;
 	while ( i <= length )
 	{
 		oRay = ray;
@@ -26,8 +26,8 @@ PointedThing VoxRaycast::Cast( World *chunkMan )
 			break;
 	}
 
-	PointedThing p;
-	p.position = Vector( ceil( ray.x ), ceil( ray.y ), ceil( ray.z ) );
+	CPointedThing p;
+	p.position = CVector( ceil( ray.x ), ceil( ray.y ), ceil( ray.z ) );
 	p.block	   = b;
 	p.normal   = oRay.Floor() - ray.Floor();
 	return p;

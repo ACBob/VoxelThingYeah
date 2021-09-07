@@ -18,39 +18,39 @@
 
 // #include "entities/entitybase.h"
 
-class World
+class CWorld
 {
   public:
 #ifdef CLIENTEXE
-	World( Shader *shader, Shader *entShader );
+	CWorld( CShader *shader, CShader *entShader );
 #elif SERVEREXE
-	World();
+	CWorld();
 #endif
-	~World();
+	~CWorld();
 
-	Chunk *ChunkAtWorldPos( Vector pos );
-	Chunk *ChunkAtChunkPos( Vector chunkPos );
+	CChunk *ChunkAtWorldPos( CVector pos );
+	CChunk *ChunkAtChunkPos( CVector chunkPos );
 
 	// Tries to get a chunk and generates a new one if it can't find one
-	Chunk *GetChunkGenerateAtWorldPos( Vector pos );
+	CChunk *GetChunkGenerateAtWorldPos( CVector pos );
 
 	// Deletes the chunk at the chunk position
-	void UnloadChunk( Vector pos );
+	void UnloadChunk( CVector pos );
 
 	// Returns the block at the position in world coords
 	// The given position is rounded by floor() before being used
 	// If outside the world it returns a nullptr
-	Block *BlockAtWorldPos( Vector pos );
+	CBlock *BlockAtWorldPos( CVector pos );
 
 	// Test against an infinitely small point centred on pos
 	// Tests in world coordinates
-	bool TestPointCollision( Vector pos );
+	bool TestPointCollision( CVector pos );
 
 	// Tests in world coordinates
-	bool TestAABBCollision( AABB col );
+	bool TestAABBCollision( CBoundingBox col );
 
 	// Is the position within our place
-	bool ValidChunkPos( const Vector pos );
+	bool ValidChunkPos( const CVector pos );
 
 	// Tick is the tick since the start of the game
 	// FIXME: depending on if I got my calculation right, this will shit itself either in 1,000 or so years or 3.
@@ -61,7 +61,7 @@ class World
 		int32_t x, y, z;
 		uint32_t blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 	};
-	PortableChunkRepresentation GetWorldRepresentation( Vector pos );
+	PortableChunkRepresentation GetWorldRepresentation( CVector pos );
 
 	// Merges the PortableChunkRepresentation into us :)
 	void UsePortable( PortableChunkRepresentation rep );
@@ -75,14 +75,14 @@ class World
 	void Render();
 
 	// Shader we render with
-	Shader *worldShader = nullptr;
+	CShader *worldShader = nullptr;
 	// Shader entities render with
-	Shader *entityShader = nullptr;
+	CShader *entityShader = nullptr;
 #endif
 
-	std::vector<Chunk *> chunks;
+	std::vector<CChunk *> chunks;
 
 	int timeOfDay = 6890;
 
-	OverworldJeneration jenerator;
+	COverworldJeneration jenerator;
 };

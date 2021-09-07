@@ -30,11 +30,11 @@ enum KBDKEY // Keys unrepresentable by a char
   KBD_RETURN	= 3,
 };
 
-class InputManager
+class CInputManager
 {
   public:
-	InputManager();
-	~InputManager();
+	CInputManager();
+	~CInputManager();
 
 #ifdef CLIENTEXE
 	// A -> Z (char) Is mapped directly to the keycode (so 65 = A on the keyboard)
@@ -45,7 +45,7 @@ class InputManager
 	// Mousepos is the current position of the mouse
 	// Mousemovement is the movement of the mouse since last frame
 	// Z is ignored
-	Vector mousePos, mouseMovement;
+	CVector mousePos, mouseMovement;
 
 	int mouseState	  = 0;
 	int oldMouseState = 0; // stores mouseState from the last frame

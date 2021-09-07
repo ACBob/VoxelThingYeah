@@ -9,12 +9,12 @@
 
 #include <SDL.h>
 
-class GameWindow : public BobWindow
+class CGameWindow : public CBobWindow
 {
   public:
-	GameWindow( const char *title = "GameWindow", Vector size = Vector( 800, 600 ),
+	CGameWindow( const char *title = "GameWindow", CVector size = CVector( 800, 600 ),
 				bool resizeable = false ); // SDL_CreateWindow
-	~GameWindow();						   // SDL_DestroyWindow
+	~CGameWindow();						   // SDL_DestroyWindow
 
 	// SDL_HideWindow / SDL_ShowWindow
 	bool IsVisible();		   // getter(?)
@@ -28,12 +28,12 @@ class GameWindow : public BobWindow
 
 	// Z Ignored
 	// SDL_SetWindowSize / SDL_GetWindowSize
-	Vector GetSize();
-	void SetSize( Vector s );
+	CVector GetSize();
+	void SetSize( CVector s );
 	// Z Ignored
 	// SDL_SetWindowPos / SDL_GetWindowPos
-	Vector GetPos();
-	void SetPos( Vector p );
+	CVector GetPos();
+	void SetPos( CVector p );
 
 	float GetSPF();
 	double GetTime();
@@ -64,7 +64,7 @@ class GameWindow : public BobWindow
 	bool sizeChanged;
 
 	// Pointer to Input manager
-	InputManager *inputMan = nullptr;
+	CInputManager *inputMan = nullptr;
 };
 
 #endif

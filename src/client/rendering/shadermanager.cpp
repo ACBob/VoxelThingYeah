@@ -10,9 +10,9 @@
 
 #include "physfs.h"
 
-std::vector<Shader *> shaderSystem::loadedShaders;
+std::vector<CShader *> shaderSystem::loadedShaders;
 
-Shader::Shader( const char *vs, const char *fs )
+CShader::CShader( const char *vs, const char *fs )
 {
 	// TODO: Replace with FileSystem
 	// I tried for a bit in vain but it got in the way of fun bobj stuff...
@@ -93,33 +93,33 @@ Shader::Shader( const char *vs, const char *fs )
 	glDeleteShader( fragSh );
 }
 
-void Shader::SetMat4( const char *name, glm::mat4 value )
+void CShader::SetMat4( const char *name, glm::mat4 value )
 {
 	glUniformMatrix4fv( glGetUniformLocation( id, name ), 1, false, glm::value_ptr( value ) );
 }
-void Shader::SetMat3( const char *name, glm::mat3 value )
+void CShader::SetMat3( const char *name, glm::mat3 value )
 {
 	glUniformMatrix3fv( glGetUniformLocation( id, name ), 1, false, glm::value_ptr( value ) );
 }
-void Shader::SetInt( const char *name, int value ) { glUniform1i( glGetUniformLocation( id, name ), value ); }
-void Shader::SetVec( const char *name, Vector value )
+void CShader::SetInt( const char *name, int value ) { glUniform1i( glGetUniformLocation( id, name ), value ); }
+void CShader::SetVec( const char *name, CVector value )
 {
 	glUniform3f( glGetUniformLocation( id, name ), value.x, value.y, value.z );
 }
-void Shader::SetUInt( const char *name, unsigned int value )
+void CShader::SetUInt( const char *name, unsigned int value )
 {
 	glUniform1ui( glGetUniformLocation( id, name ), value );
 }
 
-void Shader::Use() { glUseProgram( id ); }
+void CShader::Use() { glUseProgram( id ); }
 
 void shaderSystem::Init() {}
 
 // TODO: Uniform Buffer
 void shaderSystem::SetUniforms( glm::mat4 &view, glm::mat4 &projection, glm::mat4 &screen, unsigned int ticks,
-								int timeOfDay, Vector sunAngle )
+								int timeOfDay, CVector sunAngle )
 {
-	for ( Shader *s : loadedShaders )
+	for ( CShader *s : loadedShaders )
 	{
 		s->Use();
 		s->SetMat4( "view", view );
@@ -131,9 +131,9 @@ void shaderSystem::SetUniforms( glm::mat4 &view, glm::mat4 &projection, glm::mat
 	}
 }
 
-Shader *shaderSystem::LoadShader( const char *vs, const char *fs )
+CShader *shaderSystem::LoadShader( const char *vs, const char *fs )
 {
-	Shader *shader = new Shader( vs, fs );
+	CShader *shader = new CShader( vs, fs );
 	loadedShaders.push_back( shader );
 
 	return loadedShaders.back();
@@ -141,6 +141,6 @@ Shader *shaderSystem::LoadShader( const char *vs, const char *fs )
 void shaderSystem::UnInit()
 {
 	// Unload shaders
-	for ( Shader *s : loadedShaders )
+	for ( CShader *s : loadedShaders )
 		delete s;
 }

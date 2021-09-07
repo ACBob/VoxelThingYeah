@@ -1,7 +1,7 @@
 #include "vector.hpp"
 #include <math.h>
 
-Vector::Vector( float x, float y, float z )
+CVector::CVector( float x, float y, float z )
 {
 	this->x = x;
 	this->y = y;
@@ -9,9 +9,9 @@ Vector::Vector( float x, float y, float z )
 }
 
 // Methods
-Vector Vector::Rotate( int axis, float degrees ) const
+CVector CVector::Rotate( int axis, float degrees ) const
 {
-	Vector g = Vector( x, y, z );
+	CVector g = CVector( x, y, z );
 
 	degrees *= DEG2RAD;
 
@@ -33,19 +33,19 @@ Vector Vector::Rotate( int axis, float degrees ) const
 
 	return g;
 }
-Vector Vector::Rotate( Vector oVec ) const
+CVector CVector::Rotate( CVector oVec ) const
 {
-	Vector g( x, y, z );
+	CVector g( x, y, z );
 	for ( int i = 1; i < 3; i++ )
 	{
 		g = g.Rotate( i, oVec[i] );
 	}
 	return g;
 }
-float Vector::Magnitude() const { return sqrt( ( x * x ) + ( y * y ) + ( z * z ) ); }
-Vector Vector::Normal() const
+float CVector::Magnitude() const { return sqrt( ( x * x ) + ( y * y ) + ( z * z ) ); }
+CVector CVector::Normal() const
 {
-	Vector g = Vector( x, y, z );
+	CVector g = CVector( x, y, z );
 
 	// Magnitude
 	float mag = Magnitude();
@@ -56,17 +56,17 @@ Vector Vector::Normal() const
 
 	return g;
 }
-Vector Vector::Floor() const
+CVector CVector::Floor() const
 {
-	Vector g = Vector( floor( x ), floor( y ), floor( z ) );
+	CVector g = CVector( floor( x ), floor( y ), floor( z ) );
 	g.x		 = g.x == INFINITY ? 0 : g.x;
 	g.y		 = g.y == INFINITY ? 0 : g.y;
 	g.z		 = g.z == INFINITY ? 0 : g.z;
 	return g;
 }
-Vector Vector::Ceil() const
+CVector CVector::Ceil() const
 {
-	Vector g = Vector( ceil( x ), ceil( y ), ceil( z ) );
+	CVector g = CVector( ceil( x ), ceil( y ), ceil( z ) );
 	g.x		 = g.x == INFINITY ? 0 : g.x;
 	g.y		 = g.y == INFINITY ? 0 : g.y;
 	g.z		 = g.z == INFINITY ? 0 : g.z;
@@ -75,45 +75,45 @@ Vector Vector::Ceil() const
 
 // Operators
 // Math, with other vectors
-Vector Vector::operator+( Vector oVec ) const
+CVector CVector::operator+( CVector oVec ) const
 {
-	Vector g( x, y, z );
+	CVector g( x, y, z );
 	g.x += oVec.x;
 	g.y += oVec.y;
 	g.z += oVec.z;
 	return g;
 }
-Vector Vector::operator-( Vector oVec ) const
+CVector CVector::operator-( CVector oVec ) const
 {
-	Vector g( x, y, z );
+	CVector g( x, y, z );
 	g.x -= oVec.x;
 	g.y -= oVec.y;
 	g.z -= oVec.z;
 	return g;
 }
-Vector Vector::operator*( Vector oVec ) const
+CVector CVector::operator*( CVector oVec ) const
 {
-	Vector g( x, y, z );
+	CVector g( x, y, z );
 	g.x *= oVec.x;
 	g.y *= oVec.y;
 	g.z *= oVec.z;
 	return g;
 }
-Vector Vector::operator/( Vector oVec ) const
+CVector CVector::operator/( CVector oVec ) const
 {
-	Vector g( x, y, z );
+	CVector g( x, y, z );
 	g.x /= oVec.x;
 	g.y /= oVec.y;
 	g.z /= oVec.z;
 	return g;
 }
 // Math, with single ints/floats
-Vector Vector::operator+( float i ) const { return operator+( Vector( i, i, i ) ); }
-Vector Vector::operator-( float i ) const { return operator-( Vector( i, i, i ) ); }
-Vector Vector::operator*( float i ) const { return operator*( Vector( i, i, i ) ); }
-Vector Vector::operator/( float i ) const { return operator/( Vector( i, i, i ) ); }
+CVector CVector::operator+( float i ) const { return operator+( CVector( i, i, i ) ); }
+CVector CVector::operator-( float i ) const { return operator-( CVector( i, i, i ) ); }
+CVector CVector::operator*( float i ) const { return operator*( CVector( i, i, i ) ); }
+CVector CVector::operator/( float i ) const { return operator/( CVector( i, i, i ) ); }
 // Access
-float Vector::operator[]( int index )
+float CVector::operator[]( int index )
 {
 	switch ( index )
 	{
@@ -129,9 +129,9 @@ float Vector::operator[]( int index )
 	}
 }
 // Comparison
-bool Vector::operator==( Vector oVec ) const { return oVec.x == x && oVec.y == y && oVec.z == z; }
-bool Vector::operator!=( Vector oVec ) const { return !operator==( oVec ); }
-bool Vector::operator>( Vector oVec ) const { return Magnitude() > oVec.Magnitude(); }
-bool Vector::operator<( Vector oVec ) const { return !operator>( oVec ) && !operator==( oVec ); }
-bool Vector::operator>=( Vector oVec ) const { return operator==( oVec ) || operator>( oVec ); }
-bool Vector::operator<=( Vector oVec ) const { return operator==( oVec ) || operator<( oVec ); }
+bool CVector::operator==( CVector oVec ) const { return oVec.x == x && oVec.y == y && oVec.z == z; }
+bool CVector::operator!=( CVector oVec ) const { return !operator==( oVec ); }
+bool CVector::operator>( CVector oVec ) const { return Magnitude() > oVec.Magnitude(); }
+bool CVector::operator<( CVector oVec ) const { return !operator>( oVec ) && !operator==( oVec ); }
+bool CVector::operator>=( CVector oVec ) const { return operator==( oVec ) || operator>( oVec ); }
+bool CVector::operator<=( CVector oVec ) const { return operator==( oVec ) || operator<( oVec ); }

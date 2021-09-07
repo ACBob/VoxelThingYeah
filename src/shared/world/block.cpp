@@ -3,14 +3,14 @@
 
 #include <stdio.h>
 
-Block::Block() : chunk( nullptr ) {}
+CBlock::CBlock() : chunk( nullptr ) {}
 
-void Block::Update()
+void CBlock::Update()
 {
 	if ( chunk != nullptr )
-		reinterpret_cast<Chunk *>( chunk )->Update();
+		reinterpret_cast<CChunk *>( chunk )->Update();
 }
 
 #ifdef CLIENTEXE
-BlockTexture Block::GetSideTexture( Direction side ) { return GetDefaultBlockTextureSide( this->blockType, side ); }
+BlockTexture CBlock::GetSideTexture( Direction side ) { return GetDefaultBlockTextureSide( this->blockType, side ); }
 #endif

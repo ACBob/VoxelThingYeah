@@ -4,16 +4,16 @@
 
 #pragma once
 
-class OverworldJeneration
+class COverworldJeneration
 {
   public:
-	OverworldJeneration();
+	COverworldJeneration();
 
-	void Generate( Chunk *c );
+	void Generate( CChunk *c );
 
-	void GenBase( Chunk *c );
-	void BiomeBlocks( Chunk *c );
-	void Decorate( Chunk *c );
+	void GenBase( CChunk *c );
+	void BiomeBlocks( CChunk *c );
+	void Decorate( CChunk *c );
 
   private:
 	fnl_state baseNoise;
