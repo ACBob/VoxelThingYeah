@@ -78,14 +78,14 @@ CShader::CShader( const char *vs, const char *fs )
 		printf( "Shader compilation Error (%s):\n%s", fs, err );
 	}
 
-	id = glCreateProgram();
-	glAttachShader( id, vertSh );
-	glAttachShader( id, fragSh );
-	glLinkProgram( id );
-	glGetProgramiv( id, GL_LINK_STATUS, &success );
+	m_iId = glCreateProgram();
+	glAttachShader( m_iId, vertSh );
+	glAttachShader( m_iId, fragSh );
+	glLinkProgram( m_iId );
+	glGetProgramiv( m_iId, GL_LINK_STATUS, &success );
 	if ( !success )
 	{
-		glGetProgramInfoLog( id, 512, NULL, err );
+		glGetProgramInfoLog( m_iId, 512, NULL, err );
 		printf( "Shader linking Error (%s,%s):\n%s", vs, fs, err );
 	}
 
@@ -95,23 +95,23 @@ CShader::CShader( const char *vs, const char *fs )
 
 void CShader::SetMat4( const char *name, glm::mat4 value )
 {
-	glUniformMatrix4fv( glGetUniformLocation( id, name ), 1, false, glm::value_ptr( value ) );
+	glUniformMatrix4fv( glGetUniformLocation( m_iId, name ), 1, false, glm::value_ptr( value ) );
 }
 void CShader::SetMat3( const char *name, glm::mat3 value )
 {
-	glUniformMatrix3fv( glGetUniformLocation( id, name ), 1, false, glm::value_ptr( value ) );
+	glUniformMatrix3fv( glGetUniformLocation( m_iId, name ), 1, false, glm::value_ptr( value ) );
 }
-void CShader::SetInt( const char *name, int value ) { glUniform1i( glGetUniformLocation( id, name ), value ); }
+void CShader::SetInt( const char *name, int value ) { glUniform1i( glGetUniformLocation( m_iId, name ), value ); }
 void CShader::SetVec( const char *name, CVector value )
 {
-	glUniform3f( glGetUniformLocation( id, name ), value.x, value.y, value.z );
+	glUniform3f( glGetUniformLocation( m_iId, name ), value.x, value.y, value.z );
 }
 void CShader::SetUInt( const char *name, unsigned int value )
 {
-	glUniform1ui( glGetUniformLocation( id, name ), value );
+	glUniform1ui( glGetUniformLocation( m_iId, name ), value );
 }
 
-void CShader::Use() { glUseProgram( id ); }
+void CShader::Use() { glUseProgram( m_iId ); }
 
 void shaderSystem::Init() {}
 

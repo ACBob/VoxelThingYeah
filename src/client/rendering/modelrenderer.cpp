@@ -9,17 +9,17 @@
 
 #include <memory>
 
-CModelRenderer::CModelRenderer() : nFaces( 0 ), nVertices( 0 )
+CModelRenderer::CModelRenderer() : m_nFaces( 0 ), m_nVertices( 0 )
 {
-	glGenVertexArrays( 1, &vao );
-	glGenBuffers( 1, &vbo );
-	glGenBuffers( 1, &ebo );
+	glGenVertexArrays( 1, &m_iVao );
+	glGenBuffers( 1, &m_iVbo );
+	glGenBuffers( 1, &m_iEbo );
 
-	glBindBuffer( GL_ARRAY_BUFFER, vbo );
+	glBindBuffer( GL_ARRAY_BUFFER, m_iVbo );
 
-	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_iEbo );
 
-	glBindVertexArray( vao );
+	glBindVertexArray( m_iVao );
 
 	// Position
 	glVertexAttribPointer( 0, 3, GL_FLOAT, false, 8 * sizeof( float ), (void *)offsetof( CModel::Vertex, x ) );
@@ -38,14 +38,14 @@ void CModelRenderer::Populate( void *_mdl )
 {
 	CModel *mdl = reinterpret_cast<CModel *>( _mdl );
 
-	nVertices = mdl->vertices.size();
-	nFaces	  = mdl->faces.size();
+	m_nVertices = mdl->m_vertices.size();
+	m_nFaces	  = mdl->m_faces.size();
 
-	glBindBuffer( GL_ARRAY_BUFFER, vbo );
-	glBufferData( GL_ARRAY_BUFFER, nVertices * sizeof( CModel::Vertex ), mdl->vertices.data(), GL_DYNAMIC_DRAW );
+	glBindBuffer( GL_ARRAY_BUFFER, m_iVbo );
+	glBufferData( GL_ARRAY_BUFFER, m_nVertices * sizeof( CModel::Vertex ), mdl->m_vertices.data(), GL_DYNAMIC_DRAW );
 
-	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
-	glBufferData( GL_ELEMENT_ARRAY_BUFFER, nFaces * sizeof( CModel::Face ), mdl->faces.data(), GL_DYNAMIC_DRAW );
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_iEbo );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, m_nFaces * sizeof( CModel::Face ), mdl->m_faces.data(), GL_DYNAMIC_DRAW );
 
 	glBindBuffer( GL_ARRAY_BUFFER, 0 );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
@@ -53,9 +53,9 @@ void CModelRenderer::Populate( void *_mdl )
 
 CModelRenderer::~CModelRenderer()
 {
-	glDeleteVertexArrays( 1, &vao );
-	glDeleteBuffers( 1, &vbo );
-	glDeleteBuffers( 1, &ebo );
+	glDeleteVertexArrays( 1, &m_iVao );
+	glDeleteBuffers( 1, &m_iVbo );
+	glDeleteBuffers( 1, &m_iEbo );
 }
 
 void CModelRenderer::Render( CVector pos, CVector rot, CVector size, CShader *shader, CTexture *tex )
@@ -72,14 +72,14 @@ void CModelRenderer::Render( CVector pos, CVector rot, CVector size, CShader *sh
 	shader->SetMat3( "normalMat", glm::mat3( glm::transpose( glm::inverse( model ) ) ) );
 
 	if ( tex != nullptr )
-		glBindTexture( GL_TEXTURE_2D, tex->id );
+		glBindTexture( GL_TEXTURE_2D, tex->m_iId );
 
-	glBindVertexArray( vao );
+	glBindVertexArray( m_iVao );
 
-	glBindBuffer( GL_ARRAY_BUFFER, vbo );
-	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
+	glBindBuffer( GL_ARRAY_BUFFER, m_iVbo );
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_iEbo );
 
-	glDrawElements( GL_TRIANGLES, nFaces * sizeof( CModel::Face ), GL_UNSIGNED_INT, 0 );
+	glDrawElements( GL_TRIANGLES, m_nFaces * sizeof( CModel::Face ), GL_UNSIGNED_INT, 0 );
 
 	glBindBuffer( GL_ARRAY_BUFFER, 0 );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );

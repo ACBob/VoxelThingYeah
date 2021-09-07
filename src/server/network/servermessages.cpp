@@ -3,7 +3,7 @@
 
 namespace protocol
 {
-	void SendServerPlayerID( ENetPeer *peer, bool isOp )
+	void SendServerPlayerID( ENetPeer *pPeer, bool isOp )
 	{
 		ServerPacket p;
 		p.type					   = ServerPacket::PLAYER_ID;
@@ -13,16 +13,16 @@ namespace protocol
 		bufAcc << std::string( sv_desc->GetString() );
 		bufAcc << isOp;
 
-		protocol::SendPacket( peer, p );
+		protocol::SendPacket( pPeer, p );
 	}
-	void SendServerChunkData( ENetPeer *peer, CWorld *world, CVector pos )
+	void SendServerChunkData( ENetPeer *pPeer, CWorld *world, CVector pos )
 	{
 		CWorld::PortableChunkRepresentation crep;
 		crep = world->GetWorldRepresentation( pos );
 
-		SendServerChunkDataFromRep( peer, crep );
+		SendServerChunkDataFromRep( pPeer, crep );
 	}
-	void SendServerChunkDataFromRep( ENetPeer *peer, CWorld::PortableChunkRepresentation crep )
+	void SendServerChunkDataFromRep( ENetPeer *pPeer, CWorld::PortableChunkRepresentation crep )
 	{
 		ServerPacket p;
 		p.type					   = ServerPacket::CHUNKDATA;
@@ -33,9 +33,9 @@ namespace protocol
 		bufAcc << CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z;
 		bufAcc << crep.blocks;
 
-		SendPacket( peer, p );
+		SendPacket( pPeer, p );
 	}
-	void SendServerUpdateBlock( ENetPeer *peer, CVector pos, blocktype_t blockType )
+	void SendServerUpdateBlock( ENetPeer *pPeer, CVector pos, blocktype_t blockType )
 	{
 		ServerPacket p;
 		p.type					   = ServerPacket::UPDATE_BLOCK;
@@ -45,9 +45,9 @@ namespace protocol
 		bufAcc << pos.z;
 		bufAcc << (uint)blockType;
 
-		protocol::SendPacket( peer, p );
+		protocol::SendPacket( pPeer, p );
 	}
-	void SendServerPlayerSpawn( ENetPeer *peer, std::string username, CVector pos, CVector rot, bool join )
+	void SendServerPlayerSpawn( ENetPeer *pPeer, std::string username, CVector pos, CVector rot, bool join )
 	{
 		ServerPacket p;
 		p.type					   = ServerPacket::PLAYER_SPAWN;
@@ -60,9 +60,9 @@ namespace protocol
 		bufAcc << rot.y;
 		bufAcc << join;
 
-		SendPacket( peer, p );
+		SendPacket( pPeer, p );
 	}
-	void SendServerPlayerPos( ENetPeer *peer, std::string username, CVector pos, CVector rot )
+	void SendServerPlayerPos( ENetPeer *pPeer, std::string username, CVector pos, CVector rot )
 	{
 		ServerPacket p;
 		p.type					   = ServerPacket::PLAYERPOSORT;
@@ -74,9 +74,9 @@ namespace protocol
 		bufAcc << rot.x;
 		bufAcc << rot.y;
 
-		SendPacket( peer, p );
+		SendPacket( pPeer, p );
 	}
-	void SendServerPlayerMessage( ENetPeer *peer, std::string username, std::string message )
+	void SendServerPlayerMessage( ENetPeer *pPeer, std::string username, std::string message )
 	{
 		ServerPacket p;
 		p.type						  = ServerPacket::CHATMESSAGE;
@@ -85,9 +85,9 @@ namespace protocol
 		bufAccess << username;
 		bufAccess << message;
 
-		SendPacket( peer, p );
+		SendPacket( pPeer, p );
 	}
-	void SendServerPlayerDisconnect( ENetPeer *peer, bool isKick, std::string reason )
+	void SendServerPlayerDisconnect( ENetPeer *pPeer, bool isKick, std::string reason )
 	{
 		ServerPacket p;
 		Archive<ArchiveBuf> bufAccess = p.GetAccess();
@@ -96,9 +96,9 @@ namespace protocol
 		bufAccess << isKick;
 		bufAccess << reason;
 
-		protocol::SendPacket( peer, p );
+		protocol::SendPacket( pPeer, p );
 	}
-	void SendServerTimeOfDay( ENetPeer *peer, int ticks )
+	void SendServerTimeOfDay( ENetPeer *pPeer, int ticks )
 	{
 		ServerPacket p;
 		Archive<ArchiveBuf> bufAccess = p.GetAccess();
@@ -106,6 +106,6 @@ namespace protocol
 
 		bufAccess << ticks;
 
-		protocol::SendPacket( peer, p );
+		protocol::SendPacket( pPeer, p );
 	}
 } // namespace protocol

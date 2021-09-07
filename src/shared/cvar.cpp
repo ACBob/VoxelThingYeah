@@ -13,10 +13,10 @@ namespace ConVar
 {
 	CConVar::CConVar( const char *name, const char *defval, int flags )
 	{
-		this->name	 = name;
-		this->val	 = defval;
-		this->defVal = defval;
-		this->flags	 = flags;
+		m_cName	 = name;
+		m_cVal	 = defval;
+		m_cDefVal = defval;
+		m_iFlags	 = flags;
 	}
 
 	void CConVar::SetString( const char *val )
@@ -25,8 +25,8 @@ namespace ConVar
 		strcpy( cval, val );
 		cval[strlen( val ) + 1] = '\0';
 
-		modified  = ( strcmp( cval, defVal ) != 0 );
-		this->val = cval;
+		m_bModified  = ( strcmp( cval, m_cDefVal ) != 0 );
+		m_cVal = cval;
 	}
 	void CConVar::SetInt( int val )
 	{
@@ -42,10 +42,10 @@ namespace ConVar
 	}
 	void CConVar::SetBool( bool val ) { SetString( val ? "true" : "false" ); }
 
-	const char *CConVar::GetString() { return this->val; }
-	int CConVar::GetInt() { return atoi( this->val ); }
-	float CConVar::GetFloat() { return atof( this->val ); }
-	bool CConVar::GetBool() { return ( strcmp( this->val, "true" ) != 0 ); }
+	const char *CConVar::GetString() { return m_cVal; }
+	int CConVar::GetInt() { return atoi( m_cVal ); }
+	float CConVar::GetFloat() { return atof( m_cVal ); }
+	bool CConVar::GetBool() { return ( strcmp( m_cVal, "true" ) != 0 ); }
 
 	CConVarHandler::CConVarHandler() { Cvars = {}; }
 	CConVarHandler::~CConVarHandler()

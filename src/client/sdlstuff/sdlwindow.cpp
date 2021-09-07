@@ -6,87 +6,87 @@
 #include <memory>
 
 CGameWindow::CGameWindow( const char *title, CVector size, bool resizeable )
-	: internalWindow( nullptr, &SDL_DestroyWindow ), tick( 0 ), frameTicks( 0 ), delta( 0 ), framesInTheLastSecond( 0 ),
-	  secondsPerFrame( 0.0f ), inputMan( nullptr ), shouldClose( false )
+	: m_pInternalWindow( nullptr, &SDL_DestroyWindow ), m_iTick( 0 ), m_iFrameTicks( 0 ), m_dDelta( 0 ), m_iFramesInTheLastSecond( 0 ),
+	  m_fSecondsPerFrame( 0.0f ), m_pInputMan( nullptr ), m_bShouldClose( false )
 {
-	internalWindow.reset(
+	m_pInternalWindow.reset(
 		SDL_CreateWindow( "VoxelThingYeah", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, size.x, size.y,
 						  SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | ( resizeable ? SDL_WINDOW_RESIZABLE : 0 ) ) );
 
 	// if (resizeable);
 	// 	flags |= SDL_WINDOW_RESIZABLE;
 
-	if ( internalWindow == NULL )
+	if ( m_pInternalWindow == NULL )
 	{
 		printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
 	}
 
-	glctx = SDL_GL_CreateContext( internalWindow.get() );
+	m_glctx = SDL_GL_CreateContext( m_pInternalWindow.get() );
 
 	SDL_SetRelativeMouseMode( SDL_TRUE );
 }
 CGameWindow::~CGameWindow() {}
 
-void CGameWindow::SwapBuffers() { SDL_GL_SwapWindow( internalWindow.get() ); }
+void CGameWindow::SwapBuffers() { SDL_GL_SwapWindow( m_pInternalWindow.get() ); }
 
 bool CGameWindow::IsVisible()
 {
-	return !( ( SDL_GetWindowFlags( internalWindow.get() ) & SDL_WINDOW_HIDDEN ) == SDL_WINDOW_HIDDEN );
+	return !( ( SDL_GetWindowFlags( m_pInternalWindow.get() ) & SDL_WINDOW_HIDDEN ) == SDL_WINDOW_HIDDEN );
 }
 void CGameWindow::SetVisible( bool visible )
 {
 	if ( !visible )
-		SDL_HideWindow( internalWindow.get() );
+		SDL_HideWindow( m_pInternalWindow.get() );
 	else
-		SDL_ShowWindow( internalWindow.get() );
+		SDL_ShowWindow( m_pInternalWindow.get() );
 }
 
 bool CGameWindow::IsFocused()
 {
 	return IsVisible() &&
-		   ( SDL_GetWindowFlags( internalWindow.get() ) & SDL_WINDOW_INPUT_FOCUS ) == SDL_WINDOW_INPUT_FOCUS;
+		   ( SDL_GetWindowFlags( m_pInternalWindow.get() ) & SDL_WINDOW_INPUT_FOCUS ) == SDL_WINDOW_INPUT_FOCUS;
 }
 
-const char *CGameWindow::GetTitle() { return SDL_GetWindowTitle( internalWindow.get() ); }
-void CGameWindow::SetTitle( const char *title ) { SDL_SetWindowTitle( internalWindow.get(), title ); }
+const char *CGameWindow::GetTitle() { return SDL_GetWindowTitle( m_pInternalWindow.get() ); }
+void CGameWindow::SetTitle( const char *title ) { SDL_SetWindowTitle( m_pInternalWindow.get(), title ); }
 
 CVector CGameWindow::GetSize()
 {
 	int x, y;
-	SDL_GetWindowSize( internalWindow.get(), &x, &y );
+	SDL_GetWindowSize( m_pInternalWindow.get(), &x, &y );
 	return CVector( x, y );
 }
-void CGameWindow::SetSize( CVector size ) { SDL_SetWindowSize( internalWindow.get(), size.x, size.y ); }
+void CGameWindow::SetSize( CVector size ) { SDL_SetWindowSize( m_pInternalWindow.get(), size.x, size.y ); }
 
 CVector CGameWindow::GetPos()
 {
 	int x, y;
-	SDL_GetWindowPosition( internalWindow.get(), &x, &y );
+	SDL_GetWindowPosition( m_pInternalWindow.get(), &x, &y );
 	return CVector( x, y );
 }
-void CGameWindow::SetPos( CVector pos ) { SDL_SetWindowPosition( internalWindow.get(), pos.x, pos.y ); }
+void CGameWindow::SetPos( CVector pos ) { SDL_SetWindowPosition( m_pInternalWindow.get(), pos.x, pos.y ); }
 
 float CGameWindow::GetSPF()
 {
-	framesInTheLastSecond++;
-	if ( frameTicks < SDL_GetTicks() - 1000 ) // Has it been a second
+	m_iFramesInTheLastSecond++;
+	if ( m_iFrameTicks < SDL_GetTicks() - 1000 ) // Has it been a second
 	{
-		frameTicks			  = tick;
-		secondsPerFrame		  = 1000.0f / float( framesInTheLastSecond );
-		framesInTheLastSecond = 0;
+		m_iFrameTicks			  = m_iTick;
+		m_fSecondsPerFrame		  = 1000.0f / float( m_iFramesInTheLastSecond );
+		m_iFramesInTheLastSecond = 0;
 	}
-	return secondsPerFrame;
+	return m_fSecondsPerFrame;
 }
 
 unsigned int CGameWindow::GetMS()
 {
-	tick = SDL_GetTicks();
-	return tick;
+	m_iTick = SDL_GetTicks();
+	return m_iTick;
 }
 double CGameWindow::GetTime()
 {
-	tick = SDL_GetTicks();
-	return tick / 1000.0f;
+	m_iTick = SDL_GetTicks();
+	return m_iTick / 1000.0f;
 }
 
 const int scancodeToStateIndex[] = {
@@ -115,10 +115,10 @@ const int scancodeToStateIndex[] = {
 
 void CGameWindow::PollEvents()
 {
-	inputMan->mouseMovement = CVector( 0, 0 );
+	m_pInputMan->m_vMouseMovement = CVector( 0, 0 );
 
-	inputMan->oldMouseState = inputMan->mouseState;
-	inputMan->mouseState	= 0;
+	m_pInputMan->m_iOldMouseState = m_pInputMan->m_iMouseState;
+	m_pInputMan->m_iMouseState	= 0;
 
 	SDL_Event currentEvent;
 	while ( SDL_PollEvent( &currentEvent ) != 0 )
@@ -126,24 +126,24 @@ void CGameWindow::PollEvents()
 		switch ( currentEvent.type )
 		{
 			case SDL_QUIT: // Handle quitting directly
-				shouldClose = true;
+				m_bShouldClose = true;
 				break;
 
 			case SDL_MOUSEMOTION:
 				// HACK HACK HACK HACK: ignore mouse events while invisible
 				if ( !IsFocused() )
 					continue;
-				inputMan->mouseMovement =
-					inputMan->mouseMovement + CVector( currentEvent.motion.xrel, currentEvent.motion.yrel );
-				inputMan->mousePos = CVector( currentEvent.motion.x, currentEvent.motion.y );
+				m_pInputMan->m_vMouseMovement =
+					m_pInputMan->m_vMouseMovement + CVector( currentEvent.motion.xrel, currentEvent.motion.yrel );
+				m_pInputMan->m_vMousePos = CVector( currentEvent.motion.x, currentEvent.motion.y );
 				break;
 
 			case SDL_WINDOWEVENT:
-				sizeChanged = true;
+				m_bSizeChanged = true;
 				break;
 
 			case SDL_MOUSEWHEEL:
-				inputMan->mouseState |= ( currentEvent.wheel.y > 0 ) ? IN_WHEEL_UP : IN_WHEEL_DOWN;
+				m_pInputMan->m_iMouseState |= ( currentEvent.wheel.y > 0 ) ? IN_WHEEL_UP : IN_WHEEL_DOWN;
 				break;
 		}
 	}
@@ -154,24 +154,24 @@ void CGameWindow::PollEvents()
 	{
 		int scanCode						 = scancodeToStateIndex[i];
 		int convCode						 = scancodeToStateIndex[i + 1];
-		inputMan->oldKeyboardState[convCode] = inputMan->keyboardState[convCode];
-		inputMan->keyboardState[convCode]	 = ( state[scanCode] == 1 );
+		m_pInputMan->m_bOldKeyboardState[convCode] = m_pInputMan->m_bKeyboardState[convCode];
+		m_pInputMan->m_bKeyboardState[convCode]	 = ( state[scanCode] == 1 );
 	}
 
 	// Set the mouseState for buttons
 	unsigned int buttons = SDL_GetMouseState( NULL, NULL );
 	if ( ( buttons & SDL_BUTTON_LMASK ) != 0 )
 	{
-		inputMan->mouseState = inputMan->mouseState | IN_LEFT_MOUSE;
+		m_pInputMan->m_iMouseState = m_pInputMan->m_iMouseState | IN_LEFT_MOUSE;
 	}
 	if ( ( buttons & SDL_BUTTON_RMASK ) != 0 )
 	{
-		inputMan->mouseState = inputMan->mouseState | IN_RIGHT_MOUSE;
+		m_pInputMan->m_iMouseState = m_pInputMan->m_iMouseState | IN_RIGHT_MOUSE;
 	}
 }
 
 void CGameWindow::CaptureMouse()
 {
 	CVector size = GetSize();
-	SDL_WarpMouseInWindow( internalWindow.get(), size.x / 2, size.y / 2 );
+	SDL_WarpMouseInWindow( m_pInternalWindow.get(), size.x / 2, size.y / 2 );
 }

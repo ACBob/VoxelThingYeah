@@ -1,34 +1,35 @@
 #include "physics.hpp"
 
-CBoundingBox::CBoundingBox( CVector pos, CVector size, CVector origin )
+CBoundingBox::CBoundingBox( CVector m_vPosition, CVector size, CVector m_vOrigin )
 {
-	this->pos	 = pos;
-	this->bounds = size;
-	this->origin = origin;
+	this->m_vPosition	 = m_vPosition;
+	this->m_vBounds = size;
+	this->m_vOrigin = m_vOrigin;
 }
 
 bool CBoundingBox::TestCollide( CBoundingBox other )
 {
 	// This is silly.
-	return ( ( other.pos.x - ( other.bounds.x * other.origin.x ) ) + other.bounds.x >=
-				 ( pos.x - ( bounds.x * origin.x ) ) &&
-			 ( other.pos.x - ( other.bounds.x * other.origin.x ) ) <=
-				 ( pos.x - ( other.bounds.x * other.origin.x ) + bounds.x ) ) &&
-		   ( ( other.pos.y - ( other.bounds.y * other.origin.y ) ) + other.bounds.y >=
-				 ( pos.y - ( bounds.y * origin.y ) ) &&
-			 ( other.pos.y - ( other.bounds.y * other.origin.y ) ) <=
-				 ( pos.y - ( other.bounds.y * other.origin.y ) + bounds.y ) ) &&
-		   ( ( other.pos.z - ( other.bounds.z * other.origin.z ) ) + other.bounds.z >=
-				 ( pos.z - ( bounds.z * origin.z ) ) &&
-			 ( other.pos.z - ( other.bounds.z * other.origin.z ) ) <=
-				 ( pos.z - ( other.bounds.z * other.origin.z ) + bounds.z ) );
+	// And unreadable because of the new variables, lovely!
+	return ( ( other.m_vPosition.x - ( other.m_vBounds.x * other.m_vOrigin.x ) ) + other.m_vBounds.x >=
+				 ( m_vPosition.x - ( m_vBounds.x * m_vOrigin.x ) ) &&
+			 ( other.m_vPosition.x - ( other.m_vBounds.x * other.m_vOrigin.x ) ) <=
+				 ( m_vPosition.x - ( other.m_vBounds.x * other.m_vOrigin.x ) + m_vBounds.x ) ) &&
+		   ( ( other.m_vPosition.y - ( other.m_vBounds.y * other.m_vOrigin.y ) ) + other.m_vBounds.y >=
+				 ( m_vPosition.y - ( m_vBounds.y * m_vOrigin.y ) ) &&
+			 ( other.m_vPosition.y - ( other.m_vBounds.y * other.m_vOrigin.y ) ) <=
+				 ( m_vPosition.y - ( other.m_vBounds.y * other.m_vOrigin.y ) + m_vBounds.y ) ) &&
+		   ( ( other.m_vPosition.z - ( other.m_vBounds.z * other.m_vOrigin.z ) ) + other.m_vBounds.z >=
+				 ( m_vPosition.z - ( m_vBounds.z * m_vOrigin.z ) ) &&
+			 ( other.m_vPosition.z - ( other.m_vBounds.z * other.m_vOrigin.z ) ) <=
+				 ( m_vPosition.z - ( other.m_vBounds.z * other.m_vOrigin.z ) + m_vBounds.z ) );
 }
 
 bool CBoundingBox::TestPointCollide( CVector pos )
 {
-	if ( pos < this->pos || pos > ( this->pos + this->bounds ) )
-		return false; // Out of bounds
+	if ( pos < this->m_vPosition || pos > ( this->m_vPosition + this->m_vBounds ) )
+		return false; // Out of m_vBounds
 
-	// If it's in bounds, it's logically going to collide
+	// If it's in m_vBounds, it's logically going to collide
 	return true;
 }

@@ -14,7 +14,7 @@
 class CGui
 {
   private:
-	struct sVertex
+	struct Vertex
 	{
 		float x, y, z; //! Z always 0!!
 		float u, v;
@@ -22,10 +22,10 @@ class CGui
 		float r, g, b;
 	};
 
-	struct sImage
+	struct _Image
 	{
 		CTexture *m_pTex = nullptr;
-		std::vector<sVertex> m_vertices;
+		std::vector<Vertex> m_vertices;
 	};
 
 	std::vector<Vertex> GetQuad( CVector vPosition, CVector vSize, Colour colour, CVector vStart = CVector( 0, 0 ),
@@ -33,8 +33,8 @@ class CGui
 	std::vector<Vertex> GetCharQuad( const char *cChar, CVector vPosition, CVector vSize, Colour colour );
 
 	unsigned int m_iVbo, m_iVao;
-	std::vector<sVertex> m_textVertiecs;
-	std::vector<Image> m_images;
+	std::vector<Vertex> m_textVertiecs;
+	std::vector<_Image> m_images;
 
 	// Teh epic textTex
 	CTexture *m_pTextTex   = nullptr;
@@ -47,16 +47,16 @@ class CGui
 	~CGui();
 
 	// TODO: Put this in a generic utility class and then make all atlas-based things (i.e text, blocks) inherit it
-	struct sAtlas
+	struct Atlas
 	{
-		sAtlas( float x, float y, float sizex, float sizey )
+		Atlas( float x, float y, float sizex, float sizey )
 		{
 			this->x		= x;
 			this->y		= y;
-			this->sizeX = sizex;
-			this->sizeY = sizey;
+			this->sizex = sizex;
+			this->sizey = sizey;
 		};
-		float m_x, m_y, m_sizeX, m_sizeY;
+		float x, y, sizex, sizey;
 	};
 
 	// Z Ignored

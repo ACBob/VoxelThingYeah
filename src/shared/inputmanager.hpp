@@ -39,8 +39,8 @@ class CInputManager
 #ifdef CLIENTEXE
 	// A -> Z (char) Is mapped directly to the keycode (so 65 = A on the keyboard)
 	// For other keys (Shift, Escape, etc.) use KBD_*
-	bool keyboardState[255];
-	bool oldKeyboardState[255]; // See above, previous frame
+	bool m_bKeyboardState[255];
+	bool m_bOldKeyboardState[255]; // See above, previous frame
 
 	// Mousepos is the current position of the mouse
 	// Mousemovement is the movement of the mouse since last frame
@@ -58,5 +58,5 @@ class CInputManager
 	bool m_bInputState[INKEY_LAST];
 	bool m_bOldInputState[INKEY_LAST];
 
-	template <typename S> void serialize( S &s ) { s &inputState &oldInputState; };
+	template <typename S> void serialize( S &s ) { s &m_bInputState &m_bOldInputState; };
 };

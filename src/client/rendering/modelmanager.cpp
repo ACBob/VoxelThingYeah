@@ -5,29 +5,29 @@
 
 std::vector<CModel *> modelSystem::loadedModels;
 
-CModel::CModel( std::vector<Vertex> verts, std::vector<Face> faces ) : vertices( verts ), faces( faces )
+CModel::CModel( std::vector<Vertex> verts, std::vector<Face> faces ) : m_vertices( verts ), m_faces( faces )
 {
-	renderer = new CModelRenderer();
+	m_pRenderer = new CModelRenderer();
 }
 
-CModel::~CModel() { delete renderer; }
+CModel::~CModel() { delete m_pRenderer; }
 
-void CModel::Update() { renderer->Populate( this ); }
+void CModel::Update() { m_pRenderer->Populate( this ); }
 
 void CModel::Render()
 {
 	// Don't waste time trying to render
-	if ( vertices.size() == 0 || faces.size() == 0 )
+	if ( m_vertices.size() == 0 || m_faces.size() == 0 )
 		return;
 
-	shader->Use();
-	renderer->Render( position, rotation, size, shader, tex );
+	m_pShader->Use();
+	m_pRenderer->Render( m_vPosition, m_vRotation, m_vSize, m_pShader, m_pTex );
 }
 
-void CModel::SetShader( CShader *shader ) { this->shader = shader; }
-CShader *CModel::GetShader() { return shader; }
-void CModel::SetTexture( CTexture *tex ) { this->tex = tex; }
-CTexture *CModel::GetTexture() { return tex; }
+void CModel::SetShader( CShader *shader ) { this->m_pShader = shader; }
+CShader *CModel::GetShader() { return m_pShader; }
+void CModel::SetTexture( CTexture *tex ) { this->m_pTex = tex; }
+CTexture *CModel::GetTexture() { return m_pTex; }
 
 CModel *modelSystem::LoadModel( const char *fp )
 {
@@ -97,7 +97,7 @@ void GetCubeModel( CModel &m, CVector size )
 		vertices[faces[i].vvv].nz = normal.z;
 	}
 
-	m.vertices = vertices;
-	m.faces	   = faces;
+	m.m_vertices = vertices;
+	m.m_faces	   = faces;
 	m.Update();
 }

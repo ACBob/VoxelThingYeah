@@ -33,58 +33,58 @@ CSound::CSound( const char *path )
 		printf( "OGG File %s failed to load!\n", path );
 	}
 
-	alGenSources( 1, &this->id );
-	alSourcef( this->id, AL_PITCH, 1.0 );
-	alSourcef( this->id, AL_GAIN, 1.0 );
-	alSource3f( this->id, AL_POSITION, 0, 0, 0 );
-	alSource3f( this->id, AL_VELOCITY, 0, 0, 0 );
-	alSourcei( this->id, AL_SOURCE_TYPE, AL_STATIC );
-	alSourcei( this->id, AL_LOOPING, 0 );
+	alGenSources( 1, &m_iId );
+	alSourcef( m_iId, AL_PITCH, 1.0 );
+	alSourcef( m_iId, AL_GAIN, 1.0 );
+	alSource3f( m_iId, AL_POSITION, 0, 0, 0 );
+	alSource3f( m_iId, AL_VELOCITY, 0, 0, 0 );
+	alSourcei( m_iId, AL_SOURCE_TYPE, AL_STATIC );
+	alSourcei( m_iId, AL_LOOPING, 0 );
 
 	uint32_t l = decode_len * channels * ( sizeof( int16_t ) / sizeof( uint8_t ) );
-	alGenBuffers( 1, &buffer );
-	alBufferData( buffer, channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, data, l, rate );
+	alGenBuffers( 1, &m_iBuffer );
+	alBufferData( m_iBuffer, channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, data, l, rate );
 
-	alSourcei( this->id, AL_BUFFER, buffer );
+	alSourcei( m_iId, AL_BUFFER, m_iBuffer );
 }
 void CSound::Play( CVector src, float pitch, float gain )
 {
-	alSourcef( this->id, AL_PITCH, pitch );
-	alSourcef( this->id, AL_GAIN, gain );
-	alSource3f( this->id, AL_POSITION, src.x, src.y, src.z );
+	alSourcef( m_iId, AL_PITCH, pitch );
+	alSourcef( m_iId, AL_GAIN, gain );
+	alSource3f( m_iId, AL_POSITION, src.x, src.y, src.z );
 
-	alSourcePlay( id );
+	alSourcePlay( m_iId );
 }
 
 CSoundManager::CSoundManager()
 {
-	namedSounds["placeStone"] = LoadSound( "sound/placestone.ogg" );
-	namedSounds["breakStone"] = LoadSound( "sound/breakstone.ogg" );
+	m_namedSounds["placeStone"] = LoadSound( "sound/placestone.ogg" );
+	m_namedSounds["breakStone"] = LoadSound( "sound/breakstone.ogg" );
 
-	namedSounds["placeWood"] = LoadSound( "sound/placewood.ogg" );
-	namedSounds["breakWood"] = LoadSound( "sound/breakwood.ogg" );
+	m_namedSounds["placeWood"] = LoadSound( "sound/placewood.ogg" );
+	m_namedSounds["breakWood"] = LoadSound( "sound/breakwood.ogg" );
 
-	namedSounds["placeLoose"] = LoadSound( "sound/placeloose.ogg" );
-	namedSounds["breakLoose"] = LoadSound( "sound/breakloose.ogg" );
+	m_namedSounds["placeLoose"] = LoadSound( "sound/placeloose.ogg" );
+	m_namedSounds["breakLoose"] = LoadSound( "sound/breakloose.ogg" );
 
-	namedSounds["placeGlass"] = namedSounds["placeStone"];
-	namedSounds["breakGlass"] = LoadSound( "sound/breakglass.ogg" );
+	m_namedSounds["placeGlass"] = m_namedSounds["placeStone"];
+	m_namedSounds["breakGlass"] = LoadSound( "sound/breakglass.ogg" );
 
-	namedSounds["placeOrganic"] = LoadSound( "sound/placeorganic.ogg" );
-	namedSounds["breakOrganic"] = LoadSound( "sound/breakorganic.ogg" );
+	m_namedSounds["placeOrganic"] = LoadSound( "sound/placeorganic.ogg" );
+	m_namedSounds["breakOrganic"] = LoadSound( "sound/breakorganic.ogg" );
 }
 CSoundManager::~CSoundManager()
 {
-	for ( CSound *s : loadedSounds )
+	for ( CSound *s : m_loadedSounds )
 		delete s;
 }
 
 CSound *CSoundManager::LoadSound( const char *path )
 {
 	CSound *snd = new CSound( path );
-	loadedSounds.push_back( snd );
+	m_loadedSounds.push_back( snd );
 
-	return loadedSounds.back();
+	return m_loadedSounds.back();
 }
 
 void CSoundManager::PlayBreakSound( blocktype_t blockType, CVector pos )
@@ -95,19 +95,19 @@ void CSoundManager::PlayBreakSound( blocktype_t blockType, CVector pos )
 	switch ( mat )
 	{
 		case MAT_STONE:
-			namedSounds["breakStone"]->Play( pos, pitch, 1.0f );
+			m_namedSounds["breakStone"]->Play( pos, pitch, 1.0f );
 			break;
 		case MAT_WOOD:
-			namedSounds["breakWood"]->Play( pos, pitch, 1.0f );
+			m_namedSounds["breakWood"]->Play( pos, pitch, 1.0f );
 			break;
 		case MAT_LOOSE:
-			namedSounds["breakLoose"]->Play( pos, pitch, 1.0f );
+			m_namedSounds["breakLoose"]->Play( pos, pitch, 1.0f );
 			break;
 		case MAT_GLASS:
-			namedSounds["breakGlass"]->Play( pos, pitch, 1.0f );
+			m_namedSounds["breakGlass"]->Play( pos, pitch, 1.0f );
 			break;
 		case MAT_ORGANIC:
-			namedSounds["breakOrganic"]->Play( pos, pitch, 1.0f );
+			m_namedSounds["breakOrganic"]->Play( pos, pitch, 1.0f );
 			break;
 	}
 }
@@ -119,19 +119,19 @@ void CSoundManager::PlayPlaceSound( blocktype_t blockType, CVector pos )
 	switch ( mat )
 	{
 		case MAT_STONE:
-			namedSounds["placeStone"]->Play( pos, pitch, 1.0f );
+			m_namedSounds["placeStone"]->Play( pos, pitch, 1.0f );
 			break;
 		case MAT_WOOD:
-			namedSounds["placeWood"]->Play( pos, pitch, 1.0f );
+			m_namedSounds["placeWood"]->Play( pos, pitch, 1.0f );
 			break;
 		case MAT_LOOSE:
-			namedSounds["placeLoose"]->Play( pos, pitch, 1.0f );
+			m_namedSounds["placeLoose"]->Play( pos, pitch, 1.0f );
 			break;
 		case MAT_GLASS:
-			namedSounds["placeGlass"]->Play( pos, pitch, 1.0f );
+			m_namedSounds["placeGlass"]->Play( pos, pitch, 1.0f );
 			break;
 		case MAT_ORGANIC:
-			namedSounds["placeOrganic"]->Play( pos, pitch, 1.0f );
+			m_namedSounds["placeOrganic"]->Play( pos, pitch, 1.0f );
 			break;
 	}
 }

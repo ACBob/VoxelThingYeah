@@ -71,15 +71,15 @@ int main( int argc, char *args[] )
 			i++;
 			// Networking
 			server.Update();
-			server.currentTick = i;
+			server.m_iCurrentTick = i;
 
 			// World
-			server.world.WorldTick( i );
+			server.m_world.WorldTick( i );
 
 			if ( i % 5 == 0 )
 			{
-				for ( CNetworkPlayer *c : server.players )
-					protocol::SendServerTimeOfDay( c->peer, server.world.timeOfDay );
+				for ( CNetworkPlayer *c : server.m_players )
+					protocol::SendServerTimeOfDay( c->m_pPeer, server.m_world.m_iTimeOfDay );
 			}
 		}
 	}

@@ -8,7 +8,7 @@
 
 namespace protocol
 {
-	void DealWithPacket( NetworkPacket &p, void *side, ENetPeer *peer )
+	void DealWithPacket( NetworkPacket &p, void *side, ENetPeer *pPeer )
 	{
 		ArchiveBuf buf( p.data );
 		Archive<ArchiveBuf> bufAccess( buf );
@@ -64,7 +64,7 @@ namespace protocol
 				// con_info("%d Blocks", numBlocks);
 
 				// Woot, data!
-				client->localWorld->UsePortable( crep );
+				client->m_pLocalWorld->UsePortable( crep );
 			}
 			break;
 
@@ -78,11 +78,11 @@ namespace protocol
 
 				// Woot, data!
 				// TODO: make sure the server isn't being malicious
-				CBlock *b = client->localWorld->BlockAtWorldPos( CVector( x, y, z ) );
+				CBlock *b = client->m_pLocalWorld->BlockAtWorldPos( CVector( x, y, z ) );
 				if ( b != nullptr )
 				{
 					con_info( "Update Block At <%f,%f,%f>", x, y, z );
-					b->blockType = blocktype_t( blockType );
+					b->m_iBlockType = blocktype_t( blockType );
 					b->Update();
 				}
 			}
@@ -106,31 +106,31 @@ namespace protocol
 				{
 					// Then it's us
 					con_info( "Spawning at <%f,%f,%f> <%f,%f>", x, y, z, pitch, yaw );
-					client->localPlayer->position = CVector( x, y, z );
-					client->localPlayer->rotation = CVector( pitch, yaw, 0 );
+					client->m_pLocalPlayer->m_vPosition = CVector( x, y, z );
+					client->m_pLocalPlayer->m_vRotation = CVector( pitch, yaw, 0 );
 				}
 				else
 				{
 					con_info( "Player %s at <%f,%f,%f>", username.c_str(), x, y, z );
 
 					if ( joined )
-						client->chatBuffer.push_back( username + " joined." );
+						client->m_chatBuffer.push_back( username + " joined." );
 
-					if ( client->localWorld->GetEntityByName( username.c_str() ) != nullptr )
+					if ( client->m_pLocalWorld->GetEntityByName( username.c_str() ) != nullptr )
 					{
-						CEntityPlayer *plyr = (CEntityPlayer *)client->localWorld->GetEntityByName( username.c_str() );
-						plyr->position	   = CVector( x, y, z );
-						plyr->rotation	   = CVector( pitch, yaw, 0 );
+						CEntityPlayer *plyr = (CEntityPlayer *)client->m_pLocalWorld->GetEntityByName( username.c_str() );
+						plyr->m_vPosition	   = CVector( x, y, z );
+						plyr->m_vRotation	   = CVector( pitch, yaw, 0 );
 					}
 					else
 					{
 						// New player
 						CEntityPlayer *plyr = new CEntityPlayer();
-						plyr->position	   = CVector( x, y, z );
-						plyr->rotation	   = CVector( pitch, yaw, 0 );
-						plyr->name		   = username;
+						plyr->m_vPosition	   = CVector( x, y, z );
+						plyr->m_vRotation	   = CVector( pitch, yaw, 0 );
+						plyr->m_name		   = username;
 
-						client->localWorld->AddEntity( plyr );
+						client->m_pLocalWorld->AddEntity( plyr );
 					}
 				}
 			}
@@ -150,15 +150,15 @@ namespace protocol
 				// Empty username is taken to mean us
 				if ( username == "" )
 				{
-					client->localPlayer->position = CVector( x, y, z );
+					client->m_pLocalPlayer->m_vPosition = CVector( x, y, z );
 				}
 				else
 				{
-					if ( client->localWorld->GetEntityByName( username.c_str() ) != nullptr )
+					if ( client->m_pLocalWorld->GetEntityByName( username.c_str() ) != nullptr )
 					{
-						CEntityPlayer *plyr = (CEntityPlayer *)client->localWorld->GetEntityByName( username.c_str() );
-						plyr->position	   = CVector( x, y, z );
-						plyr->rotation	   = CVector( pitch, yaw, 0 );
+						CEntityPlayer *plyr = (CEntityPlayer *)client->m_pLocalWorld->GetEntityByName( username.c_str() );
+						plyr->m_vPosition	   = CVector( x, y, z );
+						plyr->m_vRotation	   = CVector( pitch, yaw, 0 );
 					}
 				}
 			}
@@ -172,7 +172,7 @@ namespace protocol
 
 				con_info( "%s: %s", username.c_str(), message.c_str() );
 
-				client->chatBuffer.push_back( username + ": " + message );
+				client->m_chatBuffer.push_back( username + ": " + message );
 			}
 			break;
 
@@ -196,7 +196,7 @@ namespace protocol
 
 				bufAccess >> ticks;
 
-				client->localWorld->timeOfDay = ticks;
+				client->m_pLocalWorld->m_iTimeOfDay = ticks;
 			}
 			break;
 

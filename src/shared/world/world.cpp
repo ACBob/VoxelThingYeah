@@ -11,17 +11,17 @@
 #endif
 
 #ifdef CLIENTEXE
-CWorld::CWorld( CShader *shader, CShader *entShader ) : worldShader( shader ), entityShader( entShader )
+CWorld::CWorld( CShader *shader, CShader *entShader ) : m_pWorldShader( shader ), m_pEntityShader( entShader )
 #elif SERVEREXE
 CWorld::CWorld()
 #endif
 {
-	chunks = {};
+	m_chunks = {};
 
 	// Now that all the chunks exist, generate and rebuild their models
-	for ( CChunk *c : chunks )
+	for ( CChunk *c : m_chunks )
 	{
-		jenerator.Generate( c );
+		m_jenerator.Generate( c );
 #ifdef CLIENTEXE
 		c->RebuildMdl();
 #endif
@@ -30,15 +30,15 @@ CWorld::CWorld()
 CWorld::~CWorld()
 {
 	// Destroy chunks
-	for ( CChunk *c : chunks )
+	for ( CChunk *c : m_chunks )
 		delete c;
 }
 
 // Return in good faith that it's a valid position
 CChunk *CWorld::ChunkAtChunkPos( CVector pos )
 {
-	for ( CChunk *c : chunks )
-		if ( c->position == pos )
+	for ( CChunk *c : m_chunks )
+		if ( c->m_vPosition == pos )
 			return c;
 
 	return nullptr;
@@ -52,15 +52,15 @@ CChunk *CWorld::GetChunkGenerateAtWorldPos( CVector pos )
 		return c;
 
 	c			= new CChunk();
-	c->position = ( pos / CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
-	c->chunkMan = this;
+	c->m_vPosition = ( pos / CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
+	c->m_pChunkMan = this;
 #ifdef CLIENTEXE
-	c->mdl.position = c->GetPosInWorld();
-	c->mdl.SetShader( worldShader );
+	c->m_mdl.m_vPosition = c->GetPosInWorld();
+	c->m_mdl.SetShader( m_pWorldShader );
 #endif
-	jenerator.Generate( c );
+	m_jenerator.Generate( c );
 
-	chunks.push_back( c );
+	m_chunks.push_back( c );
 
 	return c;
 }
@@ -71,11 +71,11 @@ void CWorld::UnloadChunk( CVector pos )
 	if ( c == nullptr )
 		return;
 
-	for ( auto i = chunks.begin(); i != chunks.end(); ++i )
+	for ( auto i = m_chunks.begin(); i != m_chunks.end(); ++i )
 	{
 		if ( *i == c )
 		{
-			chunks.erase( i );
+			m_chunks.erase( i );
 			return;
 		}
 	}
@@ -105,19 +105,19 @@ bool CWorld::ValidChunkPos( const CVector pos ) { return ChunkAtWorldPos( pos ) 
 
 void CWorld::AddEntity( void *e )
 {
-	ents.push_back( e );
+	m_ents.push_back( e );
 	( (CEntityBase *)e )->Spawn();
 #ifdef CLIENTEXE
-	( (CEntityBase *)e )->SetShader( entityShader );
+	( (CEntityBase *)e )->SetShader( m_pEntityShader );
 #endif
 }
 
 void *CWorld::GetEntityByName( const char *name )
 {
-	for ( void *e : ents )
+	for ( void *e : m_ents )
 	{
 		CEntityBase *ent = reinterpret_cast<CEntityBase *>( e );
-		if ( ent->name == name )
+		if ( ent->m_name == name )
 			return e;
 	}
 	return nullptr;
@@ -126,11 +126,11 @@ void *CWorld::GetEntityByName( const char *name )
 #ifdef CLIENTEXE
 void CWorld::Render()
 {
-	for ( CChunk *c : chunks )
+	for ( CChunk *c : m_chunks )
 	{
 		c->Render();
 	}
-	for ( void *ent : ents )
+	for ( void *ent : m_ents )
 	{
 		( (CEntityBase *)ent )->Render();
 	}
@@ -142,7 +142,7 @@ bool CWorld::TestPointCollision( CVector pos )
 	CBlock *b = BlockAtWorldPos( pos );
 	if ( b == nullptr )
 		return false;
-	BlockFeatures bF = GetBlockFeatures( b->blockType );
+	BlockFeatures bF = GetBlockFeatures( b->m_iBlockType );
 	if ( !bF.walkable )
 		return false;
 
@@ -152,7 +152,7 @@ bool CWorld::TestPointCollision( CVector pos )
 
 bool CWorld::TestAABBCollision( CBoundingBox col )
 {
-	CChunk *chunk = ChunkAtWorldPos( col.pos );
+	CChunk *chunk = ChunkAtWorldPos( col.m_vPosition );
 	if ( chunk == nullptr )
 		return false;
 
@@ -163,7 +163,7 @@ bool CWorld::TestAABBCollision( CBoundingBox col )
 		CHUNK1D_TO_3D( i, x, y, z );
 
 		// Don't collide with air
-		blocktype_t blockType = chunk->blocks[i].blockType;
+		blocktype_t blockType = chunk->m_blocks[i].m_iBlockType;
 		BlockFeatures bF	  = GetBlockFeatures( blockType );
 		if ( !bF.walkable )
 			continue;
@@ -177,15 +177,15 @@ bool CWorld::TestAABBCollision( CBoundingBox col )
 
 void CWorld::WorldTick( int tickN )
 {
-	for ( int i = 0; i < ents.size(); i++ )
+	for ( int i = 0; i < m_ents.size(); i++ )
 	{
-		void *ent = ents[i];
+		void *ent = m_ents[i];
 
-		if ( reinterpret_cast<CEntityBase *>( ent )->isKilled )
+		if ( reinterpret_cast<CEntityBase *>( ent )->m_bIsKilled )
 		{
 			// Clear from world
 			con_debug( "removing entity" );
-			ents.erase( ents.begin() + i );
+			m_ents.erase( m_ents.begin() + i );
 
 			continue;
 		}
@@ -199,7 +199,7 @@ void CWorld::WorldTick( int tickN )
 	}
 
 #ifdef SERVEREXE
-	for ( CChunk *chunk : chunks )
+	for ( CChunk *chunk : m_chunks )
 	{
 		// Generally we should avoid rebuilding the universe every tick
 		bool rebuild					 = false;
@@ -209,7 +209,7 @@ void CWorld::WorldTick( int tickN )
 			int x, y, z;
 			CHUNK1D_TO_3D( i, x, y, z );
 
-			blocktype_t blockType = chunk->blocks[i].blockType;
+			blocktype_t blockType = chunk->m_blocks[i].m_iBlockType;
 
 			// Every liquidSpeedth tick
 			BlockFeatures bF = GetBlockFeatures( blockType );
@@ -221,7 +221,7 @@ void CWorld::WorldTick( int tickN )
 
 		for ( CVector pos : liquidBlocks )
 		{
-			blocktype_t blockType = chunk->GetBlockAtLocal( pos )->blockType;
+			blocktype_t blockType = chunk->GetBlockAtLocal( pos )->m_iBlockType;
 			for ( int i = 0; i < 5; i++ )
 			{
 				if ( i == UP )
@@ -240,10 +240,10 @@ void CWorld::WorldTick( int tickN )
 					if ( b == nullptr )
 						continue; // uh oh
 				}
-				BlockFeatures bF = GetBlockFeatures( b->blockType );
+				BlockFeatures bF = GetBlockFeatures( b->m_iBlockType );
 				if ( bF.floodable )
 				{
-					b->blockType = blockType;
+					b->m_iBlockType = blockType;
 					rebuild		 = true;
 				}
 			}
@@ -254,11 +254,11 @@ void CWorld::WorldTick( int tickN )
 	}
 
 	// Progress time
-	timeOfDay++;
+	m_iTimeOfDay++;
 #endif
-	if ( timeOfDay > 24000 )
+	if ( m_iTimeOfDay > 24000 )
 	{
-		timeOfDay = 0;
+		m_iTimeOfDay = 0;
 	}
 }
 
@@ -273,13 +273,13 @@ CWorld::PortableChunkRepresentation CWorld::GetWorldRepresentation( CVector pos 
 	// }
 
 	CChunk *c = GetChunkGenerateAtWorldPos( pos * CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) );
-	crep.x	 = c->position.x;
-	crep.y	 = c->position.y;
-	crep.z	 = c->position.z;
+	crep.x	 = c->m_vPosition.x;
+	crep.y	 = c->m_vPosition.y;
+	crep.z	 = c->m_vPosition.z;
 
 	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
 	{
-		crep.blocks[j] = c->blocks[j].blockType;
+		crep.blocks[j] = c->m_blocks[j].m_iBlockType;
 	}
 
 	return crep;
@@ -296,7 +296,7 @@ void CWorld::UsePortable( PortableChunkRepresentation rep )
 
 	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
 	{
-		c->blocks[j].blockType = (blocktype_t)rep.blocks[j];
+		c->m_blocks[j].m_iBlockType = (blocktype_t)rep.blocks[j];
 	}
 
 	c->Update();

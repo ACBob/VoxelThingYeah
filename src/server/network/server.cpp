@@ -5,14 +5,14 @@
 
 CNetworkServer::CNetworkServer( int port, int maxClients )
 {
-	addr.host = ENET_HOST_ANY;
-	addr.port = port;
+	m_addr.host = ENET_HOST_ANY;
+	m_addr.port = port;
 
-	enetHost = enet_host_create( &addr, maxClients, 1, 0, 0 );
+	m_pEnetHost = enet_host_create( &m_addr, maxClients, 1, 0, 0 );
 
 	con_info( "Creating with port %i", port );
 
-	if ( enetHost == NULL )
+	if ( m_pEnetHost == NULL )
 	{
 		con_error( "Couldn't create ENet server object" );
 		return;
@@ -20,38 +20,38 @@ CNetworkServer::CNetworkServer( int port, int maxClients )
 }
 CNetworkServer::~CNetworkServer()
 {
-	for ( CNetworkPlayer *c : players )
+	for ( CNetworkPlayer *c : m_players )
 		KickPlayer( c, "Server is closing!" );
-	enet_host_destroy( enetHost );
+	enet_host_destroy( m_pEnetHost );
 }
 
 CNetworkPlayer *CNetworkServer::ClientFromUsername( const char *name )
 {
-	for ( CNetworkPlayer *c : players )
+	for ( CNetworkPlayer *c : m_players )
 	{
-		if ( c->username == name )
+		if ( c->m_username == name )
 			return c;
 	}
 
 	return nullptr;
 }
-CNetworkPlayer *CNetworkServer::ClientFromPeer( ENetPeer *peer )
+CNetworkPlayer *CNetworkServer::ClientFromPeer( ENetPeer *pPeer )
 {
-	for ( CNetworkPlayer *c : players )
+	for ( CNetworkPlayer *c : m_players )
 	{
-		if ( c->peer == peer )
+		if ( c->m_pPeer == pPeer )
 			return c;
 	}
 
 	return nullptr;
 }
 
-void CNetworkServer::KickPlayer( ENetPeer *peer, const char *reason )
+void CNetworkServer::KickPlayer( ENetPeer *pPeer, const char *reason )
 {
-	CNetworkPlayer *c = ClientFromPeer( peer );
+	CNetworkPlayer *c = ClientFromPeer( pPeer );
 	if ( c == nullptr )
 	{
-		con_critical( "Tried to kick a peer without a client! What!" );
+		con_critical( "Tried to kick a pPeer without a client! What!" );
 		return;
 	}
 
@@ -70,31 +70,31 @@ void CNetworkServer::KickPlayer( const char *username, const char *reason )
 }
 void CNetworkServer::KickPlayer( CNetworkPlayer *player, const char *reason )
 {
-	ENetPeer *peer = player->peer;
-	protocol::SendServerPlayerDisconnect( peer, true, reason );
+	ENetPeer *pPeer = player->m_pPeer;
+	protocol::SendServerPlayerDisconnect( pPeer, true, reason );
 
 	con_info( "Kicking player for reason %s", reason );
 
-	enet_peer_disconnect_later( peer, NULL );
+	enet_peer_disconnect_later( pPeer, NULL );
 }
 
 void CNetworkServer::Update()
 {
 	// Spend some time checking if anybody joins/leaves, or we get some client data
 	ENetEvent e;
-	while ( enet_host_service( enetHost, &e, 0 ) > 0 )
+	while ( enet_host_service( m_pEnetHost, &e, 0 ) > 0 )
 	{
 		switch ( e.type )
 		{
 			break;
 			case ENET_EVENT_TYPE_DISCONNECT: {
 				CNetworkPlayer *c = ClientFromPeer( e.peer );
-				con_info( "Goodbye %s!", c->username.c_str() );
+				con_info( "Goodbye %s!", c->m_username.c_str() );
 				// Destroy the client object AND player
-				players.erase( std::remove( players.begin(), players.end(), c ), players.end() );
-				if ( c->entity != nullptr ) //! This is GOING to shoot me in the foot later
+				m_players.erase( std::remove( m_players.begin(), m_players.end(), c ), m_players.end() );
+				if ( c->m_pEntity != nullptr ) //! This is GOING to shoot me in the foot later
 				{
-					c->entity->Kill();
+					c->m_pEntity->Kill();
 				}
 
 				delete c;
@@ -109,55 +109,55 @@ void CNetworkServer::Update()
 	}
 
 	// Check for outdated chunks and resend them to joined clients
-	for ( CChunk *c : world.chunks )
+	for ( CChunk *c : m_world.m_chunks )
 	{
-		if ( c->outdated )
+		if ( c->m_bOutdated )
 		{
-			CWorld::PortableChunkRepresentation crep = world.GetWorldRepresentation( c->position );
+			CWorld::PortableChunkRepresentation crep = m_world.GetWorldRepresentation( c->m_vPosition );
 
-			for ( CNetworkPlayer *cl : players )
+			for ( CNetworkPlayer *cl : m_players )
 			{
-				if ( cl->nextChunkLoadTick < currentTick )
+				if ( cl->m_iNextChunkLoadTick < m_iCurrentTick )
 				{
-					protocol::SendServerChunkDataFromRep( cl->peer, crep );
+					protocol::SendServerChunkDataFromRep( cl->m_pPeer, crep );
 				}
 			}
-			c->outdated = false;
+			c->m_bOutdated = false;
 		}
 	}
 
-	for ( CNetworkPlayer *c : players )
+	for ( CNetworkPlayer *c : m_players )
 	{
 		// Update chunk pos
 		// Unfortunate name
-		CVector cP = ( c->entity->position / CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
-		if ( cP != c->chunkPos )
+		CVector cP = ( c->m_pEntity->m_vPosition / CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
+		if ( cP != c->m_vChunkPos )
 		{
-			c->loadedChunkIDX	 = 0;
-			c->nextChunkLoadTick = currentTick;
+			c->m_iLoadedChunkIDX	 = 0;
+			c->m_iNextChunkLoadTick = m_iCurrentTick;
 		}
-		c->chunkPos = cP;
+		c->m_vChunkPos = cP;
 
-		if ( c->nextChunkLoadTick < currentTick )
-			c->nextChunkLoadTick = currentTick + 1;
+		if ( c->m_iNextChunkLoadTick < m_iCurrentTick )
+			c->m_iNextChunkLoadTick = m_iCurrentTick + 1;
 		else
 			continue;
 
-		if ( c->loadedChunkIDX >= ( 4 * 4 * 4 ) )
+		if ( c->m_iLoadedChunkIDX >= ( 4 * 4 * 4 ) )
 			continue;
 
 		int x = 0;
 		int y = 0;
 		int z = 0;
-		i1Dto3D( c->loadedChunkIDX, 4, 4, x, y, z );
+		i1Dto3D( c->m_iLoadedChunkIDX, 4, 4, x, y, z );
 		CVector p( x - 2, y - 2, z - 2 );
 
-		p = p + c->chunkPos;
+		p = p + c->m_vChunkPos;
 
-		protocol::SendServerChunkData( c->peer, &world, p );
+		protocol::SendServerChunkData( c->m_pPeer, &m_world, p );
 
-		c->loadedChunkIDX++;
+		c->m_iLoadedChunkIDX++;
 	}
 }
 
-bool CNetworkServer::WorkingServer() { return enetHost != NULL; }
+bool CNetworkServer::WorkingServer() { return m_pEnetHost != NULL; }

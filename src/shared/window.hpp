@@ -48,5 +48,5 @@ class CBobWindow
 	bool m_bSizeChanged = false;
 
 	// Pointer to Input manager
-	CInputManager *inputMan = nullptr;
+	CInputManager *m_pInputMan = nullptr;
 };

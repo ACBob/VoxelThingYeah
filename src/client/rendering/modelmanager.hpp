@@ -14,7 +14,7 @@ namespace modelSystem
 	class CModel
 	{
 	  public:
-		struct sVertex
+		struct Vertex
 		{
 			float x, y, z;	  // Position
 			float nx, ny, nz; // Normal
@@ -22,7 +22,7 @@ namespace modelSystem
 							  // TODO: Texture, Lighting, Etc.
 		};
 
-		struct sFace
+		struct Face
 		{
 			Face( int a = 0, int b = 0, int c = 0 )
 			{
@@ -33,7 +33,7 @@ namespace modelSystem
 			unsigned int v, vv, vvv;
 		};
 
-		CModel( std::vector<sVertex> verts = {}, std::vector<sFace> faces = {} );
+		CModel( std::vector<Vertex> verts = {}, std::vector<Face> faces = {} );
 		~CModel();
 
 		void Update();
@@ -53,12 +53,12 @@ namespace modelSystem
 		CVector m_vSize		= { 1, 1, 1 };
 
 	  private:
-		CShader *pShader = nullptr;
-		CTexture *pTex   = nullptr;
+		CShader *m_pShader = nullptr;
+		CTexture *m_pTex   = nullptr;
 
-		CModelRenderer *pRenderer = nullptr;
+		CModelRenderer *m_pRenderer = nullptr;
 
-		const char *cFilepath = nullptr;
+		const char *m_cFilepath = nullptr;
 	};
 
 	extern std::vector<CModel *> loadedModels;

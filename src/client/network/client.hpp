@@ -28,7 +28,7 @@ class CNetworkClient
 
 	// Please don't modify
 	// Returns if we're connected or not
-	bool bConnected;
+	bool m_bConnected;
 	ENetPeer *m_pPeer;
 
 	std::vector<std::string> m_chatBuffer;
@@ -36,5 +36,5 @@ class CNetworkClient
   private:
 	ENetHost *m_pEnetHost = nullptr;
 	ENetAddress m_addr;
-	ENetEvent m_e;
+	ENetEvent e;
 };

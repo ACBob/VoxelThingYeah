@@ -5,8 +5,8 @@
 class CCamera
 {
   public:
-	CVector m_position;
+	CVector m_vPosition;
 
 	// what direction the camera points
-	CVector m_forward;
+	CVector m_vForward;
 };

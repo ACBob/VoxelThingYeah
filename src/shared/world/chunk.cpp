@@ -8,28 +8,28 @@
 CChunk::CChunk()
 {
 	for ( int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++ )
-		blocks[i].blockType = blocktype_t::AIR;
+		m_blocks[i].m_iBlockType = blocktype_t::AIR;
 }
 CChunk::~CChunk() {}
 #elif SERVEREXE
 CChunk::CChunk()
 {
 	for ( int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++ )
-		blocks[i].blockType = blocktype_t::AIR;
+		m_blocks[i].m_iBlockType = blocktype_t::AIR;
 }
 CChunk::~CChunk() {}
 #endif
 
 CChunk *CChunk::Neighbour( Direction dir )
 {
-	CVector neighbourPos = position + DirectionVector[dir];
-	return ( reinterpret_cast<CWorld *>( chunkMan ) )->ChunkAtChunkPos( neighbourPos );
+	CVector neighbourPos = m_vPosition + DirectionVector[dir];
+	return ( reinterpret_cast<CWorld *>( m_pChunkMan ) )->ChunkAtChunkPos( neighbourPos );
 }
 
 #ifdef CLIENTEXE
-void CChunk::Render() { mdl.Render(); }
+void CChunk::Render() { m_mdl.Render(); }
 
-void CChunk::RebuildMdl() { BuildChunkModel( mdl, blocks, GetPosInWorld(), this ); }
+void CChunk::RebuildMdl() { BuildChunkModel( m_mdl, m_blocks, GetPosInWorld(), this ); }
 #endif
 
 // Takes a coordinate and returns a vector in world coordinates relative to this chunk
@@ -50,22 +50,18 @@ void CChunk::Update()
 	}
 #endif
 
-	outdated = true;
+	m_bOutdated = true;
 }
 
 CBlock *CChunk::GetBlockAtLocal( CVector pos )
 {
 	if ( !ValidChunkPosition( pos ) )
 		return nullptr;
-	return &blocks[int( CHUNK3D_TO_1D( pos.x, pos.y, pos.z ) )];
+	return &m_blocks[int( CHUNK3D_TO_1D( pos.x, pos.y, pos.z ) )];
 }
 
 bool ValidChunkPosition( CVector pos )
 {
 	// If the position is valid
-	if ( pos.x < 0 || pos.y < 0 || pos.z < 0 || pos.x >= CHUNKSIZE_X || pos.y >= CHUNKSIZE_Y || pos.z >= CHUNKSIZE_Z )
-	{
-		return false;
-	}
-	return true;
+	return !( pos.x < 0 || pos.y < 0 || pos.z < 0 || pos.x >= CHUNKSIZE_X || pos.y >= CHUNKSIZE_Y || pos.z >= CHUNKSIZE_Z );
 }

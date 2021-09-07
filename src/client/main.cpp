@@ -87,7 +87,7 @@ int main( int argc, char *args[] )
 	}
 	CGameWindow window( "VoxelThingYeah", CVector( scr_width->GetFloat(), scr_height->GetFloat() ), true );
 	CInputManager inputMan;
-	window.inputMan = &inputMan;
+	window.m_pInputMan = &inputMan;
 	{
 		if ( !gladLoadGLLoader( SDL_GL_GetProcAddress ) )
 		{
@@ -124,7 +124,7 @@ int main( int argc, char *args[] )
 	CWorld localWorld( diffuseShader, diffuseShader );
 
 	CNetworkClient client;
-	client.localWorld = &localWorld;
+	client.m_pLocalWorld = &localWorld;
 	if ( !client.WorkingClient() )
 	{
 		con_critical( "Client ended up in invalid state!" );
@@ -138,12 +138,12 @@ int main( int argc, char *args[] )
 	}
 
 	CEntityPlayer plyr;
-	plyr.inputMan = &inputMan;
+	plyr.m_pInputMan = &inputMan;
 	plyr.Spawn();
 	plyr.SetShader( diffuseShader );
-	client.localPlayer = &plyr;
+	client.m_pLocalPlayer = &plyr;
 	localWorld.AddEntity( &plyr );
-	plyr.client = &client;
+	plyr.m_pClient = &client;
 
 	glm::mat4 projection = glm::perspective( glm::radians( fov->GetFloat() ),
 											 scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f );
@@ -167,7 +167,7 @@ int main( int argc, char *args[] )
 	skyboxSunModel->SetShader( unlitShader );
 
 	CGui gui( scr_width->GetInt(), scr_height->GetInt() );
-	gui.inputMan = &inputMan;
+	gui.m_pInputMan = &inputMan;
 
 	int64_t then =
 		std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() )
@@ -179,17 +179,17 @@ int main( int argc, char *args[] )
 
 	CVector sunForward( 0, 1, 0 );
 	float sunAngle = 0.0f;
-	while ( !window.shouldClose )
+	while ( !window.m_bShouldClose )
 	{
 		client.Update();
-		if ( !client.connected )
+		if ( !client.m_bConnected )
 			break;
 
 		window.PollEvents();
 		if ( window.IsFocused() && !chatting )
 			window.CaptureMouse();
 
-		if ( window.sizeChanged )
+		if ( window.m_bSizeChanged )
 		{
 			CVector s = window.GetSize();
 			scr_width->SetInt( s.x );
@@ -197,27 +197,27 @@ int main( int argc, char *args[] )
 			glViewport( 0, 0, s.x, s.y );
 			gui.Resize( s.x, s.y );
 			screen			   = glm::ortho( 0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat() );
-			window.sizeChanged = false;
+			window.m_bSizeChanged = false;
 		}
 
 		inputMan.Update();
-		plyr.UpdateClient( client.localWorld );
+		plyr.UpdateClient( client.m_pLocalWorld );
 
-		if ( inputMan.inputState[INKEY_CHAT] && !inputMan.oldInputState[INKEY_CHAT] )
+		if ( inputMan.m_bInputState[INKEY_CHAT] && !inputMan.m_bOldInputState[INKEY_CHAT] )
 		{
 			chatting	   = true;
-			inputMan.inGui = true;
+			inputMan.m_bInGui = true;
 		}
 
-		if ( inputMan.inputState[INKEY_OUT] && !inputMan.oldInputState[INKEY_OUT] )
+		if ( inputMan.m_bInputState[INKEY_OUT] && !inputMan.m_bOldInputState[INKEY_OUT] )
 		{
 			if ( chatting )
 			{
 				chatting	   = false;
-				inputMan.inGui = false;
+				inputMan.m_bInGui = false;
 			}
 			else // TODO: PAUSE MENU
-				window.shouldClose = true;
+				window.m_bShouldClose = true;
 		}
 
 		// Rendering
@@ -225,25 +225,25 @@ int main( int argc, char *args[] )
 			// Rendering right at the end
 			glClear( GL_DEPTH_BUFFER_BIT );
 
-			CVector v	   = plyr.camera.pos + plyr.camera.forward;
-			glm::mat4 view = glm::lookAt( glm::vec3( plyr.camera.pos.x, plyr.camera.pos.y, plyr.camera.pos.z ),
+			CVector v	   = plyr.m_camera.m_vPosition + plyr.m_camera.m_vForward;
+			glm::mat4 view = glm::lookAt( glm::vec3( plyr.m_camera.m_vPosition.x, plyr.m_camera.m_vPosition.y, plyr.m_camera.m_vPosition.z ),
 										  glm::vec3( v.x, v.y, v.z ), glm::vec3( VEC_UP.x, VEC_UP.y, VEC_UP.z ) );
-			shaderSystem::SetUniforms( view, projection, screen, window.GetMS(), localWorld.timeOfDay, sunForward );
+			shaderSystem::SetUniforms( view, projection, screen, window.GetMS(), localWorld.m_iTimeOfDay, sunForward );
 
 			glDisable( GL_DEPTH_TEST ); // Skybox
 			{
-				skyboxModel.position = plyr.camera.pos;
+				skyboxModel.m_vPosition = plyr.m_camera.m_vPosition;
 				skyboxModel.Render();
 
-				skyboxSunModel->position = skyboxModel.position;
-				skyboxSunModel->rotation = CVector( 0, 0, -sunAngle );
+				skyboxSunModel->m_vPosition = skyboxModel.m_vPosition;
+				skyboxSunModel->m_vRotation = CVector( 0, 0, -sunAngle );
 				skyboxSunModel->Render();
 			}
 			glEnable( GL_DEPTH_TEST );
 
 			diffuseShader->Use();
 
-			glBindTexture( GL_TEXTURE_2D, terrainPng->id );
+			glBindTexture( GL_TEXTURE_2D, terrainPng->m_iId );
 
 			localWorld.Render();
 
@@ -258,35 +258,35 @@ int main( int argc, char *args[] )
 				const char *chat = gui.TextInput( 0, CVector( 0, 2 ) );
 				if ( chat != nullptr )
 				{
-					protocol::SendClientChatMessage( client.peer, chat );
+					protocol::SendClientChatMessage( client.m_pPeer, chat );
 					chatting	   = false;
-					inputMan.inGui = false;
+					inputMan.m_bInGui = false;
 				}
 			}
 
 			for ( int i = 0; i < 5; i++ )
 			{
-				int j = client.chatBuffer.size() - i;
-				if ( j < 0 || j >= client.chatBuffer.size() )
+				int j = client.m_chatBuffer.size() - i;
+				if ( j < 0 || j >= client.m_chatBuffer.size() )
 					continue;
 
-				std::string msg = client.chatBuffer.at( j );
+				std::string msg = client.m_chatBuffer.at( j );
 
 				gui.Label( msg.c_str(), CVector( 0, 2 + i ) );
 			}
 
-			snprintf( buf, 100, "<%.2f,%.2f,%.2f>", plyr.position.x, plyr.position.y, plyr.position.z );
+			snprintf( buf, 100, "<%.2f,%.2f,%.2f>", plyr.m_vPosition.x, plyr.m_vPosition.y, plyr.m_vPosition.z );
 			gui.Label( buf, CVector( 0, -1 ) );
-			int hours	= localWorld.timeOfDay / 1000;
-			int minutes = ( localWorld.timeOfDay - ( hours * 1000 ) ) / 16.6666;
+			int hours	= localWorld.m_iTimeOfDay / 1000;
+			int minutes = ( localWorld.m_iTimeOfDay - ( hours * 1000 ) ) / 16.6666;
 			snprintf( buf, 100, "Time %02i:%02i", hours, minutes );
 			gui.Label( buf, CVector( 0, -2 ) );
 
-			BlockTexture bTex = GetDefaultBlockTextureSide( plyr.selectedBlockType, Direction::NORTH );
+			BlockTexture bTex = GetDefaultBlockTextureSide( plyr.m_iSelectedBlockType, Direction::NORTH );
 			gui.ImageAtlas( terrainPng, { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey },
 							16, CVector( -1, -1 ), CVector( 4, 4 ), CVector( 1, 1 ) );
 
-			gui.Image( crosshairTex, gui.screenCentre, CVector( 2, 2 ), CVector( 0.5, 0.5 ) );
+			gui.Image( crosshairTex, gui.m_vScreenCentre, CVector( 2, 2 ), CVector( 0.5, 0.5 ) );
 			gui.Update();
 
 			delete[] buf;
@@ -302,13 +302,13 @@ int main( int argc, char *args[] )
 		{
 			i++;
 
-			sunAngle   = 180 * ( 1 - ( localWorld.timeOfDay / 12000.0f ) );
+			sunAngle   = 180 * ( 1 - ( localWorld.m_iTimeOfDay / 12000.0f ) );
 			sunForward = CVector( 0, 1, 0 ).Rotate( 3, sunAngle );
 
 			then = now + 50;
 			localWorld.WorldTick( i );
 
-			protocol::SendClientPlayerPos( client.peer, plyr.position, plyr.rotation );
+			protocol::SendClientPlayerPos( client.m_pPeer, plyr.m_vPosition, plyr.m_vRotation );
 		}
 	}
 	window.SetVisible( false );

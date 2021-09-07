@@ -56,15 +56,15 @@ class CWorld
 	// FIXME: depending on if I got my calculation right, this will shit itself either in 1,000 or so years or 3.
 	void WorldTick( int tick );
 
-	struct sPortableChunkRepresentation
+	struct PortableChunkRepresentation
 	{
 		int32_t x, y, z;
 		uint32_t blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 	};
-	sPortableChunkRepresentation GetWorldRepresentation( CVector pos );
+	PortableChunkRepresentation GetWorldRepresentation( CVector pos );
 
 	// Merges the PortableChunkRepresentation into us :)
-	void UsePortable( sPortableChunkRepresentation rep );
+	void UsePortable( PortableChunkRepresentation rep );
 
 	std::vector<void *> m_ents;
 	void AddEntity( void *e );

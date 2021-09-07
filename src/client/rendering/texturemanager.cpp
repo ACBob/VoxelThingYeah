@@ -14,7 +14,7 @@ std::vector<CTexture *> materialSystem::loadedTextures;
 CTexture::CTexture( const char *path )
 // TODO: Error Texture
 {
-	fp = path;
+	m_cFilePath = path;
 
 	PHYSFS_File *f = PHYSFS_openRead( path );
 	int64_t fl	   = PHYSFS_fileLength( f );
@@ -27,7 +27,7 @@ CTexture::CTexture( const char *path )
 		printf( "PHYSFS Error!\n%s\n", PHYSFS_getLastError() );
 	}
 
-	uint err = lodepng::decode( image, width, height, buf, fl );
+	uint err = lodepng::decode( m_imageData, m_iWidth, m_iHeight, buf, fl );
 
 	PHYSFS_close( f );
 
@@ -36,13 +36,13 @@ CTexture::CTexture( const char *path )
 		printf( "LodePNG Error: %s\n", lodepng_error_text( err ) );
 	}
 
-	glGenTextures( 1, &id );
-	glBindTexture( GL_TEXTURE_2D, id );
+	glGenTextures( 1, &m_iId );
+	glBindTexture( GL_TEXTURE_2D, m_iId );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &image[0] );
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, m_iWidth, m_iHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, &m_imageData[0] );
 }
 
 void materialSystem::Init() {}
@@ -50,7 +50,7 @@ void materialSystem::Init() {}
 CTexture *materialSystem::LoadTexture( const char *path )
 {
 	for ( CTexture *t : loadedTextures )
-		if ( t->fp == path )
+		if ( t->m_cFilePath == path )
 			return t;
 
 	CTexture *tex = new CTexture( path );

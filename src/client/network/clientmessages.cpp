@@ -3,7 +3,7 @@
 
 namespace protocol
 {
-	void SendClientPlayerID( ENetPeer *peer )
+	void SendClientPlayerID( ENetPeer *pPeer )
 	{
 		ClientPacket p;
 		p.type						  = ClientPacket::PLAYER_ID;
@@ -11,9 +11,9 @@ namespace protocol
 		bufAccess << PROTOCOL_VERSION;
 		bufAccess << std::string( username->GetString() );
 
-		protocol::SendPacket( peer, p );
+		protocol::SendPacket( pPeer, p );
 	}
-	void SendClientSetBlock( ENetPeer *peer, CVector pos, blocktype_t blockType )
+	void SendClientSetBlock( ENetPeer *pPeer, CVector pos, blocktype_t blockType )
 	{
 		ClientPacket p;
 		p.type					   = ClientPacket::SET_BLOCK;
@@ -23,9 +23,9 @@ namespace protocol
 		bufAcc << pos.z;
 		bufAcc << (uint)blockType;
 
-		protocol::SendPacket( peer, p );
+		protocol::SendPacket( pPeer, p );
 	}
-	void SendClientPlayerPos( ENetPeer *peer, CVector pos, CVector rot )
+	void SendClientPlayerPos( ENetPeer *pPeer, CVector pos, CVector rot )
 	{
 		ClientPacket p;
 		p.type					   = ClientPacket::PLAYERPOSORT;
@@ -36,24 +36,24 @@ namespace protocol
 		bufAcc << rot.x;
 		bufAcc << rot.y;
 
-		SendPacket( peer, p );
+		SendPacket( pPeer, p );
 	}
-	void SendClientChatMessage( ENetPeer *peer, std::string message )
+	void SendClientChatMessage( ENetPeer *pPeer, std::string message )
 	{
 		ClientPacket p;
 		p.type						  = ClientPacket::CHATMESSAGE;
 		Archive<ArchiveBuf> bufAccess = p.GetAccess();
 		bufAccess << message;
 
-		SendPacket( peer, p );
+		SendPacket( pPeer, p );
 	}
-	void SendClientLeave( ENetPeer *peer )
+	void SendClientLeave( ENetPeer *pPeer )
 	{
 		ClientPacket p;
 		Archive<ArchiveBuf> bufAccess = p.GetAccess();
 		p.type						  = ClientPacket::LEAVE;
 
-		protocol::SendPacket( peer, p );
-		enet_peer_disconnect( peer, 0 );
+		protocol::SendPacket( pPeer, p );
+		enet_peer_disconnect( pPeer, 0 );
 	}
 } // namespace protocol

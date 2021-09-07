@@ -41,8 +41,8 @@ class CEntityBase
 	// Renders our Model.
 	virtual void Render()
 	{
-		m_pMdl->position = position;
-		m_pMdl->rotation = rotation;
+		m_pMdl->m_vPosition = m_vPosition;
+		m_pMdl->m_vRotation = m_vRotation;
 		m_pMdl->Render();
 	}
 
@@ -54,10 +54,10 @@ class CEntityBase
 	std::string m_name;
 
 	// Gets a forward vector based on the rotation
-	CVector GetForward() { return CVector( 0, 0, -1 ).Rotate( rotation ).Normal(); }
+	CVector GetForward() { return CVector( 0, 0, -1 ).Rotate( m_vRotation ).Normal(); }
 
 	// Updates the collision box to the new position
-	void UpdateCollision() { collisionBox.pos = position; }
+	void UpdateCollision() { m_collisionBox.m_vPosition = m_vPosition; }
 
 	CVector m_vPosition;
 	CVector m_vRotation;

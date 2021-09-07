@@ -131,8 +131,8 @@ std::vector<CModel::Vertex> samplePlant( CBlock block, int x = 0, int y = 0, int
 // We include the chunk manager here so we can test our neighbouring chunks
 void BuildChunkModel( CModel &mdl, CBlock blocks[], CVector pos, void *chunk )
 {
-	mdl.vertices.clear();
-	mdl.faces.clear();
+	mdl.m_vertices.clear();
+	mdl.m_faces.clear();
 
 	for ( int y = 0; y < CHUNKSIZE_Y; y++ )
 	{
@@ -143,9 +143,9 @@ void BuildChunkModel( CModel &mdl, CBlock blocks[], CVector pos, void *chunk )
 				CBlock block = blocks[indexArray( x, y, z )];
 
 				// block here! Construct!
-				if ( block.blockType != AIR )
+				if ( block.m_iBlockType != AIR )
 				{
-					BlockFeatures blockFeatures = GetBlockFeatures( block.blockType );
+					BlockFeatures blockFeatures = GetBlockFeatures( block.m_iBlockType );
 					switch ( blockFeatures.model )
 					{
 						case BLOCKMODEL_CUBE:
@@ -155,10 +155,10 @@ void BuildChunkModel( CModel &mdl, CBlock blocks[], CVector pos, void *chunk )
 								if ( ValidChunkPosition( neighbour ) )
 								{
 									blocktype_t blockType =
-										reinterpret_cast<CChunk *>( chunk )->GetBlockAtLocal( neighbour )->blockType;
+										reinterpret_cast<CChunk *>( chunk )->GetBlockAtLocal( neighbour )->m_iBlockType;
 									BlockFeatures bF = GetBlockFeatures( blockType );
 									if ( bF.rule == OBSCURERULE_ALWAYS ||
-										 ( bF.rule == OBSCURERULE_SIMILAR && blockType == block.blockType ) )
+										 ( bF.rule == OBSCURERULE_SIMILAR && blockType == block.m_iBlockType ) )
 										continue;
 								}
 								else
@@ -173,38 +173,38 @@ void BuildChunkModel( CModel &mdl, CBlock blocks[], CVector pos, void *chunk )
 										CBlock *b = chunkNeighbour->GetBlockAtLocal( neighbour );
 										if ( b == nullptr )
 											continue;
-										BlockFeatures bF = GetBlockFeatures( b->blockType );
+										BlockFeatures bF = GetBlockFeatures( b->m_iBlockType );
 										if ( bF.rule == OBSCURERULE_ALWAYS ||
-											 ( bF.rule == OBSCURERULE_SIMILAR && b->blockType == block.blockType ) )
+											 ( bF.rule == OBSCURERULE_SIMILAR && b->m_iBlockType == block.m_iBlockType ) )
 											continue;
 									}
 								}
 
 								std::vector<CModel::Vertex> g = sampleCubeFace( Direction( i ), block, x, y, z );
-								std::copy( g.begin(), g.end(), std::back_inserter( mdl.vertices ) );
+								std::copy( g.begin(), g.end(), std::back_inserter( mdl.m_vertices ) );
 
-								int nVertices = mdl.vertices.size();
+								int nVertices = mdl.m_vertices.size();
 
-								mdl.faces.push_back( { nVertices - 4, nVertices - 3, nVertices - 2 } );
-								mdl.faces.push_back( { nVertices - 4, nVertices - 2, nVertices - 1 } );
+								mdl.m_faces.push_back( { nVertices - 4, nVertices - 3, nVertices - 2 } );
+								mdl.m_faces.push_back( { nVertices - 4, nVertices - 2, nVertices - 1 } );
 							}
 							break;
 
 						case BLOCKMODEL_PLANT:
 							std::vector<CModel::Vertex> g = samplePlant( block, x, y, z );
-							std::copy( g.begin(), g.end(), std::back_inserter( mdl.vertices ) );
+							std::copy( g.begin(), g.end(), std::back_inserter( mdl.m_vertices ) );
 
-							int nVertices = mdl.vertices.size();
+							int nVertices = mdl.m_vertices.size();
 
-							mdl.faces.push_back( { nVertices - 4, nVertices - 3, nVertices - 2 } );
-							mdl.faces.push_back( { nVertices - 4, nVertices - 2, nVertices - 1 } );
-							mdl.faces.push_back( { nVertices - 2, nVertices - 3, nVertices - 4 } );
-							mdl.faces.push_back( { nVertices - 1, nVertices - 2, nVertices - 4 } );
+							mdl.m_faces.push_back( { nVertices - 4, nVertices - 3, nVertices - 2 } );
+							mdl.m_faces.push_back( { nVertices - 4, nVertices - 2, nVertices - 1 } );
+							mdl.m_faces.push_back( { nVertices - 2, nVertices - 3, nVertices - 4 } );
+							mdl.m_faces.push_back( { nVertices - 1, nVertices - 2, nVertices - 4 } );
 
-							mdl.faces.push_back( { nVertices - 8, nVertices - 7, nVertices - 6 } );
-							mdl.faces.push_back( { nVertices - 8, nVertices - 6, nVertices - 5 } );
-							mdl.faces.push_back( { nVertices - 6, nVertices - 7, nVertices - 8 } );
-							mdl.faces.push_back( { nVertices - 5, nVertices - 6, nVertices - 8 } );
+							mdl.m_faces.push_back( { nVertices - 8, nVertices - 7, nVertices - 6 } );
+							mdl.m_faces.push_back( { nVertices - 8, nVertices - 6, nVertices - 5 } );
+							mdl.m_faces.push_back( { nVertices - 6, nVertices - 7, nVertices - 8 } );
+							mdl.m_faces.push_back( { nVertices - 5, nVertices - 6, nVertices - 8 } );
 							break;
 					}
 				}

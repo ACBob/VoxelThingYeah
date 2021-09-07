@@ -20,16 +20,16 @@
 // I am not supporting weird configurations
 #define TEXTTILES 16
 
-CGui::CGui( int screenW, int screenH ) : mouseState( IN_NO_MOUSE ), activeItem( 0 ), hotItem( 0 )
+CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActiveItem( 0 ), m_iHotItem( 0 )
 {
 	// OpenGl
 	{
-		glGenVertexArrays( 1, &vao );
-		glGenBuffers( 1, &vbo );
+		glGenVertexArrays( 1, &m_iVao );
+		glGenBuffers( 1, &m_iVbo );
 
-		glBindVertexArray( vao );
+		glBindVertexArray( m_iVao );
 
-		glBindBuffer( GL_ARRAY_BUFFER, vbo );
+		glBindBuffer( GL_ARRAY_BUFFER, m_iVbo );
 		glBufferData( GL_ARRAY_BUFFER, sizeof( float ) * 6 * 8, NULL, GL_DYNAMIC_DRAW );
 
 		// + sizeof(Texture*) so we skip the little internal thing at the end
@@ -47,40 +47,40 @@ CGui::CGui( int screenW, int screenH ) : mouseState( IN_NO_MOUSE ), activeItem( 
 		glBindVertexArray( 0 );
 	}
 
-	textTex	   = materialSystem::LoadTexture( "font.png" );
-	textShader = shaderSystem::LoadShader( "shaders/text.vert", "shaders/text.frag" );
+	m_pTextTex	   = materialSystem::LoadTexture( "font.png" );
+	m_pTextShader = shaderSystem::LoadShader( "shaders/text.vert", "shaders/text.frag" );
 
-	textBuffers = {};
+	m_textBuffers = {};
 
 	Resize( screenW, screenH );
 }
 
 void CGui::Resize( int x, int y )
 {
-	screenCentre	 = CVector( ( x * 0.5 ) / GUIUNIT, ( y * 0.5 ) / GUIUNIT );
-	screenDimensions = CVector( x, y );
+	m_vScreenCentre	 = CVector( ( x * 0.5 ) / GUIUNIT, ( y * 0.5 ) / GUIUNIT );
+	m_vScreenDimensions = CVector( x, y );
 }
 
 CGui::~CGui()
 {
 	// OpenGl
 	{
-		glDeleteBuffers( 1, &vao );
-		glDeleteVertexArrays( 1, &vbo );
+		glDeleteBuffers( 1, &m_iVao );
+		glDeleteVertexArrays( 1, &m_iVbo );
 	}
 }
 
 void CGui::Update()
 {
-	if ( mouseState == IN_NO_MOUSE )
-		activeItem = 0;
+	if ( m_iMouseState == IN_NO_MOUSE )
+		m_iActiveItem = 0;
 
-	mousePos   = inputMan->mousePos;
-	mouseState = inputMan->mouseState;
-	// else if (activeItem == 0)
-	// 	activeItem = -1;
+	m_vMousePos   = m_pInputMan->m_vMousePos;
+	m_iMouseState = m_pInputMan->m_iMouseState;
+	// else if (m_iActiveItem == 0)
+	// 	m_iActiveItem = -1;
 
-	hotItem = 0;
+	m_iHotItem = 0;
 
 	// Render
 	{
@@ -88,33 +88,33 @@ void CGui::Update()
 		glGetIntegerv( GL_DEPTH_FUNC, &depthFunc );
 		glDepthFunc( GL_ALWAYS );
 
-		textShader->Use();
+		m_pTextShader->Use();
 
-		glBindVertexArray( vao );
+		glBindVertexArray( m_iVao );
 		// Text
 		{
-			glBindTexture( GL_TEXTURE_2D, textTex->id );
+			glBindTexture( GL_TEXTURE_2D, m_pTextTex->m_iId );
 
-			glBindBuffer( GL_ARRAY_BUFFER, vbo );
-			glBufferData( GL_ARRAY_BUFFER, textVertiecs.size() * sizeof( CGui::Vertex ), textVertiecs.data(),
+			glBindBuffer( GL_ARRAY_BUFFER, m_iVbo );
+			glBufferData( GL_ARRAY_BUFFER, m_textVertiecs.size() * sizeof( CGui::Vertex ), m_textVertiecs.data(),
 						  GL_DYNAMIC_DRAW );
 			glBindBuffer( GL_ARRAY_BUFFER, 0 );
-			glDrawArrays( GL_TRIANGLES, 0, textVertiecs.size() );
+			glDrawArrays( GL_TRIANGLES, 0, m_textVertiecs.size() );
 
 			glBindTexture( GL_TEXTURE_2D, 0 );
 		}
 		glBindVertexArray( 0 );
 		// Images
-		glBindVertexArray( vao );
+		glBindVertexArray( m_iVao );
 		{
-			for ( CGui::_Image img : images )
+			for ( CGui::_Image img : m_images )
 			{
-				glBindTexture( GL_TEXTURE_2D, img._tex->id );
-				glBindBuffer( GL_ARRAY_BUFFER, vbo );
-				glBufferData( GL_ARRAY_BUFFER, img.vertices.size() * sizeof( CGui::Vertex ), img.vertices.data(),
+				glBindTexture( GL_TEXTURE_2D, img.m_pTex->m_iId );
+				glBindBuffer( GL_ARRAY_BUFFER, m_iVbo );
+				glBufferData( GL_ARRAY_BUFFER, img.m_vertices.size() * sizeof( CGui::Vertex ), img.m_vertices.data(),
 							  GL_DYNAMIC_DRAW );
 				glBindBuffer( GL_ARRAY_BUFFER, 0 );
-				glDrawArrays( GL_TRIANGLES, 0, img.vertices.size() );
+				glDrawArrays( GL_TRIANGLES, 0, img.m_vertices.size() );
 				glBindTexture( GL_TEXTURE_2D, 0 );
 			}
 		}
@@ -124,9 +124,9 @@ void CGui::Update()
 	}
 
 	// Clear our vertices
-	textVertiecs.clear();
+	m_textVertiecs.clear();
 	// Clear our images
-	images.clear();
+	m_images.clear();
 }
 
 std::vector<CGui::Vertex> CGui::GetQuad( CVector pos, CVector size, Colour color, CVector uStart, CVector uEnd )
@@ -161,9 +161,9 @@ std::vector<CGui::Vertex> CGui::GetCharQuad( const char *c, CVector pos, CVector
 
 bool CGui::RegionHit( CVector pos, CVector size )
 {
-	if ( mousePos.x < pos.x || mousePos.y < pos.y ||
+	if ( m_vMousePos.x < pos.x || m_vMousePos.y < pos.y ||
 
-		 mousePos.x > pos.x + size.x || mousePos.y > pos.y + size.y )
+		 m_vMousePos.x > pos.x + size.x || m_vMousePos.y > pos.y + size.y )
 		return false;
 	return true;
 }
@@ -173,9 +173,9 @@ CVector CGui::GetInScreen( CVector pos )
 	pos = pos * GUIUNIT;
 
 	if ( pos.x < 0 )
-		pos.x += screenDimensions.x;
+		pos.x += m_vScreenDimensions.x;
 	if ( pos.y < 0 )
-		pos.y += screenDimensions.y;
+		pos.y += m_vScreenDimensions.y;
 
 	return pos;
 }
@@ -192,17 +192,17 @@ int CGui::Button( int id, CVector pos, CVector size )
 	// Check & set State
 	if ( RegionHit( pos, size ) )
 	{
-		hotItem = id;
+		m_iHotItem = id;
 		color	= Colour( 0.75, 0.75, 0.75 );
-		if ( mouseState != 0 )
+		if ( m_iMouseState != 0 )
 			NULL; // Breakpoint
-		if ( activeItem == 0 && ( mouseState == IN_LEFT_MOUSE ) )
+		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
 		{
-			activeItem = id;
+			m_iActiveItem = id;
 		}
 	}
 
-	if ( mouseState == IN_NO_MOUSE && hotItem == id && activeItem == id )
+	if ( m_iMouseState == IN_NO_MOUSE && m_iHotItem == id && m_iActiveItem == id )
 	{
 		returnCode = 1;
 		color	   = Colour( 0.75, 0.75, 1 );
@@ -213,7 +213,7 @@ int CGui::Button( int id, CVector pos, CVector size )
 	{
 		// Get vertices
 		std::vector<CGui::Vertex> g = GetQuad( pos, size, color );
-		std::copy( g.begin(), g.end(), std::back_inserter( textVertiecs ) );
+		std::copy( g.begin(), g.end(), std::back_inserter( m_textVertiecs ) );
 	}
 
 	return returnCode;
@@ -232,7 +232,7 @@ void CGui::Label( const char *text, CVector pos, Colour color )
 		{
 			// Get vertices
 			std::vector<CGui::Vertex> g = GetCharQuad( &text[i], pos, CVector( TEXTWIDTH, TEXTHEIGHT ), color );
-			std::copy( g.begin(), g.end(), std::back_inserter( textVertiecs ) );
+			std::copy( g.begin(), g.end(), std::back_inserter( m_textVertiecs ) );
 
 			pos = pos + CVector( TEXTWIDTH, 0 );
 
@@ -248,9 +248,9 @@ void CGui::Image( CTexture *tex, CVector pos, CVector size, CVector origin )
 
 	{
 		CGui::_Image img;
-		img.vertices = GetQuad( pos - ( size * origin ), size, Colour( 1, 1, 1 ) );
-		img._tex	 = tex;
-		images.push_back( img );
+		img.m_vertices = GetQuad( pos - ( size * origin ), size, Colour( 1, 1, 1 ) );
+		img.m_pTex	 = tex;
+		m_images.push_back( img );
 	}
 }
 
@@ -261,20 +261,21 @@ void CGui::ImageAtlas( CTexture *tex, Atlas atlas, float atlasDivisions, CVector
 
 	{
 		CGui::_Image img;
-		img.vertices = GetQuad(
+		img.m_vertices = GetQuad(
 			pos - ( size * origin ), size, Colour( 1, 1, 1 ), { atlas.x / atlasDivisions, atlas.y / atlasDivisions },
 			{ ( atlas.x + atlas.sizex ) / atlasDivisions, ( atlas.y + atlas.sizey ) / atlasDivisions } );
-		img._tex = tex;
-		images.push_back( img );
+		img.m_pTex = tex;
+		m_images.push_back( img );
 	}
 }
 
 // Returns the string in the event that 'RETURN' is pressed.
 // Outputs nullptr if nothing.
 // id can be shared between multiple text inputs if they're for the same data.
+// TODO: redo this with SDL's own key detection stuff, because currently we don't account for stuff like layout (Hard-coded UK for now (lol))
 const char *CGui::TextInput( int id, CVector pos )
 {
-	std::string text = textBuffers[id];
+	std::string text = m_textBuffers[id];
 
 	Label( text.c_str(), pos );
 
@@ -283,9 +284,9 @@ const char *CGui::TextInput( int id, CVector pos )
 	// window and does it for us! AHJSDHJASHJKDASJKDJKASDHKAHKJDSJk
 	for ( int i = ' '; i <= 'Z'; i++ )
 	{
-		if ( inputMan->keyboardState[i] && !inputMan->oldKeyboardState[i] )
+		if ( m_pInputMan->m_bKeyboardState[i] && !m_pInputMan->m_bOldKeyboardState[i] )
 		{
-			if ( inputMan->keyboardState[KBD_SHIFT] )
+			if ( m_pInputMan->m_bKeyboardState[KBD_SHIFT] )
 			{
 				switch ( i )
 				{
@@ -319,16 +320,16 @@ const char *CGui::TextInput( int id, CVector pos )
 		}
 	}
 
-	if ( inputMan->keyboardState[KBD_BACKSPACE] && !inputMan->oldKeyboardState[KBD_BACKSPACE] )
+	if ( m_pInputMan->m_bKeyboardState[KBD_BACKSPACE] && !m_pInputMan->m_bOldKeyboardState[KBD_BACKSPACE] )
 	{
 		if ( text.length() )
 			text.pop_back();
 	}
 
-	textBuffers[id] = text;
+	m_textBuffers[id] = text;
 
-	if ( inputMan->keyboardState[KBD_RETURN] && !inputMan->oldKeyboardState[KBD_RETURN] )
-		return textBuffers[id].c_str();
+	if ( m_pInputMan->m_bKeyboardState[KBD_RETURN] && !m_pInputMan->m_bOldKeyboardState[KBD_RETURN] )
+		return m_textBuffers[id].c_str();
 	else
 		return nullptr;
 }
