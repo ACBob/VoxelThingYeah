@@ -61,28 +61,28 @@ void GetCubeModel( CModel &m, CVector size )
 		{ -size.x, -size.y, -size.z },
 	};
 	std::vector<CModel::Face> faces = { // +Z
-									   { 2, 1, 0 },
-									   { 3, 2, 0 },
+										{ 2, 1, 0 },
+										{ 3, 2, 0 },
 
-									   // -X
-									   { 3, 0, 5 },
-									   { 6, 3, 5 },
+										// -X
+										{ 3, 0, 5 },
+										{ 6, 3, 5 },
 
-									   // -Z
-									   { 6, 5, 4 },
-									   { 7, 6, 4 },
+										// -Z
+										{ 6, 5, 4 },
+										{ 7, 6, 4 },
 
-									   // +X
-									   { 7, 4, 1 },
-									   { 2, 7, 1 },
+										// +X
+										{ 7, 4, 1 },
+										{ 2, 7, 1 },
 
-									   // +Y
-									   { 1, 4, 5 },
-									   { 0, 1, 5 },
+										// +Y
+										{ 1, 4, 5 },
+										{ 0, 1, 5 },
 
-									   // -Y
-									   { 7, 2, 3 },
-									   { 6, 7, 3 } };
+										// -Y
+										{ 7, 2, 3 },
+										{ 6, 7, 3 } };
 	for ( int i = 0; i < 6; i += 2 )
 	{
 		CVector normal			  = DirectionVector[i];
@@ -98,6 +98,6 @@ void GetCubeModel( CModel &m, CVector size )
 	}
 
 	m.m_vertices = vertices;
-	m.m_faces	   = faces;
+	m.m_faces	 = faces;
 	m.Update();
 }

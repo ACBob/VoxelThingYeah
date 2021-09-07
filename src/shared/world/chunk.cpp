@@ -63,5 +63,6 @@ CBlock *CChunk::GetBlockAtLocal( CVector pos )
 bool ValidChunkPosition( CVector pos )
 {
 	// If the position is valid
-	return !( pos.x < 0 || pos.y < 0 || pos.z < 0 || pos.x >= CHUNKSIZE_X || pos.y >= CHUNKSIZE_Y || pos.z >= CHUNKSIZE_Z );
+	return !( pos.x < 0 || pos.y < 0 || pos.z < 0 || pos.x >= CHUNKSIZE_X || pos.y >= CHUNKSIZE_Y ||
+			  pos.z >= CHUNKSIZE_Z );
 }

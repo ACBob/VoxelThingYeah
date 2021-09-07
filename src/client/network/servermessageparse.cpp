@@ -118,17 +118,18 @@ namespace protocol
 
 					if ( client->m_pLocalWorld->GetEntityByName( username.c_str() ) != nullptr )
 					{
-						CEntityPlayer *plyr = (CEntityPlayer *)client->m_pLocalWorld->GetEntityByName( username.c_str() );
-						plyr->m_vPosition	   = CVector( x, y, z );
-						plyr->m_vRotation	   = CVector( pitch, yaw, 0 );
+						CEntityPlayer *plyr =
+							(CEntityPlayer *)client->m_pLocalWorld->GetEntityByName( username.c_str() );
+						plyr->m_vPosition = CVector( x, y, z );
+						plyr->m_vRotation = CVector( pitch, yaw, 0 );
 					}
 					else
 					{
 						// New player
 						CEntityPlayer *plyr = new CEntityPlayer();
-						plyr->m_vPosition	   = CVector( x, y, z );
-						plyr->m_vRotation	   = CVector( pitch, yaw, 0 );
-						plyr->m_name		   = username;
+						plyr->m_vPosition	= CVector( x, y, z );
+						plyr->m_vRotation	= CVector( pitch, yaw, 0 );
+						plyr->m_name		= username;
 
 						client->m_pLocalWorld->AddEntity( plyr );
 					}
@@ -156,9 +157,10 @@ namespace protocol
 				{
 					if ( client->m_pLocalWorld->GetEntityByName( username.c_str() ) != nullptr )
 					{
-						CEntityPlayer *plyr = (CEntityPlayer *)client->m_pLocalWorld->GetEntityByName( username.c_str() );
-						plyr->m_vPosition	   = CVector( x, y, z );
-						plyr->m_vRotation	   = CVector( pitch, yaw, 0 );
+						CEntityPlayer *plyr =
+							(CEntityPlayer *)client->m_pLocalWorld->GetEntityByName( username.c_str() );
+						plyr->m_vPosition = CVector( x, y, z );
+						plyr->m_vRotation = CVector( pitch, yaw, 0 );
 					}
 				}
 			}

@@ -133,7 +133,7 @@ void CNetworkServer::Update()
 		CVector cP = ( c->m_pEntity->m_vPosition / CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
 		if ( cP != c->m_vChunkPos )
 		{
-			c->m_iLoadedChunkIDX	 = 0;
+			c->m_iLoadedChunkIDX	= 0;
 			c->m_iNextChunkLoadTick = m_iCurrentTick;
 		}
 		c->m_vChunkPos = cP;

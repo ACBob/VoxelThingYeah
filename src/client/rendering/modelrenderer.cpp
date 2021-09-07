@@ -39,7 +39,7 @@ void CModelRenderer::Populate( void *_mdl )
 	CModel *mdl = reinterpret_cast<CModel *>( _mdl );
 
 	m_nVertices = mdl->m_vertices.size();
-	m_nFaces	  = mdl->m_faces.size();
+	m_nFaces	= mdl->m_faces.size();
 
 	glBindBuffer( GL_ARRAY_BUFFER, m_iVbo );
 	glBufferData( GL_ARRAY_BUFFER, m_nVertices * sizeof( CModel::Vertex ), mdl->m_vertices.data(), GL_DYNAMIC_DRAW );

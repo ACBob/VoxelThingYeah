@@ -21,14 +21,14 @@ void CInputManager::Update()
 	for ( int i = 0; i < INKEY_LAST; i++ )
 	{
 		m_bOldInputState[i] = m_bInputState[i];
-		m_bInputState[i]	 = false;
+		m_bInputState[i]	= false;
 	}
 
 	// TODO: Custom Controls (ConVars?)
 
 	m_bInputState[INKEY_FRONT] = m_bOldKeyboardState['W'];
-	m_bInputState[INKEY_LEFT]	= m_bOldKeyboardState['A'];
-	m_bInputState[INKEY_BACK]	= m_bOldKeyboardState['S'];
+	m_bInputState[INKEY_LEFT]  = m_bOldKeyboardState['A'];
+	m_bInputState[INKEY_BACK]  = m_bOldKeyboardState['S'];
 	m_bInputState[INKEY_RIGHT] = m_bOldKeyboardState['D'];
 
 	m_bInputState[INKEY_CHAT] = m_bOldKeyboardState['T'];

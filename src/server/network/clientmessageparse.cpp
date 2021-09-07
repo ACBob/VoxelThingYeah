@@ -50,9 +50,9 @@ namespace protocol
 				// Create an entity for them
 				CEntityPlayer *p = new CEntityPlayer();
 				pServer->m_world.AddEntity( p );
-				c->m_pEntity	= p;
+				c->m_pEntity  = p;
 				c->m_username = username;
-				p->m_name		= c->m_username;
+				p->m_name	  = c->m_username;
 
 				// Then send it to spawn
 #ifdef __linux__
@@ -72,7 +72,8 @@ namespace protocol
 					if ( c->m_pPeer == pPeer )
 						continue;
 					SendServerPlayerSpawn( c->m_pPeer, p->m_name, p->m_vPosition, p->m_vRotation, true );
-					SendServerPlayerSpawn( pPeer, c->m_pEntity->m_name, c->m_pEntity->m_vPosition, c->m_pEntity->m_vRotation, false );
+					SendServerPlayerSpawn( pPeer, c->m_pEntity->m_name, c->m_pEntity->m_vPosition,
+										   c->m_pEntity->m_vRotation, false );
 				}
 
 				// Now send them 0,0
@@ -114,8 +115,8 @@ namespace protocol
 				bufAccess >> yaw;
 
 				CEntityPlayer *p = pServer->ClientFromPeer( pPeer )->m_pEntity;
-				p->m_vPosition		= CVector( x, y, z );
-				p->m_vRotation		= CVector( pitch, yaw, 0 );
+				p->m_vPosition	 = CVector( x, y, z );
+				p->m_vRotation	 = CVector( pitch, yaw, 0 );
 
 				for ( CNetworkPlayer *c : pServer->m_players )
 				{

@@ -6,8 +6,8 @@
 #include <memory>
 
 CGameWindow::CGameWindow( const char *title, CVector size, bool resizeable )
-	: m_pInternalWindow( nullptr, &SDL_DestroyWindow ), m_iTick( 0 ), m_iFrameTicks( 0 ), m_dDelta( 0 ), m_iFramesInTheLastSecond( 0 ),
-	  m_fSecondsPerFrame( 0.0f ), m_pInputMan( nullptr ), m_bShouldClose( false )
+	: m_pInternalWindow( nullptr, &SDL_DestroyWindow ), m_iTick( 0 ), m_iFrameTicks( 0 ), m_dDelta( 0 ),
+	  m_iFramesInTheLastSecond( 0 ), m_fSecondsPerFrame( 0.0f ), m_pInputMan( nullptr ), m_bShouldClose( false )
 {
 	m_pInternalWindow.reset(
 		SDL_CreateWindow( "VoxelThingYeah", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, size.x, size.y,
@@ -71,8 +71,8 @@ float CGameWindow::GetSPF()
 	m_iFramesInTheLastSecond++;
 	if ( m_iFrameTicks < SDL_GetTicks() - 1000 ) // Has it been a second
 	{
-		m_iFrameTicks			  = m_iTick;
-		m_fSecondsPerFrame		  = 1000.0f / float( m_iFramesInTheLastSecond );
+		m_iFrameTicks			 = m_iTick;
+		m_fSecondsPerFrame		 = 1000.0f / float( m_iFramesInTheLastSecond );
 		m_iFramesInTheLastSecond = 0;
 	}
 	return m_fSecondsPerFrame;
@@ -118,7 +118,7 @@ void CGameWindow::PollEvents()
 	m_pInputMan->m_vMouseMovement = CVector( 0, 0 );
 
 	m_pInputMan->m_iOldMouseState = m_pInputMan->m_iMouseState;
-	m_pInputMan->m_iMouseState	= 0;
+	m_pInputMan->m_iMouseState	  = 0;
 
 	SDL_Event currentEvent;
 	while ( SDL_PollEvent( &currentEvent ) != 0 )
@@ -152,10 +152,10 @@ void CGameWindow::PollEvents()
 	const uint8_t *state = SDL_GetKeyboardState( NULL );
 	for ( int i = 0; i < sizeof( scancodeToStateIndex ) / sizeof( int ); i += 2 )
 	{
-		int scanCode						 = scancodeToStateIndex[i];
-		int convCode						 = scancodeToStateIndex[i + 1];
+		int scanCode							   = scancodeToStateIndex[i];
+		int convCode							   = scancodeToStateIndex[i + 1];
 		m_pInputMan->m_bOldKeyboardState[convCode] = m_pInputMan->m_bKeyboardState[convCode];
-		m_pInputMan->m_bKeyboardState[convCode]	 = ( state[scanCode] == 1 );
+		m_pInputMan->m_bKeyboardState[convCode]	   = ( state[scanCode] == 1 );
 	}
 
 	// Set the mouseState for buttons

@@ -42,7 +42,7 @@ bool CNetworkClient::Connect( const char *address, int port )
 		con_info( "Hello! We've connected to a server!" );
 		con_info( "Sending the neccesary information" );
 		protocol::SendClientPlayerID( e.peer );
-		m_pPeer	  = e.peer;
+		m_pPeer		 = e.peer;
 		m_bConnected = true;
 		return true;
 	}
@@ -75,7 +75,7 @@ void CNetworkClient::Disconnect()
 		}
 	}
 
-	m_pPeer	  = nullptr;
+	m_pPeer		 = nullptr;
 	m_bConnected = false;
 }
 

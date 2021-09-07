@@ -18,7 +18,7 @@ CPointedThing CVoxRaycast::Cast( CWorld *chunkMan )
 	while ( i <= m_fLength )
 	{
 		vOtherRay = vRay;
-		vRay	 = m_vPosition + m_vDirection * i;
+		vRay	  = m_vPosition + m_vDirection * i;
 		i += step;
 		pBlock = chunkMan->BlockAtWorldPos( vRay );
 
@@ -28,7 +28,7 @@ CPointedThing CVoxRaycast::Cast( CWorld *chunkMan )
 
 	CPointedThing pointedThing;
 	pointedThing.m_vPosition = CVector( ceil( vRay.x ), ceil( vRay.y ), ceil( vRay.z ) );
-	pointedThing.m_pBlock	   = pBlock;
-	pointedThing.m_vNormal   = vOtherRay.Floor() - vRay.Floor();
+	pointedThing.m_pBlock	 = pBlock;
+	pointedThing.m_vNormal	 = vOtherRay.Floor() - vRay.Floor();
 	return pointedThing;
 }

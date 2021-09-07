@@ -175,7 +175,8 @@ void BuildChunkModel( CModel &mdl, CBlock blocks[], CVector pos, void *chunk )
 											continue;
 										BlockFeatures bF = GetBlockFeatures( b->m_iBlockType );
 										if ( bF.rule == OBSCURERULE_ALWAYS ||
-											 ( bF.rule == OBSCURERULE_SIMILAR && b->m_iBlockType == block.m_iBlockType ) )
+											 ( bF.rule == OBSCURERULE_SIMILAR &&
+											   b->m_iBlockType == block.m_iBlockType ) )
 											continue;
 									}
 								}

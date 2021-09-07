@@ -13,8 +13,8 @@ class CGameWindow : public CBobWindow
 {
   public:
 	CGameWindow( const char *title = "GameWindow", CVector size = CVector( 800, 600 ),
-				bool resizeable = false ); // SDL_CreateWindow
-	~CGameWindow();						   // SDL_DestroyWindow
+				 bool resizeable = false ); // SDL_CreateWindow
+	~CGameWindow();							// SDL_DestroyWindow
 
 	// SDL_HideWindow / SDL_ShowWindow
 	bool IsVisible();		   // getter(?)

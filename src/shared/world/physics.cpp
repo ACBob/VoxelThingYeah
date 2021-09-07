@@ -2,9 +2,9 @@
 
 CBoundingBox::CBoundingBox( CVector m_vPosition, CVector size, CVector m_vOrigin )
 {
-	this->m_vPosition	 = m_vPosition;
-	this->m_vBounds = size;
-	this->m_vOrigin = m_vOrigin;
+	this->m_vPosition = m_vPosition;
+	this->m_vBounds	  = size;
+	this->m_vOrigin	  = m_vOrigin;
 }
 
 bool CBoundingBox::TestCollide( CBoundingBox other )

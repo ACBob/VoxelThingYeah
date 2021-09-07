@@ -51,7 +51,7 @@ CChunk *CWorld::GetChunkGenerateAtWorldPos( CVector pos )
 	if ( c != nullptr )
 		return c;
 
-	c			= new CChunk();
+	c			   = new CChunk();
 	c->m_vPosition = ( pos / CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
 	c->m_pChunkMan = this;
 #ifdef CLIENTEXE
@@ -92,7 +92,7 @@ CChunk *CWorld::ChunkAtWorldPos( CVector pos )
 
 CBlock *CWorld::BlockAtWorldPos( CVector pos )
 {
-	pos			 = pos.Floor();
+	pos			  = pos.Floor();
 	CChunk *chunk = ChunkAtWorldPos( pos );
 	if ( chunk == nullptr )
 		return nullptr;
@@ -168,7 +168,8 @@ bool CWorld::TestAABBCollision( CBoundingBox col )
 		if ( !bF.walkable )
 			continue;
 
-		if ( col.TestCollide( CBoundingBox( chunk->GetPosInWorld() + CVector( x, y, z ), CVector( 1, 1, 1 ), CVector( 0 ) ) ) )
+		if ( col.TestCollide(
+				 CBoundingBox( chunk->GetPosInWorld() + CVector( x, y, z ), CVector( 1, 1, 1 ), CVector( 0 ) ) ) )
 			return true;
 	}
 
@@ -202,7 +203,7 @@ void CWorld::WorldTick( int tickN )
 	for ( CChunk *chunk : m_chunks )
 	{
 		// Generally we should avoid rebuilding the universe every tick
-		bool rebuild					 = false;
+		bool rebuild					  = false;
 		std::vector<CVector> liquidBlocks = {};
 		for ( int i = 0; i < ( CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z ); i++ )
 		{
@@ -228,7 +229,7 @@ void CWorld::WorldTick( int tickN )
 					i = DOWN;
 
 				CVector dir = DirectionVector[i];
-				CBlock *b   = chunk->GetBlockAtLocal( CVector( pos.x, pos.y, pos.z ) + dir );
+				CBlock *b	= chunk->GetBlockAtLocal( CVector( pos.x, pos.y, pos.z ) + dir );
 				if ( b == nullptr )
 				{
 					// It's not in *this* chunk
@@ -236,7 +237,7 @@ void CWorld::WorldTick( int tickN )
 					if ( oChunk == nullptr )
 						continue; // Ok yeah it's outside reality
 					CVector p = CVector( pos.x + dir.x, pos.y + dir.y, pos.z + dir.z ) + ( dir * -16 );
-					b		 = oChunk->GetBlockAtLocal( p );
+					b		  = oChunk->GetBlockAtLocal( p );
 					if ( b == nullptr )
 						continue; // uh oh
 				}
@@ -244,7 +245,7 @@ void CWorld::WorldTick( int tickN )
 				if ( bF.floodable )
 				{
 					b->m_iBlockType = blockType;
-					rebuild		 = true;
+					rebuild			= true;
 				}
 			}
 		}
@@ -273,9 +274,9 @@ CWorld::PortableChunkRepresentation CWorld::GetWorldRepresentation( CVector pos 
 	// }
 
 	CChunk *c = GetChunkGenerateAtWorldPos( pos * CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) );
-	crep.x	 = c->m_vPosition.x;
-	crep.y	 = c->m_vPosition.y;
-	crep.z	 = c->m_vPosition.z;
+	crep.x	  = c->m_vPosition.x;
+	crep.y	  = c->m_vPosition.y;
+	crep.z	  = c->m_vPosition.z;
 
 	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
 	{

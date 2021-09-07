@@ -2,12 +2,12 @@
 
 ConVar::CConVar *fov = nullptr;
 
-ConVar::CConVar *scr_width  = nullptr;
+ConVar::CConVar *scr_width	= nullptr;
 ConVar::CConVar *scr_height = nullptr;
 
 ConVar::CConVar *username = nullptr;
 
-ConVar::CConVar *cl_ip	= nullptr;
+ConVar::CConVar *cl_ip	 = nullptr;
 ConVar::CConVar *cl_port = nullptr;
 
 ConVar::CConVar *cl_servername = nullptr;

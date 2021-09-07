@@ -47,7 +47,7 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 		glBindVertexArray( 0 );
 	}
 
-	m_pTextTex	   = materialSystem::LoadTexture( "font.png" );
+	m_pTextTex	  = materialSystem::LoadTexture( "font.png" );
 	m_pTextShader = shaderSystem::LoadShader( "shaders/text.vert", "shaders/text.frag" );
 
 	m_textBuffers = {};
@@ -57,7 +57,7 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 
 void CGui::Resize( int x, int y )
 {
-	m_vScreenCentre	 = CVector( ( x * 0.5 ) / GUIUNIT, ( y * 0.5 ) / GUIUNIT );
+	m_vScreenCentre		= CVector( ( x * 0.5 ) / GUIUNIT, ( y * 0.5 ) / GUIUNIT );
 	m_vScreenDimensions = CVector( x, y );
 }
 
@@ -75,7 +75,7 @@ void CGui::Update()
 	if ( m_iMouseState == IN_NO_MOUSE )
 		m_iActiveItem = 0;
 
-	m_vMousePos   = m_pInputMan->m_vMousePos;
+	m_vMousePos	  = m_pInputMan->m_vMousePos;
 	m_iMouseState = m_pInputMan->m_iMouseState;
 	// else if (m_iActiveItem == 0)
 	// 	m_iActiveItem = -1;
@@ -193,7 +193,7 @@ int CGui::Button( int id, CVector pos, CVector size )
 	if ( RegionHit( pos, size ) )
 	{
 		m_iHotItem = id;
-		color	= Colour( 0.75, 0.75, 0.75 );
+		color	   = Colour( 0.75, 0.75, 0.75 );
 		if ( m_iMouseState != 0 )
 			NULL; // Breakpoint
 		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
@@ -249,7 +249,7 @@ void CGui::Image( CTexture *tex, CVector pos, CVector size, CVector origin )
 	{
 		CGui::_Image img;
 		img.m_vertices = GetQuad( pos - ( size * origin ), size, Colour( 1, 1, 1 ) );
-		img.m_pTex	 = tex;
+		img.m_pTex	   = tex;
 		m_images.push_back( img );
 	}
 }
@@ -272,7 +272,8 @@ void CGui::ImageAtlas( CTexture *tex, Atlas atlas, float atlasDivisions, CVector
 // Returns the string in the event that 'RETURN' is pressed.
 // Outputs nullptr if nothing.
 // id can be shared between multiple text inputs if they're for the same data.
-// TODO: redo this with SDL's own key detection stuff, because currently we don't account for stuff like layout (Hard-coded UK for now (lol))
+// TODO: redo this with SDL's own key detection stuff, because currently we don't account for stuff like layout
+// (Hard-coded UK for now (lol))
 const char *CGui::TextInput( int id, CVector pos )
 {
 	std::string text = m_textBuffers[id];

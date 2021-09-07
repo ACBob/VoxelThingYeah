@@ -6,23 +6,23 @@
 
 COverworldJeneration::COverworldJeneration()
 {
-	m_baseNoise			 = fnlCreateState();
-	m_baseNoise.seed		 = m_iSeed;
+	m_baseNoise			   = fnlCreateState();
+	m_baseNoise.seed	   = m_iSeed;
 	m_baseNoise.noise_type = FNL_NOISE_OPENSIMPLEX2;
-	m_baseNoise.frequency	 = 0.025;
+	m_baseNoise.frequency  = 0.025;
 
-	m_dirtNoise			 = fnlCreateState();
-	m_dirtNoise.seed		 = m_iSeed + 230;
+	m_dirtNoise			   = fnlCreateState();
+	m_dirtNoise.seed	   = m_iSeed + 230;
 	m_dirtNoise.noise_type = FNL_NOISE_PERLIN;
-	m_dirtNoise.frequency	 = 0.0125;
+	m_dirtNoise.frequency  = 0.0125;
 
-	m_oreNoise				   = fnlCreateState();
-	m_oreNoise.seed			   = m_iSeed - 2587;
-	m_oreNoise.noise_type		   = FNL_NOISE_OPENSIMPLEX2;
-	m_oreNoise.frequency		   = 0.075;
-	m_oreNoise.octaves		   = 4;
-	m_oreNoise.lacunarity		   = 0.6;
-	m_oreNoise.gain			   = 1.3;
+	m_oreNoise					 = fnlCreateState();
+	m_oreNoise.seed				 = m_iSeed - 2587;
+	m_oreNoise.noise_type		 = FNL_NOISE_OPENSIMPLEX2;
+	m_oreNoise.frequency		 = 0.075;
+	m_oreNoise.octaves			 = 4;
+	m_oreNoise.lacunarity		 = 0.6;
+	m_oreNoise.gain				 = 1.3;
 	m_oreNoise.weighted_strength = 0.8;
 }
 
@@ -39,7 +39,7 @@ void COverworldJeneration::GenBase( CChunk *c )
 		// Make the block aware of our existence
 		c->m_blocks[i].m_pChunk = c;
 
-		float noiseData			  = 1 + fnlGetNoise3D( &m_baseNoise, WorldPosition.x, WorldPosition.y, WorldPosition.z );
+		float noiseData = 1 + fnlGetNoise3D( &m_baseNoise, WorldPosition.x, WorldPosition.y, WorldPosition.z );
 		float percentToTopSurface = 1.0f - ( WorldPosition.y / 32.0f );
 		noiseData *= percentToTopSurface;
 

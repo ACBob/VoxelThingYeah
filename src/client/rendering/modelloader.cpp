@@ -122,10 +122,10 @@ void BOBJLoadModel( CModel *m, const char *fp )
 				int vertTexCoord	= atoi( lineToken ) - 1;
 
 				m->m_vertices.at( vertIndex ) = { vertPositions[vertIndex].x, vertPositions[vertIndex].y,
-												vertPositions[vertIndex].z, normals[vertNormalIndex].x,
-												normals[vertNormalIndex].y, normals[vertNormalIndex].z,
-												uvCoords[vertTexCoord].x,	uvCoords[vertTexCoord].y };
-				idxs[i]						= vertIndex;
+												  vertPositions[vertIndex].z, normals[vertNormalIndex].x,
+												  normals[vertNormalIndex].y, normals[vertNormalIndex].z,
+												  uvCoords[vertTexCoord].x,	  uvCoords[vertTexCoord].y };
+				idxs[i]						  = vertIndex;
 
 				// printf("idx: %i\n", vertIndex);
 

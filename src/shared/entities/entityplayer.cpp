@@ -10,8 +10,8 @@ CEntityPlayer::CEntityPlayer()
 {
 	m_vPosition = CVector( 0, 0, 0 );
 #ifdef CLIENTEXE
-	m_hand.m_fLength = 4;
-	m_hand.m_vDirection	= GetForward();
+	m_hand.m_fLength	= 4;
+	m_hand.m_vDirection = GetForward();
 	m_hand.m_vPosition	= m_vPosition;
 #endif
 }
@@ -41,26 +41,30 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 		m_vRotation.y = yaw;
 	}
 
-	m_camera.m_vForward = GetForward();
-	m_camera.m_vPosition	   = m_vPosition + CVector( 0, 0, 0 );
+	m_camera.m_vForward	 = GetForward();
+	m_camera.m_vPosition = m_vPosition + CVector( 0, 0, 0 );
 
-	m_hand.m_vPosition = m_camera.m_vPosition;
+	m_hand.m_vPosition	= m_camera.m_vPosition;
 	m_hand.m_vDirection = m_camera.m_vForward;
-	m_pointed	 = m_hand.Cast( clientSideWorld );
+	m_pointed			= m_hand.Cast( clientSideWorld );
 
-	if ( m_pInputMan->m_iMouseState & IN_LEFT_MOUSE && m_pInputMan->m_iOldMouseState == 0 && m_pointed.m_pBlock != nullptr )
+	if ( m_pInputMan->m_iMouseState & IN_LEFT_MOUSE && m_pInputMan->m_iOldMouseState == 0 &&
+		 m_pointed.m_pBlock != nullptr )
 	{
 		BlockFeatures bF = GetBlockFeatures( m_pointed.m_pBlock->m_iBlockType );
 		if ( bF.breakable )
 		{
-			// soundMan->PlayBreakSound(m_pointed.m_pBlock->m_iBlockType, m_pointed.m_vPosition - Vector(0.5, 0.5, 0.5));
+			// soundMan->PlayBreakSound(m_pointed.m_pBlock->m_iBlockType, m_pointed.m_vPosition - Vector(0.5, 0.5,
+			// 0.5));
 			m_pointed.m_pBlock->m_iBlockType = blocktype_t::AIR;
 			m_pointed.m_pBlock->Update();
 
-			protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5, blocktype_t::AIR );
+			protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5,
+										  blocktype_t::AIR );
 		}
 	}
-	if ( m_pInputMan->m_iMouseState & IN_RIGHT_MOUSE && m_pInputMan->m_iOldMouseState == 0 && m_pointed.m_pBlock != nullptr )
+	if ( m_pInputMan->m_iMouseState & IN_RIGHT_MOUSE && m_pInputMan->m_iOldMouseState == 0 &&
+		 m_pointed.m_pBlock != nullptr )
 	{
 		CBlock *b		 = clientSideWorld->BlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal );
 		BlockFeatures bF = GetBlockFeatures( m_pointed.m_pBlock->m_iBlockType );
@@ -71,7 +75,8 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 			if ( !clientSideWorld->TestAABBCollision( m_collisionBox ) )
 			{
 				b->Update();
-				// soundMan->PlayPlaceSound(b->m_iBlockType, m_pointed.m_vPosition + m_pointed.m_vNormal - Vector(0.5, 0.5, 0.5));
+				// soundMan->PlayPlaceSound(b->m_iBlockType, m_pointed.m_vPosition + m_pointed.m_vNormal - Vector(0.5,
+				// 0.5, 0.5));
 			}
 			else
 				b->m_iBlockType = oldType;
@@ -112,9 +117,9 @@ void CEntityPlayer::Tick()
 		return;
 
 	CVector forward = GetForward();
-	CVector right   = forward.Rotate( 2, 90 );
-	right.y		   = 0;
-	right		   = right.Normal();
+	CVector right	= forward.Rotate( 2, 90 );
+	right.y			= 0;
+	right			= right.Normal();
 	if ( m_pInputMan->m_bInputState[INKEY_FRONT] )
 		m_vVelocity = m_vVelocity + ( forward * 2.67 );
 	else if ( m_pInputMan->m_bInputState[INKEY_BACK] )

@@ -12,11 +12,11 @@ class CVector
 
 	// Methods
 	CVector Rotate( int axis, float degrees ) const; // Returns this vector rotated around axis (1=x,3=z) by degrees
-	CVector Rotate( CVector oVec ) const;				// Returns this vector rotated by degrees x,y,z
-	float Magnitude() const;						// Returns the length (or magnitude) of this vector
-	CVector Normal() const;							// Returns the normal
-	CVector Floor() const;							// returns a floored vector
-	CVector Ceil() const;							// returns a ceiled vector
+	CVector Rotate( CVector oVec ) const;			 // Returns this vector rotated by degrees x,y,z
+	float Magnitude() const;						 // Returns the length (or magnitude) of this vector
+	CVector Normal() const;							 // Returns the normal
+	CVector Floor() const;							 // returns a floored vector
+	CVector Ceil() const;							 // returns a ceiled vector
 
 	// Operators
 	// Math, with other vectors

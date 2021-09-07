@@ -19,11 +19,11 @@ class CBobWindow
 
 	// Z Ignored
 	// SDL_SetWindowSize / SDL_GetWindowSize
-	virtual CVector GetSize()		 = 0;
+	virtual CVector GetSize()		  = 0;
 	virtual void SetSize( CVector s ) = 0;
 	// Z Ignored
 	// SDL_SetWindowPos / SDL_GetWindowPos
-	virtual CVector GetPos()			= 0;
+	virtual CVector GetPos()		 = 0;
 	virtual void SetPos( CVector p ) = 0;
 
 	// Returns the (milli)seconds per frame

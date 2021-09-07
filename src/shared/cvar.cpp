@@ -13,10 +13,10 @@ namespace ConVar
 {
 	CConVar::CConVar( const char *name, const char *defval, int flags )
 	{
-		m_cName	 = name;
-		m_cVal	 = defval;
+		m_cName	  = name;
+		m_cVal	  = defval;
 		m_cDefVal = defval;
-		m_iFlags	 = flags;
+		m_iFlags  = flags;
 	}
 
 	void CConVar::SetString( const char *val )
@@ -25,8 +25,8 @@ namespace ConVar
 		strcpy( cval, val );
 		cval[strlen( val ) + 1] = '\0';
 
-		m_bModified  = ( strcmp( cval, m_cDefVal ) != 0 );
-		m_cVal = cval;
+		m_bModified = ( strcmp( cval, m_cDefVal ) != 0 );
+		m_cVal		= cval;
 	}
 	void CConVar::SetInt( int val )
 	{

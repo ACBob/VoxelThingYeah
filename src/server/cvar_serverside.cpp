@@ -1,7 +1,7 @@
 #include "cvar_serverside.hpp"
 
 ConVar::CConVar *sv_timescale = nullptr;
-ConVar::CConVar *sv_tickms	 = nullptr;
+ConVar::CConVar *sv_tickms	  = nullptr;
 
 ConVar::CConVar *sv_name = nullptr;
 ConVar::CConVar *sv_desc = nullptr;

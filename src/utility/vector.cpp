@@ -59,17 +59,17 @@ CVector CVector::Normal() const
 CVector CVector::Floor() const
 {
 	CVector g = CVector( floor( x ), floor( y ), floor( z ) );
-	g.x		 = g.x == INFINITY ? 0 : g.x;
-	g.y		 = g.y == INFINITY ? 0 : g.y;
-	g.z		 = g.z == INFINITY ? 0 : g.z;
+	g.x		  = g.x == INFINITY ? 0 : g.x;
+	g.y		  = g.y == INFINITY ? 0 : g.y;
+	g.z		  = g.z == INFINITY ? 0 : g.z;
 	return g;
 }
 CVector CVector::Ceil() const
 {
 	CVector g = CVector( ceil( x ), ceil( y ), ceil( z ) );
-	g.x		 = g.x == INFINITY ? 0 : g.x;
-	g.y		 = g.y == INFINITY ? 0 : g.y;
-	g.z		 = g.z == INFINITY ? 0 : g.z;
+	g.x		  = g.x == INFINITY ? 0 : g.x;
+	g.y		  = g.y == INFINITY ? 0 : g.y;
+	g.z		  = g.z == INFINITY ? 0 : g.z;
 	return g;
 }
 

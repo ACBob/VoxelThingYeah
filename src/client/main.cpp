@@ -105,17 +105,17 @@ int main( int argc, char *args[] )
 	atexit( shaderSystem::UnInit );
 
 	CShader *diffuseShader = shaderSystem::LoadShader( "shaders/generic.vert", "shaders/generic.frag" );
-	CShader *skyShader	  = shaderSystem::LoadShader( "shaders/sky.vert", "shaders/sky.frag" );
-	CShader *unlitShader	  = shaderSystem::LoadShader( "shaders/generic.vert", "shaders/unlit.frag" );
+	CShader *skyShader	   = shaderSystem::LoadShader( "shaders/sky.vert", "shaders/sky.frag" );
+	CShader *unlitShader   = shaderSystem::LoadShader( "shaders/generic.vert", "shaders/unlit.frag" );
 
 	con_info( "Load default textures" );
 	materialSystem::Init();
 	atexit( materialSystem::UnInit );
 
-	CTexture *terrainPng	  = materialSystem::LoadTexture( "terrain.png" );
+	CTexture *terrainPng   = materialSystem::LoadTexture( "terrain.png" );
 	CTexture *crosshairTex = materialSystem::LoadTexture( "crosshair.png" );
 	CTexture *testTexture  = materialSystem::LoadTexture( "test.png" );
-	CTexture *sunTexture	  = materialSystem::LoadTexture( "sun.png" );
+	CTexture *sunTexture   = materialSystem::LoadTexture( "sun.png" );
 
 	modelSystem::Init();
 	atexit( modelSystem::UnInit );
@@ -196,7 +196,7 @@ int main( int argc, char *args[] )
 			scr_height->SetInt( s.y );
 			glViewport( 0, 0, s.x, s.y );
 			gui.Resize( s.x, s.y );
-			screen			   = glm::ortho( 0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat() );
+			screen				  = glm::ortho( 0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat() );
 			window.m_bSizeChanged = false;
 		}
 
@@ -205,7 +205,7 @@ int main( int argc, char *args[] )
 
 		if ( inputMan.m_bInputState[INKEY_CHAT] && !inputMan.m_bOldInputState[INKEY_CHAT] )
 		{
-			chatting	   = true;
+			chatting		  = true;
 			inputMan.m_bInGui = true;
 		}
 
@@ -213,7 +213,7 @@ int main( int argc, char *args[] )
 		{
 			if ( chatting )
 			{
-				chatting	   = false;
+				chatting		  = false;
 				inputMan.m_bInGui = false;
 			}
 			else // TODO: PAUSE MENU
@@ -226,8 +226,9 @@ int main( int argc, char *args[] )
 			glClear( GL_DEPTH_BUFFER_BIT );
 
 			CVector v	   = plyr.m_camera.m_vPosition + plyr.m_camera.m_vForward;
-			glm::mat4 view = glm::lookAt( glm::vec3( plyr.m_camera.m_vPosition.x, plyr.m_camera.m_vPosition.y, plyr.m_camera.m_vPosition.z ),
-										  glm::vec3( v.x, v.y, v.z ), glm::vec3( VEC_UP.x, VEC_UP.y, VEC_UP.z ) );
+			glm::mat4 view = glm::lookAt(
+				glm::vec3( plyr.m_camera.m_vPosition.x, plyr.m_camera.m_vPosition.y, plyr.m_camera.m_vPosition.z ),
+				glm::vec3( v.x, v.y, v.z ), glm::vec3( VEC_UP.x, VEC_UP.y, VEC_UP.z ) );
 			shaderSystem::SetUniforms( view, projection, screen, window.GetMS(), localWorld.m_iTimeOfDay, sunForward );
 
 			glDisable( GL_DEPTH_TEST ); // Skybox
@@ -259,7 +260,7 @@ int main( int argc, char *args[] )
 				if ( chat != nullptr )
 				{
 					protocol::SendClientChatMessage( client.m_pPeer, chat );
-					chatting	   = false;
+					chatting		  = false;
 					inputMan.m_bInGui = false;
 				}
 			}
