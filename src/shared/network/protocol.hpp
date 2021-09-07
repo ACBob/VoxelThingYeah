@@ -192,8 +192,7 @@ struct ServerPacket : public NetworkPacket
 
 namespace protocol
 {
-	void DealWithPacket(ClientPacket *p, void *side, ENetPeer *peer);
-	void DealWithPacket(ServerPacket *p, void *side);
+	void DealWithPacket(NetworkPacket &p, void *side, ENetPeer *peer);
 
 	// side is a badly named pointer to whoever called this
 	// Be them client or server
@@ -224,6 +223,4 @@ namespace protocol
 	void SendClientPlayerPos          (ENetPeer *peer, Vector pos, Vector rot);
 	void SendClientChatMessage        (ENetPeer *peer, std::string message);
 	void SendClientLeave              (ENetPeer *peer);
-
-	Packet GetPacketBack(ENetPacket *p);
 }
