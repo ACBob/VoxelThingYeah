@@ -30,7 +30,7 @@ namespace fileSystem
 
 	void UnInit() { PHYSFS_deinit(); }
 
-	const unsigned char *LoadFile( const char *virtualPath, int64_t &len, bool &success )
+	const uchar_t *LoadFile( const char *virtualPath, int64_t &len, bool &success )
 	{
 		PHYSFS_File *f = PHYSFS_openRead( virtualPath );
 
@@ -44,7 +44,7 @@ namespace fileSystem
 		}
 
 		int64_t fileLen	   = PHYSFS_fileLength( f );
-		unsigned char *buf = new unsigned char[fileLen + 1];
+		uchar_t *buf = new uchar_t[fileLen + 1];
 		success			   = true;
 
 		if ( PHYSFS_readBytes( f, buf, fileLen ) < fileLen )
@@ -59,7 +59,13 @@ namespace fileSystem
 		buf[fileLen] = '\0';
 		len			 = fileLen;
 
-		return buf;
+		uchar_t *out = new uchar_t[strlen(buf) + 1];
+		strcpy(out, buf);
+		out[strlen(buf) + 1] = '\0';
+
+		PHYSFS_close(f);
+
+		return out;
 	}
 
 	bool Mount( const char *realPath, const char *virtualPath, bool prepend )
