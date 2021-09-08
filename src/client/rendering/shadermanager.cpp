@@ -17,43 +17,15 @@ CShader::CShader( const char *vs, const char *fs )
 	// TODO: Replace with FileSystem
 	// I tried for a bit in vain but it got in the way of fun bobj stuff...
 
-	PHYSFS_File *f = PHYSFS_openRead( vs );
-	int64_t fl	   = PHYSFS_fileLength( f );
-	char vsc[fl + 1];
+	char *cVertexShaderSource = (char *)fileSystem::LoadFile(vs);
 
-	int64_t rl = PHYSFS_readBytes( f, &vsc, fl );
+	unsigned int iVertexShader = glCreateShader( GL_VERTEX_SHADER );
+	glShaderSource( iVertexShader, 1, (const GLchar **)&cVertexShaderSource, NULL );
 
-	vsc[fl] = '\0';
+	char *cFragmentShaderSource = (char *)fileSystem::LoadFile(fs);
 
-	if ( rl != fl )
-	{
-		printf( "PHYSFS Error!\n%s\n", PHYSFS_getLastError() );
-	}
-
-	const char *c		= &vsc[0];
-	unsigned int vertSh = glCreateShader( GL_VERTEX_SHADER );
-	glShaderSource( vertSh, 1, (const GLchar **)&c, NULL );
-
-	PHYSFS_close( f );
-
-	f  = PHYSFS_openRead( fs );
-	fl = PHYSFS_fileLength( f );
-	char fsc[fl + 1];
-
-	rl = PHYSFS_readBytes( f, &fsc, fl );
-
-	fsc[fl] = '\0';
-
-	if ( rl != fl )
-	{
-		printf( "PHYSFS Error!\n%s\n", PHYSFS_getLastError() );
-	}
-
-	const char *c1		= &fsc[0];
-	unsigned int fragSh = glCreateShader( GL_FRAGMENT_SHADER );
-	glShaderSource( fragSh, 1, (const GLchar **)&c1, NULL );
-
-	PHYSFS_close( f );
+	unsigned int iFragmentShader = glCreateShader( GL_FRAGMENT_SHADER );
+	glShaderSource( iFragmentShader, 1, (const GLchar **)&cFragmenthaderSource, NULL );
 
 	char err[512];
 	int success;
@@ -62,25 +34,25 @@ CShader::CShader( const char *vs, const char *fs )
 
 	// printf("%s\n",c1);
 
-	glCompileShader( vertSh );
-	glGetShaderiv( vertSh, GL_COMPILE_STATUS, &success );
+	glCompileShader( iVertexShader );
+	glGetShaderiv( iVertexShader, GL_COMPILE_STATUS, &success );
 	if ( !success )
 	{
-		glGetShaderInfoLog( vertSh, 512, NULL, err );
+		glGetShaderInfoLog( iVertexShader, 512, NULL, err );
 		printf( "Shader compilation Error (%s):\n%s", vs, err );
 	}
 
-	glCompileShader( fragSh );
-	glGetShaderiv( fragSh, GL_COMPILE_STATUS, &success );
+	glCompileShader( iFragmentShader );
+	glGetShaderiv( iFragmentShader, GL_COMPILE_STATUS, &success );
 	if ( !success )
 	{
-		glGetShaderInfoLog( fragSh, 512, NULL, err );
+		glGetShaderInfoLog( iFragmentShader, 512, NULL, err );
 		printf( "Shader compilation Error (%s):\n%s", fs, err );
 	}
 
 	m_iId = glCreateProgram();
-	glAttachShader( m_iId, vertSh );
-	glAttachShader( m_iId, fragSh );
+	glAttachShader( m_iId, iVertexShader );
+	glAttachShader( m_iId, iFragmentShader );
 	glLinkProgram( m_iId );
 	glGetProgramiv( m_iId, GL_LINK_STATUS, &success );
 	if ( !success )
@@ -89,8 +61,8 @@ CShader::CShader( const char *vs, const char *fs )
 		printf( "Shader linking Error (%s,%s):\n%s", vs, fs, err );
 	}
 
-	glDeleteShader( vertSh );
-	glDeleteShader( fragSh );
+	glDeleteShader( iVertexShader );
+	glDeleteShader( iFragmentShader );
 }
 
 void CShader::SetMat4( const char *name, glm::mat4 value )

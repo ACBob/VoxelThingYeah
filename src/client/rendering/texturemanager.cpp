@@ -16,20 +16,9 @@ CTexture::CTexture( const char *path )
 {
 	m_cFilePath = path;
 
-	PHYSFS_File *f = PHYSFS_openRead( path );
-	int64_t fl	   = PHYSFS_fileLength( f );
-	unsigned char buf[fl];
+	uchar_t *cPNGData = fileSystem::LoadFile(path);
 
-	int64_t rl = PHYSFS_readBytes( f, &buf, fl );
-
-	if ( rl != fl )
-	{
-		printf( "PHYSFS Error!\n%s\n", PHYSFS_getLastError() );
-	}
-
-	uint err = lodepng::decode( m_imageData, m_iWidth, m_iHeight, buf, fl );
-
-	PHYSFS_close( f );
+	uint err = lodepng::decode( m_imageData, m_iWidth, m_iHeight, cPNGData, fl );
 
 	if ( err != 0 )
 	{
