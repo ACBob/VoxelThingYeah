@@ -59,13 +59,15 @@ namespace fileSystem
 		buf[fileLen] = '\0';
 		len			 = fileLen;
 
-		uchar_t *out = new uchar_t[strlen(buf) + 1];
-		strcpy(out, buf);
-		out[strlen(buf) + 1] = '\0';
+		//! FIXME
+		// int32_t l = fileLen;
+		// uchar_t *out = new uchar_t[l];
+		// strcpy((char*)out, (char*)buf);
+		// out[l] = '\0';
 
-		PHYSFS_close(f);
+		// PHYSFS_close(f);
 
-		return out;
+		return buf;
 	}
 
 	bool Mount( const char *realPath, const char *virtualPath, bool prepend )

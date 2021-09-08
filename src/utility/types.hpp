@@ -11,3 +11,5 @@
 using uint = unsigned int;
 
 #endif
+
+using uchar_t = unsigned char;

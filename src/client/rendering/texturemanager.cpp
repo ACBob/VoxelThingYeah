@@ -7,22 +7,37 @@
 
 #include <glad/glad.h>
 
-#include "physfs.h"
+#include "filesystem.hpp"
+
+#define LOG_LEVEL DEBUG
+#include "seethe.h"
 
 std::vector<CTexture *> materialSystem::loadedTextures;
 
 CTexture::CTexture( const char *path )
 // TODO: Error Texture
 {
+	bool bSuccess = false;
+	int64_t iFileLength = 0;
 	m_cFilePath = path;
 
-	uchar_t *cPNGData = fileSystem::LoadFile(path);
-
-	uint err = lodepng::decode( m_imageData, m_iWidth, m_iHeight, cPNGData, fl );
-
-	if ( err != 0 )
+	const uchar_t *cPNGData = fileSystem::LoadFile(path, iFileLength, bSuccess);
+	if (iFileLength < 10)
 	{
-		printf( "LodePNG Error: %s\n", lodepng_error_text( err ) );
+		con_error("Invalid PNG File!");
+	}
+
+	if (!bSuccess)
+	{
+		// TODO: Return with error texture
+	}
+
+	uint iError = lodepng::decode( m_imageData, m_iWidth, m_iHeight, cPNGData, iFileLength );
+	delete[] cPNGData;
+
+	if ( iError != 0 )
+	{
+		con_error( "LodePNG Error: %s", lodepng_error_text( iError ) );
 	}
 
 	glGenTextures( 1, &m_iId );
