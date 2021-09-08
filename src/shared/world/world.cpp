@@ -223,29 +223,41 @@ void CWorld::WorldTick( int tickN )
 		for ( CVector pos : liquidBlocks )
 		{
 			blocktype_t blockType = chunk->GetBlockAtLocal( pos )->m_iBlockType;
-			for ( int i = 0; i < 5; i++ )
-			{
-				if ( i == UP )
-					i = DOWN;
+			// Test Bottom first
+			CBlock *pBlock = BlockAtWorldPos( chunk->PosToWorld( CVector( pos.x, pos.y - 1, pos.z ) ) );
+			if ( pBlock == nullptr )
+				continue;
 
-				CVector dir = DirectionVector[i];
-				CBlock *b	= chunk->GetBlockAtLocal( CVector( pos.x, pos.y, pos.z ) + dir );
-				if ( b == nullptr )
+			BlockFeatures blockF = GetBlockFeatures( pBlock->m_iBlockType );
+			if ( blockF.floodable && pBlock->m_iBlockType != blockType )
+			{
+				pBlock->m_iBlockType = blockType;
+			}
+			else if ( pBlock->m_iBlockType == blockType )
+				continue;
+			else
+			{
+				for ( int i = 0; i < 4; i++ )
 				{
-					// It's not in *this* chunk
-					CChunk *oChunk = chunk->Neighbour( (Direction)i );
-					if ( oChunk == nullptr )
-						continue; // Ok yeah it's outside reality
-					CVector p = CVector( pos.x + dir.x, pos.y + dir.y, pos.z + dir.z ) + ( dir * -16 );
-					b		  = oChunk->GetBlockAtLocal( p );
+					CVector dir = DirectionVector[i];
+					CBlock *b	= chunk->GetBlockAtLocal( CVector( pos.x, pos.y, pos.z ) + dir );
 					if ( b == nullptr )
-						continue; // uh oh
-				}
-				BlockFeatures bF = GetBlockFeatures( b->m_iBlockType );
-				if ( bF.floodable )
-				{
-					b->m_iBlockType = blockType;
-					rebuild			= true;
+					{
+						// It's not in *this* chunk
+						CChunk *oChunk = chunk->Neighbour( (Direction)i );
+						if ( oChunk == nullptr )
+							continue; // Ok yeah it's outside reality
+						CVector p = CVector( pos.x + dir.x, pos.y + dir.y, pos.z + dir.z ) + ( dir * -16 );
+						b		  = oChunk->GetBlockAtLocal( p );
+						if ( b == nullptr )
+							continue; // uh oh
+					}
+					BlockFeatures bF = GetBlockFeatures( b->m_iBlockType );
+					if ( bF.floodable )
+					{
+						b->m_iBlockType = blockType;
+						rebuild			= true;
+					}
 				}
 			}
 		}
