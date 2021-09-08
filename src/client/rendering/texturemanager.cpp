@@ -17,17 +17,17 @@ std::vector<CTexture *> materialSystem::loadedTextures;
 CTexture::CTexture( const char *path )
 // TODO: Error Texture
 {
-	bool bSuccess = false;
+	bool bSuccess		= false;
 	int64_t iFileLength = 0;
-	m_cFilePath = path;
+	m_cFilePath			= path;
 
-	const uchar_t *cPNGData = fileSystem::LoadFile(path, iFileLength, bSuccess);
-	if (iFileLength < 10)
+	const uchar_t *cPNGData = fileSystem::LoadFile( path, iFileLength, bSuccess );
+	if ( iFileLength < 10 )
 	{
-		con_error("Invalid PNG File!");
+		con_error( "Invalid PNG File!" );
 	}
 
-	if (!bSuccess)
+	if ( !bSuccess )
 	{
 		// TODO: Return with error texture
 	}

@@ -17,29 +17,29 @@ std::vector<CShader *> shaderSystem::loadedShaders;
 
 CShader::CShader( const char *vs, const char *fs )
 {
-	bool bSuccess = false;
+	bool bSuccess	= false;
 	int64_t iLength = 0;
 
-	const char *cVertexShaderSource = (char *)fileSystem::LoadFile(vs, iLength, bSuccess);
-	if (!bSuccess)
+	const char *cVertexShaderSource = (char *)fileSystem::LoadFile( vs, iLength, bSuccess );
+	if ( !bSuccess )
 	{
-		con_error("Cannot load %s!", vs);
+		con_error( "Cannot load %s!", vs );
 	}
 
 	unsigned int iVertexShader = glCreateShader( GL_VERTEX_SHADER );
 	glShaderSource( iVertexShader, 1, (const GLchar **)&cVertexShaderSource, NULL );
-	if (!bSuccess)
+	if ( !bSuccess )
 	{
-		con_error("Cannot load %s!", fs);
+		con_error( "Cannot load %s!", fs );
 	}
 
-	const char *cFragmentShaderSource = (char *)fileSystem::LoadFile(fs, iLength, bSuccess);
+	const char *cFragmentShaderSource = (char *)fileSystem::LoadFile( fs, iLength, bSuccess );
 
 	unsigned int iFragmentShader = glCreateShader( GL_FRAGMENT_SHADER );
 	glShaderSource( iFragmentShader, 1, (const GLchar **)&cFragmentShaderSource, NULL );
 
 	char *cErrBuf = new char[512];
-	int iSuccess = false;
+	int iSuccess  = false;
 
 	glCompileShader( iVertexShader );
 	glGetShaderiv( iVertexShader, GL_COMPILE_STATUS, &iSuccess );

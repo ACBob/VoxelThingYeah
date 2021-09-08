@@ -43,9 +43,9 @@ namespace fileSystem
 			return nullptr;
 		}
 
-		int64_t fileLen	   = PHYSFS_fileLength( f );
-		uchar_t *buf = new uchar_t[fileLen + 1];
-		success			   = true;
+		int64_t fileLen = PHYSFS_fileLength( f );
+		uchar_t *buf	= new uchar_t[fileLen + 1];
+		success			= true;
 
 		if ( PHYSFS_readBytes( f, buf, fileLen ) < fileLen )
 		{
