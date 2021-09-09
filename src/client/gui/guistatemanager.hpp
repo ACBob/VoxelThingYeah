@@ -1,5 +1,8 @@
 #include "gui.hpp"
 
+#include "world/world.hpp"
+#include "entities/entityplayer.hpp"
+
 #pragma once
 
 class CGuiStateManager 
@@ -21,7 +24,7 @@ class CGuiStateManager
 		CGuiStateManager();
 		~CGuiStateManager();
 
-		void Update();
+		void Update(CEntityPlayer *pLocalPlayer, CWorld *pLocalWorld);
 
 		GuiState m_state = GUISTATE_PLAY;
 		GuiSubState m_subState = PLAY_NONE;

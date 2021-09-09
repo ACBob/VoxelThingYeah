@@ -252,7 +252,7 @@ int main( int argc, char *args[] )
 
 			localWorld.Render();
 
-			guiState.Update();
+			guiState.Update(&plyr, &localWorld);
 		}
 
 		window.SwapBuffers();
