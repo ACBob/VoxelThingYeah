@@ -1,10 +1,10 @@
 #include "physics.hpp"
 
-CBoundingBox::CBoundingBox( CVector m_vPosition, CVector size, CVector m_vOrigin )
+CBoundingBox::CBoundingBox( CVector vPosition, CVector size, CVector vOrigin )
 {
-	this->m_vPosition = m_vPosition;
+	this->m_vPosition = vPosition;
 	this->m_vBounds	  = size;
-	this->m_vOrigin	  = m_vOrigin;
+	this->m_vOrigin	  = vOrigin;
 }
 
 bool CBoundingBox::TestCollide( CBoundingBox other )
