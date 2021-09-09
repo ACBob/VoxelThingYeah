@@ -64,6 +64,12 @@ void CGuiStateManager::Update(CEntityPlayer *pLocalPlayer, CWorld *pLocalWorld)
 				break;
 
 				case PLAY_PAUSE:
+				{
+					for (int i = 0; i < 3; i++)
+						m_pGui->Label("GAME PAUSED", CVector(0,-i));
+					
+					m_pGui->Button(0, CVector(2, 1), CVector(2,3));
+				}
 				break;
 			}
 		}

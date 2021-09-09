@@ -180,6 +180,7 @@ int main( int argc, char *args[] )
 	int i		= 0;
 
 	bool chatting = false;
+	bool paused = false;
 
 	CVector sunForward( 0, 1, 0 );
 	float sunAngle = 0.0f;
@@ -210,7 +211,6 @@ int main( int argc, char *args[] )
 		if ( inputMan.m_bInputState[INKEY_CHAT] && !inputMan.m_bOldInputState[INKEY_CHAT] )
 		{
 			chatting		  = true;
-			inputMan.m_bInGui = true;
 		}
 
 		if ( inputMan.m_bInputState[INKEY_OUT] && !inputMan.m_bOldInputState[INKEY_OUT] )
@@ -218,11 +218,15 @@ int main( int argc, char *args[] )
 			if ( chatting )
 			{
 				chatting		  = false;
-				inputMan.m_bInGui = false;
 			}
-			else // TODO: PAUSE MENU
-				window.m_bShouldClose = true;
+			else
+			{
+				paused = !paused;
+				guiState.m_subState = paused ? CGuiStateManager::PLAY_PAUSE : CGuiStateManager::PLAY_NONE;
+			}
 		}
+
+		inputMan.m_bInGui = (chatting || paused);
 
 		// Rendering
 		{
