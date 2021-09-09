@@ -7,6 +7,8 @@
 #include <map>
 #include <vector>
 
+#pragma once
+
 // Reference taken / tutorial followed
 // https://sol.gfxile.net/imgui/
 

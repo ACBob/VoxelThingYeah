@@ -27,6 +27,7 @@
 #include "entities/entityplayer.hpp"
 
 #include "gui/gui.hpp"
+#include "gui/guistatemanager.hpp"
 
 #include "rendering/modelloader.hpp"
 
@@ -168,6 +169,9 @@ int main( int argc, char *args[] )
 
 	CGui gui( scr_width->GetInt(), scr_height->GetInt() );
 	gui.m_pInputMan = &inputMan;
+	CGuiStateManager guiState;
+	guiState.m_pInputManager = &inputMan;
+	guiState.m_pGui = &gui;
 
 	int64_t then =
 		std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() )
@@ -248,49 +252,7 @@ int main( int argc, char *args[] )
 
 			localWorld.Render();
 
-			char *buf = new char[100];
-			snprintf( buf, 100, "Connected to \"%s\"", cl_servername->GetString() );
-			gui.Label( buf, CVector( 0, 0 ) );
-
-			gui.Label( !chatting ? "Bobcraft" : "...", CVector( 0, 1 ) );
-
-			if ( chatting )
-			{
-				const char *chat = gui.TextInput( 0, CVector( 0, 2 ) );
-				if ( chat != nullptr )
-				{
-					protocol::SendClientChatMessage( client.m_pPeer, chat );
-					chatting		  = false;
-					inputMan.m_bInGui = false;
-				}
-			}
-
-			for ( int i = 0; i < 5; i++ )
-			{
-				int j = client.m_chatBuffer.size() - i;
-				if ( j < 0 || j >= client.m_chatBuffer.size() )
-					continue;
-
-				std::string msg = client.m_chatBuffer.at( j );
-
-				gui.Label( msg.c_str(), CVector( 0, 2 + i ) );
-			}
-
-			snprintf( buf, 100, "<%.2f,%.2f,%.2f>", plyr.m_vPosition.x, plyr.m_vPosition.y, plyr.m_vPosition.z );
-			gui.Label( buf, CVector( 0, -1 ) );
-			int hours	= localWorld.m_iTimeOfDay / 1000;
-			int minutes = ( localWorld.m_iTimeOfDay - ( hours * 1000 ) ) / 16.6666;
-			snprintf( buf, 100, "Time %02i:%02i", hours, minutes );
-			gui.Label( buf, CVector( 0, -2 ) );
-
-			BlockTexture bTex = GetDefaultBlockTextureSide( plyr.m_iSelectedBlockType, Direction::NORTH );
-			gui.ImageAtlas( terrainPng, { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey },
-							16, CVector( -1, -1 ), CVector( 4, 4 ), CVector( 1, 1 ) );
-
-			gui.Image( crosshairTex, gui.m_vScreenCentre, CVector( 2, 2 ), CVector( 0.5, 0.5 ) );
-			gui.Update();
-
-			delete[] buf;
+			guiState.Update();
 		}
 
 		window.SwapBuffers();
