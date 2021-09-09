@@ -9,6 +9,8 @@
 
 #include "types.hpp"
 
+#include <algorithm>
+
 #include <cstring>
 
 #define PRINTPHYSFSERR con_error( "PhysFS Error: %s", PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ) )
@@ -60,14 +62,14 @@ namespace fileSystem
 		len			 = fileLen;
 
 		//! FIXME
-		// int32_t l = fileLen;
-		// uchar_t *out = new uchar_t[l];
-		// strcpy((char*)out, (char*)buf);
-		// out[l] = '\0';
+		int32_t l = fileLen;
+		uchar_t *out = new uchar_t[l + 1];
+		std::copy(buf, buf + l, out);
+		out[l] = '\0';
 
-		// PHYSFS_close(f);
+		PHYSFS_close(f);
 
-		return buf;
+		return out;
 	}
 
 	bool Mount( const char *realPath, const char *virtualPath, bool prepend )
