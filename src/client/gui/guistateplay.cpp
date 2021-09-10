@@ -11,6 +11,8 @@
 CGuiStatePlay::CGuiStatePlay()
 {
 	m_iState = STATE_NORMAL;
+
+	m_pCrossHairTex = materialSystem::LoadTexture("crosshair.png");
 }
 
 unsigned int CGuiStatePlay::Frame(CGui *pGui, CWorld *pLocalWorld)
@@ -57,7 +59,7 @@ unsigned int CGuiStatePlay::Frame(CGui *pGui, CWorld *pLocalWorld)
 	// pGui->ImageAtlas( terrainPng, { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey },
 	// 				16, CVector( -1, -1 ), CVector( 4, 4 ), CVector( 1, 1 ) );
 
-	// pGui->Image( crosshairTex, gui.m_vScreenCentre, CVector( 2, 2 ), CVector( 0.5, 0.5 ) ); // TODO: lmao
+	pGui->Image( m_pCrossHairTex, pGui->m_vScreenCentre, CVector( 2, 2 ), CVector( 0.5, 0.5 ) );
 	// pGui->Update();
 
 	delete[] buf;

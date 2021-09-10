@@ -1,4 +1,5 @@
 #include "guistate.hpp"
+#include "rendering/texturemanager.hpp"
 
 #pragma once
 
@@ -15,4 +16,7 @@ class CGuiStatePlay : public CGuiState
 			STATE_CHATTING = 0x1,
 			STATE_PLAYING = 0x2
 		};
+
+	private:
+		CTexture *m_pCrossHairTex = nullptr;
 };
