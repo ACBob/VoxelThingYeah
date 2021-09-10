@@ -5,30 +5,27 @@
 
 #pragma once
 
+#include "guistate.hpp"
+#include "guistateplay.hpp"
+
 class CGuiStateManager 
 {
-	public:
-
-		enum GuiState
-		{
-			GUISTATE_PLAY = 0x00, // State when we're playing, i.e hotbar and stuff
-		};
-		enum GuiSubState
-		{
-			// GUISTATE_PLAY
-				PLAY_NONE = 0x00, // When we're running around playing
-				PLAY_CHAT = 0x01, // When we're chatting, still displays the same elements as NONE, just with chat
-				PLAY_PAUSE = 0x02, // When we're paused
-		};
-		
+	public:		
 		CGuiStateManager();
 		~CGuiStateManager();
 
-		void Update(CEntityPlayer *pLocalPlayer, CWorld *pLocalWorld);
-
-		GuiState m_state = GUISTATE_PLAY;
-		GuiSubState m_subState = PLAY_NONE;
+		void Update(CWorld *pLocalWorld);
 
 		CInputManager *m_pInputManager = nullptr;
 		CGui *m_pGui = nullptr;
+
+		enum GuiState
+		{
+			GUISTATE_PLAY = 0x0
+		};
+
+		unsigned int m_iGuiState = 0;
+		CGuiState *m_pGuiState = nullptr;
+
+		CGuiStatePlay m_statePlay;
 };

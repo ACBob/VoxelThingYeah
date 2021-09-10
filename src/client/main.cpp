@@ -144,6 +144,7 @@ int main( int argc, char *args[] )
 	plyr.SetShader( diffuseShader );
 	client.m_pLocalPlayer = &plyr;
 	localWorld.AddEntity( &plyr );
+	localWorld.m_pLocalPlayer = &plyr;
 	plyr.m_pClient = &client;
 
 	glm::mat4 projection = glm::perspective( glm::radians( fov->GetFloat() ),
@@ -222,7 +223,6 @@ int main( int argc, char *args[] )
 			else
 			{
 				paused = !paused;
-				guiState.m_subState = paused ? CGuiStateManager::PLAY_PAUSE : CGuiStateManager::PLAY_NONE;
 			}
 		}
 
@@ -256,7 +256,7 @@ int main( int argc, char *args[] )
 
 			localWorld.Render();
 
-			guiState.Update(&plyr, &localWorld);
+			guiState.Update(&localWorld);
 		}
 
 		window.SwapBuffers();

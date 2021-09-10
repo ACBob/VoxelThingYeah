@@ -74,6 +74,8 @@ class CWorld
 #ifdef CLIENTEXE
 	void Render();
 
+	void *m_pLocalPlayer = nullptr;
+
 	// Shader we render with
 	CShader *m_pWorldShader = nullptr;
 	// Shader entities render with
