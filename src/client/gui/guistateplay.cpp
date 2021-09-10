@@ -41,6 +41,8 @@ unsigned int CGuiStatePlay::Frame(CGui *pGui, CWorld *pLocalWorld)
 
 		if (pGui->LabelButton(1, "Back to Game", pGui->m_vScreenCentre + CVector(0,1), CVector(0.5, 0)))
 			m_iState = STATE_NORMAL;
+		if (pGui->LabelButton(1, "Options", pGui->m_vScreenCentre + CVector(0,-1.5), CVector(0.5, 0)))
+			return CGuiStateManager::GUISTATE_PLAY;
 	}
 	else
 	{
