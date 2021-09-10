@@ -219,7 +219,7 @@ int CGui::Button( int id, CVector pos, CVector size )
 	return returnCode;
 }
 
-void CGui::Label( const char *text, CVector pos, Colour color )
+void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment textAlign )
 {
 	pos = GetInScreen( pos );
 

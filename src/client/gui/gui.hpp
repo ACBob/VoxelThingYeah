@@ -3,6 +3,7 @@
 #include "rendering/texturemanager.hpp"
 #include "shared/inputmanager.hpp"
 #include "utility/vector.hpp"
+#include "network/client.hpp"
 
 #include <map>
 #include <vector>
@@ -67,6 +68,8 @@ class CGui
 	// Used to get the input
 	CInputManager *m_pInputMan = nullptr;
 
+	CNetworkClient *m_pClient = nullptr;
+
 	// Update
 	void Update();
 
@@ -88,9 +91,16 @@ class CGui
 	// Converts positions to screen ones, including negatives being from the opposite side and stuff
 	CVector GetInScreen( CVector vPosition );
 
+	enum TextAlignment
+	{
+		TEXTALIGN_LEFT = 0x0,    // |LEFT    |
+		TEXTALIGN_CENTER = 0x01, // | CENTER |
+		TEXTALIGN_RIGHT = 0x02  // |   RIGHT|
+	};
+
 	// Elements
 	int Button( int iId, CVector vPosition, CVector vSize );
-	void Label( const char *cText, CVector vPosition, Colour colour = Color( 1, 1, 1 ) );
+	void Label( const char *cText, CVector vPosition, Colour colour = Color( 1, 1, 1 ), TextAlignment textAlign = TEXTALIGN_LEFT );
 	void Image( CTexture *pTex, CVector vPosition, CVector vSize, CVector vOrigin = CVector( 0, 0 ) );
 	void ImageAtlas( CTexture *pTex, Atlas atlas, float fAtlasDivisions, CVector vPosition, CVector vSize,
 					 CVector vOrigin = CVector( 0, 0 ) );

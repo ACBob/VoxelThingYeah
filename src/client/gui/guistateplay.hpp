@@ -14,7 +14,7 @@ class CGuiStatePlay : public CGuiState
 		{
 			STATE_NORMAL = 0x0,
 			STATE_CHATTING = 0x1,
-			STATE_PLAYING = 0x2
+			STATE_PAUSED = 0x2
 		};
 
 	private:

@@ -3,6 +3,8 @@
 #include "network/protocol.hpp"
 #include "world/world.hpp"
 
+#pragma once
+
 // This is us.
 class CNetworkClient
 {

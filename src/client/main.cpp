@@ -170,6 +170,7 @@ int main( int argc, char *args[] )
 
 	CGui gui( scr_width->GetInt(), scr_height->GetInt() );
 	gui.m_pInputMan = &inputMan;
+	gui.m_pClient = &client;
 	CGuiStateManager guiState;
 	guiState.m_pInputManager = &inputMan;
 	guiState.m_pGui = &gui;
@@ -208,25 +209,6 @@ int main( int argc, char *args[] )
 
 		inputMan.Update();
 		plyr.UpdateClient( client.m_pLocalWorld );
-
-		if ( inputMan.m_bInputState[INKEY_CHAT] && !inputMan.m_bOldInputState[INKEY_CHAT] )
-		{
-			chatting		  = true;
-		}
-
-		if ( inputMan.m_bInputState[INKEY_OUT] && !inputMan.m_bOldInputState[INKEY_OUT] )
-		{
-			if ( chatting )
-			{
-				chatting		  = false;
-			}
-			else
-			{
-				paused = !paused;
-			}
-		}
-
-		inputMan.m_bInGui = (chatting || paused);
 
 		// Rendering
 		{
