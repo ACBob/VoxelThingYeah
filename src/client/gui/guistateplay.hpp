@@ -19,4 +19,5 @@ class CGuiStatePlay : public CGuiState
 
 	private:
 		CTexture *m_pCrossHairTex = nullptr;
+		CTexture *m_pTerrainTex = nullptr;
 };
