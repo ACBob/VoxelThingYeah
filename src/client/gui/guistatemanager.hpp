@@ -7,6 +7,7 @@
 
 #include "guistate.hpp"
 #include "guistateplay.hpp"
+#include "guistateoptions.hpp"
 
 class CGuiStateManager 
 {
@@ -21,11 +22,13 @@ class CGuiStateManager
 
 		enum GuiState
 		{
-			GUISTATE_PLAY = 0x0
+			GUISTATE_PLAY = 0x0,
+			GUISTATE_OPTIONS = 0x1,
 		};
 
 		unsigned int m_iGuiState = 0;
 		CGuiState *m_pGuiState = nullptr;
 
 		CGuiStatePlay m_statePlay;
+		CGuiStateOptions m_stateOpt;
 };
