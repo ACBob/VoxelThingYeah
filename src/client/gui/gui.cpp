@@ -190,13 +190,13 @@ int CGui::Button( int id, CVector pos, CVector size, CTexture *tex )
 
 	int returnCode = 0;
 
-	Colour color = Colour( 0.5, 0.5, 0.5 );
+	Colour color = Colour( 1, 1, 1 );
 
 	// Check & set State
 	if ( RegionHit( pos, size ) )
 	{
 		m_iHotItem = id;
-		color	   = Colour( 0.75, 0.75, 0.75 );
+		color	   = Colour( 0.75, 0.75, 1 );
 		if ( m_iMouseState != 0 )
 			NULL; // Breakpoint
 		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
@@ -208,7 +208,7 @@ int CGui::Button( int id, CVector pos, CVector size, CTexture *tex )
 	if ( m_iMouseState == IN_NO_MOUSE && m_iHotItem == id && m_iActiveItem == id )
 	{
 		returnCode = 1;
-		color	   = Colour( 0.75, 0.75, 1 );
+		color	   = Colour( 0.25, 0.25, 0.25 );
 	}
 
 	Image(tex, pos / GUIUNIT, size / GUIUNIT, CVector(0,0), color);

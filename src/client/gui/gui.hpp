@@ -102,7 +102,7 @@ class CGui
 
 	// Elements
 	int Button( int iId, CVector vPosition, CVector vSize, CTexture *tex = nullptr );
-	int LabelButton(int id, const char *msg, CVector pos, CVector vOrigin = CVector( 0, 0 ), CVector padding = CVector(0.25,0.25,0.25));
+	int LabelButton(int id, const char *msg, CVector pos, CVector vOrigin = CVector( 0, 0 ), CVector padding = CVector(0.75,0.75,0.75));
 	void Label( const char *cText, CVector vPosition, Colour colour = Color( 1, 1, 1 ), TextAlignment textAlign = TEXTALIGN_LEFT );
 	void Image( CTexture *pTex, CVector vPosition, CVector vSize, CVector vOrigin = CVector( 0, 0 ), Colour tint = Colour(1,1,1) );
 	void ImageAtlas( CTexture *pTex, Atlas atlas, float fAtlasDivisions, CVector vPosition, CVector vSize,

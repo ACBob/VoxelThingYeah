@@ -8,6 +8,9 @@
 
 #include "entities/entityplayer.hpp"
 
+#define LOG_LEVEL DEBUG
+#include "shared/seethe.h"
+
 CGuiStatePlay::CGuiStatePlay()
 {
 	m_iState = STATE_NORMAL;
@@ -34,8 +37,10 @@ unsigned int CGuiStatePlay::Frame(CGui *pGui, CWorld *pLocalWorld)
 
 	if (m_iState == STATE_PAUSED)
 	{
-		pGui->Label("GAME PAUSED", pGui->m_vScreenCentre + CVector(0,3), CVector(1,1,1), CGui::TEXTALIGN_CENTER);
-		pGui->LabelButton(0, "Back to Game", pGui->m_vScreenCentre, CVector(0.5, 0));
+		pGui->Label("GAME PAUSED", pGui->m_vScreenCentre + CVector(0,5), CVector(1,1,1), CGui::TEXTALIGN_CENTER);
+
+		if (pGui->LabelButton(1, "Back to Game", pGui->m_vScreenCentre + CVector(0,1), CVector(0.5, 0)))
+			m_iState = STATE_NORMAL;
 	}
 	else
 	{
