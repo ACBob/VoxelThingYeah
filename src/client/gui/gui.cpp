@@ -49,6 +49,7 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 
 	m_pTextTex	  = materialSystem::LoadTexture( "font.png" );
 	m_pTextShader = shaderSystem::LoadShader( "shaders/text.vert", "shaders/text.frag" );
+	m_pButtonTex  = materialSystem::LoadTexture( "button.png" );
 
 	m_textBuffers = {};
 
@@ -90,20 +91,6 @@ void CGui::Update()
 
 		m_pTextShader->Use();
 
-		glBindVertexArray( m_iVao );
-		// Text
-		{
-			glBindTexture( GL_TEXTURE_2D, m_pTextTex->m_iId );
-
-			glBindBuffer( GL_ARRAY_BUFFER, m_iVbo );
-			glBufferData( GL_ARRAY_BUFFER, m_textVertiecs.size() * sizeof( CGui::Vertex ), m_textVertiecs.data(),
-						  GL_DYNAMIC_DRAW );
-			glBindBuffer( GL_ARRAY_BUFFER, 0 );
-			glDrawArrays( GL_TRIANGLES, 0, m_textVertiecs.size() );
-
-			glBindTexture( GL_TEXTURE_2D, 0 );
-		}
-		glBindVertexArray( 0 );
 		// Images
 		glBindVertexArray( m_iVao );
 		{
@@ -117,6 +104,20 @@ void CGui::Update()
 				glDrawArrays( GL_TRIANGLES, 0, img.m_vertices.size() );
 				glBindTexture( GL_TEXTURE_2D, 0 );
 			}
+		}
+		glBindVertexArray( 0 );
+		// Text
+		glBindVertexArray( m_iVao );
+		{
+			glBindTexture( GL_TEXTURE_2D, m_pTextTex->m_iId );
+
+			glBindBuffer( GL_ARRAY_BUFFER, m_iVbo );
+			glBufferData( GL_ARRAY_BUFFER, m_textVertiecs.size() * sizeof( CGui::Vertex ), m_textVertiecs.data(),
+						  GL_DYNAMIC_DRAW );
+			glBindBuffer( GL_ARRAY_BUFFER, 0 );
+			glDrawArrays( GL_TRIANGLES, 0, m_textVertiecs.size() );
+
+			glBindTexture( GL_TEXTURE_2D, 0 );
 		}
 		glBindVertexArray( 0 );
 
@@ -180,10 +181,12 @@ CVector CGui::GetInScreen( CVector pos )
 	return pos;
 }
 
-int CGui::Button( int id, CVector pos, CVector size )
+int CGui::Button( int id, CVector pos, CVector size, CTexture *tex )
 {
 	pos	 = GetInScreen( pos );
 	size = size * GUIUNIT;
+	if (tex == nullptr)
+		tex = m_pButtonTex;
 
 	int returnCode = 0;
 
@@ -208,20 +211,29 @@ int CGui::Button( int id, CVector pos, CVector size )
 		color	   = Colour( 0.75, 0.75, 1 );
 	}
 
-	// Render
-	// OpenGl
-	{
-		// Get vertices
-		std::vector<CGui::Vertex> g = GetQuad( pos, size, color );
-		std::copy( g.begin(), g.end(), std::back_inserter( m_textVertiecs ) );
-	}
+	Image(tex, pos / GUIUNIT, size / GUIUNIT, CVector(0,0), color);
 
 	return returnCode;
+}
+
+int CGui::LabelButton(int id, const char *msg, CVector pos, CVector origin, CVector padding)
+{
+	// TODO: Function to get size of rendered text
+	CVector size = CVector( (TEXTWIDTH * strlen(msg) / GUIUNIT) + (padding.x / 2.0f), (TEXTHEIGHT * 2 / GUIUNIT) + (padding.y / 2.0f) );
+	pos = pos - ( size * origin );
+	int buttonOut = Button(id, pos, size);
+	Label(msg, pos + size/2, CVector(1,1,1), TEXTALIGN_CENTER);
+	return buttonOut;
 }
 
 void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment textAlign )
 {
 	pos = GetInScreen( pos );
+
+	if (textAlign == TEXTALIGN_CENTER)
+		pos = pos - CVector( ( TEXTWIDTH * strlen(text) ) / 2, 0 );
+	else if (textAlign == TEXTALIGN_RIGHT)
+		pos = pos - CVector( ( TEXTWIDTH * strlen(text) ) , 0 );
 
 	// Render
 	// OpenGl
@@ -241,14 +253,14 @@ void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment tex
 	}
 }
 
-void CGui::Image( CTexture *tex, CVector pos, CVector size, CVector origin )
+void CGui::Image( CTexture *tex, CVector pos, CVector size, CVector origin, Colour tint )
 {
 	pos	 = pos * GUIUNIT;
 	size = size * GUIUNIT;
 
 	{
 		CGui::_Image img;
-		img.m_vertices = GetQuad( pos - ( size * origin ), size, Colour( 1, 1, 1 ) );
+		img.m_vertices = GetQuad( pos - ( size * origin ), size, tint );
 		img.m_pTex	   = tex;
 		m_images.push_back( img );
 	}

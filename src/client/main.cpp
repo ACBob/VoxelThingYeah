@@ -193,7 +193,7 @@ int main( int argc, char *args[] )
 			break;
 
 		window.PollEvents();
-		if ( window.IsFocused() && !chatting )
+		if ( window.IsFocused() && !inputMan.m_bInGui )
 			window.CaptureMouse();
 
 		if ( window.m_bSizeChanged )
