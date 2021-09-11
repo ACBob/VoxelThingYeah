@@ -6,8 +6,11 @@
 
 #include <random>
 
+#define AL_ALEXT_PROTOTYPES
 #include <AL/al.h>
 #include <AL/alc.h>
+#include <AL/efx.h>
+#include <AL/efx-presets.h>
 
 #include "filesystem.hpp"
 
@@ -20,6 +23,12 @@
 
 std::vector<CSound *> soundSystem::loadedSounds;
 std::map<std::string, CSoundEvent*> soundSystem::soundEvents;
+
+ALCdevice *openAlDevice;
+ALCcontext *openAlContext;
+ALuint soundEffects;
+ALuint soundEffectSlot;
+// ALuint soundFilter;
 
 // TODO: Error sound
 CSound::CSound( const char *path )
@@ -60,6 +69,7 @@ void CSound::Play( CVector src, float pitch, float gain )
 	alSourcef( m_iId, AL_PITCH, pitch );
 	alSourcef( m_iId, AL_GAIN, gain );
 	alSource3f( m_iId, AL_POSITION, src.x, src.y, src.z );
+	alSource3i( m_iId, AL_AUXILIARY_SEND_FILTER, soundEffectSlot, 0, AL_FILTER_NULL );
 
 	alSourcePlay( m_iId );
 }
@@ -90,9 +100,6 @@ void CSoundEvent::Play( CVector pos )
 	m_sounds.at(soundIdx)->Play(pos, pitch, pitch);
 }
 
-ALCdevice *openAlDevice;
-ALCcontext *openAlContext;
-
 void soundSystem::Init()
 {
 	openAlDevice = alcOpenDevice(NULL);
@@ -100,6 +107,12 @@ void soundSystem::Init()
 	{
 		con_error("OpenAL Initialisation Failed!");
 		return;
+	}
+
+	if (alcIsExtensionPresent(openAlDevice, "ALC_EXT_EFX") == AL_FALSE)
+	{
+		con_warning("Device does not support ALC_EXT_EFX, no cool reverb for you :(");
+		cl_reverb->SetBool(false);
 	}
 
 	openAlContext = alcCreateContext(openAlDevice, NULL);
@@ -110,6 +123,18 @@ void soundSystem::Init()
 	if (!alcMakeContextCurrent(openAlContext))
 	{	
 		con_error("Could not make AL context current!");
+	}
+
+	if (true)
+	{
+		// Effects
+		alGenAuxiliaryEffectSlots(1, &soundEffectSlot);
+		alGenEffects(1, &soundEffects);
+
+		alEffecti(soundEffects, AL_EFFECT_TYPE, AL_EFFECT_REVERB);
+		alEffectf(soundEffects, AL_REVERB_DECAY_TIME, 0.1f);
+
+		alAuxiliaryEffectSloti(soundEffectSlot, AL_EFFECTSLOT_EFFECT, soundEffects);
 	}
 
 	alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
@@ -163,6 +188,9 @@ void soundSystem::UnInit()
 		delete s;
 	for ( auto s : soundEvents )
 		delete s.second;
+		
+	alDeleteEffects(1, &soundEffects);
+	alDeleteAuxiliaryEffectSlots(1, &soundEffects);
 	
 	// Shutdown sound
 	alcDestroyContext(openAlContext);

@@ -13,6 +13,7 @@ ConVar::CConVar *cl_port = nullptr;
 ConVar::CConVar *cl_servername = nullptr;
 
 ConVar::CConVar *cl_volume = nullptr;
+ConVar::CConVar *cl_reverb = nullptr;
 
 void SetupClientSideConvars()
 {
@@ -29,4 +30,5 @@ void SetupClientSideConvars()
 	cl_servername = conVarHandle.DeclareConvar( "cl_servername", "", ConVar::CVAR_READONLY );
 
 	cl_volume = conVarHandle.DeclareConvar( "cl_volume", "1.0", ConVar::CVAR_ARCHIVE );
+	cl_reverb = conVarHandle.DeclareConvar( "cl_reverb", "true", ConVar::CVAR_ARCHIVE );
 }
