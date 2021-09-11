@@ -31,6 +31,8 @@
 
 #include "rendering/modelloader.hpp"
 
+#include "sound/soundmanager.hpp"
+
 int main( int argc, char *args[] )
 {
 
@@ -118,8 +120,23 @@ int main( int argc, char *args[] )
 	CTexture *testTexture  = materialSystem::LoadTexture( "test.png" );
 	CTexture *sunTexture   = materialSystem::LoadTexture( "sun.png" );
 
+
+	con_info("Loading some models");
 	modelSystem::Init();
 	atexit( modelSystem::UnInit );
+
+	CModel skyboxModel;
+	GetCubeModel( skyboxModel, CVector( -2, -2, -2 ) );
+	skyboxModel.SetShader( skyShader );
+	skyboxModel.SetTexture( testTexture );
+
+	CModel *skyboxSunModel = modelSystem::LoadModel( "models/sun.obj" );
+	skyboxSunModel->SetTexture( sunTexture );
+	skyboxSunModel->SetShader( unlitShader );
+
+	con_info("Loading Sounds...");
+	soundSystem::Init();
+	atexit( soundSystem::UnInit );
 
 	con_info( "Create Client..." );
 	CWorld localWorld( diffuseShader, diffuseShader );
@@ -158,20 +175,6 @@ int main( int argc, char *args[] )
 	glEnable( GL_BLEND );
 	glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
 	glBlendEquation( GL_FUNC_ADD );
-
-	CModel skyboxModel;
-	GetCubeModel( skyboxModel, CVector( -2, -2, -2 ) );
-	skyboxModel.SetShader( skyShader );
-	skyboxModel.SetTexture( testTexture );
-
-	CModel *skyboxSunModel = modelSystem::LoadModel( "models/sun.obj" );
-	skyboxSunModel->SetTexture( sunTexture );
-	skyboxSunModel->SetShader( unlitShader );
-
-	CModel colMdlTest;
-	GetCubeModel( colMdlTest, CVector( -0.25, -1, -0.25 ) );
-	colMdlTest.SetTexture( testTexture );
-	colMdlTest.SetShader( unlitShader );
 
 	CGui gui( scr_width->GetInt(), scr_height->GetInt() );
 	gui.m_pInputMan = &inputMan;
@@ -244,11 +247,6 @@ int main( int argc, char *args[] )
 			glBindTexture( GL_TEXTURE_2D, terrainPng->m_iId );
 
 			localWorld.Render();
-
-			glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-			colMdlTest.m_vPosition = plyr.m_vPosition + CVector( 0, 1, 0 );
-			colMdlTest.Render();
-			glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 
 			guiState.Update( &localWorld );
 		}

@@ -1,6 +1,6 @@
 #include "soundmanager.hpp"
 
-#include "stb_vorbis.c"
+#include "toml.hpp"
 
 #include "blockdef.hpp"
 
@@ -8,6 +8,11 @@
 
 #include "physfs.h"
 #include <AL/al.h>
+
+#include "stb_vorbis.c"
+
+std::vector<CSound *> soundSystem::m_loadedSounds;
+std::map<const char *, CSound *> soundSystem::m_namedSounds;
 
 // TODO: Error sound
 CSound::CSound( const char *path )
@@ -56,38 +61,25 @@ void CSound::Play( CVector src, float pitch, float gain )
 	alSourcePlay( m_iId );
 }
 
-CSoundManager::CSoundManager()
+void soundSystem::Init()
 {
-	m_namedSounds["placeStone"] = LoadSound( "sound/placestone.ogg" );
-	m_namedSounds["breakStone"] = LoadSound( "sound/breakstone.ogg" );
 
-	m_namedSounds["placeWood"] = LoadSound( "sound/placewood.ogg" );
-	m_namedSounds["breakWood"] = LoadSound( "sound/breakwood.ogg" );
-
-	m_namedSounds["placeLoose"] = LoadSound( "sound/placeloose.ogg" );
-	m_namedSounds["breakLoose"] = LoadSound( "sound/breakloose.ogg" );
-
-	m_namedSounds["placeGlass"] = m_namedSounds["placeStone"];
-	m_namedSounds["breakGlass"] = LoadSound( "sound/breakglass.ogg" );
-
-	m_namedSounds["placeOrganic"] = LoadSound( "sound/placeorganic.ogg" );
-	m_namedSounds["breakOrganic"] = LoadSound( "sound/breakorganic.ogg" );
 }
-CSoundManager::~CSoundManager()
+void soundSystem::UnInit()
 {
 	for ( CSound *s : m_loadedSounds )
 		delete s;
 }
 
-CSound *CSoundManager::LoadSound( const char *path )
+CSound *soundSystem::LoadSound( const char *path )
 {
 	CSound *snd = new CSound( path );
 	m_loadedSounds.push_back( snd );
 
-	return m_loadedSounds.back();
+	return snd;
 }
 
-void CSoundManager::PlayBreakSound( blocktype_t blockType, CVector pos )
+void soundSystem::PlayBreakSound( blocktype_t blockType, CVector pos )
 {
 	blockmaterial_t mat = GetBlockMaterial( blockType );
 	float pitch			= 0.5 + ( random() % 15 ) / 10.0f;
@@ -111,7 +103,7 @@ void CSoundManager::PlayBreakSound( blocktype_t blockType, CVector pos )
 			break;
 	}
 }
-void CSoundManager::PlayPlaceSound( blocktype_t blockType, CVector pos )
+void soundSystem::PlayPlaceSound( blocktype_t blockType, CVector pos )
 {
 	blockmaterial_t mat = GetBlockMaterial( blockType );
 	float pitch			= 0.5 + ( random() % 15 ) / 10.0f;
