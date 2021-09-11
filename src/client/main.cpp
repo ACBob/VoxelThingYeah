@@ -120,8 +120,7 @@ int main( int argc, char *args[] )
 	CTexture *testTexture  = materialSystem::LoadTexture( "test.png" );
 	CTexture *sunTexture   = materialSystem::LoadTexture( "sun.png" );
 
-
-	con_info("Loading some models");
+	con_info( "Loading some models" );
 	modelSystem::Init();
 	atexit( modelSystem::UnInit );
 
@@ -134,7 +133,7 @@ int main( int argc, char *args[] )
 	skyboxSunModel->SetTexture( sunTexture );
 	skyboxSunModel->SetShader( unlitShader );
 
-	con_info("Loading Sounds...");
+	con_info( "Loading Sounds..." );
 	soundSystem::Init();
 	atexit( soundSystem::UnInit );
 
@@ -220,7 +219,7 @@ int main( int argc, char *args[] )
 		inputMan.Update();
 		plyr.UpdateClient( client.m_pLocalWorld );
 
-		soundSystem::SetListener(plyr.m_vPosition, plyr.GetForward(), plyr.m_vVelocity);
+		soundSystem::SetListener( plyr.m_vPosition, plyr.GetForward(), plyr.m_vVelocity );
 
 		// Rendering
 		{

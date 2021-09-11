@@ -9,8 +9,8 @@
 #define AL_ALEXT_PROTOTYPES
 #include <AL/al.h>
 #include <AL/alc.h>
-#include <AL/efx.h>
 #include <AL/efx-presets.h>
+#include <AL/efx.h>
 
 #include "filesystem.hpp"
 
@@ -22,7 +22,7 @@
 #include "stb_vorbis.c"
 
 std::vector<CSound *> soundSystem::loadedSounds;
-std::map<std::string, CSoundEvent*> soundSystem::soundEvents;
+std::map<std::string, CSoundEvent *> soundSystem::soundEvents;
 
 ALCdevice *openAlDevice;
 ALCcontext *openAlContext;
@@ -36,7 +36,7 @@ CSound::CSound( const char *path )
 	bool bSuccess		= false;
 	int64_t iFileLength = 0;
 
-	const uchar_t *soundData = fileSystem::LoadFile(path, iFileLength, bSuccess);
+	const uchar_t *soundData = fileSystem::LoadFile( path, iFileLength, bSuccess );
 
 	int channels, rate;
 	short *data = NULL;
@@ -76,13 +76,13 @@ void CSound::Play( CVector src, float pitch, float gain )
 
 CSoundEvent::CSoundEvent( std::vector<std::string> sounds, const char *type, float minpitch, float maxpitch )
 {
-	for (std::string soundName : sounds)
+	for ( std::string soundName : sounds )
 	{
-		CSound *s = soundSystem::LoadSound(soundName.c_str());
-		m_sounds.push_back(s);
+		CSound *s = soundSystem::LoadSound( soundName.c_str() );
+		m_sounds.push_back( s );
 	}
 
-	if (strcmp(type, "block") == 0)
+	if ( strcmp( type, "block" ) == 0 )
 	{
 		m_iSoundType = SOUNDTYPE_BLOCK;
 	}
@@ -93,93 +93,93 @@ CSoundEvent::CSoundEvent( std::vector<std::string> sounds, const char *type, flo
 
 void CSoundEvent::Play( CVector pos )
 {
-	float pitch	= m_fMinPitch + (m_fMaxPitch - m_fMinPitch) * ((rand()) / (float)RAND_MAX);
+	float pitch = m_fMinPitch + ( m_fMaxPitch - m_fMinPitch ) * ( ( rand() ) / (float)RAND_MAX );
 
-	int soundIdx = (rand() % m_sounds.size());
+	int soundIdx = ( rand() % m_sounds.size() );
 
-	m_sounds.at(soundIdx)->Play(pos, pitch, pitch);
+	m_sounds.at( soundIdx )->Play( pos, pitch, pitch );
 }
 
 void soundSystem::Init()
 {
-	openAlDevice = alcOpenDevice(NULL);
-	if (!openAlDevice)
+	openAlDevice = alcOpenDevice( NULL );
+	if ( !openAlDevice )
 	{
-		con_error("OpenAL Initialisation Failed!");
+		con_error( "OpenAL Initialisation Failed!" );
 		return;
 	}
 
-	if (alcIsExtensionPresent(openAlDevice, "ALC_EXT_EFX") == AL_FALSE)
+	if ( alcIsExtensionPresent( openAlDevice, "ALC_EXT_EFX" ) == AL_FALSE )
 	{
-		con_warning("Device does not support ALC_EXT_EFX, no cool reverb for you :(");
-		cl_reverb->SetBool(false);
+		con_warning( "Device does not support ALC_EXT_EFX, no cool reverb for you :(" );
+		cl_reverb->SetBool( false );
 	}
 
-	openAlContext = alcCreateContext(openAlDevice, NULL);
-	if (!openAlContext)
+	openAlContext = alcCreateContext( openAlDevice, NULL );
+	if ( !openAlContext )
 	{
-		con_error("OpenAL Intialisation Failed!");
+		con_error( "OpenAL Intialisation Failed!" );
 	}
-	if (!alcMakeContextCurrent(openAlContext))
-	{	
-		con_error("Could not make AL context current!");
+	if ( !alcMakeContextCurrent( openAlContext ) )
+	{
+		con_error( "Could not make AL context current!" );
 	}
 
-	if (true)
+	if ( true )
 	{
 		// Effects
-		alGenAuxiliaryEffectSlots(1, &soundEffectSlot);
-		alGenEffects(1, &soundEffects);
+		alGenAuxiliaryEffectSlots( 1, &soundEffectSlot );
+		alGenEffects( 1, &soundEffects );
 
-		alEffecti(soundEffects, AL_EFFECT_TYPE, AL_EFFECT_REVERB);
-		alEffectf(soundEffects, AL_REVERB_DECAY_TIME, 0.1f);
+		alEffecti( soundEffects, AL_EFFECT_TYPE, AL_EFFECT_REVERB );
+		alEffectf( soundEffects, AL_REVERB_DECAY_TIME, 0.1f );
 
-		alAuxiliaryEffectSloti(soundEffectSlot, AL_EFFECTSLOT_EFFECT, soundEffects);
+		alAuxiliaryEffectSloti( soundEffectSlot, AL_EFFECTSLOT_EFFECT, soundEffects );
 	}
 
-	alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
-	alListener3f(AL_VELOCITY, 0.0f, 0.0f, 0.0f);
-	float ori[] = {0.0, 0.0, -1.0, 0.0, 1.0, 0.0};
-	alListenerfv(AL_ORIENTATION, ori);
-	alListenerf(AL_GAIN, cl_volume->GetFloat());
+	alListener3f( AL_POSITION, 0.0f, 0.0f, 0.0f );
+	alListener3f( AL_VELOCITY, 0.0f, 0.0f, 0.0f );
+	float ori[] = { 0.0, 0.0, -1.0, 0.0, 1.0, 0.0 };
+	alListenerfv( AL_ORIENTATION, ori );
+	alListenerf( AL_GAIN, cl_volume->GetFloat() );
 
 	/* Now load the sounds */
-	con_info("Loading sounds.toml");
+	con_info( "Loading sounds.toml" );
 
-	int64_t fl = 0;
-	bool bSuccess = false;
-	const uchar_t *soundsToml = fileSystem::LoadFile("sound/sounds.toml", fl, bSuccess);
+	int64_t fl				  = 0;
+	bool bSuccess			  = false;
+	const uchar_t *soundsToml = fileSystem::LoadFile( "sound/sounds.toml", fl, bSuccess );
 
-	toml::Result data = toml::parse((char*)soundsToml);
-	
-	for (std::string key : data.table->keys())
+	toml::Result data = toml::parse( (char *)soundsToml );
+
+	for ( std::string key : data.table->keys() )
 	{
-		auto tbl = data.table->getTable(key);
+		auto tbl = data.table->getTable( key );
 
-		auto [ has, type ] = tbl->getString("type");
-		if (!has)
+		auto [has, type] = tbl->getString( "type" );
+		if ( !has )
 			// Assume type
 			type = "";
 
-		auto sounds = tbl->getArray("sounds");
-		if (!sounds)
-			con_warning("Sound %s has no sounds set!", key.c_str());
-		
+		auto sounds = tbl->getArray( "sounds" );
+		if ( !sounds )
+			con_warning( "Sound %s has no sounds set!", key.c_str() );
+
 		float minPitch, maxPitch;
 
-		auto pitch = tbl->getArray("pitch");
-		auto pA = pitch->getDouble(0);
-		if (!pA.first)
+		auto pitch = tbl->getArray( "pitch" );
+		auto pA	   = pitch->getDouble( 0 );
+		if ( !pA.first )
 			minPitch = 1.0f;
 		else
 			minPitch = pA.second;
-		auto pB = pitch->getDouble(1);
-		if (!pB.first)
+		auto pB = pitch->getDouble( 1 );
+		if ( !pB.first )
 			maxPitch = 1.0f;
 		else
 			maxPitch = pB.second;
 
-		soundEvents[key] = new CSoundEvent(*sounds->getStringVector().get(), type.c_str(), minPitch, maxPitch);
+		soundEvents[key] = new CSoundEvent( *sounds->getStringVector().get(), type.c_str(), minPitch, maxPitch );
 	}
 }
 void soundSystem::UnInit()
@@ -188,32 +188,28 @@ void soundSystem::UnInit()
 		delete s;
 	for ( auto s : soundEvents )
 		delete s.second;
-		
-	alDeleteEffects(1, &soundEffects);
-	alDeleteAuxiliaryEffectSlots(1, &soundEffects);
-	
+
+	alDeleteEffects( 1, &soundEffects );
+	alDeleteAuxiliaryEffectSlots( 1, &soundEffects );
+
 	// Shutdown sound
-	alcDestroyContext(openAlContext);
-	alcCloseDevice(openAlDevice);
+	alcDestroyContext( openAlContext );
+	alcCloseDevice( openAlDevice );
 }
 
-void soundSystem::SetListener(CVector pos, CVector forward, CVector vel)
+void soundSystem::SetListener( CVector pos, CVector forward, CVector vel )
 {
-	alListener3f(AL_POSITION, pos.x, pos.y, pos.z);
-	float orient[] = {
-		forward.x,
-		forward.y,
-		forward.z,
+	alListener3f( AL_POSITION, pos.x, pos.y, pos.z );
+	float orient[] = { forward.x, forward.y, forward.z,
 
-		0, 1, 0
-	};
-	alListenerfv(AL_ORIENTATION, orient);
-	alListener3f(AL_VELOCITY, vel.x, vel.y, vel.z);
+					   0,		  1,		 0 };
+	alListenerfv( AL_ORIENTATION, orient );
+	alListener3f( AL_VELOCITY, vel.x, vel.y, vel.z );
 }
 
 CSound *soundSystem::LoadSound( const char *path )
 {
-		con_info("Load sound %s", path);
+	con_info( "Load sound %s", path );
 	CSound *snd = new CSound( path );
 	loadedSounds.push_back( snd );
 
@@ -222,51 +218,51 @@ CSound *soundSystem::LoadSound( const char *path )
 
 void soundSystem::PlayBreakSound( blocktype_t blockType, CVector pos )
 {
-	blockmaterial_t mat = GetBlockMaterial(blockType);
+	blockmaterial_t mat = GetBlockMaterial( blockType );
 
-	switch (mat)
+	switch ( mat )
 	{
 		default:
 		case MAT_NONE:
 		case MAT_STONE:
-			soundEvents["block.break.stone"]->Play(pos);
-		break;
+			soundEvents["block.break.stone"]->Play( pos );
+			break;
 		case MAT_LOOSE:
-			soundEvents["block.break.loose"]->Play(pos);
-		break;
+			soundEvents["block.break.loose"]->Play( pos );
+			break;
 		case MAT_WOOD:
-			soundEvents["block.break.wood"]->Play(pos);
-		break;
+			soundEvents["block.break.wood"]->Play( pos );
+			break;
 		case MAT_GLASS:
-			soundEvents["block.break.glass"]->Play(pos);
-		break;
+			soundEvents["block.break.glass"]->Play( pos );
+			break;
 		case MAT_ORGANIC:
-			soundEvents["block.break.organic"]->Play(pos);
-		break;
+			soundEvents["block.break.organic"]->Play( pos );
+			break;
 	}
 }
 void soundSystem::PlayPlaceSound( blocktype_t blockType, CVector pos )
 {
-	blockmaterial_t mat = GetBlockMaterial(blockType);
+	blockmaterial_t mat = GetBlockMaterial( blockType );
 
-	switch (mat)
+	switch ( mat )
 	{
 		default:
 		case MAT_NONE:
 		case MAT_STONE:
-			soundEvents["block.place.stone"]->Play(pos);
-		break;
+			soundEvents["block.place.stone"]->Play( pos );
+			break;
 		case MAT_LOOSE:
-			soundEvents["block.place.loose"]->Play(pos);
-		break;
+			soundEvents["block.place.loose"]->Play( pos );
+			break;
 		case MAT_WOOD:
-			soundEvents["block.place.wood"]->Play(pos);
-		break;
+			soundEvents["block.place.wood"]->Play( pos );
+			break;
 		case MAT_GLASS:
-			soundEvents["block.place.glass"]->Play(pos);
-		break;
+			soundEvents["block.place.glass"]->Play( pos );
+			break;
 		case MAT_ORGANIC:
-			soundEvents["block.place.organic"]->Play(pos);
-		break;
+			soundEvents["block.place.organic"]->Play( pos );
+			break;
 	}
 }

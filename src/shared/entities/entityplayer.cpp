@@ -62,7 +62,8 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 		BlockFeatures bF = GetBlockFeatures( m_pointed.m_pBlock->m_iBlockType );
 		if ( bF.breakable )
 		{
-			soundSystem::PlayBreakSound(m_pointed.m_pBlock->m_iBlockType, m_pointed.m_vPosition - CVector(0.5, 0.5, 0.5));
+			soundSystem::PlayBreakSound( m_pointed.m_pBlock->m_iBlockType,
+										 m_pointed.m_vPosition - CVector( 0.5, 0.5, 0.5 ) );
 			m_pointed.m_pBlock->m_iBlockType = blocktype_t::AIR;
 			m_pointed.m_pBlock->Update();
 
@@ -82,7 +83,8 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 			if ( !clientSideWorld->TestAABBCollision( m_collisionBox ) )
 			{
 				b->Update();
-				soundSystem::PlayPlaceSound(b->m_iBlockType, m_pointed.m_vPosition + m_pointed.m_vNormal - CVector(0.5, 0.5, 0.5));
+				soundSystem::PlayPlaceSound( b->m_iBlockType,
+											 m_pointed.m_vPosition + m_pointed.m_vNormal - CVector( 0.5, 0.5, 0.5 ) );
 			}
 			else
 				b->m_iBlockType = oldType;
