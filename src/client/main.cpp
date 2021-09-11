@@ -220,7 +220,7 @@ int main( int argc, char *args[] )
 		inputMan.Update();
 		plyr.UpdateClient( client.m_pLocalWorld );
 
-		soundSystem::SetListener(plyr.m_vPosition, plyr.GetForward());
+		soundSystem::SetListener(plyr.m_vPosition, plyr.GetForward(), plyr.m_vVelocity);
 
 		// Rendering
 		{

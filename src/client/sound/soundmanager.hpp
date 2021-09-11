@@ -45,7 +45,7 @@ namespace soundSystem
 	void Init();
 	void UnInit();
 
-	void SetListener( CVector pos, CVector forward );
+	void SetListener( CVector pos, CVector forward, CVector vel );
 
 	CSound *LoadSound( const char *path );
 

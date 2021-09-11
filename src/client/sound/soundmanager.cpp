@@ -169,7 +169,7 @@ void soundSystem::UnInit()
 	alcCloseDevice(openAlDevice);
 }
 
-void soundSystem::SetListener(CVector pos, CVector forward)
+void soundSystem::SetListener(CVector pos, CVector forward, CVector vel)
 {
 	alListener3f(AL_POSITION, pos.x, pos.y, pos.z);
 	float orient[] = {
@@ -180,6 +180,7 @@ void soundSystem::SetListener(CVector pos, CVector forward)
 		0, 1, 0
 	};
 	alListenerfv(AL_ORIENTATION, orient);
+	alListener3f(AL_VELOCITY, vel.x, vel.y, vel.z);
 }
 
 CSound *soundSystem::LoadSound( const char *path )
