@@ -33,7 +33,7 @@ CSound::CSound( const char *path )
 	short *data = NULL;
 
 	unsigned int decode_len =
-		stb_vorbis_decode_memory( reinterpret_cast<uint8 *>( &soundData ), iFileLength, &channels, &rate, &data );
+		stb_vorbis_decode_memory( reinterpret_cast<const uint8 *>( soundData ), iFileLength, &channels, &rate, &data );
 	if ( decode_len <= 0 )
 	{
 		con_error( "OGG File %s failed to load!", path );
