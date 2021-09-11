@@ -31,12 +31,12 @@ class CEntityBase
 	// Called every tick (usually 1/20th of a second)
 	// Gets handed the delta time to help work out physics-related stuff
 	// Also gets given the world for collision reasons
-	virtual void PhysicsTick( float delta, CWorld *world ) = 0;
+	virtual void PhysicsTick( float delta, CWorld *world ) {};
 
 #ifdef CLIENTEXE
 	// Update any client-side things we may have, called every frame rather than per tick
 	// Uses the client-side version of the world for testing things (i.e player hand)
-	virtual void UpdateClient( CWorld *clientSideWorld ) = 0;
+	virtual void UpdateClient( CWorld *clientSideWorld ) {};
 
 	// Renders our Model.
 	virtual void Render()

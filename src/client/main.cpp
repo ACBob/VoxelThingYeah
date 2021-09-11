@@ -220,7 +220,7 @@ int main( int argc, char *args[] )
 			// Rendering right at the end
 			glClear( GL_DEPTH_BUFFER_BIT );
 
-			CVector v	   = plyr.m_camera.m_vPosition + plyr.m_camera.m_vForward;
+			CVector v	   = plyr.m_camera.m_vPosition + plyr.m_camera.GetForward();
 			glm::mat4 view = glm::lookAt(
 				glm::vec3( plyr.m_camera.m_vPosition.x, plyr.m_camera.m_vPosition.y, plyr.m_camera.m_vPosition.z ),
 				glm::vec3( v.x, v.y, v.z ), glm::vec3( VEC_UP.x, VEC_UP.y, VEC_UP.z ) );

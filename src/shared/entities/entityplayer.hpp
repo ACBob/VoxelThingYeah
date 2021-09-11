@@ -1,4 +1,4 @@
-#include "camera.hpp"
+#include "entitycamera.hpp"
 #include "entitybase.hpp"
 #include "shared/inputmanager.hpp"
 #include "utility/raycast.hpp"
@@ -38,7 +38,7 @@ class CEntityPlayer : public CEntityBase
 	// Block type we're gonna place
 	blocktype_t m_iSelectedBlockType = blocktype_t::DIRT;
 
-	CCamera m_camera;
+	CEntityCamera m_camera;
 
 	void *m_pClient = nullptr;
 #endif

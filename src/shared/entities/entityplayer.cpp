@@ -44,11 +44,8 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 		m_vRotation.y = yaw;
 	}
 
-	m_camera.m_vForward	 = GetForward();
-	m_camera.m_vPosition = m_vPosition + CVector( 0, 0, 0 );
-
 	m_hand.m_vPosition	= m_camera.m_vPosition;
-	m_hand.m_vDirection = m_camera.m_vForward;
+	m_hand.m_vDirection = m_camera.GetForward();
 	m_pointed			= m_hand.Cast( clientSideWorld );
 
 	if ( m_pInputMan->m_iMouseState & IN_LEFT_MOUSE && m_pInputMan->m_iOldMouseState == 0 &&
