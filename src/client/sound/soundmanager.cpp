@@ -64,16 +64,19 @@ void CSound::Play( CVector src, float pitch, float gain )
 	alSourcePlay( m_iId );
 }
 
+ALCdevice *openAlDevice;
+ALCcontext *openAlContext;
+
 void soundSystem::Init()
 {
-	ALCdevice *openAlDevice = alcOpenDevice(NULL);
+	openAlDevice = alcOpenDevice(NULL);
 	if (!openAlDevice)
 	{
 		con_error("OpenAL Initialisation Failed!");
 		return;
 	}
 
-	ALCcontext *openAlContext = alcCreateContext(openAlDevice, NULL);
+	openAlContext = alcCreateContext(openAlDevice, NULL);
 	if (!openAlContext)
 	{
 		con_error("OpenAL Intialisation Failed!");
@@ -93,6 +96,23 @@ void soundSystem::UnInit()
 {
 	for ( CSound *s : m_loadedSounds )
 		delete s;
+	
+	// Shutdown sound
+	alcDestroyContext(openAlContext);
+	alcCloseDevice(openAlDevice);
+}
+
+void soundSystem::SetListener(CVector pos, CVector forward)
+{
+	alListener3f(AL_POSITION, pos.x, pos.y, pos.z);
+	float orient[] = {
+		forward.x,
+		forward.y,
+		forward.z,
+
+		0, 1, 0
+	};
+	alListenerfv(AL_ORIENTATION, orient);
 }
 
 CSound *soundSystem::LoadSound( const char *path )

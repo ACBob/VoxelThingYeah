@@ -4,6 +4,7 @@
 
 #ifdef CLIENTEXE
 	#include "network/client.hpp"
+	#include "sound/soundmanager.hpp"
 #endif
 
 CEntityPlayer::CEntityPlayer()
@@ -61,8 +62,7 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 		BlockFeatures bF = GetBlockFeatures( m_pointed.m_pBlock->m_iBlockType );
 		if ( bF.breakable )
 		{
-			// soundMan->PlayBreakSound(m_pointed.m_pBlock->m_iBlockType, m_pointed.m_vPosition - Vector(0.5, 0.5,
-			// 0.5));
+			soundSystem::PlayBreakSound(m_pointed.m_pBlock->m_iBlockType, m_pointed.m_vPosition - CVector(0.5, 0.5, 0.5));
 			m_pointed.m_pBlock->m_iBlockType = blocktype_t::AIR;
 			m_pointed.m_pBlock->Update();
 
@@ -82,8 +82,7 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 			if ( !clientSideWorld->TestAABBCollision( m_collisionBox ) )
 			{
 				b->Update();
-				// soundMan->PlayPlaceSound(b->m_iBlockType, m_pointed.m_vPosition + m_pointed.m_vNormal - Vector(0.5,
-				// 0.5, 0.5));
+				soundSystem::PlayPlaceSound(m_pointed.m_pBlock->m_iBlockType, m_pointed.m_vPosition - CVector(0.5, 0.5, 0.5));
 			}
 			else
 				b->m_iBlockType = oldType;
