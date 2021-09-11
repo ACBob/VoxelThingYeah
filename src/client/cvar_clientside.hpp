@@ -16,4 +16,6 @@ extern ConVar::CConVar *cl_port;
 
 extern ConVar::CConVar *cl_servername;
 
+extern ConVar::CConVar *cl_volume;
+
 void SetupClientSideConvars();

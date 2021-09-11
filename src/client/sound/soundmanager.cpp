@@ -8,6 +8,12 @@
 
 #include "physfs.h"
 #include <AL/al.h>
+#include <AL/alc.h>
+
+#define LOG_LEVEL DEBUG
+#include "shared/seethe.h"
+
+#include "cvar_clientside.hpp"
 
 #include "stb_vorbis.c"
 
@@ -63,7 +69,28 @@ void CSound::Play( CVector src, float pitch, float gain )
 
 void soundSystem::Init()
 {
+	ALCdevice *openAlDevice = alcOpenDevice(NULL);
+	if (!openAlDevice)
+	{
+		con_error("OpenAL Initialisation Failed!");
+		return;
+	}
 
+	ALCcontext *openAlContext = alcCreateContext(openAlDevice, NULL);
+	if (!openAlContext)
+	{
+		con_error("OpenAL Intialisation Failed!");
+	}
+	if (!alcMakeContextCurrent(openAlContext))
+	{	
+		con_error("Could not make AL context current!");
+	}
+
+	alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
+	alListener3f(AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+	float ori[] = {0.0, 0.0, -1.0, 0.0, 1.0, 0.0};
+	alListenerfv(AL_ORIENTATION, ori);
+	alListenerf(AL_GAIN, cl_volume->GetFloat());
 }
 void soundSystem::UnInit()
 {

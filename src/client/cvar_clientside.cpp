@@ -12,6 +12,8 @@ ConVar::CConVar *cl_port = nullptr;
 
 ConVar::CConVar *cl_servername = nullptr;
 
+ConVar::CConVar *cl_volume = nullptr;
+
 void SetupClientSideConvars()
 {
 	fov = conVarHandle.DeclareConvar( "fov", "70", ConVar::CVAR_ARCHIVE );
@@ -25,4 +27,6 @@ void SetupClientSideConvars()
 	cl_port = conVarHandle.DeclareConvar( "cl_port", "58008" );
 
 	cl_servername = conVarHandle.DeclareConvar( "cl_servername", "", ConVar::CVAR_READONLY );
+
+	cl_volume = conVarHandle.DeclareConvar( "cl_volume", "1.0", ConVar::CVAR_ARCHIVE );
 }
