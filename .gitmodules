@@ -13,3 +13,6 @@
 [submodule "subprojects/toml11"]
 	path = subprojects/toml11
 	url = https://github.com/ToruNiina/toml11.git
+[submodule "subprojects/tomlcpp"]
+	path = subprojects/tomlcpp
+	url = https://github.com/cktan/tomlcpp.git
