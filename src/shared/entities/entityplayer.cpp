@@ -50,65 +50,65 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 
 		m_camera.m_vRotation.x = pitch;
 		m_camera.m_vRotation.y = yaw;
-	}
 
-	m_hand.m_vPosition	= m_camera.m_vPosition;
-	m_hand.m_vDirection = m_camera.GetForward();
-	m_pointed			= m_hand.Cast( clientSideWorld );
+		m_hand.m_vPosition	= m_camera.m_vPosition;
+		m_hand.m_vDirection = m_camera.GetForward();
+		m_pointed			= m_hand.Cast( clientSideWorld );
 
-	if ( m_pInputMan->m_iMouseState & IN_LEFT_MOUSE && m_pInputMan->m_iOldMouseState == 0 &&
-		 m_pointed.m_pBlock != nullptr )
-	{
-		BlockFeatures bF = GetBlockFeatures( m_pointed.m_pBlock->m_iBlockType );
-		if ( bF.breakable )
+		if ( m_pInputMan->m_iMouseState & IN_LEFT_MOUSE && m_pInputMan->m_iOldMouseState == 0 &&
+			m_pointed.m_pBlock != nullptr )
 		{
-			soundSystem::PlayBreakSound( m_pointed.m_pBlock->m_iBlockType,
-										 m_pointed.m_vPosition - CVector( 0.5, 0.5, 0.5 ) );
-			m_pointed.m_pBlock->m_iBlockType = blocktype_t::AIR;
-			m_pointed.m_pBlock->Update();
-
-			protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5,
-										  blocktype_t::AIR );
-		}
-	}
-	if ( m_pInputMan->m_iMouseState & IN_RIGHT_MOUSE && m_pInputMan->m_iOldMouseState == 0 &&
-		 m_pointed.m_pBlock != nullptr )
-	{
-		CBlock *b		 = clientSideWorld->BlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal );
-		BlockFeatures bF = GetBlockFeatures( m_pointed.m_pBlock->m_iBlockType );
-		if ( b != nullptr && bF.selectable )
-		{
-			blocktype_t oldType = b->m_iBlockType;
-			b->m_iBlockType		= m_iSelectedBlockType;
-			if ( !clientSideWorld->TestAABBCollision( m_collisionBox ) )
+			BlockFeatures bF = GetBlockFeatures( m_pointed.m_pBlock->m_iBlockType );
+			if ( bF.breakable )
 			{
-				b->Update();
-				soundSystem::PlayPlaceSound( b->m_iBlockType,
-											 m_pointed.m_vPosition + m_pointed.m_vNormal - CVector( 0.5, 0.5, 0.5 ) );
+				soundSystem::PlayBreakSound( m_pointed.m_pBlock->m_iBlockType,
+											m_pointed.m_vPosition - CVector( 0.5, 0.5, 0.5 ) );
+				m_pointed.m_pBlock->m_iBlockType = blocktype_t::AIR;
+				m_pointed.m_pBlock->Update();
+
+				protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5,
+											blocktype_t::AIR );
 			}
-			else
-				b->m_iBlockType = oldType;
-
-			protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer,
-										  ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, b->m_iBlockType );
 		}
-	}
+		if ( m_pInputMan->m_iMouseState & IN_RIGHT_MOUSE && m_pInputMan->m_iOldMouseState == 0 &&
+			m_pointed.m_pBlock != nullptr )
+		{
+			CBlock *b		 = clientSideWorld->BlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal );
+			BlockFeatures bF = GetBlockFeatures( m_pointed.m_pBlock->m_iBlockType );
+			if ( b != nullptr && bF.selectable )
+			{
+				blocktype_t oldType = b->m_iBlockType;
+				b->m_iBlockType		= m_iSelectedBlockType;
+				if ( !clientSideWorld->TestAABBCollision( m_collisionBox ) )
+				{
+					b->Update();
+					soundSystem::PlayPlaceSound( b->m_iBlockType,
+												m_pointed.m_vPosition + m_pointed.m_vNormal - CVector( 0.5, 0.5, 0.5 ) );
+				}
+				else
+					b->m_iBlockType = oldType;
 
-	if ( m_pInputMan->m_iMouseState & IN_WHEEL_UP )
-	{
-		m_iSelectedBlockType = blocktype_t( m_iSelectedBlockType + 1 );
-		if ( m_iSelectedBlockType == blocktype_t::BEDROCK )
+				protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer,
+											( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, b->m_iBlockType );
+			}
+		}
+
+		if ( m_pInputMan->m_iMouseState & IN_WHEEL_UP )
+		{
 			m_iSelectedBlockType = blocktype_t( m_iSelectedBlockType + 1 );
-		if ( m_iSelectedBlockType > blocktype_t::FLOWER )
-			m_iSelectedBlockType = blocktype_t::STONE;
-	}
-	else if ( m_pInputMan->m_iMouseState & IN_WHEEL_DOWN )
-	{
-		m_iSelectedBlockType = blocktype_t( m_iSelectedBlockType - 1 );
-		if ( m_iSelectedBlockType == blocktype_t::BEDROCK )
+			if ( m_iSelectedBlockType == blocktype_t::BEDROCK )
+				m_iSelectedBlockType = blocktype_t( m_iSelectedBlockType + 1 );
+			if ( m_iSelectedBlockType > blocktype_t::FLOWER )
+				m_iSelectedBlockType = blocktype_t::STONE;
+		}
+		else if ( m_pInputMan->m_iMouseState & IN_WHEEL_DOWN )
+		{
 			m_iSelectedBlockType = blocktype_t( m_iSelectedBlockType - 1 );
-		if ( m_iSelectedBlockType <= blocktype_t::AIR )
-			m_iSelectedBlockType = blocktype_t::FLOWER;
+			if ( m_iSelectedBlockType == blocktype_t::BEDROCK )
+				m_iSelectedBlockType = blocktype_t( m_iSelectedBlockType - 1 );
+			if ( m_iSelectedBlockType <= blocktype_t::AIR )
+				m_iSelectedBlockType = blocktype_t::FLOWER;
+		}
 	}
 }
 #endif
