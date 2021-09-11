@@ -8,8 +8,8 @@
 ["soundtest"]
 type = "block"
 appendSounds = false
-sounds = ["sound/test.ogg"]
-pitch = [0.01,2.0]
+sounds = ["sound/red.ogg", "sound/green.ogg", "sound/blue.ogg"]
+pitch = [1.0,2.0]
 
 
 ["block.break.stone"]

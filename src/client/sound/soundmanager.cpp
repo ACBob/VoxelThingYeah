@@ -83,11 +83,9 @@ void CSoundEvent::Play( CVector pos )
 	// float pitch	= m_fMinPitch + (m_fMaxPitch - m_fMinPitch) * ((rand()) / (float)RAND_MAX);
 	float pitch = 1.0f;
 
-	int soundIdx = 0;
-	if (m_sounds.size() > 1)
-		soundIdx = (rand() & m_sounds.size());
+	int soundIdx = (rand() % m_sounds.size());
 
-	m_sounds[soundIdx]->Play(pos, pitch, 1.0f);
+	m_sounds.at(soundIdx)->Play(pos, pitch, 1.0f);
 }
 
 ALCdevice *openAlDevice;

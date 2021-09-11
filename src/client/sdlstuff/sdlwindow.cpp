@@ -113,7 +113,7 @@ const int scancodeToStateIndex[] = {
 
 void CGameWindow::PollEvents()
 {
-	SDL_SetRelativeMouseMode( !m_pInputMan->m_bInGui ? SDL_TRUE : SDL_FALSE );
+	// SDL_SetRelativeMouseMode( !m_pInputMan->m_bInGui ? SDL_TRUE : SDL_FALSE );
 
 	m_pInputMan->m_vMouseMovement = CVector( 0, 0 );
 
