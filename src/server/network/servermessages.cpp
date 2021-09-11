@@ -108,4 +108,14 @@ namespace protocol
 
 		protocol::SendPacket( pPeer, p );
 	}
+	void SendServerPlayerLeave( ENetPeer *pPeer, std::string username )
+	{
+		ServerPacket p;
+		Archive<ArchiveBuf> bufAccess = p.GetAccess();
+		p.type						  = ServerPacket::PLAYERLEAVE;
+
+		bufAccess << username;
+
+		protocol::SendPacket( pPeer, p );
+	}
 } // namespace protocol

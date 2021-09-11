@@ -97,6 +97,11 @@ void CNetworkServer::Update()
 					c->m_pEntity->Kill();
 				}
 
+				for (CNetworkPlayer *cl : m_players)
+				{
+					protocol::SendServerPlayerLeave(cl->m_pPeer, c->m_username);
+				}
+
 				delete c;
 			}
 			break;

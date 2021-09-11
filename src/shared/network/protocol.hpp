@@ -167,7 +167,14 @@ struct ServerPacket : public NetworkPacket
 				ticks
 			}
 		*/
-		TIMEOFDAY = 0x08
+		TIMEOFDAY = 0x08,
+		// Tells the client that another player they know has left, and to delete them
+		/*
+			{
+				username
+			}
+		*/
+		PLAYERLEAVE = 0x09,
 	};
 
 	template <typename S> void serialize( S &s ) { s &type &data & true; };
@@ -197,6 +204,7 @@ namespace protocol
 	void SendServerPlayerMessage( ENetPeer *pPeer, std::string username, std::string message );
 	void SendServerPlayerDisconnect( ENetPeer *pPeer, bool isKick, std::string reason = "" );
 	void SendServerTimeOfDay( ENetPeer *pPeer, int ticks );
+	void SendServerPlayerLeave( ENetPeer *pPeer, std::string username );
 
 	/****************************************************/
 	/******************* CLIENT *************************/

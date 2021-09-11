@@ -201,6 +201,24 @@ namespace protocol
 				client->m_pLocalWorld->m_iTimeOfDay = ticks;
 			}
 			break;
+			case ServerPacket::PLAYERLEAVE: {
+				std::string username;
+				bufAccess >> username;
+
+				if ( username == "" || username == client->m_pLocalPlayer->m_name )
+				{
+					con_warning("Attempt from server to PLAYERLEAVE us...?");
+					return;
+				}
+
+				CEntityPlayer *e = (CEntityPlayer*)client->m_pLocalWorld->GetEntityByName( username.c_str() );
+				if ( e != nullptr )
+				{
+					e->m_bIsKilled = true;
+					client->m_chatBuffer.push_back( username + " has left the game." );
+				}
+			}
+			break;
 
 			default: {
 				con_error( "Unknown packet of type %#010x", p.type );
