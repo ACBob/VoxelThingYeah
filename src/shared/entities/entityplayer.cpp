@@ -13,6 +13,9 @@ CEntityPlayer::CEntityPlayer()
 	m_hand.m_fLength	= 4;
 	m_hand.m_vDirection = GetForward();
 	m_hand.m_vPosition	= m_vPosition;
+
+	m_children.push_back(&m_camera);
+	m_camera.m_vParentPosition = CVector(0,1.72,0);
 #endif
 
 	m_collisionBox.m_vBounds = CVector(0.5,2,0.5);
@@ -27,8 +30,8 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 	if ( !m_pInputMan->m_bInGui )
 	{
 		// TODO: sensitivity
-		float pitch = m_vRotation.x;
-		float yaw	= m_vRotation.y;
+		float pitch = m_camera.m_vRotation.x;
+		float yaw	= m_camera.m_vRotation.y;
 
 		pitch -= m_pInputMan->m_vMouseMovement.y * 0.1;
 		yaw += m_pInputMan->m_vMouseMovement.x * 0.1;
@@ -40,8 +43,10 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 
 		pitch = pitch < -89.9 ? -89.9 : ( pitch > 89.9 ? 89.9 : pitch );
 
-		m_vRotation.x = pitch;
 		m_vRotation.y = yaw;
+
+		m_camera.m_vRotation.x = pitch;
+		m_camera.m_vRotation.y = yaw;
 	}
 
 	m_hand.m_vPosition	= m_camera.m_vPosition;
@@ -164,4 +169,6 @@ void CEntityPlayer::PhysicsTick( float delta, CWorld *world )
 	}
 
 	m_vVelocity = m_vVelocity * 0.8;
+
+	UpdateChildren();
 }

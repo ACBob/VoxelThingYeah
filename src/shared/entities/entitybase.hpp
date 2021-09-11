@@ -11,6 +11,7 @@
 #endif
 
 #include <string>
+#include <vector>
 
 class CEntityBase
 {
@@ -32,6 +33,9 @@ class CEntityBase
 	// Gets handed the delta time to help work out physics-related stuff
 	// Also gets given the world for collision reasons
 	virtual void PhysicsTick( float delta, CWorld *world ) {};
+
+	// Updates the entity's children
+	virtual void UpdateChildren();
 
 #ifdef CLIENTEXE
 	// Update any client-side things we may have, called every frame rather than per tick
@@ -59,20 +63,25 @@ class CEntityBase
 	// Updates the collision box to the new position
 	void UpdateCollision() { m_collisionBox.m_vPosition = m_vPosition; }
 
+	// Position in world
 	CVector m_vPosition;
+	// Position relative to parent
+	CVector m_vParentPosition;
+	// Rotation
 	CVector m_vRotation;
+	// Velocity
 	CVector m_vVelocity;
 
 	CBoundingBox m_collisionBox;
 
-	template <typename S> void serialize( S &s )
-	{
-		s.container4b( m_vPosition, 3 );
-		s.container4b( m_vRotation, 3 );
-		s.container4b( m_vVelocity, 3 );
-		s.class4b( m_collisionBox );
-	};
-
 	// if isKilled, is removed from the entity list and not processed otherwise
 	bool m_bIsKilled = false;
+
+	// Parent/Child system
+	// Parent has authority over its' children
+	// If an entity has a parent, it shouldn't change anything by itself really
+	// Only things that *should* be changed is m_vParentPosition && m_vRotation
+	// Everything else is handled by the parent.
+	std::vector<CEntityBase*> m_children;
+	CEntityBase *m_pParent = nullptr;
 };
