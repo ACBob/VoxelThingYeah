@@ -10,3 +10,6 @@
 [submodule "subprojects/enet"]
 	path = subprojects/enet
 	url = https://github.com/lsalzman/enet.git
+[submodule "subprojects/toml11"]
+	path = subprojects/toml11
+	url = https://github.com/ToruNiina/toml11.git
