@@ -208,6 +208,8 @@ int main( int argc, char *args[] )
 			scr_height->SetInt( s.y );
 			glViewport( 0, 0, s.x, s.y );
 			gui.Resize( s.x, s.y );
+			projection = glm::perspective( glm::radians( fov->GetFloat() ),
+											 scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f );
 			screen				  = glm::ortho( 0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat() );
 			window.m_bSizeChanged = false;
 		}
