@@ -12,9 +12,8 @@
 
 #define TEXTINTEXWIDTH 8
 #define TEXTINTEXHEIGHT 8
-#define TEXTRATIO 1
 
-#define TEXTWIDTH GUIUNIT *TEXTRATIO
+#define TEXTWIDTH GUIUNIT
 #define TEXTHEIGHT GUIUNIT
 
 // I am not supporting weird configurations
