@@ -6,11 +6,19 @@
 
 #include <random>
 
+#ifdef __linux__
 #define AL_ALEXT_PROTOTYPES
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <AL/efx-presets.h>
 #include <AL/efx.h>
+#elif _WIN32
+// Mostly my setup, idk what it's like on an actual windows host
+#include <al.h>
+#include <alc.h>
+#else
+	#error Unsupported Platform!
+#endif
 
 #include "filesystem.hpp"
 
@@ -69,7 +77,9 @@ void CSound::Play( CVector src, float pitch, float gain )
 	alSourcef( m_iId, AL_PITCH, pitch );
 	alSourcef( m_iId, AL_GAIN, gain );
 	alSource3f( m_iId, AL_POSITION, src.x, src.y, src.z );
+#ifdef __linux__
 	alSource3i( m_iId, AL_AUXILIARY_SEND_FILTER, soundEffectSlot, 0, AL_FILTER_NULL );
+#endif
 
 	alSourcePlay( m_iId );
 }
@@ -109,11 +119,15 @@ void soundSystem::Init()
 		return;
 	}
 
+#ifdef __linux__
 	if ( alcIsExtensionPresent( openAlDevice, "ALC_EXT_EFX" ) == AL_FALSE )
 	{
 		con_warning( "Device does not support ALC_EXT_EFX, no cool reverb for you :(" );
 		cl_reverb->SetBool( false );
 	}
+#else
+	con_warning("Reverb support currently disabled for Windows.");
+#endif
 
 	openAlContext = alcCreateContext( openAlDevice, NULL );
 	if ( !openAlContext )
@@ -125,7 +139,8 @@ void soundSystem::Init()
 		con_error( "Could not make AL context current!" );
 	}
 
-	if ( true )
+#ifdef __linux__
+	if ( cl_reverb->GetBool() )
 	{
 		// Effects
 		alGenAuxiliaryEffectSlots( 1, &soundEffectSlot );
@@ -136,6 +151,7 @@ void soundSystem::Init()
 
 		alAuxiliaryEffectSloti( soundEffectSlot, AL_EFFECTSLOT_EFFECT, soundEffects );
 	}
+#endif
 
 	alListener3f( AL_POSITION, 0.0f, 0.0f, 0.0f );
 	alListener3f( AL_VELOCITY, 0.0f, 0.0f, 0.0f );
@@ -189,8 +205,10 @@ void soundSystem::UnInit()
 	for ( auto s : soundEvents )
 		delete s.second;
 
+#ifdef __linux__
 	alDeleteEffects( 1, &soundEffects );
 	alDeleteAuxiliaryEffectSlots( 1, &soundEffects );
+#endif
 
 	// Shutdown sound
 	alcDestroyContext( openAlContext );
