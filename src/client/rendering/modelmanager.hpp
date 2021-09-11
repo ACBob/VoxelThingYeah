@@ -52,6 +52,8 @@ namespace modelSystem
 		CVector m_vRotation = { 0, 0, 0 };
 		CVector m_vSize		= { 1, 1, 1 };
 
+		bool m_bVisible = true;
+
 	  private:
 		CShader *m_pShader = nullptr;
 		CTexture *m_pTex   = nullptr;

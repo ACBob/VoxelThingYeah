@@ -19,6 +19,9 @@ void CModel::Render()
 	// Don't waste time trying to render
 	if ( m_vertices.size() == 0 || m_faces.size() == 0 )
 		return;
+	// If we're not visible, don't bother
+	if ( !m_bVisible )
+		return;
 
 	m_pShader->Use();
 	m_pRenderer->Render( m_vPosition, m_vRotation, m_vSize, m_pShader, m_pTex );

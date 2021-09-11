@@ -26,6 +26,8 @@ CEntityPlayer::~CEntityPlayer() {}
 #ifdef CLIENTEXE
 void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 {
+	m_pMdl->m_bVisible = false;
+
 	// Mouse Input
 	if ( !m_pInputMan->m_bInGui )
 	{
