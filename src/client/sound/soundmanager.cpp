@@ -1,6 +1,6 @@
 #include "soundmanager.hpp"
 
-#include "toml.hpp"
+#include "tomlcpp.hpp"
 
 #include "blockdef.hpp"
 
@@ -18,8 +18,8 @@
 
 #include "stb_vorbis.c"
 
-std::vector<CSound *> soundSystem::m_loadedSounds;
-std::map<const char *, CSound *> soundSystem::m_namedSounds;
+std::vector<CSound *> soundSystem::loadedSounds;
+std::map<std::string, CSoundEvent*> soundSystem::soundEvents;
 
 // TODO: Error sound
 CSound::CSound( const char *path )
@@ -64,6 +64,32 @@ void CSound::Play( CVector src, float pitch, float gain )
 	alSourcePlay( m_iId );
 }
 
+CSoundEvent::CSoundEvent( std::vector<std::string> sounds, const char *type, float minpitch, float maxpitch )
+{
+	for (std::string soundName : sounds)
+	{
+		CSound *s = soundSystem::LoadSound(soundName.c_str());
+		m_sounds.push_back(s);
+	}
+
+	if (strcmp(type, "block") == 0)
+	{
+		m_iSoundType = SOUNDTYPE_BLOCK;
+	}
+}
+
+void CSoundEvent::Play( CVector pos )
+{
+	// float pitch	= m_fMinPitch + (m_fMaxPitch - m_fMinPitch) * ((rand()) / (float)RAND_MAX);
+	float pitch = 1.0f;
+
+	int soundIdx = 0;
+	if (m_sounds.size() > 1)
+		soundIdx = (rand() & m_sounds.size());
+
+	m_sounds[soundIdx]->Play(pos, pitch, 1.0f);
+}
+
 ALCdevice *openAlDevice;
 ALCcontext *openAlContext;
 
@@ -91,11 +117,40 @@ void soundSystem::Init()
 	float ori[] = {0.0, 0.0, -1.0, 0.0, 1.0, 0.0};
 	alListenerfv(AL_ORIENTATION, ori);
 	alListenerf(AL_GAIN, cl_volume->GetFloat());
+
+	/* Now load the sounds */
+	con_info("Loading sounds.toml");
+
+	int64_t fl = 0;
+	bool bSuccess = false;
+	const uchar_t *soundsToml = fileSystem::LoadFile("sound/sounds.toml", fl, bSuccess);
+
+	toml::Result data = toml::parse((char*)soundsToml);
+	
+	for (std::string key : data.table->keys())
+	{
+		auto tbl = data.table->getTable(key);
+
+		auto [ has, type ] = tbl->getString("type");
+		if (!has)
+			// Assume type
+			type = "";
+
+		auto sounds = tbl->getArray("sounds");
+		if (!sounds)
+			con_warning("Sound %s has no sounds set!", key.c_str());
+		
+		auto pitch = tbl->getArray("pitch");
+
+		soundEvents[key] = new CSoundEvent(*sounds->getStringVector().get(), type.c_str(), 1.0f, 1.0f);
+	}
 }
 void soundSystem::UnInit()
 {
-	for ( CSound *s : m_loadedSounds )
+	for ( CSound *s : loadedSounds )
 		delete s;
+	for ( auto s : soundEvents )
+		delete s.second;
 	
 	// Shutdown sound
 	alcDestroyContext(openAlContext);
@@ -117,57 +172,38 @@ void soundSystem::SetListener(CVector pos, CVector forward)
 
 CSound *soundSystem::LoadSound( const char *path )
 {
+		con_info("Load sound %s", path);
 	CSound *snd = new CSound( path );
-	m_loadedSounds.push_back( snd );
+	loadedSounds.push_back( snd );
 
 	return snd;
 }
 
 void soundSystem::PlayBreakSound( blocktype_t blockType, CVector pos )
 {
-	blockmaterial_t mat = GetBlockMaterial( blockType );
-	float pitch			= 0.5 + ( random() % 15 ) / 10.0f;
-
-	switch ( mat )
-	{
-		case MAT_STONE:
-			m_namedSounds["breakStone"]->Play( pos, pitch, 1.0f );
-			break;
-		case MAT_WOOD:
-			m_namedSounds["breakWood"]->Play( pos, pitch, 1.0f );
-			break;
-		case MAT_LOOSE:
-			m_namedSounds["breakLoose"]->Play( pos, pitch, 1.0f );
-			break;
-		case MAT_GLASS:
-			m_namedSounds["breakGlass"]->Play( pos, pitch, 1.0f );
-			break;
-		case MAT_ORGANIC:
-			m_namedSounds["breakOrganic"]->Play( pos, pitch, 1.0f );
-			break;
-	}
+	soundEvents["soundtest"]->Play(pos);
 }
 void soundSystem::PlayPlaceSound( blocktype_t blockType, CVector pos )
 {
-	blockmaterial_t mat = GetBlockMaterial( blockType );
-	float pitch			= 0.5 + ( random() % 15 ) / 10.0f;
+	// blockmaterial_t mat = GetBlockMaterial( blockType );
+	// float pitch			= 0.5 + ( random() % 15 ) / 10.0f;
 
-	switch ( mat )
-	{
-		case MAT_STONE:
-			m_namedSounds["placeStone"]->Play( pos, pitch, 1.0f );
-			break;
-		case MAT_WOOD:
-			m_namedSounds["placeWood"]->Play( pos, pitch, 1.0f );
-			break;
-		case MAT_LOOSE:
-			m_namedSounds["placeLoose"]->Play( pos, pitch, 1.0f );
-			break;
-		case MAT_GLASS:
-			m_namedSounds["placeGlass"]->Play( pos, pitch, 1.0f );
-			break;
-		case MAT_ORGANIC:
-			m_namedSounds["placeOrganic"]->Play( pos, pitch, 1.0f );
-			break;
-	}
+	// switch ( mat )
+	// {
+	// 	case MAT_STONE:
+	// 		m_soundEvents["placeStone"]->Play( pos, pitch, 1.0f );
+	// 		break;
+	// 	case MAT_WOOD:
+	// 		m_soundEvents["placeWood"]->Play( pos, pitch, 1.0f );
+	// 		break;
+	// 	case MAT_LOOSE:
+	// 		m_soundEvents["placeLoose"]->Play( pos, pitch, 1.0f );
+	// 		break;
+	// 	case MAT_GLASS:
+	// 		m_soundEvents["placeGlass"]->Play( pos, pitch, 1.0f );
+	// 		break;
+	// 	case MAT_ORGANIC:
+	// 		m_soundEvents["placeOrganic"]->Play( pos, pitch, 1.0f );
+	// 		break;
+	// }
 }

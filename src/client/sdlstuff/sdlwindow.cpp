@@ -22,8 +22,6 @@ CGameWindow::CGameWindow( const char *title, CVector size, bool resizeable )
 	}
 
 	m_glctx = SDL_GL_CreateContext( m_pInternalWindow.get() );
-
-	SDL_SetRelativeMouseMode( SDL_TRUE );
 }
 CGameWindow::~CGameWindow() {}
 
@@ -115,7 +113,7 @@ const int scancodeToStateIndex[] = {
 
 void CGameWindow::PollEvents()
 {
-	SDL_SetRelativeMouseMode( !m_pInputMan->m_bInGui ? SDL_TRUE : SDL_FALSE );
+	// SDL_SetRelativeMouseMode( !m_pInputMan->m_bInGui ? SDL_TRUE : SDL_FALSE );
 
 	m_pInputMan->m_vMouseMovement = CVector( 0, 0 );
 
