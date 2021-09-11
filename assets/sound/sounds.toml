@@ -1,0 +1,74 @@
+# Small pieces of documentation, GO!
+# [Sound event name] - The naming convention is dot-seperated, but isn't hard-enforced.
+# type = string - Right now there's just block, but it will expand to other areas, used for volume meters.
+# appendSounds = bool - If true, we add the sounds to the pool rather than replace. Only good for resource packs really. Assumed false.
+# pitch = [a,b] - The pitch played will be between a and b, if absent assumed [1,1]
+
+["soundtest"]
+type = "block"
+appendSounds = false
+sounds = ["sound/test.ogg"]
+pitch = [0.01,2.0]
+
+
+["block.break.stone"]
+type = "block"
+appendSounds = false
+sounds = [ "sound/break.ogg" ]
+pitch = [ 0.5, 1.5 ]
+
+["block.break.loose"]
+type = "block"
+appendSounds = false
+sounds = [ "sound/breakloose.ogg" ]
+pitch = [ 0.5, 1.5 ]
+
+["block.break.wood"]
+type = "block"
+appendSounds = false
+sounds = [ "sound/breakwood.ogg" ]
+pitch = [ 0.5, 1.5 ]
+
+["block.break.glass"]
+type = "block"
+appendSounds = false
+sounds = [ "sound/breakglass.ogg" ]
+pitch = [ 0.5, 1.5 ]
+
+["block.break.organic"]
+type = "block"
+appendSounds = false
+sounds = [ "sound/breakorganic.ogg" ]
+pitch = [ 0.5, 1.5 ]
+
+##########################################
+
+["block.place.stone"]
+type = "block"
+appendSounds = false
+sounds = [ "sound/break.ogg" ]
+pitch = [ 0.5, 1.5 ]
+
+["block.place.loose"]
+type = "block"
+appendSounds = false
+sounds = [ "sound/breakloose.ogg" ]
+pitch = [ 0.5, 1.5 ]
+
+["block.place.wood"]
+type = "block"
+appendSounds = false
+sounds = [ "sound/breakwood.ogg" ]
+pitch = [ 0.5, 1.5 ]
+
+["block.place.glass"]
+type = "block"
+appendSounds = false
+sounds = [ "sound/breakglass.ogg" ]
+pitch = [ 0.5, 1.5 ]
+
+["block.place.organic"]
+type = "block"
+appendSounds = false
+sounds = [ "sound/breakorganic.ogg" ]
+pitch = [ 0.5, 1.5 ]
