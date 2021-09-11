@@ -15,7 +15,7 @@ pitch = [1.0,2.0]
 ["block.break.stone"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/break.ogg" ]
+sounds = [ "sound/breakstone.ogg" ]
 pitch = [ 0.5, 1.5 ]
 
 ["block.break.loose"]
@@ -47,29 +47,29 @@ pitch = [ 0.5, 1.5 ]
 ["block.place.stone"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/break.ogg" ]
+sounds = [ "sound/placestone.ogg" ]
 pitch = [ 0.5, 1.5 ]
 
 ["block.place.loose"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/breakloose.ogg" ]
+sounds = [ "sound/placeloose.ogg" ]
 pitch = [ 0.5, 1.5 ]
 
 ["block.place.wood"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/breakwood.ogg" ]
+sounds = [ "sound/placewood.ogg" ]
 pitch = [ 0.5, 1.5 ]
 
 ["block.place.glass"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/breakglass.ogg" ]
+sounds = [ "sound/placeglass.ogg" ]
 pitch = [ 0.5, 1.5 ]
 
 ["block.place.organic"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/breakorganic.ogg" ]
+sounds = [ "sound/placeorganic.ogg" ]
 pitch = [ 0.5, 1.5 ]

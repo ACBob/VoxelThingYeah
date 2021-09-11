@@ -222,29 +222,51 @@ CSound *soundSystem::LoadSound( const char *path )
 
 void soundSystem::PlayBreakSound( blocktype_t blockType, CVector pos )
 {
-	soundEvents["soundtest"]->Play(pos);
+	blockmaterial_t mat = GetBlockMaterial(blockType);
+
+	switch (mat)
+	{
+		default:
+		case MAT_NONE:
+		case MAT_STONE:
+			soundEvents["block.break.stone"]->Play(pos);
+		break;
+		case MAT_LOOSE:
+			soundEvents["block.break.loose"]->Play(pos);
+		break;
+		case MAT_WOOD:
+			soundEvents["block.break.wood"]->Play(pos);
+		break;
+		case MAT_GLASS:
+			soundEvents["block.break.glass"]->Play(pos);
+		break;
+		case MAT_ORGANIC:
+			soundEvents["block.break.organic"]->Play(pos);
+		break;
+	}
 }
 void soundSystem::PlayPlaceSound( blocktype_t blockType, CVector pos )
 {
-	// blockmaterial_t mat = GetBlockMaterial( blockType );
-	// float pitch			= 0.5 + ( random() % 15 ) / 10.0f;
+	blockmaterial_t mat = GetBlockMaterial(blockType);
 
-	// switch ( mat )
-	// {
-	// 	case MAT_STONE:
-	// 		m_soundEvents["placeStone"]->Play( pos, pitch, 1.0f );
-	// 		break;
-	// 	case MAT_WOOD:
-	// 		m_soundEvents["placeWood"]->Play( pos, pitch, 1.0f );
-	// 		break;
-	// 	case MAT_LOOSE:
-	// 		m_soundEvents["placeLoose"]->Play( pos, pitch, 1.0f );
-	// 		break;
-	// 	case MAT_GLASS:
-	// 		m_soundEvents["placeGlass"]->Play( pos, pitch, 1.0f );
-	// 		break;
-	// 	case MAT_ORGANIC:
-	// 		m_soundEvents["placeOrganic"]->Play( pos, pitch, 1.0f );
-	// 		break;
-	// }
+	switch (mat)
+	{
+		default:
+		case MAT_NONE:
+		case MAT_STONE:
+			soundEvents["block.place.stone"]->Play(pos);
+		break;
+		case MAT_LOOSE:
+			soundEvents["block.place.loose"]->Play(pos);
+		break;
+		case MAT_WOOD:
+			soundEvents["block.place.wood"]->Play(pos);
+		break;
+		case MAT_GLASS:
+			soundEvents["block.place.glass"]->Play(pos);
+		break;
+		case MAT_ORGANIC:
+			soundEvents["block.place.organic"]->Play(pos);
+		break;
+	}
 }
