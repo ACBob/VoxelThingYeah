@@ -19,6 +19,12 @@
 // I am not supporting weird configurations
 #define TEXTTILES 16
 
+#define LOG_LEVEL DEBUG
+#include "shared/seethe.h"
+
+// Char because we don't need 16 bits
+char fontWidths[('~' - ' ')];
+
 CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActiveItem( 0 ), m_iHotItem( 0 )
 {
 	// OpenGl
@@ -53,6 +59,13 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 	m_textBuffers = {};
 
 	Resize( screenW, screenH );
+
+	// TODO: read texture and find the min width to display
+	con_info("Processing font widths");
+	for (char c = ' '; c < '~'; c++)
+	{
+		fontWidths[c] = 16;
+	}
 }
 
 void CGui::Resize( int x, int y )
@@ -246,7 +259,7 @@ void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment tex
 			std::vector<CGui::Vertex> g = GetCharQuad( &text[i], pos, CVector( TEXTWIDTH, TEXTHEIGHT ), color );
 			std::copy( g.begin(), g.end(), std::back_inserter( m_textVertiecs ) );
 
-			pos = pos + CVector( TEXTWIDTH, 0 );
+			pos = pos + CVector( fontWidths[text[i]], 0 );
 
 			i++;
 		}
