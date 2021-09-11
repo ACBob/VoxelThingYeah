@@ -14,6 +14,9 @@ CEntityPlayer::CEntityPlayer()
 	m_hand.m_vDirection = GetForward();
 	m_hand.m_vPosition	= m_vPosition;
 #endif
+
+	m_collisionBox.m_vBounds = CVector(0.5,2,0.5);
+	m_collisionBox.m_vOrigin = CVector(0.5, 0, 0.5);
 }
 CEntityPlayer::~CEntityPlayer() {}
 

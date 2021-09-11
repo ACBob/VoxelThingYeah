@@ -168,6 +168,11 @@ int main( int argc, char *args[] )
 	skyboxSunModel->SetTexture( sunTexture );
 	skyboxSunModel->SetShader( unlitShader );
 
+	CModel colMdlTest;
+	GetCubeModel(colMdlTest, CVector(-0.25,-1,-0.25));
+	colMdlTest.SetTexture( testTexture );
+	colMdlTest.SetShader( unlitShader );
+
 	CGui gui( scr_width->GetInt(), scr_height->GetInt() );
 	gui.m_pInputMan = &inputMan;
 	gui.m_pClient = &client;
@@ -237,6 +242,11 @@ int main( int argc, char *args[] )
 			glBindTexture( GL_TEXTURE_2D, terrainPng->m_iId );
 
 			localWorld.Render();
+
+			glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+			colMdlTest.m_vPosition = plyr.m_vPosition + CVector(0,1,0);
+			colMdlTest.Render();
+			glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 
 			guiState.Update(&localWorld);
 		}
