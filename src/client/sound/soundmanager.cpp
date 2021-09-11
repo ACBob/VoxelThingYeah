@@ -6,9 +6,10 @@
 
 #include <random>
 
-#include "physfs.h"
 #include <AL/al.h>
 #include <AL/alc.h>
+
+#include "filesystem.hpp"
 
 #define LOG_LEVEL DEBUG
 #include "shared/seethe.h"
@@ -23,25 +24,19 @@ std::map<const char *, CSound *> soundSystem::m_namedSounds;
 // TODO: Error sound
 CSound::CSound( const char *path )
 {
-	PHYSFS_File *f = PHYSFS_openRead( path );
-	int64_t fl	   = PHYSFS_fileLength( f );
-	unsigned char buf[fl];
+	bool bSuccess		= false;
+	int64_t iFileLength = 0;
 
-	int64_t rl = PHYSFS_readBytes( f, &buf, fl );
-
-	if ( rl != fl )
-	{
-		printf( "PHYSFS Error!\n%s\n", PHYSFS_getLastError() );
-	}
+	const uchar_t *soundData = fileSystem::LoadFile(path, iFileLength, bSuccess);
 
 	int channels, rate;
 	short *data = NULL;
 
 	unsigned int decode_len =
-		stb_vorbis_decode_memory( reinterpret_cast<uint8 *>( &buf ), fl, &channels, &rate, &data );
+		stb_vorbis_decode_memory( reinterpret_cast<uint8 *>( &soundData ), iFileLength, &channels, &rate, &data );
 	if ( decode_len <= 0 )
 	{
-		printf( "OGG File %s failed to load!\n", path );
+		con_error( "OGG File %s failed to load!", path );
 	}
 
 	alGenSources( 1, &m_iId );
@@ -57,6 +52,8 @@ CSound::CSound( const char *path )
 	alBufferData( m_iBuffer, channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, data, l, rate );
 
 	alSourcei( m_iId, AL_BUFFER, m_iBuffer );
+
+	delete soundData;
 }
 void CSound::Play( CVector src, float pitch, float gain )
 {
