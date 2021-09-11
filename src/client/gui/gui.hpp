@@ -1,9 +1,9 @@
 
+#include "network/client.hpp"
 #include "rendering/shadermanager.hpp"
 #include "rendering/texturemanager.hpp"
 #include "shared/inputmanager.hpp"
 #include "utility/vector.hpp"
-#include "network/client.hpp"
 
 #include <map>
 #include <vector>
@@ -43,7 +43,7 @@ class CGui
 	CTexture *m_pTextTex   = nullptr;
 	CShader *m_pTextShader = nullptr;
 
-	CTexture *m_pButtonTex   = nullptr;
+	CTexture *m_pButtonTex = nullptr;
 
 	std::map<int, std::string> m_textBuffers;
 
@@ -93,18 +93,20 @@ class CGui
 	// Converts positions to screen ones, including negatives being from the opposite side and stuff
 	CVector GetInScreen( CVector vPosition );
 
-	enum TextAlignment
-	{
-		TEXTALIGN_LEFT = 0x0,    // |LEFT    |
+	enum TextAlignment {
+		TEXTALIGN_LEFT	 = 0x0,	 // |LEFT    |
 		TEXTALIGN_CENTER = 0x01, // | CENTER |
-		TEXTALIGN_RIGHT = 0x02  // |   RIGHT|
+		TEXTALIGN_RIGHT	 = 0x02	 // |   RIGHT|
 	};
 
 	// Elements
 	int Button( int iId, CVector vPosition, CVector vSize, CTexture *tex = nullptr );
-	int LabelButton(int id, const char *msg, CVector pos, CVector vOrigin = CVector( 0, 0 ), CVector padding = CVector(0.75,0.75,0.75));
-	void Label( const char *cText, CVector vPosition, Colour colour = Color( 1, 1, 1 ), TextAlignment textAlign = TEXTALIGN_LEFT );
-	void Image( CTexture *pTex, CVector vPosition, CVector vSize, CVector vOrigin = CVector( 0, 0 ), Colour tint = Colour(1,1,1) );
+	int LabelButton( int id, const char *msg, CVector pos, CVector vOrigin = CVector( 0, 0 ),
+					 CVector padding = CVector( 0.75, 0.75, 0.75 ) );
+	void Label( const char *cText, CVector vPosition, Colour colour = Color( 1, 1, 1 ),
+				TextAlignment textAlign = TEXTALIGN_LEFT );
+	void Image( CTexture *pTex, CVector vPosition, CVector vSize, CVector vOrigin = CVector( 0, 0 ),
+				Colour tint = Colour( 1, 1, 1 ) );
 	void ImageAtlas( CTexture *pTex, Atlas atlas, float fAtlasDivisions, CVector vPosition, CVector vSize,
 					 CVector vOrigin = CVector( 0, 0 ) );
 	const char *TextInput( int iId, CVector vPosition );

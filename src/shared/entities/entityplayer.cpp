@@ -14,12 +14,12 @@ CEntityPlayer::CEntityPlayer()
 	m_hand.m_vDirection = GetForward();
 	m_hand.m_vPosition	= m_vPosition;
 
-	m_children.push_back(&m_camera);
-	m_camera.m_vParentPosition = CVector(0,1.72,0);
+	m_children.push_back( &m_camera );
+	m_camera.m_vParentPosition = CVector( 0, 1.72, 0 );
 #endif
 
-	m_collisionBox.m_vBounds = CVector(0.5,2,0.5);
-	m_collisionBox.m_vOrigin = CVector(0.5, 0, 0.5);
+	m_collisionBox.m_vBounds = CVector( 0.5, 2, 0.5 );
+	m_collisionBox.m_vOrigin = CVector( 0.5, 0, 0.5 );
 }
 CEntityPlayer::~CEntityPlayer() {}
 

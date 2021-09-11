@@ -1,5 +1,5 @@
-#include "entitycamera.hpp"
 #include "entitybase.hpp"
+#include "entitycamera.hpp"
 #include "shared/inputmanager.hpp"
 #include "utility/raycast.hpp"
 

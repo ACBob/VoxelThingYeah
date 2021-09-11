@@ -62,12 +62,12 @@ namespace fileSystem
 		len			 = fileLen;
 
 		//! FIXME
-		int32_t l = fileLen;
+		int32_t l	 = fileLen;
 		uchar_t *out = new uchar_t[l + 1];
-		std::copy(buf, buf + l, out);
+		std::copy( buf, buf + l, out );
 		out[l] = '\0';
 
-		PHYSFS_close(f);
+		PHYSFS_close( f );
 
 		return out;
 	}

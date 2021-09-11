@@ -1,5 +1,5 @@
-#include "gui.hpp"
 #include "guistateplay.hpp"
+#include "gui.hpp"
 #include "guistatemanager.hpp" // For returning a different state if any
 
 #include "cvar_clientside.hpp"
@@ -15,33 +15,35 @@ CGuiStatePlay::CGuiStatePlay()
 {
 	m_iState = STATE_NORMAL;
 
-	m_pCrossHairTex = materialSystem::LoadTexture("crosshair.png");
-	m_pTerrainTex = materialSystem::LoadTexture("terrain.png");
+	m_pCrossHairTex = materialSystem::LoadTexture( "crosshair.png" );
+	m_pTerrainTex	= materialSystem::LoadTexture( "terrain.png" );
 }
 
-unsigned int CGuiStatePlay::Frame(CGui *pGui, CWorld *pLocalWorld)
+unsigned int CGuiStatePlay::Frame( CGui *pGui, CWorld *pLocalWorld )
 {
-	if ( m_iState == STATE_NORMAL && pGui->m_pInputMan->m_bInputState[INKEY_CHAT] && !pGui->m_pInputMan->m_bOldInputState[INKEY_CHAT] )
+	if ( m_iState == STATE_NORMAL && pGui->m_pInputMan->m_bInputState[INKEY_CHAT] &&
+		 !pGui->m_pInputMan->m_bOldInputState[INKEY_CHAT] )
 		m_iState = STATE_CHATTING;
 	else if ( pGui->m_pInputMan->m_bInputState[INKEY_OUT] && !pGui->m_pInputMan->m_bOldInputState[INKEY_OUT] )
 	{
 		if ( m_iState == STATE_CHATTING )
 			m_iState = STATE_NORMAL;
-		else if (m_iState == STATE_NORMAL)
+		else if ( m_iState == STATE_NORMAL )
 			m_iState = STATE_PAUSED;
-		else if (m_iState == STATE_PAUSED)
+		else if ( m_iState == STATE_PAUSED )
 			m_iState = STATE_NORMAL;
 	}
 
-	pGui->m_pInputMan->m_bInGui = !(m_iState == STATE_NORMAL);
+	pGui->m_pInputMan->m_bInGui = !( m_iState == STATE_NORMAL );
 
-	if (m_iState == STATE_PAUSED)
+	if ( m_iState == STATE_PAUSED )
 	{
-		pGui->Label("GAME PAUSED", pGui->m_vScreenCentre + CVector(0,5), CVector(1,1,1), CGui::TEXTALIGN_CENTER);
+		pGui->Label( "GAME PAUSED", pGui->m_vScreenCentre + CVector( 0, 5 ), CVector( 1, 1, 1 ),
+					 CGui::TEXTALIGN_CENTER );
 
-		if (pGui->LabelButton(1, "Back to Game", pGui->m_vScreenCentre + CVector(0,1), CVector(0.5, 0)))
+		if ( pGui->LabelButton( 1, "Back to Game", pGui->m_vScreenCentre + CVector( 0, 1 ), CVector( 0.5, 0 ) ) )
 			m_iState = STATE_NORMAL;
-		if (pGui->LabelButton(1, "Options", pGui->m_vScreenCentre + CVector(0,-1.5), CVector(0.5, 0)))
+		if ( pGui->LabelButton( 1, "Options", pGui->m_vScreenCentre + CVector( 0, -1.5 ), CVector( 0.5, 0 ) ) )
 			return CGuiStateManager::GUISTATE_OPTIONS;
 	}
 	else
@@ -50,7 +52,7 @@ unsigned int CGuiStatePlay::Frame(CGui *pGui, CWorld *pLocalWorld)
 		snprintf( buf, 100, "Connected to \"%s\"", cl_servername->GetString() );
 		pGui->Label( buf, CVector( 0, 0 ) );
 
-		pGui->Label( "Bobcraft", CVector( 0, 1 ) );		
+		pGui->Label( "Bobcraft", CVector( 0, 1 ) );
 
 		if ( m_iState == STATE_CHATTING )
 		{
@@ -58,7 +60,7 @@ unsigned int CGuiStatePlay::Frame(CGui *pGui, CWorld *pLocalWorld)
 			if ( chat != nullptr )
 			{
 				protocol::SendClientChatMessage( pGui->m_pClient->m_pPeer, chat );
-				m_iState = STATE_NORMAL;
+				m_iState					= STATE_NORMAL;
 				pGui->m_pInputMan->m_bInGui = false;
 			}
 		}
@@ -74,19 +76,20 @@ unsigned int CGuiStatePlay::Frame(CGui *pGui, CWorld *pLocalWorld)
 			pGui->Label( msg.c_str(), CVector( 0, 2 + i ) );
 		}
 
-		snprintf( buf, 100, "<%.2f,%.2f,%.2f>",	
-			reinterpret_cast<CEntityPlayer*>(pLocalWorld->m_pLocalPlayer)->m_vPosition.x,
-			reinterpret_cast<CEntityPlayer*>(pLocalWorld->m_pLocalPlayer)->m_vPosition.y,
-			reinterpret_cast<CEntityPlayer*>(pLocalWorld->m_pLocalPlayer)->m_vPosition.z );
+		snprintf( buf, 100, "<%.2f,%.2f,%.2f>",
+				  reinterpret_cast<CEntityPlayer *>( pLocalWorld->m_pLocalPlayer )->m_vPosition.x,
+				  reinterpret_cast<CEntityPlayer *>( pLocalWorld->m_pLocalPlayer )->m_vPosition.y,
+				  reinterpret_cast<CEntityPlayer *>( pLocalWorld->m_pLocalPlayer )->m_vPosition.z );
 		pGui->Label( buf, CVector( 0, -1 ) );
 		int hours	= pLocalWorld->m_iTimeOfDay / 1000;
 		int minutes = ( pLocalWorld->m_iTimeOfDay - ( hours * 1000 ) ) / 16.6666;
 		snprintf( buf, 100, "Time %02i:%02i", hours, minutes );
 		pGui->Label( buf, CVector( 0, -2 ) );
 
-		BlockTexture bTex = GetDefaultBlockTextureSide( reinterpret_cast<CEntityPlayer*>(pLocalWorld->m_pLocalPlayer)->m_iSelectedBlockType, Direction::NORTH );
+		BlockTexture bTex = GetDefaultBlockTextureSide(
+			reinterpret_cast<CEntityPlayer *>( pLocalWorld->m_pLocalPlayer )->m_iSelectedBlockType, Direction::NORTH );
 		pGui->ImageAtlas( m_pTerrainTex, { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey },
-						16, CVector( -1, -1 ), CVector( 4, 4 ), CVector( 1, 1 ) );
+						  16, CVector( -1, -1 ), CVector( 4, 4 ), CVector( 1, 1 ) );
 
 		pGui->Image( m_pCrossHairTex, pGui->m_vScreenCentre, CVector( 2, 2 ), CVector( 0.5, 0.5 ) );
 		// pGui->Update();

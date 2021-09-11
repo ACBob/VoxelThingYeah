@@ -14,10 +14,8 @@ class CEntityCamera : public CEntityBase
 	void Kill() { BaseClass::Kill(); };
 
 #ifdef CLIENTEXE
-	void UpdateClient( CWorld *clientSideWorld ) { BaseClass::UpdateClient(clientSideWorld); };
+	void UpdateClient( CWorld *clientSideWorld ) { BaseClass::UpdateClient( clientSideWorld ); };
 #endif
 
-	void PhysicsTick( float delta, CWorld *world ) { BaseClass::PhysicsTick(delta, world); };
-
-
+	void PhysicsTick( float delta, CWorld *world ) { BaseClass::PhysicsTick( delta, world ); };
 };

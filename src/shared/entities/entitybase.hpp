@@ -32,7 +32,7 @@ class CEntityBase
 	// Called every tick (usually 1/20th of a second)
 	// Gets handed the delta time to help work out physics-related stuff
 	// Also gets given the world for collision reasons
-	virtual void PhysicsTick( float delta, CWorld *world ) {};
+	virtual void PhysicsTick( float delta, CWorld *world ){};
 
 	// Updates the entity's children
 	virtual void UpdateChildren();
@@ -40,7 +40,7 @@ class CEntityBase
 #ifdef CLIENTEXE
 	// Update any client-side things we may have, called every frame rather than per tick
 	// Uses the client-side version of the world for testing things (i.e player hand)
-	virtual void UpdateClient( CWorld *clientSideWorld ) {};
+	virtual void UpdateClient( CWorld *clientSideWorld ){};
 
 	// Renders our Model.
 	virtual void Render()
@@ -82,6 +82,6 @@ class CEntityBase
 	// If an entity has a parent, it shouldn't change anything by itself really
 	// Only things that *should* be changed is m_vParentPosition && m_vRotation
 	// Everything else is handled by the parent.
-	std::vector<CEntityBase*> m_children;
+	std::vector<CEntityBase *> m_children;
 	CEntityBase *m_pParent = nullptr;
 };

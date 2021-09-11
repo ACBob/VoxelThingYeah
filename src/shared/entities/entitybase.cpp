@@ -10,10 +10,10 @@ void CEntityBase::Kill() { m_bIsKilled = true; }
 
 void CEntityBase::UpdateChildren()
 {
-	for (CEntityBase *ent : m_children)
+	for ( CEntityBase *ent : m_children )
 	{
-		ent->m_pParent = this;
-		ent->m_vPosition = m_vPosition + ent->m_vParentPosition.Rotate(m_vRotation);
+		ent->m_pParent	 = this;
+		ent->m_vPosition = m_vPosition + ent->m_vParentPosition.Rotate( m_vRotation );
 		ent->m_vVelocity = CVector();
 	}
 }

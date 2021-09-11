@@ -145,7 +145,7 @@ int main( int argc, char *args[] )
 	client.m_pLocalPlayer = &plyr;
 	localWorld.AddEntity( &plyr );
 	localWorld.m_pLocalPlayer = &plyr;
-	plyr.m_pClient = &client;
+	plyr.m_pClient			  = &client;
 
 	glm::mat4 projection = glm::perspective( glm::radians( fov->GetFloat() ),
 											 scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f );
@@ -169,16 +169,16 @@ int main( int argc, char *args[] )
 	skyboxSunModel->SetShader( unlitShader );
 
 	CModel colMdlTest;
-	GetCubeModel(colMdlTest, CVector(-0.25,-1,-0.25));
+	GetCubeModel( colMdlTest, CVector( -0.25, -1, -0.25 ) );
 	colMdlTest.SetTexture( testTexture );
 	colMdlTest.SetShader( unlitShader );
 
 	CGui gui( scr_width->GetInt(), scr_height->GetInt() );
 	gui.m_pInputMan = &inputMan;
-	gui.m_pClient = &client;
+	gui.m_pClient	= &client;
 	CGuiStateManager guiState;
 	guiState.m_pInputManager = &inputMan;
-	guiState.m_pGui = &gui;
+	guiState.m_pGui			 = &gui;
 
 	int64_t then =
 		std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() )
@@ -187,7 +187,7 @@ int main( int argc, char *args[] )
 	int i		= 0;
 
 	bool chatting = false;
-	bool paused = false;
+	bool paused	  = false;
 
 	CVector sunForward( 0, 1, 0 );
 	float sunAngle = 0.0f;
@@ -208,8 +208,8 @@ int main( int argc, char *args[] )
 			scr_height->SetInt( s.y );
 			glViewport( 0, 0, s.x, s.y );
 			gui.Resize( s.x, s.y );
-			projection = glm::perspective( glm::radians( fov->GetFloat() ),
-											 scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f );
+			projection			  = glm::perspective( glm::radians( fov->GetFloat() ),
+											  scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f );
 			screen				  = glm::ortho( 0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat() );
 			window.m_bSizeChanged = false;
 		}
@@ -246,11 +246,11 @@ int main( int argc, char *args[] )
 			localWorld.Render();
 
 			glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-			colMdlTest.m_vPosition = plyr.m_vPosition + CVector(0,1,0);
+			colMdlTest.m_vPosition = plyr.m_vPosition + CVector( 0, 1, 0 );
 			colMdlTest.Render();
 			glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 
-			guiState.Update(&localWorld);
+			guiState.Update( &localWorld );
 		}
 
 		window.SwapBuffers();

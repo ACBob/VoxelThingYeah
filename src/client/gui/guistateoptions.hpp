@@ -5,15 +5,12 @@
 
 class CGuiStateOptions : public CGuiState
 {
-	public:
-		CGuiStateOptions();
+  public:
+	CGuiStateOptions();
 
-		unsigned int Frame(CGui *pGui, CWorld *pLocalWorld);
+	unsigned int Frame( CGui *pGui, CWorld *pLocalWorld );
 
-		enum State
-		{
-			STATE_NORMAL = 0x0
-		};
+	enum State { STATE_NORMAL = 0x0 };
 
-	private:
+  private:
 };

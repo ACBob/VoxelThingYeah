@@ -207,11 +207,11 @@ namespace protocol
 
 				if ( username == "" || username == client->m_pLocalPlayer->m_name )
 				{
-					con_warning("Attempt from server to PLAYERLEAVE us...?");
+					con_warning( "Attempt from server to PLAYERLEAVE us...?" );
 					return;
 				}
 
-				CEntityPlayer *e = (CEntityPlayer*)client->m_pLocalWorld->GetEntityByName( username.c_str() );
+				CEntityPlayer *e = (CEntityPlayer *)client->m_pLocalWorld->GetEntityByName( username.c_str() );
 				if ( e != nullptr )
 				{
 					e->m_bIsKilled = true;

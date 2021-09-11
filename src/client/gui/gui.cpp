@@ -185,7 +185,7 @@ int CGui::Button( int id, CVector pos, CVector size, CTexture *tex )
 {
 	pos	 = GetInScreen( pos );
 	size = size * GUIUNIT;
-	if (tex == nullptr)
+	if ( tex == nullptr )
 		tex = m_pButtonTex;
 
 	int returnCode = 0;
@@ -211,18 +211,19 @@ int CGui::Button( int id, CVector pos, CVector size, CTexture *tex )
 		color	   = Colour( 0.25, 0.25, 0.25 );
 	}
 
-	Image(tex, pos / GUIUNIT, size / GUIUNIT, CVector(0,0), color);
+	Image( tex, pos / GUIUNIT, size / GUIUNIT, CVector( 0, 0 ), color );
 
 	return returnCode;
 }
 
-int CGui::LabelButton(int id, const char *msg, CVector pos, CVector origin, CVector padding)
+int CGui::LabelButton( int id, const char *msg, CVector pos, CVector origin, CVector padding )
 {
 	// TODO: Function to get size of rendered text
-	CVector size = CVector( (TEXTWIDTH * strlen(msg) / GUIUNIT) + (padding.x / 2.0f), (TEXTHEIGHT * 2 / GUIUNIT) + (padding.y / 2.0f) );
-	pos = pos - ( size * origin );
-	int buttonOut = Button(id, pos, size);
-	Label(msg, pos + size/2, CVector(1,1,1), TEXTALIGN_CENTER);
+	CVector size  = CVector( ( TEXTWIDTH * strlen( msg ) / GUIUNIT ) + ( padding.x / 2.0f ),
+							 ( TEXTHEIGHT * 2 / GUIUNIT ) + ( padding.y / 2.0f ) );
+	pos			  = pos - ( size * origin );
+	int buttonOut = Button( id, pos, size );
+	Label( msg, pos + size / 2, CVector( 1, 1, 1 ), TEXTALIGN_CENTER );
 	return buttonOut;
 }
 
@@ -230,10 +231,10 @@ void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment tex
 {
 	pos = GetInScreen( pos );
 
-	if (textAlign == TEXTALIGN_CENTER)
-		pos = pos - CVector( ( TEXTWIDTH * strlen(text) ) / 2, 0 );
-	else if (textAlign == TEXTALIGN_RIGHT)
-		pos = pos - CVector( ( TEXTWIDTH * strlen(text) ) , 0 );
+	if ( textAlign == TEXTALIGN_CENTER )
+		pos = pos - CVector( ( TEXTWIDTH * strlen( text ) ) / 2, 0 );
+	else if ( textAlign == TEXTALIGN_RIGHT )
+		pos = pos - CVector( ( TEXTWIDTH * strlen( text ) ), 0 );
 
 	// Render
 	// OpenGl

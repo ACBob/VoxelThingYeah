@@ -5,19 +5,14 @@
 
 class CGuiStatePlay : public CGuiState
 {
-	public:
-		CGuiStatePlay();
+  public:
+	CGuiStatePlay();
 
-		unsigned int Frame(CGui *pGui, CWorld *pLocalWorld);
+	unsigned int Frame( CGui *pGui, CWorld *pLocalWorld );
 
-		enum State
-		{
-			STATE_NORMAL = 0x0,
-			STATE_CHATTING = 0x1,
-			STATE_PAUSED = 0x2
-		};
+	enum State { STATE_NORMAL = 0x0, STATE_CHATTING = 0x1, STATE_PAUSED = 0x2 };
 
-	private:
-		CTexture *m_pCrossHairTex = nullptr;
-		CTexture *m_pTerrainTex = nullptr;
+  private:
+	CTexture *m_pCrossHairTex = nullptr;
+	CTexture *m_pTerrainTex	  = nullptr;
 };
