@@ -41,8 +41,6 @@ add_subdirectory(subprojects/physfs EXCLUDE_FROM_ALL)
 add_subdirectory(subprojects/enet EXCLUDE_FROM_ALL)
 # GLM
 add_subdirectory(subprojects/glm EXCLUDE_FROM_ALL)
-# TOML 11
-add_subdirectory(subprojects/toml11 EXCLUDE_FROM_ALL)
 
 # Game Sources
 add_subdirectory(src)
@@ -56,7 +54,6 @@ include_directories(${includes}
 	"${CMAKE_CURRENT_LIST_DIR}/subprojects/lodepng" 
 	"${CMAKE_CURRENT_LIST_DIR}/subprojects/physfs/src" 
 	"${CMAKE_CURRENT_LIST_DIR}/subprojects/enet/include"
-	"${CMAKE_CURRENT_LIST_DIR}/subprojects/toml11"
 	"${CMAKE_CURRENT_LIST_DIR}/include"
 	
 	"${CMAKE_CURRENT_LIST_DIR}/src/shared"
