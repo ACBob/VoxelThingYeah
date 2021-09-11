@@ -76,16 +76,18 @@ CSoundEvent::CSoundEvent( std::vector<std::string> sounds, const char *type, flo
 	{
 		m_iSoundType = SOUNDTYPE_BLOCK;
 	}
+
+	m_fMinPitch = minpitch;
+	m_fMaxPitch = maxpitch;
 }
 
 void CSoundEvent::Play( CVector pos )
 {
-	// float pitch	= m_fMinPitch + (m_fMaxPitch - m_fMinPitch) * ((rand()) / (float)RAND_MAX);
-	float pitch = 1.0f;
+	float pitch	= m_fMinPitch + (m_fMaxPitch - m_fMinPitch) * ((rand()) / (float)RAND_MAX);
 
 	int soundIdx = (rand() % m_sounds.size());
 
-	m_sounds.at(soundIdx)->Play(pos, pitch, 1.0f);
+	m_sounds.at(soundIdx)->Play(pos, pitch, pitch);
 }
 
 ALCdevice *openAlDevice;
@@ -138,9 +140,21 @@ void soundSystem::Init()
 		if (!sounds)
 			con_warning("Sound %s has no sounds set!", key.c_str());
 		
-		auto pitch = tbl->getArray("pitch");
+		float minPitch, maxPitch;
 
-		soundEvents[key] = new CSoundEvent(*sounds->getStringVector().get(), type.c_str(), 1.0f, 1.0f);
+		auto pitch = tbl->getArray("pitch");
+		auto pA = pitch->getDouble(0);
+		if (!pA.first)
+			minPitch = 1.0f;
+		else
+			minPitch = pA.second;
+		auto pB = pitch->getDouble(1);
+		if (!pB.first)
+			maxPitch = 1.0f;
+		else
+			maxPitch = pB.second;
+
+		soundEvents[key] = new CSoundEvent(*sounds->getStringVector().get(), type.c_str(), minPitch, maxPitch);
 	}
 }
 void soundSystem::UnInit()
