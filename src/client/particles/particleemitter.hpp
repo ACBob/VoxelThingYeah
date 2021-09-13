@@ -8,5 +8,7 @@ class CParticleEmitter
 	CParticleEmitter();
 	~CParticleEmitter();
 
+	void Render();
+
 	std::vector<CParticle> m_particles;
 };

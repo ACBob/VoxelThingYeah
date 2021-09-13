@@ -1,10 +1,31 @@
 #include "particlesystem.hpp"
 
+const CModel::Vertex particlePlane[4] = {
+	{ -0.5f, -0.5f, 0.0f },
+	{ 0.5f, -0.5f, 0.0f },
+	{ 0.5f, 0.5f, 0.0f },
+	{ -0.5f, 0.5f, 0.0f }
+};
+const CModel::Face particlePlaneFaces[2] = {
+	{ 0, 1, 2 },
+	{ 1, 2, 3 }
+};
+
 namespace particleSystem
 {
-	void Init() {}
-	void UnInit() {}
+	void Init()
+	{
+		particleMdl = new CModel();
+		std::copy( particlePlane, particlePlane + 4, std::back_inserter( particleMdl->m_vertices ) );
+		std::copy( particlePlaneFaces, particlePlaneFaces + 2, std::back_inserter( particleMdl->m_faces ) );
+	}
+	void UnInit()
+	{
+		delete particleMdl;
+	}
 
 	std::vector<CParticle> particles;
 	std::vector<CParticleEmitter> particleEmitters;
+
+	CModel *particleMdl = nullptr;
 } // namespace particleSystem

@@ -1,4 +1,5 @@
 #include "vector.hpp"
+#include "rendering/modelmanager.hpp"
 
 class CParticle
 {
@@ -7,8 +8,12 @@ class CParticle
 	CParticle();
 	~CParticle();
 
+	void Render();
+
 	CVector m_vPosition;
 	CVector m_vSize; // Z Ignored!!!
 
-	bool bShouldDie;
+	CModel *m_mdl;
+
+	bool m_bShouldDie;
 };
