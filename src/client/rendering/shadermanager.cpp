@@ -102,19 +102,12 @@ void shaderSystem::Init() {}
 void shaderSystem::SetUniforms( glm::mat4 &view, glm::mat4 &projection, glm::mat4 &screen, unsigned int ticks,
 								int timeOfDay, CVector sunAngle )
 {
-	glm::mat4 billboard(projection);
-	billboard[0].w = 0;
-	billboard[1].w = 0;
-	billboard[2].w = 0;
-	billboard[3].w = 1;
-
 	for ( CShader *s : loadedShaders )
 	{
 		s->Use();
 		s->SetMat4( "view", view );
 		s->SetMat4( "projection", projection );
 		s->SetMat4( "screen", screen );
-		s->SetMat4( "billboard", billboard );
 		s->SetInt( "time", ticks );
 		s->SetInt( "timeOfDay", timeOfDay );
 		s->SetVec( "sunAngle", sunAngle );

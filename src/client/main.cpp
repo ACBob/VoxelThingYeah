@@ -135,6 +135,11 @@ int main( int argc, char *args[] )
 	skyboxSunModel->SetTexture( sunTexture );
 	skyboxSunModel->SetShader( unlitShader );
 
+	CModel a;
+	GetCubeModel( a, CVector(0.2, 0.2, 0.2) );
+	a.SetShader(unlitShader);
+	a.SetTexture(testTexture);
+
 	con_info( "Loading Sounds..." );
 	soundSystem::Init();
 	atexit( soundSystem::UnInit );
@@ -263,6 +268,8 @@ int main( int argc, char *args[] )
 
 			testParticle.m_vPosition = v;
 			testParticle.Render();
+			a.m_vPosition = testParticle.m_vPosition;
+			a.Render();
 
 			guiState.Update( &localWorld );
 		}

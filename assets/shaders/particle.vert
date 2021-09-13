@@ -8,10 +8,22 @@ out vec3 Light;
 
 uniform mat4 model;
 uniform mat4 view;
-uniform mat4 billboard;
+uniform mat4 projection;
 
 void main()
 {
-	gl_Position = billboard * view * model * vec4(aPos, 1.0f);
+	mat4 billboard = model * view;
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			if (i==j)
+				billboard[i*4][j] = 1.0f;
+			else
+				billboard[i*4][j] = 0.0f;
+		}
+	}
+
+	gl_Position = projection * billboard * vec4(aPos, 0.0f);
 	TexCoord = vec2(aTexCoord.x, aTexCoord.y);
 }
