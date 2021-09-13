@@ -85,6 +85,7 @@ void COverworldJeneration::BiomeBlocks( CChunk *c )
 			// We follow down to -1 so we can alter the blocks in the chunk below
 			for ( int y = CHUNKSIZE_Y; y > -1; y-- )
 			{
+				// TODO: Actually fix this as it tries to query chunks that don't exist yet.
 				CBlock *blk = c->GetBlockAtLocal( CVector( x, y, z ) );
 				if ( blk != nullptr && blk->m_iBlockType != STONE )
 					continue;
