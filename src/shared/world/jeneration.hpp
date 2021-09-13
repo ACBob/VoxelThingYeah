@@ -4,6 +4,8 @@
 
 #pragma once
 
+#define CAVE_NOISES 3
+
 class COverworldJeneration
 {
   public:
@@ -20,6 +22,8 @@ class COverworldJeneration
 	fnl_state m_seafloorNoise;
 	fnl_state m_dirtNoise;
 	fnl_state m_oreNoise;
+	
+	fnl_state m_caveNoises[CAVE_NOISES];
 
 	int m_iSeed = 69;
 

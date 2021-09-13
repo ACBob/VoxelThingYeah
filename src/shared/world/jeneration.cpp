@@ -30,6 +30,13 @@ COverworldJeneration::COverworldJeneration()
 	m_oreNoise.lacunarity		 = 0.6;
 	m_oreNoise.gain				 = 1.3;
 	m_oreNoise.weighted_strength = 0.8;
+
+	for (int i = 0; i < CAVE_NOISES; i++)
+	{
+		m_caveNoises[i] = fnlCreateState();
+		m_caveNoises[i].seed = m_iSeed + 'CAVE' + i;
+		m_caveNoises[i].frequency = 0.01;
+	}
 }
 
 // Generates the base stone skeleton
@@ -104,20 +111,33 @@ void COverworldJeneration::BiomeBlocks( CChunk *c )
 // Decorates with ores, plants, etc.
 void COverworldJeneration::Decorate( CChunk *c )
 {
-	// Ore
 	for ( int i = 0; i < sizeof( c->m_blocks ) / sizeof( CBlock ); i++ )
 	{
-		if ( c->m_blocks[i].m_iBlockType != STONE )
-			continue;
-
 		int x, y, z;
 		CHUNK1D_TO_3D( i, x, y, z );
 		CVector WorldPosition = c->PosToWorld( CVector( x, y, z ) );
 
-		float noiseData = fnlGetNoise3D( &m_oreNoise, WorldPosition.x, WorldPosition.y, WorldPosition.z ) * 1.1;
+		// Ore
+		if ( c->m_blocks[i].m_iBlockType == STONE )
+		{
+			float noiseData = fnlGetNoise3D( &m_oreNoise, WorldPosition.x, WorldPosition.y, WorldPosition.z ) * 1.1;
 
-		if ( noiseData > 0.9 )
-			c->m_blocks[i].m_iBlockType = ORE_COAL;
+			if ( noiseData > 0.9 )
+				c->m_blocks[i].m_iBlockType = ORE_COAL;
+		}
+
+		// Caves
+		float caveVal = 0.0f;
+		for (int j = 0; j < CAVE_NOISES; j++)
+			caveVal += std::pow(fnlGetNoise3D( &m_caveNoises[j], WorldPosition.x, WorldPosition.y, WorldPosition.z ), 2.0f);
+		
+		if ( caveVal < 0.04f )
+		{
+			if ( c->m_blocks[i].m_iBlockType == STONE || c->m_blocks[i].m_iBlockType == GRASS || c->m_blocks[i].m_iBlockType == DIRT || c->m_blocks[i].m_iBlockType == ORE_COAL )
+			{
+				c->m_blocks[i].m_iBlockType = AIR;
+			}
+		}
 	}
 }
 
