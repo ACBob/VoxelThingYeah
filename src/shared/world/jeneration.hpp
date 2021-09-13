@@ -17,8 +17,11 @@ class COverworldJeneration
 
   private:
 	fnl_state m_baseNoise;
+	fnl_state m_seafloorNoise;
 	fnl_state m_dirtNoise;
 	fnl_state m_oreNoise;
 
 	int m_iSeed = 69;
+
+	int m_iSeaLevel = 10;
 };

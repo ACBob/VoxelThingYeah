@@ -11,6 +11,12 @@ COverworldJeneration::COverworldJeneration()
 	m_baseNoise.noise_type = FNL_NOISE_OPENSIMPLEX2;
 	m_baseNoise.frequency  = 0.025;
 
+	m_seafloorNoise		 = fnlCreateState();
+	m_seafloorNoise.seed = m_iSeed + 23;
+	m_seafloorNoise.noise_type = FNL_NOISE_PERLIN;
+	m_seafloorNoise.octaves = 1;
+	m_seafloorNoise.lacunarity = 0.3;
+
 	m_dirtNoise			   = fnlCreateState();
 	m_dirtNoise.seed	   = m_iSeed + 230;
 	m_dirtNoise.noise_type = FNL_NOISE_PERLIN;
@@ -39,11 +45,22 @@ void COverworldJeneration::GenBase( CChunk *c )
 		// Make the block aware of our existence
 		c->m_blocks[i].m_pChunk = c;
 
-		float noiseData = 1 + fnlGetNoise3D( &m_baseNoise, WorldPosition.x, WorldPosition.y, WorldPosition.z );
-		float percentToTopSurface = 1.0f - ( WorldPosition.y / 32.0f );
-		noiseData *= percentToTopSurface;
+		// First try the seafloor
+		float noiseDataFloor = fnlGetNoise2D( &m_seafloorNoise, WorldPosition.x, WorldPosition.z );
+		float seaFloor = 8.0f + (3.0f * noiseDataFloor);
 
-		c->m_blocks[i].m_iBlockType = noiseData > 0.7 ? blocktype_t::STONE : blocktype_t::AIR;
+		if (WorldPosition.y <= seaFloor)
+		{
+			c->m_blocks[i].m_iBlockType = STONE;
+			continue;
+		}
+
+
+		float noiseData3D = 1 + fnlGetNoise3D( &m_baseNoise, WorldPosition.x, WorldPosition.y, WorldPosition.z );
+		float percentToTopSurface = 1.0f - ( WorldPosition.y / 32.0f );
+		noiseData3D *= percentToTopSurface;
+
+		c->m_blocks[i].m_iBlockType = noiseData3D > 0.7 ? STONE : (WorldPosition.y > m_iSeaLevel ? AIR : WATER);
 	}
 }
 
@@ -62,7 +79,7 @@ void COverworldJeneration::BiomeBlocks( CChunk *c )
 			for ( int y = CHUNKSIZE_Y; y > -1; y-- )
 			{
 				CBlock *blk = c->GetBlockAtLocal( CVector( x, y, z ) );
-				if ( blk != nullptr && blk->m_iBlockType == AIR )
+				if ( blk != nullptr && blk->m_iBlockType != STONE )
 					continue;
 
 				CBlock *b = c->GetBlockAtLocal( CVector( x, y + 1, z ) );
