@@ -33,6 +33,8 @@
 
 #include "sound/soundmanager.hpp"
 
+#include "particles/particlesystem.hpp"
+
 int main( int argc, char *args[] )
 {
 
@@ -137,6 +139,10 @@ int main( int argc, char *args[] )
 	soundSystem::Init();
 	atexit( soundSystem::UnInit );
 
+	con_info("Init ParticleSystem...");
+	particleSystem::Init();
+	atexit( particleSystem::UnInit );
+
 	con_info( "Create Client..." );
 	CWorld localWorld( diffuseShader, diffuseShader );
 
@@ -188,8 +194,9 @@ int main( int argc, char *args[] )
 	int64_t now = then;
 	int i		= 0;
 
-	bool chatting = false;
-	bool paused	  = false;
+	CParticle testParticle;
+	testParticle.m_mdl = particleSystem::particleMdl;
+	testParticle.m_vPosition = CVector(8,8,8);
 
 	CVector sunForward( 0, 1, 0 );
 	float sunAngle = 0.0f;
@@ -248,6 +255,14 @@ int main( int argc, char *args[] )
 			glBindTexture( GL_TEXTURE_2D, terrainPng->m_iId );
 
 			localWorld.Render();
+
+			// for (CParticleEmitter pe : particleSystem::particleEmitters)
+			// {
+			// 	pe.Render();
+			// }
+
+			testParticle.m_vPosition = v;
+			testParticle.Render();
 
 			guiState.Update( &localWorld );
 		}
