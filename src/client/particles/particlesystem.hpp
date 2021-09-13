@@ -10,6 +10,6 @@ namespace particleSystem
 
 	extern std::vector<CParticle> particles;
 	extern std::vector<CParticleEmitter> particleEmitters;
-	
+
 	extern CModel *particleMdl;
 } // namespace particleSystem

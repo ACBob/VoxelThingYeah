@@ -1,5 +1,5 @@
-#include "vector.hpp"
 #include "rendering/modelmanager.hpp"
+#include "vector.hpp"
 
 class CParticle
 {

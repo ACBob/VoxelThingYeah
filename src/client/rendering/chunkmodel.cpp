@@ -168,7 +168,8 @@ void BuildChunkModel( CModel &mdl, CBlock blocks[], CVector pos, void *chunk )
 										reinterpret_cast<CChunk *>( chunk )->Neighbour( Direction( i ) );
 									if ( chunkNeighbour != nullptr )
 									{
-										neighbour = neighbour + ( DirectionVector[i] * CVector(-CHUNKSIZE_X, -CHUNKSIZE_Y, -CHUNKSIZE_Z) );
+										neighbour = neighbour + ( DirectionVector[i] *
+																  CVector( -CHUNKSIZE_X, -CHUNKSIZE_Y, -CHUNKSIZE_Z ) );
 
 										CBlock *b = chunkNeighbour->GetBlockAtLocal( neighbour );
 										if ( b == nullptr )

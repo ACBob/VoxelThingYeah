@@ -56,24 +56,24 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 		m_pointed			= m_hand.Cast( clientSideWorld );
 
 		if ( m_pInputMan->m_iMouseState & IN_LEFT_MOUSE && m_pInputMan->m_iOldMouseState == 0 &&
-			m_pointed.m_pBlock != nullptr )
+			 m_pointed.m_pBlock != nullptr )
 		{
 			BlockFeatures bF = GetBlockFeatures( m_pointed.m_pBlock->m_iBlockType );
 			if ( bF.breakable )
 			{
 				soundSystem::PlayBreakSound( m_pointed.m_pBlock->m_iBlockType,
-											m_pointed.m_vPosition - CVector( 0.5, 0.5, 0.5 ) );
+											 m_pointed.m_vPosition - CVector( 0.5, 0.5, 0.5 ) );
 				m_pointed.m_pBlock->m_iBlockType = blocktype_t::AIR;
 				m_pointed.m_pBlock->Update();
 
 				protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5,
-											blocktype_t::AIR );
+											  blocktype_t::AIR );
 			}
 		}
 		if ( m_pInputMan->m_iMouseState & IN_RIGHT_MOUSE && m_pInputMan->m_iOldMouseState == 0 &&
-			m_pointed.m_pBlock != nullptr )
+			 m_pointed.m_pBlock != nullptr )
 		{
-			CBlock *b		 = clientSideWorld->BlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal );
+			CBlock *b = clientSideWorld->BlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal );
 			BlockFeatures bF = GetBlockFeatures( m_pointed.m_pBlock->m_iBlockType );
 			if ( b != nullptr && bF.selectable )
 			{
@@ -82,14 +82,14 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 				if ( !clientSideWorld->TestAABBCollision( m_collisionBox ) )
 				{
 					b->Update();
-					soundSystem::PlayPlaceSound( b->m_iBlockType,
-												m_pointed.m_vPosition + m_pointed.m_vNormal - CVector( 0.5, 0.5, 0.5 ) );
+					soundSystem::PlayPlaceSound( b->m_iBlockType, m_pointed.m_vPosition + m_pointed.m_vNormal -
+																	  CVector( 0.5, 0.5, 0.5 ) );
 				}
 				else
 					b->m_iBlockType = oldType;
 
 				protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer,
-											( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, b->m_iBlockType );
+											  ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, b->m_iBlockType );
 			}
 		}
 

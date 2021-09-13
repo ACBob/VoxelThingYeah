@@ -11,10 +11,10 @@ COverworldJeneration::COverworldJeneration()
 	m_baseNoise.noise_type = FNL_NOISE_OPENSIMPLEX2;
 	m_baseNoise.frequency  = 0.005;
 
-	m_seafloorNoise		 = fnlCreateState();
-	m_seafloorNoise.seed = m_iSeed + 23;
+	m_seafloorNoise			   = fnlCreateState();
+	m_seafloorNoise.seed	   = m_iSeed + 23;
 	m_seafloorNoise.noise_type = FNL_NOISE_PERLIN;
-	m_seafloorNoise.octaves = 1;
+	m_seafloorNoise.octaves	   = 1;
 	m_seafloorNoise.lacunarity = 0.3;
 
 	m_dirtNoise			   = fnlCreateState();
@@ -31,10 +31,10 @@ COverworldJeneration::COverworldJeneration()
 	m_oreNoise.gain				 = 1.3;
 	m_oreNoise.weighted_strength = 0.8;
 
-	for (int i = 0; i < CAVE_NOISES; i++)
+	for ( int i = 0; i < CAVE_NOISES; i++ )
 	{
-		m_caveNoises[i] = fnlCreateState();
-		m_caveNoises[i].seed = m_iSeed + 'CAVE' + i;
+		m_caveNoises[i]			  = fnlCreateState();
+		m_caveNoises[i].seed	  = m_iSeed + 'CAVE' + i;
 		m_caveNoises[i].frequency = 0.01;
 	}
 }
@@ -54,20 +54,19 @@ void COverworldJeneration::GenBase( CChunk *c )
 
 		// First try the seafloor
 		float noiseDataFloor = fnlGetNoise2D( &m_seafloorNoise, WorldPosition.x, WorldPosition.z );
-		float seaFloor = 8.0f + (3.0f * noiseDataFloor);
+		float seaFloor		 = 8.0f + ( 3.0f * noiseDataFloor );
 
-		if (WorldPosition.y <= seaFloor)
+		if ( WorldPosition.y <= seaFloor )
 		{
 			c->m_blocks[i].m_iBlockType = STONE;
 			continue;
 		}
 
-
 		float noiseData3D = 1 + fnlGetNoise3D( &m_baseNoise, WorldPosition.x, WorldPosition.y, WorldPosition.z );
 		float percentToTopSurface = 1.0f - ( WorldPosition.y / 32.0f );
 		noiseData3D *= percentToTopSurface;
 
-		c->m_blocks[i].m_iBlockType = noiseData3D > 0.7 ? STONE : (WorldPosition.y > m_iSeaLevel ? AIR : WATER);
+		c->m_blocks[i].m_iBlockType = noiseData3D > 0.7 ? STONE : ( WorldPosition.y > m_iSeaLevel ? AIR : WATER );
 	}
 }
 
@@ -129,12 +128,14 @@ void COverworldJeneration::Decorate( CChunk *c )
 
 		// Caves
 		float caveVal = 0.0f;
-		for (int j = 0; j < CAVE_NOISES; j++)
-			caveVal += std::pow(fnlGetNoise3D( &m_caveNoises[j], WorldPosition.x, WorldPosition.y, WorldPosition.z ), 2.0f);
-		
+		for ( int j = 0; j < CAVE_NOISES; j++ )
+			caveVal +=
+				std::pow( fnlGetNoise3D( &m_caveNoises[j], WorldPosition.x, WorldPosition.y, WorldPosition.z ), 2.0f );
+
 		if ( caveVal < 0.04f )
 		{
-			if ( c->m_blocks[i].m_iBlockType == STONE || c->m_blocks[i].m_iBlockType == GRASS || c->m_blocks[i].m_iBlockType == DIRT || c->m_blocks[i].m_iBlockType == ORE_COAL )
+			if ( c->m_blocks[i].m_iBlockType == STONE || c->m_blocks[i].m_iBlockType == GRASS ||
+				 c->m_blocks[i].m_iBlockType == DIRT || c->m_blocks[i].m_iBlockType == ORE_COAL )
 			{
 				c->m_blocks[i].m_iBlockType = AIR;
 			}

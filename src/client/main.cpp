@@ -136,15 +136,15 @@ int main( int argc, char *args[] )
 	skyboxSunModel->SetShader( unlitShader );
 
 	CModel a;
-	GetCubeModel( a, CVector(0.2, 0.2, 0.2) );
-	a.SetShader(unlitShader);
-	a.SetTexture(testTexture);
+	GetCubeModel( a, CVector( 0.2, 0.2, 0.2 ) );
+	a.SetShader( unlitShader );
+	a.SetTexture( testTexture );
 
 	con_info( "Loading Sounds..." );
 	soundSystem::Init();
 	atexit( soundSystem::UnInit );
 
-	con_info("Init ParticleSystem...");
+	con_info( "Init ParticleSystem..." );
 	particleSystem::Init();
 	atexit( particleSystem::UnInit );
 
@@ -200,8 +200,8 @@ int main( int argc, char *args[] )
 	int i		= 0;
 
 	CParticle testParticle;
-	testParticle.m_mdl = particleSystem::particleMdl;
-	testParticle.m_vPosition = CVector(8,8,8);
+	testParticle.m_mdl		 = particleSystem::particleMdl;
+	testParticle.m_vPosition = CVector( 8, 8, 8 );
 
 	CVector sunForward( 0, 1, 0 );
 	float sunAngle = 0.0f;
@@ -266,10 +266,10 @@ int main( int argc, char *args[] )
 			// 	pe.Render();
 			// }
 
-			testParticle.m_vPosition = v;
-			testParticle.Render();
-			a.m_vPosition = testParticle.m_vPosition;
-			a.Render();
+			// testParticle.m_vPosition = v;
+			// testParticle.Render();
+			// a.m_vPosition = testParticle.m_vPosition;
+			// a.Render();
 
 			guiState.Update( &localWorld );
 		}

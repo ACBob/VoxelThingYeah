@@ -7,15 +7,15 @@
 #include <random>
 
 #ifdef __linux__
-#define AL_ALEXT_PROTOTYPES
-#include <AL/al.h>
-#include <AL/alc.h>
-#include <AL/efx-presets.h>
-#include <AL/efx.h>
+	#define AL_ALEXT_PROTOTYPES
+	#include <AL/al.h>
+	#include <AL/alc.h>
+	#include <AL/efx-presets.h>
+	#include <AL/efx.h>
 #elif _WIN32
-// Mostly my setup, idk what it's like on an actual windows host
-#include <al.h>
-#include <alc.h>
+	// Mostly my setup, idk what it's like on an actual windows host
+	#include <al.h>
+	#include <alc.h>
 #else
 	#error Unsupported Platform!
 #endif
@@ -126,7 +126,7 @@ void soundSystem::Init()
 		cl_reverb->SetBool( false );
 	}
 #else
-	con_warning("Reverb support currently disabled for Windows.");
+	con_warning( "Reverb support currently disabled for Windows." );
 #endif
 
 	openAlContext = alcCreateContext( openAlDevice, NULL );

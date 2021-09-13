@@ -247,8 +247,10 @@ void CWorld::WorldTick( int tickN )
 						CChunk *oChunk = chunk->Neighbour( (Direction)i );
 						if ( oChunk == nullptr )
 							continue; // Ok yeah it's outside reality
-						CVector p = CVector( pos.x + dir.x, pos.y + dir.y, pos.z + dir.z ) + ( dir * CVector(-CHUNKSIZE_X, -CHUNKSIZE_Y, -CHUNKSIZE_Z) );;
-						b		  = oChunk->GetBlockAtLocal( p );
+						CVector p = CVector( pos.x + dir.x, pos.y + dir.y, pos.z + dir.z ) +
+									( dir * CVector( -CHUNKSIZE_X, -CHUNKSIZE_Y, -CHUNKSIZE_Z ) );
+						;
+						b = oChunk->GetBlockAtLocal( p );
 						if ( b == nullptr )
 							continue; // uh oh
 					}

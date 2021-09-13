@@ -23,7 +23,7 @@
 #include "shared/seethe.h"
 
 // Char because we don't need 16 bits
-char fontWidths[('~' - ' ')];
+char fontWidths[( '~' - ' ' )];
 
 CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActiveItem( 0 ), m_iHotItem( 0 )
 {
@@ -61,8 +61,8 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 	Resize( screenW, screenH );
 
 	// TODO: read texture and find the min width to display
-	con_info("Processing font widths");
-	for (char c = ' '; c < '~'; c++)
+	con_info( "Processing font widths" );
+	for ( char c = ' '; c < '~'; c++ )
 	{
 		fontWidths[c] = 16;
 	}
