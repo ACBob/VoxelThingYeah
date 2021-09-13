@@ -9,7 +9,7 @@ COverworldJeneration::COverworldJeneration()
 	m_baseNoise			   = fnlCreateState();
 	m_baseNoise.seed	   = m_iSeed;
 	m_baseNoise.noise_type = FNL_NOISE_OPENSIMPLEX2;
-	m_baseNoise.frequency  = 0.025;
+	m_baseNoise.frequency  = 0.005;
 
 	m_seafloorNoise		 = fnlCreateState();
 	m_seafloorNoise.seed = m_iSeed + 23;
