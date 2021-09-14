@@ -8,7 +8,10 @@
 CChunk::CChunk()
 {
 	for ( int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++ )
+	{
 		m_blocks[i].m_iBlockType = blocktype_t::AIR;
+		m_iLightingValue[i] = 0x00000000;
+	}
 }
 CChunk::~CChunk() {}
 #elif SERVEREXE
@@ -48,6 +51,9 @@ void CChunk::Update()
 		if ( neighbour != nullptr )
 			neighbour->RebuildMdl();
 	}
+
+	// Lighting
+	
 #endif
 
 	m_bOutdated = true;

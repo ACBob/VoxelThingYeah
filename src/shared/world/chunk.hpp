@@ -50,6 +50,9 @@ class CChunk
 
 #ifdef CLIENTEXE
 	CModel m_mdl;
+	// 8 bits
+	// 2 red, 2 green, 2 blue - 2 for the sky
+	uint8_t m_iLightingValue[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 #endif
 
 	// World pointer (can't set type because circular include :lenny:)
