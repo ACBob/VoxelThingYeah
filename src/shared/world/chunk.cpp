@@ -72,3 +72,28 @@ bool ValidChunkPosition( CVector pos )
 	return !( pos.x < 0 || pos.y < 0 || pos.z < 0 || pos.x >= CHUNKSIZE_X || pos.y >= CHUNKSIZE_Y ||
 			  pos.z >= CHUNKSIZE_Z );
 }
+
+#ifdef CLIENTEXE
+
+Colour CChunk::GetLightingLocal(CVector pos)
+{
+	Colour c;
+	uint16_t l = m_iLightingValue[int( CHUNK3D_TO_1D( pos.x, pos.y, pos.z ) )];
+	c.x = (l >> 8) & 0xF;
+	c.y = (l >> 4) & 0xF;
+	c.z = l & 0xF;
+	c.w = (l >> 16) & 0xF;
+
+	return c;
+}
+
+void CChunk::SetLightingLocal( CVector pos, Colour colour )
+{
+	uint16_t l = m_iLightingValue[int( CHUNK3D_TO_1D( pos.x, pos.y, pos.z ) )];
+	l = (l & 0x0FFF) | ((int)colour.w << 16);
+	l = (l & 0xF0FF) | ((int)colour.x << 8);
+	l = (l & 0xFF0F) | ((int)colour.x << 4);
+	l = (l & 0xFFF0) | ((int)colour.x);
+}
+
+#endif

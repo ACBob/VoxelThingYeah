@@ -5,10 +5,10 @@
 class CVector
 {
   public:
-	float x, y, z = 0.0f;
+	float x, y, z, w = 0.0f;
 
 	// Default constructor, just keeps everything 0,0,0
-	CVector( float x = 0, float y = 0, float z = 0 );
+	CVector( float x = 0, float y = 0, float z = 0, float w = 0 );
 
 	// Methods
 	CVector Rotate( int axis, float degrees ) const; // Returns this vector rotated around axis (1=x,3=z) by degrees

@@ -1,16 +1,19 @@
 #include "vector.hpp"
 #include <math.h>
 
-CVector::CVector( float x, float y, float z )
+CVector::CVector( float x, float y, float z, float w )
 {
 	this->x = x;
 	this->y = y;
 	this->z = z;
+	this->w = w;
 }
 
 // Methods
 CVector CVector::Rotate( int axis, float degrees ) const
 {
+	// TODO: w
+
 	CVector g = CVector( x, y, z );
 
 	degrees *= DEG2RAD;
@@ -35,6 +38,8 @@ CVector CVector::Rotate( int axis, float degrees ) const
 }
 CVector CVector::Rotate( CVector oVec ) const
 {
+	// TODO: w
+
 	CVector g( x, y, z );
 	for ( int i = 1; i < 3; i++ )
 	{
@@ -42,7 +47,7 @@ CVector CVector::Rotate( CVector oVec ) const
 	}
 	return g;
 }
-float CVector::Magnitude() const { return sqrt( ( x * x ) + ( y * y ) + ( z * z ) ); }
+float CVector::Magnitude() const { return sqrt( ( x * x ) + ( y * y ) + ( z * z ) + ( w * w ) ); }
 CVector CVector::Normal() const
 {
 	CVector g = CVector( x, y, z );
@@ -53,6 +58,7 @@ CVector CVector::Normal() const
 	g.x = x / mag;
 	g.y = y / mag;
 	g.z = z / mag;
+	g.w = w / mag;
 
 	return g;
 }
@@ -62,6 +68,7 @@ CVector CVector::Floor() const
 	g.x		  = g.x == INFINITY ? 0 : g.x;
 	g.y		  = g.y == INFINITY ? 0 : g.y;
 	g.z		  = g.z == INFINITY ? 0 : g.z;
+	g.w       = g.w == INFINITY ? 0 : g.w;
 	return g;
 }
 CVector CVector::Ceil() const
@@ -70,6 +77,7 @@ CVector CVector::Ceil() const
 	g.x		  = g.x == INFINITY ? 0 : g.x;
 	g.y		  = g.y == INFINITY ? 0 : g.y;
 	g.z		  = g.z == INFINITY ? 0 : g.z;
+	g.w       = g.w == INFINITY ? 0 : g.w;
 	return g;
 }
 
@@ -81,6 +89,7 @@ CVector CVector::operator+( CVector oVec ) const
 	g.x += oVec.x;
 	g.y += oVec.y;
 	g.z += oVec.z;
+	g.w += oVec.w;
 	return g;
 }
 CVector CVector::operator-( CVector oVec ) const
@@ -89,6 +98,7 @@ CVector CVector::operator-( CVector oVec ) const
 	g.x -= oVec.x;
 	g.y -= oVec.y;
 	g.z -= oVec.z;
+	g.w -= oVec.w;
 	return g;
 }
 CVector CVector::operator*( CVector oVec ) const
@@ -97,6 +107,7 @@ CVector CVector::operator*( CVector oVec ) const
 	g.x *= oVec.x;
 	g.y *= oVec.y;
 	g.z *= oVec.z;
+	g.w *= oVec.w;
 	return g;
 }
 CVector CVector::operator/( CVector oVec ) const
@@ -105,13 +116,14 @@ CVector CVector::operator/( CVector oVec ) const
 	g.x /= oVec.x;
 	g.y /= oVec.y;
 	g.z /= oVec.z;
+	g.w /= oVec.w;
 	return g;
 }
 // Math, with single ints/floats
-CVector CVector::operator+( float i ) const { return operator+( CVector( i, i, i ) ); }
-CVector CVector::operator-( float i ) const { return operator-( CVector( i, i, i ) ); }
-CVector CVector::operator*( float i ) const { return operator*( CVector( i, i, i ) ); }
-CVector CVector::operator/( float i ) const { return operator/( CVector( i, i, i ) ); }
+CVector CVector::operator+( float i ) const { return operator+( CVector( i, i, i, i ) ); }
+CVector CVector::operator-( float i ) const { return operator-( CVector( i, i, i, i ) ); }
+CVector CVector::operator*( float i ) const { return operator*( CVector( i, i, i, i ) ); }
+CVector CVector::operator/( float i ) const { return operator/( CVector( i, i, i, i ) ); }
 // Access
 float CVector::operator[]( int index )
 {
@@ -126,12 +138,15 @@ float CVector::operator[]( int index )
 		case 3:
 			return z;
 			break;
+		case 4:
+			return w;
+			break;
 	}
 }
 // Comparison
-bool CVector::operator==( CVector oVec ) const { return oVec.x == x && oVec.y == y && oVec.z == z; }
+bool CVector::operator==( CVector oVec ) const { return oVec.x == x && oVec.y == y && oVec.z == z && oVec.w == w; }
 bool CVector::operator!=( CVector oVec ) const { return !operator==( oVec ); }
 bool CVector::operator>( CVector oVec ) const { return Magnitude() > oVec.Magnitude(); }
-bool CVector::operator<( CVector oVec ) const { return oVec > CVector{ x, y, z }; }
+bool CVector::operator<( CVector oVec ) const { return oVec > CVector{ x, y, z, w }; }
 bool CVector::operator>=( CVector oVec ) const { return operator==( oVec ) || operator>( oVec ); }
 bool CVector::operator<=( CVector oVec ) const { return operator==( oVec ) || operator<( oVec ); }
