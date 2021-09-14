@@ -6,7 +6,7 @@ CPointedThing::CPointedThing() : m_pBlock( nullptr ), m_vPosition( 0 ) {}
 
 CVoxRaycast::CVoxRaycast() : m_vPosition( 0 ), m_vDirection( 0 ), m_fLength( 0 ) {}
 
-CPointedThing CVoxRaycast::Cast( CWorld *chunkMan )
+CPointedThing CVoxRaycast::Cast( CWorld *pChunkMan, bool bUseCollision )
 {
 	CVector vRay = m_vPosition;
 	CVector vOtherRay; // for figuring out normal
@@ -20,10 +20,18 @@ CPointedThing CVoxRaycast::Cast( CWorld *chunkMan )
 		vOtherRay = vRay;
 		vRay	  = m_vPosition + m_vDirection * i;
 		i += step;
-		pBlock = chunkMan->BlockAtWorldPos( vRay );
+		pBlock = pChunkMan->BlockAtWorldPos( vRay );
 
-		if ( chunkMan->TestPointCollision( vRay ) )
-			break;
+		if ( bUseCollision )
+		{
+			if ( pChunkMan->TestPointCollision( vRay ) )
+				break;
+		}
+		else
+		{
+			if ( pBlock != nullptr && pBlock->m_iBlockType != AIR )
+				break;
+		}
 	}
 
 	CPointedThing pointedThing;

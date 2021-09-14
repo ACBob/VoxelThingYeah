@@ -31,6 +31,11 @@ blockmaterial_t GetBlockMaterial( blocktype_t blockType )
 		case FLOWER:
 			return blockmaterial_t::MAT_ORGANIC;
 			break;
+
+		case WATER:
+		case LAVA:
+			return blockmaterial_t::MAT_LIQUID;
+			break;
 	}
 }
 
@@ -75,7 +80,7 @@ BlockFeatures GetBlockFeatures( blocktype_t blockType )
 			bF.walkable	   = false;
 			bF.solid	   = false;
 			bF.isLiquid	   = true;
-			bF.liquidSpeed = blockType == LAVA ? 29 : 5;
+			bF.liquidSpeed = blockType == LAVA ? 15 : 5;
 			bF.rule		   = OBSCURERULE_SIMILAR;
 			break;
 

@@ -238,7 +238,7 @@ void soundSystem::SetListener( CWorld *world, CVector pos, CVector forward, CVec
 	for (int i = 0; i < 6; i++)
 	{
 		cast.m_vDirection = DirectionVector[i];
-		CPointedThing a = cast.Cast(world);
+		CPointedThing a = cast.Cast(world, false);
 
 		if (a.m_pBlock == nullptr)
 		{
@@ -266,6 +266,10 @@ void soundSystem::SetListener( CWorld *world, CVector pos, CVector forward, CVec
 
 			MAT_ORGANIC:
 				reverb = 0.15f;
+			break;
+
+			MAT_LIQUID:
+				reverb = 0.0f;
 			break;
 
 		}

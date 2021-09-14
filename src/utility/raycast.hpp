@@ -19,7 +19,9 @@ class CVoxRaycast
 {
   public:
 	CVoxRaycast();
-	CPointedThing Cast( CWorld *pChunkMan );
+	// pChunkMan - Pointer to world to access blocks
+	// bUseCollision - test for collision if true, if false we just go for the first non-air block
+	CPointedThing Cast( CWorld *pChunkMan, bool bUseCollision = true );
 
 	CVector m_vPosition;
 	CVector m_vDirection;

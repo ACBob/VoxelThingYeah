@@ -31,6 +31,7 @@ enum blockmaterial_t {
 	MAT_WOOD	= 3, // It's wood
 	MAT_GLASS	= 4, // It's glass
 	MAT_ORGANIC = 5, // Grass, Leaves, Plants
+	MAT_LIQUID  = 6, // Water, Lava
 };
 
 enum blockobscurerule_t {
