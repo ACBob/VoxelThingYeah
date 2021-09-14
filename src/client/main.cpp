@@ -231,7 +231,7 @@ int main( int argc, char *args[] )
 		inputMan.Update();
 		plyr.UpdateClient( client.m_pLocalWorld );
 
-		soundSystem::SetListener( plyr.m_vPosition, plyr.GetForward(), plyr.m_vVelocity );
+		soundSystem::SetListener( &localWorld, plyr.m_camera.m_vPosition, plyr.m_camera.GetForward(), plyr.m_vVelocity );
 
 		// Rendering
 		{

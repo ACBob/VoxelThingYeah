@@ -6,6 +6,7 @@
 #include <map>
 
 #include "world/block.hpp"
+#include "world/world.hpp"
 
 #define SOUNDBUFFERS 1
 
@@ -44,7 +45,7 @@ namespace soundSystem
 	void Init();
 	void UnInit();
 
-	void SetListener( CVector pos, CVector forward, CVector vel );
+	void SetListener( CWorld *wlrd, CVector pos, CVector forward, CVector vel );
 
 	CSound *LoadSound( const char *path );
 

@@ -6,6 +6,8 @@
 
 #include <random>
 
+#include "utility/raycast.hpp"
+
 #ifdef __linux__
 	#define AL_ALEXT_PROTOTYPES
 	#include <AL/al.h>
@@ -215,7 +217,7 @@ void soundSystem::UnInit()
 	alcCloseDevice( openAlDevice );
 }
 
-void soundSystem::SetListener( CVector pos, CVector forward, CVector vel )
+void soundSystem::SetListener( CWorld *world, CVector pos, CVector forward, CVector vel )
 {
 	alListener3f( AL_POSITION, pos.x, pos.y, pos.z );
 	float orient[] = { forward.x, forward.y, forward.z,
@@ -223,6 +225,58 @@ void soundSystem::SetListener( CVector pos, CVector forward, CVector vel )
 					   0,		  1,		 0 };
 	alListenerfv( AL_ORIENTATION, orient );
 	alListener3f( AL_VELOCITY, vel.x, vel.y, vel.z );
+
+#ifdef __linux__
+
+	// Now the magic reverb stuff
+	CVoxRaycast cast;
+	cast.m_vPosition = pos;
+	cast.m_fLength = 16.0f;
+
+	float decayTime = 0.0f;
+
+	for (int i = 0; i < 6; i++)
+	{
+		cast.m_vDirection = DirectionVector[i];
+		CPointedThing a = cast.Cast(world);
+
+		if (a.m_pBlock == nullptr)
+		{
+			// Add some reverb for things we can't touch, but be conservative of it
+			decayTime += 0.2f;
+			continue;
+		}
+
+		float reverb = 0.0f;
+		blockmaterial_t mat = GetBlockMaterial(a.m_pBlock->m_iBlockType);
+		switch (mat)
+		{
+			default:
+				reverb = 0.2f;
+			break;
+
+			MAT_STONE:
+			MAT_GLASS:
+				reverb = 0.4f;
+			break;
+
+			MAT_LOOSE:
+				reverb = 0.2f;
+			break;
+
+			MAT_ORGANIC:
+				reverb = 0.15f;
+			break;
+
+		}
+
+		decayTime += reverb * ( a.m_fDistance / 4.0f );
+	}
+
+	alEffectf( soundEffects, AL_REVERB_DECAY_TIME, decayTime );
+	alAuxiliaryEffectSloti( soundEffectSlot, AL_EFFECTSLOT_EFFECT, soundEffects );	
+
+#endif
 }
 
 CSound *soundSystem::LoadSound( const char *path )

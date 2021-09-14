@@ -45,7 +45,7 @@ namespace ConVar
 	const char *CConVar::GetString() { return m_cVal; }
 	int CConVar::GetInt() { return atoi( m_cVal ); }
 	float CConVar::GetFloat() { return atof( m_cVal ); }
-	bool CConVar::GetBool() { return ( strcmp( m_cVal, "true" ) != 0 ); }
+	bool CConVar::GetBool() { return ( strcmp( m_cVal, "true" ) == 0 ); }
 
 	CConVarHandler::CConVarHandler() { Cvars = {}; }
 	CConVarHandler::~CConVarHandler()

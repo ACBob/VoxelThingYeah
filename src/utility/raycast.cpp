@@ -30,5 +30,6 @@ CPointedThing CVoxRaycast::Cast( CWorld *chunkMan )
 	pointedThing.m_vPosition = CVector( ceil( vRay.x ), ceil( vRay.y ), ceil( vRay.z ) );
 	pointedThing.m_pBlock	 = pBlock;
 	pointedThing.m_vNormal	 = vOtherRay.Floor() - vRay.Floor();
+	pointedThing.m_fDistance = i;
 	return pointedThing;
 }
