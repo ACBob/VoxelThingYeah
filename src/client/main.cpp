@@ -112,6 +112,7 @@ int main( int argc, char *args[] )
 	CShader *diffuseShader = shaderSystem::LoadShader( "shaders/generic.vert", "shaders/generic.frag" );
 	CShader *skyShader	   = shaderSystem::LoadShader( "shaders/sky.vert", "shaders/sky.frag" );
 	CShader *unlitShader   = shaderSystem::LoadShader( "shaders/generic.vert", "shaders/unlit.frag" );
+	CShader *viewDiffuseShader = shaderSystem::LoadShader( "shaders/viewmodel.vert", "shaders/generic.frag" );
 
 	con_info( "Load default textures" );
 	materialSystem::Init();
@@ -139,6 +140,13 @@ int main( int argc, char *args[] )
 	GetCubeModel( a, CVector( 0.2, 0.2, 0.2 ) );
 	a.SetShader( unlitShader );
 	a.SetTexture( testTexture );
+
+	CModel viewModel;
+	GetCubeModel( viewModel, CVector(0.25, 0.25, 0.25) );
+	viewModel.SetTexture(testTexture);
+	viewModel.SetShader(viewDiffuseShader);
+	viewModel.m_vPosition = CVector(0.6,-0.5,-0.3);
+	viewModel.m_vRotation = CVector(0, 12, 0);
 
 	con_info( "Loading Sounds..." );
 	soundSystem::Init();
@@ -272,6 +280,8 @@ int main( int argc, char *args[] )
 			// a.Render();
 
 			guiState.Update( &localWorld );
+
+			viewModel.Render();
 		}
 
 		window.SwapBuffers();

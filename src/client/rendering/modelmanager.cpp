@@ -98,6 +98,13 @@ void GetCubeModel( CModel &m, CVector size )
 		vertices[faces[i].vvv].nx = normal.x;
 		vertices[faces[i].vvv].ny = normal.y;
 		vertices[faces[i].vvv].nz = normal.z;
+
+		vertices[faces[i].v].u = 0.0f;
+		vertices[faces[i].v].v = 0.0f;
+		vertices[faces[i].vv].u = 1.0f;
+		vertices[faces[i].vv].v = 0.0f;
+		vertices[faces[i].vvv].u = 0.0f;
+		vertices[faces[i].vvv].v = 1.0f;
 	}
 
 	m.m_vertices = vertices;
