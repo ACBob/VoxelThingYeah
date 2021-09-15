@@ -23,6 +23,7 @@ namespace shaderSystem
 		void SetMat4( const char *name, glm::mat4 value );
 		void SetMat3( const char *name, glm::mat3 value );
 		void SetVec( const char *name, CVector value );
+		void SetVec4( const char *name, CVector value ); // Like SetVec but allows the W component
 		void SetInt( const char *name, int value );
 		void SetUInt( const char *name, unsigned int value );
 

@@ -52,6 +52,8 @@ namespace modelSystem
 		CVector m_vRotation = { 0, 0, 0 };
 		CVector m_vSize		= { 1, 1, 1 };
 
+		CVector m_vUvOffset = { 0, 0 };
+
 		bool m_bVisible = true;
 
 	  private:

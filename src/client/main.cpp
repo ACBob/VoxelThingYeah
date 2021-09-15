@@ -285,6 +285,8 @@ int main( int argc, char *args[] )
 
 			guiState.Update( &localWorld );
 
+			BlockTexture bTex = GetDefaultBlockTextureSide( plyr.m_iSelectedBlockType, Direction::NORTH );
+			viewModel.m_vUvOffset = CVector(bTex.x, bTex.y) * (1/16.0f);
 			viewModel.Render();
 		}
 

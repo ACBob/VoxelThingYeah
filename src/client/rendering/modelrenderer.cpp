@@ -58,7 +58,7 @@ CModelRenderer::~CModelRenderer()
 	glDeleteBuffers( 1, &m_iEbo );
 }
 
-void CModelRenderer::Render( CVector pos, CVector rot, CVector size, CShader *shader, CTexture *tex )
+void CModelRenderer::Render( CVector pos, CVector rot, CVector size, CVector uvOffset, CShader *shader, CTexture *tex )
 {
 
 	glm::mat4 model = glm::mat4( 1.0f );
@@ -70,6 +70,7 @@ void CModelRenderer::Render( CVector pos, CVector rot, CVector size, CShader *sh
 
 	shader->SetMat4( "model", model );
 	shader->SetMat3( "normalMat", glm::mat3( glm::transpose( glm::inverse( model ) ) ) );
+	shader->SetVec( "texCoordO", uvOffset );
 
 	if ( tex != nullptr )
 		glBindTexture( GL_TEXTURE_2D, tex->m_iId );

@@ -13,6 +13,10 @@ uniform mat4 viewScreen;
 uniform mat4 projection;
 uniform mat3 normalMat;
 
+// Tex coord offset
+// Used for the viewmodel and laziness
+uniform vec3 texCoordO;
+
 uniform int timeOfDay;
 uniform vec3 sunAngle;
 
@@ -21,7 +25,7 @@ uniform vec3 sunAngle;
 void main()
 {
 	gl_Position = projection * viewScreen * model * vec4(aPos, 1.0f);
-	TexCoord = vec2(aTexCoord.x, aTexCoord.y);
+	TexCoord = vec2(aTexCoord.x + texCoordO.x, aTexCoord.y + texCoordO.y);
 
 	vec3 absSunAngle = sunAngle;
 	absSunAngle.y = max(sunAngle.y, 0);

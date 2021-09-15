@@ -89,6 +89,10 @@ void CShader::SetVec( const char *name, CVector value )
 {
 	glUniform3f( glGetUniformLocation( m_iId, name ), value.x, value.y, value.z );
 }
+void CShader::SetVec4( const char *name, CVector value )
+{
+	glUniform4f( glGetUniformLocation( m_iId, name ), value.x, value.y, value.z, value.w );
+}
 void CShader::SetUInt( const char *name, unsigned int value )
 {
 	glUniform1ui( glGetUniformLocation( m_iId, name ), value );

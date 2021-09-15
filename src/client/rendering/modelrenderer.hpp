@@ -14,7 +14,7 @@ class CModelRenderer
 	// Updated the index buffer and vertex buffer
 	void Populate( void *mdl );
 
-	void Render( CVector pos, CVector rot, CVector size, CShader *shader, CTexture *tex );
+	void Render( CVector pos, CVector rot, CVector size, CVector uvOffset, CShader *shader, CTexture *tex );
 
   private:
 	// Vertex Buffer
