@@ -142,11 +142,11 @@ int main( int argc, char *args[] )
 	a.SetTexture( testTexture );
 
 	CModel viewModel;
-	GetCubeModel( viewModel, CVector(0.25, 0.25, 0.25) );
+	GetCubeModel( viewModel, CVector(0.4, 0.4, 0.4) );
 	viewModel.SetTexture(testTexture);
 	viewModel.SetShader(viewDiffuseShader);
-	viewModel.m_vPosition = CVector(0.6,-0.5,-0.3);
-	viewModel.m_vRotation = CVector(0, 12, 0);
+	viewModel.m_vPosition = CVector(0.4,-0.4,-0.4);
+	viewModel.m_vRotation = CVector(0, 45, 0);
 
 	con_info( "Loading Sounds..." );
 	soundSystem::Init();
