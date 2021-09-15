@@ -1,6 +1,6 @@
 #include "jeneration.hpp"
 
-#include "world.hpp"
+#include "world/world.hpp"
 
 #include <math.h>
 

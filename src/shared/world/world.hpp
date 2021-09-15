@@ -10,7 +10,7 @@
 #include "physics.hpp"
 #include "world/block.hpp"
 
-#include "jeneration.hpp"
+#include "jeneration/jeneration.hpp"
 
 #pragma once
 

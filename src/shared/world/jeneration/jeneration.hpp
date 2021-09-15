@@ -1,5 +1,6 @@
-#include "block.hpp"
-#include "chunk.hpp"
+#include "world/block.hpp"
+#include "world/chunk.hpp"
+#include "biomes.hpp"
 #include "fastnoise.h"
 
 #pragma once
