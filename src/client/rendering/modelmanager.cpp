@@ -73,7 +73,7 @@ const CModel::Vertex cubeVertices[] = {
 };
 
 // Basically a hobbled together clone of ChunkModel's face supplying stuff
-void GetCubeModel( CModel &m, CVector size )
+void GetCubeModel( CModel &m, CVector size, CVector uv )
 {
 	std::vector<CModel::Vertex> vertices = {};
 	std::vector<CModel::Face> faces = {};
@@ -99,20 +99,20 @@ void GetCubeModel( CModel &m, CVector size )
 			switch ( i )
 			{
 				case 0:
-					vertices[k].u = 0.0f;
-					vertices[k].v = 0.0f;
+					vertices[k].u = uv.x;
+					vertices[k].v = uv.y;
 					break;
 				case 1:
-					vertices[k].u = 1.0f;
-					vertices[k].v = 0.0f;
+					vertices[k].u = uv.z;
+					vertices[k].v = uv.y;
 					break;
 				case 2:
-					vertices[k].u = 1.0f;
-					vertices[k].v = 1.0f;
+					vertices[k].u = uv.z;
+					vertices[k].v = uv.w;
 					break;
 				case 3:
-					vertices[k].u = 0.0f;
-					vertices[k].v = 1.0f;
+					vertices[k].u = uv.x;
+					vertices[k].v = uv.w;
 					break;
 			}
 		}

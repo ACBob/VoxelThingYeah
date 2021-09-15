@@ -75,4 +75,4 @@ namespace modelSystem
 // Laziness and Convenience
 using CModel = modelSystem::CModel;
 
-void GetCubeModel( CModel &m, CVector size = CVector( 1, 1, 1 ) );
+void GetCubeModel( CModel &m, CVector size = CVector( 1, 1, 1 ), CVector uv = CVector(0.0f, 0.0f, 1.0f, 1.0f) );

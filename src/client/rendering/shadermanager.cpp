@@ -99,13 +99,14 @@ void CShader::Use() { glUseProgram( m_iId ); }
 void shaderSystem::Init() {}
 
 // TODO: Uniform Buffer
-void shaderSystem::SetUniforms( glm::mat4 &view, glm::mat4 &projection, glm::mat4 &screen, unsigned int ticks,
+void shaderSystem::SetUniforms( glm::mat4 &viewModel, glm::mat4 &viewScreen, glm::mat4 &projection, glm::mat4 &screen, unsigned int ticks,
 								int timeOfDay, CVector sunAngle )
 {
 	for ( CShader *s : loadedShaders )
 	{
 		s->Use();
-		s->SetMat4( "view", view );
+		s->SetMat4( "view", viewModel );
+		s->SetMat4( "viewScreen", viewScreen );
 		s->SetMat4( "projection", projection );
 		s->SetMat4( "screen", screen );
 		s->SetInt( "time", ticks );

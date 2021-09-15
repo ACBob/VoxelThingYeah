@@ -142,8 +142,8 @@ int main( int argc, char *args[] )
 	a.SetTexture( testTexture );
 
 	CModel viewModel;
-	GetCubeModel( viewModel, CVector(0.4, 0.4, 0.4) );
-	viewModel.SetTexture(testTexture);
+	GetCubeModel( viewModel, CVector(0.3, 0.3, 0.3), CVector(0.0f, 0.0f, 1/16.0f, 1/16.0f) );
+	viewModel.SetTexture(terrainPng);
 	viewModel.SetShader(viewDiffuseShader);
 	viewModel.m_vPosition = CVector(0.4,-0.4,-0.4);
 	viewModel.m_vRotation = CVector(0, 45, 0);
@@ -185,6 +185,9 @@ int main( int argc, char *args[] )
 	glm::mat4 projection = glm::perspective( glm::radians( fov->GetFloat() ),
 											 scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f );
 	glm::mat4 screen	 = glm::ortho( 0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat() );
+	glm::mat4 viewScreen = glm::lookAt(
+		glm::vec3( 0,0,0 ),
+		glm::vec3( 0,0,-1), glm::vec3( VEC_UP.x, VEC_UP.y, VEC_UP.z ) );
 
 	glEnable( GL_DEPTH_TEST );
 	glDepthFunc( GL_LEQUAL );
@@ -246,11 +249,12 @@ int main( int argc, char *args[] )
 			// Rendering right at the end
 			glClear( GL_DEPTH_BUFFER_BIT );
 
-			CVector v	   = plyr.m_camera.m_vPosition + plyr.m_camera.GetForward();
-			glm::mat4 view = glm::lookAt(
+			CVector f      = plyr.m_camera.GetForward();
+			CVector v	   = plyr.m_camera.m_vPosition + f;
+			glm::mat4 viewWorld = glm::lookAt(
 				glm::vec3( plyr.m_camera.m_vPosition.x, plyr.m_camera.m_vPosition.y, plyr.m_camera.m_vPosition.z ),
 				glm::vec3( v.x, v.y, v.z ), glm::vec3( VEC_UP.x, VEC_UP.y, VEC_UP.z ) );
-			shaderSystem::SetUniforms( view, projection, screen, window.GetMS(), localWorld.m_iTimeOfDay, sunForward );
+			shaderSystem::SetUniforms( viewWorld, viewScreen, projection, screen, window.GetMS(), localWorld.m_iTimeOfDay, sunForward );
 
 			glDisable( GL_DEPTH_TEST ); // Skybox
 			{

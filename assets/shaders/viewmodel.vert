@@ -3,13 +3,13 @@ layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoord;
 
-// Same as generic.vert but it doesn't use the view matrix, gluing it to the player's screen.
+// Same as generic.vert but it uses the screenView matrix thing instead of the viewMatrix
 
 out vec2 TexCoord;
 out vec3 Light;
 
 uniform mat4 model;
-uniform mat4 view;
+uniform mat4 viewScreen;
 uniform mat4 projection;
 uniform mat3 normalMat;
 
@@ -20,7 +20,7 @@ uniform vec3 sunAngle;
 
 void main()
 {
-	gl_Position = projection * model * vec4(aPos, 1.0f);
+	gl_Position = projection * viewScreen * model * vec4(aPos, 1.0f);
 	TexCoord = vec2(aTexCoord.x, aTexCoord.y);
 
 	vec3 absSunAngle = sunAngle;
