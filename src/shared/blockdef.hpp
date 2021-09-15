@@ -22,6 +22,8 @@ enum blocktype_t {
 	ORE_COAL = 12,
 	ORE_IRON = 13,
 	FLOWER	 = 14,
+	SAND	 = 15,
+	SANDSTONE = 16,
 };
 
 enum blockmaterial_t {
@@ -32,6 +34,7 @@ enum blockmaterial_t {
 	MAT_GLASS	= 4, // It's glass
 	MAT_ORGANIC = 5, // Grass, Leaves, Plants
 	MAT_LIQUID  = 6, // Water, Lava
+	MAT_DUST    = 7 // Sand
 };
 
 enum blockobscurerule_t {

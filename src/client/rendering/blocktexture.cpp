@@ -65,5 +65,19 @@ BlockTexture GetDefaultBlockTextureSide( blocktype_t type, Direction side )
 		case FLOWER:
 			return { 14, 0, 1, 1 };
 			break;
+		case SAND:
+			return { 15, 0, 1, 1 };
+			break;
+		case SANDSTONE:
+			if ( side == Direction::UP )
+			{
+				return { 0, 1, 1, 1 };
+			}
+			if ( side == Direction::DOWN )
+			{
+				return { 2, 1, 1, 1 };
+			}
+			return { 1, 1, 1, 1 };
+			break;
 	}
 }

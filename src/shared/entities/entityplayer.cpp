@@ -98,7 +98,7 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 			m_iSelectedBlockType = blocktype_t( m_iSelectedBlockType + 1 );
 			if ( m_iSelectedBlockType == blocktype_t::BEDROCK )
 				m_iSelectedBlockType = blocktype_t( m_iSelectedBlockType + 1 );
-			if ( m_iSelectedBlockType > blocktype_t::FLOWER )
+			if ( m_iSelectedBlockType > blocktype_t::SANDSTONE )
 				m_iSelectedBlockType = blocktype_t::STONE;
 		}
 		else if ( m_pInputMan->m_iMouseState & IN_WHEEL_DOWN )
@@ -107,7 +107,7 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 			if ( m_iSelectedBlockType == blocktype_t::BEDROCK )
 				m_iSelectedBlockType = blocktype_t( m_iSelectedBlockType - 1 );
 			if ( m_iSelectedBlockType <= blocktype_t::AIR )
-				m_iSelectedBlockType = blocktype_t::FLOWER;
+				m_iSelectedBlockType = blocktype_t::SANDSTONE;
 		}
 	}
 }

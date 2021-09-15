@@ -10,6 +10,7 @@ blockmaterial_t GetBlockMaterial( blocktype_t blockType )
 		case BEDROCK:
 		case ORE_COAL:
 		case ORE_IRON:
+		case SANDSTONE:
 			return blockmaterial_t::MAT_STONE;
 			break;
 
@@ -35,6 +36,10 @@ blockmaterial_t GetBlockMaterial( blocktype_t blockType )
 		case WATER:
 		case LAVA:
 			return blockmaterial_t::MAT_LIQUID;
+			break;
+		
+		case SAND:
+			return blockmaterial_t::MAT_DUST;
 			break;
 	}
 }
