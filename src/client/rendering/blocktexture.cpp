@@ -79,5 +79,11 @@ BlockTexture GetDefaultBlockTextureSide( blocktype_t type, Direction side )
 			}
 			return { 1, 1, 1, 1 };
 			break;
+		case BRICKS:
+			return { 3, 1, 1, 1};
+			break;
+		case LGRASS:
+			return { 4, 1, 1, 1};
+			break;
 	}
 }

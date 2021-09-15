@@ -24,6 +24,8 @@ enum blocktype_t {
 	FLOWER	  = 14,
 	SAND	  = 15,
 	SANDSTONE = 16,
+	BRICKS = 17,
+	LGRASS    = 18
 };
 
 enum blockmaterial_t {

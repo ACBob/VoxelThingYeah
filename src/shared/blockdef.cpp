@@ -11,6 +11,7 @@ blockmaterial_t GetBlockMaterial( blocktype_t blockType )
 		case ORE_COAL:
 		case ORE_IRON:
 		case SANDSTONE:
+		case BRICKS:
 			return blockmaterial_t::MAT_STONE;
 			break;
 
@@ -30,6 +31,7 @@ blockmaterial_t GetBlockMaterial( blocktype_t blockType )
 		case GRASS:
 		case LEAVES:
 		case FLOWER:
+		case LGRASS:
 			return blockmaterial_t::MAT_ORGANIC;
 			break;
 
@@ -73,6 +75,7 @@ BlockFeatures GetBlockFeatures( blocktype_t blockType )
 			break;
 
 		case FLOWER:
+		case LGRASS:
 			bF.rule	 = OBSCURERULE_NEVER;
 			bF.solid = false;
 			bF.model = BLOCKMODEL_PLANT;
