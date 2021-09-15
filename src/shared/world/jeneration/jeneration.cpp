@@ -42,12 +42,12 @@ COverworldJeneration::COverworldJeneration()
 	m_biomesOvergroundTemperatureNoise			  = fnlCreateState();
 	m_biomesOvergroundTemperatureNoise.seed		  = m_iSeed + 102;
 	m_biomesOvergroundTemperatureNoise.noise_type = FNL_NOISE_PERLIN;
-	m_biomesOvergroundTemperatureNoise.octaves    = 1;
+	m_biomesOvergroundTemperatureNoise.octaves	  = 1;
 	m_biomesOvergroundTemperatureNoise.frequency  = 0.01f;
 
 	m_biomesOvergroundHumidityNoise				 = fnlCreateState();
 	m_biomesOvergroundHumidityNoise.seed		 = m_iSeed + 22106;
-	m_biomesOvergroundHumidityNoise.octaves      = 1;
+	m_biomesOvergroundHumidityNoise.octaves		 = 1;
 	m_biomesOvergroundHumidityNoise.noise_type	 = FNL_NOISE_PERLIN;
 	m_biomesOvergroundTemperatureNoise.frequency = 0.01f;
 
