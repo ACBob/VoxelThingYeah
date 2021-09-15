@@ -49,7 +49,6 @@ void modelSystem::UnInit()
 		delete m;
 }
 
-
 const std::vector<std::vector<int>> cubeTris = {
 	{ 3, 2, 1, 0 }, // N
 	{ 6, 3, 0, 5 }, // E
@@ -76,18 +75,17 @@ const CModel::Vertex cubeVertices[] = {
 void GetCubeModel( CModel &m, CVector size, CVector uv )
 {
 	std::vector<CModel::Vertex> vertices = {};
-	std::vector<CModel::Face> faces = {};
+	std::vector<CModel::Face> faces		 = {};
 
-	for ( int j = 0; j < 6; j ++ )
+	for ( int j = 0; j < 6; j++ )
 	{
-		CVector normal			  = DirectionVector[j];
-
+		CVector normal = DirectionVector[j];
 
 		for ( int i = 0; i < 4; i++ )
 		{
 			int k = vertices.size();
 			vertices.push_back( cubeVertices[cubeTris[j][i]] );
-			
+
 			vertices[k].nx = normal.x;
 			vertices[k].ny = normal.y;
 			vertices[k].nz = normal.z;
@@ -116,7 +114,7 @@ void GetCubeModel( CModel &m, CVector size, CVector uv )
 					break;
 			}
 		}
-	
+
 		int nVertices = vertices.size();
 		faces.push_back( { nVertices - 4, nVertices - 3, nVertices - 2 } );
 		faces.push_back( { nVertices - 4, nVertices - 2, nVertices - 1 } );

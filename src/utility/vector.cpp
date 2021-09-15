@@ -68,7 +68,7 @@ CVector CVector::Floor() const
 	g.x		  = g.x == INFINITY ? 0 : g.x;
 	g.y		  = g.y == INFINITY ? 0 : g.y;
 	g.z		  = g.z == INFINITY ? 0 : g.z;
-	g.w       = g.w == INFINITY ? 0 : g.w;
+	g.w		  = g.w == INFINITY ? 0 : g.w;
 	return g;
 }
 CVector CVector::Ceil() const
@@ -77,7 +77,7 @@ CVector CVector::Ceil() const
 	g.x		  = g.x == INFINITY ? 0 : g.x;
 	g.y		  = g.y == INFINITY ? 0 : g.y;
 	g.z		  = g.z == INFINITY ? 0 : g.z;
-	g.w       = g.w == INFINITY ? 0 : g.w;
+	g.w		  = g.w == INFINITY ? 0 : g.w;
 	return g;
 }
 

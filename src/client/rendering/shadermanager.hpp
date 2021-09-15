@@ -33,8 +33,8 @@ namespace shaderSystem
 	void Init();
 	void UnInit();
 
-	void SetUniforms( glm::mat4 &viewScreen, glm::mat4 &viewModel, glm::mat4 &projection, glm::mat4 &screen, unsigned int ticks, int timeOfDay,
-					  CVector sunAngle );
+	void SetUniforms( glm::mat4 &viewScreen, glm::mat4 &viewModel, glm::mat4 &projection, glm::mat4 &screen,
+					  unsigned int ticks, int timeOfDay, CVector sunAngle );
 
 	CShader *LoadShader( const char *vs, const char *fs );
 

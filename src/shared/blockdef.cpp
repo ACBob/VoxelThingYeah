@@ -37,7 +37,7 @@ blockmaterial_t GetBlockMaterial( blocktype_t blockType )
 		case LAVA:
 			return blockmaterial_t::MAT_LIQUID;
 			break;
-		
+
 		case SAND:
 			return blockmaterial_t::MAT_DUST;
 			break;

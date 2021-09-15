@@ -109,9 +109,9 @@ int main( int argc, char *args[] )
 	shaderSystem::Init();
 	atexit( shaderSystem::UnInit );
 
-	CShader *diffuseShader = shaderSystem::LoadShader( "shaders/generic.vert", "shaders/generic.frag" );
-	CShader *skyShader	   = shaderSystem::LoadShader( "shaders/sky.vert", "shaders/sky.frag" );
-	CShader *unlitShader   = shaderSystem::LoadShader( "shaders/generic.vert", "shaders/unlit.frag" );
+	CShader *diffuseShader	   = shaderSystem::LoadShader( "shaders/generic.vert", "shaders/generic.frag" );
+	CShader *skyShader		   = shaderSystem::LoadShader( "shaders/sky.vert", "shaders/sky.frag" );
+	CShader *unlitShader	   = shaderSystem::LoadShader( "shaders/generic.vert", "shaders/unlit.frag" );
 	CShader *viewDiffuseShader = shaderSystem::LoadShader( "shaders/viewmodel.vert", "shaders/generic.frag" );
 
 	con_info( "Load default textures" );
@@ -142,11 +142,11 @@ int main( int argc, char *args[] )
 	a.SetTexture( testTexture );
 
 	CModel viewModel;
-	GetCubeModel( viewModel, CVector(0.3, 0.3, 0.3), CVector(0.0f, 0.0f, 1/16.0f, 1/16.0f) );
-	viewModel.SetTexture(terrainPng);
-	viewModel.SetShader(viewDiffuseShader);
-	viewModel.m_vPosition = CVector(0.4,-0.4,-0.4);
-	viewModel.m_vRotation = CVector(0, 45, 0);
+	GetCubeModel( viewModel, CVector( 0.3, 0.3, 0.3 ), CVector( 0.0f, 0.0f, 1 / 16.0f, 1 / 16.0f ) );
+	viewModel.SetTexture( terrainPng );
+	viewModel.SetShader( viewDiffuseShader );
+	viewModel.m_vPosition = CVector( 0.4, -0.4, -0.4 );
+	viewModel.m_vRotation = CVector( 0, 45, 0 );
 
 	con_info( "Loading Sounds..." );
 	soundSystem::Init();
@@ -185,9 +185,8 @@ int main( int argc, char *args[] )
 	glm::mat4 projection = glm::perspective( glm::radians( fov->GetFloat() ),
 											 scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f );
 	glm::mat4 screen	 = glm::ortho( 0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat() );
-	glm::mat4 viewScreen = glm::lookAt(
-		glm::vec3( 0,0,0 ),
-		glm::vec3( 0,0,-1), glm::vec3( VEC_UP.x, VEC_UP.y, VEC_UP.z ) );
+	glm::mat4 viewScreen =
+		glm::lookAt( glm::vec3( 0, 0, 0 ), glm::vec3( 0, 0, -1 ), glm::vec3( VEC_UP.x, VEC_UP.y, VEC_UP.z ) );
 
 	glEnable( GL_DEPTH_TEST );
 	glDepthFunc( GL_LEQUAL );
@@ -242,19 +241,21 @@ int main( int argc, char *args[] )
 		inputMan.Update();
 		plyr.UpdateClient( client.m_pLocalWorld );
 
-		soundSystem::SetListener( &localWorld, plyr.m_camera.m_vPosition, plyr.m_camera.GetForward(), plyr.m_vVelocity );
+		soundSystem::SetListener( &localWorld, plyr.m_camera.m_vPosition, plyr.m_camera.GetForward(),
+								  plyr.m_vVelocity );
 
 		// Rendering
 		{
 			// Rendering right at the end
 			glClear( GL_DEPTH_BUFFER_BIT );
 
-			CVector f      = plyr.m_camera.GetForward();
-			CVector v	   = plyr.m_camera.m_vPosition + f;
+			CVector f			= plyr.m_camera.GetForward();
+			CVector v			= plyr.m_camera.m_vPosition + f;
 			glm::mat4 viewWorld = glm::lookAt(
 				glm::vec3( plyr.m_camera.m_vPosition.x, plyr.m_camera.m_vPosition.y, plyr.m_camera.m_vPosition.z ),
 				glm::vec3( v.x, v.y, v.z ), glm::vec3( VEC_UP.x, VEC_UP.y, VEC_UP.z ) );
-			shaderSystem::SetUniforms( viewWorld, viewScreen, projection, screen, window.GetMS(), localWorld.m_iTimeOfDay, sunForward );
+			shaderSystem::SetUniforms( viewWorld, viewScreen, projection, screen, window.GetMS(),
+									   localWorld.m_iTimeOfDay, sunForward );
 
 			glDisable( GL_DEPTH_TEST ); // Skybox
 			{
@@ -285,8 +286,8 @@ int main( int argc, char *args[] )
 
 			guiState.Update( &localWorld );
 
-			BlockTexture bTex = GetDefaultBlockTextureSide( plyr.m_iSelectedBlockType, Direction::NORTH );
-			viewModel.m_vUvOffset = CVector(bTex.x, bTex.y) * (1/16.0f);
+			BlockTexture bTex	  = GetDefaultBlockTextureSide( plyr.m_iSelectedBlockType, Direction::NORTH );
+			viewModel.m_vUvOffset = CVector( bTex.x, bTex.y ) * ( 1 / 16.0f );
 			viewModel.Render();
 		}
 

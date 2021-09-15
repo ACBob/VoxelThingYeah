@@ -7,22 +7,22 @@
 #pragma once
 
 enum blocktype_t {
-	AIR		 = 0,
-	STONE	 = 1,
-	DIRT	 = 2,
-	GRASS	 = 3,
-	COBBLE	 = 4,
-	PLANKS	 = 5,
-	BEDROCK	 = 6,
-	GLASS	 = 7,
-	LOG		 = 8,
-	LEAVES	 = 9,
-	WATER	 = 10,
-	LAVA	 = 11,
-	ORE_COAL = 12,
-	ORE_IRON = 13,
-	FLOWER	 = 14,
-	SAND	 = 15,
+	AIR		  = 0,
+	STONE	  = 1,
+	DIRT	  = 2,
+	GRASS	  = 3,
+	COBBLE	  = 4,
+	PLANKS	  = 5,
+	BEDROCK	  = 6,
+	GLASS	  = 7,
+	LOG		  = 8,
+	LEAVES	  = 9,
+	WATER	  = 10,
+	LAVA	  = 11,
+	ORE_COAL  = 12,
+	ORE_IRON  = 13,
+	FLOWER	  = 14,
+	SAND	  = 15,
 	SANDSTONE = 16,
 };
 
@@ -33,8 +33,8 @@ enum blockmaterial_t {
 	MAT_WOOD	= 3, // It's wood
 	MAT_GLASS	= 4, // It's glass
 	MAT_ORGANIC = 5, // Grass, Leaves, Plants
-	MAT_LIQUID  = 6, // Water, Lava
-	MAT_DUST    = 7 // Sand
+	MAT_LIQUID	= 6, // Water, Lava
+	MAT_DUST	= 7	 // Sand
 };
 
 enum blockobscurerule_t {

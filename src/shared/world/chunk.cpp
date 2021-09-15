@@ -10,7 +10,7 @@ CChunk::CChunk()
 	for ( int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++ )
 	{
 		m_blocks[i].m_iBlockType = blocktype_t::AIR;
-		m_iLightingValue[i] = 0x00000000;
+		m_iLightingValue[i]		 = 0x00000000;
 	}
 }
 CChunk::~CChunk() {}
@@ -53,7 +53,7 @@ void CChunk::Update()
 	}
 
 	// Lighting
-	
+
 #endif
 
 	m_bOutdated = true;
@@ -75,14 +75,14 @@ bool ValidChunkPosition( CVector pos )
 
 #ifdef CLIENTEXE
 
-Colour CChunk::GetLightingLocal(CVector pos)
+Colour CChunk::GetLightingLocal( CVector pos )
 {
 	Colour c;
 	uint16_t l = m_iLightingValue[int( CHUNK3D_TO_1D( pos.x, pos.y, pos.z ) )];
-	c.x = (l >> 8) & 0xF;
-	c.y = (l >> 4) & 0xF;
-	c.z = l & 0xF;
-	c.w = (l >> 16) & 0xF;
+	c.x		   = ( l >> 8 ) & 0xF;
+	c.y		   = ( l >> 4 ) & 0xF;
+	c.z		   = l & 0xF;
+	c.w		   = ( l >> 16 ) & 0xF;
 
 	return c;
 }
@@ -90,10 +90,10 @@ Colour CChunk::GetLightingLocal(CVector pos)
 void CChunk::SetLightingLocal( CVector pos, Colour colour )
 {
 	uint16_t l = m_iLightingValue[int( CHUNK3D_TO_1D( pos.x, pos.y, pos.z ) )];
-	l = (l & 0x0FFF) | ((int)colour.w << 16);
-	l = (l & 0xF0FF) | ((int)colour.x << 8);
-	l = (l & 0xFF0F) | ((int)colour.x << 4);
-	l = (l & 0xFFF0) | ((int)colour.x);
+	l		   = ( l & 0x0FFF ) | ( (int)colour.w << 16 );
+	l		   = ( l & 0xF0FF ) | ( (int)colour.x << 8 );
+	l		   = ( l & 0xFF0F ) | ( (int)colour.x << 4 );
+	l		   = ( l & 0xFFF0 ) | ( (int)colour.x );
 }
 
 #endif

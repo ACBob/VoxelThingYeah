@@ -231,54 +231,53 @@ void soundSystem::SetListener( CWorld *world, CVector pos, CVector forward, CVec
 	// Now the magic reverb stuff
 	CVoxRaycast cast;
 	cast.m_vPosition = pos;
-	cast.m_fLength = 16.0f;
+	cast.m_fLength	 = 16.0f;
 
 	float decayTime = 0.0f;
 
-	for (int i = 0; i < 6; i++)
+	for ( int i = 0; i < 6; i++ )
 	{
 		cast.m_vDirection = DirectionVector[i];
-		CPointedThing a = cast.Cast(world, false);
+		CPointedThing a	  = cast.Cast( world, false );
 
-		if (a.m_pBlock == nullptr)
+		if ( a.m_pBlock == nullptr )
 		{
 			// Add some reverb for things we can't touch, but be conservative of it
 			decayTime += 0.2f;
 			continue;
 		}
 
-		float reverb = 0.0f;
-		blockmaterial_t mat = GetBlockMaterial(a.m_pBlock->m_iBlockType);
-		switch (mat)
+		float reverb		= 0.0f;
+		blockmaterial_t mat = GetBlockMaterial( a.m_pBlock->m_iBlockType );
+		switch ( mat )
 		{
 			default:
 				reverb = 0.2f;
-			break;
+				break;
 
 			MAT_STONE:
 			MAT_GLASS:
 				reverb = 0.4f;
-			break;
+				break;
 
 			MAT_LOOSE:
 				reverb = 0.2f;
-			break;
+				break;
 
 			MAT_ORGANIC:
 				reverb = 0.15f;
-			break;
+				break;
 
 			MAT_LIQUID:
 				reverb = 0.0f;
-			break;
-
+				break;
 		}
 
 		decayTime += reverb * ( a.m_fDistance / 4.0f );
 	}
 
 	alEffectf( soundEffects, AL_REVERB_DECAY_TIME, decayTime );
-	alAuxiliaryEffectSloti( soundEffectSlot, AL_EFFECTSLOT_EFFECT, soundEffects );	
+	alAuxiliaryEffectSloti( soundEffectSlot, AL_EFFECTSLOT_EFFECT, soundEffects );
 
 #endif
 }
