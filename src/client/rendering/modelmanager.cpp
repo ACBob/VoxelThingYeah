@@ -49,62 +49,77 @@ void modelSystem::UnInit()
 		delete m;
 }
 
+
+const std::vector<std::vector<int>> cubeTris = {
+	{ 3, 2, 1, 0 }, // N
+	{ 6, 3, 0, 5 }, // E
+	{ 7, 6, 5, 4 }, // S
+	{ 2, 7, 4, 1 }, // W
+
+	{ 0, 1, 4, 5 }, // UP
+	{ 6, 7, 2, 3 }	// DN
+};
+const CModel::Vertex cubeVertices[] = {
+	// NORTH +Z
+	{ 0.5f, 0.5f, 0.5f },
+	{ -0.5f, 0.5f, 0.5f },
+	{ -0.5f, -0.5f, 0.5f },
+	{ 0.5f, -0.5f, 0.5f },
+	// SOUTH -Z
+	{ -0.5f, 0.5f, -0.5f },
+	{ 0.5f, 0.5f, -0.5f },
+	{ 0.5f, -0.5f, -0.5f },
+	{ -0.5f, -0.5f, -0.5f },
+};
+
+// Basically a hobbled together clone of ChunkModel's face supplying stuff
 void GetCubeModel( CModel &m, CVector size )
 {
-	std::vector<CModel::Vertex> vertices = {
-		// NORTH +Z
-		{ size.x, size.y, size.z },
-		{ -size.x, size.y, size.z },
-		{ -size.x, -size.y, size.z },
-		{ size.x, -size.y, size.z },
-		// SOUTH -Z
-		{ -size.x, size.y, -size.z },
-		{ size.x, size.y, -size.z },
-		{ size.x, -size.y, -size.z },
-		{ -size.x, -size.y, -size.z },
-	};
-	std::vector<CModel::Face> faces = { // +Z
-										{ 2, 1, 0 },
-										{ 3, 2, 0 },
+	std::vector<CModel::Vertex> vertices = {};
+	std::vector<CModel::Face> faces = {};
 
-										// -X
-										{ 3, 0, 5 },
-										{ 6, 3, 5 },
-
-										// -Z
-										{ 6, 5, 4 },
-										{ 7, 6, 4 },
-
-										// +X
-										{ 7, 4, 1 },
-										{ 2, 7, 1 },
-
-										// +Y
-										{ 1, 4, 5 },
-										{ 0, 1, 5 },
-
-										// -Y
-										{ 7, 2, 3 },
-										{ 6, 7, 3 } };
-	for ( int i = 0; i < 6; i += 2 )
+	for ( int j = 0; j < 6; j ++ )
 	{
-		CVector normal			  = DirectionVector[i];
-		vertices[faces[i].v].nx	  = normal.x;
-		vertices[faces[i].v].ny	  = normal.y;
-		vertices[faces[i].v].nz	  = normal.z;
-		vertices[faces[i].vv].nx  = normal.x;
-		vertices[faces[i].vv].ny  = normal.y;
-		vertices[faces[i].vv].nz  = normal.z;
-		vertices[faces[i].vvv].nx = normal.x;
-		vertices[faces[i].vvv].ny = normal.y;
-		vertices[faces[i].vvv].nz = normal.z;
+		CVector normal			  = DirectionVector[j];
 
-		vertices[faces[i].v].u = 0.0f;
-		vertices[faces[i].v].v = 0.0f;
-		vertices[faces[i].vv].u = 1.0f;
-		vertices[faces[i].vv].v = 0.0f;
-		vertices[faces[i].vvv].u = 0.0f;
-		vertices[faces[i].vvv].v = 1.0f;
+
+		for ( int i = 0; i < 4; i++ )
+		{
+			int k = vertices.size();
+			vertices.push_back( cubeVertices[cubeTris[j][i]] );
+			
+			vertices[k].nx = normal.x;
+			vertices[k].ny = normal.y;
+			vertices[k].nz = normal.z;
+
+			vertices[k].x *= size.x;
+			vertices[k].y *= size.y;
+			vertices[k].z *= size.z;
+
+			switch ( i )
+			{
+				case 0:
+					vertices[k].u = 0.0f;
+					vertices[k].v = 0.0f;
+					break;
+				case 1:
+					vertices[k].u = 1.0f;
+					vertices[k].v = 0.0f;
+					break;
+				case 2:
+					vertices[k].u = 1.0f;
+					vertices[k].v = 1.0f;
+					break;
+				case 3:
+					vertices[k].u = 0.0f;
+					vertices[k].v = 1.0f;
+					break;
+			}
+		}
+	
+		int nVertices = vertices.size();
+		faces.push_back( { nVertices - 4, nVertices - 3, nVertices - 2 } );
+		faces.push_back( { nVertices - 4, nVertices - 2, nVertices - 1 } );
 	}
 
 	m.m_vertices = vertices;
