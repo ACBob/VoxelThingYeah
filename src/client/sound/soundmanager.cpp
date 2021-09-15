@@ -252,7 +252,7 @@ void soundSystem::SetListener( CWorld *world, CVector pos, CVector forward, CVec
 		switch ( mat )
 		{
 			default:
-				reverb = 0.2f;
+				reverb = 0.05f;
 				break;
 
 			MAT_STONE:
