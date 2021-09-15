@@ -314,6 +314,9 @@ void soundSystem::PlayBreakSound( blocktype_t blockType, CVector pos )
 		case MAT_ORGANIC:
 			soundEvents["block.break.organic"]->Play( pos );
 			break;
+		case MAT_DUST:
+			soundEvents["block.break.dust"]->Play( pos );
+			break;
 	}
 }
 void soundSystem::PlayPlaceSound( blocktype_t blockType, CVector pos )
@@ -338,6 +341,9 @@ void soundSystem::PlayPlaceSound( blocktype_t blockType, CVector pos )
 			break;
 		case MAT_ORGANIC:
 			soundEvents["block.place.organic"]->Play( pos );
+			break;
+		case MAT_DUST:
+			soundEvents["block.place.dust"]->Play( pos );
 			break;
 	}
 }

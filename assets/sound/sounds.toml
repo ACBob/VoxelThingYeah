@@ -42,6 +42,12 @@ appendSounds = false
 sounds = [ "sound/breakorganic.ogg" ]
 pitch = [ 0.6, 1.2 ]
 
+["block.break.dust"]
+type = "block"
+appendSounds = false
+sounds = [ "sound/breaksand.ogg" ]
+pitch = [ 0.6, 1.2 ]
+
 ##########################################
 
 ["block.place.stone"]
@@ -72,4 +78,10 @@ pitch = [ 0.6, 1.2 ]
 type = "block"
 appendSounds = false
 sounds = [ "sound/placeorganic.ogg" ]
+pitch = [ 0.6, 1.2 ]
+
+["block.place.dust"]
+type = "block"
+appendSounds = false
+sounds = [ "sound/placesand.ogg" ]
 pitch = [ 0.6, 1.2 ]
