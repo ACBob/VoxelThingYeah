@@ -37,6 +37,22 @@ COverworldJeneration::COverworldJeneration()
 		m_caveNoises[i].seed	  = m_iSeed + 'CAVE' + i;
 		m_caveNoises[i].frequency = 0.01;
 	}
+
+	// Biome numbers provided by Jen
+	m_biomesOvergroundTemperatureNoise			  = fnlCreateState();
+	m_biomesOvergroundTemperatureNoise.seed		  = m_iSeed + 102;
+	m_biomesOvergroundTemperatureNoise.noise_type = FNL_NOISE_PERLIN;
+	m_biomesOvergroundTemperatureNoise.octaves    = 1;
+	m_biomesOvergroundTemperatureNoise.frequency  = 0.01f;
+
+	m_biomesOvergroundHumidityNoise				 = fnlCreateState();
+	m_biomesOvergroundHumidityNoise.seed		 = m_iSeed + 22106;
+	m_biomesOvergroundHumidityNoise.octaves      = 1;
+	m_biomesOvergroundHumidityNoise.noise_type	 = FNL_NOISE_PERLIN;
+	m_biomesOvergroundTemperatureNoise.frequency = 0.01f;
+
+	// Biomes
+	InitBiomes();
 }
 
 // Generates the base stone skeleton
@@ -54,7 +70,7 @@ void COverworldJeneration::GenBase( CChunk *c )
 
 		// First try the seafloor
 		float noiseDataFloor = fnlGetNoise2D( &m_seafloorNoise, WorldPosition.x, WorldPosition.z );
-		float seaFloor		 = 8.0f + ( 3.0f * noiseDataFloor );
+		float seaFloor		 = SEA_FLOOR + ( 3.0f * noiseDataFloor );
 
 		if ( WorldPosition.y <= seaFloor )
 		{
@@ -93,15 +109,22 @@ void COverworldJeneration::BiomeBlocks( CChunk *c )
 				if ( b == nullptr )
 					continue;
 
+				CBiome *biome = GetBiomeAtPos( c->PosToWorld( CVector( x, y, z ) ) );
+
 				if ( b->m_iBlockType == AIR )
 				{
-					blk->m_iBlockType = GRASS;
+					blk->m_iBlockType = biome->m_iBlockSurface;
 					grassDepth--;
 				}
-				else if ( b->m_iBlockType == GRASS || b->m_iBlockType == DIRT && grassDepth > 0 )
+				else if ( b->m_iBlockType == biome->m_iBlockSurface ||
+						  b->m_iBlockType == biome->m_iBlockSubSurface && grassDepth > 0 )
 				{
-					blk->m_iBlockType = DIRT;
+					blk->m_iBlockType = biome->m_iBlockSubSurface;
 					grassDepth--;
+				}
+				else if ( blk->m_iBlockType == STONE )
+				{
+					blk->m_iBlockType = biome->m_iBlockRock;
 				}
 			}
 		}
@@ -135,7 +158,8 @@ void COverworldJeneration::Decorate( CChunk *c )
 		if ( caveVal < 0.04f )
 		{
 			if ( c->m_blocks[i].m_iBlockType == STONE || c->m_blocks[i].m_iBlockType == GRASS ||
-				 c->m_blocks[i].m_iBlockType == DIRT || c->m_blocks[i].m_iBlockType == ORE_COAL )
+				 c->m_blocks[i].m_iBlockType == DIRT || c->m_blocks[i].m_iBlockType == ORE_COAL ||
+				 c->m_blocks[i].m_iBlockType == SAND || c->m_blocks[i].m_iBlockType == SANDSTONE )
 			{
 				c->m_blocks[i].m_iBlockType = AIR;
 			}
@@ -148,4 +172,20 @@ void COverworldJeneration::Generate( CChunk *c )
 	GenBase( c );
 	BiomeBlocks( c );
 	Decorate( c );
+}
+
+CBiome *COverworldJeneration::GetBiomeAtPos( CVector p )
+{
+	float fTemperature = 1.35f + fnlGetNoise2D( &m_biomesOvergroundTemperatureNoise, p.x, p.z );
+	// float fHumidity = fnlGetNoise2D( &m_biomesOvergroundHumidityNoise, p.x, p.z );
+
+	CBiome *closestBiome = biomes::biomeList[0];
+
+	for ( CBiome *biome : biomes::biomeList )
+	{
+		if ( fabsf( biome->m_fTemperature - fTemperature ) < fabsf( closestBiome->m_fTemperature - fTemperature ) )
+			closestBiome = biome;
+	}
+
+	return closestBiome;
 }
