@@ -6,7 +6,7 @@
 			"request": "launch",
 			"program": "${workspaceFolder}/bin/VoxelThingYeah_client",
 			"args": [
-				"username VScodePlayer; fov 90"
+				"username VScodePlayer; fov 90; playerskin skin.png"
 			],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",

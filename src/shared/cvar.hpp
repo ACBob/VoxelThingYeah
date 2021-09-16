@@ -45,6 +45,9 @@ namespace ConVar
 		// Sets value as boolean
 		void SetBool( bool val );
 
+		// Returns if the value has been changed
+		bool IsModified() { return m_bModified; };
+
 	  private:
 		int m_iFlags;
 

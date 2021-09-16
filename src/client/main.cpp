@@ -122,6 +122,10 @@ int main( int argc, char *args[] )
 	CTexture *crosshairTex = materialSystem::LoadTexture( "crosshair.png" );
 	CTexture *testTexture  = materialSystem::LoadTexture( "test.png" );
 	CTexture *sunTexture   = materialSystem::LoadTexture( "sun.png" );
+	CTexture *playerTex = nullptr;
+	
+	if (playerskin->IsModified())
+		playerTex = materialSystem::LoadTexture( playerskin->GetString() );
 
 	con_info( "Loading some models" );
 	modelSystem::Init();
@@ -181,6 +185,9 @@ int main( int argc, char *args[] )
 	localWorld.AddEntity( &plyr );
 	localWorld.m_pLocalPlayer = &plyr;
 	plyr.m_pClient			  = &client;
+
+	if (playerTex != nullptr)
+		plyr.m_pMdl->SetTexture(playerTex);
 
 	glm::mat4 projection = glm::perspective( glm::radians( fov->GetFloat() ),
 											 scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f );

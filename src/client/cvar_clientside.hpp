@@ -19,4 +19,6 @@ extern ConVar::CConVar *cl_servername;
 extern ConVar::CConVar *cl_volume;
 extern ConVar::CConVar *cl_reverb;
 
+extern ConVar::CConVar *playerskin;
+
 void SetupClientSideConvars();
