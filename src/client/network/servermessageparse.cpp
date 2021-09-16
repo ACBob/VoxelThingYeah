@@ -219,6 +219,22 @@ namespace protocol
 				}
 			}
 			break;
+			case ServerPacket::PLAYERSKIN: {
+				std::string username;
+				std::vector<unsigned char> imageData;
+				unsigned int resolution = 0;
+
+				bufAccess >> username;
+				bufAccess >> imageData;
+				bufAccess >> resolution;
+
+				CEntityPlayer *e = (CEntityPlayer *)client->m_pLocalWorld->GetEntityByName( username.c_str() );
+				if ( e != nullptr )
+				{
+					e->m_pMdl->SetTexture( materialSystem::LoadTexture(imageData, resolution * 8, resolution * 8) );
+				}
+			}
+			break;
 
 			default: {
 				con_error( "Unknown packet of type %#010x", p.type );

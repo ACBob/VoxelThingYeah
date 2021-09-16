@@ -50,10 +50,20 @@ namespace protocol
 	void SendClientLeave( ENetPeer *pPeer )
 	{
 		ClientPacket p;
-		Archive<ArchiveBuf> bufAccess = p.GetAccess();
-		p.type						  = ClientPacket::LEAVE;
+		p.type = ClientPacket::LEAVE;
 
 		protocol::SendPacket( pPeer, p );
 		enet_peer_disconnect( pPeer, 0 );
+	}
+	void SendClientSkin( ENetPeer *pPeer, std::vector<unsigned char> imageData, unsigned int resolution )
+	{
+		ClientPacket p;
+		Archive<ArchiveBuf> bufAccess = p.GetAccess();
+		p.type						  = ClientPacket::SKIN;
+		
+		bufAccess << imageData;
+		bufAccess << resolution;
+		
+		protocol::SendPacket( pPeer, p );
 	}
 } // namespace protocol

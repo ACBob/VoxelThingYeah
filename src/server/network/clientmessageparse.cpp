@@ -160,6 +160,25 @@ namespace protocol
 			}
 			break;
 
+			case ClientPacket::SKIN: {
+				std::vector<unsigned char> imageData;
+				unsigned int skinRes;
+				bufAccess >> imageData;
+				bufAccess >> skinRes;
+
+				CNetworkPlayer *plyr = pServer->ClientFromPeer(pPeer);
+				plyr->m_skinData = imageData;
+				plyr->m_skinRes = skinRes;
+
+				for ( CNetworkPlayer *c : pServer->m_players )
+				{
+					if (c->m_pPeer == pPeer) continue;
+
+					SendServerPlayerSkin(c->m_pPeer, c->m_username, c->m_skinData, c->m_skinRes);
+				}
+			}
+			break;
+
 			default: {
 				con_error( "Unknown packet of type %#010x", p.type );
 			}

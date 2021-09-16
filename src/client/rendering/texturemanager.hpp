@@ -10,6 +10,7 @@ namespace materialSystem
 	{
 	  public:
 		CTexture( const char *path );
+		CTexture( std::vector<unsigned char> imageData, unsigned int height, unsigned int width );
 
 		std::vector<unsigned char> m_imageData;
 		unsigned int m_iWidth, m_iHeight, m_iId;
@@ -21,6 +22,7 @@ namespace materialSystem
 	void UnInit();
 
 	CTexture *LoadTexture( const char *path );
+	CTexture *LoadTexture( std::vector<unsigned char> imageData, unsigned int height, unsigned int width );
 
 	extern std::vector<CTexture *> loadedTextures;
 }; // namespace materialSystem

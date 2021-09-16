@@ -10,6 +10,9 @@ class CNetworkPlayer
 	CEntityPlayer *m_pEntity = nullptr;
 	std::string m_username;
 
+	std::vector<unsigned char> m_skinData;
+	unsigned int m_skinRes;
+
 	int m_iLoadedChunkIDX			  = 0;
 	unsigned int m_iNextChunkLoadTick = 0;
 	CVector m_vChunkPos; // the chunk we're in

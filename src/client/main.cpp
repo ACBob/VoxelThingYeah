@@ -187,7 +187,11 @@ int main( int argc, char *args[] )
 	plyr.m_pClient			  = &client;
 
 	if (playerTex != nullptr)
+	{
 		plyr.m_pMdl->SetTexture(playerTex);
+		con_info("Sending our skin");
+		protocol::SendClientSkin( client.m_pPeer, plyr.m_pMdl->GetTexture()->m_imageData, 8 );
+	}
 
 	glm::mat4 projection = glm::perspective( glm::radians( fov->GetFloat() ),
 											 scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f );

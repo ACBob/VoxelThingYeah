@@ -221,7 +221,7 @@ namespace protocol
 	void SendServerPlayerDisconnect( ENetPeer *pPeer, bool isKick, std::string reason = "" );
 	void SendServerTimeOfDay( ENetPeer *pPeer, int ticks );
 	void SendServerPlayerLeave( ENetPeer *pPeer, std::string username );
-	void SendServerPlayerSkin( ENetPeer *pPeer, std::string username );
+	void SendServerPlayerSkin( ENetPeer *pPeer, std::string username, std::vector<unsigned char> imageData, unsigned int resolution );
 
 	/****************************************************/
 	/******************* CLIENT *************************/
@@ -231,5 +231,5 @@ namespace protocol
 	void SendClientPlayerPos( ENetPeer *pPeer, CVector pos, CVector rot );
 	void SendClientChatMessage( ENetPeer *pPeer, std::string message );
 	void SendClientLeave( ENetPeer *pPeer );
-	void SendClientSkin( ENetPeer *pPeer );
+	void SendClientSkin( ENetPeer *pPeer, std::vector<unsigned char> imageData, unsigned int resolution );
 } // namespace protocol
