@@ -228,6 +228,8 @@ namespace protocol
 				bufAccess >> imageData;
 				bufAccess >> resolution;
 
+				con_info("Handling %s' skin", username.c_str());
+
 				CEntityPlayer *e = (CEntityPlayer *)client->m_pLocalWorld->GetEntityByName( username.c_str() );
 				if ( e != nullptr )
 				{

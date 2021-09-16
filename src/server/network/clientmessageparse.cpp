@@ -72,8 +72,11 @@ namespace protocol
 					if ( c->m_pPeer == pPeer )
 						continue;
 					SendServerPlayerSpawn( c->m_pPeer, p->m_name, p->m_vPosition, p->m_vRotation, true );
+
 					SendServerPlayerSpawn( pPeer, c->m_pEntity->m_name, c->m_pEntity->m_vPosition,
 										   c->m_pEntity->m_vRotation, false );
+					if (c->m_skinData.size())
+						SendServerPlayerSkin(pPeer, c->m_username, c->m_skinData, c->m_skinRes);
 				}
 
 				// Now send them 0,0
@@ -160,21 +163,23 @@ namespace protocol
 			}
 			break;
 
-			case ClientPacket::SKIN: {
+			case ClientPacket::SKIN: { // TODO: Validate to some degree (i.e max resolution)
 				std::vector<unsigned char> imageData;
 				unsigned int skinRes;
 				bufAccess >> imageData;
 				bufAccess >> skinRes;
 
 				CNetworkPlayer *plyr = pServer->ClientFromPeer(pPeer);
+				con_info("%s has a skin", plyr->m_username.c_str());
+
 				plyr->m_skinData = imageData;
 				plyr->m_skinRes = skinRes;
 
 				for ( CNetworkPlayer *c : pServer->m_players )
 				{
-					if (c->m_pPeer == pPeer) continue;
+					if (c == plyr) continue;
 
-					SendServerPlayerSkin(c->m_pPeer, c->m_username, c->m_skinData, c->m_skinRes);
+					SendServerPlayerSkin(c->m_pPeer, plyr->m_username, plyr->m_skinData, plyr->m_skinRes);
 				}
 			}
 			break;
