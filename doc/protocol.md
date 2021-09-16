@@ -93,6 +93,13 @@ Contains no data.
 
 It's completely safe to close the connection after this, you don't need to wait for conformation.
 
+### 0x06 (SKIN)
+Tells the server what skin we have.\
+The server processes this, but we don't recieve any feedback. The server will simply not send players the skin.
+| Value | Type | Description |
+|-------|------|-------------|
+| Skin Data | RGBA Array | Texture Data |
+
 ## Server -> Client
 
 ### 0x00 (PLAYER_ID)
@@ -172,8 +179,15 @@ The world's time of day.
 |-------|------|-------------|
 | Ticks | Integer | The tick time of day |
 
-### 0x07 (PLAYER_LEAVE)
+### 0x09 (PLAYER_LEAVE)
 Notifies clients that a player has left, and to delete their model or whatever.
 | Value | Type | Description |
 |-------|------|-------------|
 | Username | std::string | Username of the player leaving. |
+
+### 0x0A (PLAYER_SKIN)
+Notifies the client of a custom skin another player may have.
+| Value | Type | Description |
+|-------|------|-------------|
+| Username | std::string | Username of the player. |
+| Skin Data | RGBA Array | Texture Data |

@@ -72,6 +72,14 @@ struct ClientPacket : public NetworkPacket
 			Sorry nothing
 		*/
 		LEAVE = 0x05,
+		// Sent to the server in the case of a custom skin
+		// Assumed that if not sent just the default skin
+		/*
+			{
+				textureData
+			}
+		*/
+		SKIN = 0x06,
 	};
 
 	template <typename S> void serialize( S &s ) { s &type &data & false; };
@@ -175,6 +183,14 @@ struct ServerPacket : public NetworkPacket
 			}
 		*/
 		PLAYERLEAVE = 0x09,
+		// Sets the skin of player with username
+		/*
+			{
+				username,
+				textureData
+			}
+		*/
+		PLAYERSKIN = 0x0a,
 	};
 
 	template <typename S> void serialize( S &s ) { s &type &data & true; };
@@ -205,6 +221,7 @@ namespace protocol
 	void SendServerPlayerDisconnect( ENetPeer *pPeer, bool isKick, std::string reason = "" );
 	void SendServerTimeOfDay( ENetPeer *pPeer, int ticks );
 	void SendServerPlayerLeave( ENetPeer *pPeer, std::string username );
+	void SendServerPlayerSkin( ENetPeer *pPeer, std::string username );
 
 	/****************************************************/
 	/******************* CLIENT *************************/
@@ -214,4 +231,5 @@ namespace protocol
 	void SendClientPlayerPos( ENetPeer *pPeer, CVector pos, CVector rot );
 	void SendClientChatMessage( ENetPeer *pPeer, std::string message );
 	void SendClientLeave( ENetPeer *pPeer );
+	void SendClientSkin( ENetPeer *pPeer );
 } // namespace protocol
