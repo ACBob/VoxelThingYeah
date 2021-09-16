@@ -3,17 +3,12 @@ cmake_minimum_required(VERSION 3.16)
 
 project(VoxelThingYeah VERSION 0.0.0)
 
-# If no build type is specified, Build in release.
-# if(${CMAKE_BUILD_TYPE})
-# else()
-# 	set(CMAKE_BUILD_TYPE Release)
-# endif()
-
 # Set C flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Wno-unused-parameter -Wno-missing-field-initializers")
+add_compile_options(-Wall -Wextra -pedantic -Wno-unused-parameter -Wno-missing-field-initializers)
 
 if (WIN32)
-	set(CMAKE_CXX_FLAGS "-static-libgcc -static-libstdc++ ${CMAKE_CXX_FLAGS}")
+	# Statically link libgcc and libstdc++ because I don't fancy shipping them seperately
+	add_compile_options(-static-libgcc -static-libstdc++)
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
