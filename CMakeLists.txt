@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.16)
 
 project(VoxelThingYeah VERSION 0.0.0)
 
+option(BOBCRAFT_ENABLE_OPENAL "Enable OpenAL support" ON)
+
 # Set C flags
 add_compile_options(-Wall -Wextra -pedantic -Wno-unused-parameter -Wno-missing-field-initializers)
 
@@ -17,10 +19,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Put the game executable in /bin
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
-# TODO: windows :trollface:
 find_package(SDL2 REQUIRED)
-find_package(OpenAL REQUIRED)
 find_package(OpenGL REQUIRED)
+
+if (BOBCRAFT_ENABLE_OPENAL)
+	find_package(OpenAL)
+	if (${OPENAL_FOUND})
+		add_compile_definitions(BOBCRAFT_ENABLE_OPENAL)
+	else()
+		set(BOBCRAFT_ENABLE_OPENAL OFF)
+		message(WARNING "Couldn't find OpenAL, Disabling audio support.")
+	endif()
+endif()
 
 # LodePNG
 add_library(lodepng STATIC subprojects/lodepng/lodepng.cpp subprojects/lodepng/lodepng.h)

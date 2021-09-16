@@ -8,6 +8,11 @@
 #include "world/block.hpp"
 #include "world/world.hpp"
 
+#define LOG_LEVEL DEBUG
+#include "shared/seethe.h"
+
+#ifdef BOBCRAFT_ENABLE_OPENAL
+
 #define SOUNDBUFFERS 1
 
 namespace soundSystem
@@ -55,6 +60,59 @@ namespace soundSystem
 	void PlayBreakSound( blocktype_t blockType, CVector pos );
 	void PlayPlaceSound( blocktype_t blockType, CVector pos );
 } // namespace soundSystem
+
+// Stubs when sound is disabled
+#else
+
+namespace soundSystem
+{
+	class CSound
+	{
+	  public:
+		CSound( const char *path ) {};
+		// Listen = location of listener
+		// Src = location of sound src
+		void Play( CVector src, float pitch, float gain ) {};
+	};
+
+	class CSoundEvent
+	{
+		enum SOUNDTYPE {
+			SOUNDTYPE_BLOCK = 0x0,
+		};
+
+	  public:
+		CSoundEvent( std::vector<std::string> sounds, const char *type, float minpitch, float maxpitch ) {};
+
+		void Play( CVector src ) {};
+
+		std::vector<CSound *> m_sounds;
+
+		float m_fMinPitch = 1.0f;
+		float m_fMaxPitch = 1.0f;
+
+		unsigned int m_iSoundType = 0;
+	};
+
+	inline void Init()
+	{
+		con_warning("Bobcraft compiled without audio support.");
+	};
+	inline void UnInit() {};
+
+	inline void SetListener( CWorld *wlrd, CVector pos, CVector forward, CVector vel ) {};
+
+	inline CSound *LoadSound( const char *path ) {};
+
+	extern std::vector<CSound *> loadedSounds;
+	extern std::map<std::string, CSoundEvent *> soundEvents;
+
+	inline void PlayBreakSound( blocktype_t blockType, CVector pos ) {};
+	inline void PlayPlaceSound( blocktype_t blockType, CVector pos ) {};
+} // namespace soundSystem
+
+#endif
+
 
 using CSound	  = soundSystem::CSound;
 using CSoundEvent = soundSystem::CSoundEvent;
