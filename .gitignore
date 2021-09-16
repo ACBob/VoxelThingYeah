@@ -9,3 +9,6 @@ shaders/*.bin
 shaders/*.spv
 
 .vscode/
+
+# Custom Skin
+assets/skin.png
