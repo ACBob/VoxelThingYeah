@@ -25,6 +25,20 @@
 // Char because we don't need 16 bits
 char fontWidths[( '~' - ' ' )];
 
+int CGui::GetTextLength(const char *msg) {
+	int l = 0;
+
+	int i = 0;
+	while ( msg[i] != NULL )
+	{
+		l = l + fontWidths[msg[i]] + TEXTINTEXWIDTH;
+
+		i++;
+	}
+
+	return l;
+}
+
 CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActiveItem( 0 ), m_iHotItem( 0 )
 {
 	// OpenGl
@@ -202,9 +216,10 @@ std::vector<CGui::Vertex> CGui::GetCharQuad( const char *c, CVector pos, CVector
 
 bool CGui::RegionHit( CVector pos, CVector size )
 {
-	if ( m_vMousePos.x < pos.x || m_vMousePos.y < pos.y ||
+	pos.y = m_vScreenDimensions.y - pos.y;
 
-		 m_vMousePos.x > pos.x + size.x || m_vMousePos.y > pos.y + size.y )
+	if ( m_vMousePos.x <= pos.x || m_vMousePos.y >= pos.y ||
+		 m_vMousePos.x >= pos.x + size.x || m_vMousePos.y <= pos.y - size.y )
 		return false;
 	return true;
 }
@@ -258,12 +273,15 @@ int CGui::Button( int id, CVector pos, CVector size, CTexture *tex )
 
 int CGui::LabelButton( int id, const char *msg, CVector pos, CVector origin, CVector padding )
 {
-	// TODO: Function to get size of rendered text
-	CVector size  = CVector( ( TEXTWIDTH * strlen( msg ) / GUIUNIT ) + ( padding.x / 2.0f ),
-							 ( TEXTHEIGHT * 2 / GUIUNIT ) + ( padding.y / 2.0f ) );
-	pos			  = pos - ( size * origin );
-	int buttonOut = Button( id, pos, size );
-	Label( msg, pos + size / 2, CVector( 1, 1, 1 ), TEXTALIGN_CENTER );
+	// Get size, fixed position
+	CVector size  = ( CVector( GetTextLength(msg), TEXTHEIGHT ) + padding * GUIUNIT );
+	pos			  = pos - ( size / GUIUNIT ) * origin;
+
+	// Render and get output of button
+	int buttonOut = Button( id, pos, size / GUIUNIT );
+
+	// TODO: it's in the floor
+	Label( msg, (pos + (size / GUIUNIT) * origin), CVector(1,1,1), TEXTALIGN_CENTER );
 	return buttonOut;
 }
 
@@ -272,9 +290,9 @@ void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment tex
 	pos = GetInScreen( pos );
 
 	if ( textAlign == TEXTALIGN_CENTER )
-		pos = pos - CVector( ( TEXTWIDTH * strlen( text ) ) / 2, 0 );
+		pos = pos - CVector( GetTextLength(text) / 2, 0 );
 	else if ( textAlign == TEXTALIGN_RIGHT )
-		pos = pos - CVector( ( TEXTWIDTH * strlen( text ) ), 0 );
+		pos = pos - CVector( GetTextLength(text), 0 );
 
 	// Render
 	// OpenGl

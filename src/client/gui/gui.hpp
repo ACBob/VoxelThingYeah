@@ -99,10 +99,13 @@ class CGui
 		TEXTALIGN_RIGHT	 = 0x02	 // |   RIGHT|
 	};
 
+	// Utility
+	int GetTextLength(const char* text);
+
 	// Elements
 	int Button( int iId, CVector vPosition, CVector vSize, CTexture *tex = nullptr );
 	int LabelButton( int id, const char *msg, CVector pos, CVector vOrigin = CVector( 0, 0 ),
-					 CVector padding = CVector( 0.75, 0.75, 0.75 ) );
+					 CVector padding = CVector( 2, 1, 0 ) );
 	void Label( const char *cText, CVector vPosition, Colour colour = Color( 1, 1, 1 ),
 				TextAlignment textAlign = TEXTALIGN_LEFT );
 	void Image( CTexture *pTex, CVector vPosition, CVector vSize, CVector vOrigin = CVector( 0, 0 ),
