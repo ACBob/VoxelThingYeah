@@ -62,9 +62,37 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 
 	// TODO: read texture and find the min width to display
 	con_info( "Processing font widths" );
+	int resX = m_pTextTex->m_iWidth / 16;
+	int resY = m_pTextTex->m_iHeight / 16;
 	for ( char c = ' '; c < '~'; c++ )
 	{
-		fontWidths[c] = 16;
+		if (c == ' ')
+		{
+			fontWidths[c] = 8;
+			continue;
+		}
+
+		// we assume the width to be a power of 16 and height to be a power of 16
+		int x = (c - ' ') / 16;
+		int px = x * resX;
+		int y = (c - ' ') % 16;
+		int py = y * resY;
+		
+		int width = 0;
+		for (int i = 0; i < resX; i ++ )
+		{
+			for (int j = 0; j < resY; j ++)
+			{
+				int idx = (px + i) * m_pTextTex->m_iWidth + (py + j);
+				if (m_pTextTex->m_imageData[idx * 4] != 0)
+				{
+					width = i;
+					break;
+				}
+			}
+		}
+
+		fontWidths[c] = width;
 	}
 }
 
@@ -259,7 +287,7 @@ void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment tex
 			std::vector<CGui::Vertex> g = GetCharQuad( &text[i], pos, CVector( TEXTWIDTH, TEXTHEIGHT ), color );
 			std::copy( g.begin(), g.end(), std::back_inserter( m_textVertiecs ) );
 
-			pos = pos + CVector( fontWidths[text[i]], 0 );
+			pos = pos + CVector( fontWidths[text[i]] + TEXTINTEXWIDTH, 0 );
 
 			i++;
 		}
