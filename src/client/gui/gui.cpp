@@ -68,7 +68,7 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 	{
 		if (c == ' ')
 		{
-			fontWidths[c] = 8;
+			fontWidths[c] = 4;
 			continue;
 		}
 
@@ -84,7 +84,7 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 			for (int j = 0; j < resY; j ++)
 			{
 				int idx = (px + i) * m_pTextTex->m_iWidth + (py + j);
-				if (m_pTextTex->m_imageData[idx * 4] != 0)
+				if (m_pTextTex->m_imageData[idx * 4 + 4] != 0)
 				{
 					width = i;
 					break;
