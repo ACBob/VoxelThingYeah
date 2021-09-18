@@ -8,7 +8,7 @@
 
 // The whole coordinate system is based on these GUIUUNITs.
 // When we start to dynamically rescale the GUI based on resolution this will come in handy. for now, 16px.
-#define GUIUNIT 16
+#define GUIUNIT m_iGuiUnit
 
 #define TEXTINTEXWIDTH 8
 #define TEXTINTEXHEIGHT 8
@@ -31,7 +31,7 @@ int CGui::GetTextLength(const char *msg) {
 	int i = 0;
 	while ( msg[i] != NULL )
 	{
-		l = l + fontWidths[msg[i]] + TEXTINTEXWIDTH;
+		l = l + fontWidths[msg[i]] + TEXTWIDTH / 2;
 
 		i++;
 	}
@@ -108,6 +108,8 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 
 		fontWidths[c] = width;
 	}
+
+	m_iGuiUnit = 16;
 }
 
 void CGui::Resize( int x, int y )
@@ -305,7 +307,7 @@ void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment tex
 			std::vector<CGui::Vertex> g = GetCharQuad( &text[i], pos, CVector( TEXTWIDTH, TEXTHEIGHT ), color );
 			std::copy( g.begin(), g.end(), std::back_inserter( m_textVertiecs ) );
 
-			pos = pos + CVector( fontWidths[text[i]] + TEXTINTEXWIDTH, 0 );
+			pos = pos + CVector( fontWidths[text[i]] + TEXTWIDTH / 2, 0 );
 
 			i++;
 		}

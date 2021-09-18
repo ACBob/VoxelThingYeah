@@ -214,6 +214,8 @@ int main( int argc, char *args[] )
 	guiState.m_pInputManager = &inputMan;
 	guiState.m_pGui			 = &gui;
 
+	gui.m_iGuiUnit = floor(window.GetSize().x / 53);
+
 	int64_t then =
 		std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() )
 			.count();
@@ -243,6 +245,7 @@ int main( int argc, char *args[] )
 			scr_height->SetInt( s.y );
 			glViewport( 0, 0, s.x, s.y );
 			gui.Resize( s.x, s.y );
+			gui.m_iGuiUnit = floor(window.GetSize().x / 53);
 			projection			  = glm::perspective( glm::radians( fov->GetFloat() ),
 											  scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f );
 			screen				  = glm::ortho( 0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat() );

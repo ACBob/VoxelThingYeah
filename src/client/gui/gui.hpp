@@ -87,6 +87,9 @@ class CGui
 	// Current interaction
 	int m_iActiveItem;
 
+	// Gui Size
+	int m_iGuiUnit;
+
 	// Z Ignored!
 	bool RegionHit( CVector vPosition, CVector vSize );
 
