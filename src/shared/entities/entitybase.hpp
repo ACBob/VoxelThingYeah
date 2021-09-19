@@ -32,7 +32,7 @@ class CEntityBase
 	// Called every tick (usually 1/20th of a second)
 	// Gets handed the delta time to help work out physics-related stuff
 	// Also gets given the world for collision reasons
-	virtual void PhysicsTick( float delta, CWorld *world ){};
+	virtual void PhysicsTick( float delta, CWorld *world );
 
 	// Updates the entity's children
 	virtual void UpdateChildren();
@@ -71,6 +71,9 @@ class CEntityBase
 	CVector m_vRotation;
 	// Velocity
 	CVector m_vVelocity;
+
+	bool m_bOnFloor = false;
+	bool m_bApplyGravity = true;
 
 	CBoundingBox m_collisionBox;
 

@@ -129,16 +129,18 @@ void CEntityPlayer::Tick()
 	right.y			= 0;
 	right			= right.Normal();
 	if ( m_pInputMan->m_bInputState[INKEY_FRONT] )
-		m_vVelocity = m_vVelocity + ( forward * 0.3 );
+		m_vVelocity = m_vVelocity + ( forward * 0.2 );
 	else if ( m_pInputMan->m_bInputState[INKEY_BACK] )
-		m_vVelocity = m_vVelocity + ( forward * -0.3 );
+		m_vVelocity = m_vVelocity + ( forward * -0.2 );
 	if ( m_pInputMan->m_bInputState[INKEY_LEFT] )
-		m_vVelocity = m_vVelocity + ( right * -0.3 );
+		m_vVelocity = m_vVelocity + ( right * -0.2 );
 	else if ( m_pInputMan->m_bInputState[INKEY_RIGHT] )
-		m_vVelocity = m_vVelocity + ( right * 0.3 );
+		m_vVelocity = m_vVelocity + ( right * 0.2 );
 	
 	if (m_pInputMan->m_bInputState[INKEY_FLY] && !m_pInputMan->m_bOldInputState[INKEY_FLY])
 		m_bFly = !m_bFly;
+
+	m_bApplyGravity = !m_bFly;
 
 	if (m_bFly)
 	{
@@ -149,9 +151,9 @@ void CEntityPlayer::Tick()
 	}
 	else
 	{
-		if ( m_pInputMan->m_bInputState[INKEY_UP] && !m_pInputMan->m_bOldInputState[INKEY_UP] && m_bOnFloor )
+		if ( m_pInputMan->m_bInputState[INKEY_UP] && m_bOnFloor )
 		{
-			m_vVelocity.y = 4.0f;
+			m_vVelocity.y = 4.5f;
 		}
 	}
 #endif
@@ -159,50 +161,5 @@ void CEntityPlayer::Tick()
 
 void CEntityPlayer::PhysicsTick( float delta, CWorld *world )
 {
-	m_bOnFloor = false;
-
-	for (int i = 0; i < 3; i++)
-	{
-		float op = m_vPosition[i+1];
-		float p = m_vPosition[i+1] + m_vVelocity[i+1] * delta;
-		switch(i)
-		{
-			case 0:
-				m_vPosition.x = p;
-			break;
-			case 1:
-				m_vPosition.y = p;
-			break;
-			case 2:
-				m_vPosition.z = p;
-			break;
-		}
-		UpdateCollision();
-		if ( world->TestAABBCollision( m_collisionBox ) )
-		{
-			switch(i)
-			{
-				case 0:
-					m_vPosition.x = op;
-					m_vVelocity.x = 0;
-				break;
-				case 1:
-					m_vPosition.y = op;
-					m_vVelocity.y = 0;
-					m_bOnFloor = true;
-				break;
-				case 2:
-					m_vPosition.z = op;
-					m_vVelocity.z = 0;
-				break;
-			}
-		}
-	}
-
-	m_vVelocity = m_vVelocity * CVector(0.91, 0.98, 0.91);
-
-	if (!m_bFly)
-		m_vVelocity.y += -0.8;
-
-	UpdateChildren();
+	BaseClass::PhysicsTick( delta, world );
 }

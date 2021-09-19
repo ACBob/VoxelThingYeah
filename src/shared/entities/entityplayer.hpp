@@ -43,7 +43,5 @@ class CEntityPlayer : public CEntityBase
 	void *m_pClient = nullptr;
 #endif
 
-	bool m_bOnFloor;
-
 	bool m_bFly = true;
 };
