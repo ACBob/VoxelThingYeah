@@ -94,7 +94,10 @@ void CStatePlay::Update()
 
 		m_pLocalWorld->Render();
 
-		BlockTexture bTex	  = GetDefaultBlockTextureSide( m_pLocalPlayer->m_iSelectedBlockType, Direction::NORTH );
+		m_pLocalWorld->WorldTick( pStateMan->m_iTick );
+		protocol::SendClientPlayerPos( pStateMan->m_pClient->m_pPeer, m_pLocalPlayer->m_vPosition, m_pLocalPlayer->m_vRotation );
+
+		BlockTexture bTex = GetDefaultBlockTextureSide( m_pLocalPlayer->m_iSelectedBlockType, Direction::NORTH );
 	}
 
 	if (leave)

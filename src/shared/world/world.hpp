@@ -53,8 +53,10 @@ class CWorld
 	bool ValidChunkPos( const CVector pos );
 
 	// Tick is the tick since the start of the game
-	// FIXME: depending on if I got my calculation right, this will shit itself either in 1,000 or so years or 3.
-	void WorldTick( int tick );
+	// TODO: This will overflow maybe
+	void WorldTick( int64_t tick );
+
+	int64_t m_iLastTick = 0;
 
 	struct PortableChunkRepresentation
 	{

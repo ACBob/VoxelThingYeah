@@ -18,6 +18,8 @@ class CGameStateMachine : public CStateMachine
 		CGui *m_pGui;
 		CGameWindow *m_pWindow;
 		CInputManager *m_pInputMan;
+
+		int64_t m_iTick = 0; // Client Tick
 };
 
 class CStatePlay : public CState

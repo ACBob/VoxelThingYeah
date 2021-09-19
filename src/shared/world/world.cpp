@@ -176,7 +176,7 @@ bool CWorld::TestAABBCollision( CBoundingBox col )
 	return false;
 }
 
-void CWorld::WorldTick( int tickN )
+void CWorld::WorldTick( int64_t tickN )
 {
 	for ( int i = 0; i < m_ents.size(); i++ )
 	{
@@ -198,6 +198,9 @@ void CWorld::WorldTick( int tickN )
 		reinterpret_cast<CEntityBase *>( ent )->PhysicsTick( 0.05, this );
 #endif
 	}
+
+	if (tickN == m_iLastTick)
+		return;
 
 #ifdef SERVEREXE
 	for ( CChunk *chunk : m_chunks )

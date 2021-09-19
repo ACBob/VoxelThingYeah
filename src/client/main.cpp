@@ -150,6 +150,9 @@ int main( int argc, char *args[] )
 	glm::mat4 b = glm::ortho(0.0f, 0.0f, 0.0f, 0.0f);
 	shaderSystem::SetUniforms(a, b, screen, 0, 0, CVector());
 
+	int64_t now = std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() ).count();
+	int64_t then = now;
+
 	while ( !window.m_bShouldClose )
 	{
 		window.PollEvents();
@@ -164,6 +167,13 @@ int main( int argc, char *args[] )
 		client.Update();
 
 		window.SwapBuffers();
+
+		now = std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() ).count();
+		if (now >= then)
+		{
+			then = now + 50;
+			gameStateMan.m_iTick ++;
+		}
 	}
 	gameStateMan.Flush();
 
