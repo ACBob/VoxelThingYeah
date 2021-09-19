@@ -27,6 +27,8 @@ void CStatePlay::Enter()
 	m_pStellarModel->SetShader(m_pUnlitShader);
 	m_skyboxModel.SetShader(m_pSkyboxShader);
 
+	m_pStellarModel->SetTexture(materialSystem::LoadTexture("sun.png"));
+
 	m_pTerrainPNG = materialSystem::LoadTexture("terrain.png");
 
 	m_pLocalPlayer = new CEntityPlayer();
