@@ -23,7 +23,9 @@ enum INKEY {
 	INKEY_CHAT = 6,
 	INKEY_OUT  = 7, // Escape
 
-	INKEY_LAST // used only to get the possible inkeys
+	INKEY_FLY  = 8,
+
+	INKEY_LAST // used only to get the possible inkeys, not a key of its own
 };
 
 enum KBDKEY // Keys unrepresentable by a char
@@ -60,6 +62,4 @@ class CInputManager
 
 	bool m_bInputState[INKEY_LAST];
 	bool m_bOldInputState[INKEY_LAST];
-
-	template <typename S> void serialize( S &s ) { s &m_bInputState &m_bOldInputState; };
 };

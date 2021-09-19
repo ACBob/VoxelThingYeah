@@ -21,6 +21,7 @@ class CGameStateMachine : public CStateMachine
 		CInputManager *m_pInputMan;
 
 		int64_t m_iTick = 0; // Client Tick
+		float m_fDelta = 0.0f;
 };
 
 class CStatePlay : public CState

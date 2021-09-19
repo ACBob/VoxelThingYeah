@@ -129,49 +129,80 @@ void CEntityPlayer::Tick()
 	right.y			= 0;
 	right			= right.Normal();
 	if ( m_pInputMan->m_bInputState[INKEY_FRONT] )
-		m_vVelocity = m_vVelocity + ( forward * 2.67 );
+		m_vVelocity = m_vVelocity + ( forward * 0.3 );
 	else if ( m_pInputMan->m_bInputState[INKEY_BACK] )
-		m_vVelocity = m_vVelocity + ( forward * -2.67 );
+		m_vVelocity = m_vVelocity + ( forward * -0.3 );
 	if ( m_pInputMan->m_bInputState[INKEY_LEFT] )
-		m_vVelocity = m_vVelocity + ( right * -2.67 );
+		m_vVelocity = m_vVelocity + ( right * -0.3 );
 	else if ( m_pInputMan->m_bInputState[INKEY_RIGHT] )
-		m_vVelocity = m_vVelocity + ( right * 2.67 );
+		m_vVelocity = m_vVelocity + ( right * 0.3 );
+	
+	if (m_pInputMan->m_bInputState[INKEY_FLY] && !m_pInputMan->m_bOldInputState[INKEY_FLY])
+		m_bFly = !m_bFly;
 
-	if ( m_pInputMan->m_bInputState[INKEY_UP] )
-		m_vVelocity = m_vVelocity + ( VEC_UP * 2.67 );
-	else if ( m_pInputMan->m_bInputState[INKEY_DOWN] )
-		m_vVelocity = m_vVelocity + ( VEC_UP * -2.67 );
+	if (m_bFly)
+	{
+		if ( m_pInputMan->m_bInputState[INKEY_UP] )
+			m_vVelocity = m_vVelocity + ( VEC_UP * 0.4 );
+		else if ( m_pInputMan->m_bInputState[INKEY_DOWN] )
+			m_vVelocity = m_vVelocity + ( VEC_UP * -0.4 );
+	}
+	else
+	{
+		if ( m_pInputMan->m_bInputState[INKEY_UP] && !m_pInputMan->m_bOldInputState[INKEY_UP] && m_bOnFloor )
+		{
+			m_vVelocity.y = 4.0f;
+		}
+	}
 #endif
 }
 
 void CEntityPlayer::PhysicsTick( float delta, CWorld *world )
 {
-	m_vPosition.x += m_vVelocity.x * delta;
-	UpdateCollision();
-	if ( world->TestAABBCollision( m_collisionBox ) )
+	m_bOnFloor = false;
+
+	for (int i = 0; i < 3; i++)
 	{
-		m_vPosition.x -= m_vVelocity.x * delta;
-		m_vVelocity.x = 0;
-	}
-	m_vPosition.y += m_vVelocity.y * delta;
-	UpdateCollision();
-	if ( world->TestAABBCollision( m_collisionBox ) )
-	{
-		// Don't glue ourselves to ceilings!
-		if ( m_vVelocity.y < 0 )
-			m_bOnFloor = true;
-		m_vPosition.y -= m_vVelocity.y * delta;
-		m_vVelocity.y = 0;
-	}
-	m_vPosition.z += m_vVelocity.z * delta;
-	UpdateCollision();
-	if ( world->TestAABBCollision( m_collisionBox ) )
-	{
-		m_vPosition.z -= m_vVelocity.z * delta;
-		m_vVelocity.z = 0;
+		float op = m_vPosition[i+1];
+		float p = m_vPosition[i+1] + m_vVelocity[i+1] * delta;
+		switch(i)
+		{
+			case 0:
+				m_vPosition.x = p;
+			break;
+			case 1:
+				m_vPosition.y = p;
+			break;
+			case 2:
+				m_vPosition.z = p;
+			break;
+		}
+		UpdateCollision();
+		if ( world->TestAABBCollision( m_collisionBox ) )
+		{
+			switch(i)
+			{
+				case 0:
+					m_vPosition.x = op;
+					m_vVelocity.x = 0;
+				break;
+				case 1:
+					m_vPosition.y = op;
+					m_vVelocity.y = 0;
+					m_bOnFloor = true;
+				break;
+				case 2:
+					m_vPosition.z = op;
+					m_vVelocity.z = 0;
+				break;
+			}
+		}
 	}
 
-	m_vVelocity = m_vVelocity * 0.8;
+	m_vVelocity = m_vVelocity * CVector(0.91, 0.98, 0.91);
+
+	if (!m_bFly)
+		m_vVelocity.y += -0.8;
 
 	UpdateChildren();
 }

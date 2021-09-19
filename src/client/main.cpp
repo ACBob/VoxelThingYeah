@@ -159,6 +159,9 @@ int main( int argc, char *args[] )
 
 	int64_t now = std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() ).count();
 	int64_t then = now;
+	int64_t nextTick = now;
+
+	int64_t delta = 0;
 
 	while ( !window.m_bShouldClose )
 	{
@@ -190,11 +193,17 @@ int main( int argc, char *args[] )
 		window.SwapBuffers();
 
 		now = std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() ).count();
-		if (now >= then)
+		delta = now - then;
+		then = now;
+		if (now >= nextTick)
 		{
-			then = now + 50;
+			nextTick = now + 50;
 			gameStateMan.m_iTick ++;
 		}
+
+		gameStateMan.m_fDelta = delta / 1000.0f;
+		if (gameStateMan.m_fDelta < 0.05)
+			gameStateMan.m_fDelta = 0.05;
 	}
 	gameStateMan.Flush();
 

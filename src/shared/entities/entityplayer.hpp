@@ -44,4 +44,6 @@ class CEntityPlayer : public CEntityBase
 #endif
 
 	bool m_bOnFloor;
+
+	bool m_bFly = true;
 };
