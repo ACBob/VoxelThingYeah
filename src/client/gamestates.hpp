@@ -7,6 +7,7 @@
 #include "rendering/texturemanager.hpp"
 #include "sdlstuff/sdlwindow.hpp"
 #include "rendering/modelmanager.hpp"
+#include "sound/soundmanager.hpp"
 
 #pragma once
 
@@ -42,6 +43,8 @@ class CStatePlay : public CState
 	CModel *m_pStellarModel;
 
 	CTexture *m_pTerrainPNG;
+
+	int64_t m_iLastTick = 0;
 };
 
 class CStateMenu : public CState

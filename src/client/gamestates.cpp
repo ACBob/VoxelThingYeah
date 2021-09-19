@@ -33,6 +33,7 @@ void CStatePlay::Enter()
 	m_pLocalWorld = new CWorld( m_pDiffuseShader, m_pDiffuseShader );
 
 	m_pLocalPlayer->m_pInputMan = pStateMan->m_pGui->m_pInputMan;
+	m_pLocalPlayer->m_pClient = pStateMan->m_pClient;
 	
 	m_pLocalWorld->AddEntity(m_pLocalPlayer);
 
@@ -55,6 +56,8 @@ void CStatePlay::Update()
 {
 	CGameStateMachine* pStateMan = reinterpret_cast<CGameStateMachine*>(m_pStateMan);
 
+	pStateMan->m_pInputMan->m_bInGui = false;
+
 	// Should we leave the game?
 	bool leave = false;
 
@@ -65,6 +68,26 @@ void CStatePlay::Update()
 		leave = true;
 	else
 	{
+		// -----------------------
+		// Updating Stuff
+		// -----------------------
+		m_pLocalPlayer->UpdateClient( m_pLocalWorld );
+		m_pLocalWorld->WorldTick( pStateMan->m_iTick );
+
+		if (pStateMan->m_iTick != m_iLastTick)
+		{
+			// Bandwith patrol, come out with your hands up!
+			protocol::SendClientPlayerPos( pStateMan->m_pClient->m_pPeer, m_pLocalPlayer->m_vPosition, m_pLocalPlayer->m_vRotation );
+
+			m_iLastTick = pStateMan->m_iTick;
+		}
+
+		soundSystem::SetListener(m_pLocalWorld, m_pLocalPlayer->m_vPosition, m_pLocalPlayer->GetForward(), m_pLocalPlayer->m_vVelocity);
+
+
+		// -----------------------
+		// Rendering
+		// -----------------------
 		CVector f			= m_pLocalPlayer->m_camera.GetForward();
 		CVector v			= m_pLocalPlayer->m_camera.m_vPosition + f;
 		glm::mat4 view = glm::lookAt(
@@ -72,8 +95,6 @@ void CStatePlay::Update()
 			glm::vec3( v.x, v.y, v.z ), glm::vec3( VEC_UP.x, VEC_UP.y, VEC_UP.z ) );
 		shaderSystem::SetUniforms( view, m_projectionMatrix, m_screenMatrix, pStateMan->m_pWindow->GetMS(),
 									m_pLocalWorld->m_iTimeOfDay, vSunForward );
-
-		pStateMan->m_pInputMan->m_bInGui = false;
 
 		glDisable( GL_DEPTH_TEST ); // Skybox
 		{
@@ -86,18 +107,17 @@ void CStatePlay::Update()
 		}
 		glEnable( GL_DEPTH_TEST );
 
-		m_pLocalPlayer->UpdateClient( m_pLocalWorld );
-
 		m_pDiffuseShader->Use();
 
 		glBindTexture( GL_TEXTURE_2D, m_pTerrainPNG->m_iId );
 
 		m_pLocalWorld->Render();
 
-		m_pLocalWorld->WorldTick( pStateMan->m_iTick );
-		protocol::SendClientPlayerPos( pStateMan->m_pClient->m_pPeer, m_pLocalPlayer->m_vPosition, m_pLocalPlayer->m_vRotation );
-
+		// -----------------------
+		// GUI
+		// -----------------------
 		BlockTexture bTex = GetDefaultBlockTextureSide( m_pLocalPlayer->m_iSelectedBlockType, Direction::NORTH );
+		pStateMan->m_pGui->ImageAtlas(m_pTerrainPNG, {(float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey}, 16.0f, CVector(-1,-1), CVector(4,4), CVector(1,1) );
 	}
 
 	if (leave)
