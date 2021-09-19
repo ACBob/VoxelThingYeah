@@ -74,6 +74,7 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 	m_pTextShader = shaderSystem::LoadShader( "shaders/text.vert", "shaders/text.frag" );
 	m_pButtonTex  = materialSystem::LoadTexture( "button.png" );
 	m_pBGTex	  = materialSystem::LoadTexture( "guibg.png" );
+	m_pCrosshairTex	  = materialSystem::LoadTexture( "crosshair.png" );
 
 	m_textBuffers = {};
 
@@ -348,6 +349,11 @@ void CGui::ImageAtlas( CTexture *tex, Atlas atlas, float atlasDivisions, CVector
 		img.m_pTex = tex;
 		m_images.push_back( img );
 	}
+}
+
+void CGui::Crosshair()
+{
+	Image(m_pCrosshairTex, m_vScreenCentre, CVector(3,3), CVector(0.5,0.5));
 }
 
 // Returns the string in the event that 'RETURN' is pressed.

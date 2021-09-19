@@ -128,6 +128,8 @@ void CStatePlay::Update()
 		int minutes = ( m_pLocalWorld->m_iTimeOfDay - ( hours * 1000 ) ) / 16.6666;
 		snprintf( guiBuf, 100, "%02i:%02i", hours, minutes );
 		pStateMan->m_pGui->Label( guiBuf, CVector( pStateMan->m_pGui->m_vScreenCentre.x, -1 ), Color(1,1,1), CGui::TEXTALIGN_CENTER );
+
+		pStateMan->m_pGui->Crosshair();
 	}
 
 	delete[] guiBuf;

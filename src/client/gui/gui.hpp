@@ -83,6 +83,7 @@ class CGui
 
 	// Shared Resources
 	CTexture *m_pBGTex = nullptr;
+	CTexture *m_pCrosshairTex = nullptr;
 
 	// Current button pressed down
 	int m_iMouseState;
@@ -119,5 +120,6 @@ class CGui
 				Colour tint = Colour( 1, 1, 1 ) );
 	void ImageAtlas( CTexture *pTex, Atlas atlas, float fAtlasDivisions, CVector vPosition, CVector vSize,
 					 CVector vOrigin = CVector( 0, 0 ) );
+	void Crosshair(); // A wrapper for Image
 	const char *TextInput( int iId, CVector vPosition );
 };

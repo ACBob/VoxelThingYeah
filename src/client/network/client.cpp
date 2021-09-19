@@ -81,15 +81,12 @@ void CNetworkClient::Disconnect()
 
 void CNetworkClient::Update()
 {
-	ENetEvent e;
-	if ( !m_pPeer )
-	{
-		con_warning( "Attempt to update server without a pPeer!" );
-		return; // Can't update w/out a pPeer
-	}
-
 	if (!m_bConnected)
 		return;
+		
+	ENetEvent e;
+	if ( !m_pPeer )
+		return; // Can't update w/out a pPeer
 
 	while ( enet_host_service( m_pEnetHost, &e, 0 ) > 0 )
 	{
