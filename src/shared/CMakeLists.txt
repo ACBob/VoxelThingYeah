@@ -11,5 +11,6 @@ set(shared_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/cvar.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/inputmanager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/blockdef.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/statemanager.cpp
 	PARENT_SCOPE
 )

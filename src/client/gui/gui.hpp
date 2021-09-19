@@ -4,6 +4,7 @@
 #include "rendering/texturemanager.hpp"
 #include "shared/inputmanager.hpp"
 #include "utility/vector.hpp"
+#include "shared/statemanager.hpp"
 
 #include <map>
 #include <vector>
