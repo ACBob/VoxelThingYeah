@@ -30,7 +30,7 @@ class CNetworkClient
 
 	// Please don't modify
 	// Returns if we're connected or not
-	bool m_bConnected;
+	bool m_bConnected = false;
 	ENetPeer *m_pPeer;
 
 	std::vector<std::string> m_chatBuffer;
