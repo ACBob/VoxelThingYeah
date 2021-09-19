@@ -140,20 +140,22 @@ int main( int argc, char *args[] )
 	gameStateMan.PushState(std::make_unique<CStateMenu>());
 	gameStateMan.m_pClient = &client;
 	gameStateMan.m_pGui = &gui;
+	gameStateMan.m_pWindow = &window;
+	gameStateMan.m_pInputMan = &inputMan;
 
 	inputMan.m_bInGui = true;
 
 	glm::mat4 screen	 = glm::ortho( 0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat() );
 	glm::mat4 a = glm::ortho(0.0f, 0.0f, 0.0f, 0.0f);
 	glm::mat4 b = glm::ortho(0.0f, 0.0f, 0.0f, 0.0f);
-	glm::mat4 c = glm::ortho(0.0f, 0.0f, 0.0f, 0.0f);
-	shaderSystem::SetUniforms(a, b, c, screen, 0, 0, CVector());
+	shaderSystem::SetUniforms(a, b, screen, 0, 0, CVector());
 
 	while ( !window.m_bShouldClose )
 	{
 		window.PollEvents();
 		if ( window.IsFocused() && !inputMan.m_bInGui )
 			window.CaptureMouse();
+		inputMan.Update();
 
 		glClear( GL_DEPTH_BUFFER_BIT );
 

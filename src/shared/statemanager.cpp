@@ -2,8 +2,8 @@
 
 void CStateMachine::PushState(std::unique_ptr<CState> state)
 {
-	state->Enter();
 	state->m_pStateMan = this;
+	state->Enter();
 	m_stateStack.push_back(std::move(state));
 }
 
