@@ -13,8 +13,6 @@
 
 #include <cstring>
 
-#define PRINTPHYSFSERR con_error( "PhysFS Error: %s", PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ) )
-
 namespace fileSystem
 {
 
@@ -23,7 +21,7 @@ namespace fileSystem
 		// Initialise PhysFS first and foremost
 		if ( PHYSFS_init( exePath ) == 0 )
 		{
-			PRINTPHYSFSERR;
+			con_error( "PhysFS Error: %s", PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ) );
 			return false;
 		}
 
@@ -38,7 +36,7 @@ namespace fileSystem
 
 		if ( !f )
 		{
-			PRINTPHYSFSERR;
+			con_error( "%s: %s", virtualPath, PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ) );
 			PHYSFS_close( f );
 			len		= 0;
 			success = false;
@@ -51,7 +49,7 @@ namespace fileSystem
 
 		if ( PHYSFS_readBytes( f, buf, fileLen ) < fileLen )
 		{
-			PRINTPHYSFSERR;
+			con_error( "%s: %s", virtualPath, PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ) );
 			PHYSFS_close( f );
 			len		= 0;
 			success = false;
@@ -76,7 +74,7 @@ namespace fileSystem
 	{
 		if ( PHYSFS_mount( realPath, virtualPath, prepend ? 0 : 1 ) == 0 )
 		{
-			PRINTPHYSFSERR;
+			con_error( "%s->%s: %s", virtualPath, realpath, PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ) );
 			return false;
 		}
 

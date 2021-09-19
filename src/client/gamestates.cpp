@@ -22,7 +22,7 @@ void CStatePlay::Enter()
 	m_pSkyboxShader = shaderSystem::LoadShader("shaders/sky.vert", "shaders/sky.frag");
 
 	GetCubeModel( m_skyboxModel, CVector(-5, -5, -5) );
-	m_pStellarModel = modelSystem::LoadModel("sun.obj");
+	m_pStellarModel = modelSystem::LoadModel("models/sun.obj");
 
 	m_pStellarModel->SetShader(m_pUnlitShader);
 	m_skyboxModel.SetShader(m_pSkyboxShader);
@@ -146,7 +146,9 @@ void CStateMenu::Enter()
 
 void CStateMenu::Exit()
 {
-
+	CGameStateMachine* pStateMan = reinterpret_cast<CGameStateMachine*>(m_pStateMan);
+	
+	pStateMan->m_pClient->Disconnect();
 }
 
 void CStateMenu::Update()
