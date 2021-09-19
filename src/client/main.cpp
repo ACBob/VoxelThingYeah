@@ -105,7 +105,7 @@ int main( int argc, char *args[] )
 
 	con_info( "Cool that's done" );
 	con_info( "*drumroll* and now... Your feature entertainment... Our internal rendering systems! :)" );
-	
+
 	glEnable( GL_DEPTH_TEST );
 	glDepthFunc( GL_LEQUAL );
 	glEnable( GL_CULL_FACE );
@@ -156,7 +156,6 @@ int main( int argc, char *args[] )
 	glm::mat4 screen	 = glm::ortho( 0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat() );
 	glm::mat4 a = glm::ortho(0.0f, 0.0f, 0.0f, 0.0f);
 	glm::mat4 b = glm::ortho(0.0f, 0.0f, 0.0f, 0.0f);
-	shaderSystem::SetUniforms(a, b, screen, 0, 0, CVector());
 
 	int64_t now = std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() ).count();
 	int64_t then = now;
@@ -168,7 +167,21 @@ int main( int argc, char *args[] )
 			window.CaptureMouse();
 		inputMan.Update();
 
+		if ( window.m_bSizeChanged )
+		{
+			CVector s = window.GetSize();
+			scr_width->SetInt( s.x );
+			scr_height->SetInt( s.y );
+			glViewport( 0, 0, s.x, s.y );
+			gui.Resize( s.x, s.y );
+			gui.m_iGuiUnit = floor(window.GetSize().x / 53);
+			screen				  = glm::ortho( 0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat() );
+			window.m_bSizeChanged = false;
+		}
+
 		glClear( GL_DEPTH_BUFFER_BIT );
+		// Update screen matrix
+		shaderSystem::SetUniforms(a, b, screen, 0, 0, CVector());
 
 		gameStateMan.Update();
 		gui.Update();
