@@ -135,8 +135,10 @@ int main( int argc, char *args[] )
 	gui.m_iGuiUnit = floor(window.GetSize().x / 53);
 
 	con_info("Init Game State...");
-	CStateMachine gameStateMan;
+	CGameStateMachine gameStateMan;
 	gameStateMan.PushState(std::make_unique<CStatePlay>());
+	gameStateMan.m_pClient = &client;
+	gameStateMan.m_pGui = &gui;
 
 	inputMan.m_bInGui = true;
 
@@ -150,8 +152,6 @@ int main( int argc, char *args[] )
 			window.CaptureMouse();
 
 		gameStateMan.Update();
-
-		gui.Label("Bobcraft :trollface:", CVector(0,0), Color(1,1,1), CGui::TEXTALIGN_CENTER);
 		gui.Update();
 
 		window.SwapBuffers();
