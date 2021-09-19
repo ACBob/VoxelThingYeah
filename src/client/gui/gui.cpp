@@ -24,6 +24,7 @@
 #define LOG_LEVEL DEBUG
 #include "shared/seethe.h"
 
+// TODO: global?
 float fontWidths[( '~' - ' ' )];
 
 int CGui::GetTextLength(const char *msg) {
@@ -32,7 +33,8 @@ int CGui::GetTextLength(const char *msg) {
 	int i = 0;
 	while ( msg[i] != NULL )
 	{
-		l = l + fontWidths[msg[i] - ' '] + TEXTWIDTH / 2;
+		l += fontWidths[msg[i] - ' '] * TEXTWIDTH;
+		l += 2.0f/16.0f * (float)GUIUNIT;
 
 		i++;
 	}
