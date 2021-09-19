@@ -6,6 +6,7 @@
 #include "rendering/shadermanager.hpp"
 #include "rendering/texturemanager.hpp"
 #include "sdlstuff/sdlwindow.hpp"
+#include "rendering/modelmanager.hpp"
 
 #pragma once
 
@@ -32,6 +33,11 @@ class CStatePlay : public CState
 	glm::mat4 m_screenMatrix;
 
 	CShader *m_pDiffuseShader;
+	CShader *m_pUnlitShader;
+	CShader *m_pSkyboxShader;
+
+	CModel m_skyboxModel;
+	CModel *m_pStellarModel;
 
 	CTexture *m_pTerrainPNG;
 };

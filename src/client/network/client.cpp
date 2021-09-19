@@ -88,6 +88,9 @@ void CNetworkClient::Update()
 		return; // Can't update w/out a pPeer
 	}
 
+	if (!m_bConnected)
+		return;
+
 	while ( enet_host_service( m_pEnetHost, &e, 0 ) > 0 )
 	{
 		switch ( e.type )

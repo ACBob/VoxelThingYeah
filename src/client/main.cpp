@@ -161,6 +161,7 @@ int main( int argc, char *args[] )
 
 		gameStateMan.Update();
 		gui.Update();
+		client.Update();
 
 		window.SwapBuffers();
 	}
