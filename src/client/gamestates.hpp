@@ -18,3 +18,10 @@ class CStatePlay : public CState
 	void Exit();
 	void Update();
 };
+
+class CStateMenu : public CState
+{
+	void Enter();
+	void Exit();
+	void Update();
+};

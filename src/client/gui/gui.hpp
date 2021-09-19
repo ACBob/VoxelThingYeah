@@ -81,6 +81,9 @@ class CGui
 	CVector m_vScreenCentre;
 	CVector m_vScreenDimensions;
 
+	// Shared Resources
+	CTexture *m_pBGTex = nullptr;
+
 	// Current button pressed down
 	int m_iMouseState;
 	// Item under the mouse

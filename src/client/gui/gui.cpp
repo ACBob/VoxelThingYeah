@@ -69,9 +69,11 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 		glBindVertexArray( 0 );
 	}
 
+	// Setup some stff that'll be used by most things using the GUI
 	m_pTextTex	  = materialSystem::LoadTexture( "font.png" );
 	m_pTextShader = shaderSystem::LoadShader( "shaders/text.vert", "shaders/text.frag" );
 	m_pButtonTex  = materialSystem::LoadTexture( "button.png" );
+	m_pBGTex	  = materialSystem::LoadTexture( "guibg.png" );
 
 	m_textBuffers = {};
 

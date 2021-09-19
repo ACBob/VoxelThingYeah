@@ -133,23 +133,29 @@ int main( int argc, char *args[] )
 	gui.m_pInputMan = &inputMan;
 	gui.m_pClient	= &client;
 	gui.m_iGuiUnit = floor(window.GetSize().x / 53);
+	gui.Resize( scr_width->GetInt(), scr_height->GetInt() );
 
 	con_info("Init Game State...");
 	CGameStateMachine gameStateMan;
-	gameStateMan.PushState(std::make_unique<CStatePlay>());
+	gameStateMan.PushState(std::make_unique<CStateMenu>());
 	gameStateMan.m_pClient = &client;
 	gameStateMan.m_pGui = &gui;
 
 	inputMan.m_bInGui = true;
 
 	glm::mat4 screen	 = glm::ortho( 0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat() );
-	shaderSystem::SetUniforms(screen, screen, screen, screen, 0, 0, CVector());
+	glm::mat4 a = glm::ortho(0.0f, 0.0f, 0.0f, 0.0f);
+	glm::mat4 b = glm::ortho(0.0f, 0.0f, 0.0f, 0.0f);
+	glm::mat4 c = glm::ortho(0.0f, 0.0f, 0.0f, 0.0f);
+	shaderSystem::SetUniforms(a, b, c, screen, 0, 0, CVector());
 
 	while ( !window.m_bShouldClose )
 	{
 		window.PollEvents();
 		if ( window.IsFocused() && !inputMan.m_bInGui )
 			window.CaptureMouse();
+
+		glClear( GL_DEPTH_BUFFER_BIT );
 
 		gameStateMan.Update();
 		gui.Update();
