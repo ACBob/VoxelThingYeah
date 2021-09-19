@@ -58,6 +58,9 @@ void CStatePlay::Update()
 
 	pStateMan->m_pInputMan->m_bInGui = false;
 
+
+	char *guiBuf = new char[512];
+
 	// Should we leave the game?
 	bool leave = false;
 
@@ -118,7 +121,16 @@ void CStatePlay::Update()
 		// -----------------------
 		BlockTexture bTex = GetDefaultBlockTextureSide( m_pLocalPlayer->m_iSelectedBlockType, Direction::NORTH );
 		pStateMan->m_pGui->ImageAtlas(m_pTerrainPNG, {(float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey}, 16.0f, CVector(-1,-1), CVector(4,4), CVector(1,1) );
+
+		pStateMan->m_pGui->Label("Meegreef ALPHA", CVector(0,-1));
+
+		int hours	= m_pLocalWorld->m_iTimeOfDay / 1000;
+		int minutes = ( m_pLocalWorld->m_iTimeOfDay - ( hours * 1000 ) ) / 16.6666;
+		snprintf( guiBuf, 100, "%02i:%02i", hours, minutes );
+		pStateMan->m_pGui->Label( guiBuf, CVector( pStateMan->m_pGui->m_vScreenCentre.x, -1 ), Color(1,1,1), CGui::TEXTALIGN_CENTER );
 	}
+
+	delete[] guiBuf;
 
 	if (leave)
 		m_pStateMan->PopState();

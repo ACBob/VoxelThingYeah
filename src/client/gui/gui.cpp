@@ -307,7 +307,11 @@ void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment tex
 		while ( text[i] != '\0' )
 		{
 			// Get vertices
-			std::vector<CGui::Vertex> g = GetCharQuad( &text[i], pos, CVector( TEXTWIDTH, TEXTHEIGHT ), color );
+			// Shadow
+			std::vector<CGui::Vertex> g = GetCharQuad( &text[i], pos - (2.0f/16.0f * (float)GUIUNIT), CVector( TEXTWIDTH, TEXTHEIGHT ), color / 2 );
+			std::copy( g.begin(), g.end(), std::back_inserter( m_textVertiecs ) );
+
+			g = GetCharQuad( &text[i], pos, CVector( TEXTWIDTH, TEXTHEIGHT ), color );
 			std::copy( g.begin(), g.end(), std::back_inserter( m_textVertiecs ) );
 
 			pos.x += fontWidths[text[i] - ' '] * TEXTWIDTH;
