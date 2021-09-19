@@ -14,15 +14,15 @@ bool CBoundingBox::TestCollide( CBoundingBox other )
 	return ( ( other.m_vPosition.x - ( other.m_vBounds.x * other.m_vOrigin.x ) ) + other.m_vBounds.x >=
 				 ( m_vPosition.x - ( m_vBounds.x * m_vOrigin.x ) ) &&
 			 ( other.m_vPosition.x - ( other.m_vBounds.x * other.m_vOrigin.x ) ) <=
-				 ( m_vPosition.x - ( other.m_vBounds.x * other.m_vOrigin.x ) + m_vBounds.x ) ) &&
+				 ( m_vPosition.x - ( m_vBounds.x * m_vOrigin.x ) + m_vBounds.x ) ) &&
 		   ( ( other.m_vPosition.y - ( other.m_vBounds.y * other.m_vOrigin.y ) ) + other.m_vBounds.y >=
 				 ( m_vPosition.y - ( m_vBounds.y * m_vOrigin.y ) ) &&
 			 ( other.m_vPosition.y - ( other.m_vBounds.y * other.m_vOrigin.y ) ) <=
-				 ( m_vPosition.y - ( other.m_vBounds.y * other.m_vOrigin.y ) + m_vBounds.y ) ) &&
+				 ( m_vPosition.y - ( m_vBounds.y * m_vOrigin.y ) + m_vBounds.y ) ) &&
 		   ( ( other.m_vPosition.z - ( other.m_vBounds.z * other.m_vOrigin.z ) ) + other.m_vBounds.z >=
 				 ( m_vPosition.z - ( m_vBounds.z * m_vOrigin.z ) ) &&
 			 ( other.m_vPosition.z - ( other.m_vBounds.z * other.m_vOrigin.z ) ) <=
-				 ( m_vPosition.z - ( other.m_vBounds.z * other.m_vOrigin.z ) + m_vBounds.z ) );
+				 ( m_vPosition.z - ( m_vBounds.z * m_vOrigin.z ) + m_vBounds.z ) );
 }
 
 bool CBoundingBox::TestPointCollide( CVector pos )
