@@ -75,7 +75,7 @@ void CStatePlay::Update()
 		// Updating Stuff
 		// -----------------------
 		m_pLocalPlayer->UpdateClient( m_pLocalWorld );
-		m_pLocalWorld->WorldTick( pStateMan->m_iTick );
+		m_pLocalWorld->WorldTick( pStateMan->m_iTick, pStateMan->m_pWindow->GetSPF() / 1000.0f );
 
 		if (pStateMan->m_iTick != m_iLastTick)
 		{

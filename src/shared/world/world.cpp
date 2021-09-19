@@ -176,7 +176,7 @@ bool CWorld::TestAABBCollision( CBoundingBox col )
 	return false;
 }
 
-void CWorld::WorldTick( int64_t tickN )
+void CWorld::WorldTick( int64_t tickN, float delta )
 {
 	for ( int i = 0; i < m_ents.size(); i++ )
 	{
@@ -192,10 +192,10 @@ void CWorld::WorldTick( int64_t tickN )
 		}
 		reinterpret_cast<CEntityBase *>( ent )->Tick();
 #ifdef SERVEREXE
-		reinterpret_cast<CEntityBase *>( ent )->PhysicsTick( sv_tickms->GetInt() / 1000.0f, this );
+		reinterpret_cast<CEntityBase *>( ent )->PhysicsTick( delta, this );
 #else
 		// TODO: get tick speed from server
-		reinterpret_cast<CEntityBase *>( ent )->PhysicsTick( 0.05, this );
+		reinterpret_cast<CEntityBase *>( ent )->PhysicsTick( delta, this );
 #endif
 	}
 

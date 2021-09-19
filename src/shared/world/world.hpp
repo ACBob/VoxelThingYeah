@@ -54,7 +54,7 @@ class CWorld
 
 	// Tick is the tick since the start of the game
 	// TODO: This will overflow maybe
-	void WorldTick( int64_t tick );
+	void WorldTick( int64_t tick, float delta );
 
 	int64_t m_iLastTick = 0;
 

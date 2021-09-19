@@ -74,7 +74,7 @@ int main( int argc, char *args[] )
 			server.m_iCurrentTick = i;
 
 			// World
-			server.m_world.WorldTick( i );
+			server.m_world.WorldTick( i, sv_tickms->GetFloat() / 1000.0f );
 
 			if ( i % 5 == 0 )
 			{
