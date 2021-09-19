@@ -13,7 +13,7 @@
 
 #ifdef BOBCRAFT_ENABLE_OPENAL
 
-#define SOUNDBUFFERS 1
+	#define SOUNDBUFFERS 1
 
 namespace soundSystem
 {
@@ -69,10 +69,10 @@ namespace soundSystem
 	class CSound
 	{
 	  public:
-		CSound( const char *path ) {};
+		CSound( const char *path ){};
 		// Listen = location of listener
 		// Src = location of sound src
-		void Play( CVector src, float pitch, float gain ) {};
+		void Play( CVector src, float pitch, float gain ){};
 	};
 
 	class CSoundEvent
@@ -82,9 +82,9 @@ namespace soundSystem
 		};
 
 	  public:
-		CSoundEvent( std::vector<std::string> sounds, const char *type, float minpitch, float maxpitch ) {};
+		CSoundEvent( std::vector<std::string> sounds, const char *type, float minpitch, float maxpitch ){};
 
-		void Play( CVector src ) {};
+		void Play( CVector src ){};
 
 		std::vector<CSound *> m_sounds;
 
@@ -94,25 +94,21 @@ namespace soundSystem
 		unsigned int m_iSoundType = 0;
 	};
 
-	inline void Init()
-	{
-		con_warning("Bobcraft compiled without audio support.");
-	};
-	inline void UnInit() {};
+	inline void Init() { con_warning( "Bobcraft compiled without audio support." ); };
+	inline void UnInit(){};
 
-	inline void SetListener( CWorld *wlrd, CVector pos, CVector forward, CVector vel ) {};
+	inline void SetListener( CWorld *wlrd, CVector pos, CVector forward, CVector vel ){};
 
-	inline CSound *LoadSound( const char *path ) {};
+	inline CSound *LoadSound( const char *path ){};
 
 	extern std::vector<CSound *> loadedSounds;
 	extern std::map<std::string, CSoundEvent *> soundEvents;
 
-	inline void PlayBreakSound( blocktype_t blockType, CVector pos ) {};
-	inline void PlayPlaceSound( blocktype_t blockType, CVector pos ) {};
+	inline void PlayBreakSound( blocktype_t blockType, CVector pos ){};
+	inline void PlayPlaceSound( blocktype_t blockType, CVector pos ){};
 } // namespace soundSystem
 
 #endif
-
 
 using CSound	  = soundSystem::CSound;
 using CSoundEvent = soundSystem::CSoundEvent;

@@ -72,7 +72,7 @@ class CEntityBase
 	// Velocity
 	CVector m_vVelocity;
 
-	bool m_bOnFloor = false;
+	bool m_bOnFloor		 = false;
 	bool m_bApplyGravity = true;
 
 	CBoundingBox m_collisionBox;

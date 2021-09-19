@@ -136,13 +136,13 @@ void CEntityPlayer::Tick()
 		m_vVelocity = m_vVelocity + ( right * -0.2 );
 	else if ( m_pInputMan->m_bInputState[INKEY_RIGHT] )
 		m_vVelocity = m_vVelocity + ( right * 0.2 );
-	
-	if (m_pInputMan->m_bInputState[INKEY_FLY] && !m_pInputMan->m_bOldInputState[INKEY_FLY])
+
+	if ( m_pInputMan->m_bInputState[INKEY_FLY] && !m_pInputMan->m_bOldInputState[INKEY_FLY] )
 		m_bFly = !m_bFly;
 
 	m_bApplyGravity = !m_bFly;
 
-	if (m_bFly)
+	if ( m_bFly )
 	{
 		if ( m_pInputMan->m_bInputState[INKEY_UP] )
 			m_vVelocity = m_vVelocity + ( VEC_UP * 0.4 );
@@ -159,7 +159,4 @@ void CEntityPlayer::Tick()
 #endif
 }
 
-void CEntityPlayer::PhysicsTick( float delta, CWorld *world )
-{
-	BaseClass::PhysicsTick( delta, world );
-}
+void CEntityPlayer::PhysicsTick( float delta, CWorld *world ) { BaseClass::PhysicsTick( delta, world ); }

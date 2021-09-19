@@ -51,8 +51,8 @@ CTexture::CTexture( const char *path )
 CTexture::CTexture( std::vector<unsigned char> imageData, unsigned int width, unsigned int height )
 {
 	m_imageData = imageData;
-	m_iWidth = width;
-	m_iHeight = height;
+	m_iWidth	= width;
+	m_iHeight	= height;
 
 	glGenTextures( 1, &m_iId );
 	glBindTexture( GL_TEXTURE_2D, m_iId );

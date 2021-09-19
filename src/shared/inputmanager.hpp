@@ -23,7 +23,7 @@ enum INKEY {
 	INKEY_CHAT = 6,
 	INKEY_OUT  = 7, // Escape
 
-	INKEY_FLY  = 8,
+	INKEY_FLY = 8,
 
 	INKEY_LAST // used only to get the possible inkeys, not a key of its own
 };

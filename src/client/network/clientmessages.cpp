@@ -60,10 +60,10 @@ namespace protocol
 		ClientPacket p;
 		Archive<ArchiveBuf> bufAccess = p.GetAccess();
 		p.type						  = ClientPacket::SKIN;
-		
+
 		bufAccess << imageData;
 		bufAccess << resolution;
-		
+
 		protocol::SendPacket( pPeer, p );
 	}
 } // namespace protocol

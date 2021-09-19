@@ -113,7 +113,7 @@ int main( int argc, char *args[] )
 	glEnable( GL_BLEND );
 	glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
 	glBlendEquation( GL_FUNC_ADD );
-	
+
 	shaderSystem::Init();
 	atexit( shaderSystem::UnInit );
 	materialSystem::Init();
@@ -135,30 +135,32 @@ int main( int argc, char *args[] )
 		return EXIT_FAILURE;
 	}
 
-	con_info("Init GUI...");
+	con_info( "Init GUI..." );
 
 	CGui gui( scr_width->GetInt(), scr_height->GetInt() );
 	gui.m_pInputMan = &inputMan;
 	gui.m_pClient	= &client;
-	gui.m_iGuiUnit = floor(window.GetSize().x / 53);
+	gui.m_iGuiUnit	= floor( window.GetSize().x / 53 );
 	gui.Resize( scr_width->GetInt(), scr_height->GetInt() );
 
-	con_info("Init Game State...");
+	con_info( "Init Game State..." );
 	CGameStateMachine gameStateMan;
-	gameStateMan.PushState(std::make_unique<CStateMenu>());
-	gameStateMan.m_pClient = &client;
-	gameStateMan.m_pGui = &gui;
-	gameStateMan.m_pWindow = &window;
+	gameStateMan.PushState( std::make_unique<CStateMenu>() );
+	gameStateMan.m_pClient	 = &client;
+	gameStateMan.m_pGui		 = &gui;
+	gameStateMan.m_pWindow	 = &window;
 	gameStateMan.m_pInputMan = &inputMan;
 
 	inputMan.m_bInGui = true;
 
-	glm::mat4 screen	 = glm::ortho( 0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat() );
-	glm::mat4 a = glm::ortho(0.0f, 0.0f, 0.0f, 0.0f);
-	glm::mat4 b = glm::ortho(0.0f, 0.0f, 0.0f, 0.0f);
+	glm::mat4 screen = glm::ortho( 0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat() );
+	glm::mat4 a		 = glm::ortho( 0.0f, 0.0f, 0.0f, 0.0f );
+	glm::mat4 b		 = glm::ortho( 0.0f, 0.0f, 0.0f, 0.0f );
 
-	int64_t now = std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() ).count();
-	int64_t then = now;
+	int64_t now =
+		std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() )
+			.count();
+	int64_t then	 = now;
 	int64_t nextTick = now;
 
 	int64_t delta = 0;
@@ -177,14 +179,14 @@ int main( int argc, char *args[] )
 			scr_height->SetInt( s.y );
 			glViewport( 0, 0, s.x, s.y );
 			gui.Resize( s.x, s.y );
-			gui.m_iGuiUnit = floor(window.GetSize().x / 53);
+			gui.m_iGuiUnit		  = floor( window.GetSize().x / 53 );
 			screen				  = glm::ortho( 0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat() );
 			window.m_bSizeChanged = false;
 		}
 
 		glClear( GL_DEPTH_BUFFER_BIT );
 		// Update screen matrix
-		shaderSystem::SetUniforms(a, b, screen, 0, 0, CVector());
+		shaderSystem::SetUniforms( a, b, screen, 0, 0, CVector() );
 
 		gameStateMan.Update();
 		gui.Update();
@@ -192,17 +194,19 @@ int main( int argc, char *args[] )
 
 		window.SwapBuffers();
 
-		now = std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() ).count();
+		now =
+			std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() )
+				.count();
 		delta = now - then;
-		then = now;
-		if (now >= nextTick)
+		then  = now;
+		if ( now >= nextTick )
 		{
 			nextTick = now + 50;
-			gameStateMan.m_iTick ++;
+			gameStateMan.m_iTick++;
 		}
 
 		gameStateMan.m_fDelta = delta / 1000.0f;
-		if (gameStateMan.m_fDelta < 0.05)
+		if ( gameStateMan.m_fDelta < 0.05 )
 			gameStateMan.m_fDelta = 0.05;
 	}
 	gameStateMan.Flush();

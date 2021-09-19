@@ -118,7 +118,8 @@ namespace protocol
 
 		protocol::SendPacket( pPeer, p );
 	}
-	void SendServerPlayerSkin( ENetPeer *pPeer, std::string username, std::vector<unsigned char> imageData, unsigned int resolution )
+	void SendServerPlayerSkin( ENetPeer *pPeer, std::string username, std::vector<unsigned char> imageData,
+							   unsigned int resolution )
 	{
 		ServerPacket p;
 		Archive<ArchiveBuf> bufAccess = p.GetAccess();

@@ -199,7 +199,7 @@ void CWorld::WorldTick( int64_t tickN, float delta )
 #endif
 	}
 
-	if (tickN == m_iLastTick)
+	if ( tickN == m_iLastTick )
 		return;
 
 #ifdef SERVEREXE

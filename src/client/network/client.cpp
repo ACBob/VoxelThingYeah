@@ -81,9 +81,9 @@ void CNetworkClient::Disconnect()
 
 void CNetworkClient::Update()
 {
-	if (!m_bConnected)
+	if ( !m_bConnected )
 		return;
-		
+
 	ENetEvent e;
 	if ( !m_pPeer )
 		return; // Can't update w/out a pPeer

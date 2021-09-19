@@ -1,27 +1,27 @@
-#include "shared/statemanager.hpp"
+#include "entities/entityplayer.hpp"
 #include "gui/gui.hpp"
 #include "network/client.hpp"
-#include "entities/entityplayer.hpp"
-#include "world/world.hpp"
+#include "rendering/modelmanager.hpp"
 #include "rendering/shadermanager.hpp"
 #include "rendering/texturemanager.hpp"
 #include "sdlstuff/sdlwindow.hpp"
-#include "rendering/modelmanager.hpp"
+#include "shared/statemanager.hpp"
 #include "sound/soundmanager.hpp"
+#include "world/world.hpp"
 
 #pragma once
 
 // Like CStateMachine but holds extra client-y stuff
 class CGameStateMachine : public CStateMachine
 {
-	public:
-		CNetworkClient *m_pClient;
-		CGui *m_pGui;
-		CGameWindow *m_pWindow;
-		CInputManager *m_pInputMan;
+  public:
+	CNetworkClient *m_pClient;
+	CGui *m_pGui;
+	CGameWindow *m_pWindow;
+	CInputManager *m_pInputMan;
 
-		int64_t m_iTick = 0; // Client Tick
-		float m_fDelta = 0.0f;
+	int64_t m_iTick = 0; // Client Tick
+	float m_fDelta	= 0.0f;
 };
 
 class CStatePlay : public CState

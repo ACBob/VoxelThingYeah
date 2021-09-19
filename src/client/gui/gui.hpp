@@ -3,8 +3,8 @@
 #include "rendering/shadermanager.hpp"
 #include "rendering/texturemanager.hpp"
 #include "shared/inputmanager.hpp"
-#include "utility/vector.hpp"
 #include "shared/statemanager.hpp"
+#include "utility/vector.hpp"
 
 #include <map>
 #include <vector>
@@ -82,7 +82,7 @@ class CGui
 	CVector m_vScreenDimensions;
 
 	// Shared Resources
-	CTexture *m_pBGTex = nullptr;
+	CTexture *m_pBGTex		  = nullptr;
 	CTexture *m_pCrosshairTex = nullptr;
 
 	// Current button pressed down
@@ -108,7 +108,7 @@ class CGui
 	};
 
 	// Utility
-	int GetTextLength(const char* text);
+	int GetTextLength( const char *text );
 
 	// Elements
 	int Button( int iId, CVector vPosition, CVector vSize, CTexture *tex = nullptr );

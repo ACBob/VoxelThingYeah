@@ -27,14 +27,15 @@
 // TODO: global?
 float fontWidths[( '~' - ' ' )];
 
-int CGui::GetTextLength(const char *msg) {
+int CGui::GetTextLength( const char *msg )
+{
 	int l = 0;
 
 	int i = 0;
 	while ( msg[i] != NULL )
 	{
 		l += fontWidths[msg[i] - ' '] * TEXTWIDTH;
-		l += 2.0f/16.0f * (float)GUIUNIT;
+		l += 2.0f / 16.0f * (float)GUIUNIT;
 
 		i++;
 	}
@@ -70,11 +71,11 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 	}
 
 	// Setup some stff that'll be used by most things using the GUI
-	m_pTextTex	  = materialSystem::LoadTexture( "font.png" );
-	m_pTextShader = shaderSystem::LoadShader( "shaders/text.vert", "shaders/text.frag" );
-	m_pButtonTex  = materialSystem::LoadTexture( "button.png" );
-	m_pBGTex	  = materialSystem::LoadTexture( "guibg.png" );
-	m_pCrosshairTex	  = materialSystem::LoadTexture( "crosshair.png" );
+	m_pTextTex		= materialSystem::LoadTexture( "font.png" );
+	m_pTextShader	= shaderSystem::LoadShader( "shaders/text.vert", "shaders/text.frag" );
+	m_pButtonTex	= materialSystem::LoadTexture( "button.png" );
+	m_pBGTex		= materialSystem::LoadTexture( "guibg.png" );
+	m_pCrosshairTex = materialSystem::LoadTexture( "crosshair.png" );
 
 	m_textBuffers = {};
 
@@ -86,24 +87,24 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 	int resY = m_pTextTex->m_iHeight / 16;
 	for ( char c = ' '; c < '~'; c++ )
 	{
-		if (c == ' ')
+		if ( c == ' ' )
 		{
 			fontWidths[c - ' '] = 1.0;
 			continue;
 		}
 
 		// we assume the width to be a power of 16 and height to be a power of 16
-		int px = ( (c - ' ') % 16 ) * resX;
-		int py = ( (c - ' ') / 16 ) * resY;
-		
+		int px = ( ( c - ' ' ) % 16 ) * resX;
+		int py = ( ( c - ' ' ) / 16 ) * resY;
+
 		int width = 0;
-		for (int y = 0; y < resY; y ++ )
+		for ( int y = 0; y < resY; y++ )
 		{
-			for (int x = 0; x < resX; x ++)
+			for ( int x = 0; x < resX; x++ )
 			{
 				// https://github.com/lvandeve/lodepng/blob/master/examples/example_sdl.cpp#L67, amusingly.
-				int idx = 4 * (py + y) * m_pTextTex->m_iWidth + 4 * (px + x) + 3;
-				if (m_pTextTex->m_imageData[idx] && x+1 >= width)
+				int idx = 4 * ( py + y ) * m_pTextTex->m_iWidth + 4 * ( px + x ) + 3;
+				if ( m_pTextTex->m_imageData[idx] && x + 1 >= width )
 				{
 					width = x + 1;
 				}
@@ -224,8 +225,8 @@ bool CGui::RegionHit( CVector pos, CVector size )
 {
 	pos.y = m_vScreenDimensions.y - pos.y;
 
-	if ( m_vMousePos.x <= pos.x || m_vMousePos.y >= pos.y ||
-		 m_vMousePos.x >= pos.x + size.x || m_vMousePos.y <= pos.y - size.y )
+	if ( m_vMousePos.x <= pos.x || m_vMousePos.y >= pos.y || m_vMousePos.x >= pos.x + size.x ||
+		 m_vMousePos.y <= pos.y - size.y )
 		return false;
 	return true;
 }
@@ -280,14 +281,14 @@ int CGui::Button( int id, CVector pos, CVector size, CTexture *tex )
 int CGui::LabelButton( int id, const char *msg, CVector pos, CVector origin, CVector padding )
 {
 	// Get size, fixed position
-	CVector size  = ( CVector( GetTextLength(msg), TEXTHEIGHT ) + padding * GUIUNIT );
-	pos			  = pos - ( size / GUIUNIT ) * origin;
+	CVector size = ( CVector( GetTextLength( msg ), TEXTHEIGHT ) + padding * GUIUNIT );
+	pos			 = pos - ( size / GUIUNIT ) * origin;
 
 	// Render and get output of button
 	int buttonOut = Button( id, pos, size / GUIUNIT );
 
 	// TODO: it's in the floor
-	Label( msg, (pos + (size / GUIUNIT) * origin), CVector(1,1,1), TEXTALIGN_CENTER );
+	Label( msg, ( pos + ( size / GUIUNIT ) * origin ), CVector( 1, 1, 1 ), TEXTALIGN_CENTER );
 	return buttonOut;
 }
 
@@ -296,9 +297,9 @@ void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment tex
 	pos = GetInScreen( pos );
 
 	if ( textAlign == TEXTALIGN_CENTER )
-		pos = pos - CVector( GetTextLength(text) / 2, 0 );
+		pos = pos - CVector( GetTextLength( text ) / 2, 0 );
 	else if ( textAlign == TEXTALIGN_RIGHT )
-		pos = pos - CVector( GetTextLength(text), 0 );
+		pos = pos - CVector( GetTextLength( text ), 0 );
 
 	// Render
 	// OpenGl
@@ -309,14 +310,15 @@ void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment tex
 		{
 			// Get vertices
 			// Shadow
-			std::vector<CGui::Vertex> g = GetCharQuad( &text[i], pos - (2.0f/16.0f * (float)GUIUNIT), CVector( TEXTWIDTH, TEXTHEIGHT ), color / 2 );
+			std::vector<CGui::Vertex> g = GetCharQuad( &text[i], pos - ( 2.0f / 16.0f * (float)GUIUNIT ),
+													   CVector( TEXTWIDTH, TEXTHEIGHT ), color / 2 );
 			std::copy( g.begin(), g.end(), std::back_inserter( m_textVertiecs ) );
 
 			g = GetCharQuad( &text[i], pos, CVector( TEXTWIDTH, TEXTHEIGHT ), color );
 			std::copy( g.begin(), g.end(), std::back_inserter( m_textVertiecs ) );
 
 			pos.x += fontWidths[text[i] - ' '] * TEXTWIDTH;
-			pos.x += 2.0f/16.0f * (float)GUIUNIT;
+			pos.x += 2.0f / 16.0f * (float)GUIUNIT;
 
 			i++;
 		}
@@ -351,10 +353,7 @@ void CGui::ImageAtlas( CTexture *tex, Atlas atlas, float atlasDivisions, CVector
 	}
 }
 
-void CGui::Crosshair()
-{
-	Image(m_pCrosshairTex, m_vScreenCentre, CVector(3,3), CVector(0.5,0.5));
-}
+void CGui::Crosshair() { Image( m_pCrosshairTex, m_vScreenCentre, CVector( 3, 3 ), CVector( 0.5, 0.5 ) ); }
 
 // Returns the string in the event that 'RETURN' is pressed.
 // Outputs nullptr if nothing.
