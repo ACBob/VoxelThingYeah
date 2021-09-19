@@ -16,14 +16,15 @@
 #define TEXTWIDTH GUIUNIT
 #define TEXTHEIGHT GUIUNIT
 
+#define LETTERSPACING 8 / GUIUNIT
+
 // I am not supporting weird configurations
 #define TEXTTILES 16
 
 #define LOG_LEVEL DEBUG
 #include "shared/seethe.h"
 
-// Char because we don't need 16 bits
-char fontWidths[( '~' - ' ' )];
+float fontWidths[( '~' - ' ' )];
 
 int CGui::GetTextLength(const char *msg) {
 	int l = 0;
@@ -31,7 +32,7 @@ int CGui::GetTextLength(const char *msg) {
 	int i = 0;
 	while ( msg[i] != NULL )
 	{
-		l = l + fontWidths[msg[i]] + TEXTWIDTH / 2;
+		l = l + fontWidths[msg[i] - ' '] + TEXTWIDTH / 2;
 
 		i++;
 	}
@@ -82,31 +83,29 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 	{
 		if (c == ' ')
 		{
-			fontWidths[c] = 4;
+			fontWidths[c - ' '] = 1.0;
 			continue;
 		}
 
 		// we assume the width to be a power of 16 and height to be a power of 16
-		int x = (c - ' ') / 16;
-		int px = x * resX;
-		int y = (c - ' ') % 16;
-		int py = y * resY;
+		int px = ( (c - ' ') % 16 ) * resX;
+		int py = ( (c - ' ') / 16 ) * resY;
 		
 		int width = 0;
-		for (int i = 0; i < resX; i ++ )
+		for (int y = 0; y < resY; y ++ )
 		{
-			for (int j = 0; j < resY; j ++)
+			for (int x = 0; x < resX; x ++)
 			{
-				int idx = (px + i) * m_pTextTex->m_iWidth + (py + j);
-				if (m_pTextTex->m_imageData[idx * 4 + 4] != 0)
+				// https://github.com/lvandeve/lodepng/blob/master/examples/example_sdl.cpp#L67, amusingly.
+				int idx = 4 * (py + y) * m_pTextTex->m_iWidth + 4 * (px + x) + 3;
+				if (m_pTextTex->m_imageData[idx] && x+1 >= width)
 				{
-					width = i;
-					break;
+					width = x + 1;
 				}
 			}
 		}
 
-		fontWidths[c] = width;
+		fontWidths[c - ' '] = (float)width / (float)resX;
 	}
 
 	m_iGuiUnit = 16;
@@ -307,7 +306,8 @@ void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment tex
 			std::vector<CGui::Vertex> g = GetCharQuad( &text[i], pos, CVector( TEXTWIDTH, TEXTHEIGHT ), color );
 			std::copy( g.begin(), g.end(), std::back_inserter( m_textVertiecs ) );
 
-			pos = pos + CVector( fontWidths[text[i]] + TEXTWIDTH / 2, 0 );
+			pos.x += fontWidths[text[i] - ' '] * TEXTWIDTH;
+			pos.x += 2.0f/16.0f * (float)GUIUNIT;
 
 			i++;
 		}
