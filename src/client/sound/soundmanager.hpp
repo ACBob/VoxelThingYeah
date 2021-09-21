@@ -59,6 +59,7 @@ namespace soundSystem
 
 	void PlayBreakSound( blocktype_t blockType, CVector pos );
 	void PlayPlaceSound( blocktype_t blockType, CVector pos );
+	void PlayStepSound( blocktype_t blockType, CVector pos );
 } // namespace soundSystem
 
 // Stubs when sound is disabled

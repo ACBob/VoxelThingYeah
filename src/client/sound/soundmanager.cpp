@@ -347,3 +347,31 @@ void soundSystem::PlayPlaceSound( blocktype_t blockType, CVector pos )
 			break;
 	}
 }
+void soundSystem::PlayStepSound( blocktype_t blockType, CVector pos )
+{
+	blockmaterial_t mat = GetBlockMaterial( blockType );
+
+	switch ( mat )
+	{
+		default:
+		case MAT_NONE:
+		case MAT_STONE:
+			soundEvents["block.step.stone"]->Play( pos );
+			break;
+		case MAT_LOOSE:
+			soundEvents["block.step.loose"]->Play( pos );
+			break;
+		case MAT_WOOD:
+			soundEvents["block.step.wood"]->Play( pos );
+			break;
+		case MAT_GLASS:
+			soundEvents["block.step.glass"]->Play( pos );
+			break;
+		case MAT_ORGANIC:
+			soundEvents["block.step.organic"]->Play( pos );
+			break;
+		case MAT_DUST:
+			soundEvents["block.step.dust"]->Play( pos );
+			break;
+	}
+}

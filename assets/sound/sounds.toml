@@ -11,6 +11,9 @@ appendSounds = false
 sounds = ["sound/red.ogg", "sound/green.ogg", "sound/blue.ogg"]
 pitch = [1.0,2.0]
 
+##########################################
+# Breaking Sounds                        #
+##########################################
 
 ["block.break.stone"]
 type = "block"
@@ -49,6 +52,8 @@ sounds = [ "sound/breaksand.ogg" ]
 pitch = [ 0.6, 1.2 ]
 
 ##########################################
+# Placing Sounds                         #
+##########################################
 
 ["block.place.stone"]
 type = "block"
@@ -85,3 +90,42 @@ type = "block"
 appendSounds = false
 sounds = [ "sound/placesand.ogg" ]
 pitch = [ 0.6, 1.2 ]
+
+##########################################
+# Footstep Sounds                        #
+##########################################
+["block.step.stone"]
+type = "block"
+appendSounds = false
+sounds = [ "sound/placestone.ogg", "sound/breakstone.ogg" ]
+pitch = [ 0.9, 1.1 ]
+
+["block.step.loose"]
+type = "block"
+appendSounds = false
+sounds = [ "sound/placeloose.ogg", "sound/breakloose.ogg" ]
+pitch = [ 0.9, 1.1 ]
+
+["block.step.wood"]
+type = "block"
+appendSounds = false
+sounds = [ "sound/placewood.ogg", "sound/breakwood.ogg" ]
+pitch = [ 0.9, 1.1 ]
+
+["block.step.glass"]
+type = "block"
+appendSounds = false
+sounds = [ "sound/placestone.ogg", "sound/breakstone.ogg" ]
+pitch = [ 0.9, 1.1 ]
+
+["block.step.organic"]
+type = "block"
+appendSounds = false
+sounds = [ "sound/placeorganic.ogg", "sound/breakorganic.ogg" ]
+pitch = [ 0.9, 1.1 ]
+
+["block.step.dust"]
+type = "block"
+appendSounds = false
+sounds = [ "sound/placesand.ogg", "sound/breaksand.ogg" ]
+pitch = [ 0.9, 1.1 ]
