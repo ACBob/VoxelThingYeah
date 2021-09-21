@@ -78,7 +78,7 @@ void CEntityBase::Tick(int64_t iTick)
 			if (iTick >= m_iFootstepTick)
 			{
 				soundSystem::PlayStepSound(m_pLastBlockFloor->m_iBlockType, m_vPosition);
-				m_iFootstepTick = iTick + 20;
+				m_iFootstepTick = iTick + 9;
 			}
 		}
 	}

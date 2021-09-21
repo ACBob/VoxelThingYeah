@@ -98,7 +98,7 @@ void CStatePlay::Update()
 			glm::lookAt( glm::vec3( m_pLocalPlayer->m_camera.m_vPosition.x, m_pLocalPlayer->m_camera.m_vPosition.y,
 									m_pLocalPlayer->m_camera.m_vPosition.z ),
 						 glm::vec3( v.x, v.y, v.z ), glm::vec3( VEC_UP.x, VEC_UP.y, VEC_UP.z ) );
-		shaderSystem::SetUniforms( view, m_projectionMatrix, m_screenMatrix, pStateMan->m_pWindow->GetMS(),
+		shaderSystem::SetUniforms( view, m_projectionMatrix, pStateMan->m_pWindow->GetMS(),
 								   m_pLocalWorld->m_iTimeOfDay, vSunForward );
 
 		glDisable( GL_DEPTH_TEST ); // Skybox

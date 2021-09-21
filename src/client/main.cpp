@@ -186,7 +186,10 @@ int main( int argc, char *args[] )
 
 		glClear( GL_DEPTH_BUFFER_BIT );
 		// Update screen matrix
-		shaderSystem::SetUniforms( a, b, screen, 0, 0, CVector() );
+		for (CShader *shd : shaderSystem::loadedShaders)
+		{
+			shd->SetMat4("screen", screen);
+		}
 
 		gameStateMan.Update();
 		gui.Update();
