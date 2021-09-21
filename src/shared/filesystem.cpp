@@ -74,7 +74,7 @@ namespace fileSystem
 	{
 		if ( PHYSFS_mount( realPath, virtualPath, prepend ? 0 : 1 ) == 0 )
 		{
-			con_error( "%s->%s: %s", virtualPath, realpath, PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ) );
+			con_error( "%s->%s: %s", virtualPath, realPath, PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ) );
 			return false;
 		}
 
