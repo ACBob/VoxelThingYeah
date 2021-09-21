@@ -206,8 +206,6 @@ int main( int argc, char *args[] )
 		}
 
 		gameStateMan.m_fDelta = delta / 1000.0f;
-		if ( gameStateMan.m_fDelta < 0.05 )
-			gameStateMan.m_fDelta = 0.05;
 	}
 	gameStateMan.Flush();
 

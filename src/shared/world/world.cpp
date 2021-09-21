@@ -190,7 +190,7 @@ void CWorld::WorldTick( int64_t tickN, float delta )
 
 			continue;
 		}
-		reinterpret_cast<CEntityBase *>( ent )->Tick();
+		reinterpret_cast<CEntityBase *>( ent )->Tick( tickN );
 #ifdef SERVEREXE
 		reinterpret_cast<CEntityBase *>( ent )->PhysicsTick( delta, this );
 #else

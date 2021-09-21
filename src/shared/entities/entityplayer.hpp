@@ -2,6 +2,7 @@
 #include "entitycamera.hpp"
 #include "shared/inputmanager.hpp"
 #include "utility/raycast.hpp"
+#include "utility/types.hpp"
 
 #pragma once
 
@@ -13,7 +14,7 @@ class CEntityPlayer : public CEntityBase
 	CEntityPlayer();
 	~CEntityPlayer();
 
-	void Tick();
+	void Tick(int64_t iTick);
 	void Spawn()
 	{
 		BaseClass::Spawn();

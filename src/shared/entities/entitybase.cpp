@@ -1,5 +1,9 @@
 #include "entitybase.hpp"
 
+#ifdef CLIENTEXE
+#include "sound/soundmanager.hpp"
+#endif
+
 CEntityBase::CEntityBase() : m_collisionBox( { CVector( 0 ), CVector( 0.5, 0.5, 0.5 ), CVector( 0.5, 0.5, 0.5 ) } ) {}
 
 CEntityBase::~CEntityBase() {}
@@ -22,9 +26,6 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 {
 	m_bOnFloor = false;
 
-	// Without this physics feels too fast
-	fDelta *= 0.8;
-
 	m_vPosition.x += m_vVelocity.x * fDelta;
 	UpdateCollision();
 	if ( pWorld->TestAABBCollision( this->m_collisionBox ) )
@@ -36,6 +37,8 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	UpdateCollision();
 	if ( pWorld->TestAABBCollision( this->m_collisionBox ) )
 	{
+		m_pLastBlockFloor = pWorld->BlockAtWorldPos(m_vPosition);
+
 		m_vPosition.y -= m_vVelocity.y * fDelta;
 		m_vVelocity.y /= 2;
 
@@ -50,12 +53,34 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	}
 
 	if ( m_bApplyGravity )
-		m_vVelocity.y -= 7 * fDelta;
+		m_vVelocity.y -= 32.0f * fDelta;
 
+	CVector vFriction;
 	if ( !m_bOnFloor )
-		m_vVelocity = m_vVelocity * CVector( 0.9, 0.99, 0.9 );
+		vFriction = m_vVelocity * 1.0f * fDelta * -1.0f;
 	else
-		m_vVelocity = m_vVelocity * 0.89;
+		vFriction = m_vVelocity * 1.3f * fDelta * -1.0f;
+	
+	m_vVelocity = m_vVelocity + vFriction;
 
 	UpdateChildren();
+}
+
+void CEntityBase::Tick(int64_t iTick)
+{
+#ifdef CLIENTEXE
+	CVector t = m_vVelocity;
+	t.y = 0;
+	if (t.Magnitude() > 1)
+	{
+		if (m_bFootstepSounds && m_bOnFloor && m_pLastBlockFloor != nullptr)
+		{
+			if (iTick >= m_iFootstepTick)
+			{
+				soundSystem::PlayBreakSound(m_pLastBlockFloor->m_iBlockType, m_vPosition);
+				m_iFootstepTick = iTick + 9;
+			}
+		}
+	}
+#endif
 }

@@ -27,7 +27,7 @@ class CEntityBase
 	virtual void Kill() = 0;
 
 	// Called every tick (usually 1/20th of a second)
-	virtual void Tick(){};
+	virtual void Tick(int64_t iTick);
 
 	// Called every tick (usually 1/20th of a second)
 	// Gets handed the delta time to help work out physics-related stuff
@@ -74,6 +74,11 @@ class CEntityBase
 
 	bool m_bOnFloor		 = false;
 	bool m_bApplyGravity = true;
+	bool m_bFootstepSounds = true;
+
+	int64_t m_iFootstepTick = 0;
+
+	CBlock *m_pLastBlockFloor = nullptr;
 
 	CBoundingBox m_collisionBox;
 

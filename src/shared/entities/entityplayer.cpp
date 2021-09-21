@@ -113,9 +113,9 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 }
 #endif
 
-void CEntityPlayer::Tick()
+void CEntityPlayer::Tick(int64_t iTick)
 {
-	BaseClass::Tick();
+	BaseClass::Tick(iTick);
 
 #ifdef CLIENTEXE
 	if ( m_pInputMan == nullptr )
@@ -128,14 +128,20 @@ void CEntityPlayer::Tick()
 	CVector right	= forward.Rotate( 2, 90 );
 	right.y			= 0;
 	right			= right.Normal();
+	
+	CVector vMoveDir(0);
+
 	if ( m_pInputMan->m_bInputState[INKEY_FRONT] )
-		m_vVelocity = m_vVelocity + ( forward * 0.2 );
+		vMoveDir = vMoveDir + ( forward * 4 );
 	else if ( m_pInputMan->m_bInputState[INKEY_BACK] )
-		m_vVelocity = m_vVelocity + ( forward * -0.2 );
+		vMoveDir = vMoveDir + ( forward * -4 );
 	if ( m_pInputMan->m_bInputState[INKEY_LEFT] )
-		m_vVelocity = m_vVelocity + ( right * -0.2 );
+		vMoveDir = vMoveDir + ( right * -4 );
 	else if ( m_pInputMan->m_bInputState[INKEY_RIGHT] )
-		m_vVelocity = m_vVelocity + ( right * 0.2 );
+		vMoveDir = vMoveDir + ( right * 4 );
+	
+	m_vVelocity.x = vMoveDir.x;
+	m_vVelocity.z = vMoveDir.z;
 
 	if ( m_pInputMan->m_bInputState[INKEY_FLY] && !m_pInputMan->m_bOldInputState[INKEY_FLY] )
 		m_bFly = !m_bFly;
