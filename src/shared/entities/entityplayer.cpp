@@ -121,9 +121,6 @@ void CEntityPlayer::Tick(int64_t iTick)
 	if ( m_pInputMan == nullptr )
 		return; // This isn't owned by us, don't do anything
 
-	if ( m_pInputMan->m_bInGui )
-		return;
-
 	CVector forward = GetForward();
 	CVector right	= forward.Rotate( 2, 90 );
 	right.y			= 0;
@@ -131,35 +128,38 @@ void CEntityPlayer::Tick(int64_t iTick)
 	
 	CVector vMoveDir(0);
 
-	if ( m_pInputMan->m_bInputState[INKEY_FRONT] )
-		vMoveDir = vMoveDir + ( forward );
-	else if ( m_pInputMan->m_bInputState[INKEY_BACK] )
-		vMoveDir = vMoveDir - ( forward );
-	if ( m_pInputMan->m_bInputState[INKEY_LEFT] )
-		vMoveDir = vMoveDir - ( right );
-	else if ( m_pInputMan->m_bInputState[INKEY_RIGHT] )
-		vMoveDir = vMoveDir + ( right );
+	if (!m_bInInventory)
+	{
+		if ( m_pInputMan->m_bInputState[INKEY_FRONT] )
+			vMoveDir = vMoveDir + ( forward );
+		else if ( m_pInputMan->m_bInputState[INKEY_BACK] )
+			vMoveDir = vMoveDir - ( forward );
+		if ( m_pInputMan->m_bInputState[INKEY_LEFT] )
+			vMoveDir = vMoveDir - ( right );
+		else if ( m_pInputMan->m_bInputState[INKEY_RIGHT] )
+			vMoveDir = vMoveDir + ( right );
 
-	if ( m_bFly )
-	{
-		if ( m_pInputMan->m_bInputState[INKEY_UP] )
-			vMoveDir = vMoveDir + ( VEC_UP );
-		else if ( m_pInputMan->m_bInputState[INKEY_DOWN] )
-			vMoveDir = vMoveDir - ( VEC_UP );
-	}
-	else
-	{
-		if ( m_pInputMan->m_bInputState[INKEY_UP] && m_bOnFloor )
+		if ( m_bFly )
 		{
-			vMoveDir.y = 19.8f;
+			if ( m_pInputMan->m_bInputState[INKEY_UP] )
+				vMoveDir = vMoveDir + ( VEC_UP );
+			else if ( m_pInputMan->m_bInputState[INKEY_DOWN] )
+				vMoveDir = vMoveDir - ( VEC_UP );
 		}
+		else
+		{
+			if ( m_pInputMan->m_bInputState[INKEY_UP] && m_bOnFloor )
+			{
+				vMoveDir.y = 19.8f;
+			}
+		}
+		if (m_bFly)
+			vMoveDir = vMoveDir * 6.0f * 0.99f;
+		else
+			vMoveDir = vMoveDir * 4.3f * 0.98f;
+		if (!m_bFly)
+			vMoveDir.y += m_vVelocity.y;
 	}
-	if (m_bFly)
-		vMoveDir = vMoveDir * 6.0f * 0.99f;
-	else
-		vMoveDir = vMoveDir * 4.3f * 0.98f;
-	if (!m_bFly)
-		vMoveDir.y += m_vVelocity.y;
 
 	float f = m_bOnFloor ? 0.125f : m_bFly ? 0.1f : 0.076f;
 
