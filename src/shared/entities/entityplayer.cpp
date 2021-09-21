@@ -151,7 +151,7 @@ void CEntityPlayer::Tick(int64_t iTick)
 	{
 		if ( m_pInputMan->m_bInputState[INKEY_UP] && m_bOnFloor )
 		{
-			vMoveDir.y = 18.0f;
+			vMoveDir.y = 19.8f;
 		}
 	}
 	if (m_bFly)
@@ -161,7 +161,7 @@ void CEntityPlayer::Tick(int64_t iTick)
 	if (!m_bFly)
 		vMoveDir.y += m_vVelocity.y;
 
-	float f = m_bOnFloor ? 0.125f : m_bFly ? 0.1f : 0.02f;
+	float f = m_bOnFloor ? 0.125f : m_bFly ? 0.1f : 0.076f;
 
 	m_vVelocity = m_vVelocity.Lerp(vMoveDir, f);
 
