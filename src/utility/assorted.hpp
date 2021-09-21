@@ -41,3 +41,8 @@ inline void i1Dto3D( int i, int sizeX, int sizeY, int &x, int &y, int &z )
 	y = round( ( i - z * sizeX * sizeY ) / sizeX );
 	x = i - sizeX * ( y + sizeY * z );
 }
+
+inline float lerp(float a, float b, float t)
+{
+	return (1.0f - t) * a + t*b;
+}

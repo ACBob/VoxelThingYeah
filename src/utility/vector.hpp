@@ -17,6 +17,7 @@ class CVector
 	CVector Normal() const;							 // Returns the normal
 	CVector Floor() const;							 // returns a floored vector
 	CVector Ceil() const;							 // returns a ceiled vector
+	CVector Lerp( CVector oVec, float perc ) const;  // lerps
 
 	// Operators
 	// Math, with other vectors

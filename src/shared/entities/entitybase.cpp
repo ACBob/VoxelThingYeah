@@ -57,9 +57,9 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 
 	CVector vFriction;
 	if ( !m_bOnFloor )
-		vFriction = m_vVelocity * 1.0f * fDelta * -1.0f;
+		vFriction = m_vVelocity * 0.11f * fDelta * -1.0f;
 	else
-		vFriction = m_vVelocity * 1.3f * fDelta * -1.0f;
+		vFriction = m_vVelocity * 0.3f * fDelta * -1.0f;
 	
 	m_vVelocity = m_vVelocity + vFriction;
 
@@ -78,7 +78,7 @@ void CEntityBase::Tick(int64_t iTick)
 			if (iTick >= m_iFootstepTick)
 			{
 				soundSystem::PlayStepSound(m_pLastBlockFloor->m_iBlockType, m_vPosition);
-				m_iFootstepTick = iTick + 9;
+				m_iFootstepTick = iTick + 20;
 			}
 		}
 	}

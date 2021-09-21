@@ -1,4 +1,5 @@
 #include "vector.hpp"
+#include "assorted.hpp"
 #include <math.h>
 
 CVector::CVector( float x, float y, float z, float w )
@@ -78,6 +79,16 @@ CVector CVector::Ceil() const
 	g.y		  = g.y == INFINITY ? 0 : g.y;
 	g.z		  = g.z == INFINITY ? 0 : g.z;
 	g.w		  = g.w == INFINITY ? 0 : g.w;
+	return g;
+}
+CVector CVector::Lerp( CVector oVec, float fPc ) const
+{
+	CVector g = CVector(x,y,z);
+	g.x = lerp(x, oVec.x, fPc);
+	g.y = lerp(y, oVec.y, fPc);
+	g.z = lerp(z, oVec.z, fPc);
+	g.w = lerp(w, oVec.w, fPc);
+
 	return g;
 }
 
