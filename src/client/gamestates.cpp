@@ -57,7 +57,7 @@ void CStatePlay::Update()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
 
-	pStateMan->m_pInputMan->m_bInGui = false;
+	pStateMan->m_pInputMan->m_bInGui = (m_bInPause || m_pLocalPlayer->m_bInInventory);
 
 	char *guiBuf = new char[512];
 
@@ -118,6 +118,17 @@ void CStatePlay::Update()
 
 		m_pLocalWorld->Render();
 
+		if (!m_bInPause && pStateMan->m_pInputMan->m_bInputState[INKEY_INV] && !pStateMan->m_pInputMan->m_bOldInputState[INKEY_INV])
+			m_pLocalPlayer->m_bInInventory = !m_pLocalPlayer->m_bInInventory;
+		
+		if (pStateMan->m_pInputMan->m_bInputState[INKEY_OUT] && !pStateMan->m_pInputMan->m_bOldInputState[INKEY_OUT])
+		{
+			if (m_pLocalPlayer->m_bInInventory)
+				m_pLocalPlayer->m_bInInventory = false;
+			else
+				m_bInPause = !m_bInPause;
+		}
+
 		// -----------------------
 		// GUI
 		// -----------------------
@@ -134,7 +145,30 @@ void CStatePlay::Update()
 		pStateMan->m_pGui->Label( guiBuf, CVector( pStateMan->m_pGui->m_vScreenCentre.x, -1 ), Color( 1, 1, 1 ),
 								  CGui::TEXTALIGN_CENTER );
 
-		pStateMan->m_pGui->Crosshair();
+		if (m_pLocalPlayer->m_bInInventory)
+		{
+			pStateMan->m_pGui->Image(pStateMan->m_pGui->m_pInventoryTex, pStateMan->m_pGui->m_vScreenCentre, CVector(20,20), CVector(0.5,0.5));
+
+			CVector p = pStateMan->m_pGui->m_vScreenCentre + CVector(-8,5.5);
+			CVector op = p;
+			for (int i = blocktype_t::STONE; i < blocktype_t::MOSSCBBLE; i++)
+			{
+				snprintf( guiBuf, 100, "%d", i );
+				BlockTexture bTex = GetDefaultBlockTextureSide( (blocktype_t)i, Direction::NORTH );
+				if (pStateMan->m_pGui->AtlasButton('b'+i, m_pTerrainPNG, { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey }, 16.0f, p, CVector(2,2)))
+					m_pLocalPlayer->m_iSelectedBlockType = (blocktype_t)i;
+				p.x += 2;
+				if (i % 8 == 0)
+				{
+					p.y -= 2;
+					p.x = op.x;
+				}
+			}
+		}
+		else
+		{
+			pStateMan->m_pGui->Crosshair();
+		}
 	}
 
 	delete[] guiBuf;

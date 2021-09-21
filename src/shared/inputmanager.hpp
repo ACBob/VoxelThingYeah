@@ -25,6 +25,8 @@ enum INKEY {
 
 	INKEY_FLY = 8,
 
+	INKEY_INV = 9,
+
 	INKEY_LAST // used only to get the possible inkeys, not a key of its own
 };
 

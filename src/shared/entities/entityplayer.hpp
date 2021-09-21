@@ -45,4 +45,5 @@ class CEntityPlayer : public CEntityBase
 #endif
 
 	bool m_bFly = true;
+	bool m_bInInventory = false;
 };

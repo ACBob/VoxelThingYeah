@@ -15,10 +15,10 @@
 class CGameStateMachine : public CStateMachine
 {
   public:
-	CNetworkClient *m_pClient;
-	CGui *m_pGui;
-	CGameWindow *m_pWindow;
-	CInputManager *m_pInputMan;
+	CNetworkClient *m_pClient = nullptr;
+	CGui *m_pGui = nullptr;
+	CGameWindow *m_pWindow = nullptr;
+	CInputManager *m_pInputMan = nullptr;
 
 	int64_t m_iTick = 0; // Client Tick
 	float m_fDelta	= 0.0f;
@@ -44,6 +44,8 @@ class CStatePlay : public CState
 	CModel *m_pStellarModel;
 
 	CTexture *m_pTerrainPNG;
+
+	bool m_bInPause = false;
 
 	int64_t m_iLastTick = 0;
 };

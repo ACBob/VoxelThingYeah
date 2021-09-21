@@ -76,6 +76,7 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 	m_pButtonTex	= materialSystem::LoadTexture( "button.png" );
 	m_pBGTex		= materialSystem::LoadTexture( "guibg.png" );
 	m_pCrosshairTex = materialSystem::LoadTexture( "crosshair.png" );
+	m_pInventoryTex = materialSystem::LoadTexture( "inventory.png" );
 
 	m_textBuffers = {};
 
@@ -121,6 +122,7 @@ void CGui::Resize( int x, int y )
 {
 	m_vScreenCentre		= CVector( ( x * 0.5 ) / GUIUNIT, ( y * 0.5 ) / GUIUNIT );
 	m_vScreenDimensions = CVector( x, y );
+	m_iGuiUnit		  = x / 53;
 }
 
 CGui::~CGui()
@@ -276,6 +278,13 @@ int CGui::Button( int id, CVector pos, CVector size, CTexture *tex )
 	Image( tex, pos / GUIUNIT, size / GUIUNIT, CVector( 0, 0 ), color );
 
 	return returnCode;
+}
+
+int CGui::AtlasButton( int id, CTexture *tex, Atlas atlas, float atlasDivisions, CVector pos, CVector size )
+{
+	int b = Button(id, pos, size);
+	ImageAtlas(tex, atlas, atlasDivisions, pos, size);
+	return b;
 }
 
 int CGui::LabelButton( int id, const char *msg, CVector pos, CVector origin, CVector padding )

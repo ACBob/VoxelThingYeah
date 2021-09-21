@@ -38,5 +38,7 @@ void CInputManager::Update()
 	m_bInputState[INKEY_OUT]  = m_bOldKeyboardState[KBD_ESCAPE];
 
 	m_bInputState[INKEY_FLY] = m_bOldKeyboardState['V'];
+
+	m_bInputState[INKEY_INV] = m_bOldKeyboardState['E'];
 }
 #endif

@@ -178,9 +178,8 @@ int main( int argc, char *args[] )
 			scr_width->SetInt( s.x );
 			scr_height->SetInt( s.y );
 			glViewport( 0, 0, s.x, s.y );
-			gui.Resize( s.x, s.y );
-			gui.m_iGuiUnit		  = floor( window.GetSize().x / 53 );
 			screen				  = glm::ortho( 0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat() );
+			gui.Resize( s.x, s.y );
 			window.m_bSizeChanged = false;
 		}
 
