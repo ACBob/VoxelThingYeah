@@ -120,9 +120,9 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 
 void CGui::Resize( int x, int y )
 {
+	m_iGuiUnit		  = x / 53;
 	m_vScreenCentre		= CVector( ( x * 0.5 ) / GUIUNIT, ( y * 0.5 ) / GUIUNIT );
 	m_vScreenDimensions = CVector( x, y );
-	m_iGuiUnit		  = x / 53;
 }
 
 CGui::~CGui()
