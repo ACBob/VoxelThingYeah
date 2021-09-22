@@ -113,20 +113,15 @@ void CNetworkServer::Update()
 		}
 	}
 
-	// Check for outdated chunks and resend them to joined clients
-	// TODO: Queue
+	// Check for outdated chunks and queue them
 	for ( CChunk *c : m_world.m_chunks )
 	{
 		if ( c->m_bReallyDirty )
 		{
 			for ( CNetworkPlayer *cl : m_players )
 			{
-				if ( cl->m_iNextChunkLoadTick < m_iCurrentTick )
-				{
-					protocol::SendServerChunkDataFromRep( cl->m_pPeer, c->m_portableDef );
-				}
+				cl->m_pChunkQueue.push_back(c);
 			}
-
 			c->m_bReallyDirty = false;
 		}
 	}
@@ -143,11 +138,6 @@ void CNetworkServer::Update()
 		}
 		c->m_vChunkPos = cP;
 
-		if ( c->m_iNextChunkLoadTick < m_iCurrentTick )
-			c->m_iNextChunkLoadTick = m_iCurrentTick + 1;
-		else
-			continue;
-
 		if ( c->m_iLoadedChunkIDX >= ( 4 * 4 * 4 ) )
 			continue;
 
@@ -159,9 +149,27 @@ void CNetworkServer::Update()
 
 		p = p + c->m_vChunkPos;
 
-		protocol::SendServerChunkData( c->m_pPeer, &m_world, p );
+		// Queue it
+		c->m_pChunkQueue.push_back(m_world.GetChunkGenerateAtWorldPos(p));
 
 		c->m_iLoadedChunkIDX++;
+	}
+
+	// Now handle the queue
+	for (CNetworkPlayer *p : m_players)
+	{
+		// They don't have an opportunity to load.
+		if (p->m_iNextChunkLoadTick > m_iCurrentTick)
+			continue;
+		// They have nothing in their queue
+		if (p->m_pChunkQueue.size() < 1)
+			continue;
+
+		CChunk *c = p->m_pChunkQueue.back();
+		p->m_pChunkQueue.pop_back();
+		
+		if (c != nullptr)
+			protocol::SendServerChunkDataFromRep(p->m_pPeer, c->m_portableDef);
 	}
 }
 
