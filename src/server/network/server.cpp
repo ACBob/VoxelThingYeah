@@ -134,25 +134,24 @@ void CNetworkServer::Update()
 		if ( cP != c->m_vChunkPos )
 		{
 			c->m_iLoadedChunkIDX	= 0;
-			c->m_iNextChunkLoadTick = m_iCurrentTick;
+			c->m_iNextChunkLoadTick = m_iCurrentTick - 1;
 		}
 		c->m_vChunkPos = cP;
 
-		if ( c->m_iLoadedChunkIDX >= ( 4 * 4 * 4 ) )
+		if ( c->m_iLoadedChunkIDX > ( 4 * 4 * 4 ) )
 			continue;
 
-		int x = 0;
+		int x = 0; 
 		int y = 0;
 		int z = 0;
 		i1Dto3D( c->m_iLoadedChunkIDX, 4, 4, x, y, z );
 		CVector p( x - 2, y - 2, z - 2 );
+		c->m_iLoadedChunkIDX++;
 
 		p = p + c->m_vChunkPos;
 
 		// Queue it
-		c->m_pChunkQueue.push_back(m_world.GetChunkGenerateAtWorldPos(p));
-
-		c->m_iLoadedChunkIDX++;
+		c->m_pChunkQueue.push_back(m_world.GetChunkGenerateAtWorldPos(p * CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ));
 	}
 
 	// Now handle the queue
@@ -161,8 +160,9 @@ void CNetworkServer::Update()
 		// They don't have an opportunity to load.
 		if (p->m_iNextChunkLoadTick > m_iCurrentTick)
 			continue;
+		p->m_iNextChunkLoadTick = m_iCurrentTick + 1;
 		// They have nothing in their queue
-		if (p->m_pChunkQueue.size() < 1)
+		if (p->m_pChunkQueue.empty())
 			continue;
 
 		CChunk *c = p->m_pChunkQueue.back();
