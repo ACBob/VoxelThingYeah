@@ -176,7 +176,7 @@ bool CWorld::TestAABBCollision( CBoundingBox col )
 	return false;
 }
 
-void CWorld::WorldTick( int64_t tickN, float delta )
+void CWorld::WorldTick( int64_t iTick, float delta )
 {
 	for ( int i = 0; i < m_ents.size(); i++ )
 	{
@@ -190,117 +190,37 @@ void CWorld::WorldTick( int64_t tickN, float delta )
 
 			continue;
 		}
-		reinterpret_cast<CEntityBase *>( ent )->Tick( tickN );
+		reinterpret_cast<CEntityBase *>( ent )->Tick( iTick );
 #ifdef SERVEREXE
 		reinterpret_cast<CEntityBase *>( ent )->PhysicsTick( delta, this );
 #else
-		// TODO: get tick speed from server
 		reinterpret_cast<CEntityBase *>( ent )->PhysicsTick( delta, this );
 #endif
 	}
 
-	if ( tickN == m_iLastTick )
+	if ( iTick == m_iLastTick )
 		return;
 
-#ifdef SERVEREXE
 	for ( CChunk *chunk : m_chunks )
 	{
-		// Generally we should avoid rebuilding the universe every tick
-		bool rebuild					  = false;
-		std::vector<CVector> liquidBlocks = {};
-		for ( int i = 0; i < ( CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z ); i++ )
-		{
-			int x, y, z;
-			CHUNK1D_TO_3D( i, x, y, z );
-
-			blocktype_t blockType = chunk->m_blocks[i].m_iBlockType;
-
-			// Every liquidSpeedth tick
-			BlockFeatures bF = GetBlockFeatures( blockType );
-			if ( bF.isLiquid && tickN % bF.liquidSpeed == 0 )
-			{
-				liquidBlocks.push_back( CVector( x, y, z ) );
-			}
-		}
-
-		for ( CVector pos : liquidBlocks )
-		{
-			blocktype_t blockType = chunk->GetBlockAtLocal( pos )->m_iBlockType;
-			// Test Bottom first
-			CBlock *pBlock = BlockAtWorldPos( chunk->PosToWorld( CVector( pos.x, pos.y - 1, pos.z ) ) );
-			if ( pBlock == nullptr )
-				continue;
-
-			BlockFeatures blockF = GetBlockFeatures( pBlock->m_iBlockType );
-			if ( blockF.floodable && pBlock->m_iBlockType != blockType )
-			{
-				pBlock->m_iBlockType = blockType;
-			}
-			else if ( pBlock->m_iBlockType == blockType )
-				continue;
-			else
-			{
-				for ( int i = 0; i < 4; i++ )
-				{
-					CVector dir = DirectionVector[i];
-					CBlock *b	= chunk->GetBlockAtLocal( CVector( pos.x, pos.y, pos.z ) + dir );
-					if ( b == nullptr )
-					{
-						// It's not in *this* chunk
-						CChunk *oChunk = chunk->Neighbour( (Direction)i );
-						if ( oChunk == nullptr )
-							continue; // Ok yeah it's outside reality
-						CVector p = CVector( pos.x + dir.x, pos.y + dir.y, pos.z + dir.z ) +
-									( dir * CVector( -CHUNKSIZE_X, -CHUNKSIZE_Y, -CHUNKSIZE_Z ) );
-						;
-						b = oChunk->GetBlockAtLocal( p );
-						if ( b == nullptr )
-							continue; // uh oh
-					}
-					BlockFeatures bF = GetBlockFeatures( b->m_iBlockType );
-					if ( bF.floodable )
-					{
-						b->m_iBlockType = blockType;
-						rebuild			= true;
-					}
-				}
-			}
-		}
-
-		if ( rebuild )
-			chunk->Update();
+		if ( chunk->m_bDirty )
+			chunk->Update( iTick );
 	}
 
+#ifdef SERVEREXE
 	// Progress time
 	m_iTimeOfDay++;
 #endif
+
 	if ( m_iTimeOfDay > 24000 )
 	{
 		m_iTimeOfDay = 0;
 	}
 }
 
-CWorld::PortableChunkRepresentation CWorld::GetWorldRepresentation( CVector pos )
+PortableChunkRepresentation CWorld::GetWorldRepresentation( CVector pos )
 {
-	PortableChunkRepresentation crep;
-
-	// if (!ValidChunkPos(pos))
-	// {
-	// 	con_critical("We've just returned garbage data for the portable chunk!");
-	// 	return crep;
-	// }
-
-	CChunk *c = GetChunkGenerateAtWorldPos( pos * CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) );
-	crep.x	  = c->m_vPosition.x;
-	crep.y	  = c->m_vPosition.y;
-	crep.z	  = c->m_vPosition.z;
-
-	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
-	{
-		crep.blocks[j] = c->m_blocks[j].m_iBlockType;
-	}
-
-	return crep;
+	return GetChunkGenerateAtWorldPos( pos )->m_portableDef;
 }
 
 void CWorld::UsePortable( PortableChunkRepresentation rep )
@@ -314,8 +234,8 @@ void CWorld::UsePortable( PortableChunkRepresentation rep )
 
 	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
 	{
-		c->m_blocks[j].m_iBlockType = (blocktype_t)rep.blocks[j];
+		c->m_blocks[j].m_iBlockType = (blocktype_t)rep.m_iBlocks[j];
 	}
 
-	c->Update();
+	c->m_bDirty = true;
 }

@@ -17,12 +17,12 @@ namespace protocol
 	}
 	void SendServerChunkData( ENetPeer *pPeer, CWorld *world, CVector pos )
 	{
-		CWorld::PortableChunkRepresentation crep;
+		PortableChunkRepresentation crep;
 		crep = world->GetWorldRepresentation( pos );
 
 		SendServerChunkDataFromRep( pPeer, crep );
 	}
-	void SendServerChunkDataFromRep( ENetPeer *pPeer, CWorld::PortableChunkRepresentation crep )
+	void SendServerChunkDataFromRep( ENetPeer *pPeer, PortableChunkRepresentation crep )
 	{
 		ServerPacket p;
 		p.type					   = ServerPacket::CHUNKDATA;
@@ -31,7 +31,7 @@ namespace protocol
 		bufAcc << crep.y;
 		bufAcc << crep.z;
 		bufAcc << CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z;
-		bufAcc << crep.blocks;
+		bufAcc << crep.m_iBlocks;
 
 		SendPacket( pPeer, p );
 	}

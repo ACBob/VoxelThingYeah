@@ -58,15 +58,10 @@ class CWorld
 
 	int64_t m_iLastTick = 0;
 
-	struct PortableChunkRepresentation
-	{
-		int32_t x, y, z;
-		uint32_t blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
-	};
-	PortableChunkRepresentation GetWorldRepresentation( CVector pos );
-
 	// Merges the PortableChunkRepresentation into us :)
 	void UsePortable( PortableChunkRepresentation rep );
+	// Returns the world rep at the chunk
+	PortableChunkRepresentation GetWorldRepresentation( CVector pos );
 
 	std::vector<void *> m_ents;
 	void AddEntity( void *e );

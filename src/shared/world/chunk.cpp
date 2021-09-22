@@ -11,14 +11,22 @@ CChunk::CChunk()
 	{
 		m_blocks[i].m_iBlockType = blocktype_t::AIR;
 		m_iLightingValue[i]		 = 0x00000000;
+		m_portableDef.m_iBlocks[i] = m_blocks[i].m_iBlockType;
 	}
+
+	m_bDirty = true;
 }
 CChunk::~CChunk() {}
 #elif SERVEREXE
 CChunk::CChunk()
 {
 	for ( int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++ )
+	{
 		m_blocks[i].m_iBlockType = blocktype_t::AIR;
+		m_portableDef.m_iBlocks[i] = m_blocks[i].m_iBlockType;
+	}
+	
+	m_bDirty = true;
 }
 CChunk::~CChunk() {}
 #endif
@@ -39,8 +47,97 @@ void CChunk::RebuildMdl() { BuildChunkModel( m_mdl, m_blocks, GetPosInWorld(), t
 // Intended to be used by in-chunk coords but doesn't throw a hissyfit if it's not
 CVector CChunk::PosToWorld( CVector pos ) { return GetPosInWorld() + pos; }
 
-void CChunk::Update()
+void CChunk::Update(int64_t iTick)
 {
+	// We updated so we're not dirty
+	m_bDirty = false;
+	m_bReallyDirty = false;
+
+#ifdef SERVEREXE
+	// Liquid handling is done in two passes
+	// Pass 1 goes over every currently existing block in the chunk
+	// If it finds a block marked as liquid, AND the current tick is a multiple
+	// of when it would flow, we collect it into a list for pass 2
+	// This is done so we don't flow infinitely in one direction because of linear index
+	//
+	// Pass 2 we go through every block position we intend to process
+	// And flow liquid into any blocks that are marked as flowable
+	// If we touch a neighbouring chunk, we mark it as dirty
+	// If liquid flows in us at all we mark ourselves as dirty for the next tick
+	// Where we'll then try flowing again (which might or might not cause another flow)
+
+	std::vector<CVector> liquidBlocks = {};
+	for ( int i = 0; i < ( CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z ); i++ )
+	{
+		int x, y, z;
+		CHUNK1D_TO_3D( i, x, y, z );
+
+		blocktype_t blockType = m_blocks[i].m_iBlockType;
+
+		// Every liquidSpeedth tick
+		BlockFeatures bF = GetBlockFeatures( blockType );
+		if ( bF.isLiquid && iTick % bF.liquidSpeed == 0 )
+		{
+			liquidBlocks.push_back( CVector( x, y, z ) );
+		}
+	}
+
+	for ( CVector pos : liquidBlocks )
+	{
+		blocktype_t blockType = GetBlockAtLocal( pos )->m_iBlockType;
+		// Test Bottom first
+		CBlock *pBlock = reinterpret_cast<CWorld*>(m_pChunkMan)->BlockAtWorldPos( PosToWorld( CVector( pos.x, pos.y - 1, pos.z ) ) );
+		if ( pBlock == nullptr )
+			continue;
+
+		BlockFeatures blockF = GetBlockFeatures( pBlock->m_iBlockType );
+		if ( blockF.floodable && pBlock->m_iBlockType != blockType )
+		{
+			pBlock->m_iBlockType = blockType;
+		}
+		else if ( pBlock->m_iBlockType == blockType )
+			continue;
+		else
+		{
+			for ( int i = 0; i < 4; i++ )
+			{
+				CVector dir = DirectionVector[i];
+				CBlock *b	= GetBlockAtLocal( CVector( pos.x, pos.y, pos.z ) + dir );
+				if ( b == nullptr )
+				{
+					// It's not in *this* chunk
+					CChunk *oChunk = Neighbour( (Direction)i );
+					if ( oChunk == nullptr )
+						continue; // Ok yeah it's outside reality
+					CVector p = CVector( pos.x + dir.x, pos.y + dir.y, pos.z + dir.z ) +
+								( dir * CVector( -CHUNKSIZE_X, -CHUNKSIZE_Y, -CHUNKSIZE_Z ) );
+					;
+					b = oChunk->GetBlockAtLocal( p );
+					if ( b == nullptr )
+						continue; // uh oh
+				}
+				BlockFeatures bF = GetBlockFeatures( b->m_iBlockType );
+				if ( bF.floodable )
+				{
+					b->m_iBlockType = blockType;
+					m_bDirty		= true; // Something within us changed, we should update next tick too
+					m_bReallyDirty = true; // We also want to immediately send us back
+				}
+			}
+		}
+	}
+
+	// Rebuild the portable information at last
+	m_portableDef.x	  = m_vPosition.x;
+	m_portableDef.y	  = m_vPosition.y;
+	m_portableDef.z	  = m_vPosition.z;
+
+	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
+	{
+		m_portableDef.m_iBlocks[j] = m_blocks[j].m_iBlockType;
+	}
+#endif
+
 #ifdef CLIENTEXE
 	// Chunk update makes neighbours and ourself update our model
 	// Hahahahahahah slow
@@ -52,11 +149,8 @@ void CChunk::Update()
 			neighbour->RebuildMdl();
 	}
 
-	// Lighting
-
+	// TODO: Lighting
 #endif
-
-	m_bOutdated = true;
 }
 
 CBlock *CChunk::GetBlockAtLocal( CVector pos )

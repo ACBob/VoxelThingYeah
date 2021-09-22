@@ -213,7 +213,7 @@ namespace protocol
 	/****************************************************/
 	void SendServerPlayerID( ENetPeer *pPeer, bool isOp );
 	void SendServerChunkData( ENetPeer *pPeer, CWorld *world, CVector pos );
-	void SendServerChunkDataFromRep( ENetPeer *pPeer, CWorld::PortableChunkRepresentation crep );
+	void SendServerChunkDataFromRep( ENetPeer *pPeer, PortableChunkRepresentation crep );
 	void SendServerUpdateBlock( ENetPeer *pPeer, CVector pos, blocktype_t blockType );
 	void SendServerPlayerSpawn( ENetPeer *pPeer, std::string username, CVector pos, CVector rot, bool join );
 	void SendServerPlayerPos( ENetPeer *pPeer, std::string username, CVector pos, CVector rot );

@@ -22,6 +22,16 @@
 
 #pragma once
 
+// A storage only type of chunk
+// that stores JUST essential information to rebuild a chunk
+// Used for saving/loading and network stuff
+struct PortableChunkRepresentation
+{
+	// CVector can't be used in this context
+	int32_t x, y, z;
+	uint32_t m_iBlocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
+};
+
 class CChunk
 {
   public:
@@ -40,7 +50,7 @@ class CChunk
 
 	void Render();
 #endif
-	void Update();
+	void Update(int64_t iTick);
 
 	CVector PosToWorld( CVector pos );
 
@@ -62,7 +72,12 @@ class CChunk
 	// World pointer (can't set type because circular include :lenny:)
 	void *m_pChunkMan = nullptr;
 
-	bool m_bOutdated = false;
+	PortableChunkRepresentation m_portableDef;
+
+	// Regular Dirt
+	bool m_bDirty = false;
+	// Wow we need a clean
+	bool m_bReallyDirty = false;
 };
 
 bool ValidChunkPosition( CVector pos );

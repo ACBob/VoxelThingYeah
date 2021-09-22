@@ -114,20 +114,20 @@ void CNetworkServer::Update()
 	}
 
 	// Check for outdated chunks and resend them to joined clients
+	// TODO: Queue
 	for ( CChunk *c : m_world.m_chunks )
 	{
-		if ( c->m_bOutdated )
+		if ( c->m_bReallyDirty )
 		{
-			CWorld::PortableChunkRepresentation crep = m_world.GetWorldRepresentation( c->m_vPosition );
-
 			for ( CNetworkPlayer *cl : m_players )
 			{
 				if ( cl->m_iNextChunkLoadTick < m_iCurrentTick )
 				{
-					protocol::SendServerChunkDataFromRep( cl->m_pPeer, crep );
+					protocol::SendServerChunkDataFromRep( cl->m_pPeer, c->m_portableDef );
 				}
 			}
-			c->m_bOutdated = false;
+
+			c->m_bReallyDirty = false;
 		}
 	}
 

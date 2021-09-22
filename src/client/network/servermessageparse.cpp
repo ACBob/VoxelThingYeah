@@ -52,13 +52,13 @@ namespace protocol
 			break;
 
 			case ServerPacket::CHUNKDATA: {
-				CWorld::PortableChunkRepresentation crep;
+				PortableChunkRepresentation crep;
 				int numBlocks;
 				bufAccess >> crep.x;
 				bufAccess >> crep.y;
 				bufAccess >> crep.z;
 				bufAccess >> numBlocks;
-				bufAccess >> crep.blocks;
+				bufAccess >> crep.m_iBlocks;
 
 				// con_info("ChunkData at <%d,%d,%d>", crep.x, crep.y, crep.z);
 				// con_info("%d Blocks", numBlocks);
