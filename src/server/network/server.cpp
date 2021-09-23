@@ -120,7 +120,7 @@ void CNetworkServer::Update()
 		{
 			for ( CNetworkPlayer *cl : m_players )
 			{
-				cl->m_pChunkQueue.push_back(c);
+				cl->m_pChunkQueue.push_back(c->m_vPosition);
 			}
 			c->m_bReallyDirty = false;
 		}
@@ -135,6 +135,7 @@ void CNetworkServer::Update()
 		{
 			c->m_iLoadedChunkIDX	= 0;
 			c->m_iNextChunkLoadTick = m_iCurrentTick - 1;
+			c->m_pChunkQueue.push_back(cP);
 		}
 		c->m_vChunkPos = cP;
 
@@ -151,7 +152,7 @@ void CNetworkServer::Update()
 		p = p + c->m_vChunkPos;
 
 		// Queue it
-		c->m_pChunkQueue.push_back(m_world.GetChunkGenerateAtWorldPos(p * CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ));
+		c->m_pChunkQueue.push_back(p);
 	}
 
 	// Now handle the queue
@@ -165,8 +166,10 @@ void CNetworkServer::Update()
 		if (p->m_pChunkQueue.empty())
 			continue;
 
-		CChunk *c = p->m_pChunkQueue.back();
+		CVector pos = p->m_pChunkQueue.back();
 		p->m_pChunkQueue.pop_back();
+
+		CChunk *c = m_world.GetChunkGenerateAtWorldPos(pos * CVector(CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z));
 		
 		if (c != nullptr)
 			protocol::SendServerChunkDataFromRep(p->m_pPeer, c->m_portableDef);

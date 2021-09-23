@@ -203,7 +203,7 @@ void CWorld::WorldTick( int64_t iTick, float delta )
 
 	for ( CChunk *chunk : m_chunks )
 	{
-		if ( chunk->m_bDirty )
+		if ( chunk->m_bDirty || chunk->m_bReallyDirty )
 			chunk->Update( iTick );
 	}
 

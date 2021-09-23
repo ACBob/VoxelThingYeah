@@ -14,7 +14,7 @@ class CNetworkPlayer
 	unsigned int m_skinRes;
 
 	// A queue of chunks to be sent
-	std::vector<CChunk *> m_pChunkQueue;
+	std::vector<CVector> m_pChunkQueue;
 
 	int m_iLoadedChunkIDX			  = 0;
 	unsigned int m_iNextChunkLoadTick = 0;
