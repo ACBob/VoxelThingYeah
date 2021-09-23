@@ -19,7 +19,7 @@ void CStatePlay::Enter()
 	m_pDiffuseShader = shaderSystem::LoadShader( "shaders/generic.vert", "shaders/generic.frag" );
 	m_pUnlitShader	 = shaderSystem::LoadShader( "shaders/generic.vert", "shaders/unlit.frag" );
 	m_pSkyboxShader	 = shaderSystem::LoadShader( "shaders/sky.vert", "shaders/sky.frag" );
-	m_pWaterShader	 = m_pDiffuseShader;
+	m_pWaterShader	 = shaderSystem::LoadShader( "shaders/water.vert", "shaders/generic.frag" );
 
 	GetCubeModel( m_skyboxModel, CVector( -5, -5, -5 ) );
 	m_pStellarModel = modelSystem::LoadModel( "models/sun.obj" );
@@ -99,7 +99,7 @@ void CStatePlay::Update()
 			glm::lookAt( glm::vec3( m_pLocalPlayer->m_camera.m_vPosition.x, m_pLocalPlayer->m_camera.m_vPosition.y,
 									m_pLocalPlayer->m_camera.m_vPosition.z ),
 						 glm::vec3( v.x, v.y, v.z ), glm::vec3( VEC_UP.x, VEC_UP.y, VEC_UP.z ) );
-		shaderSystem::SetUniforms( view, m_projectionMatrix, pStateMan->m_pWindow->GetMS(),
+		shaderSystem::SetUniforms( view, m_projectionMatrix, m_iLastTick,
 								   m_pLocalWorld->m_iTimeOfDay, vSunForward );
 
 		glDisable( GL_DEPTH_TEST ); // Skybox
