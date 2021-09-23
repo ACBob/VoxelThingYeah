@@ -19,6 +19,7 @@ void CStatePlay::Enter()
 	m_pDiffuseShader = shaderSystem::LoadShader( "shaders/generic.vert", "shaders/generic.frag" );
 	m_pUnlitShader	 = shaderSystem::LoadShader( "shaders/generic.vert", "shaders/unlit.frag" );
 	m_pSkyboxShader	 = shaderSystem::LoadShader( "shaders/sky.vert", "shaders/sky.frag" );
+	m_pWaterShader	 = m_pDiffuseShader;
 
 	GetCubeModel( m_skyboxModel, CVector( -5, -5, -5 ) );
 	m_pStellarModel = modelSystem::LoadModel( "models/sun.obj" );
@@ -31,7 +32,7 @@ void CStatePlay::Enter()
 	m_pTerrainPNG = materialSystem::LoadTexture( "terrain.png" );
 
 	m_pLocalPlayer = new CEntityPlayer();
-	m_pLocalWorld  = new CWorld( m_pDiffuseShader, m_pDiffuseShader );
+	m_pLocalWorld  = new CWorld( m_pDiffuseShader, m_pDiffuseShader, m_pWaterShader );
 
 	m_pLocalPlayer->m_pInputMan = pStateMan->m_pGui->m_pInputMan;
 	m_pLocalPlayer->m_pClient	= pStateMan->m_pClient;

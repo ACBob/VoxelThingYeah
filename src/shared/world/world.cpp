@@ -11,7 +11,7 @@
 #endif
 
 #ifdef CLIENTEXE
-CWorld::CWorld( CShader *shader, CShader *entShader ) : m_pWorldShader( shader ), m_pEntityShader( entShader )
+CWorld::CWorld( CShader *shader, CShader *entShader, CShader *waterShader ) : m_pWorldShader( shader ), m_pEntityShader( entShader ), m_pWaterShader( waterShader )
 #elif SERVEREXE
 CWorld::CWorld()
 #endif
@@ -58,7 +58,7 @@ CChunk *CWorld::GetChunkGenerateAtWorldPos( CVector pos )
 	c->m_blocksMdl.m_vPosition = c->GetPosInWorld();
 	c->m_blocksMdl.SetShader( m_pWorldShader );
 	c->m_waterMdl.m_vPosition = c->GetPosInWorld();
-	c->m_waterMdl.SetShader( m_pWorldShader );
+	c->m_waterMdl.SetShader( m_pWaterShader );
 #endif
 	m_jenerator.Generate( c );
 

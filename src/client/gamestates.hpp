@@ -39,6 +39,7 @@ class CStatePlay : public CState
 	CShader *m_pDiffuseShader;
 	CShader *m_pUnlitShader;
 	CShader *m_pSkyboxShader;
+	CShader *m_pWaterShader;
 
 	CModel m_skyboxModel;
 	CModel *m_pStellarModel;

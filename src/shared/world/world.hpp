@@ -22,7 +22,7 @@ class CWorld
 {
   public:
 #ifdef CLIENTEXE
-	CWorld( CShader *shader, CShader *entShader );
+	CWorld( CShader *shader, CShader *entShader, CShader *waterShader );
 #elif SERVEREXE
 	CWorld();
 #endif
@@ -77,6 +77,8 @@ class CWorld
 	CShader *m_pWorldShader = nullptr;
 	// Shader entities render with
 	CShader *m_pEntityShader = nullptr;
+	// Shader we render specifically water with
+	CShader *m_pWaterShader = nullptr;
 #endif
 
 	std::vector<CChunk *> m_chunks;
