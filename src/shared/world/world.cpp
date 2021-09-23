@@ -87,9 +87,8 @@ void CWorld::UnloadChunk( CVector pos )
 CChunk *CWorld::ChunkAtWorldPos( CVector pos )
 {
 	pos = pos / CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z );
-	pos = pos.Floor();
 
-	return ChunkAtChunkPos( pos );
+	return ChunkAtChunkPos( pos.Floor() );
 }
 
 CBlock *CWorld::BlockAtWorldPos( CVector pos )

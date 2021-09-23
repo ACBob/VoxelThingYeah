@@ -133,6 +133,8 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 {
 	mdl.m_vertices.clear();
 	mdl.m_faces.clear();
+	wmdl.m_vertices.clear();
+	wmdl.m_faces.clear();
 
 	for ( int y = 0; y < CHUNKSIZE_Y; y++ )
 	{
