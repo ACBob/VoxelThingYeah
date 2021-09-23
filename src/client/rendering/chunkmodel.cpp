@@ -129,7 +129,7 @@ std::vector<CModel::Vertex> samplePlant( CBlock block, int x = 0, int y = 0, int
 }
 
 // We include the chunk manager here so we can test our neighbouring chunks
-void BuildChunkModel( CModel &mdl, CBlock blocks[], CVector pos, void *chunk )
+void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, void *chunk )
 {
 	mdl.m_vertices.clear();
 	mdl.m_faces.clear();
@@ -183,12 +183,25 @@ void BuildChunkModel( CModel &mdl, CBlock blocks[], CVector pos, void *chunk )
 								}
 
 								std::vector<CModel::Vertex> g = sampleCubeFace( Direction( i ), block, x, y, z );
-								std::copy( g.begin(), g.end(), std::back_inserter( mdl.m_vertices ) );
 
-								int nVertices = mdl.m_vertices.size();
+								if (block.m_iBlockType == WATER)
+								{
+									std::copy( g.begin(), g.end(), std::back_inserter( wmdl.m_vertices ) );
 
-								mdl.m_faces.push_back( { nVertices - 4, nVertices - 3, nVertices - 2 } );
-								mdl.m_faces.push_back( { nVertices - 4, nVertices - 2, nVertices - 1 } );
+									int nVertices = wmdl.m_vertices.size();
+
+									wmdl.m_faces.push_back( { nVertices - 4, nVertices - 3, nVertices - 2 } );
+									wmdl.m_faces.push_back( { nVertices - 4, nVertices - 2, nVertices - 1 } );
+								}
+								else
+								{
+									std::copy( g.begin(), g.end(), std::back_inserter( mdl.m_vertices ) );
+
+									int nVertices = mdl.m_vertices.size();
+
+									mdl.m_faces.push_back( { nVertices - 4, nVertices - 3, nVertices - 2 } );
+									mdl.m_faces.push_back( { nVertices - 4, nVertices - 2, nVertices - 1 } );
+								}
 							}
 							break;
 
@@ -215,4 +228,5 @@ void BuildChunkModel( CModel &mdl, CBlock blocks[], CVector pos, void *chunk )
 	}
 
 	mdl.Update();
+	wmdl.Update();
 }

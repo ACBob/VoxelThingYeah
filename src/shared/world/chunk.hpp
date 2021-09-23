@@ -49,6 +49,7 @@ class CChunk
 	void RebuildMdl();
 
 	void Render();
+	void RenderTrans(); // Renders things that should be done last, like water
 #endif
 	void Update(int64_t iTick);
 
@@ -59,7 +60,8 @@ class CChunk
 	CBlock m_blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 
 #ifdef CLIENTEXE
-	CModel m_mdl;
+	CModel m_blocksMdl;
+	CModel m_waterMdl;
 	// 16 bits
 	// 4 red, 4 green, 4 blue and 4 extra for the sky/natural light
 	uint16_t m_iLightingValue[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];

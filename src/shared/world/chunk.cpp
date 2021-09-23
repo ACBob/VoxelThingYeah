@@ -38,9 +38,10 @@ CChunk *CChunk::Neighbour( Direction dir )
 }
 
 #ifdef CLIENTEXE
-void CChunk::Render() { m_mdl.Render(); }
+void CChunk::Render() { m_blocksMdl.Render(); }
+void CChunk::RenderTrans() { m_waterMdl.Render(); }
 
-void CChunk::RebuildMdl() { BuildChunkModel( m_mdl, m_blocks, GetPosInWorld(), this ); }
+void CChunk::RebuildMdl() { BuildChunkModel( m_blocksMdl, m_waterMdl, m_blocks, GetPosInWorld(), this ); }
 #endif
 
 // Takes a coordinate and returns a vector in world coordinates relative to this chunk

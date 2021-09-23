@@ -55,8 +55,10 @@ CChunk *CWorld::GetChunkGenerateAtWorldPos( CVector pos )
 	c->m_vPosition = ( pos / CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
 	c->m_pChunkMan = this;
 #ifdef CLIENTEXE
-	c->m_mdl.m_vPosition = c->GetPosInWorld();
-	c->m_mdl.SetShader( m_pWorldShader );
+	c->m_blocksMdl.m_vPosition = c->GetPosInWorld();
+	c->m_blocksMdl.SetShader( m_pWorldShader );
+	c->m_waterMdl.m_vPosition = c->GetPosInWorld();
+	c->m_waterMdl.SetShader( m_pWorldShader );
 #endif
 	m_jenerator.Generate( c );
 
@@ -126,13 +128,20 @@ void *CWorld::GetEntityByName( const char *name )
 #ifdef CLIENTEXE
 void CWorld::Render()
 {
+	// Render regular blocks
 	for ( CChunk *c : m_chunks )
 	{
 		c->Render();
 	}
+	// Render entities
 	for ( void *ent : m_ents )
 	{
 		( (CEntityBase *)ent )->Render();
+	}
+	// Render stuff like water
+	for ( CChunk *c : m_chunks )
+	{
+		c->RenderTrans();
 	}
 }
 #endif
