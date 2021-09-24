@@ -51,7 +51,7 @@ class CChunk
 	void Render();
 	void RenderTrans(); // Renders things that should be done last, like water
 #endif
-	void Update(int64_t iTick);
+	void Update( int64_t iTick );
 
 	CVector PosToWorld( CVector pos );
 

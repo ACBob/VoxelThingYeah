@@ -15,9 +15,9 @@
 class CGameStateMachine : public CStateMachine
 {
   public:
-	CNetworkClient *m_pClient = nullptr;
-	CGui *m_pGui = nullptr;
-	CGameWindow *m_pWindow = nullptr;
+	CNetworkClient *m_pClient  = nullptr;
+	CGui *m_pGui			   = nullptr;
+	CGameWindow *m_pWindow	   = nullptr;
 	CInputManager *m_pInputMan = nullptr;
 
 	int64_t m_iTick = 0; // Client Tick

@@ -9,8 +9,8 @@ CChunk::CChunk()
 {
 	for ( int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++ )
 	{
-		m_blocks[i].m_iBlockType = blocktype_t::AIR;
-		m_iLightingValue[i]		 = 0x00000000;
+		m_blocks[i].m_iBlockType   = blocktype_t::AIR;
+		m_iLightingValue[i]		   = 0x00000000;
 		m_portableDef.m_iBlocks[i] = m_blocks[i].m_iBlockType;
 	}
 
@@ -22,10 +22,10 @@ CChunk::CChunk()
 {
 	for ( int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++ )
 	{
-		m_blocks[i].m_iBlockType = blocktype_t::AIR;
+		m_blocks[i].m_iBlockType   = blocktype_t::AIR;
 		m_portableDef.m_iBlocks[i] = m_blocks[i].m_iBlockType;
 	}
-	
+
 	m_bDirty = true;
 }
 CChunk::~CChunk() {}
@@ -48,10 +48,10 @@ void CChunk::RebuildMdl() { BuildChunkModel( m_blocksMdl, m_waterMdl, m_blocks, 
 // Intended to be used by in-chunk coords but doesn't throw a hissyfit if it's not
 CVector CChunk::PosToWorld( CVector pos ) { return GetPosInWorld() + pos; }
 
-void CChunk::Update(int64_t iTick)
+void CChunk::Update( int64_t iTick )
 {
 	// We updated so we're not dirty
-	m_bDirty = false;
+	m_bDirty	   = false;
 	m_bReallyDirty = false;
 
 #ifdef SERVEREXE
@@ -87,7 +87,8 @@ void CChunk::Update(int64_t iTick)
 	{
 		blocktype_t blockType = GetBlockAtLocal( pos )->m_iBlockType;
 		// Test Bottom first
-		CBlock *pBlock = reinterpret_cast<CWorld*>(m_pChunkMan)->BlockAtWorldPos( PosToWorld( CVector( pos.x, pos.y - 1, pos.z ) ) );
+		CBlock *pBlock = reinterpret_cast<CWorld *>( m_pChunkMan )
+							 ->BlockAtWorldPos( PosToWorld( CVector( pos.x, pos.y - 1, pos.z ) ) );
 		if ( pBlock == nullptr )
 			continue;
 
@@ -122,16 +123,16 @@ void CChunk::Update(int64_t iTick)
 				{
 					b->m_iBlockType = blockType;
 					m_bDirty		= true; // Something within us changed, we should update next tick too
-					m_bReallyDirty = true; // We also want to immediately send us back
+					m_bReallyDirty	= true; // We also want to immediately send us back
 				}
 			}
 		}
 	}
 
 	// Rebuild the portable information at last
-	m_portableDef.x	  = m_vPosition.x;
-	m_portableDef.y	  = m_vPosition.y;
-	m_portableDef.z	  = m_vPosition.z;
+	m_portableDef.x = m_vPosition.x;
+	m_portableDef.y = m_vPosition.y;
+	m_portableDef.z = m_vPosition.z;
 
 	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
 	{

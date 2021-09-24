@@ -11,7 +11,8 @@
 #endif
 
 #ifdef CLIENTEXE
-CWorld::CWorld( CShader *shader, CShader *entShader, CShader *waterShader ) : m_pWorldShader( shader ), m_pEntityShader( entShader ), m_pWaterShader( waterShader )
+CWorld::CWorld( CShader *shader, CShader *entShader, CShader *waterShader )
+	: m_pWorldShader( shader ), m_pEntityShader( entShader ), m_pWaterShader( waterShader )
 #elif SERVEREXE
 CWorld::CWorld()
 #endif

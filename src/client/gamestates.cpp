@@ -58,7 +58,7 @@ void CStatePlay::Update()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
 
-	pStateMan->m_pInputMan->m_bInGui = (m_bInPause || m_pLocalPlayer->m_bInInventory);
+	pStateMan->m_pInputMan->m_bInGui = ( m_bInPause || m_pLocalPlayer->m_bInInventory );
 
 	char *guiBuf = new char[512];
 
@@ -99,8 +99,7 @@ void CStatePlay::Update()
 			glm::lookAt( glm::vec3( m_pLocalPlayer->m_camera.m_vPosition.x, m_pLocalPlayer->m_camera.m_vPosition.y,
 									m_pLocalPlayer->m_camera.m_vPosition.z ),
 						 glm::vec3( v.x, v.y, v.z ), glm::vec3( VEC_UP.x, VEC_UP.y, VEC_UP.z ) );
-		shaderSystem::SetUniforms( view, m_projectionMatrix, m_iLastTick,
-								   m_pLocalWorld->m_iTimeOfDay, vSunForward );
+		shaderSystem::SetUniforms( view, m_projectionMatrix, m_iLastTick, m_pLocalWorld->m_iTimeOfDay, vSunForward );
 
 		glDisable( GL_DEPTH_TEST ); // Skybox
 		{
@@ -119,12 +118,13 @@ void CStatePlay::Update()
 
 		m_pLocalWorld->Render();
 
-		if (!m_bInPause && pStateMan->m_pInputMan->m_bInputState[INKEY_INV] && !pStateMan->m_pInputMan->m_bOldInputState[INKEY_INV])
+		if ( !m_bInPause && pStateMan->m_pInputMan->m_bInputState[INKEY_INV] &&
+			 !pStateMan->m_pInputMan->m_bOldInputState[INKEY_INV] )
 			m_pLocalPlayer->m_bInInventory = !m_pLocalPlayer->m_bInInventory;
-		
-		if (pStateMan->m_pInputMan->m_bInputState[INKEY_OUT] && !pStateMan->m_pInputMan->m_bOldInputState[INKEY_OUT])
+
+		if ( pStateMan->m_pInputMan->m_bInputState[INKEY_OUT] && !pStateMan->m_pInputMan->m_bOldInputState[INKEY_OUT] )
 		{
-			if (m_pLocalPlayer->m_bInInventory)
+			if ( m_pLocalPlayer->m_bInInventory )
 				m_pLocalPlayer->m_bInInventory = false;
 			else
 				m_bInPause = !m_bInPause;
@@ -146,20 +146,24 @@ void CStatePlay::Update()
 		pStateMan->m_pGui->Label( guiBuf, CVector( pStateMan->m_pGui->m_vScreenCentre.x, -1 ), Color( 1, 1, 1 ),
 								  CGui::TEXTALIGN_CENTER );
 
-		if (m_pLocalPlayer->m_bInInventory)
+		if ( m_pLocalPlayer->m_bInInventory )
 		{
-			pStateMan->m_pGui->Image(pStateMan->m_pGui->m_pInventoryTex, pStateMan->m_pGui->m_vScreenCentre, CVector(20,20), CVector(0.5,0.5));
+			pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pInventoryTex, pStateMan->m_pGui->m_vScreenCentre,
+									  CVector( 20, 20 ), CVector( 0.5, 0.5 ) );
 
-			CVector p = pStateMan->m_pGui->m_vScreenCentre + CVector(-8,5.5);
+			CVector p  = pStateMan->m_pGui->m_vScreenCentre + CVector( -8, 5.5 );
 			CVector op = p;
-			for (int i = blocktype_t::STONE; i < blocktype_t::MOSSCBBLE; i++)
+			for ( int i = blocktype_t::STONE; i < blocktype_t::MOSSCBBLE; i++ )
 			{
 				snprintf( guiBuf, 100, "%d", i );
 				BlockTexture bTex = GetDefaultBlockTextureSide( (blocktype_t)i, Direction::NORTH );
-				if (pStateMan->m_pGui->AtlasButton('b'+i, m_pTerrainPNG, { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey }, 16.0f, p, CVector(2,2)))
+				if ( pStateMan->m_pGui->AtlasButton(
+						 'b' + i, m_pTerrainPNG,
+						 { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey }, 16.0f, p,
+						 CVector( 2, 2 ) ) )
 					m_pLocalPlayer->m_iSelectedBlockType = (blocktype_t)i;
 				p.x += 2;
-				if (i % 8 == 0)
+				if ( i % 8 == 0 )
 				{
 					p.y -= 2;
 					p.x = op.x;

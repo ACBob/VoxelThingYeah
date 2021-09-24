@@ -83,11 +83,11 @@ CVector CVector::Ceil() const
 }
 CVector CVector::Lerp( CVector oVec, float fPc ) const
 {
-	CVector g = CVector(x,y,z);
-	g.x = lerp(x, oVec.x, fPc);
-	g.y = lerp(y, oVec.y, fPc);
-	g.z = lerp(z, oVec.z, fPc);
-	g.w = lerp(w, oVec.w, fPc);
+	CVector g = CVector( x, y, z );
+	g.x		  = lerp( x, oVec.x, fPc );
+	g.y		  = lerp( y, oVec.y, fPc );
+	g.z		  = lerp( z, oVec.z, fPc );
+	g.w		  = lerp( w, oVec.w, fPc );
 
 	return g;
 }

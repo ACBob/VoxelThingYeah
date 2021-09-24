@@ -14,7 +14,7 @@ class CEntityPlayer : public CEntityBase
 	CEntityPlayer();
 	~CEntityPlayer();
 
-	void Tick(int64_t iTick);
+	void Tick( int64_t iTick );
 	void Spawn()
 	{
 		BaseClass::Spawn();
@@ -44,6 +44,6 @@ class CEntityPlayer : public CEntityBase
 	void *m_pClient = nullptr;
 #endif
 
-	bool m_bFly = true;
+	bool m_bFly			= true;
 	bool m_bInInventory = false;
 };

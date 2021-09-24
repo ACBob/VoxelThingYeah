@@ -113,9 +113,9 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 }
 #endif
 
-void CEntityPlayer::Tick(int64_t iTick)
+void CEntityPlayer::Tick( int64_t iTick )
 {
-	BaseClass::Tick(iTick);
+	BaseClass::Tick( iTick );
 
 #ifdef CLIENTEXE
 	if ( m_pInputMan == nullptr )
@@ -125,10 +125,10 @@ void CEntityPlayer::Tick(int64_t iTick)
 	CVector right	= forward.Rotate( 2, 90 );
 	right.y			= 0;
 	right			= right.Normal();
-	
-	CVector vMoveDir(0);
 
-	if (!m_bInInventory)
+	CVector vMoveDir( 0 );
+
+	if ( !m_bInInventory )
 	{
 		if ( m_pInputMan->m_bInputState[INKEY_FRONT] )
 			vMoveDir = vMoveDir + ( forward );
@@ -153,17 +153,17 @@ void CEntityPlayer::Tick(int64_t iTick)
 				vMoveDir.y = 19.8f;
 			}
 		}
-		if (m_bFly)
+		if ( m_bFly )
 			vMoveDir = vMoveDir * 6.0f * 0.99f;
 		else
 			vMoveDir = vMoveDir * 4.3f * 0.98f;
-		if (!m_bFly)
+		if ( !m_bFly )
 			vMoveDir.y += m_vVelocity.y;
 	}
 
 	float f = m_bOnFloor ? 0.125f : m_bFly ? 0.1f : 0.076f;
 
-	m_vVelocity = m_vVelocity.Lerp(vMoveDir, f);
+	m_vVelocity = m_vVelocity.Lerp( vMoveDir, f );
 
 	if ( m_pInputMan->m_bInputState[INKEY_FLY] && !m_pInputMan->m_bOldInputState[INKEY_FLY] )
 		m_bFly = !m_bFly;
