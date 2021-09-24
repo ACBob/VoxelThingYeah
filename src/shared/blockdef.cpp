@@ -25,6 +25,7 @@ blockmaterial_t GetBlockMaterial( blocktype_t blockType )
 			break;
 
 		case GLASS:
+		case ICE:
 			return blockmaterial_t::MAT_GLASS;
 			break;
 
@@ -32,6 +33,7 @@ blockmaterial_t GetBlockMaterial( blocktype_t blockType )
 		case LEAVES:
 		case FLOWER:
 		case LGRASS:
+		case SNOWGRASS:
 			return blockmaterial_t::MAT_ORGANIC;
 			break;
 
@@ -41,6 +43,7 @@ blockmaterial_t GetBlockMaterial( blocktype_t blockType )
 			break;
 
 		case SAND:
+		case SNOW:
 			return blockmaterial_t::MAT_DUST;
 			break;
 	}
