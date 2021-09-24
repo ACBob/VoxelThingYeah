@@ -92,5 +92,22 @@ BlockTexture GetDefaultBlockTextureSide( blocktype_t type, Direction side )
 				return { 5, 1, 1, 1 };
 			return { 6, 1, 1, 1 };
 			break;
+		case SNOW:
+			return { 9, 1, 1, 1 };
+			break;
+		case SNOWGRASS:
+			if ( side == Direction::UP )
+			{
+				return { 9, 1, 1, 1 };
+			}
+			if ( side == Direction::DOWN )
+			{
+				return { 1, 0, 1, 1 };
+			}
+			return { 7, 1, 1, 1 };
+			break;
+		case ICE:
+			return { 10, 1, 1, 1 };
+			break;
 	}
 }

@@ -43,7 +43,7 @@ COverworldJeneration::COverworldJeneration()
 	m_biomesOvergroundTemperatureNoise.seed		  = m_iSeed + 102;
 	m_biomesOvergroundTemperatureNoise.noise_type = FNL_NOISE_PERLIN;
 	m_biomesOvergroundTemperatureNoise.octaves	  = 1;
-	m_biomesOvergroundTemperatureNoise.frequency  = 0.01f;
+	m_biomesOvergroundTemperatureNoise.frequency  = 0.02f;
 
 	m_biomesOvergroundHumidityNoise				 = fnlCreateState();
 	m_biomesOvergroundHumidityNoise.seed		 = m_iSeed + 22106;
@@ -102,7 +102,7 @@ void COverworldJeneration::BiomeBlocks( CChunk *c )
 			{
 				// TODO: Actually fix this as it tries to query chunks that don't exist yet.
 				CBlock *blk = c->GetBlockAtLocal( CVector( x, y, z ) );
-				if ( blk != nullptr && blk->m_iBlockType != STONE )
+				if ( blk != nullptr && blk->m_iBlockType == AIR )
 					continue;
 
 				CBlock *b = c->GetBlockAtLocal( CVector( x, y + 1, z ) );
@@ -113,8 +113,16 @@ void COverworldJeneration::BiomeBlocks( CChunk *c )
 
 				if ( b->m_iBlockType == AIR )
 				{
-					blk->m_iBlockType = biome->m_iBlockSurface;
-					grassDepth--;
+					if (blk->m_iBlockType == STONE)
+					{
+						b->m_iBlockType = biome->m_iBlockDust;
+						blk->m_iBlockType = biome->m_iBlockSurface;
+						grassDepth--;
+					}
+					else
+					{
+						blk->m_iBlockType = biome->m_iBlockWaterSurf;
+					}
 				}
 				else if ( b->m_iBlockType == biome->m_iBlockSurface ||
 						  b->m_iBlockType == biome->m_iBlockSubSurface && grassDepth > 0 )
@@ -176,14 +184,20 @@ void COverworldJeneration::Generate( CChunk *c )
 
 CBiome *COverworldJeneration::GetBiomeAtPos( CVector p )
 {
-	float fTemperature = 1.35f + fnlGetNoise2D( &m_biomesOvergroundTemperatureNoise, p.x, p.z );
+	float fTemperature = (fnlGetNoise2D( &m_biomesOvergroundTemperatureNoise, p.x, p.z ) + 1.0f);
 	// float fHumidity = fnlGetNoise2D( &m_biomesOvergroundHumidityNoise, p.x, p.z );
 
 	CBiome *closestBiome = biomes::biomeList[0];
 
 	for ( CBiome *biome : biomes::biomeList )
 	{
-		if ( fabsf( biome->m_fTemperature - fTemperature ) < fabsf( closestBiome->m_fTemperature - fTemperature ) )
+		if (fTemperature >= biome->m_fMinTemperature && fTemperature <= biome->m_fMaxTemperature)
+		{
+			return biome;
+		}
+
+		// Else try to find the closest to the max temperature
+		if ( fabsf( biome->m_fMaxTemperature - fTemperature ) < fabsf( closestBiome->m_fMaxTemperature - fTemperature ) )
 			closestBiome = biome;
 	}
 

@@ -26,7 +26,10 @@ enum blocktype_t {
 	SANDSTONE = 16,
 	BRICKS	  = 17,
 	LGRASS	  = 18,
-	MOSSCBBLE = 19
+	MOSSCBBLE = 19,
+	SNOW	  = 20,
+	SNOWGRASS = 21,
+	ICE       = 22
 };
 
 enum blockmaterial_t {

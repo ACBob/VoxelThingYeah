@@ -153,7 +153,7 @@ void CStatePlay::Update()
 
 			CVector p  = pStateMan->m_pGui->m_vScreenCentre + CVector( -8, 5.5 );
 			CVector op = p;
-			for ( int i = blocktype_t::STONE; i < blocktype_t::MOSSCBBLE; i++ )
+			for ( int i = blocktype_t::STONE; i < blocktype_t::ICE; i++ )
 			{
 				snprintf( guiBuf, 100, "%d", i );
 				BlockTexture bTex = GetDefaultBlockTextureSide( (blocktype_t)i, Direction::NORTH );
