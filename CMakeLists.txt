@@ -79,7 +79,17 @@ target_link_libraries(${CLIENT_BIN} ${SDL2_LIBRARIES} ${OPENAL_LIBRARY} ${CMAKE_
 target_compile_definitions(${CLIENT_BIN} PUBLIC CLIENTEXE)
 target_include_directories(${CLIENT_BIN} PRIVATE "${CMAKE_CURRENT_LIST_DIR}/src/client")
 
+if (${CMAKE_BUILD_TYPE} MATCHES "Debug" OR "RelWithDebInfo")
+else()
+	target_compile_definitions(${CLIENT_BIN} PUBLIC LOG_LEVEL=1)
+endif()
+
 add_executable(${SERVER_BIN} ${gameServer_SRCS})
 target_link_libraries(${SERVER_BIN} ${CMAKE_DL_LIBS} physfs-static enet)
 target_compile_definitions(${SERVER_BIN} PUBLIC SERVEREXE)
 target_include_directories(${SERVER_BIN} PRIVATE "${CMAKE_CURRENT_LIST_DIR}/src/server")
+
+if (${CMAKE_BUILD_TYPE} MATCHES "Debug" OR "RelWithDebInfo")
+else()
+	target_compile_definitions(${SERVER_BIN} PUBLIC LOG_LEVEL=1)
+endif()
