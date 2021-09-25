@@ -142,6 +142,11 @@ void CChunk::Update( int64_t iTick )
 					b->m_iValueA = blockHandling->m_iValueA - 1;
 					bDirtyAgain		= true; // Something within us changed, we should update next tick too
 				}
+				else if (b->m_iBlockType == blockFeatures.liquidFlow)
+				{
+					if (b->m_iValueA < (blockHandling->m_iValueA - 1))
+						b->m_iValueA = blockHandling->m_iValueA - 1;
+				}
 			}
 		}
 	}
