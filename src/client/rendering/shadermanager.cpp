@@ -8,6 +8,8 @@
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "errorshader.hpp"
+
 #include "filesystem.hpp"
 
 #define LOG_LEVEL DEBUG
@@ -20,20 +22,32 @@ CShader::CShader( const char *vs, const char *fs )
 	bool bSuccess	= false;
 	int64_t iLength = 0;
 
-	const char *cVertexShaderSource = (char *)fileSystem::LoadFile( vs, iLength, bSuccess );
+	char *cVertexShaderSource = (char *)fileSystem::LoadFile( vs, iLength, bSuccess );
 	if ( !bSuccess )
 	{
-		con_error( "Cannot load %s!", vs );
+		con_error( "Cannot load Vertex %s!", fs );
+		// use the error instead
+		delete cVertexShaderSource;
+
+		cVertexShaderSource = new char[strlen(ERRORVERT) + 1];
+		strcpy(cVertexShaderSource, ERRORVERT);
+		cVertexShaderSource[strlen(ERRORVERT) + 1] = '\0';
 	}
 
 	unsigned int iVertexShader = glCreateShader( GL_VERTEX_SHADER );
 	glShaderSource( iVertexShader, 1, (const GLchar **)&cVertexShaderSource, NULL );
+
+	char *cFragmentShaderSource = (char *)fileSystem::LoadFile( fs, iLength, bSuccess );
 	if ( !bSuccess )
 	{
-		con_error( "Cannot load %s!", fs );
-	}
+		con_error( "Cannot load Fragment %s!", fs );
+		// use the error instead
+		delete cFragmentShaderSource;
 
-	const char *cFragmentShaderSource = (char *)fileSystem::LoadFile( fs, iLength, bSuccess );
+		cFragmentShaderSource = new char[strlen(ERRORFRAG) + 1];
+		strcpy(cFragmentShaderSource, ERRORFRAG);
+		cFragmentShaderSource[strlen(ERRORFRAG) + 1] = '\0';
+	}
 
 	unsigned int iFragmentShader = glCreateShader( GL_FRAGMENT_SHADER );
 	glShaderSource( iFragmentShader, 1, (const GLchar **)&cFragmentShaderSource, NULL );

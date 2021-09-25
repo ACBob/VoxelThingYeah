@@ -22,8 +22,9 @@ void BOBJLoadModel( CModel *m, const char *fp )
 	{
 		delete file;
 
-		file = new char[strlen(ERRORMDLOBJ)];
+		file = new char[strlen(ERRORMDLOBJ) + 1];
 		strcpy(file, ERRORMDLOBJ);
+		file[strlen(ERRORMDLOBJ) + 1] = '\0';
 	}
 
 	char *token;
