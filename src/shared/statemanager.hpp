@@ -32,7 +32,6 @@ class CStateMachine
 	void Flush();
 	// Updates
 	void Update();
-	// Returns the currently active state, if any.
-	// Returns nullptr if there is no current states on the stack
-	CState *ActiveState();
+	// Returns if the state is empty
+	bool IsEmpty();
 };

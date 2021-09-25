@@ -209,7 +209,7 @@ void CStateMenu::Update()
 		m_pStateMan->PushState( std::make_unique<CStatePlay>() );
 	}
 
-	if ( pStateMan->m_pGui->LabelButton( 1, "Quit", pStateMan->m_pGui->m_vScreenCentre - CVector(0,1), CVector( 0.5, 0.5 ) ) )
+	if ( pStateMan->m_pGui->LabelButton( 2, "Quit", pStateMan->m_pGui->m_vScreenCentre - CVector(0,2), CVector( 0.5, 0.5 ) ) )
 	{
 		pStateMan->PopState();
 	}
