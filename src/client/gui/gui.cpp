@@ -77,6 +77,7 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 	m_pBGTex		= materialSystem::LoadTexture( "guibg.png" );
 	m_pCrosshairTex = materialSystem::LoadTexture( "crosshair.png" );
 	m_pInventoryTex = materialSystem::LoadTexture( "inventory.png" );
+	m_pLogoTex = materialSystem::LoadTexture( "title.png" );
 
 	m_textBuffers = {};
 
@@ -336,7 +337,7 @@ void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment tex
 
 void CGui::Image( CTexture *tex, CVector pos, CVector size, CVector origin, Colour tint )
 {
-	pos	 = pos * GUIUNIT;
+	pos	 = GetInScreen( pos );
 	size = size * GUIUNIT;
 
 	{

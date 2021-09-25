@@ -82,9 +82,11 @@ class CGui
 	CVector m_vScreenDimensions;
 
 	// Shared Resources
+	// Ideally stuff that would be used in multiple places
 	CTexture *m_pBGTex		  = nullptr;
 	CTexture *m_pCrosshairTex = nullptr;
 	CTexture *m_pInventoryTex = nullptr;
+	CTexture *m_pLogoTex = nullptr;
 
 	// Current button pressed down
 	int m_iMouseState;

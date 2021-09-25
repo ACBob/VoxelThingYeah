@@ -201,6 +201,8 @@ void CStateMenu::Update()
 							  pStateMan->m_pGui->m_vScreenDimensions / pStateMan->m_pGui->m_iGuiUnit, CVector( 0, 0 ),
 							  CVector( 0.5, 0.5, 0.5 ) );
 
+	pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pLogoTex, CVector(pStateMan->m_pGui->m_vScreenCentre.x, -1), CVector(10 * 5.25,10), CVector(0.5, 1) );
+
 	if ( pStateMan->m_pGui->LabelButton( 1, "Play", pStateMan->m_pGui->m_vScreenCentre, CVector( 0.5, 0.5 ) ) )
 	{
 		pStateMan->m_pClient->Connect( cl_ip->GetString(), cl_port->GetInt() );
