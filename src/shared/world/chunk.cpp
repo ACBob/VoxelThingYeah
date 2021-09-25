@@ -112,7 +112,7 @@ void CChunk::Update( int64_t iTick )
 		if ( blockF.floodable && pBlock->m_iBlockType != blockType )
 		{
 			pBlock->m_iBlockType = blockFeatures.liquidFlow;
-			pBlock->m_iValueA = blockHandling->m_iValueA;
+			pBlock->m_iValueA = blockFeatures.liquidRange;
 		}
 		else if ( pBlock->m_iBlockType == blockFeatures.liquidFlow || pBlock->m_iBlockType == blockFeatures.liquidSource )
 			continue;
