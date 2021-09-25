@@ -168,7 +168,7 @@ void soundSystem::Init()
 	bool bSuccess			  = false;
 	const uchar_t *soundsToml = fileSystem::LoadFile( "sound/sounds.toml", fl, bSuccess );
 
-	toml::Result data = toml::parse( (char *)soundsToml );
+	toml::Result data = toml::parse( bSuccess ? (char *)soundsToml : "\0" );
 
 	for ( std::string key : data.table->keys() )
 	{
