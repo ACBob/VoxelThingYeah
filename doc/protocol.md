@@ -1,4 +1,4 @@
-# Bobcraft Protocol Documentation
+# Meegreef Protocol Documentation
 **For protocol version 0x1.**
 
 Table Of Contents:
@@ -7,10 +7,10 @@ Table Of Contents:
  * [Packet Types](#packet-types)
 
 # Introduction
-Bobcraft makes use of the [ENet](https://github.com/lsalzman/enet) library for handling packet sending and receiving. Players, in-fact, are bound by their ENet Network Peer, so ENet serves as a crucial component.\
+Meegreef makes use of the [ENet](https://github.com/lsalzman/enet) library for handling packet sending and receiving. Players, in-fact, are bound by their ENet Network Peer, so ENet serves as a crucial component.\
 All packets are marked at `ENET_PACKET_FLAG_RELIABLE`.
 
-On-top of that, Bobcraft uses [a library](https://github.com/voidah/archive) for serializing packets. Note that I don't actually know at this time *what* the library does, so it's probably safest to just use it.
+On-top of that, Meegreef uses [a library](https://github.com/voidah/archive) for serializing packets. Note that I don't actually know at this time *what* the library does, so it's probably safest to just use it.
 
 **NOTE: It's very important to remember the server and client make _very_ little distinction between themselves when sending information, leaving it to a single boolean value. IDs will overlap and things will go disastrously wrong if you forget to check the value!**
 

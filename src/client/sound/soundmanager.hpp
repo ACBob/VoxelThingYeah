@@ -11,7 +11,7 @@
 #define LOG_LEVEL DEBUG
 #include "shared/seethe.h"
 
-#ifdef BOBCRAFT_ENABLE_OPENAL
+#ifdef MEEGREEF_ENABLE_OPENAL
 
 	#define SOUNDBUFFERS 1
 
@@ -95,7 +95,7 @@ namespace soundSystem
 		unsigned int m_iSoundType = 0;
 	};
 
-	inline void Init() { con_warning( "Bobcraft compiled without audio support." ); };
+	inline void Init() { con_warning( "Meegreef compiled without audio support." ); };
 	inline void UnInit(){};
 
 	inline void SetListener( CWorld *wlrd, CVector pos, CVector forward, CVector vel ){};

@@ -1,1 +1,1 @@
-start "Bobcraft Client (OUT)" cmd /c bin\voxelthingyeah_client
+start "Meegreef Client (OUT)" cmd /c bin\voxelthingyeah_client

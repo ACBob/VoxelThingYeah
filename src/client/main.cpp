@@ -39,7 +39,7 @@
 int main( int argc, char *args[] )
 {
 
-	con_info( "Hello from bobcraft!" );
+	con_info( "Hello from Meegreef!" );
 	con_info( "Setting up client-side convars..." );
 	SetupClientSideConvars();
 

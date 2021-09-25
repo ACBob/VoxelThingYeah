@@ -18,8 +18,8 @@ void SetupServerSideConvars()
 	sv_tickms = conVarHandle.DeclareConvar( "sv_tickms", "50", ConVar::F::CVAR_CHEAT | ConVar::F::CVAR_SESSION );
 
 	// Name & Description of the server
-	sv_name = conVarHandle.DeclareConvar( "sv_name", "Epic Bobcraft Server", ConVar::F::CVAR_SESSION );
-	sv_desc = conVarHandle.DeclareConvar( "sv_desc", "Cool Server", ConVar::F::CVAR_SESSION );
+	sv_name = conVarHandle.DeclareConvar( "sv_name", "Epic Meegreef Server", ConVar::F::CVAR_ARCHIVE );
+	sv_desc = conVarHandle.DeclareConvar( "sv_desc", "Cool Server", ConVar::F::CVAR_ARCHIVE );
 
 	// Port to open
 	sv_port = conVarHandle.DeclareConvar( "sv_port", "58008", ConVar::F::CVAR_ARCHIVE );

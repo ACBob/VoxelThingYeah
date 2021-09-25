@@ -19,7 +19,7 @@
 
 int main( int argc, char *args[] )
 {
-	con_info( "Hello from scenic bobcraft server!" );
+	con_info( "Hello from scenic Meegreef server!" );
 	con_info( "Setting up Server-side convars..." );
 	SetupServerSideConvars();
 
