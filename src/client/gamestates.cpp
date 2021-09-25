@@ -208,4 +208,9 @@ void CStateMenu::Update()
 		pStateMan->m_pClient->Connect( cl_ip->GetString(), cl_port->GetInt() );
 		m_pStateMan->PushState( std::make_unique<CStatePlay>() );
 	}
+
+	if ( pStateMan->m_pGui->LabelButton( 1, "Quit", pStateMan->m_pGui->m_vScreenCentre - CVector(0,1), CVector( 0.5, 0.5 ) ) )
+	{
+		pStateMan->PopState();
+	}
 }

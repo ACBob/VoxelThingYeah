@@ -27,3 +27,11 @@ void CStateMachine::Update()
 	if ( !m_stateStack.empty() )
 		m_stateStack.back()->Update();
 }
+
+CState *CStateMachine::ActiveState()
+{
+	if ( !m_stateStack.empty() )
+		return m_stateStack.back().get();
+	
+	return nullptr;
+}

@@ -208,6 +208,9 @@ int main( int argc, char *args[] )
 		}
 
 		gameStateMan.m_fDelta = delta / 1000.0f;
+
+		if (gameStateMan.ActiveState() == nullptr)
+			break;
 	}
 	gameStateMan.Flush();
 
