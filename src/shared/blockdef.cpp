@@ -84,6 +84,9 @@ BlockFeatures GetBlockFeatures( blocktype_t blockType )
 			bF.model = BLOCKMODEL_PLANT;
 			break;
 
+		case WATERSRC:
+		case LAVASRC:
+			bF.isLiquidSource = true;
 		case WATER:
 		case LAVA:
 			bF.breakable   = false;
@@ -93,6 +96,9 @@ BlockFeatures GetBlockFeatures( blocktype_t blockType )
 			bF.isLiquid	   = true;
 			bF.liquidSpeed = blockType == LAVA ? 15 : 5;
 			bF.rule		   = OBSCURERULE_SIMILAR;
+			bF.liquidFlow = (blockType == WATERSRC || blockType == WATER) ? WATER : LAVA;
+			bF.liquidSource = (blockType == WATERSRC || blockType == WATER) ? WATERSRC : LAVASRC;
+			bF.liquidRange = (blockType == WATERSRC || blockType == WATER) ? 7 : 4;
 			break;
 
 		case AIR:

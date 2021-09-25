@@ -18,18 +18,20 @@ enum blocktype_t {
 	LOG		  = 8,
 	LEAVES	  = 9,
 	WATER	  = 10,
-	LAVA	  = 11,
-	ORE_COAL  = 12,
-	ORE_IRON  = 13,
-	FLOWER	  = 14,
-	SAND	  = 15,
-	SANDSTONE = 16,
-	BRICKS	  = 17,
-	LGRASS	  = 18,
-	MOSSCBBLE = 19,
-	SNOW	  = 20,
-	SNOWGRASS = 21,
-	ICE       = 22
+	WATERSRC  = 11,
+	LAVA	  = 12,
+	LAVASRC   = 13,
+	ORE_COAL  = 14,
+	ORE_IRON  = 15,
+	FLOWER	  = 16,
+	SAND	  = 17,
+	SANDSTONE = 18,
+	BRICKS	  = 19,
+	LGRASS	  = 20,
+	MOSSCBBLE = 21,
+	SNOW	  = 22,
+	SNOWGRASS = 23,
+	ICE       = 24
 };
 
 enum blockmaterial_t {
@@ -70,6 +72,13 @@ struct BlockFeatures
 	bool floodable;
 	// IS a liquid
 	bool isLiquid;
+	// IS a source of a liquid (i.e act infinite and create flow)
+	bool isLiquidSource;
+	// Flow/Source variants
+	blocktype_t liquidFlow;
+	blocktype_t liquidSource;
+	// How far the liquid should flow
+	int liquidRange;
 	// Every THIS tick, flow
 	int liquidSpeed;
 	// Model to use

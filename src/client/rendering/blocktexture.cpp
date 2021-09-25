@@ -51,9 +51,11 @@ BlockTexture GetDefaultBlockTextureSide( blocktype_t type, Direction side )
 			return { 9, 0, 1, 1 };
 			break;
 		case WATER:
+		case WATERSRC:
 			return { 10, 0, 1, 1 };
 			break;
 		case LAVA:
+		case LAVASRC:
 			return { 11, 0, 1, 1 };
 			break;
 		case ORE_COAL:
