@@ -15,29 +15,34 @@
 std::vector<CTexture *> materialSystem::loadedTextures;
 
 CTexture::CTexture( const char *path )
-// TODO: Error Texture
 {
 	bool bSuccess		= false;
 	int64_t iFileLength = 0;
 	m_cFilePath			= path;
 
 	const uchar_t *cPNGData = fileSystem::LoadFile( path, iFileLength, bSuccess );
-	if ( iFileLength < 10 )
-	{
-		con_error( "Invalid PNG File!" );
-	}
-
-	if ( !bSuccess )
-	{
-		// TODO: Return with error texture
-	}
-
 	uint iError = lodepng::decode( m_imageData, m_iWidth, m_iHeight, cPNGData, iFileLength );
 	delete[] cPNGData;
-
-	if ( iError != 0 )
+	if ( iFileLength < 10 || !bSuccess || iError != 0)
 	{
-		con_error( "LodePNG Error: %s", lodepng_error_text( iError ) );
+		if ( iError != 0 )
+		{
+			con_error( "LodePNG Error: %s", lodepng_error_text( iError ) );
+		}
+
+		con_error( "Invalid PNG %s, loading error texture...", path );
+
+		// The image data is RGBA
+		// So the data can be written like this for a classic source-style checkerboard
+		m_imageData = {
+			255, 0, 255, 255,
+			0, 0, 0, 255,
+			0, 0, 0, 255,
+			255, 0, 255, 255,
+		};
+
+		m_iWidth = 2;
+		m_iHeight = 2;
 	}
 
 	glGenTextures( 1, &m_iId );
