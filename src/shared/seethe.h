@@ -26,6 +26,8 @@
 #define BORDER          "-"
 
 /* Enabler flags */
+/* Debug shows a lot more */
+#if LOG_LEVEL == DEBUG
 #define DISPLAY_COLOUR  1
 #define DISPLAY_TIME    1
 #define DISPLAY_LEVEL   1
@@ -36,6 +38,18 @@
 #define DISPLAY_MESSAGE 1
 #define DISPLAY_ENDING  1
 #define DISPLAY_RESET   1
+#else
+#define DISPLAY_COLOUR  1
+#define DISPLAY_TIME    1
+#define DISPLAY_LEVEL   1
+#define DISPLAY_FUNC    0
+#define DISPLAY_FILE    0
+#define DISPLAY_LINE    0
+#define DISPLAY_BORDER  1
+#define DISPLAY_MESSAGE 1
+#define DISPLAY_ENDING  1
+#define DISPLAY_RESET   1
+#endif
 
 /* Log to screen */
 #define emit_log(colour, level, file, func, line, ...) do {                         \
@@ -92,57 +106,45 @@
 #define SILENT      6
 
 /* DEBUG LOG */
-#define con_debug(...) do {                                                             \
-    if (LOG_LEVEL == DEBUG) {                                                       \
-        emit_log(                                                                   \
-            DEBUG_COLOUR, "[DEBUG]", __FILE__, __func__, __LINE__, __VA_ARGS__      \
-        );                                                                          \
-    }                                                                               \
-} while (0)
+#if LOG_LEVEL == DEBUG 
+#define con_debug(...) emit_log( DEBUG_COLOUR, "[DEBUG]", __FILE__, __func__, __LINE__, __VA_ARGS__ )
+#else
+#define con_debug(...)
+#endif
 
 /* INFO LOG */
-#define con_info(...) do {                                                              \
-    if (LOG_LEVEL <= INFO) {                                                        \
-        emit_log(                                                                   \
-            INFO_COLOUR, "[INFO]", __FILE__, __func__, __LINE__, __VA_ARGS__        \
-        );                                                                          \
-    }                                                                               \
-} while (0)
+#if LOG_LEVEL == DEBUG || LOG_LEVEL == INFO
+#define con_info(...) emit_log( INFO_COLOUR, "[INFO]", __FILE__, __func__, __LINE__, __VA_ARGS__ )
+#else
+#define con_info(...)
+#endif
 
 /* NOTICE LOG */
-#define con_notice(...) do {                                                            \
-    if (LOG_LEVEL <= NOTICE) {                                                      \
-        emit_log(                                                                   \
-            NOTICE_COLOUR, "[NOTICE]", __FILE__, __func__, __LINE__, __VA_ARGS__    \
-        );                                                                          \
-    }                                                                               \
-} while (0)
+#if LOG_LEVEL == DEBUG || LOG_LEVEL == INFO || LOG_LEVEL == NOTICE
+#define con_notice(...) emit_log( NOTICE_COLOUR, "[NOTICE]", __FILE__, __func__, __LINE__, __VA_ARGS__ )
+#else
+#define con_notice(...)
+#endif
 
 /* WARNING LOG */
-#define con_warning(...) do {                                                           \
-    if (LOG_LEVEL <= WARNING) {                                                     \
-        emit_log(                                                                   \
-            WARNING_COLOUR, "[WARNING]", __FILE__, __func__, __LINE__, __VA_ARGS__  \
-        );                                                                          \
-    }                                                                               \
-} while (0)
+#if LOG_LEVEL == DEBUG || LOG_LEVEL == INFO || LOG_LEVEL == NOTICE || LOG_LEVEL == WARNING
+#define con_warning(...) emit_log( WARNING_COLOUR, "[WARNING]", __FILE__, __func__, __LINE__, __VA_ARGS__ )
+#else
+#define con_warning(...)
+#endif
 
 /* ERROR LOG */
-#define con_error(...) do {                                                             \
-    if (LOG_LEVEL <= ERROR) {                                                       \
-        emit_log(                                                                   \
-            ERROR_COLOUR, "[ERROR]", __FILE__, __func__, __LINE__, __VA_ARGS__      \
-        );                                                                          \
-    }                                                                               \
-} while (0)
+#if LOG_LEVEL == DEBUG || LOG_LEVEL == INFO || LOG_LEVEL == NOTICE || LOG_LEVEL == WARNING || LOG_LEVEL == ERROR
+#define con_error(...) emit_log( ERROR_COLOUR, "[ERROR]", __FILE__, __func__, __LINE__, __VA_ARGS__ )
+#else
+#define con_error(...)
+#endif
 
 /* CRITICAL LOG */
-#define con_critical(...) do {                                                          \
-    if (LOG_LEVEL <= CRITICAL) {                                                    \
-        emit_log(                                                                   \
-            CRITICAL_COLOUR, "[CRITICAL]", __FILE__, __func__, __LINE__, __VA_ARGS__\
-        );                                                                          \
-    }                                                                               \
-} while (0)
+#if LOG_LEVEL == DEBUG || LOG_LEVEL == INFO || LOG_LEVEL == NOTICE || LOG_LEVEL == WARNING || LOG_LEVEL == ERROR || LOG_LEVEL == CRITICAL
+#define con_critical(...) emit_log( CRITICAL_COLOUR, "[CRITICAL]", __FILE__, __func__, __LINE__, __VA_ARGS__ )
+#else
+#define con_critical(...)
+#endif
 
 #endif // seethe.h
