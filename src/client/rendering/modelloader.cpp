@@ -1,6 +1,6 @@
 #include "filesystem.hpp"
 
-#include "seethe.h"
+#include "logging.hpp"
 
 #include "modelloader.hpp"
 #include "errormdl.hpp"

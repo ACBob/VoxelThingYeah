@@ -1,6 +1,6 @@
 #include "client.hpp"
 
-#include "seethe.h"
+#include "logging.hpp"
 
 CNetworkClient::CNetworkClient()
 {

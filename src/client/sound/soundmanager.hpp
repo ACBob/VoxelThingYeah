@@ -8,7 +8,7 @@
 #include "world/block.hpp"
 #include "world/world.hpp"
 
-#include "shared/seethe.h"
+#include "shared/logging.hpp"
 
 #ifdef MEEGREEF_ENABLE_OPENAL
 

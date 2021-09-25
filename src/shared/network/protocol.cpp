@@ -2,7 +2,7 @@
 
 #include "network.hpp"
 
-#include "seethe.h"
+#include "logging.hpp"
 
 #ifdef CLIENTEXE
 	#include "cvar_clientside.hpp"

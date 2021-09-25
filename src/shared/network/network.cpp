@@ -1,6 +1,6 @@
 #include "network.hpp"
 
-#include "seethe.h"
+#include "logging.hpp"
 
 namespace network
 {

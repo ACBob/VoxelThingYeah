@@ -3,7 +3,7 @@
 
 #include "cvar_serverside.hpp"
 
-#include "seethe.h"
+#include "logging.hpp"
 
 namespace protocol
 {

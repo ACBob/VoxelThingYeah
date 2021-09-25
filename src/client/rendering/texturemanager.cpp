@@ -9,7 +9,7 @@
 
 #include "filesystem.hpp"
 
-#include "seethe.h"
+#include "logging.hpp"
 
 std::vector<CTexture *> materialSystem::loadedTextures;
 

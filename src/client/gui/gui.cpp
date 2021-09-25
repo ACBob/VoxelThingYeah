@@ -21,7 +21,7 @@
 // I am not supporting weird configurations
 #define TEXTTILES 16
 
-#include "shared/seethe.h"
+#include "shared/logging.hpp"
 
 // TODO: global?
 float fontWidths[( '~' - ' ' )];

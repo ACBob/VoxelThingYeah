@@ -5,7 +5,7 @@
 #include "shared/cvar.hpp"
 #include "shared/filesystem.hpp"
 
-#include "shared/seethe.h"
+#include "shared/logging.hpp"
 
 #include <chrono>
 #include <cstdio>

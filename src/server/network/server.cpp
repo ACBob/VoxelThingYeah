@@ -1,6 +1,6 @@
 #include "server.hpp"
 
-#include "seethe.h"
+#include "logging.hpp"
 
 CNetworkServer::CNetworkServer( int port, int maxClients )
 {

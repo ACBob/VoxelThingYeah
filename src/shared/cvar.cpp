@@ -1,6 +1,6 @@
 #include "cvar.hpp"
 
-#include "seethe.h"
+#include "logging.hpp"
 
 #include <cstring>
 #include <memory>

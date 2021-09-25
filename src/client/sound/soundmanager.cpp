@@ -24,7 +24,7 @@
 
 #include "filesystem.hpp"
 
-#include "shared/seethe.h"
+#include "shared/logging.hpp"
 
 #include "cvar_clientside.hpp"
 

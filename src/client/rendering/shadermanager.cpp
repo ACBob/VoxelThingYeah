@@ -12,7 +12,7 @@
 
 #include "filesystem.hpp"
 
-#include "seethe.h"
+#include "logging.hpp"
 
 std::vector<CShader *> shaderSystem::loadedShaders;
 

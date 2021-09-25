@@ -12,7 +12,7 @@
 
 #include "cvar_serverside.hpp"
 
-#include "shared/seethe.h"
+#include "shared/logging.hpp"
 
 #include "world/world.hpp"
 

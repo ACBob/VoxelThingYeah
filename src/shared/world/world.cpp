@@ -4,7 +4,7 @@
 
 #include "physics.hpp"
 
-#include "shared/seethe.h"
+#include "shared/logging.hpp"
 
 #ifdef SERVEREXE
 	#include "server/cvar_serverside.hpp"

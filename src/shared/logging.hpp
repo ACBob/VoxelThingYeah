@@ -1,5 +1,4 @@
-#ifndef SEETHE_H
-#define SEETHE_H
+#pragma once
 
 #include <stdio.h>
 #include <time.h>
@@ -146,5 +145,3 @@
 #else
 #define con_critical(...)
 #endif
-
-#endif // seethe.h

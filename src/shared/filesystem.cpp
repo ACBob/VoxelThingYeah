@@ -4,7 +4,7 @@
 
 #include "physfs.h"
 
-#include "seethe.h"
+#include "logging.hpp"
 
 #include "types.hpp"
 
