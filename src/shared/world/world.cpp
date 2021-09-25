@@ -244,6 +244,8 @@ void CWorld::UsePortable( PortableChunkRepresentation rep )
 	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
 	{
 		c->m_blocks[j].m_iBlockType = (blocktype_t)rep.m_iBlocks[j];
+		c->m_blocks[j].m_iValueA = rep.m_iVal[j];
+		c->m_blocks[j].m_iValueB = rep.m_iValB[j];
 	}
 
 	c->m_bDirty = true;

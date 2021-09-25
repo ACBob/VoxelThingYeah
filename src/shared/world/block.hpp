@@ -15,6 +15,11 @@ class CBlock
 
 	blocktype_t m_iBlockType = blocktype_t::AIR;
 
+	// Seperated uneccesarily
+	// Exactly sixteen (16) bits for data
+	uint8_t m_iValueA;
+	uint8_t m_iValueB;
+
 #ifdef CLIENTEXE
 	BlockTexture GetSideTexture( Direction side );
 #endif
