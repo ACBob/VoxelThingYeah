@@ -1,6 +1,8 @@
 // Holds fancy block definition stuffy stuff
 // TODO: more OOP way?
 
+#include <types.hpp>
+
 // size of X,Y,Z of blocks
 #define BLOCKUNIT 1.0f
 
@@ -78,7 +80,7 @@ struct BlockFeatures
 	blocktype_t liquidFlow;
 	blocktype_t liquidSource;
 	// How far the liquid should flow
-	int liquidRange;
+	uint8_t liquidRange;
 	// Every THIS tick, flow
 	int liquidSpeed;
 	// Model to use

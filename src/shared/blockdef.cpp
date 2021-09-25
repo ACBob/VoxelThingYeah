@@ -58,6 +58,10 @@ BlockFeatures GetBlockFeatures( blocktype_t blockType )
 	bF.walkable	   = true;
 	bF.floodable   = false;
 	bF.isLiquid	   = false;
+	bF.isLiquidSource = false;
+	bF.liquidFlow = AIR;
+	bF.liquidSource = AIR;
+	bF.liquidRange = 0;
 	bF.liquidSpeed = 0;
 	bF.rule		   = OBSCURERULE_ALWAYS;
 	bF.model	   = BLOCKMODEL_CUBE;
