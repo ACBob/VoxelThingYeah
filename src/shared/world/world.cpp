@@ -225,7 +225,7 @@ void CWorld::WorldTick( int64_t iTick, float delta )
 
 		for (CVector plyrPos : playerPositions)
 		{
-			if ( (plyrPos - chunk->m_vPosition).Magnitude() < 4 )
+			if ( (plyrPos - chunk->m_vPosition).Magnitude() < 7 )
 			{
 				chunk->Update( iTick );
 				break;

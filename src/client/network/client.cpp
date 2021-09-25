@@ -108,7 +108,7 @@ void CNetworkClient::Update()
 	CVector cP = ( m_pLocalPlayer->m_vPosition / CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
 	for ( CChunk *c : m_pLocalWorld->m_chunks )
 	{
-		if ( ( c->m_vPosition - cP ).Magnitude() > 4 )
+		if ( ( c->m_vPosition - cP ).Magnitude() > 5 )
 		{
 			m_pLocalWorld->UnloadChunk( c->m_vPosition );
 		}
