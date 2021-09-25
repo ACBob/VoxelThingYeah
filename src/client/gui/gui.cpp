@@ -21,7 +21,6 @@
 // I am not supporting weird configurations
 #define TEXTTILES 16
 
-#define LOG_LEVEL DEBUG
 #include "shared/seethe.h"
 
 // TODO: global?

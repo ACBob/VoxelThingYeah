@@ -8,7 +8,6 @@
 #include "world/block.hpp"
 #include "world/world.hpp"
 
-#define LOG_LEVEL DEBUG
 #include "shared/seethe.h"
 
 #ifdef MEEGREEF_ENABLE_OPENAL

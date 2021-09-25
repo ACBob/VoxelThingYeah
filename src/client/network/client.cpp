@@ -1,6 +1,5 @@
 #include "client.hpp"
 
-#define LOG_LEVEL DEBUG
 #include "seethe.h"
 
 CNetworkClient::CNetworkClient()

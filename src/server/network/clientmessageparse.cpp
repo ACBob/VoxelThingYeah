@@ -3,7 +3,6 @@
 
 #include "cvar_serverside.hpp"
 
-#define LOG_LEVEL DEBUG
 #include "seethe.h"
 
 namespace protocol

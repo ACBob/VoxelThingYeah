@@ -1,6 +1,5 @@
 #include "filesystem.hpp"
 
-#define LOG_LEVEL DEBUG
 #include "seethe.h"
 
 #include "modelloader.hpp"

@@ -4,7 +4,6 @@
 
 #include "physfs.h"
 
-#define LOG_LEVEL DEBUG
 #include "seethe.h"
 
 #include "types.hpp"

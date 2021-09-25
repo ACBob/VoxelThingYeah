@@ -1,6 +1,5 @@
 #include "server.hpp"
 
-#define LOG_LEVEL DEBUG
 #include "seethe.h"
 
 CNetworkServer::CNetworkServer( int port, int maxClients )

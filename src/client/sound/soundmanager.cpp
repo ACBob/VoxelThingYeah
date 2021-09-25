@@ -24,7 +24,6 @@
 
 #include "filesystem.hpp"
 
-#define LOG_LEVEL DEBUG
 #include "shared/seethe.h"
 
 #include "cvar_clientside.hpp"

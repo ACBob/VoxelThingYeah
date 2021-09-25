@@ -9,7 +9,6 @@
 
 #include "filesystem.hpp"
 
-#define LOG_LEVEL DEBUG
 #include "seethe.h"
 
 std::vector<CTexture *> materialSystem::loadedTextures;

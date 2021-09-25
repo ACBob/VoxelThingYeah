@@ -5,7 +5,6 @@
 #include "shared/cvar.hpp"
 #include "shared/filesystem.hpp"
 
-#define LOG_LEVEL DEBUG
 #include "shared/seethe.h"
 
 #include <chrono>

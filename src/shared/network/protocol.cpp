@@ -2,7 +2,6 @@
 
 #include "network.hpp"
 
-#define LOG_LEVEL DEBUG
 #include "seethe.h"
 
 #ifdef CLIENTEXE

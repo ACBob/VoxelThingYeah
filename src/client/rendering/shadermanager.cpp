@@ -12,7 +12,6 @@
 
 #include "filesystem.hpp"
 
-#define LOG_LEVEL DEBUG
 #include "seethe.h"
 
 std::vector<CShader *> shaderSystem::loadedShaders;

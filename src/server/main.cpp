@@ -12,7 +12,6 @@
 
 #include "cvar_serverside.hpp"
 
-#define LOG_LEVEL DEBUG
 #include "shared/seethe.h"
 
 #include "world/world.hpp"
