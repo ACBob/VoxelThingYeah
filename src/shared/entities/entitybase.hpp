@@ -76,6 +76,9 @@ class CEntityBase
 	bool m_bApplyGravity   = true;
 	bool m_bFootstepSounds = true;
 
+	// TRUE if it's a player class
+	virtual bool IsPlayer() { return false; };
+
 	int64_t m_iFootstepTick = 0;
 
 	CBlock *m_pLastBlockFloor = nullptr;

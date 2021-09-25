@@ -79,8 +79,8 @@ class CChunk
 
 	// Regular Dirt
 	bool m_bDirty = false;
-	// Wow we need a clean
-	bool m_bReallyDirty = false;
+
+	int64_t m_iLastTick = 0;
 };
 
 bool ValidChunkPosition( CVector pos );

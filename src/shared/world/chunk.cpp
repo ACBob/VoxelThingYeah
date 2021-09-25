@@ -17,7 +17,6 @@ CChunk::CChunk()
 	}
 
 	m_bDirty = true;
-	m_bReallyDirty = true;
 }
 CChunk::~CChunk() {}
 #elif SERVEREXE
@@ -32,7 +31,6 @@ CChunk::CChunk()
 	}
 
 	m_bDirty = true;
-	m_bReallyDirty = true;
 }
 CChunk::~CChunk() {}
 #endif
@@ -56,9 +54,13 @@ CVector CChunk::PosToWorld( CVector pos ) { return GetPosInWorld() + pos; }
 
 void CChunk::Update( int64_t iTick )
 {
-	// We updated so we're not dirty
-	m_bDirty	   = false;
-	m_bReallyDirty = false;
+	// If true we're dirty next tick
+	bool bDirtyAgain = false;
+
+	if (iTick == m_iLastTick)
+		return;
+	
+	m_iLastTick = iTick;
 
 #ifdef SERVEREXE
 	// Liquid handling is done in two passes
@@ -137,8 +139,7 @@ void CChunk::Update( int64_t iTick )
 				{
 					b->m_iBlockType = blockFeatures.liquidFlow;
 					b->m_iValueA = blockHandling->m_iValueA - 1;
-					m_bDirty		= true; // Something within us changed, we should update next tick too
-					m_bReallyDirty	= true; // We also want to immediately send us back
+					bDirtyAgain		= true; // Something within us changed, we should update next tick too
 				}
 			}
 		}
@@ -160,16 +161,21 @@ void CChunk::Update( int64_t iTick )
 #ifdef CLIENTEXE
 	// Chunk update makes neighbours and ourself update our model
 	// Hahahahahahah slow
-	RebuildMdl();
-	for ( int i = 0; i < 6; i++ )
+	if (m_bDirty) // You're a dirty little purple chunk
 	{
-		CChunk *neighbour = Neighbour( (Direction)i );
-		if ( neighbour != nullptr )
-			neighbour->RebuildMdl();
+		RebuildMdl();
+		for ( int i = 0; i < 6; i++ )
+		{
+			CChunk *neighbour = Neighbour( (Direction)i );
+			if ( neighbour != nullptr )
+				neighbour->RebuildMdl();
+		}
+		// TODO: Lighting
 	}
-
-	// TODO: Lighting
 #endif
+
+	// We updated so we're not dirty
+	m_bDirty	   = bDirtyAgain;
 }
 
 CBlock *CChunk::GetBlockAtLocal( CVector pos )

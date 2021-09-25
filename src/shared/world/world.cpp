@@ -187,6 +187,8 @@ bool CWorld::TestAABBCollision( CBoundingBox col )
 
 void CWorld::WorldTick( int64_t iTick, float delta )
 {
+	std::vector<CVector> playerPositions;
+
 	for ( int i = 0; i < m_ents.size(); i++ )
 	{
 		void *ent = m_ents[i];
@@ -200,11 +202,13 @@ void CWorld::WorldTick( int64_t iTick, float delta )
 			continue;
 		}
 		reinterpret_cast<CEntityBase *>( ent )->Tick( iTick );
-#ifdef SERVEREXE
 		reinterpret_cast<CEntityBase *>( ent )->PhysicsTick( delta, this );
-#else
-		reinterpret_cast<CEntityBase *>( ent )->PhysicsTick( delta, this );
-#endif
+
+		if (reinterpret_cast<CEntityBase *>( ent )->IsPlayer())
+			playerPositions.push_back(
+				(reinterpret_cast<CEntityBase *>( ent )->m_vPosition / CVector(CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z)).Floor()
+			);
+			
 	}
 
 	if ( iTick == m_iLastTick )
@@ -212,8 +216,21 @@ void CWorld::WorldTick( int64_t iTick, float delta )
 
 	for ( CChunk *chunk : m_chunks )
 	{
-		if ( chunk->m_bDirty || chunk->m_bReallyDirty )
+		if ( chunk->m_bDirty )
+		{
 			chunk->Update( iTick );
+			continue;
+		}
+
+
+		for (CVector plyrPos : playerPositions)
+		{
+			if ( (plyrPos - chunk->m_vPosition).Magnitude() < 4 )
+			{
+				chunk->Update( iTick );
+				break;
+			}
+		}
 	}
 
 #ifdef SERVEREXE

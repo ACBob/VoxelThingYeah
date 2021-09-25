@@ -115,13 +115,10 @@ void CNetworkServer::Update()
 	// Check for outdated chunks and queue them
 	for ( CChunk *c : m_world.m_chunks )
 	{
-		if ( c->m_bReallyDirty )
+		for ( CNetworkPlayer *cl : m_players )
 		{
-			for ( CNetworkPlayer *cl : m_players )
-			{
+			if (c->m_bDirty)
 				cl->m_pChunkQueue.push_back( c->m_vPosition );
-			}
-			c->m_bReallyDirty = false;
 		}
 	}
 

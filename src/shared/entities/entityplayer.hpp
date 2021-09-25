@@ -31,6 +31,8 @@ class CEntityPlayer : public CEntityBase
 
 	void PhysicsTick( float delta, CWorld *world );
 
+	bool IsPlayer() { return true; };
+
 #ifdef CLIENTEXE
 	CInputManager *m_pInputMan = nullptr;
 	CVoxRaycast m_hand;
