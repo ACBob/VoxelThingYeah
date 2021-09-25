@@ -4,6 +4,7 @@
 #include "seethe.h"
 
 #include "modelloader.hpp"
+#include "errormdl.hpp"
 
 #include <iostream>
 
@@ -18,7 +19,12 @@ void BOBJLoadModel( CModel *m, const char *fp )
 	char *file = (char *)fileSystem::LoadFile( fp, l, succeed );
 
 	if ( !succeed )
-		return;
+	{
+		delete file;
+
+		file = new char[strlen(ERRORMDLOBJ)];
+		strcpy(file, ERRORMDLOBJ);
+	}
 
 	char *token;
 	char *saveptr;
