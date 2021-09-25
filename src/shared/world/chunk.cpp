@@ -17,6 +17,7 @@ CChunk::CChunk()
 	}
 
 	m_bDirty = true;
+	m_bReallyDirty = true;
 }
 CChunk::~CChunk() {}
 #elif SERVEREXE
@@ -31,6 +32,7 @@ CChunk::CChunk()
 	}
 
 	m_bDirty = true;
+	m_bReallyDirty = true;
 }
 CChunk::~CChunk() {}
 #endif
