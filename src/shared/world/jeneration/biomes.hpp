@@ -13,7 +13,7 @@ class CBiome
 	blocktype_t m_iBlockSubSurface = AIR; // DIRT
 	blocktype_t m_iBlockRock	   = AIR; // STONE
 	blocktype_t m_iBlockDust	   = AIR; // E.G SNOW
-	blocktype_t m_iBlockWaterSurf  = WATER; // E.G ICE
+	blocktype_t m_iBlockWaterSurf  = WATERSRC; // E.G ICE
 
 	// 0 To 2, controls generation
 	float m_fMinTemperature = 0.0f;

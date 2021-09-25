@@ -186,7 +186,7 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 
 								std::vector<CModel::Vertex> g = sampleCubeFace( Direction( i ), block, x, y, z );
 
-								if ( block.m_iBlockType == WATER )
+								if ( block.m_iBlockType == WATER || block.m_iBlockType == WATERSRC )
 								{
 									std::copy( g.begin(), g.end(), std::back_inserter( wmdl.m_vertices ) );
 

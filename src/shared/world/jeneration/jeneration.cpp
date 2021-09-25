@@ -82,7 +82,7 @@ void COverworldJeneration::GenBase( CChunk *c )
 		float percentToTopSurface = 1.0f - ( WorldPosition.y / 32.0f );
 		noiseData3D *= percentToTopSurface;
 
-		c->m_blocks[i].m_iBlockType = noiseData3D > 0.7 ? STONE : ( WorldPosition.y > m_iSeaLevel ? AIR : WATER );
+		c->m_blocks[i].m_iBlockType = noiseData3D > 0.7 ? STONE : ( WorldPosition.y > m_iSeaLevel ? AIR : WATERSRC );
 	}
 }
 
