@@ -139,7 +139,7 @@ void CEntityPlayer::Tick( int64_t iTick )
 		else if ( m_pInputMan->m_bInputState[INKEY_RIGHT] )
 			vMoveDir = vMoveDir + ( right );
 
-		if ( m_bFly )
+		if ( m_bFly || m_bInWater )
 		{
 			if ( m_pInputMan->m_bInputState[INKEY_UP] )
 				vMoveDir = vMoveDir + ( VEC_UP );
@@ -155,13 +155,15 @@ void CEntityPlayer::Tick( int64_t iTick )
 		}
 		if ( m_bFly )
 			vMoveDir = vMoveDir * 6.0f * 0.99f;
+		else if ( m_bInWater )
+			vMoveDir = vMoveDir * 2.3f * 1.01f;
 		else
 			vMoveDir = vMoveDir * 4.3f * 0.98f;
 		if ( !m_bFly )
 			vMoveDir.y += m_vVelocity.y;
 	}
 
-	float f = m_bOnFloor ? 0.125f : m_bFly ? 0.1f : 0.076f;
+	float f = m_bInWater ? 0.09f : m_bOnFloor ? 0.125f : m_bFly ? 0.1f : 0.076f;
 
 	m_vVelocity = m_vVelocity.Lerp( vMoveDir, f );
 

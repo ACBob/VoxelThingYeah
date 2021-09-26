@@ -75,6 +75,7 @@ class CEntityBase
 	bool m_bOnFloor		   = false;
 	bool m_bApplyGravity   = true;
 	bool m_bFootstepSounds = true;
+	bool m_bInWater = false;
 
 	// TRUE if it's a player class
 	virtual bool IsPlayer() { return false; };
