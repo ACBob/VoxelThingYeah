@@ -194,6 +194,12 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 
 									wmdl.m_faces.push_back( { nVertices - 4, nVertices - 3, nVertices - 2 } );
 									wmdl.m_faces.push_back( { nVertices - 4, nVertices - 2, nVertices - 1 } );
+
+									if (i == UP)
+									{
+										wmdl.m_faces.push_back( { nVertices - 2, nVertices - 3, nVertices - 4 } );
+										wmdl.m_faces.push_back( { nVertices - 1, nVertices - 2, nVertices - 4 } );
+									}
 								}
 								else
 								{
