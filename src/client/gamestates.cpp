@@ -135,16 +135,6 @@ void CStatePlay::Update()
 		// -----------------------
 		// GUI
 		// -----------------------
-		if (m_pLocalPlayer->m_pSelectedItem != nullptr)
-		{
-			BlockTexture bTex = GetDefaultBlockTextureSide( reinterpret_cast<CBlockItem*>(m_pLocalPlayer->m_pSelectedItem)->m_iBlockType, Direction::NORTH );
-			pStateMan->m_pGui->ImageAtlas( m_pTerrainPNG,
-										{ (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey },
-										16.0f, CVector( -1, -1 ), CVector( 4, 4 ), CVector( 1, 1 ) );
-			snprintf( guiBuf, 100, "%d", m_pLocalPlayer->m_pSelectedItem->GetCount() );
-			pStateMan->m_pGui->Label(guiBuf, CVector( -1, -2 ));
-		}
-
 		pStateMan->m_pGui->Label( "Meegreef ALPHA", CVector( 0, -1 ) );
 
 		int hours	= m_pLocalWorld->m_iTimeOfDay / 1000;
@@ -154,7 +144,24 @@ void CStatePlay::Update()
 								  CGui::TEXTALIGN_CENTER );
 
 		pStateMan->m_pGui->Image(m_pHotbarTex, CVector(pStateMan->m_pGui->m_vScreenCentre.x, 0), CVector(18.5, 2.5), CVector(0.5, 0));
-		float p = 8.0f * (m_pLocalPlayer->m_iSelectedItemIDX / 4.0f -1.0f);
+		float p;
+		
+		for (int i = 0; i < 8; i++)
+		{
+			p = 8.0f * (i / 4.0f -1.0f);
+
+			if (m_pLocalPlayer->m_inventory.Slot(i) == nullptr || m_pLocalPlayer->m_inventory.Slot(i)->GetCount() == 0)
+				continue;
+				
+			BlockTexture bTex = GetDefaultBlockTextureSide( reinterpret_cast<CBlockItem*>(m_pLocalPlayer->m_inventory.Slot(i))->m_iBlockType, Direction::NORTH );
+			pStateMan->m_pGui->ImageAtlas( m_pTerrainPNG,
+										{ (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey },
+										16.0f, CVector(p + pStateMan->m_pGui->m_vScreenCentre.x, 1.25), CVector( 2, 2 ), CVector( 0.5, 0.5 ) );
+			
+			snprintf( guiBuf, 100, "%d", m_pLocalPlayer->m_inventory.Slot(i)->GetCount() );
+			pStateMan->m_pGui->Label(guiBuf, CVector(p + pStateMan->m_pGui->m_vScreenCentre.x, 0));
+		}
+		p = 8.0f * (m_pLocalPlayer->m_iSelectedItemIDX / 4.0f -1.0f);
 		pStateMan->m_pGui->Image(m_pHotbarSelectTex, CVector(p + pStateMan->m_pGui->m_vScreenCentre.x, 1.25), CVector(3,3), CVector(0.5, 0.5));
 
 		if ( m_pLocalPlayer->m_bInInventory )
