@@ -2,6 +2,8 @@
 
 #define ITEMSTACK_MAX 64
 
+#pragma once
+
 class CItem
 {
 	public:

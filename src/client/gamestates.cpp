@@ -133,10 +133,15 @@ void CStatePlay::Update()
 		// -----------------------
 		// GUI
 		// -----------------------
-		BlockTexture bTex = GetDefaultBlockTextureSide( m_pLocalPlayer->m_iSelectedBlockType, Direction::NORTH );
-		pStateMan->m_pGui->ImageAtlas( m_pTerrainPNG,
-									   { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey },
-									   16.0f, CVector( -1, -1 ), CVector( 4, 4 ), CVector( 1, 1 ) );
+		if (m_pLocalPlayer->m_pSelectedItem != nullptr)
+		{
+			BlockTexture bTex = GetDefaultBlockTextureSide( reinterpret_cast<CBlockItem*>(m_pLocalPlayer->m_pSelectedItem)->m_iBlockType, Direction::NORTH );
+			pStateMan->m_pGui->ImageAtlas( m_pTerrainPNG,
+										{ (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey },
+										16.0f, CVector( -1, -1 ), CVector( 4, 4 ), CVector( 1, 1 ) );
+			snprintf( guiBuf, 100, "%d", m_pLocalPlayer->m_pSelectedItem->GetCount() );
+			pStateMan->m_pGui->Label(guiBuf, CVector( -1, -2 ));
+		}
 
 		pStateMan->m_pGui->Label( "Meegreef ALPHA", CVector( 0, -1 ) );
 
@@ -153,7 +158,7 @@ void CStatePlay::Update()
 
 			CVector p  = pStateMan->m_pGui->m_vScreenCentre + CVector( -8, 5.5 );
 			CVector op = p;
-			for ( int i = blocktype_t::STONE; i < blocktype_t::ICE; i++ )
+			for ( int i = blocktype_t::STONE; i <= blocktype_t::ICE; i++ )
 			{
 				snprintf( guiBuf, 100, "%d", i );
 				BlockTexture bTex = GetDefaultBlockTextureSide( (blocktype_t)i, Direction::NORTH );
@@ -161,7 +166,7 @@ void CStatePlay::Update()
 						 'b' + i, m_pTerrainPNG,
 						 { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey }, 16.0f, p,
 						 CVector( 2, 2 ) ) )
-					m_pLocalPlayer->m_iSelectedBlockType = (blocktype_t)i;
+					NULL; // do nothing
 				p.x += 2;
 				if ( i % 8 == 0 )
 				{

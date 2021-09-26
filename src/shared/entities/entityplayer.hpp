@@ -40,13 +40,14 @@ class CEntityPlayer : public CEntityBase
 	CVoxRaycast m_hand;
 	CPointedThing m_pointed;
 
-	// Block type we're gonna place
-	blocktype_t m_iSelectedBlockType = blocktype_t::DIRT;
+	int m_iSelectedItemIDX = 0;
 
 	CEntityCamera m_camera;
 
 	void *m_pClient = nullptr;
 #endif
+
+	CItem *m_pSelectedItem = nullptr;
 
 	bool m_bFly			= true;
 	bool m_bInInventory = false;

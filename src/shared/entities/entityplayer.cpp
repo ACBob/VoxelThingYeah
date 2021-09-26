@@ -7,6 +7,8 @@
 	#include "sound/soundmanager.hpp"
 #endif
 
+#include "inventory/blockitem.hpp"
+
 CEntityPlayer::CEntityPlayer() :
 	m_inventory(36)
 {
@@ -76,10 +78,10 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 		{
 			CBlock *b = clientSideWorld->BlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal );
 			BlockFeatures bF = GetBlockFeatures( m_pointed.m_pBlock->m_iBlockType );
-			if ( b != nullptr && bF.selectable )
+			if ( m_pSelectedItem != nullptr && m_pSelectedItem->GetCount() > 0 && b != nullptr && bF.selectable )
 			{
-				blocktype_t oldType = b->m_iBlockType;
-				b->m_iBlockType		= m_iSelectedBlockType;
+				blocktype_t oldType = b->m_iBlockType; // TODO: We're assuming it's a block item
+				b->m_iBlockType		= reinterpret_cast<CBlockItem*>(m_pSelectedItem)->m_iBlockType;
 				if ( !clientSideWorld->TestAABBCollision( m_collisionBox ) )
 				{
 					b->Update();
@@ -96,20 +98,16 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 
 		if ( m_pInputMan->m_iMouseState & IN_WHEEL_UP )
 		{
-			m_iSelectedBlockType = blocktype_t( m_iSelectedBlockType + 1 );
-			if ( m_iSelectedBlockType == blocktype_t::BEDROCK )
-				m_iSelectedBlockType = blocktype_t( m_iSelectedBlockType + 1 );
-			if ( m_iSelectedBlockType > blocktype_t::MOSSCBBLE )
-				m_iSelectedBlockType = blocktype_t::STONE;
+			m_iSelectedItemIDX --;
+			m_iSelectedItemIDX = m_iSelectedItemIDX > 0 ? m_iSelectedItemIDX : 9;
 		}
 		else if ( m_pInputMan->m_iMouseState & IN_WHEEL_DOWN )
 		{
-			m_iSelectedBlockType = blocktype_t( m_iSelectedBlockType - 1 );
-			if ( m_iSelectedBlockType == blocktype_t::BEDROCK )
-				m_iSelectedBlockType = blocktype_t( m_iSelectedBlockType - 1 );
-			if ( m_iSelectedBlockType <= blocktype_t::AIR )
-				m_iSelectedBlockType = blocktype_t::MOSSCBBLE;
+			m_iSelectedItemIDX ++;
+			m_iSelectedItemIDX = m_iSelectedItemIDX < 10 ? m_iSelectedItemIDX : 0;
 		}
+
+		m_pSelectedItem = m_inventory.Slot(m_iSelectedItemIDX);
 	}
 }
 #endif

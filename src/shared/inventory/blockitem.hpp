@@ -3,6 +3,8 @@
 
 #include "../blockdef.hpp"
 
+#pragma once
+
 class CBlockItem : public CItem
 {
 	DeclBaseClass( CItem );
