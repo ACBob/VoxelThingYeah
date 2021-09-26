@@ -114,7 +114,7 @@ class CGui
 	int GetTextLength( const char *text );
 
 	// Elements
-	int Button( int iId, CVector vPosition, CVector vSize, CVector vOrigin = CVector(0,0), CTexture *tex = nullptr );
+	int Button( int iId, CVector vPosition, CVector vSize, CVector vOrigin = CVector(0,0), CTexture *tex = nullptr, bool hide = false );
 	int AtlasButton( int id, CTexture *tex, Atlas atlas, float atlasDivisions, CVector pos, CVector size, CVector vOrigin = CVector(0,0) );
 	int LabelButton( int id, const char *msg, CVector pos, CVector vOrigin = CVector( 0, 0 ),
 					 CVector padding = CVector( 2, 1, 0 ) );

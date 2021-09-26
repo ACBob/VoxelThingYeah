@@ -245,7 +245,7 @@ CVector CGui::GetInScreen( CVector pos )
 	return pos;
 }
 
-int CGui::Button( int id, CVector pos, CVector size, CVector origin, CTexture *tex )
+int CGui::Button( int id, CVector pos, CVector size, CVector origin, CTexture *tex, bool hide )
 {
 	pos	 = GetInScreen( pos );
 	size = size * GUIUNIT;
@@ -279,28 +279,31 @@ int CGui::Button( int id, CVector pos, CVector size, CVector origin, CTexture *t
 	CVector p = pos / GUIUNIT;
 	CVector s = size / GUIUNIT;
 
-	// Corners of the 9rect
-	ImageAtlas( tex, {0,0, 1,1}, 6, p + CVector(0, s.y - 0.5), CVector(0.5, 0.5), CVector(0,0), color);
-	ImageAtlas( tex, {5,0, 1,1}, 6, p + CVector(s.x, s.y - 0.5), CVector(0.5, 0.5), CVector(0,0), color);
-	ImageAtlas( tex, {0,5, 1,1}, 6, p, CVector(0.5, 0.5), CVector(0,0), color);
-	ImageAtlas( tex, {5,5, 1,1}, 6, p + CVector(s.x, 0), CVector(0.5, 0.5), CVector(0,0), color);
+	if (!hide)
+	{
+		// Corners of the 9rect
+		ImageAtlas( tex, {0,0, 1,1}, 6, p + CVector(0, s.y - 0.5), CVector(0.5, 0.5), CVector(0,0), color);
+		ImageAtlas( tex, {5,0, 1,1}, 6, p + CVector(s.x, s.y - 0.5), CVector(0.5, 0.5), CVector(0,0), color);
+		ImageAtlas( tex, {0,5, 1,1}, 6, p, CVector(0.5, 0.5), CVector(0,0), color);
+		ImageAtlas( tex, {5,5, 1,1}, 6, p + CVector(s.x, 0), CVector(0.5, 0.5), CVector(0,0), color);
 
-	// Edges
-	ImageAtlas( tex, {1,0, 4,1}, 6, p + CVector(0.5, s.y - 0.5), CVector(s.x - 0.5, 0.5), CVector(0,0), color);
-	ImageAtlas( tex, {1,5, 4,1}, 6, p + CVector(0.5, 0), CVector(s.x - 0.5, 0.5), CVector(0,0), color);
+		// Edges
+		ImageAtlas( tex, {1,0, 4,1}, 6, p + CVector(0.5, s.y - 0.5), CVector(s.x - 0.5, 0.5), CVector(0,0), color);
+		ImageAtlas( tex, {1,5, 4,1}, 6, p + CVector(0.5, 0), CVector(s.x - 0.5, 0.5), CVector(0,0), color);
 
-	ImageAtlas( tex, {0,1, 1,4}, 6, p + CVector(0, 0.5), CVector(0.5, s.y - 1), CVector(0,0), color);
-	ImageAtlas( tex, {5,1, 1,4}, 6, p + CVector(s.x, 0.5), CVector(0.5, s.y - 1), CVector(0,0), color);
+		ImageAtlas( tex, {0,1, 1,4}, 6, p + CVector(0, 0.5), CVector(0.5, s.y - 1), CVector(0,0), color);
+		ImageAtlas( tex, {5,1, 1,4}, 6, p + CVector(s.x, 0.5), CVector(0.5, s.y - 1), CVector(0,0), color);
 
-	// Middle
-	ImageAtlas( tex, {1,1, 4,4}, 6, p + CVector(0.5, 0.5), CVector(s.x - 0.5, s.y - 1), CVector( 0, 0 ), color );
+		// Middle
+		ImageAtlas( tex, {1,1, 4,4}, 6, p + CVector(0.5, 0.5), CVector(s.x - 0.5, s.y - 1), CVector( 0, 0 ), color );
+	}
 
 	return returnCode;
 }
 
 int CGui::AtlasButton( int id, CTexture *tex, Atlas atlas, float atlasDivisions, CVector pos, CVector size, CVector origin )
 {
-	int b = Button( id, pos, size, origin );
+	int b = Button( id, pos, size, origin, nullptr, true );
 	ImageAtlas( tex, atlas, atlasDivisions, pos, size, origin );
 	return b;
 }
