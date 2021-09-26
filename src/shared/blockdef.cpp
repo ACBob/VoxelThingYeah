@@ -77,6 +77,7 @@ BlockFeatures GetBlockFeatures( blocktype_t blockType )
 
 		case LEAVES:
 		case GLASS:
+		case ICE:
 			bF.rule	 = blockType == LEAVES ? OBSCURERULE_NEVER : OBSCURERULE_SIMILAR;
 			bF.solid = false;
 			break;
