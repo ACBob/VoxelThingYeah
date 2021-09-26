@@ -22,8 +22,38 @@ CGameWindow::CGameWindow( const char *title, CVector size, bool resizeable )
 	}
 
 	m_glctx = SDL_GL_CreateContext( m_pInternalWindow.get() );
+
+	// For any SDL stuff we render
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 }
 CGameWindow::~CGameWindow() {}
+
+void CGameWindow::SetIcon(const char* texName)
+{
+	if (texName != nullptr)
+	{
+		m_pIcon = materialSystem::LoadTexture(texName);
+
+		SDL_Surface *ico = SDL_CreateRGBSurface(0, m_pIcon->m_iWidth, m_pIcon->m_iHeight, 32, 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff);
+
+		for (int y = 0; y < m_pIcon->m_iHeight; y ++)
+		{
+			for (int x = 0; x < m_pIcon->m_iWidth; x ++)
+			{
+				uint32_t r = m_pIcon->m_imageData[4 * y * m_pIcon->m_iWidth + 4 * x + 0];
+				uint32_t g = m_pIcon->m_imageData[4 * y * m_pIcon->m_iWidth + 4 * x + 1];
+				uint32_t b = m_pIcon->m_imageData[4 * y * m_pIcon->m_iWidth + 4 * x + 2];
+				uint32_t a = m_pIcon->m_imageData[4 * y * m_pIcon->m_iWidth + 4 * x + 3];
+
+				uint32_t* bufp;
+				bufp = (uint32_t *)ico->pixels + (y * ico->pitch / 4) + x;
+				*bufp = 16777216 * r + 65536 * g + 256 * b + a;
+			}
+		}
+
+		SDL_SetWindowIcon(m_pInternalWindow.get(), ico);
+	}
+}
 
 void CGameWindow::SwapBuffers() { SDL_GL_SwapWindow( m_pInternalWindow.get() ); }
 

@@ -9,12 +9,19 @@
 
 #include <SDL.h>
 
+#include "rendering/texturemanager.hpp"
+
 class CGameWindow : public CBobWindow
 {
+	private:
+		CTexture *m_pIcon;
+
   public:
 	CGameWindow( const char *title = "GameWindow", CVector size = CVector( 800, 600 ),
 				 bool resizeable = false ); // SDL_CreateWindow
 	~CGameWindow();							// SDL_DestroyWindow
+
+	void SetIcon(const char *texName);
 
 	// SDL_HideWindow / SDL_ShowWindow
 	bool IsVisible();		   // getter(?)

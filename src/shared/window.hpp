@@ -7,6 +7,8 @@ class CBobWindow
 	// BobWindow(const char *title = "BobWindow", Vector size = Vector(800,600)); // SDL_CreateWindow
 	// ~BobWindow(); // SDL_DestroyWindow
 
+	virtual void SetIcon(const char *texName) = 0;
+
 	// SDL_HideWindow / SDL_ShowWindow
 	virtual bool IsVisible()		  = 0; // getter(?)
 	virtual void SetVisible( bool v ) = 0; // setter(?)

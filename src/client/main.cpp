@@ -122,6 +122,8 @@ int main( int argc, char *args[] )
 	soundSystem::Init();
 	atexit( soundSystem::UnInit );
 
+	window.SetIcon("logo1664.png");
+
 	con_info( "Init ParticleSystem..." );
 	particleSystem::Init();
 	atexit( particleSystem::UnInit );
