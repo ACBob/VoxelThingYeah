@@ -276,7 +276,24 @@ int CGui::Button( int id, CVector pos, CVector size, CVector origin, CTexture *t
 		color	   = Colour( 0.25, 0.25, 0.25 );
 	}
 
-	Image( tex, pos / GUIUNIT, size / GUIUNIT, CVector( 0, 0 ), color );
+	CVector p = pos / GUIUNIT;
+	CVector s = size / GUIUNIT;
+
+	// Corners of the 9rect
+	ImageAtlas( tex, {0,0, 1,1}, 6, p + CVector(0, s.y - 0.5), CVector(0.5, 0.5), CVector(0,0), color);
+	ImageAtlas( tex, {5,0, 1,1}, 6, p + CVector(s.x, s.y - 0.5), CVector(0.5, 0.5), CVector(0,0), color);
+	ImageAtlas( tex, {0,5, 1,1}, 6, p, CVector(0.5, 0.5), CVector(0,0), color);
+	ImageAtlas( tex, {5,5, 1,1}, 6, p + CVector(s.x, 0), CVector(0.5, 0.5), CVector(0,0), color);
+
+	// Edges
+	ImageAtlas( tex, {1,0, 4,1}, 6, p + CVector(0.5, s.y - 0.5), CVector(s.x - 0.5, 0.5), CVector(0,0), color);
+	ImageAtlas( tex, {1,5, 4,1}, 6, p + CVector(0.5, 0), CVector(s.x - 0.5, 0.5), CVector(0,0), color);
+
+	ImageAtlas( tex, {0,1, 1,4}, 6, p + CVector(0, 0.5), CVector(0.5, s.y - 1), CVector(0,0), color);
+	ImageAtlas( tex, {5,1, 1,4}, 6, p + CVector(s.x, 0.5), CVector(0.5, s.y - 1), CVector(0,0), color);
+
+	// Middle
+	ImageAtlas( tex, {1,1, 4,4}, 6, p + CVector(0.5, 0.5), CVector(s.x - 0.5, s.y - 1), CVector( 0, 0 ), color );
 
 	return returnCode;
 }
@@ -349,7 +366,7 @@ void CGui::Image( CTexture *tex, CVector pos, CVector size, CVector origin, Colo
 	}
 }
 
-void CGui::ImageAtlas( CTexture *tex, Atlas atlas, float atlasDivisions, CVector pos, CVector size, CVector origin )
+void CGui::ImageAtlas( CTexture *tex, Atlas atlas, float atlasDivisions, CVector pos, CVector size, CVector origin, CVector tint )
 {
 	pos	 = GetInScreen( pos );
 	size = size * GUIUNIT;
@@ -357,7 +374,7 @@ void CGui::ImageAtlas( CTexture *tex, Atlas atlas, float atlasDivisions, CVector
 	{
 		CGui::_Image img;
 		img.m_vertices = GetQuad(
-			pos - ( size * origin ), size, Colour( 1, 1, 1 ), { atlas.x / atlasDivisions, atlas.y / atlasDivisions },
+			pos - ( size * origin ), size, tint, { atlas.x / atlasDivisions, atlas.y / atlasDivisions },
 			{ ( atlas.x + atlas.sizex ) / atlasDivisions, ( atlas.y + atlas.sizey ) / atlasDivisions } );
 		img.m_pTex = tex;
 		m_images.push_back( img );
