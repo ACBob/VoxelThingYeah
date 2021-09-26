@@ -30,6 +30,8 @@ void CStatePlay::Enter()
 	m_pStellarModel->SetTexture( materialSystem::LoadTexture( "sun.png" ) );
 
 	m_pTerrainPNG = materialSystem::LoadTexture( "terrain.png" );
+	m_pHotbarTex = materialSystem::LoadTexture( "hotbar.png" );
+	m_pHotbarSelectTex = materialSystem::LoadTexture( "hotbar-selected.png" );
 
 	m_pLocalPlayer = new CEntityPlayer();
 	m_pLocalWorld  = new CWorld( m_pDiffuseShader, m_pDiffuseShader, m_pWaterShader, m_pTerrainPNG );
@@ -150,6 +152,10 @@ void CStatePlay::Update()
 		snprintf( guiBuf, 100, "%02i:%02i", hours, minutes );
 		pStateMan->m_pGui->Label( guiBuf, CVector( pStateMan->m_pGui->m_vScreenCentre.x, -1 ), Color( 1, 1, 1 ),
 								  CGui::TEXTALIGN_CENTER );
+
+		pStateMan->m_pGui->Image(m_pHotbarTex, CVector(pStateMan->m_pGui->m_vScreenCentre.x, 0), CVector(18.5, 2.5), CVector(0.5, 0));
+		float p = 8.0f * (m_pLocalPlayer->m_iSelectedItemIDX / 4.0f -1.0f);
+		pStateMan->m_pGui->Image(m_pHotbarSelectTex, CVector(p + pStateMan->m_pGui->m_vScreenCentre.x, 1.25), CVector(3,3), CVector(0.5, 0.5));
 
 		if ( m_pLocalPlayer->m_bInInventory )
 		{

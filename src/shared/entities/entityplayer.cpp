@@ -100,12 +100,12 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 		if ( m_pInputMan->m_iMouseState & IN_WHEEL_UP )
 		{
 			m_iSelectedItemIDX --;
-			m_iSelectedItemIDX = m_iSelectedItemIDX > 0 ? m_iSelectedItemIDX : 9;
+			m_iSelectedItemIDX = m_iSelectedItemIDX >= 0 ? m_iSelectedItemIDX : 8;
 		}
 		else if ( m_pInputMan->m_iMouseState & IN_WHEEL_DOWN )
 		{
 			m_iSelectedItemIDX ++;
-			m_iSelectedItemIDX = m_iSelectedItemIDX < 10 ? m_iSelectedItemIDX : 0;
+			m_iSelectedItemIDX = m_iSelectedItemIDX < 9 ? m_iSelectedItemIDX : 0;
 		}
 
 		m_pSelectedItem = m_inventory.Slot(m_iSelectedItemIDX);

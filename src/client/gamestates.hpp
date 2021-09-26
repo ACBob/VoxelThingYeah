@@ -45,6 +45,8 @@ class CStatePlay : public CState
 	CModel *m_pStellarModel;
 
 	CTexture *m_pTerrainPNG;
+	CTexture *m_pHotbarTex;
+	CTexture *m_pHotbarSelectTex;
 
 	bool m_bInPause = false;
 
