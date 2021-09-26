@@ -167,18 +167,24 @@ void CStatePlay::Update()
 		if ( m_pLocalPlayer->m_bInInventory )
 		{
 			pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pInventoryTex, pStateMan->m_pGui->m_vScreenCentre,
-									  CVector( 20, 20 ), CVector( 0.5, 0.5 ) );
+									  CVector( 22, 22 ), CVector( 0.5, 0.5 ) );
+			pStateMan->m_pGui->Label( "Inventory...", pStateMan->m_pGui->m_vScreenCentre + CVector(-9.625, 9.625) );
 
-			CVector p  = pStateMan->m_pGui->m_vScreenCentre + CVector( -8, 5.5 );
+			CVector p  = pStateMan->m_pGui->m_vScreenCentre + CVector( -8, 8 );
 			CVector op = p;
+			int j = 0;
 			for ( int i = blocktype_t::STONE; i <= blocktype_t::ICE; i++ )
 			{
-				snprintf( guiBuf, 100, "%d", i );
+				// Skip useless liquid flow variants
+				if (i == WATER || i == LAVA)
+					continue;
+				j++;
+
 				BlockTexture bTex = GetDefaultBlockTextureSide( (blocktype_t)i, Direction::NORTH );
 				if ( pStateMan->m_pGui->AtlasButton(
 						 'b' + i, m_pTerrainPNG,
 						 { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey }, 16.0f, p,
-						 CVector( 2, 2 ) ) )
+						 CVector( 2, 2 ), CVector(0.5, 0.5) ) )
 				{
 					if (m_pLocalPlayer->m_pSelectedItem != nullptr)
 					{
@@ -189,7 +195,7 @@ void CStatePlay::Update()
 				}
 
 				p.x += 2;
-				if ( i % 8 == 0 )
+				if ( j % 9 == 0 )
 				{
 					p.y -= 2;
 					p.x = op.x;

@@ -245,10 +245,11 @@ CVector CGui::GetInScreen( CVector pos )
 	return pos;
 }
 
-int CGui::Button( int id, CVector pos, CVector size, CTexture *tex )
+int CGui::Button( int id, CVector pos, CVector size, CVector origin, CTexture *tex )
 {
 	pos	 = GetInScreen( pos );
 	size = size * GUIUNIT;
+	pos = pos - (size * origin);
 	if ( tex == nullptr )
 		tex = m_pButtonTex;
 
@@ -280,10 +281,10 @@ int CGui::Button( int id, CVector pos, CVector size, CTexture *tex )
 	return returnCode;
 }
 
-int CGui::AtlasButton( int id, CTexture *tex, Atlas atlas, float atlasDivisions, CVector pos, CVector size )
+int CGui::AtlasButton( int id, CTexture *tex, Atlas atlas, float atlasDivisions, CVector pos, CVector size, CVector origin )
 {
-	int b = Button( id, pos, size );
-	ImageAtlas( tex, atlas, atlasDivisions, pos, size );
+	int b = Button( id, pos, size, origin );
+	ImageAtlas( tex, atlas, atlasDivisions, pos, size, origin );
 	return b;
 }
 
@@ -291,10 +292,11 @@ int CGui::LabelButton( int id, const char *msg, CVector pos, CVector origin, CVe
 {
 	// Get size, fixed position
 	CVector size = ( CVector( GetTextLength( msg ), TEXTHEIGHT ) + padding * GUIUNIT );
-	pos			 = pos - ( size / GUIUNIT ) * origin;
 
 	// Render and get output of button
-	int buttonOut = Button( id, pos, size / GUIUNIT );
+	int buttonOut = Button( id, pos, size / GUIUNIT, origin );
+
+	pos			 = pos - ( size / GUIUNIT ) * origin;
 
 	// TODO: it's in the floor
 	Label( msg, ( pos + ( size / GUIUNIT ) * origin ), CVector( 1, 1, 1 ), TEXTALIGN_CENTER );
