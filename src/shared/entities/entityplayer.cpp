@@ -7,7 +7,8 @@
 	#include "sound/soundmanager.hpp"
 #endif
 
-CEntityPlayer::CEntityPlayer()
+CEntityPlayer::CEntityPlayer() :
+	m_inventory(36)
 {
 	m_vPosition = CVector( 0, 0, 0 );
 #ifdef CLIENTEXE

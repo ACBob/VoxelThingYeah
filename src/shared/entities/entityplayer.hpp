@@ -4,6 +4,8 @@
 #include "utility/raycast.hpp"
 #include "utility/types.hpp"
 
+#include "inventory/inventory.hpp"
+
 #pragma once
 
 class CEntityPlayer : public CEntityBase
@@ -48,4 +50,6 @@ class CEntityPlayer : public CEntityBase
 
 	bool m_bFly			= true;
 	bool m_bInInventory = false;
+
+	CInventory m_inventory;
 };
