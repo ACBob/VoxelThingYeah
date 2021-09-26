@@ -68,12 +68,13 @@ int main( int argc, char *args[] )
 		{
 			then = now + sv_tickms->GetInt();
 			i++;
-			// Networking
-			server.Update();
-			server.m_iCurrentTick = i;
 
 			// World
 			server.m_world.WorldTick( i, sv_tickms->GetFloat() / 1000.0f );
+			
+			// Networking
+			server.Update();
+			server.m_iCurrentTick = i;
 
 			if ( i % 5 == 0 )
 			{

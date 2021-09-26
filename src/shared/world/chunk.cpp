@@ -181,7 +181,9 @@ void CChunk::Update( int64_t iTick )
 #endif
 
 	// We updated so we're not dirty
+	// We can also assume that if we're dirty again we're *really* dirty and need to resend the whole chunk ASAP!
 	m_bDirty	   = bDirtyAgain;
+	m_bReallyDirty = bDirtyAgain;
 }
 
 CBlock *CChunk::GetBlockAtLocal( CVector pos )

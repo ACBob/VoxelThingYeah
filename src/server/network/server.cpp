@@ -117,7 +117,7 @@ void CNetworkServer::Update()
 	{
 		for ( CNetworkPlayer *cl : m_players )
 		{
-			if (c->m_bDirty)
+			if (c->m_bReallyDirty)
 				cl->m_pChunkQueue.push_back( c->m_vPosition );
 		}
 	}
