@@ -166,7 +166,15 @@ void CStatePlay::Update()
 						 'b' + i, m_pTerrainPNG,
 						 { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey }, 16.0f, p,
 						 CVector( 2, 2 ) ) )
-					NULL; // do nothing
+				{
+					if (m_pLocalPlayer->m_pSelectedItem != nullptr)
+					{
+						// TODO: assuming blockitem
+						m_pLocalPlayer->m_pSelectedItem->SetCount(ITEMSTACK_MAX);
+						reinterpret_cast<CBlockItem*>(m_pLocalPlayer->m_pSelectedItem)->m_iBlockType = (blocktype_t)i;
+					}
+				}
+
 				p.x += 2;
 				if ( i % 8 == 0 )
 				{

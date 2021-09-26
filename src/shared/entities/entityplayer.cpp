@@ -87,6 +87,7 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 					b->Update();
 					soundSystem::PlayPlaceSound( b->m_iBlockType, m_pointed.m_vPosition + m_pointed.m_vNormal -
 																	  CVector( 0.5, 0.5, 0.5 ) );
+					m_pSelectedItem->SetCount(m_pSelectedItem->GetCount() - 1);
 				}
 				else
 					b->m_iBlockType = oldType;
