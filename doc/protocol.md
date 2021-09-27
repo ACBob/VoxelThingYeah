@@ -64,6 +64,8 @@ Notifies the server we want to make a block change.
 | Y | Integer | Y Coord |
 | Z | Integer | Z Coord |
 | Block Type | Integer | The block type we want to set. |
+| Value A | 8 Bits | Extra Data associated with the block |
+| Value B | 8 Bits | Extra Data associated with the block |
 
 ### 0x02 (PLAYER_POSORT)
 Tells the server where we think we are.
@@ -135,6 +137,8 @@ Set the block at the position.
 | Y | Integer | Y Coord |
 | Z | Integer | Z Coord |
 | Block ID | Integer | The block to set |
+| Value A | 8 Bits | Extra Data associated with the block |
+| Value B | 8 Bits | Extra Data associated with the block |
 
 ### 0x04 (PLAYER_SPAWN)
 Spawns/Respawns the player.
