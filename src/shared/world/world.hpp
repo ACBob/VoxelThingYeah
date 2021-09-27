@@ -18,6 +18,8 @@
 
 // #include "entities/entitybase.h"
 
+#include <memory>
+
 class CWorld
 {
   public:
@@ -84,7 +86,7 @@ class CWorld
 	CTexture *m_pWorldTex = nullptr;
 #endif
 
-	std::vector<CChunk *> m_chunks;
+	std::vector<std::unique_ptr<CChunk>> m_chunks;
 
 	int m_iTimeOfDay = 6890;
 

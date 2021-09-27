@@ -10,6 +10,8 @@
 	#include "server/cvar_serverside.hpp"
 #endif
 
+#include <algorithm>
+
 #ifdef CLIENTEXE
 CWorld::CWorld( CShader *shader, CShader *entShader, CShader *waterShader, CTexture *worldTex )
 	: m_pWorldShader( shader ), m_pEntityShader( entShader ), m_pWaterShader( waterShader ), m_pWorldTex(worldTex)
@@ -17,12 +19,10 @@ CWorld::CWorld( CShader *shader, CShader *entShader, CShader *waterShader, CText
 CWorld::CWorld()
 #endif
 {
-	m_chunks = {};
-
 	// Now that all the chunks exist, generate and rebuild their models
-	for ( CChunk *c : m_chunks )
+	for ( auto &&c : m_chunks )
 	{
-		m_jenerator.Generate( c );
+		m_jenerator.Generate( c.get() );
 #ifdef CLIENTEXE
 		c->RebuildMdl();
 #endif
@@ -31,16 +31,16 @@ CWorld::CWorld()
 CWorld::~CWorld()
 {
 	// Destroy chunks
-	for ( CChunk *c : m_chunks )
-		delete c;
+	m_chunks.clear();
 }
 
 // Return in good faith that it's a valid position
 CChunk *CWorld::ChunkAtChunkPos( CVector pos )
 {
-	for ( CChunk *c : m_chunks )
-		if ( c->m_vPosition == pos )
-			return c;
+	// TODO: std::map
+	for (auto &&c : m_chunks )
+		if ( c.get()->m_vPosition == pos )
+			return c.get();
 
 	return nullptr;
 }
@@ -52,7 +52,8 @@ CChunk *CWorld::GetChunkGenerateAtWorldPos( CVector pos )
 	if ( c != nullptr )
 		return c;
 
-	c			   = new CChunk();
+	m_chunks.push_back(std::make_unique<CChunk>());
+	c = m_chunks.back().get();
 	c->m_vPosition = ( pos / CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
 	c->m_pChunkMan = this;
 #ifdef CLIENTEXE
@@ -65,25 +66,12 @@ CChunk *CWorld::GetChunkGenerateAtWorldPos( CVector pos )
 #endif
 	m_jenerator.Generate( c );
 
-	m_chunks.push_back( c );
-
 	return c;
 }
 
 void CWorld::UnloadChunk( CVector pos )
 {
-	CChunk *c = ChunkAtChunkPos( pos );
-	if ( c == nullptr )
-		return;
-
-	for ( auto i = m_chunks.begin(); i != m_chunks.end(); ++i )
-	{
-		if ( *i == c )
-		{
-			m_chunks.erase( i );
-			return;
-		}
-	}
+	m_chunks.erase(std::remove_if(m_chunks.begin(), m_chunks.end(), [pos](auto &&c) { return c.get()->m_vPosition == pos; }), m_chunks.end());
 }
 
 // Return in good faith that it's a valid position
@@ -131,20 +119,16 @@ void *CWorld::GetEntityByName( const char *name )
 void CWorld::Render()
 {
 	// Render regular blocks
-	for ( CChunk *c : m_chunks )
-	{
-		c->Render();
-	}
+	for (auto &&c : m_chunks )
+		c.get()->Render();
 	// Render entities
 	for ( void *ent : m_ents )
 	{
 		( (CEntityBase *)ent )->Render();
 	}
 	// Render stuff like water
-	for ( CChunk *c : m_chunks )
-	{
-		c->RenderTrans();
-	}
+	for (auto &&c : m_chunks )
+		c.get()->RenderTrans();
 }
 #endif
 
@@ -216,8 +200,9 @@ void CWorld::WorldTick( int64_t iTick, float delta )
 	if ( iTick == m_iLastTick )
 		return;
 
-	for ( CChunk *chunk : m_chunks )
+	for (auto &&c : m_chunks )
 	{
+		CChunk *chunk = c.get();
 		if ( chunk->m_bDirty )
 		{
 			chunk->Update( iTick );
