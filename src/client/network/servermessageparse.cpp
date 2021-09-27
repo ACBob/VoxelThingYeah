@@ -69,19 +69,24 @@ namespace protocol
 
 			case ServerPacket::UPDATE_BLOCK: {
 				float x, y, z;
+				uint8_t valA, valB;
 				uint blockType;
 				bufAccess >> x;
 				bufAccess >> y;
 				bufAccess >> z;
 				bufAccess >> blockType;
+				bufAccess >> valA;
+				bufAccess >> valB;
 
 				// Woot, data!
-				// TODO: make sure the server isn't being malicious
+				// TODO: make sure the server isn't being malicious.. Somehow
 				CBlock *b = client->m_pLocalWorld->BlockAtWorldPos( CVector( x, y, z ) );
 				if ( b != nullptr )
 				{
 					con_info( "Update Block At <%f,%f,%f>", x, y, z );
 					b->m_iBlockType = blocktype_t( blockType );
+					b->m_iValueA = valA;
+					b->m_iValueB = valB;
 					b->Update();
 				}
 			}

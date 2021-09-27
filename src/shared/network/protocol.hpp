@@ -43,7 +43,8 @@ struct ClientPacket : public NetworkPacket
 		/*
 			{
 				X,Y,Z,
-				blockID
+				blockID,
+				valA, valB
 			}
 		*/
 		SET_BLOCK = 0x01,
@@ -214,7 +215,7 @@ namespace protocol
 	void SendServerPlayerID( ENetPeer *pPeer, bool isOp );
 	void SendServerChunkData( ENetPeer *pPeer, CWorld *world, CVector pos );
 	void SendServerChunkDataFromRep( ENetPeer *pPeer, PortableChunkRepresentation crep );
-	void SendServerUpdateBlock( ENetPeer *pPeer, CVector pos, blocktype_t blockType );
+	void SendServerUpdateBlock( ENetPeer *pPeer, CVector pos, blocktype_t blockType, uint8_t valA, uint8_t valB );
 	void SendServerPlayerSpawn( ENetPeer *pPeer, std::string username, CVector pos, CVector rot, bool join );
 	void SendServerPlayerPos( ENetPeer *pPeer, std::string username, CVector pos, CVector rot );
 	void SendServerPlayerMessage( ENetPeer *pPeer, std::string username, std::string message );
@@ -228,7 +229,7 @@ namespace protocol
 	/******************* CLIENT *************************/
 	/****************************************************/
 	void SendClientPlayerID( ENetPeer *pPeer );
-	void SendClientSetBlock( ENetPeer *pPeer, CVector pos, blocktype_t blockType );
+	void SendClientSetBlock( ENetPeer *pPeer, CVector pos, blocktype_t blockType, uint8_t valA, uint8_t valB );
 	void SendClientPlayerPos( ENetPeer *pPeer, CVector pos, CVector rot );
 	void SendClientChatMessage( ENetPeer *pPeer, std::string message );
 	void SendClientLeave( ENetPeer *pPeer );

@@ -70,7 +70,7 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 				m_pointed.m_pBlock->Update();
 
 				protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5,
-											  blocktype_t::AIR );
+											  blocktype_t::AIR, 0, 0 );
 			}
 		}
 		if ( m_pInputMan->m_iMouseState & IN_RIGHT_MOUSE && m_pInputMan->m_iOldMouseState == 0 &&
@@ -93,7 +93,7 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 					b->m_iBlockType = oldType;
 
 				protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer,
-											  ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, b->m_iBlockType );
+											  ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, b->m_iBlockType, 0, 0 );
 			}
 		}
 

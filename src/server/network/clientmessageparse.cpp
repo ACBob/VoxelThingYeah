@@ -86,23 +86,27 @@ namespace protocol
 			case ClientPacket::SET_BLOCK: {
 				float x, y, z;
 				uint blockType;
+				uint8_t valA, valB;
 				bufAccess >> x;
 				bufAccess >> y;
 				bufAccess >> z;
 				bufAccess >> blockType;
+				bufAccess >> valA;
+				bufAccess >> valB;
 
 				CBlock *b = pServer->m_world.BlockAtWorldPos( CVector( x, y, z ) );
 				if ( true ) // If it's a valid block placement (for now no check)
 				{
 					b->m_iBlockType = (blocktype_t)blockType;
-					con_info( "Update Block At <%f,%f,%f>", x, y, z );
+					b->m_iValueA = valA;
+					b->m_iValueB = valB;
 					b->Update();
 				}
 				blockType = b->m_iBlockType;
 
 				for ( CNetworkPlayer *c : pServer->m_players )
 				{
-					SendServerUpdateBlock( c->m_pPeer, CVector( x, y, z ), blocktype_t( blockType ) );
+					SendServerUpdateBlock( c->m_pPeer, CVector( x, y, z ), blocktype_t( blockType ), valA, valB );
 				}
 			}
 			break;
