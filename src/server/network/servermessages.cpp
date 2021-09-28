@@ -1,6 +1,8 @@
 #include "cvar_serverside.hpp"
 #include "network/protocol.hpp"
 
+#include "logging.hpp"
+
 namespace protocol
 {
 	void SendServerPlayerID( ENetPeer *pPeer, bool isOp )
@@ -32,6 +34,8 @@ namespace protocol
 		bufAcc << crep.z;
 		bufAcc << CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z;
 		bufAcc << crep.m_iBlocks;
+
+		// con_debug("SEND <%d,%d,%d>", crep.x, crep.y, crep.z);
 
 		SendPacket( pPeer, p );
 	}

@@ -55,6 +55,9 @@ CChunk *CWorld::GetChunkGenerateAtWorldPos( CVector pos )
 	m_chunks.push_back(std::make_unique<CChunk>());
 	c = m_chunks.back().get();
 	c->m_vPosition = ( pos / CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
+	c->m_portableDef.x = c->m_vPosition.x;
+	c->m_portableDef.y = c->m_vPosition.y;
+	c->m_portableDef.z = c->m_vPosition.z;
 	c->m_pChunkMan = this;
 #ifdef CLIENTEXE
 	c->m_blocksMdl.m_vPosition = c->GetPosInWorld();

@@ -61,7 +61,7 @@ namespace protocol
 				int x = 8 + rand() % 8;
 				int z = 8 + rand() % 8;
 #endif
-				p->m_vPosition = CVector( x, 17, z );
+				p->m_vPosition = CVector( x, 20, z );
 				p->m_vRotation = CVector( 0, 0, 0 );
 
 				SendServerPlayerSpawn( pPeer, "", p->m_vPosition, p->m_vRotation, false );

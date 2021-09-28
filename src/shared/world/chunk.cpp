@@ -4,6 +4,8 @@
 
 #include "world.hpp"
 
+#include "logging.hpp"
+
 #ifdef CLIENTEXE
 CChunk::CChunk()
 {
@@ -18,7 +20,9 @@ CChunk::CChunk()
 
 	m_bDirty = true;
 }
-CChunk::~CChunk() {}
+CChunk::~CChunk() {
+	con_debug("deleting chunk @ <%.0f, %.0f, %.0f>", m_vPosition.x, m_vPosition.y, m_vPosition.z);
+}
 #elif SERVEREXE
 CChunk::CChunk()
 {
@@ -150,6 +154,7 @@ void CChunk::Update( int64_t iTick )
 			}
 		}
 	}
+#endif
 
 	// Rebuild the portable information at last
 	m_portableDef.x = m_vPosition.x;
@@ -162,7 +167,6 @@ void CChunk::Update( int64_t iTick )
 		m_portableDef.m_iVal[j] = m_blocks[j].m_iValueA;
 		m_portableDef.m_iValB[j] = m_blocks[j].m_iValueB;
 	}
-#endif
 
 #ifdef CLIENTEXE
 	// Chunk update makes neighbours and ourself update our model

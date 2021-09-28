@@ -130,12 +130,12 @@ void CNetworkServer::Update()
 		if ( cP != c->m_vChunkPos )
 		{
 			c->m_iLoadedChunkIDX	= 0;
-			c->m_iNextChunkLoadTick = m_iCurrentTick - 1;
+			c->m_iNextChunkLoadTick = 0;
 			c->m_pChunkQueue.push_back( cP );
 		}
 		c->m_vChunkPos = cP;
 
-		if ( c->m_iLoadedChunkIDX > ( 4 * 4 * 4 ) )
+		if ( c->m_iLoadedChunkIDX >= ( 4 * 4 * 4 ) )
 			continue;
 
 		int x = 0;
@@ -145,7 +145,9 @@ void CNetworkServer::Update()
 		CVector p( x - 2, y - 2, z - 2 );
 		c->m_iLoadedChunkIDX++;
 
-		p = p + c->m_vChunkPos;
+		p = c->m_vChunkPos + p;
+
+		// con_debug("QUEUE <%.0f,%.0f,%.0f>, %d", p.x, p.y, p.z, c->m_iLoadedChunkIDX);
 
 		// Queue it
 		c->m_pChunkQueue.push_back( p );
@@ -157,7 +159,7 @@ void CNetworkServer::Update()
 		// They don't have an opportunity to load.
 		if ( p->m_iNextChunkLoadTick > m_iCurrentTick )
 			continue;
-		p->m_iNextChunkLoadTick = m_iCurrentTick + 1;
+		p->m_iNextChunkLoadTick = m_iCurrentTick;
 		// They have nothing in their queue
 		if ( p->m_pChunkQueue.empty() )
 			continue;
@@ -165,10 +167,11 @@ void CNetworkServer::Update()
 		CVector pos = p->m_pChunkQueue.back();
 		p->m_pChunkQueue.pop_back();
 
+		// con_debug("LOAD <%.0f,%.0f,%.0f>, %d", pos.x, pos.y, pos.z, p->m_iLoadedChunkIDX);
+
 		CChunk *c = m_world.GetChunkGenerateAtWorldPos( pos * CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) );
 
-		if ( c != nullptr )
-			protocol::SendServerChunkDataFromRep( p->m_pPeer, c->m_portableDef );
+		protocol::SendServerChunkDataFromRep( p->m_pPeer, c->m_portableDef );
 	}
 }
 

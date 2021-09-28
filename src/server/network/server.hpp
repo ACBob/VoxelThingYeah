@@ -17,7 +17,7 @@ class CNetworkPlayer
 	std::vector<CVector> m_pChunkQueue;
 
 	int m_iLoadedChunkIDX			  = 0;
-	unsigned int m_iNextChunkLoadTick = 0;
+	uint64_t m_iNextChunkLoadTick = 0;
 	CVector m_vChunkPos; // the chunk we're in
 };
 

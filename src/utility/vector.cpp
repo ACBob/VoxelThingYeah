@@ -156,7 +156,7 @@ float CVector::operator[]( int index )
 }
 // Comparison
 bool CVector::operator==( CVector oVec ) const { return oVec.x == x && oVec.y == y && oVec.z == z && oVec.w == w; }
-bool CVector::operator!=( CVector oVec ) const { return !operator==( oVec ); }
+bool CVector::operator!=( CVector oVec ) const { return oVec.x != x || oVec.y != y || oVec.z != z || oVec.w != w; }
 bool CVector::operator>( CVector oVec ) const { return Magnitude() > oVec.Magnitude(); }
 bool CVector::operator<( CVector oVec ) const { return oVec > CVector{ x, y, z, w }; }
 bool CVector::operator>=( CVector oVec ) const { return operator==( oVec ) || operator>( oVec ); }
