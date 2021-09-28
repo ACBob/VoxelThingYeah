@@ -86,7 +86,6 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 
 	Resize( screenW, screenH );
 
-	// TODO: read texture and find the min width to display
 	con_info( "Processing font widths" );
 	int resX = m_pTextTex->m_iWidth / 16;
 	int resY = m_pTextTex->m_iHeight / 16;
