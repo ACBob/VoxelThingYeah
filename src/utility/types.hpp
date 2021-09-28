@@ -2,11 +2,13 @@
 
 	#include <inttypes.h>
 	#include <stdint.h>
+	#include <uchar.h>
 
 #else
 
 	#include <inttypes.h>
 	#include <stdint.h>
+	#include <uchar.h>
 
 using uint = unsigned int;
 

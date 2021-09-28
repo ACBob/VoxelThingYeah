@@ -6,6 +6,10 @@
 
 #include <glad/glad.h>
 
+#include "437.hpp"
+
+#include <algorithm>
+
 // The whole coordinate system is based on these GUIUUNITs.
 // When we start to dynamically rescale the GUI based on resolution this will come in handy. for now, 16px.
 #define GUIUNIT m_iGuiUnit
@@ -26,14 +30,14 @@
 // TODO: global?
 float fontWidths[256];
 
-int CGui::GetTextLength( const char *msg )
+int CGui::GetTextLength( const char16_t *msg )
 {
 	int l = 0;
 
 	int i = 0;
 	while ( msg[i] != NULL )
 	{
-		l += fontWidths[msg[i] - ' '] * TEXTWIDTH;
+		l += fontWidths[std::distance(CP437UNICODE, std::find(CP437UNICODE, CP437UNICODE + 256, msg[i]))] * TEXTWIDTH;
 		l += 2.0f / 16.0f * (float)GUIUNIT;
 
 		i++;
@@ -205,11 +209,18 @@ std::vector<CGui::Vertex> CGui::GetQuad( CVector pos, CVector size, Colour color
 		{ pos.x, pos.y + size.y, 0, uStart.x, uStart.y, color.x, color.y, color.z },
 	};
 }
+std::vector<CGui::Vertex> CGui::GetChar16Quad( const char16_t c, CVector pos, CVector size, Colour color )
+{
+	const char ctouse = std::distance(CP437UNICODE, std::find(CP437UNICODE, CP437UNICODE + 256, c));
+
+	return GetCharQuad(ctouse, pos, size, color);
+}
 std::vector<CGui::Vertex> CGui::GetCharQuad( const char c, CVector pos, CVector size, Colour color )
 {
+
 	float x, y;
-	x = ( int( c ) % TEXTTILES ) * TEXTINTEXWIDTH;
-	y = ( int( c ) / TEXTTILES ) * TEXTINTEXHEIGHT;
+	x = ( c % TEXTTILES ) * TEXTINTEXWIDTH;
+	y = ( c / TEXTTILES ) * TEXTINTEXHEIGHT;
 
 	CVector uStart = {
 		x / ( 16.0f * TEXTINTEXWIDTH ),
@@ -308,7 +319,7 @@ int CGui::AtlasButton( int id, CTexture *tex, Atlas atlas, float atlasDivisions,
 	return b;
 }
 
-int CGui::LabelButton( int id, const char *msg, CVector pos, CVector origin, CVector padding )
+int CGui::LabelButton( int id, const char16_t *msg, CVector pos, CVector origin, CVector padding )
 {
 	// Get size, fixed position
 	CVector size = ( CVector( GetTextLength( msg ), TEXTHEIGHT ) + padding * GUIUNIT );
@@ -323,7 +334,7 @@ int CGui::LabelButton( int id, const char *msg, CVector pos, CVector origin, CVe
 	return buttonOut;
 }
 
-void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment textAlign )
+void CGui::Label( const char16_t *text, CVector pos, Colour color, TextAlignment textAlign )
 {
 	pos = GetInScreen( pos );
 
@@ -341,14 +352,16 @@ void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment tex
 		{
 			// Get vertices
 			// Shadow
-			std::vector<CGui::Vertex> g = GetCharQuad( text[i], pos - ( 2.0f / 16.0f * (float)GUIUNIT ),
+			const char j = std::distance(CP437UNICODE, std::find(CP437UNICODE, CP437UNICODE + 256, text[i]));
+
+			std::vector<CGui::Vertex> g = GetCharQuad( j, pos - ( 2.0f / 16.0f * (float)GUIUNIT ),
 													   CVector( TEXTWIDTH, TEXTHEIGHT ), color / 2 );
 			std::copy( g.begin(), g.end(), std::back_inserter( m_textVertiecs ) );
 
-			g = GetCharQuad( text[i], pos, CVector( TEXTWIDTH, TEXTHEIGHT ), color );
+			g = GetCharQuad( j, pos, CVector( TEXTWIDTH, TEXTHEIGHT ), color );
 			std::copy( g.begin(), g.end(), std::back_inserter( m_textVertiecs ) );
 
-			pos.x += fontWidths[text[i]] * TEXTWIDTH;
+			pos.x += fontWidths[j] * TEXTWIDTH;
 			pos.x += 2.0f / 16.0f * (float)GUIUNIT;
 
 			i++;
@@ -391,9 +404,9 @@ void CGui::Crosshair() { Image( m_pCrosshairTex, m_vScreenCentre, CVector( 3, 3 
 // id can be shared between multiple text inputs if they're for the same data.
 // TODO: redo this with SDL's own key detection stuff, because currently we don't account for stuff like layout
 // (Hard-coded UK for now (lol))
-const char *CGui::TextInput( int id, CVector pos )
+const char16_t *CGui::TextInput( int id, CVector pos )
 {
-	std::string text = m_textBuffers[id];
+	std::u16string text = m_textBuffers[id];
 
 	Label( text.c_str(), pos );
 
