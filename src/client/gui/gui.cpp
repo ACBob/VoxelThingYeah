@@ -30,7 +30,7 @@
 // TODO: global?
 float fontWidths[256];
 
-int CGui::GetTextLength( const char16_t *msg )
+int CGui::GetTextLength( const wchar_t *msg )
 {
 	int l = 0;
 
@@ -209,13 +209,13 @@ std::vector<CGui::Vertex> CGui::GetQuad( CVector pos, CVector size, Colour color
 		{ pos.x, pos.y + size.y, 0, uStart.x, uStart.y, color.x, color.y, color.z },
 	};
 }
-std::vector<CGui::Vertex> CGui::GetChar16Quad( const char16_t c, CVector pos, CVector size, Colour color )
+std::vector<CGui::Vertex> CGui::GetChar16Quad( const wchar_t c, CVector pos, CVector size, Colour color )
 {
-	const char ctouse = std::distance(CP437UNICODE, std::find(CP437UNICODE, CP437UNICODE + 256, c));
+	const wchar_t ctouse = std::distance(CP437UNICODE, std::find(CP437UNICODE, CP437UNICODE + 256, c));
 
 	return GetCharQuad(ctouse, pos, size, color);
 }
-std::vector<CGui::Vertex> CGui::GetCharQuad( const char c, CVector pos, CVector size, Colour color )
+std::vector<CGui::Vertex> CGui::GetCharQuad( const wchar_t c, CVector pos, CVector size, Colour color )
 {
 
 	float x, y;
@@ -319,7 +319,7 @@ int CGui::AtlasButton( int id, CTexture *tex, Atlas atlas, float atlasDivisions,
 	return b;
 }
 
-int CGui::LabelButton( int id, const char16_t *msg, CVector pos, CVector origin, CVector padding )
+int CGui::LabelButton( int id, const wchar_t *msg, CVector pos, CVector origin, CVector padding )
 {
 	// Get size, fixed position
 	CVector size = ( CVector( GetTextLength( msg ), TEXTHEIGHT ) + padding * GUIUNIT );
@@ -334,7 +334,7 @@ int CGui::LabelButton( int id, const char16_t *msg, CVector pos, CVector origin,
 	return buttonOut;
 }
 
-void CGui::Label( const char16_t *text, CVector pos, Colour color, TextAlignment textAlign )
+void CGui::Label( const wchar_t *text, CVector pos, Colour color, TextAlignment textAlign )
 {
 	pos = GetInScreen( pos );
 
@@ -352,7 +352,7 @@ void CGui::Label( const char16_t *text, CVector pos, Colour color, TextAlignment
 		{
 			// Get vertices
 			// Shadow
-			const char j = std::distance(CP437UNICODE, std::find(CP437UNICODE, CP437UNICODE + 256, text[i]));
+			const wchar_t j = std::distance(CP437UNICODE, std::find(CP437UNICODE, CP437UNICODE + 256, text[i]));
 
 			std::vector<CGui::Vertex> g = GetCharQuad( j, pos - ( 2.0f / 16.0f * (float)GUIUNIT ),
 													   CVector( TEXTWIDTH, TEXTHEIGHT ), color / 2 );
@@ -404,9 +404,9 @@ void CGui::Crosshair() { Image( m_pCrosshairTex, m_vScreenCentre, CVector( 3, 3 
 // id can be shared between multiple text inputs if they're for the same data.
 // TODO: redo this with SDL's own key detection stuff, because currently we don't account for stuff like layout
 // (Hard-coded UK for now (lol))
-const char16_t *CGui::TextInput( int id, CVector pos )
+const wchar_t *CGui::TextInput( int id, CVector pos )
 {
-	std::u16string text = m_textBuffers[id];
+	std::wstring text = m_textBuffers[id];
 
 	Label( text.c_str(), pos );
 
