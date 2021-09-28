@@ -137,8 +137,6 @@ void CStatePlay::Update()
 		// -----------------------
 		pStateMan->m_pGui->Label( u"Meegreef ALPHA", CVector( 0, -1 ) );
 
-		pStateMan->m_pGui->Label( u"♫♪♫♪♫ Musical! ☻ ♫♪♫♪♫", CVector( 0, -4 ) );
-
 		int hours	= m_pLocalWorld->m_iTimeOfDay / 1000;
 		int minutes = ( m_pLocalWorld->m_iTimeOfDay - ( hours * 1000 ) ) / 16.6666;
 		// snprintf( guiBuf, 100, "%02i:%02i", hours, minutes );
