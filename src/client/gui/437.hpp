@@ -4,7 +4,7 @@
 
 #include "utility/types.hpp"
 
-static const char16_t CP437UNICODE[] = {
+static const wchar_t CP437UNICODE[] = {
 0x0000, // :(
 0x263A,
 0x263B,
