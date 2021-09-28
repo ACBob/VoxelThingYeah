@@ -24,7 +24,7 @@
 #include "shared/logging.hpp"
 
 // TODO: global?
-float fontWidths[( '~' - ' ' )];
+float fontWidths[256];
 
 int CGui::GetTextLength( const char *msg )
 {
@@ -86,17 +86,17 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 	con_info( "Processing font widths" );
 	int resX = m_pTextTex->m_iWidth / 16;
 	int resY = m_pTextTex->m_iHeight / 16;
-	for ( char c = ' '; c < '~'; c++ )
+	for ( uchar_t c = 0; c < 255; c++ )
 	{
 		if ( c == ' ' )
 		{
-			fontWidths[c - ' '] = 1.0;
+			fontWidths[' '] = 1.0;
 			continue;
 		}
 
 		// we assume the width to be a power of 16 and height to be a power of 16
-		int px = ( ( c - ' ' ) % 16 ) * resX;
-		int py = ( ( c - ' ' ) / 16 ) * resY;
+		int px = ( c % 16 ) * resX;
+		int py = ( c / 16 ) * resY;
 
 		int width = 0;
 		for ( int y = 0; y < resY; y++ )
@@ -112,7 +112,7 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 			}
 		}
 
-		fontWidths[c - ' '] = (float)width / (float)resX;
+		fontWidths[c] = (float)width / (float)resX;
 	}
 
 	m_iGuiUnit = 16;
@@ -205,11 +205,11 @@ std::vector<CGui::Vertex> CGui::GetQuad( CVector pos, CVector size, Colour color
 		{ pos.x, pos.y + size.y, 0, uStart.x, uStart.y, color.x, color.y, color.z },
 	};
 }
-std::vector<CGui::Vertex> CGui::GetCharQuad( const char *c, CVector pos, CVector size, Colour color )
+std::vector<CGui::Vertex> CGui::GetCharQuad( const char c, CVector pos, CVector size, Colour color )
 {
 	float x, y;
-	x = ( int( *c - ' ' ) % TEXTTILES ) * TEXTINTEXWIDTH;
-	y = ( int( *c - ' ' ) / TEXTTILES ) * TEXTINTEXHEIGHT;
+	x = ( int( c ) % TEXTTILES ) * TEXTINTEXWIDTH;
+	y = ( int( c ) / TEXTTILES ) * TEXTINTEXHEIGHT;
 
 	CVector uStart = {
 		x / ( 16.0f * TEXTINTEXWIDTH ),
@@ -341,14 +341,14 @@ void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment tex
 		{
 			// Get vertices
 			// Shadow
-			std::vector<CGui::Vertex> g = GetCharQuad( &text[i], pos - ( 2.0f / 16.0f * (float)GUIUNIT ),
+			std::vector<CGui::Vertex> g = GetCharQuad( text[i], pos - ( 2.0f / 16.0f * (float)GUIUNIT ),
 													   CVector( TEXTWIDTH, TEXTHEIGHT ), color / 2 );
 			std::copy( g.begin(), g.end(), std::back_inserter( m_textVertiecs ) );
 
-			g = GetCharQuad( &text[i], pos, CVector( TEXTWIDTH, TEXTHEIGHT ), color );
+			g = GetCharQuad( text[i], pos, CVector( TEXTWIDTH, TEXTHEIGHT ), color );
 			std::copy( g.begin(), g.end(), std::back_inserter( m_textVertiecs ) );
 
-			pos.x += fontWidths[text[i] - ' '] * TEXTWIDTH;
+			pos.x += fontWidths[text[i]] * TEXTWIDTH;
 			pos.x += 2.0f / 16.0f * (float)GUIUNIT;
 
 			i++;
