@@ -5,7 +5,7 @@
 #include "utility/types.hpp"
 
 static const char16_t CP437UNICODE[] = {
-0x0000,
+0x0000, // :(
 0x263A,
 0x263B,
 0x2665,
@@ -260,4 +260,5 @@ static const char16_t CP437UNICODE[] = {
 0x207F,
 0x00B2,
 0x25A0,
-0x00A0 };
+0xfffd // Non-breaking space is replaced by the "REPLACEMENT CHARACTER" so that we can represent error
+};
