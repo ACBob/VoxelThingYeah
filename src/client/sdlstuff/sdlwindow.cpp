@@ -5,6 +5,8 @@
 #include <iostream>
 #include <memory>
 
+#include "logging.hpp"
+
 CGameWindow::CGameWindow( const char *title, CVector size, bool resizeable )
 	: m_pInternalWindow( nullptr, &SDL_DestroyWindow ), m_iTick( 0 ), m_iFrameTicks( 0 ), m_dDelta( 0 ),
 	  m_iFramesInTheLastSecond( 0 ), m_fSecondsPerFrame( 0.0f ), m_pInputMan( nullptr ), m_bShouldClose( false )
@@ -18,15 +20,20 @@ CGameWindow::CGameWindow( const char *title, CVector size, bool resizeable )
 
 	if ( m_pInternalWindow == NULL )
 	{
-		printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
+		char *errBuf = new char[512];
+		snprintf(errBuf, 512, "Window could not be created!\nSDL_Error:%s", SDL_GetError());
+		Panic( errBuf );
 	}
-
-	m_glctx = SDL_GL_CreateContext( m_pInternalWindow.get() );
 
 	// For any SDL stuff we render
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 }
 CGameWindow::~CGameWindow() {}
+
+void CGameWindow::GatherCTX()
+{
+	m_glctx = SDL_GL_CreateContext( m_pInternalWindow.get() );
+}
 
 void CGameWindow::SetIcon(const char* texName)
 {
@@ -204,4 +211,11 @@ void CGameWindow::CaptureMouse()
 {
 	CVector size = GetSize();
 	SDL_WarpMouseInWindow( m_pInternalWindow.get(), size.x / 2, size.y / 2 );
+}
+
+void CGameWindow::Panic(const char *err)
+{
+	con_critical("ENGINE PANIC: %s", err);
+	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Engine Panic!", err, m_pInternalWindow.get());
+	std::exit(EXIT_FAILURE);
 }

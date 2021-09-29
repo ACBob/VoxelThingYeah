@@ -21,6 +21,9 @@ class CGameWindow : public CBobWindow
 				 bool resizeable = false ); // SDL_CreateWindow
 	~CGameWindow();							// SDL_DestroyWindow
 
+	// Gets the OpenGL Context
+	void GatherCTX();
+
 	void SetIcon(const char *texName);
 
 	// SDL_HideWindow / SDL_ShowWindow
@@ -41,6 +44,9 @@ class CGameWindow : public CBobWindow
 	// SDL_SetWindowPos / SDL_GetWindowPos
 	CVector GetPos();
 	void SetPos( CVector p );
+
+	// Displays an error message somehow, Use for when shit hits the fans and we need to exit immediately
+	void Panic(const char *err);
 
 	float GetSPF();
 	double GetTime();

@@ -37,7 +37,6 @@
 
 int main( int argc, char *args[] )
 {
-
 	con_info( "Hello from Meegreef!" );
 	con_info( "Setting up client-side convars..." );
 	SetupClientSideConvars();
@@ -47,11 +46,24 @@ int main( int argc, char *args[] )
 	con_info( "Parsing command line convars..." );
 	conVarHandle.Parse( argstring );
 
+	con_info("Creating Display...");
+	// Initialize SDL systems
+	if ( SDL_Init( SDL_INIT_VIDEO ) )
+	{
+		char *errBuf = new char[512];
+		snprintf(errBuf, 512, "SDL could not initialize!\n SDL_Error: %s", SDL_GetError());
+		con_critical("ENGINE PANIC: %s", errBuf);
+		SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR, "Engine Panic!", errBuf, NULL );
+
+		delete errBuf;
+		return EXIT_FAILURE;
+	}
+	CGameWindow window( "VoxelThingYeah", CVector( scr_width->GetFloat(), scr_height->GetFloat() ), true );
+
 	con_info( "Init Filesystem..." );
 	if ( !fileSystem::Init( args[0] ) )
 	{
-		con_critical( "Couldn't initialise Filesystem! Unrecoverable!" );
-		return EXIT_FAILURE;
+		window.Panic( "Couldn't initialise Filesystem! Unrecoverable!" );
 	}
 	atexit( fileSystem::UnInit );
 
@@ -62,19 +74,15 @@ int main( int argc, char *args[] )
 	con_info( "Init Network..." );
 	if ( !network::Init() )
 	{
-		con_critical( "Couldn't initialise Network! Unrecoverable!" );
-		return EXIT_FAILURE;
+		window.Panic( "Couldn't initialise Network! Unrecoverable!" );
 	}
 	atexit( network::Uninit );
+	
+	CInputManager inputMan;
+	window.m_pInputMan = &inputMan;
 
 	con_info( "Now doing all the OpenGL & SDL cruft." );
 	{
-		// Initialize SDL systems
-		if ( SDL_Init( SDL_INIT_VIDEO ) )
-		{
-			con_critical( "SDL could not initialize!\n SDL_Error: %s\n", SDL_GetError() );
-			return EXIT_FAILURE;
-		}
 		atexit( SDL_Quit );
 		SDL_GL_LoadLibrary( NULL );
 
@@ -90,15 +98,11 @@ int main( int argc, char *args[] )
 
 		SDL_LogSetPriority( SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO );
 	}
-	CGameWindow window( "VoxelThingYeah", CVector( scr_width->GetFloat(), scr_height->GetFloat() ), true );
-	CInputManager inputMan;
-	window.m_pInputMan = &inputMan;
+	window.GatherCTX();
 	{
 		if ( !gladLoadGLLoader( SDL_GL_GetProcAddress ) )
 		{
-			// TODO: Use SDL rendering and display an error on-screen
-			con_critical( "Cannot load Glad\n" );
-			return EXIT_FAILURE;
+			window.Panic("GLAD Could not be loaded!");
 		}
 	}
 
@@ -132,8 +136,7 @@ int main( int argc, char *args[] )
 	CNetworkClient client;
 	if ( !client.WorkingClient() )
 	{
-		con_critical( "Client ended up in invalid state!" );
-		return EXIT_FAILURE;
+		window.Panic( "Client ended up in invalid state!" );
 	}
 
 	con_info( "Init GUI..." );
