@@ -130,6 +130,10 @@ void CEntityPlayer::Tick( int64_t iTick )
 
 	if ( !m_bInInventory && !m_pInputMan->m_bInGui )
 	{
+
+		if ( m_pInputMan->m_bInputState[INKEY_FLY] && !m_pInputMan->m_bOldInputState[INKEY_FLY] )
+			m_bFly = !m_bFly;
+
 		if ( m_pInputMan->m_bInputState[INKEY_FRONT] )
 			vMoveDir = vMoveDir + ( forward );
 		else if ( m_pInputMan->m_bInputState[INKEY_BACK] )
@@ -166,9 +170,6 @@ void CEntityPlayer::Tick( int64_t iTick )
 	float f = m_bInWater ? 0.09f : m_bOnFloor ? 0.125f : m_bFly ? 0.1f : 0.076f;
 
 	m_vVelocity = m_vVelocity.Lerp( vMoveDir, f );
-
-	if ( m_pInputMan->m_bInputState[INKEY_FLY] && !m_pInputMan->m_bOldInputState[INKEY_FLY] )
-		m_bFly = !m_bFly;
 
 	m_bApplyGravity = !m_bFly;
 #endif
