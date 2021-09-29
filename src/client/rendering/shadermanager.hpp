@@ -1,5 +1,3 @@
-// TODO: shader manager
-
 #include <glm/glm.hpp>
 
 #include "utility/vector.hpp"

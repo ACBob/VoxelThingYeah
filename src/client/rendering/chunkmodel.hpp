@@ -1,5 +1,3 @@
-// TODO: genric model class
-
 #include "modelmanager.hpp"
 #include "utility/vector.hpp"
 #include "world/block.hpp"
