@@ -11,6 +11,12 @@ appendSounds = false
 sounds = ["sound/red.ogg", "sound/green.ogg", "sound/blue.ogg"]
 pitch = [1.0,2.0]
 
+["game.music"]
+type = "music"
+appendSounds = false
+sounds = ["sound/music/mojyjes.ogg", "sound/music/shestenar.ogg", "sound/music/isteke.ogg"]
+pitch = [1.0]
+
 ##########################################
 # Breaking Sounds                        #
 ##########################################

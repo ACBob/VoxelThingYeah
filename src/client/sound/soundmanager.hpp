@@ -31,6 +31,7 @@ namespace soundSystem
 	{
 		enum SOUNDTYPE {
 			SOUNDTYPE_BLOCK = 0x0,
+			SOUNDTYPE_MUSIC = 0x1,
 		};
 
 	  public:
@@ -59,6 +60,8 @@ namespace soundSystem
 	void PlayBreakSound( blocktype_t blockType, CVector pos );
 	void PlayPlaceSound( blocktype_t blockType, CVector pos );
 	void PlayStepSound( blocktype_t blockType, CVector pos );
+
+	void PlaySoundEvent( const char* eventName, CVector pos );
 } // namespace soundSystem
 
 // Stubs when sound is disabled
@@ -106,6 +109,8 @@ namespace soundSystem
 
 	inline void PlayBreakSound( blocktype_t blockType, CVector pos ){};
 	inline void PlayPlaceSound( blocktype_t blockType, CVector pos ){};
+	inline void PlayStepSound( blocktype_t blockType, CVector pos ) {};
+	inline void PlaySoundEvent( const char* eventName, CVector pos ){};
 } // namespace soundSystem
 
 #endif

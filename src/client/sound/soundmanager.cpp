@@ -97,6 +97,10 @@ CSoundEvent::CSoundEvent( std::vector<std::string> sounds, const char *type, flo
 	{
 		m_iSoundType = SOUNDTYPE_BLOCK;
 	}
+	else if ( strcmp(type, "music") )
+	{
+		m_iSoundType = SOUNDTYPE_MUSIC;
+	}
 
 	m_fMinPitch = minpitch;
 	m_fMaxPitch = maxpitch;
@@ -108,7 +112,15 @@ void CSoundEvent::Play( CVector pos )
 
 	int soundIdx = ( rand() % m_sounds.size() );
 
-	m_sounds.at( soundIdx )->Play( pos, pitch, pitch );
+	// TODO: Seperate volume variables
+	float gain = 1.0;
+	switch(m_iSoundType)
+	{
+		case SOUNDTYPE_BLOCK: gain = 1.0f; break;
+		case SOUNDTYPE_MUSIC: gain = 0.25f; break;
+	}
+
+	m_sounds.at( soundIdx )->Play( pos, pitch, gain );
 }
 
 void soundSystem::Init()
@@ -318,7 +330,16 @@ void soundSystem::PlayStepSound( blocktype_t blockType, CVector pos )
 
 	char *buf = new char[512];
 	snprintf(buf, 512, "block.step.%s", BlockMaterialSTR(mat));
-	soundEvents[buf]->Play( pos );
-
+	PlaySoundEvent(buf, pos);
 	delete buf;
+}
+void soundSystem::PlaySoundEvent(const char *soundEvent, CVector pos)
+{
+	if (!soundEvents.count(soundEvent))
+	{
+		con_error("Unknown Sound Event %s", soundEvent);
+		return;
+	}
+
+	soundEvents[soundEvent]->Play( pos );
 }

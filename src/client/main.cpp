@@ -169,6 +169,8 @@ int main( int argc, char *args[] )
 
 	int64_t delta = 0;
 
+	int64_t musicTick = 0;
+
 	while ( !window.m_bShouldClose )
 	{
 		window.PollEvents();
@@ -192,6 +194,14 @@ int main( int argc, char *args[] )
 		for ( CShader *shd : shaderSystem::loadedShaders )
 		{
 			shd->SetMat4( "screen", screen );
+		}
+
+		if (gameStateMan.m_iTick >= musicTick)
+		{
+			musicTick = gameStateMan.m_iTick + 20000;
+
+			if (rand() % 100 > 50)
+				soundSystem::PlaySoundEvent("game.music", CVector(0,0,0));
 		}
 
 		gameStateMan.Update();
