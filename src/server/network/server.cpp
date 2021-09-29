@@ -67,6 +67,12 @@ void CNetworkServer::KickPlayer( const char *username, const char *reason )
 
 	KickPlayer( c, reason );
 }
+CNetworkPlayer::~CNetworkPlayer()
+{
+	if (m_pEntity != nullptr)
+		m_pEntity->Kill();
+}
+
 void CNetworkServer::KickPlayer( CNetworkPlayer *player, const char *reason )
 {
 	ENetPeer *pPeer = player->m_pPeer;
@@ -91,10 +97,6 @@ void CNetworkServer::Update()
 				con_info( "Goodbye %s!", c->m_username.c_str() );
 				// Destroy the client object AND player
 				m_players.erase( std::remove( m_players.begin(), m_players.end(), c ), m_players.end() );
-				if ( c->m_pEntity != nullptr ) //! This is GOING to shoot me in the foot later
-				{
-					c->m_pEntity->Kill();
-				}
 
 				for ( CNetworkPlayer *cl : m_players )
 				{
@@ -124,6 +126,9 @@ void CNetworkServer::Update()
 
 	for ( CNetworkPlayer *c : m_players )
 	{
+		if (c->m_pEntity == nullptr)
+			continue; // we can assume they probably no longer exist, or are in the process of joining/leaving or something
+
 		// Update chunk pos
 		// Unfortunate name
 		CVector cP = ( c->m_pEntity->m_vPosition / CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();

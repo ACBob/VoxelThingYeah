@@ -6,6 +6,8 @@
 class CNetworkPlayer
 {
   public:
+	~CNetworkPlayer();
+
 	ENetPeer *m_pPeer		 = nullptr;
 	CEntityPlayer *m_pEntity = nullptr;
 	std::string m_username;
