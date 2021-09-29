@@ -76,7 +76,7 @@ pitch = [ 0.6, 1.2 ]
 ["block.place.glass"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/placeglass.ogg" ]
+sounds = [ "sound/placestone.ogg" ]
 pitch = [ 0.6, 1.2 ]
 
 ["block.place.organic"]

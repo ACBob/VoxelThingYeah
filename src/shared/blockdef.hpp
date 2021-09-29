@@ -60,6 +60,8 @@ enum blockmodel_t {
 
 blockmaterial_t GetBlockMaterial( blocktype_t blockType );
 
+const char *BlockMaterialSTR( blockmaterial_t mat );
+
 struct BlockFeatures
 {
 	// Can Collide

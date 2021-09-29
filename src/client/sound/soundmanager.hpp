@@ -53,7 +53,7 @@ namespace soundSystem
 
 	CSound *LoadSound( const char *path );
 
-	extern std::vector<CSound *> loadedSounds;
+	extern std::map<std::string, CSound *> loadedSounds;
 	extern std::map<std::string, CSoundEvent *> soundEvents;
 
 	void PlayBreakSound( blocktype_t blockType, CVector pos );

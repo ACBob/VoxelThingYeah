@@ -30,7 +30,7 @@
 
 #include "stb_vorbis.c"
 
-std::vector<CSound *> soundSystem::loadedSounds;
+std::map<std::string, CSound *> soundSystem::loadedSounds;
 std::map<std::string, CSoundEvent *> soundSystem::soundEvents;
 
 ALCdevice *openAlDevice;
@@ -201,8 +201,8 @@ void soundSystem::Init()
 }
 void soundSystem::UnInit()
 {
-	for ( CSound *s : loadedSounds )
-		delete s;
+	for ( auto s : loadedSounds )
+		delete s.second;
 	for ( auto s : soundEvents )
 		delete s.second;
 
@@ -283,9 +283,11 @@ void soundSystem::SetListener( CWorld *world, CVector pos, CVector forward, CVec
 
 CSound *soundSystem::LoadSound( const char *path )
 {
-	con_info( "Load sound %s", path );
+	if (loadedSounds.count(path))
+		return loadedSounds[path];
+
 	CSound *snd = new CSound( path );
-	loadedSounds.push_back( snd );
+	loadedSounds[path] = snd;
 
 	return snd;
 }
@@ -294,83 +296,29 @@ void soundSystem::PlayBreakSound( blocktype_t blockType, CVector pos )
 {
 	blockmaterial_t mat = GetBlockMaterial( blockType );
 
-	switch ( mat )
-	{
-		default:
-		case MAT_NONE:
-		case MAT_STONE:
-			soundEvents["block.break.stone"]->Play( pos );
-			break;
-		case MAT_LOOSE:
-			soundEvents["block.break.loose"]->Play( pos );
-			break;
-		case MAT_WOOD:
-			soundEvents["block.break.wood"]->Play( pos );
-			break;
-		case MAT_GLASS:
-			soundEvents["block.break.glass"]->Play( pos );
-			break;
-		case MAT_ORGANIC:
-			soundEvents["block.break.organic"]->Play( pos );
-			break;
-		case MAT_DUST:
-			soundEvents["block.break.dust"]->Play( pos );
-			break;
-	}
+	char *buf = new char[512];
+	snprintf(buf, 512, "block.break.%s", BlockMaterialSTR(mat));
+	soundEvents[buf]->Play( pos );
+
+	delete buf;
 }
 void soundSystem::PlayPlaceSound( blocktype_t blockType, CVector pos )
 {
 	blockmaterial_t mat = GetBlockMaterial( blockType );
 
-	switch ( mat )
-	{
-		default:
-		case MAT_NONE:
-		case MAT_STONE:
-			soundEvents["block.place.stone"]->Play( pos );
-			break;
-		case MAT_LOOSE:
-			soundEvents["block.place.loose"]->Play( pos );
-			break;
-		case MAT_WOOD:
-			soundEvents["block.place.wood"]->Play( pos );
-			break;
-		case MAT_GLASS:
-			soundEvents["block.place.glass"]->Play( pos );
-			break;
-		case MAT_ORGANIC:
-			soundEvents["block.place.organic"]->Play( pos );
-			break;
-		case MAT_DUST:
-			soundEvents["block.place.dust"]->Play( pos );
-			break;
-	}
+	char *buf = new char[512];
+	snprintf(buf, 512, "block.place.%s", BlockMaterialSTR(mat));
+	soundEvents[buf]->Play( pos );
+
+	delete buf;
 }
 void soundSystem::PlayStepSound( blocktype_t blockType, CVector pos )
 {
 	blockmaterial_t mat = GetBlockMaterial( blockType );
 
-	switch ( mat )
-	{
-		default:
-		case MAT_NONE:
-		case MAT_STONE:
-			soundEvents["block.step.stone"]->Play( pos );
-			break;
-		case MAT_LOOSE:
-			soundEvents["block.step.loose"]->Play( pos );
-			break;
-		case MAT_WOOD:
-			soundEvents["block.step.wood"]->Play( pos );
-			break;
-		case MAT_GLASS:
-			soundEvents["block.step.glass"]->Play( pos );
-			break;
-		case MAT_ORGANIC:
-			soundEvents["block.step.organic"]->Play( pos );
-			break;
-		case MAT_DUST:
-			soundEvents["block.step.dust"]->Play( pos );
-			break;
-	}
+	char *buf = new char[512];
+	snprintf(buf, 512, "block.step.%s", BlockMaterialSTR(mat));
+	soundEvents[buf]->Play( pos );
+
+	delete buf;
 }
