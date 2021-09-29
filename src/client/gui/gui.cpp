@@ -401,53 +401,18 @@ void CGui::Crosshair() { Image( m_pCrosshairTex, m_vScreenCentre, CVector( 3, 3 
 // Returns the string in the event that 'RETURN' is pressed.
 // Outputs nullptr if nothing.
 // id can be shared between multiple text inputs if they're for the same data.
-// TODO: redo this with SDL's own key detection stuff, because currently we don't account for stuff like layout
-// (Hard-coded UK for now (lol))
 const wchar_t *CGui::TextInput( int id, CVector pos )
 {
 	std::wstring text = m_textBuffers[id];
 
 	Label( text.c_str(), pos );
 
-	// TODO: I hate this
-	// FIXME: Doesn't account for keyboard, get input manager to have some kind of built-in thing that talks to the
-	// window and does it for us! AHJSDHJASHJKDASJKDJKASDHKAHKJDSJk
-	for ( int i = ' '; i <= 'Z'; i++ )
+	if (m_pInputMan->m_cTypeKey != nullptr)
 	{
-		if ( m_pInputMan->m_bKeyboardState[i] && !m_pInputMan->m_bOldKeyboardState[i] )
-		{
-			if ( m_pInputMan->m_bKeyboardState[KBD_SHIFT] )
-			{
-				switch ( i )
-				{
-					case ';':
-						text += ':';
-						continue;
-						break;
-					case '1':
-						text += '!';
-						continue;
-						break;
-					case '2':
-						text += '"';
-						continue;
-						break;
-					case '9':
-						text += '(';
-						continue;
-						break;
-					case '0':
-						text += ')';
-						continue;
-						break;
-				}
-				text += i;
-			}
-			else if ( i >= 'A' && i <= 'Z' )
-				text += i + 32;
-			else
-				text += i;
-		}
+		wchar_t* ch = new wchar_t[strlen(m_pInputMan->m_cTypeKey) + 1];
+		mbstowcs (ch, m_pInputMan->m_cTypeKey, strlen(m_pInputMan->m_cTypeKey) + 1);
+
+		text = text + ch;
 	}
 
 	if ( m_pInputMan->m_bKeyboardState[KBD_BACKSPACE] && !m_pInputMan->m_bOldKeyboardState[KBD_BACKSPACE] )

@@ -49,6 +49,9 @@ class CInputManager
 	bool m_bKeyboardState[255];
 	bool m_bOldKeyboardState[255]; // See above, previous frame
 
+	// the character we are to type
+	char *m_cTypeKey = nullptr;
+
 	// Mousepos is the current position of the mouse
 	// Mousemovement is the movement of the mouse since last frame
 	// Z is ignored

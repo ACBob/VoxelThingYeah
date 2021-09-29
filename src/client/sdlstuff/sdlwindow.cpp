@@ -151,11 +151,19 @@ const int scancodeToStateIndex[] = {
 void CGameWindow::PollEvents()
 {
 	SDL_SetRelativeMouseMode( !m_pInputMan->m_bInGui ? SDL_TRUE : SDL_FALSE );
+	if (m_pInputMan->m_bInGui)
+	    SDL_StartTextInput();
+	else
+		SDL_StopTextInput();
 
 	m_pInputMan->m_vMouseMovement = CVector( 0, 0 );
 
 	m_pInputMan->m_iOldMouseState = m_pInputMan->m_iMouseState;
 	m_pInputMan->m_iMouseState	  = 0;
+
+	if (m_pInputMan->m_cTypeKey != nullptr)
+		delete m_pInputMan->m_cTypeKey;
+	m_pInputMan->m_cTypeKey = nullptr;
 
 	SDL_Event currentEvent;
 	while ( SDL_PollEvent( &currentEvent ) != 0 )
@@ -181,6 +189,11 @@ void CGameWindow::PollEvents()
 
 			case SDL_MOUSEWHEEL:
 				m_pInputMan->m_iMouseState |= ( currentEvent.wheel.y > 0 ) ? IN_WHEEL_UP : IN_WHEEL_DOWN;
+				break;
+			
+			case SDL_TEXTINPUT:
+				m_pInputMan->m_cTypeKey = new char[32];
+				strncpy(m_pInputMan->m_cTypeKey, currentEvent.text.text, 32);
 				break;
 		}
 	}
