@@ -6,7 +6,7 @@ layout (location = 2) in vec3 aColor;
 out vec2 TexCoord;
 out vec3 Color;
 
-#include "shaders/uniforms.glsl"
+#include "shaders/include/uniforms.glsl"
 
 void main()
 {
