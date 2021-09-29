@@ -128,7 +128,7 @@ void CEntityPlayer::Tick( int64_t iTick )
 
 	CVector vMoveDir( 0 );
 
-	if ( !m_bInInventory )
+	if ( !m_bInInventory && !m_pInputMan->m_bInGui )
 	{
 		if ( m_pInputMan->m_bInputState[INKEY_FRONT] )
 			vMoveDir = vMoveDir + ( forward );

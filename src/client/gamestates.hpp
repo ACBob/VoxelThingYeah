@@ -49,6 +49,7 @@ class CStatePlay : public CState
 	CTexture *m_pHotbarSelectTex;
 
 	bool m_bInPause = false;
+	bool m_bInChat = false;
 
 	int64_t m_iLastTick = 0;
 };

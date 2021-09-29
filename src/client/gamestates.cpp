@@ -60,7 +60,7 @@ void CStatePlay::Update()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
 
-	pStateMan->m_pInputMan->m_bInGui = ( m_bInPause || m_pLocalPlayer->m_bInInventory );
+	pStateMan->m_pInputMan->m_bInGui = ( m_bInChat || m_bInPause || m_pLocalPlayer->m_bInInventory );
 
 	wchar_t *guiBuf = new wchar_t[512];
 
@@ -120,14 +120,26 @@ void CStatePlay::Update()
 
 		m_pLocalWorld->Render();
 
-		if ( !m_bInPause && pStateMan->m_pInputMan->m_bInputState[INKEY_INV] &&
-			 !pStateMan->m_pInputMan->m_bOldInputState[INKEY_INV] )
-			m_pLocalPlayer->m_bInInventory = !m_pLocalPlayer->m_bInInventory;
+		// -----------------------
+		// Input
+		// -----------------------
+		if (!m_bInPause && !m_bInChat)
+		{
+			if ( pStateMan->m_pInputMan->m_bInputState[INKEY_INV] &&
+				!pStateMan->m_pInputMan->m_bOldInputState[INKEY_INV] )
+				m_pLocalPlayer->m_bInInventory = !m_pLocalPlayer->m_bInInventory;
+
+			if ( pStateMan->m_pInputMan->m_bInputState[INKEY_CHAT] &&
+				!pStateMan->m_pInputMan->m_bOldInputState[INKEY_CHAT] )
+				m_bInChat = !m_bInChat;
+		}
 
 		if ( pStateMan->m_pInputMan->m_bInputState[INKEY_OUT] && !pStateMan->m_pInputMan->m_bOldInputState[INKEY_OUT] )
 		{
 			if ( m_pLocalPlayer->m_bInInventory )
 				m_pLocalPlayer->m_bInInventory = false;
+			else if (m_bInChat)
+				m_bInChat = false;
 			else
 				m_bInPause = !m_bInPause;
 		}
@@ -207,6 +219,36 @@ void CStatePlay::Update()
 		else
 		{
 			pStateMan->m_pGui->Crosshair();
+		}
+
+		// Chat Rendering
+		wchar_t *buf = new wchar_t[256];
+		for (int i = 5; i > 0; i--)
+		{
+			if (i > pStateMan->m_pClient->m_chatBuffer.size())
+				continue;
+
+			mbstowcs(buf, pStateMan->m_pClient->m_chatBuffer[pStateMan->m_pClient->m_chatBuffer.size() - i].c_str(), 256);
+			pStateMan->m_pGui->Label(buf, CVector(0, i+1));
+		}
+		delete[] buf;
+
+		if (m_bInChat)
+		{
+			// Chat
+			const wchar_t *chat = pStateMan->m_pGui->TextInput(5, CVector(0,0));
+
+			if (chat != nullptr)
+			{
+				char *buf = new char[256];
+				wcstombs(buf, chat, 256);
+
+				protocol::SendClientChatMessage(pStateMan->m_pClient->m_pPeer, buf);
+
+				delete[] buf;
+
+				m_bInChat = false;
+			}
 		}
 	}
 
