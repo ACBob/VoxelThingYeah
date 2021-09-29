@@ -48,6 +48,8 @@ bool CNetworkClient::Connect( const char *address, int port )
 	else
 	{
 		con_error( "Nobody said hello back :(" );
+		enet_peer_reset(m_pPeer);
+		m_pPeer = nullptr;
 		return false;
 	}
 }

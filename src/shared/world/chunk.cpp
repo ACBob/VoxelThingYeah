@@ -21,7 +21,7 @@ CChunk::CChunk()
 	m_bDirty = true;
 }
 CChunk::~CChunk() {
-	con_debug("deleting chunk @ <%.0f, %.0f, %.0f>", m_vPosition.x, m_vPosition.y, m_vPosition.z);
+	// con_debug("deleting chunk @ <%.0f, %.0f, %.0f>", m_vPosition.x, m_vPosition.y, m_vPosition.z);
 }
 #elif SERVEREXE
 CChunk::CChunk()
