@@ -46,6 +46,11 @@ int main( int argc, char *args[] )
 	con_info( "Parsing command line convars..." );
 	conVarHandle.Parse( argstring );
 
+	// seed random
+	srand(time(NULL));
+
+	con_debug("Your random number today is %d", rand() % 500);
+
 	con_info("Creating Display...");
 	// Initialize SDL systems
 	if ( SDL_Init( SDL_INIT_VIDEO ) )
