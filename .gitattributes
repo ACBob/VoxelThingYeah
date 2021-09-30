@@ -1,2 +1,10 @@
 *.png filter=lfs diff=lfs merge=lfs -text
 *.ogg filter=lfs diff=lfs merge=lfs -text
+
+# Attempt to hide the C libraries we merged with the code
+src/utility/toml.h linguist-detectable=false
+src/utility/toml.c linguist-detectable=false
+src/client/sound/stb_vorbis.c linguist-detectable=false
+src/client/rendering/glad.c linguist-detectable=false
+include/glad/glad.h linguist-detectable=false
+include/fastnoise.h linguist-detectable=false
