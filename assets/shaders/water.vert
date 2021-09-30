@@ -26,6 +26,8 @@ void main()
 	pos.y += sin((mPos.x * mPos.z) + ftime/2.0) * WAVEINTENSITY*2;
 	pos.y = min(pos.y, aPos.y);
 
-#	include "shaders/include/inworld.glsl"
+	gl_Position = projection * view * model * vec4(pos, 1.0f);
+	TexCoord = vec2(aTexCoord.x, aTexCoord.y);
+
 #	include "shaders/include/diffuse.glsl"
 }
