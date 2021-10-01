@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#pragma once
+
 namespace particleSystem
 {
 	void Init();

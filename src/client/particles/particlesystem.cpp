@@ -18,7 +18,7 @@ namespace particleSystem
 		particleMdl->Update();
 
 		particleMdl->SetShader( shaderSystem::LoadShader( "shaders/particle.vert", "shaders/particle.frag" ) );
-		particleMdl->SetTexture( materialSystem::LoadTexture( "terrain.png" ) );
+		particleMdl->SetTexture( materialSystem::LoadTexture( "test.png" ) );
 	}
 	void UnInit() { delete particleMdl; }
 

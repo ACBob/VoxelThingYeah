@@ -91,6 +91,11 @@ CVector CVector::Lerp( CVector oVec, float fPc ) const
 
 	return g;
 }
+CVector CVector::Inverse() const
+{
+	CVector g = CVector(-x, -y, -z, -w);
+	return g;
+}
 
 // Operators
 // Math, with other vectors

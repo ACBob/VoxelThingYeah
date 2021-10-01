@@ -4,8 +4,8 @@ CParticleEmitter::CParticleEmitter() {}
 
 CParticleEmitter::~CParticleEmitter() {}
 
-void CParticleEmitter::Render()
+void CParticleEmitter::Render(CVector camForward)
 {
 	for ( CParticle p : m_particles )
-		p.Render();
+		p.Render(camForward);
 }

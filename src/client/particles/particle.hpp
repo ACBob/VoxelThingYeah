@@ -1,6 +1,8 @@
 #include "rendering/modelmanager.hpp"
 #include "vector.hpp"
 
+#pragma once
+
 class CParticle
 {
 
@@ -8,7 +10,7 @@ class CParticle
 	CParticle();
 	~CParticle();
 
-	void Render();
+	void Render(CVector camForward);
 
 	CVector m_vPosition;
 	CVector m_vSize; // Z Ignored!!!

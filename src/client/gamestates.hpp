@@ -8,6 +8,7 @@
 #include "shared/statemanager.hpp"
 #include "sound/soundmanager.hpp"
 #include "world/world.hpp"
+#include "particles/particlesystem.hpp"
 
 #pragma once
 
@@ -43,6 +44,8 @@ class CStatePlay : public CState
 
 	CModel m_skyboxModel;
 	CModel *m_pStellarModel;
+
+	CParticle m_particle;
 
 	CTexture *m_pTerrainPNG;
 	CTexture *m_pHotbarTex;

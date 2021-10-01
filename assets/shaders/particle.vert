@@ -8,20 +8,10 @@ out vec3 Light;
 
 #include "shaders/include/uniforms.glsl"
 
+#define PI 3.1415926538
+
 void main()
 {
-	mat4 billboard = model * view;
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			if (i==j)
-				billboard[i*4][j] = 1.0f;
-			else
-				billboard[i*4][j] = 0.0f;
-		}
-	}
-
-	gl_Position = projection * billboard * vec4(aPos, 0.0f);
-	TexCoord = vec2(aTexCoord.x, aTexCoord.y);
+#	include "shaders/include/inworld.glsl"
+#	include "shaders/include/diffuse.glsl"
 }

@@ -250,6 +250,9 @@ void CStatePlay::Update()
 				m_bInChat = false;
 			}
 		}
+
+		m_particle.m_vPosition = m_pLocalPlayer->m_camera.m_vPosition + m_pLocalPlayer->m_camera.GetForward() * 2;
+		m_particle.Render(m_pLocalPlayer->m_camera.m_vRotation);
 	}
 
 	delete[] guiBuf;

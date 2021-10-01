@@ -1,11 +1,17 @@
 #include "particle.hpp"
 
-CParticle::CParticle() {}
+#include "particlesystem.hpp"
+
+CParticle::CParticle()
+{
+	m_mdl = particleSystem::particleMdl;
+}
 
 CParticle::~CParticle() {}
 
-void CParticle::Render()
+void CParticle::Render(CVector camForward)
 {
 	m_mdl->m_vPosition = m_vPosition;
+	m_mdl->m_vRotation = camForward;
 	m_mdl->Render();
 }

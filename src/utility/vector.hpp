@@ -18,6 +18,7 @@ class CVector
 	CVector Floor() const;							 // returns a floored vector
 	CVector Ceil() const;							 // returns a ceiled vector
 	CVector Lerp( CVector oVec, float perc ) const;	 // lerps
+	CVector Inverse() const;
 
 	// Operators
 	// Math, with other vectors
@@ -49,3 +50,4 @@ typedef CVector Color;
 typedef Color Colour;
 
 #define DEG2RAD ( M_PI / 180.0 )
+#define RAD2DEG ( 180.0 / M_PI )
