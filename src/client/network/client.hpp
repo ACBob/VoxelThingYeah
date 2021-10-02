@@ -2,6 +2,9 @@
 #include "entities/entityplayer.hpp"
 #include "network/protocol.hpp"
 #include "world/world.hpp"
+#include "particles/particlesystem.hpp"
+
+#include "specialeffectdef.hpp"
 
 #pragma once
 
@@ -23,10 +26,14 @@ class CNetworkClient
 
 	void DecodeChunkData( ArchiveIntermediary data );
 
+	void SpecialEffectHandle(CVector pos, SpecialEffect specialEffect, int attrib);
+
 	// Pointer to the local world
 	CWorld *m_pLocalWorld = nullptr;
 	// Pointer to the local player
 	CEntityPlayer *m_pLocalPlayer = nullptr;
+	// Pointer to the particle manager
+	CParticleManager *m_pParticleMan = nullptr;
 
 	// Please don't modify
 	// Returns if we're connected or not

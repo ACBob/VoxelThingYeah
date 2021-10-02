@@ -5,6 +5,8 @@
 
 #include "logging.hpp"
 
+#include "specialeffectdef.hpp"
+
 namespace protocol
 {
 	void DealWithPacket( NetworkPacket &p, void *side, ENetPeer *pPeer )
@@ -241,6 +243,19 @@ namespace protocol
 				}
 			}
 			break;
+			case ServerPacket::SPECIALEFFECT: {
+				int x,y,z;
+				int effectId;
+				int effectAttrib;
+
+				bufAccess >> x;
+				bufAccess >> y;
+				bufAccess >> z;
+				bufAccess >> effectId;
+				bufAccess >> effectAttrib;
+
+				client->SpecialEffectHandle(CVector(x,y,z), (SpecialEffect)effectId, effectAttrib);
+			}
 
 			default: {
 				con_error( "Unknown packet of type %#010x", p.type );

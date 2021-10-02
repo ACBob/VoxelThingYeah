@@ -43,6 +43,7 @@ void CStatePlay::Enter()
 
 	pStateMan->m_pClient->m_pLocalPlayer = m_pLocalPlayer;
 	pStateMan->m_pClient->m_pLocalWorld	 = m_pLocalWorld;
+	pStateMan->m_pClient->m_pParticleMan = &m_particleMan;
 }
 
 void CStatePlay::Exit()
@@ -54,6 +55,7 @@ void CStatePlay::Exit()
 
 	pStateMan->m_pClient->m_pLocalPlayer = nullptr;
 	pStateMan->m_pClient->m_pLocalWorld	 = nullptr;
+	pStateMan->m_pClient->m_pParticleMan = nullptr;
 }
 
 void CStatePlay::Update()

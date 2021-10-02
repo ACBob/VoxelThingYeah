@@ -137,4 +137,18 @@ namespace protocol
 
 		protocol::SendPacket( pPeer, p );
 	}
+	void SendServerSpecialEffect( ENetPeer *pPeer, int x, int y, int z, int id, int attrib )
+	{
+		ServerPacket p;
+		Archive<ArchiveBuf> bufAccess = p.GetAccess();
+		p.type						  = ServerPacket::SPECIALEFFECT;
+
+		bufAccess << x;
+		bufAccess << y;
+		bufAccess << z;
+		bufAccess << id;
+		bufAccess << attrib;
+
+		protocol::SendPacket( pPeer, p );
+	}
 } // namespace protocol

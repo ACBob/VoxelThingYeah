@@ -5,6 +5,8 @@
 
 #include "logging.hpp"
 
+#include "specialeffectdef.hpp"
+
 namespace protocol
 {
 	void DealWithPacket( NetworkPacket &p, void *pSide, ENetPeer *pPeer )
@@ -93,6 +95,9 @@ namespace protocol
 				CBlock *b = pServer->m_world.BlockAtWorldPos( CVector( x, y, z ) );
 				if ( true ) // If it's a valid block placement (for now no check)
 				{
+					if (blockType == AIR)
+						SendServerSpecialEffect(pPeer, x, y, z, SPECIALEFFECT_BLOCKBREAK, b->m_iBlockType);
+
 					b->m_iBlockType = (blocktype_t)blockType;
 					b->m_iValueA = valA;
 					b->m_iValueB = valB;
