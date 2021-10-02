@@ -2,11 +2,16 @@
 
 #include "particlesystem.hpp"
 
-CParticle::CParticle() :
+CParticle::CParticle(ParticleDef pdef) :
 	m_vSize(1,1),
-	m_vVelocity(0)
+	m_vVelocity(0),
+	m_mdl(particleSystem::particleMdl)
 {
-	m_mdl = particleSystem::particleMdl;
+	m_particleDef = pdef;
+
+	m_vVelocity = m_particleDef.vMinExplode + ( m_particleDef.vMaxExplode - m_particleDef.vMinExplode ) * ( ( rand() ) / (float)RAND_MAX );
+	m_vSize = m_particleDef.vMinSize + ( m_particleDef.vMaxSize - m_particleDef.vMinSize ) * ( ( rand() ) / (float)RAND_MAX );
+	m_fLifeTime = m_particleDef.fMinLifetime + ( m_particleDef.fMaxLifetime - m_particleDef.fMinLifetime ) * ( ( rand() ) / (float)RAND_MAX );
 }
 
 CParticle::~CParticle() {}
@@ -45,5 +50,13 @@ void CParticle::PhysicsTick(CWorld *pWorld, float fDelta)
 		m_vVelocity.z /= 2;
 	}
 
-	m_vVelocity = m_vVelocity + m_vLinear;
+	CVector f = m_vVelocity * m_particleDef.vDrag;
+	m_vVelocity = m_vVelocity - f;
+	m_vVelocity = m_vVelocity + m_particleDef.vLinear;
+
+	m_vSize = m_vSize - m_particleDef.vShrinkage * fDelta;
+
+	// Die if we've become a singularity
+	if (m_vSize <= CVector(0,0))
+		m_fLifeTime = 0.0f;
 }

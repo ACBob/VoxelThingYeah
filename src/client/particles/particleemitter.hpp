@@ -4,10 +4,13 @@
 
 #pragma once
 
+// A particle emitter may not make more than this many particles (seriously dude why)
+#define MAXEMITTERPARTICLEMASTER 8192
+
 class CParticleEmitter
 {
   public:
-	CParticleEmitter();
+	CParticleEmitter(ParticleDef pdef);
 	~CParticleEmitter();
 
 	void Render(CVector camRot);
@@ -22,14 +25,9 @@ class CParticleEmitter
 	int64_t m_iLastTick = 0;
 
 	bool m_bDone = false;
-	bool m_bOneshot = false;
 
 	// Properties
-	bool m_bParticlesCollide = true;
-	float m_fParticleLifetimes = 2.0;
-
-	int m_iMaxParticles = 100;
-	int m_iParticleEveryNthTick = 1;
+	ParticleDef m_particleDef;
 
   private:
 	std::vector<CParticle> m_particles;

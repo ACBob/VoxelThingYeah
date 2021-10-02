@@ -3,13 +3,15 @@
 
 #include "world/world.hpp"
 
+#include "particledef.hpp"
+
 #pragma once
 
 class CParticle
 {
 
   public:
-	CParticle();
+	CParticle(ParticleDef pdef);
 	~CParticle();
 
 	void Render(CVector camRot);
@@ -21,9 +23,7 @@ class CParticle
 
 	CVector m_vVelocity;
 
-	CVector m_vLinear;
-	
-	bool m_bCollision;
+	ParticleDef m_particleDef;
 
 	float m_fLifeTime;
 

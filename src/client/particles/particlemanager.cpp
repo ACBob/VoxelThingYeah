@@ -13,27 +13,18 @@ CParticleManager::~CParticleManager()
 	m_emitters.clear();
 }
 
-CParticle &CParticleManager::CreateParticle(CVector pos, CVector explode, CVector linear, float lifetime, bool collide)
+CParticle &CParticleManager::CreateParticle(CVector pos, ParticleDef pdef)
 {
-	CParticle &p = m_particles.emplace_back();
+	CParticle &p = m_particles.emplace_back(pdef);
 	p.m_vPosition = pos;
-	p.m_vVelocity = explode;
-	p.m_vLinear = linear;
-	p.m_bCollision = collide;
-	p.m_fLifeTime = lifetime;
 
 	return p;
 }
 
-CParticleEmitter &CParticleManager::CreateEmitter(CVector pos, CVector explode, CVector linear, float lifetime, bool collide, bool oneshot)
+CParticleEmitter &CParticleManager::CreateEmitter(CVector pos, ParticleDef pdef)
 {
-	CParticleEmitter &p = m_emitters.emplace_back();
+	CParticleEmitter &p = m_emitters.emplace_back(pdef);
 	p.m_vPosition = pos;
-	p.m_vExplosion = explode;
-	p.m_vLinear = linear;
-	p.m_bParticlesCollide = collide;
-	p.m_fParticleLifetimes = lifetime;
-	p.m_bOneshot = oneshot;
 
 	return p;
 }

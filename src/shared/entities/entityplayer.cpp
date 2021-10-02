@@ -71,7 +71,7 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 
 				for (int i = 0; i < 20; i++)
 				{
-					pParticleMan->CreateParticle(m_pointed.m_vPosition - CVector( 0.5, 0.5, 0.5 ), CVector(2.5f - rand() % 500 / 100.0f, 2.5f - rand() % 500 / 100.0f, 2.5f - rand() % 500 / 100.0f), {0,-.98,0}, 1 + rand() % 100 / 100.0f, true);
+					pParticleMan->CreateParticle(m_pointed.m_vPosition - CVector( 0.5, 0.5, 0.5 ), ParticleDef());
 				}
 
 				protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5,

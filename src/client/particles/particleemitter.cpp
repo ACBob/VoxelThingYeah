@@ -2,7 +2,10 @@
 
 #include <algorithm>
 
-CParticleEmitter::CParticleEmitter() {}
+CParticleEmitter::CParticleEmitter(ParticleDef pdef)
+{
+	m_particleDef = pdef;
+}
 
 CParticleEmitter::~CParticleEmitter()
 {
@@ -22,21 +25,17 @@ void CParticleEmitter::PhysicsTick(CWorld *pWorld, int64_t iTick, float fDelta)
 	for ( CParticle &p : m_particles )
 		p.PhysicsTick(pWorld, fDelta);
 	
-	if (!m_bDone && iTick != m_iLastTick && iTick % m_iParticleEveryNthTick == 0)
+	if (!m_bDone && iTick != m_iLastTick && iTick % m_particleDef.iEmissionTick == 0)
 	{
-		if (m_particles.size() < m_iMaxParticles)
+		if (m_particles.size() < m_particleDef.iMaxParticles && m_particles.size() < MAXEMITTERPARTICLEMASTER)
 		{
-			CParticle &p = m_particles.emplace_back();
-			p.m_bCollision = m_bParticlesCollide;
-			p.m_fLifeTime = m_fParticleLifetimes;
+			CParticle &p = m_particles.emplace_back(m_particleDef);
 			p.m_vPosition = m_vPosition;
-			p.m_vVelocity = m_vExplosion;
-			p.m_vLinear = m_vLinear;
 		}
 
 		m_iLastTick = iTick;
 	}
 
-	if (m_bOneshot && m_particles.size() == m_iMaxParticles)
+	if (m_particleDef.bOneShot && m_particles.size() == m_particleDef.iMaxParticles)
 		m_bDone = true;
 }
