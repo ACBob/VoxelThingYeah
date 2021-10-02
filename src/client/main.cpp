@@ -154,11 +154,11 @@ int main( int argc, char *args[] )
 
 	con_info( "Init Game State..." );
 	CGameStateMachine gameStateMan;
-	gameStateMan.PushState( std::make_unique<CStateMenu>() );
 	gameStateMan.m_pClient	 = &client;
 	gameStateMan.m_pGui		 = &gui;
 	gameStateMan.m_pWindow	 = &window;
 	gameStateMan.m_pInputMan = &inputMan;
+	gameStateMan.PushState( std::make_unique<CStateMenu>() );
 
 	inputMan.m_bInGui = true;
 

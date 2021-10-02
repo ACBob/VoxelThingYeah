@@ -259,7 +259,14 @@ void CStatePlay::Update()
 		m_pStateMan->PopState();
 }
 
-void CStateMenu::Enter() {}
+void CStateMenu::Enter()
+{
+	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+
+	// 3 and 4 are used for ip and port respectively
+	pStateMan->m_pGui->m_textBuffers[3] = cl_ip->GetString();
+	pStateMan->m_pGui->m_textBuffers[4] = cl_port->GetString();
+}
 
 void CStateMenu::Exit()
 {
@@ -282,6 +289,9 @@ void CStateMenu::Update()
 
 	if ( pStateMan->m_pGui->LabelButton( 1, "Play", pStateMan->m_pGui->m_vScreenCentre, CVector( 0.5, 0.5 ) ) )
 	{
+		cl_ip->SetString(pStateMan->m_pGui->m_textBuffers[3].c_str());
+		cl_port->SetString(pStateMan->m_pGui->m_textBuffers[4].c_str());
+
 		pStateMan->m_pClient->Connect( cl_ip->GetString(), cl_port->GetInt() );
 		m_pStateMan->PushState( std::make_unique<CStatePlay>() );
 	}
@@ -290,4 +300,9 @@ void CStateMenu::Update()
 	{
 		pStateMan->PopState();
 	}
+
+	pStateMan->m_pGui->Label("IP:", pStateMan->m_pGui->m_vScreenCentre - CVector(0,4.5), Color(1,1,1), CGui::TEXTALIGN_CENTER);
+	pStateMan->m_pGui->SelectableTextInput(3, pStateMan->m_pGui->m_vScreenCentre - CVector(8,7), CVector(16,2));
+	pStateMan->m_pGui->Label("Port:", pStateMan->m_pGui->m_vScreenCentre - CVector(0,9.5), Color(1,1,1), CGui::TEXTALIGN_CENTER);
+	pStateMan->m_pGui->SelectableTextInput(4, pStateMan->m_pGui->m_vScreenCentre - CVector(8,12), CVector(16,2));
 }

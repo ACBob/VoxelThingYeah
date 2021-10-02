@@ -45,8 +45,7 @@ class CGui
 	CShader *m_pTextShader = nullptr;
 
 	CTexture *m_pButtonTex = nullptr;
-
-	std::map<int, std::string> m_textBuffers;
+	CTexture *m_pTextInpTex = nullptr;
 
   public:
 	CGui( int screenW, int screenH );
@@ -94,9 +93,13 @@ class CGui
 	int m_iHotItem;
 	// Current interaction
 	int m_iActiveItem;
+	// Current element with keyboard element
+	int m_iKeyboardItem;
 
 	// Gui Size
 	int m_iGuiUnit;
+
+	std::map<int, std::string> m_textBuffers;
 
 	// Z Ignored!
 	bool RegionHit( CVector vPosition, CVector vSize );
@@ -127,4 +130,5 @@ class CGui
 	void Image9Rect( CTexture *pTex, CVector pos, CVector size, Colour color );
 	void Crosshair(); // A wrapper for Image
 	const char *TextInput( int iId, CVector vPosition );
+	const char *SelectableTextInput( int id, CVector pos, CVector size, CTexture *pTex = nullptr ); // Variant of TextInput that has support for selection, also rendering with a background
 };

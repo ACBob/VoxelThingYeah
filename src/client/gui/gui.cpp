@@ -48,7 +48,7 @@ int CGui::GetTextLength( const char *msg )
 	return l;
 }
 
-CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActiveItem( 0 ), m_iHotItem( 0 )
+CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActiveItem( 0 ), m_iHotItem( 0 ), m_iKeyboardItem( 0 )
 {
 	// OpenGl
 	{
@@ -79,6 +79,7 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 	m_pTextTex		= materialSystem::LoadTexture( "font.png" );
 	m_pTextShader	= shaderSystem::LoadShader( "shaders/text.vert", "shaders/text.frag" );
 	m_pButtonTex	= materialSystem::LoadTexture( "button.png" );
+	m_pTextInpTex	= materialSystem::LoadTexture( "textinput.png" );
 	m_pBGTex		= materialSystem::LoadTexture( "guibg.png" );
 	m_pCrosshairTex = materialSystem::LoadTexture( "crosshair.png" );
 	m_pInventoryTex = materialSystem::LoadTexture( "inventory.png" );
@@ -268,8 +269,6 @@ int CGui::Button( int id, CVector pos, CVector size, CVector origin, CTexture *t
 	{
 		m_iHotItem = id;
 		color	   = Colour( 0.75, 0.75, 1 );
-		if ( m_iMouseState != 0 )
-			NULL; // Breakpoint
 		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
 		{
 			m_iActiveItem = id;
@@ -311,7 +310,7 @@ int CGui::LabelButton( int id, const char *msg, CVector pos, CVector origin, CVe
 	pos			 = pos - ( size / GUIUNIT ) * origin;
 
 	// TODO: it's in the floor
-	Label( msg, ( pos + ( size / GUIUNIT ) * origin ), CVector( 1, 1, 1 ), TEXTALIGN_CENTER );
+	Label( msg, ( pos + CVector(0,-0.5) + ( size / GUIUNIT ) * origin ), CVector( 1, 1, 1 ), TEXTALIGN_CENTER );
 	return buttonOut;
 }
 
@@ -378,8 +377,6 @@ void CGui::ImageAtlas( CTexture *tex, Atlas atlas, float atlasDivisions, CVector
 	}
 }
 
-#define rect9s 1.0
-
 void CGui::Image9Rect( CTexture *tex, CVector pos, CVector size, Colour color )
 {
 	// Corners of the 9rect
@@ -444,7 +441,36 @@ const char *CGui::TextInput( int id, CVector pos )
 		return nullptr;
 }
 
-// const char *CGui::TextInput( int id, CVector pos )
-// {
+const char *CGui::SelectableTextInput( int id, CVector pos, CVector size, CTexture *pTex )
+{
+	pos	 = GetInScreen( pos );
+	size = size * GUIUNIT;
 
-// }
+	if ( pTex == nullptr )
+		pTex = m_pTextInpTex;
+	
+	Image9Rect(pTex, pos / GUIUNIT, size / GUIUNIT, Color(1,1,1));
+
+	if (RegionHit(pos, size))
+	{
+		m_iHotItem = id;
+		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
+		{
+			m_iActiveItem = id;
+			m_iKeyboardItem = id;
+
+			con_info("click");
+		}
+	}		
+
+	if (m_iKeyboardItem != id)
+		Label(m_textBuffers[id].c_str(), (pos / GUIUNIT) + CVector(0,0.5));
+	else
+	{
+		TextInput(id, (pos / GUIUNIT) + CVector(0,0.5));
+
+
+	}
+
+	return nullptr;
+}
