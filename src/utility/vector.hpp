@@ -18,7 +18,9 @@ class CVector
 	CVector Floor() const;							 // returns a floored vector
 	CVector Ceil() const;							 // returns a ceiled vector
 	CVector Lerp( CVector oVec, float perc ) const;	 // lerps
-	CVector Inverse() const;
+	CVector Inverse() const; // Gets the inverse vector
+	CVector LookingAt(CVector oVec, CVector up = {0,1,0}) const; // Returns a vector of degrees for a rotation that would point at oVec from here
+	float Dot(CVector oVec) const;
 
 	// Operators
 	// Math, with other vectors

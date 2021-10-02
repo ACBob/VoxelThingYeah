@@ -96,6 +96,22 @@ CVector CVector::Inverse() const
 	CVector g = CVector(-x, -y, -z, -w);
 	return g;
 }
+CVector CVector::LookingAt(CVector oVec, CVector up) const
+{
+	CVector a = {x,0,z};
+	CVector b = {x,y,0};
+	CVector c = {oVec.x,0,oVec.z};
+	CVector d = {oVec.x,oVec.y,0};
+
+	float d1 = acosf(a.Dot(c) / (a.Magnitude() * c.Magnitude())) * RAD2DEG;
+	float d2 = acosf(b.Dot(d) / (b.Magnitude() * d.Magnitude())) * RAD2DEG;
+
+	return {d2,d1,0};
+}
+float CVector::Dot(CVector oVec) const
+{
+	return x * oVec.x + y * oVec.y + z * oVec.z + w * oVec.w;
+} 
 
 // Operators
 // Math, with other vectors

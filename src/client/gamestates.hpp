@@ -45,7 +45,7 @@ class CStatePlay : public CState
 	CModel m_skyboxModel;
 	CModel *m_pStellarModel;
 
-	CParticle m_particle;
+	CParticleEmitter m_particleEmitterTest;
 
 	CTexture *m_pTerrainPNG;
 	CTexture *m_pHotbarTex;

@@ -80,6 +80,8 @@ void CStatePlay::Update()
 		m_pLocalPlayer->UpdateClient( m_pLocalWorld );
 		m_pLocalWorld->WorldTick( pStateMan->m_iTick, pStateMan->m_fDelta );
 
+		m_particleEmitterTest.PhysicsTick( m_pLocalWorld, pStateMan->m_iTick, pStateMan->m_fDelta );
+
 		if ( pStateMan->m_iTick != m_iLastTick )
 		{
 			// Bandwith patrol, come out with your hands up!
@@ -119,6 +121,9 @@ void CStatePlay::Update()
 		glBindTexture( GL_TEXTURE_2D, m_pTerrainPNG->m_iId );
 
 		m_pLocalWorld->Render();
+
+		// Particles Last
+		m_particleEmitterTest.Render(m_pLocalPlayer->m_camera.m_vRotation);
 
 		// -----------------------
 		// Input
@@ -251,8 +256,7 @@ void CStatePlay::Update()
 			}
 		}
 
-		m_particle.m_vPosition = m_pLocalPlayer->m_camera.m_vPosition + m_pLocalPlayer->m_camera.GetForward() * 2;
-		m_particle.Render(m_pLocalPlayer->m_camera.m_vRotation);
+		m_particleEmitterTest.m_vPosition = m_pLocalPlayer->m_vPosition + m_pLocalPlayer->GetForward() * 3;
 	}
 
 	delete[] guiBuf;
