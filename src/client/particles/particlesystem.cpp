@@ -21,9 +21,6 @@ namespace particleSystem
 		particleMdl->SetTexture( materialSystem::LoadTexture( "test.png" ) );
 	}
 	void UnInit() { delete particleMdl; }
-
-	std::vector<CParticle> particles;
-	std::vector<CParticleEmitter> particleEmitters;
-
+	
 	CModel *particleMdl = nullptr;
 } // namespace particleSystem

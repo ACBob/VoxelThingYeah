@@ -80,7 +80,7 @@ void CStatePlay::Update()
 		m_pLocalPlayer->UpdateClient( m_pLocalWorld );
 		m_pLocalWorld->WorldTick( pStateMan->m_iTick, pStateMan->m_fDelta );
 
-		m_particleEmitterTest.PhysicsTick( m_pLocalWorld, pStateMan->m_iTick, pStateMan->m_fDelta );
+		m_particleMan.PhysicsTick( m_pLocalWorld, pStateMan->m_iTick, pStateMan->m_fDelta );
 
 		if ( pStateMan->m_iTick != m_iLastTick )
 		{
@@ -123,7 +123,7 @@ void CStatePlay::Update()
 		m_pLocalWorld->Render();
 
 		// Particles Last
-		m_particleEmitterTest.Render(m_pLocalPlayer->m_camera.m_vRotation);
+		m_particleMan.Render(m_pLocalPlayer->m_camera.m_vRotation);
 
 		// -----------------------
 		// Input
@@ -255,8 +255,6 @@ void CStatePlay::Update()
 				m_bInChat = false;
 			}
 		}
-
-		m_particleEmitterTest.m_vPosition = m_pLocalPlayer->m_vPosition + m_pLocalPlayer->GetForward() * 3;
 	}
 
 	delete[] guiBuf;

@@ -21,6 +21,9 @@ class CParticleEmitter
 
 	int64_t m_iLastTick = 0;
 
+	bool m_bDone = false;
+	bool m_bOneshot = false;
+
 	// Properties
 	bool m_bParticlesCollide = true;
 	float m_fParticleLifetimes = 2.0;

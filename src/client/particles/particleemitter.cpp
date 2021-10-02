@@ -4,7 +4,10 @@
 
 CParticleEmitter::CParticleEmitter() {}
 
-CParticleEmitter::~CParticleEmitter() {}
+CParticleEmitter::~CParticleEmitter()
+{
+	m_particles.clear();
+}
 
 void CParticleEmitter::Render(CVector camRot)
 {
@@ -19,7 +22,7 @@ void CParticleEmitter::PhysicsTick(CWorld *pWorld, int64_t iTick, float fDelta)
 	for ( CParticle &p : m_particles )
 		p.PhysicsTick(pWorld, fDelta);
 	
-	if (iTick != m_iLastTick && iTick % m_iParticleEveryNthTick == 0)
+	if (!m_bDone && iTick != m_iLastTick && iTick % m_iParticleEveryNthTick == 0)
 	{
 		if (m_particles.size() < m_iMaxParticles)
 		{
@@ -33,4 +36,7 @@ void CParticleEmitter::PhysicsTick(CWorld *pWorld, int64_t iTick, float fDelta)
 
 		m_iLastTick = iTick;
 	}
+
+	if (m_bOneshot && m_particles.size() == m_iMaxParticles)
+		m_bDone = true;
 }
