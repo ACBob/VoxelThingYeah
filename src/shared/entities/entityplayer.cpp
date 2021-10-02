@@ -28,7 +28,7 @@ CEntityPlayer::CEntityPlayer() :
 CEntityPlayer::~CEntityPlayer() {}
 
 #ifdef CLIENTEXE
-void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
+void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pParticleMan )
 {
 	m_pMdl->m_bVisible = false;
 
@@ -68,6 +68,11 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld )
 											 m_pointed.m_vPosition - CVector( 0.5, 0.5, 0.5 ) );
 				m_pointed.m_pBlock->m_iBlockType = blocktype_t::AIR;
 				m_pointed.m_pBlock->Update();
+
+				for (int i = 0; i < 20; i++)
+				{
+					pParticleMan->CreateParticle(m_pointed.m_vPosition - CVector( 0.5, 0.5, 0.5 ), CVector(2.5f - rand() % 500 / 100.0f, 2.5f - rand() % 500 / 100.0f, 2.5f - rand() % 500 / 100.0f), {0,-.98,0}, 1 + rand() % 100 / 100.0f, true);
+				}
 
 				protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5,
 											  blocktype_t::AIR, 0, 0 );

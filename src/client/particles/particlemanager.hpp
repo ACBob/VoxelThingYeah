@@ -15,7 +15,7 @@ class CParticleManager
 
 		void Render(CVector camRot);
 
-		CParticle &CreateParticle(CVector pos, CVector explode, CVector linear, bool collide);
+		CParticle &CreateParticle(CVector pos, CVector explode, CVector linear, float lifetime, bool collide);
 		CParticleEmitter &CreateEmitter(CVector pos, CVector explode, CVector linear, float lifetime, bool collide, bool oneshot);
 
 		std::vector<CParticleEmitter> m_emitters;

@@ -77,7 +77,7 @@ void CStatePlay::Update()
 		// -----------------------
 		// Updating Stuff
 		// -----------------------
-		m_pLocalPlayer->UpdateClient( m_pLocalWorld );
+		m_pLocalPlayer->UpdateClient( m_pLocalWorld, &m_particleMan );
 		m_pLocalWorld->WorldTick( pStateMan->m_iTick, pStateMan->m_fDelta );
 
 		m_particleMan.PhysicsTick( m_pLocalWorld, pStateMan->m_iTick, pStateMan->m_fDelta );
@@ -124,6 +124,8 @@ void CStatePlay::Update()
 
 		// Particles Last
 		m_particleMan.Render(m_pLocalPlayer->m_camera.m_vRotation);
+
+		// m_particleMan.CreateParticle(m_pLocalPlayer->m_vPosition, CVector(2.5f - (rand() % 500) / 100.0f, 5.0f - (rand() % 1000) / 100.0f, 2.5f - (rand() % 500) / 100.0f), {0,-.98,0}, 5, true);
 
 		// -----------------------
 		// Input

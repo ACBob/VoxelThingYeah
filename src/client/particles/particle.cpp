@@ -38,6 +38,7 @@ void CParticle::PhysicsTick(CWorld *pWorld, float fDelta)
 		m_vPosition.y -= m_vVelocity.y * fDelta;
 		m_vVelocity.y /= 2;
 	}
+	m_vPosition.z += m_vVelocity.z * fDelta;
 	if ( pWorld->TestPointCollision( m_vPosition ) )
 	{
 		m_vPosition.z -= m_vVelocity.z * fDelta;

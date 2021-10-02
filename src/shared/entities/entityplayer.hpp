@@ -6,6 +6,10 @@
 
 #include "inventory/inventory.hpp"
 
+#ifdef CLIENTEXE
+#include "particles/particlemanager.hpp"
+#endif
+
 #pragma once
 
 class CEntityPlayer : public CEntityBase
@@ -28,7 +32,7 @@ class CEntityPlayer : public CEntityBase
 	void Kill() { BaseClass::Kill(); }
 
 #ifdef CLIENTEXE
-	void UpdateClient( CWorld *clientSideWorld );
+	void UpdateClient( CWorld *clientSideWorld, CParticleManager *pParticleMan );
 #endif
 
 	void PhysicsTick( float delta, CWorld *world );
