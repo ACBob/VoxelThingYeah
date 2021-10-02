@@ -147,7 +147,7 @@ const int scancodeToStateIndex[] = {
 	SDL_SCANCODE_Y,			'Y',		SDL_SCANCODE_Z,		 'Z',
 
 	SDL_SCANCODE_ESCAPE,	KBD_ESCAPE, SDL_SCANCODE_LSHIFT, KBD_SHIFT, SDL_SCANCODE_BACKSPACE, KBD_BACKSPACE,
-	SDL_SCANCODE_RETURN,	KBD_RETURN,
+	SDL_SCANCODE_RETURN,	KBD_RETURN, SDL_SCANCODE_LCTRL, KBD_CNTRL
 };
 
 void CGameWindow::PollEvents()
@@ -162,6 +162,8 @@ void CGameWindow::PollEvents()
 
 	m_pInputMan->m_iOldMouseState = m_pInputMan->m_iMouseState;
 	m_pInputMan->m_iMouseState	  = 0;
+
+	m_pInputMan->m_clipboard = "";
 
 	if (m_pInputMan->m_cTypeKey != nullptr)
 		delete m_pInputMan->m_cTypeKey;
@@ -223,6 +225,14 @@ void CGameWindow::PollEvents()
 	if ( ( buttons & SDL_BUTTON_RMASK ) != 0 )
 	{
 		m_pInputMan->m_iMouseState = m_pInputMan->m_iMouseState | IN_RIGHT_MOUSE;
+	}
+
+	// Detect when CTRL+V has been pressed
+	if ( m_pInputMan->m_bKeyboardState[KBD_CNTRL] && (m_pInputMan->m_bKeyboardState['V'] && !m_pInputMan->m_bOldKeyboardState['V']) )
+	{
+		char *clipboard = SDL_GetClipboardText();
+		m_pInputMan->m_clipboard = clipboard;
+		SDL_free(clipboard);
 	}
 }
 

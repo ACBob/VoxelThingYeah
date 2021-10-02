@@ -1,5 +1,7 @@
 #include "utility/vector.hpp"
 
+#include <string>
+
 #pragma once
 
 #define IN_NO_MOUSE 0
@@ -35,6 +37,7 @@ enum KBDKEY // Keys unrepresentable by a char
   KBD_SHIFT		= 1,
   KBD_BACKSPACE = 2,
   KBD_RETURN	= 3,
+  KBD_CNTRL = 4,
 };
 
 class CInputManager
@@ -51,6 +54,8 @@ class CInputManager
 
 	// the character we are to type
 	char *m_cTypeKey = nullptr;
+
+	std::string m_clipboard;
 
 	// Mousepos is the current position of the mouse
 	// Mousemovement is the movement of the mouse since last frame

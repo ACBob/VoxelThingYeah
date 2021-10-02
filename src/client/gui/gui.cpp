@@ -412,6 +412,9 @@ const char *CGui::TextInput( int id, CVector pos )
 		text += m_pInputMan->m_cTypeKey;
 	}
 
+	if (m_pInputMan->m_clipboard.size())
+		text += m_pInputMan->m_clipboard;
+
 	if ( m_pInputMan->m_bKeyboardState[KBD_BACKSPACE] && !m_pInputMan->m_bOldKeyboardState[KBD_BACKSPACE] )
 	{
 		if ( text.length() )
