@@ -16,8 +16,16 @@
 
 #include "world/world.hpp"
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 int main( int argc, char *args[] )
 {
+	// Because Windows is from the stoneage
+#ifdef _WIN32
+	SetConsoleOutputCP( CP_UTF8 );
+#endif
 	con_info( "Hello from scenic Meegreef server!" );
 	con_info( "Setting up Server-side convars..." );
 	SetupServerSideConvars();
