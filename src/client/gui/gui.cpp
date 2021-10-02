@@ -351,9 +351,6 @@ void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment tex
 			// Shadow
 			const int j = std::distance(CP437UNICODE, std::find(CP437UNICODE, CP437UNICODE + 256, c));
 
-			if (c == 163)
-				con_info("%d, %d", c, j);
-
 			std::vector<CGui::Vertex> g = GetCharQuad( j, pos - ( 2.0f / 16.0f * (float)GUIUNIT ),
 													   CVector( TEXTWIDTH, TEXTHEIGHT ), color / 2 );
 			std::copy( g.begin(), g.end(), std::back_inserter( m_textVertiecs ) );
@@ -414,7 +411,22 @@ const char *CGui::TextInput( int id, CVector pos )
 	if ( m_pInputMan->m_bKeyboardState[KBD_BACKSPACE] && !m_pInputMan->m_bOldKeyboardState[KBD_BACKSPACE] )
 	{
 		if ( text.length() )
-			text.pop_back();
+		{
+			if (text.length() >= 2)
+			{
+				std::string g = text.substr( text.length() - 2 );
+
+				int a = utfz::decode(g.c_str());
+				if (a > 127 && a != utfz::replace)
+				{
+					// HACK: Remove two :trollface:
+					text.pop_back();
+				}
+			}
+
+			text.pop_back();			
+		}
+			
 	}
 
 	m_textBuffers[id] = text;
