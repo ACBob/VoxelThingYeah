@@ -242,7 +242,7 @@ void CStatePlay::Update()
 		if (m_bInChat)
 		{
 			// Chat
-			const char *chat = pStateMan->m_pGui->TextInput(5, CVector(0,0));
+			const char *chat = pStateMan->m_pGui->TextInput(69, CVector(0,0));
 
 			if (chat != nullptr)
 			{
