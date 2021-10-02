@@ -10,7 +10,7 @@ CParticle::CParticle(ParticleDef pdef) :
 	m_particleDef = pdef;
 
 	m_vVelocity = RandomVector(m_particleDef.vMinExplode, m_particleDef.vMaxExplode);
-	m_vSize = RandomVector(m_particleDef.vMinSize, m_particleDef.vMaxSize);
+	m_vSize = m_particleDef.vMinSize + ( m_particleDef.vMaxSize - m_particleDef.vMinSize ) * ( ( rand() ) / (float)RAND_MAX );
 	m_vUvOffset = RandomVector(m_particleDef.vUVOffsetMin, m_particleDef.vUVOffsetMax);
 	m_fLifeTime = m_particleDef.fMinLifetime + ( m_particleDef.fMaxLifetime - m_particleDef.fMinLifetime ) * ( ( rand() ) / (float)RAND_MAX );
 }
