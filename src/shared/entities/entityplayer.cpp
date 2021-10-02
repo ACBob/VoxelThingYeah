@@ -74,10 +74,11 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 				ParticleDef blockBreak = PARTICLE_BREAKBLOCK;
 				blockBreak.vUVOffsetMin = blockBreak.vUVOffsetMax = CVector(tex.sizex / 16.0f, tex.sizey / 16.0f, tex.x / 16.0f, tex.y / 16.0f);
 				blockBreak.pTexture = materialSystem::LoadTexture("terrain.png");
-				for (int i = 0; i < 20; i++)
-				{
-					pParticleMan->CreateParticle(m_pointed.m_vPosition - CVector( 0.5, 0.5, 0.5 ), blockBreak);
-				}
+
+				for (int x = 0; x < 4; x++)
+					for (int y = 0; y < 4; y++)
+						for (int z = 0; z < 4; z++)
+							pParticleMan->CreateParticle(m_pointed.m_vPosition - CVector( x/4.0f,y/4.0f,z/4.0f ), blockBreak);
 
 				protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5,
 											  blocktype_t::AIR, 0, 0 );

@@ -31,6 +31,8 @@ void CParticle::PhysicsTick(CWorld *pWorld, float fDelta)
 {
 	if (m_fLifeTime <= 0)
 		return;
+
+	bool applyFriction = false;
 	
 	m_fLifeTime -= fDelta;
 
@@ -39,23 +41,34 @@ void CParticle::PhysicsTick(CWorld *pWorld, float fDelta)
 	{
 		m_vPosition.x -= m_vVelocity.x * fDelta;
 		m_vVelocity.x /= 2;
+
+		applyFriction = true;
 	}
 	m_vPosition.y += m_vVelocity.y * fDelta;
 	if ( pWorld->TestPointCollision( m_vPosition ) )
 	{
 		m_vPosition.y -= m_vVelocity.y * fDelta;
 		m_vVelocity.y /= 2;
+
+		applyFriction = true;
 	}
 	m_vPosition.z += m_vVelocity.z * fDelta;
 	if ( pWorld->TestPointCollision( m_vPosition ) )
 	{
 		m_vPosition.z -= m_vVelocity.z * fDelta;
 		m_vVelocity.z /= 2;
+
+		applyFriction = true;
 	}
 
-	CVector f = m_vVelocity * m_particleDef.vDrag;
-	m_vVelocity = m_vVelocity - f;
 	m_vVelocity = m_vVelocity + m_particleDef.vLinear;
+
+	CVector f = m_vVelocity * m_particleDef.vDrag;
+	if (applyFriction)
+		f = f + m_vVelocity * m_particleDef.vFriction;
+	m_vVelocity = m_vVelocity - f;
+
+
 
 	m_vSize = m_vSize - m_particleDef.vShrinkage * fDelta;
 

@@ -14,5 +14,7 @@ void main()
 {
 #	include "shaders/include/inworld.glsl"
 
-	Light = vec3(1.0f, 1.0f, 1.0f);
+	float f = 0.5 + 0.5 * cos(PI - PI * (timeOfDay / 12000.0)) * 0.75;
+	f += 0.25 + 0.5 * f;
+	Light = vec3(f);
 }
