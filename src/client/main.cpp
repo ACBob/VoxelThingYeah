@@ -37,6 +37,7 @@
 
 #ifdef _WIN32
 #include <windows.h>
+#include <stdio.h>
 #endif
 
 int main( int argc, char *args[] )
@@ -44,6 +45,8 @@ int main( int argc, char *args[] )
 	// Because Windows is from the stoneage
 #ifdef _WIN32
 	SetConsoleOutputCP( CP_UTF8 );
+	freopen( "CON", "w", stdout );
+	freopen( "CON", "w", stderr );
 #endif
 	con_info( "Hello from Meegreef!" );
 	con_info( "Setting up client-side convars..." );
