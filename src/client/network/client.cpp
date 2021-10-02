@@ -120,6 +120,7 @@ void CNetworkClient::SpecialEffectHandle(CVector pos, SpecialEffect specialEffec
 				return;
 			soundSystem::PlayPlaceSound( b, pos + CVector( 0.5, 0.5, 0.5 ) );
 		}
+		break;
 		default:
 			con_error("Unknown Effect %#010x!", specialEffect);
 		break;
