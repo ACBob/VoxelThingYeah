@@ -210,6 +210,7 @@ int main( int argc, char *args[] )
 		}
 
 		gameStateMan.Update();
+		gui.m_iTick = gameStateMan.m_iTick;
 		gui.Update();
 		client.Update();
 

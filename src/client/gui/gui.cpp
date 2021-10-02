@@ -405,7 +405,7 @@ const char *CGui::TextInput( int id, CVector pos )
 {
 	std::string text = m_textBuffers[id];
 
-	Label( text.c_str(), pos );
+	Label( (text + (((m_iTick / 8) % 2 == 0) ? "_" : "")).c_str(), pos );
 
 	if (m_pInputMan->m_cTypeKey != nullptr)
 	{
@@ -452,28 +452,32 @@ const char *CGui::SelectableTextInput( int id, CVector pos, CVector size, CTextu
 	if ( pTex == nullptr )
 		pTex = m_pTextInpTex;
 	
-	Image9Rect(pTex, pos / GUIUNIT, size / GUIUNIT, Color(1,1,1));
+	Colour color(1,1,1);
+	Colour textColor(1,1,1);
 
 	if (RegionHit(pos, size))
 	{
 		m_iHotItem = id;
+		color	   = Colour( 0.75, 0.75, 1 );
+		textColor = Colour(1,1,0.75);
+
 		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
 		{
 			m_iActiveItem = id;
 			m_iKeyboardItem = id;
-
-			con_info("click");
 		}
 	}		
 
 	if (m_iKeyboardItem != id)
-		Label(m_textBuffers[id].c_str(), (pos / GUIUNIT) + CVector(0,0.5));
+		Label(m_textBuffers[id].c_str(), (pos / GUIUNIT) + CVector(0,0.5), textColor);
 	else
 	{
 		TextInput(id, (pos / GUIUNIT) + CVector(0,0.5));
 
 
 	}
+
+	Image9Rect(pTex, pos / GUIUNIT, size / GUIUNIT, Colour(1,1,1));
 
 	return nullptr;
 }

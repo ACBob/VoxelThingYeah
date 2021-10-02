@@ -96,6 +96,8 @@ class CGui
 	// Current element with keyboard element
 	int m_iKeyboardItem;
 
+	int64_t m_iTick = 0;
+
 	// Gui Size
 	int m_iGuiUnit;
 
