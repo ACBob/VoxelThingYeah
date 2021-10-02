@@ -64,7 +64,7 @@ void CStatePlay::Update()
 
 	pStateMan->m_pInputMan->m_bInGui = ( m_bInChat || m_bInPause || m_pLocalPlayer->m_bInInventory );
 
-	wchar_t *guiBuf = new wchar_t[512];
+	char *guiBuf = new char[512];
 
 	// Should we leave the game?
 	bool leave = false;
@@ -156,13 +156,13 @@ void CStatePlay::Update()
 		// -----------------------
 		// GUI
 		// -----------------------
-		pStateMan->m_pGui->Label( L"Meegreef ALPHA", CVector( 0, -1 ) );
+		pStateMan->m_pGui->Label( "Meegreef ALPHA", CVector( 0, -1 ) );
 
-		pStateMan->m_pGui->Label( L"\u263A Smiley!!!", CVector( 0, -2 ) );
+		pStateMan->m_pGui->Label( "\u263A Smiley!!!", CVector( 0, -2 ) );
 
 		int hours	= m_pLocalWorld->m_iTimeOfDay / 1000;
 		int minutes = ( m_pLocalWorld->m_iTimeOfDay - ( hours * 1000 ) ) / 16.6666;
-		swprintf( guiBuf, 100, L"%02i:%02i", hours, minutes );
+		snprintf( guiBuf, 100, "%02i:%02i", hours, minutes );
 		pStateMan->m_pGui->Label( guiBuf, CVector( pStateMan->m_pGui->m_vScreenCentre.x, -1 ), Color( 1, 1, 1 ),
 								  CGui::TEXTALIGN_CENTER );
 
@@ -181,7 +181,7 @@ void CStatePlay::Update()
 										{ (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey },
 										16.0f, CVector(p + pStateMan->m_pGui->m_vScreenCentre.x, 1.25), CVector( 2, 2 ), CVector( 0.5, 0.5 ) );
 			
-			swprintf( guiBuf, 100, L"%d", m_pLocalPlayer->m_inventory.Slot(i)->GetCount() );
+			snprintf( guiBuf, 100, "%d", m_pLocalPlayer->m_inventory.Slot(i)->GetCount() );
 			pStateMan->m_pGui->Label(guiBuf, CVector(p + pStateMan->m_pGui->m_vScreenCentre.x, 0));
 		}
 		p = 8.0f * (m_pLocalPlayer->m_iSelectedItemIDX / 4.0f -1.0f);
@@ -191,7 +191,7 @@ void CStatePlay::Update()
 		{
 			pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pInventoryTex, pStateMan->m_pGui->m_vScreenCentre,
 									  CVector( 22, 22 ), CVector( 0.5, 0.5 ) );
-			pStateMan->m_pGui->Label( L"Inventory...", pStateMan->m_pGui->m_vScreenCentre + CVector(-9.625, 9.625) );
+			pStateMan->m_pGui->Label( "Inventory...", pStateMan->m_pGui->m_vScreenCentre + CVector(-9.625, 9.625) );
 
 			CVector p  = pStateMan->m_pGui->m_vScreenCentre + CVector( -8, 8 );
 			CVector op = p;
@@ -231,30 +231,22 @@ void CStatePlay::Update()
 		}
 
 		// Chat Rendering
-		wchar_t *buf = new wchar_t[256];
 		for (int i = 5; i > 0; i--)
 		{
 			if (i > pStateMan->m_pClient->m_chatBuffer.size())
 				continue;
 
-			mbstowcs(buf, pStateMan->m_pClient->m_chatBuffer[pStateMan->m_pClient->m_chatBuffer.size() - i].c_str(), 256);
-			pStateMan->m_pGui->Label(buf, CVector(0, i+1));
+			pStateMan->m_pGui->Label(pStateMan->m_pClient->m_chatBuffer[pStateMan->m_pClient->m_chatBuffer.size() - i].c_str(), CVector(0, i+1));
 		}
-		delete[] buf;
 
 		if (m_bInChat)
 		{
 			// Chat
-			const wchar_t *chat = pStateMan->m_pGui->TextInput(5, CVector(0,0));
+			const char *chat = pStateMan->m_pGui->TextInput(5, CVector(0,0));
 
 			if (chat != nullptr)
 			{
-				char *buf = new char[256];
-				wcstombs(buf, chat, 256);
-
-				protocol::SendClientChatMessage(pStateMan->m_pClient->m_pPeer, buf);
-
-				delete[] buf;
+				protocol::SendClientChatMessage(pStateMan->m_pClient->m_pPeer, chat);
 
 				m_bInChat = false;
 			}
@@ -288,13 +280,13 @@ void CStateMenu::Update()
 
 	pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pLogoTex, CVector(pStateMan->m_pGui->m_vScreenCentre.x, -1), CVector(10 * 5.25,10), CVector(0.5, 1) );
 
-	if ( pStateMan->m_pGui->LabelButton( 1, L"Play", pStateMan->m_pGui->m_vScreenCentre, CVector( 0.5, 0.5 ) ) )
+	if ( pStateMan->m_pGui->LabelButton( 1, "Play", pStateMan->m_pGui->m_vScreenCentre, CVector( 0.5, 0.5 ) ) )
 	{
 		pStateMan->m_pClient->Connect( cl_ip->GetString(), cl_port->GetInt() );
 		m_pStateMan->PushState( std::make_unique<CStatePlay>() );
 	}
 
-	if ( pStateMan->m_pGui->LabelButton( 2, L"Quit", pStateMan->m_pGui->m_vScreenCentre - CVector(0,2), CVector( 0.5, 0.5 ) ) )
+	if ( pStateMan->m_pGui->LabelButton( 2, "Quit", pStateMan->m_pGui->m_vScreenCentre - CVector(0,2), CVector( 0.5, 0.5 ) ) )
 	{
 		pStateMan->PopState();
 	}

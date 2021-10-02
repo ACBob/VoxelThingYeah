@@ -34,8 +34,8 @@ class CGui
 
 	std::vector<Vertex> GetQuad( CVector vPosition, CVector vSize, Colour colour, CVector vStart = CVector( 0, 0 ),
 								 CVector vEnd = CVector( 1, 1 ) );
-	std::vector<Vertex> GetCharQuad( const wchar_t c, CVector vPosition, CVector vSize, Colour colour );
-	std::vector<Vertex> GetChar16Quad( const wchar_t c, CVector vPosition, CVector vSize, Colour colour );
+	std::vector<Vertex> GetCharQuad( const char c, CVector vPosition, CVector vSize, Colour colour );
+	std::vector<Vertex> GetChar16Quad( const char c, CVector vPosition, CVector vSize, Colour colour );
 
 	unsigned int m_iVbo, m_iVao;
 	std::vector<Vertex> m_textVertiecs;
@@ -47,7 +47,7 @@ class CGui
 
 	CTexture *m_pButtonTex = nullptr;
 
-	std::map<int, std::wstring> m_textBuffers;
+	std::map<int, std::string> m_textBuffers;
 
   public:
 	CGui( int screenW, int screenH );
@@ -112,19 +112,19 @@ class CGui
 	};
 
 	// Utility
-	int GetTextLength( const wchar_t *text );
+	int GetTextLength( const char *text );
 
 	// Elements
 	int Button( int iId, CVector vPosition, CVector vSize, CVector vOrigin = CVector(0,0), CTexture *tex = nullptr, bool hide = false );
 	int AtlasButton( int id, CTexture *tex, Atlas atlas, float atlasDivisions, CVector pos, CVector size, CVector vOrigin = CVector(0,0) );
-	int LabelButton( int id, const wchar_t *msg, CVector pos, CVector vOrigin = CVector( 0, 0 ),
+	int LabelButton( int id, const char *msg, CVector pos, CVector vOrigin = CVector( 0, 0 ),
 					 CVector padding = CVector( 2, 1, 0 ) );
-	void Label( const wchar_t *cText, CVector vPosition, Colour colour = Color( 1, 1, 1 ),
+	void Label( const char *cText, CVector vPosition, Colour colour = Color( 1, 1, 1 ),
 				TextAlignment textAlign = TEXTALIGN_LEFT );
 	void Image( CTexture *pTex, CVector vPosition, CVector vSize, CVector vOrigin = CVector( 0, 0 ),
 				Colour tint = Colour( 1, 1, 1 ) );
 	void ImageAtlas( CTexture *pTex, Atlas atlas, float fAtlasDivisions, CVector vPosition, CVector vSize,
 					 CVector vOrigin = CVector( 0, 0 ), Color tint = Color(1,1,1) );
 	void Crosshair(); // A wrapper for Image
-	const wchar_t *TextInput( int iId, CVector vPosition );
+	const char *TextInput( int iId, CVector vPosition );
 };

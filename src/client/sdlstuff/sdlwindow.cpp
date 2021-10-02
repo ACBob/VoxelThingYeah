@@ -196,6 +196,10 @@ void CGameWindow::PollEvents()
 			case SDL_TEXTINPUT:
 				m_pInputMan->m_cTypeKey = new char[32];
 				strncpy(m_pInputMan->m_cTypeKey, currentEvent.text.text, 32);
+				m_pInputMan->m_cTypeKey[32] = '\0';
+
+				// con_info("It thinks %s", m_pInputMan->m_cTypeKey);
+				// con_info("Actually %s", currentEvent.text.text);
 				break;
 		}
 	}
