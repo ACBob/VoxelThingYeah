@@ -1,1 +1,1 @@
-start "Meegreef Server" cmd /c bin\voxelthingyeah_server
+start "Meegreef Server" cmd /U /C bin\voxelthingyeah_server

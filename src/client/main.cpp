@@ -35,8 +35,16 @@
 
 #include "gamestates.hpp"
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 int main( int argc, char *args[] )
 {
+	// Because Windows is from the stoneage
+#ifdef _WIN32
+	SetConsoleOutputCP( CP_UTF8 );
+#endif
 	con_info( "Hello from Meegreef!" );
 	con_info( "Setting up client-side convars..." );
 	SetupClientSideConvars();

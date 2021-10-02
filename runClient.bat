@@ -1,1 +1,1 @@
-start "Meegreef Client (OUT)" cmd /c bin\voxelthingyeah_client
+start "Meegreef Client (OUT)" cmd /U /C bin\voxelthingyeah_client

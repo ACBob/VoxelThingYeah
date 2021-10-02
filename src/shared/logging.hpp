@@ -3,32 +3,56 @@
 #include <stdio.h>
 #include <time.h>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 /* Default level */
 #ifndef LOG_LEVEL
     #define LOG_LEVEL   DEBUG
 #endif
 
 /* Colour customization */
+// Because windows is from the stone age and doesn't understand the modern day...
+#ifndef _WIN32
 #define DEBUG_COLOUR    ""
+#define NOCOLOUR        "\x1B[0m"
 #define INFO_COLOUR     "\x1B[36m"
 #define NOTICE_COLOUR   "\x1B[32;1m"
 #define WARNING_COLOUR  "\x1B[33m"
 #define ERROR_COLOUR    "\x1B[31m"
 #define CRITICAL_COLOUR "\x1B[41;1m"
 
+#define LOG_DISPLAYCOLOUR(col) \
+    printf("%s", col)
+#define LOG_RESETCOLOUR \
+    printf("%s", RESET_COLOUR)
+#else
+#define DEBUG_COLOUR    0x0F
+#define NOCOLOUR        0x0F
+#define INFO_COLOUR     0x0B
+#define NOTICE_COLOUR   0x06
+#define WARNING_COLOUR  0x0E
+#define ERROR_COLOUR    0x0C
+#define CRITICAL_COLOUR 0x47
+
+#define LOG_DISPLAYCOLOUR(col) \
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), col);
+#define LOG_RESETCOLOUR \
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RESET_COLOUR);
+#endif
+
 /* Do not change this. */
-#define RESET_COLOUR    "\x1B[0m"
+#define RESET_COLOUR    NOCOLOUR
 
 /* Formatting prefs. */
 #define MSG_ENDING      "\n"
-#define TIME_FORMAT     "%T"
+#define TIME_FORMAT     "%H:%M:%S"
 #define BORDER          "-"
 
 /* Enabler flags */
 /* Debug shows a lot more */
 #if LOG_LEVEL == DEBUG
-#define DISPLAY_COLOUR  1
-#define DISPLAY_TIME    1
 #define DISPLAY_LEVEL   1
 #define DISPLAY_FUNC    1
 #define DISPLAY_FILE    1
@@ -38,8 +62,6 @@
 #define DISPLAY_ENDING  1
 #define DISPLAY_RESET   1
 #else
-#define DISPLAY_COLOUR  1
-#define DISPLAY_TIME    1
 #define DISPLAY_LEVEL   1
 #define DISPLAY_FUNC    0
 #define DISPLAY_FILE    0
@@ -59,10 +81,10 @@
     strftime(time_buffer, 80, TIME_FORMAT, localtime(&raw_time));                   \
                                                                                     \
     /* enable colour */                                                             \
-    printf("%s", DISPLAY_COLOUR ? colour : "");                                     \
+    LOG_DISPLAYCOLOUR(colour);                                                      \
                                                                                     \
     /* display the time */                                                          \
-    printf("%s%s", DISPLAY_TIME ? time_buffer : "", DISPLAY_TIME ? " " : "");       \
+    printf("%s ", time_buffer);                                                     \
                                                                                     \
     /* display the level */                                                         \
     printf("%10s%s", DISPLAY_LEVEL ? level : "", DISPLAY_LEVEL ? " " : "");         \
@@ -91,7 +113,7 @@
     printf("%s", DISPLAY_ENDING ? MSG_ENDING : "");                                 \
                                                                                     \
     /* reset the colour */                                                          \
-    printf("%s", DISPLAY_RESET ? RESET_COLOUR : "");                                \
+    LOG_RESETCOLOUR;                                                                \
                                                                                     \
 } while (0)
 
