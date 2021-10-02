@@ -287,21 +287,7 @@ int CGui::Button( int id, CVector pos, CVector size, CVector origin, CTexture *t
 
 	if (!hide)
 	{
-		// Corners of the 9rect
-		ImageAtlas( tex, {0,0, 1,1}, 6, p + CVector(0, s.y - 0.5), CVector(0.5, 0.5), CVector(0,0), color);
-		ImageAtlas( tex, {5,0, 1,1}, 6, p + CVector(s.x, s.y - 0.5), CVector(0.5, 0.5), CVector(0,0), color);
-		ImageAtlas( tex, {0,5, 1,1}, 6, p, CVector(0.5, 0.5), CVector(0,0), color);
-		ImageAtlas( tex, {5,5, 1,1}, 6, p + CVector(s.x, 0), CVector(0.5, 0.5), CVector(0,0), color);
-
-		// Edges
-		ImageAtlas( tex, {1,0, 4,1}, 6, p + CVector(0.5, s.y - 0.5), CVector(s.x - 0.5, 0.5), CVector(0,0), color);
-		ImageAtlas( tex, {1,5, 4,1}, 6, p + CVector(0.5, 0), CVector(s.x - 0.5, 0.5), CVector(0,0), color);
-
-		ImageAtlas( tex, {0,1, 1,4}, 6, p + CVector(0, 0.5), CVector(0.5, s.y - 1), CVector(0,0), color);
-		ImageAtlas( tex, {5,1, 1,4}, 6, p + CVector(s.x, 0.5), CVector(0.5, s.y - 1), CVector(0,0), color);
-
-		// Middle
-		ImageAtlas( tex, {1,1, 4,4}, 6, p + CVector(0.5, 0.5), CVector(s.x - 0.5, s.y - 1), CVector( 0, 0 ), color );
+		Image9Rect(tex, p, s, color);
 	}
 
 	return returnCode;
@@ -392,6 +378,27 @@ void CGui::ImageAtlas( CTexture *tex, Atlas atlas, float atlasDivisions, CVector
 	}
 }
 
+#define rect9s 1.0
+
+void CGui::Image9Rect( CTexture *tex, CVector pos, CVector size, Colour color )
+{
+	// Corners of the 9rect
+	ImageAtlas( tex, {0,0, 1,1}, 3, pos + CVector(0, size.y - 0.5), CVector(0.5, 0.5), CVector(0,0), color);
+	ImageAtlas( tex, {2,0, 1,1}, 3, pos + CVector(size.x, size.y - 0.5), CVector(0.5, 0.5), CVector(0,0), color);
+	ImageAtlas( tex, {0,2, 1,1}, 3, pos, CVector(0.5, 0.5), CVector(0,0), color);
+	ImageAtlas( tex, {2,2, 1,1}, 3, pos + CVector(size.x, 0), CVector(0.5, 0.5), CVector(0,0), color);
+
+	// Edges
+	ImageAtlas( tex, {1,0, 1,1}, 3, pos + CVector(0.5, size.y - 0.5), CVector(size.x - 0.5, 0.5), CVector(0,0), color);
+	ImageAtlas( tex, {1,2, 1,1}, 3, pos + CVector(0.5, 0), CVector(size.x - 0.5, 0.5), CVector(0,0), color);
+
+	ImageAtlas( tex, {0,1, 1,1}, 3, pos + CVector(0, 0.5), CVector(0.5, size.y - 1), CVector(0,0), color);
+	ImageAtlas( tex, {2,1, 1,1}, 3, pos + CVector(size.x, 0.5), CVector(0.5, size.y - 1), CVector(0,0), color);
+
+	// Middle
+	ImageAtlas( tex, {1,1, 1,1}, 3, pos + CVector(0.5, 0.5), CVector(size.x - 0.5, size.y - 1), CVector( 0, 0 ), color );
+}
+
 void CGui::Crosshair() { Image( m_pCrosshairTex, m_vScreenCentre, CVector( 3, 3 ), CVector( 0.5, 0.5 ) ); }
 
 // Returns the string in the event that 'RETURN' is pressed.
@@ -436,3 +443,8 @@ const char *CGui::TextInput( int id, CVector pos )
 	else
 		return nullptr;
 }
+
+// const char *CGui::TextInput( int id, CVector pos )
+// {
+
+// }

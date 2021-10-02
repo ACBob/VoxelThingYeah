@@ -124,6 +124,7 @@ class CGui
 				Colour tint = Colour( 1, 1, 1 ) );
 	void ImageAtlas( CTexture *pTex, Atlas atlas, float fAtlasDivisions, CVector vPosition, CVector vSize,
 					 CVector vOrigin = CVector( 0, 0 ), Color tint = Color(1,1,1) );
+	void Image9Rect( CTexture *pTex, CVector pos, CVector size, Colour color );
 	void Crosshair(); // A wrapper for Image
 	const char *TextInput( int iId, CVector vPosition );
 };
