@@ -93,18 +93,22 @@ void CNetworkClient::SpecialEffectHandle(CVector pos, SpecialEffect specialEffec
 			// Attrib is taken to be the block id
 			blocktype_t b = (blocktype_t)attrib;
 
+			// Air has no break effect
+			if ( b == AIR )
+				return;
+
 			BlockTexture tex = GetDefaultBlockTextureSide(b, NORTH);
 
 			ParticleDef blockBreak = PARTICLE_BREAKBLOCK;
 			blockBreak.vUVOffsetMin = blockBreak.vUVOffsetMax = CVector(tex.sizex / 16.0f, tex.sizey / 16.0f, tex.x / 16.0f, tex.y / 16.0f);
 			blockBreak.pTexture = materialSystem::LoadTexture("terrain.png");
 
-			soundSystem::PlayBreakSound( b, pos - CVector( 0.5, 0.5, 0.5 ) );
+			soundSystem::PlayBreakSound( b, pos + CVector( 0.5, 0.5, 0.5 ) );
 
 			for (int x = 0; x < 4; x++)
 				for (int y = 0; y < 4; y++)
 					for (int z = 0; z < 4; z++)
-						m_pParticleMan->CreateParticle(pos - CVector( x/4.0f,y/4.0f,z/4.0f ), blockBreak);
+						m_pParticleMan->CreateParticle(pos + CVector( x/4.0f,y/4.0f,z/4.0f ), blockBreak);
 		}
 		break;
 		default:

@@ -64,8 +64,6 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 			BlockFeatures bF = GetBlockFeatures( m_pointed.m_pBlock->m_iBlockType );
 			if ( bF.breakable )
 			{
-				( (CNetworkClient *)m_pClient )->SpecialEffectHandle(m_pointed.m_vPosition, SPECIALEFFECT_BLOCKBREAK, m_pointed.m_pBlock->m_iBlockType);
-
 				m_pointed.m_pBlock->m_iBlockType = blocktype_t::AIR;
 				m_pointed.m_pBlock->Update();
 

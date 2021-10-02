@@ -256,6 +256,7 @@ namespace protocol
 
 				client->SpecialEffectHandle(CVector(x,y,z), (SpecialEffect)effectId, effectAttrib);
 			}
+			break;
 
 			default: {
 				con_error( "Unknown packet of type %#010x", p.type );
