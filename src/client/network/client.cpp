@@ -111,6 +111,15 @@ void CNetworkClient::SpecialEffectHandle(CVector pos, SpecialEffect specialEffec
 						m_pParticleMan->CreateParticle(pos + CVector( x/4.0f,y/4.0f,z/4.0f ), blockBreak);
 		}
 		break;
+		case SPECIALEFFECT_BLOCKPLACE: {
+			// Attrib is taken to be the block id
+			blocktype_t b = (blocktype_t)attrib;
+
+			// Air has no place effect
+			if ( b == AIR )
+				return;
+			soundSystem::PlayPlaceSound( b, pos + CVector( 0.5, 0.5, 0.5 ) );
+		}
 		default:
 			con_error("Unknown Effect %#010x!", specialEffect);
 		break;

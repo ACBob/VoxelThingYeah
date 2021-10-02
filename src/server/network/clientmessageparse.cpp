@@ -108,6 +108,9 @@ namespace protocol
 
 						if (blockType == AIR)
 							SendServerSpecialEffect(c->m_pPeer, x,y,z, SPECIALEFFECT_BLOCKBREAK, oldBlockType);
+						else
+							SendServerSpecialEffect(c->m_pPeer, x,y,z, SPECIALEFFECT_BLOCKPLACE, blockType);
+
 					}
 				}
 				else
