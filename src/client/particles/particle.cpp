@@ -21,6 +21,7 @@ void CParticle::Render(CVector camRot)
 	m_mdl->m_vPosition = m_vPosition;
 	m_mdl->m_vRotation = camRot;
 	m_mdl->m_vSize = m_vSize;
+	m_mdl->SetTexture(m_particleDef.pTexture);
 	m_mdl->Render();
 } 
 
