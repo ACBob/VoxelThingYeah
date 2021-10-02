@@ -34,8 +34,7 @@ class CGui
 
 	std::vector<Vertex> GetQuad( CVector vPosition, CVector vSize, Colour colour, CVector vStart = CVector( 0, 0 ),
 								 CVector vEnd = CVector( 1, 1 ) );
-	std::vector<Vertex> GetCharQuad( const char c, CVector vPosition, CVector vSize, Colour colour );
-	std::vector<Vertex> GetChar16Quad( const char c, CVector vPosition, CVector vSize, Colour colour );
+	std::vector<Vertex> GetCharQuad( const int c, CVector vPosition, CVector vSize, Colour colour );
 
 	unsigned int m_iVbo, m_iVao;
 	std::vector<Vertex> m_textVertiecs;

@@ -4,5 +4,6 @@ set(utility_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/fastnoise.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/tomlcpp.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/toml.c
+	${CMAKE_CURRENT_SOURCE_DIR}/utfz.cpp
 	PARENT_SCOPE
 )

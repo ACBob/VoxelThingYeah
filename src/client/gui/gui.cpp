@@ -8,6 +8,8 @@
 
 #include "437.hpp"
 
+#include "utfz.h"
+
 #include <algorithm>
 
 // The whole coordinate system is based on these GUIUUNITs.
@@ -208,13 +210,7 @@ std::vector<CGui::Vertex> CGui::GetQuad( CVector pos, CVector size, Colour color
 		{ pos.x, pos.y + size.y, 0, uStart.x, uStart.y, color.x, color.y, color.z },
 	};
 }
-std::vector<CGui::Vertex> CGui::GetChar16Quad( const char c, CVector pos, CVector size, Colour color )
-{
-	const char ctouse = std::distance(CP437UNICODE, std::find(CP437UNICODE, CP437UNICODE + 256, c));
-
-	return GetCharQuad(ctouse, pos, size, color);
-}
-std::vector<CGui::Vertex> CGui::GetCharQuad( const char c, CVector pos, CVector size, Colour color )
+std::vector<CGui::Vertex> CGui::GetCharQuad( const int c, CVector pos, CVector size, Colour color )
 {
 
 	float x, y;
@@ -347,11 +343,16 @@ void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment tex
 	{
 		int i = 0;
 
-		while ( text[i] != '\0' )
+		int c;
+
+		while ( utfz::next(text, c) )
 		{
 			// Get vertices
 			// Shadow
-			const char j = std::distance(CP437UNICODE, std::find(CP437UNICODE, CP437UNICODE + 256, text[i]));
+			const int j = std::distance(CP437UNICODE, std::find(CP437UNICODE, CP437UNICODE + 256, c));
+
+			if (c == 163)
+				con_info("%d, %d", c, j);
 
 			std::vector<CGui::Vertex> g = GetCharQuad( j, pos - ( 2.0f / 16.0f * (float)GUIUNIT ),
 													   CVector( TEXTWIDTH, TEXTHEIGHT ), color / 2 );
@@ -362,8 +363,6 @@ void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment tex
 
 			pos.x += fontWidths[j] * TEXTWIDTH;
 			pos.x += 2.0f / 16.0f * (float)GUIUNIT;
-
-			i++;
 		}
 	}
 }
