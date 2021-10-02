@@ -182,3 +182,15 @@ bool CVector::operator>( CVector oVec ) const { return Magnitude() > oVec.Magnit
 bool CVector::operator<( CVector oVec ) const { return oVec > CVector{ x, y, z, w }; }
 bool CVector::operator>=( CVector oVec ) const { return operator==( oVec ) || operator>( oVec ); }
 bool CVector::operator<=( CVector oVec ) const { return operator==( oVec ) || operator<( oVec ); }
+
+
+CVector RandomVector(CVector min, CVector max)
+{
+	CVector g;
+	g.x = min.x + ( max.x - min.x ) * ( ( rand() ) / (float)RAND_MAX );
+	g.y = min.y + ( max.y - min.y ) * ( ( rand() ) / (float)RAND_MAX );
+	g.z = min.z + ( max.z - min.z ) * ( ( rand() ) / (float)RAND_MAX );
+	g.w = min.w + ( max.w - min.w ) * ( ( rand() ) / (float)RAND_MAX );
+
+	return g;
+}

@@ -13,8 +13,8 @@ struct ParticleDef {
 	CVector vMaxExplode = {0,0,0};
 
 	CVector vLinear = {0,0,0}; // Velocity applied every frame
-	CVector vDrag = {0.5f, 0.5f, 0.5f}; // Velocity has this percent taken in air
-	CVector vFriction = {0.7f, 0.7f, 0.7f}; // If collides, this is the percent taken when on floor (In adddition to drag)
+	CVector vDrag = {0.05f, 0.05f, 0.05f}; // Velocity has this percent taken in air
+	CVector vFriction = {0.07f, 0.07f, 0.07f}; // If collides, this is the percent taken when on floor (In adddition to drag)
 
 	// How long the particle exists for
 	float fMinLifetime = 1.0f;
@@ -32,4 +32,22 @@ struct ParticleDef {
 
 	// Texture to render with
 	CTexture *pTexture = nullptr;
+};
+
+const ParticleDef PARTICLE_BREAKBLOCK = {
+	true,
+	{-5,-5,-5},
+	{5,5,5},
+	{0.0, -.098, 0.0},
+	{0.05f, 0.05f, 0.05f},
+	{0.07f, 0.07f, 0.07f},
+	0.7f,
+	1.3f,
+	{0.1f,0.1f,0.1f},
+	{0.2f,0.2f,0.2f},
+	{0,0},
+	1,
+	1024,
+	true,
+	nullptr
 };

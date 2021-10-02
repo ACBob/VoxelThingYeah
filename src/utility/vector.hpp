@@ -44,6 +44,8 @@ class CVector
 	bool operator<=( CVector oVec ) const;
 };
 
+CVector RandomVector(CVector min = {0,0,0}, CVector max = {1,1,1});
+
 const CVector VEC_UP( 0.0f, 1.0f, 0.0f );
 const CVector VEC_RIGHT( 1.0f, 0.0f, 0.0f );
 
