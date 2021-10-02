@@ -121,6 +121,8 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 		fontWidths[c] = (float)width / (float)resX;
 	}
 
+	fontWidths[255] = 1.0f;
+
 	m_iGuiUnit = 16;
 }
 
@@ -334,7 +336,10 @@ void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment tex
 		{
 			// Get vertices
 			// Shadow
-			const int j = std::distance(CP437UNICODE, std::find(CP437UNICODE, CP437UNICODE + 256, c));
+			int j = std::distance(CP437UNICODE, std::find(CP437UNICODE, CP437UNICODE + 256, c));
+
+			if (j == 0 || j >= 256)
+				j = 255;
 
 			std::vector<CGui::Vertex> g = GetCharQuad( j, pos - ( 2.0f / 16.0f * (float)GUIUNIT ),
 													   CVector( TEXTWIDTH, TEXTHEIGHT ), color / 2 );
@@ -432,8 +437,7 @@ const char *CGui::TextInput( int id, CVector pos )
 			}
 
 			text.pop_back();			
-		}
-			
+		}			
 	}
 
 	m_textBuffers[id] = text;
