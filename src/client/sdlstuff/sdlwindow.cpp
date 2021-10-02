@@ -5,6 +5,8 @@
 #include <iostream>
 #include <memory>
 
+#include <string.h>
+
 #include "logging.hpp"
 
 CGameWindow::CGameWindow( const char *title, CVector size, bool resizeable )
