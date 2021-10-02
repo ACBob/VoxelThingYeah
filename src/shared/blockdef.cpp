@@ -38,7 +38,9 @@ blockmaterial_t GetBlockMaterial( blocktype_t blockType )
 			break;
 
 		case WATER:
+		case WATERSRC:
 		case LAVA:
+		case LAVASRC:
 			return blockmaterial_t::MAT_LIQUID;
 			break;
 

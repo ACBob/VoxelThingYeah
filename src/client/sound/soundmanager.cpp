@@ -320,7 +320,7 @@ void soundSystem::PlayPlaceSound( blocktype_t blockType, CVector pos )
 
 	char *buf = new char[512];
 	snprintf(buf, 512, "block.place.%s", BlockMaterialSTR(mat));
-	soundEvents[buf]->Play( pos );
+	PlaySoundEvent(buf, pos);
 
 	delete buf;
 }
