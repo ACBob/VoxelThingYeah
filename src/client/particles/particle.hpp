@@ -23,6 +23,8 @@ class CParticle
 
 	CVector m_vVelocity;
 
+	CVector m_vUvOffset;
+
 	ParticleDef m_particleDef;
 
 	float m_fLifeTime;

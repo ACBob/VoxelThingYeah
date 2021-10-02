@@ -70,7 +70,7 @@ void CModelRenderer::Render( CVector pos, CVector rot, CVector size, CVector uvO
 
 	shader->SetMat4( "model", model );
 	shader->SetMat3( "normalMat", glm::mat3( glm::transpose( glm::inverse( model ) ) ) );
-	shader->SetVec( "texCoordO", uvOffset );
+	shader->SetVec4( "texCoordOffset", uvOffset );
 
 	if ( tex != nullptr )
 		glBindTexture( GL_TEXTURE_2D, tex->m_iId );

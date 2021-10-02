@@ -32,6 +32,9 @@ struct ParticleDef {
 
 	// Texture to render with
 	CTexture *pTexture = nullptr;
+
+	CVector vUVOffsetMin = {1,1,0,0};
+	CVector vUVOffsetMax = {1,1,0,0};
 };
 
 const ParticleDef PARTICLE_BREAKBLOCK = {
@@ -49,5 +52,7 @@ const ParticleDef PARTICLE_BREAKBLOCK = {
 	1,
 	1024,
 	true,
-	nullptr
+	nullptr,
+	{1,1,0,0},
+	{1,1,0,0}
 };

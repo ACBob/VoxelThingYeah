@@ -13,5 +13,6 @@ out vec3 Light;
 void main()
 {
 #	include "shaders/include/inworld.glsl"
-#	include "shaders/include/diffuse.glsl"
+
+	Light = vec3(1.0f, 1.0f, 1.0f);
 }

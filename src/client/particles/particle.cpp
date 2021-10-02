@@ -11,6 +11,7 @@ CParticle::CParticle(ParticleDef pdef) :
 
 	m_vVelocity = RandomVector(m_particleDef.vMinExplode, m_particleDef.vMaxExplode);
 	m_vSize = RandomVector(m_particleDef.vMinSize, m_particleDef.vMaxSize);
+	m_vUvOffset = RandomVector(m_particleDef.vUVOffsetMin, m_particleDef.vUVOffsetMax);
 	m_fLifeTime = m_particleDef.fMinLifetime + ( m_particleDef.fMaxLifetime - m_particleDef.fMinLifetime ) * ( ( rand() ) / (float)RAND_MAX );
 }
 
@@ -22,6 +23,7 @@ void CParticle::Render(CVector camRot)
 	m_mdl->m_vRotation = camRot;
 	m_mdl->m_vSize = m_vSize;
 	m_mdl->SetTexture(m_particleDef.pTexture);
+	m_mdl->m_vUvOffset = m_vUvOffset;
 	m_mdl->Render();
 } 
 

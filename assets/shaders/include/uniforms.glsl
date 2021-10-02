@@ -6,3 +6,5 @@ uniform mat3 normalMat;
 
 uniform int timeOfDay;
 uniform vec3 sunAngle;
+
+uniform vec4 texCoordOffset;
