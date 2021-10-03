@@ -21,11 +21,11 @@ namespace utfz
 	// Index from the high 5 bits of the first byte in a sequence to the length of the sequence
 	// Imperative that -1 == invalid
 	const int8_t seq_len_table[32] = {
-		1,	1,	1,	1,	1,	1,	1,	1,	1, 1, 1, 1, 1, 1, 1, 1, //  0..15 (00000..01111)
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //  0..15 (00000..01111)
 		-1, -1, -1, -1, -1, -1, -1, -1, // 16..23 (10000..10111) - 10... is only legal as prefixes for continuation
 										// bytes
-		2,	2,	2,	2,					// 24..27 (11000..11011)
-		3,	3,							// 28..29 (11100..11101)
+		2, 2, 2, 2,						// 24..27 (11000..11011)
+		3, 3,							// 28..29 (11100..11101)
 		4,								// 30     (11110)
 		-1,								// 31     (11111)
 	};

@@ -102,7 +102,9 @@ void CNetworkClient::SpecialEffectHandle( CVector pos, SpecialEffect specialEffe
 
 			ParticleDef blockBreak	= PARTICLE_BREAKBLOCK;
 			blockBreak.vUVOffsetMin = CVector( tex.sizex / 64.0f, tex.sizey / 64.0f, tex.x / 16.0f, tex.y / 16.0f );
-			blockBreak.vUVOffsetMax = CVector( tex.sizex / 64.0f, tex.sizey / 64.0f, (tex.x + tex.sizex/2.0f) / 16.0f, (tex.y + tex.sizey/2.0f) / 16.0f );
+			blockBreak.vUVOffsetMax =
+				CVector( tex.sizex / 64.0f, tex.sizey / 64.0f, ( tex.x + tex.sizex / 2.0f ) / 16.0f,
+						 ( tex.y + tex.sizey / 2.0f ) / 16.0f );
 			blockBreak.pTexture = materialSystem::LoadTexture( "terrain.png" );
 
 			soundSystem::PlayBreakSound( b, pos + CVector( 0.5, 0.5, 0.5 ) );

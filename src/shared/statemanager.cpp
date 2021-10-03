@@ -13,7 +13,7 @@ void CStateMachine::PopState()
 	{
 		m_stateStack.back()->Exit();
 		m_stateStack.pop_back();
-		if (!m_stateStack.empty())
+		if ( !m_stateStack.empty() )
 			m_stateStack.back()->ReturnedTo();
 	}
 }

@@ -15,9 +15,9 @@
 // https://sol.gfxile.net/imgui/
 
 #ifdef GUI_SRC_ID
-#define GUIGEN_ID ((IMGUI_SRC_ID) + (__LINE__))
+	#define GUIGEN_ID ( ( IMGUI_SRC_ID ) + ( __LINE__ ) )
 #else
-#define GUIGEN_ID (__LINE__)
+	#define GUIGEN_ID ( __LINE__ )
 #endif
 
 // OOP POO
@@ -52,6 +52,8 @@ class CGui
 
 	CTexture *m_pButtonTex	= nullptr;
 	CTexture *m_pTextInpTex = nullptr;
+	CTexture *m_pSliderTex	= nullptr;
+	CTexture *m_pThumbTex	= nullptr;
 
 	std::map<int, std::string> m_textBuffers;
 
@@ -112,8 +114,8 @@ class CGui
 	// Clears all the stored buffer stuff
 	void ClearBuffers();
 
-	void SetTextBuffer(int id, const char* text);
-	const char* GetTextBuffer(int id);
+	void SetTextBuffer( int id, const char *text );
+	const char *GetTextBuffer( int id );
 
 	// Z Ignored!
 	bool RegionHit( CVector vPosition, CVector vSize );
@@ -149,4 +151,5 @@ class CGui
 	const char *SelectableTextInput( int id, CVector pos, CVector size,
 									 CTexture *pTex = nullptr ); // Variant of TextInput that has support for selection,
 																 // also rendering with a background
+	bool Slider( int id, CVector pos, CVector size, int max, int &value );
 };

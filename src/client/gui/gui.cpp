@@ -86,6 +86,8 @@ CGui::CGui( int screenW, int screenH )
 	m_pCrosshairTex = materialSystem::LoadTexture( "crosshair.png" );
 	m_pInventoryTex = materialSystem::LoadTexture( "inventory.png" );
 	m_pLogoTex		= materialSystem::LoadTexture( "title.png" );
+	m_pSliderTex	= materialSystem::LoadTexture( "slider.png" );
+	m_pThumbTex		= materialSystem::LoadTexture( "thumb.png" );
 
 	m_textBuffers = {};
 
@@ -234,20 +236,11 @@ std::vector<CGui::Vertex> CGui::GetCharQuad( const int c, CVector pos, CVector s
 	return GetQuad( pos, size, color, uStart, uEnd );
 }
 
-void CGui::ClearBuffers()
-{
-	m_textBuffers.clear();
-}
+void CGui::ClearBuffers() { m_textBuffers.clear(); }
 
-void CGui::SetTextBuffer(int id, const char* text)
-{
-	m_textBuffers[id] = text;
-}
+void CGui::SetTextBuffer( int id, const char *text ) { m_textBuffers[id] = text; }
 
-const char* CGui::GetTextBuffer(int id)
-{
-	return m_textBuffers[id].c_str();
-}
+const char *CGui::GetTextBuffer( int id ) { return m_textBuffers[id].c_str(); }
 
 bool CGui::RegionHit( CVector pos, CVector size )
 {
@@ -505,4 +498,45 @@ const char *CGui::SelectableTextInput( int id, CVector pos, CVector size, CTextu
 	Image9Rect( pTex, pos / GUIUNIT, size / GUIUNIT, Colour( 1, 1, 1 ) );
 
 	return nullptr;
+}
+
+bool CGui::Slider( int id, CVector pos, CVector size, int max, int &value )
+{
+	pos	 = GetInScreen( pos );
+	size = size * GUIUNIT;
+
+	Image9Rect( m_pSliderTex, pos / GUIUNIT, size / GUIUNIT, Color( 1, 1, 1 ) );
+
+	float ypos = ( (size.y - 2 * GUIUNIT) * value ) / max;
+
+	Image( m_pThumbTex, ( pos + CVector( 0, ypos ) ) / GUIUNIT, CVector( 2, 2 ), CVector( 0, 0 ),
+		   Color( 1, 1, 1 ) );
+
+	if ( RegionHit( pos, size ) )
+	{
+		m_iHotItem = id;
+
+		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
+		{
+			m_iActiveItem = id;
+		}
+	}
+
+	if ( m_iActiveItem == id )
+	{
+		float p = ( m_vMousePos.y * -1 ) + pos.y;
+		if ( p < 0 )
+			p = 0;
+		if ( p > size.y )
+			p = size.y;
+		int val = ( p * max ) / size.y;
+
+		if ( val != value )
+		{
+			value = val;
+			return true;
+		}
+	}
+
+	return false;
 }

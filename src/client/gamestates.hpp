@@ -72,6 +72,8 @@ class CStateOptionsMenu : public CState
 	void ReturnedTo();
 	void Exit();
 	void Update();
+
+	int m_iSliderTestVal = 0;
 };
 class CKickScreen : public CState
 {

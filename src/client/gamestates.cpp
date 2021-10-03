@@ -235,14 +235,16 @@ void CStatePlay::Update()
 				}
 			}
 		}
-		else if (m_bInPause) 
+		else if ( m_bInPause )
 		{
-			if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Options", pStateMan->m_pGui->m_vScreenCentre - CVector( 0, 0 ),
-												CVector( 0.5, 0.5 ) ) )
+			if ( pStateMan->m_pGui->LabelButton(
+					 GUIGEN_ID, "Options", pStateMan->m_pGui->m_vScreenCentre - CVector( 0, 0 ), CVector( 0.5, 0.5 ) ) )
 			{
 				m_pStateMan->PushState( std::make_unique<CStateOptionsMenu>() );
 			}
-			if (pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Disconnect", pStateMan->m_pGui->m_vScreenCentre - CVector( 0, 4 ), CVector( 0.5, 0.5 )))
+			if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Disconnect",
+												 pStateMan->m_pGui->m_vScreenCentre - CVector( 0, 4 ),
+												 CVector( 0.5, 0.5 ) ) )
 			{
 				pStateMan->m_pClient->Disconnect();
 				pStateMan->PopState();
@@ -290,9 +292,9 @@ void CStateMenu::Enter()
 	pStateMan->m_pGui->ClearBuffers();
 
 	// 3 and 4 are used for ip and port respectively
-	pStateMan->m_pGui->SetTextBuffer(3, cl_ip->GetString());
-	pStateMan->m_pGui->SetTextBuffer(4, cl_port->GetString());
-	pStateMan->m_pGui->SetTextBuffer(5, username->GetString());
+	pStateMan->m_pGui->SetTextBuffer( 3, cl_ip->GetString() );
+	pStateMan->m_pGui->SetTextBuffer( 4, cl_port->GetString() );
+	pStateMan->m_pGui->SetTextBuffer( 5, username->GetString() );
 }
 
 void CStateMenu::ReturnedTo()
@@ -300,14 +302,14 @@ void CStateMenu::ReturnedTo()
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
 
 	// 3 and 4 are used for ip and port respectively
-	pStateMan->m_pGui->SetTextBuffer(3, cl_ip->GetString());
-	pStateMan->m_pGui->SetTextBuffer(4, cl_port->GetString());
-	pStateMan->m_pGui->SetTextBuffer(5, username->GetString());
+	pStateMan->m_pGui->SetTextBuffer( 3, cl_ip->GetString() );
+	pStateMan->m_pGui->SetTextBuffer( 4, cl_port->GetString() );
+	pStateMan->m_pGui->SetTextBuffer( 5, username->GetString() );
 
 	// If there's a kick reason, it's safe to assume we've been kicked. In such case, display the kick screen.
-	if (strlen(cl_kickreason->GetString()))
+	if ( strlen( cl_kickreason->GetString() ) )
 	{
-		pStateMan->PushState(std::make_unique<CKickScreen>());
+		pStateMan->PushState( std::make_unique<CKickScreen>() );
 	}
 }
 
@@ -334,9 +336,9 @@ void CStateMenu::Update()
 
 	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Play", pStateMan->m_pGui->m_vScreenCentre, CVector( 0.5, 0.5 ) ) )
 	{
-		cl_ip->SetString( pStateMan->m_pGui->GetTextBuffer(3) );
-		cl_port->SetString( pStateMan->m_pGui->GetTextBuffer(4) );
-		username->SetString( pStateMan->m_pGui->GetTextBuffer(5) );
+		cl_ip->SetString( pStateMan->m_pGui->GetTextBuffer( 3 ) );
+		cl_port->SetString( pStateMan->m_pGui->GetTextBuffer( 4 ) );
+		username->SetString( pStateMan->m_pGui->GetTextBuffer( 5 ) );
 
 		pStateMan->m_pClient->Connect( cl_ip->GetString(), cl_port->GetInt() );
 		m_pStateMan->PushState( std::make_unique<CStatePlay>() );
@@ -345,9 +347,9 @@ void CStateMenu::Update()
 	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Options", pStateMan->m_pGui->m_vScreenCentre - CVector( 0, 2 ),
 										 CVector( 0.5, 0.5 ) ) )
 	{
-		cl_ip->SetString( pStateMan->m_pGui->GetTextBuffer(3) );
-		cl_port->SetString( pStateMan->m_pGui->GetTextBuffer(4) );
-		username->SetString( pStateMan->m_pGui->GetTextBuffer(5) );
+		cl_ip->SetString( pStateMan->m_pGui->GetTextBuffer( 3 ) );
+		cl_port->SetString( pStateMan->m_pGui->GetTextBuffer( 4 ) );
+		username->SetString( pStateMan->m_pGui->GetTextBuffer( 5 ) );
 		m_pStateMan->PushState( std::make_unique<CStateOptionsMenu>() );
 	}
 	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Quit", pStateMan->m_pGui->m_vScreenCentre - CVector( 0, 4 ),
@@ -390,16 +392,20 @@ void CStateOptionsMenu::Update()
 	pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pBGTex, CVector( 0, 0 ),
 							  pStateMan->m_pGui->m_vScreenDimensions / pStateMan->m_pGui->m_iGuiUnit, CVector( 0, 0 ),
 							  CVector( 0.5, 0.5, 0.5 ) );
-	
-	pStateMan->m_pGui->Label("Options...", CVector(pStateMan->m_pGui->m_vScreenCentre.x, -2), Color(1,1,1), CGui::TEXTALIGN_CENTER);
-	
-	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Return", CVector(pStateMan->m_pGui->m_vScreenCentre.x, 2 ),
+
+	pStateMan->m_pGui->Label( "Options...", CVector( pStateMan->m_pGui->m_vScreenCentre.x, -2 ), Color( 1, 1, 1 ),
+							  CGui::TEXTALIGN_CENTER );
+
+	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Return", CVector( pStateMan->m_pGui->m_vScreenCentre.x, 2 ),
 										 CVector( 0.5, 0.5 ) ) )
 	{
 		m_pStateMan->PopState();
 	}
 
-	pStateMan->m_pGui->Label("Sorry Nothing", pStateMan->m_pGui->m_vScreenCentre, Color(1,0.5,0.5), CGui::TEXTALIGN_CENTER);
+	// pStateMan->m_pGui->Label("Sorry Nothing", pStateMan->m_pGui->m_vScreenCentre, Color(1,0.5,0.5),
+	// CGui::TEXTALIGN_CENTER);
+
+	pStateMan->m_pGui->Slider( 69, pStateMan->m_pGui->m_vScreenCentre, CVector( 1.5, 10 ), 100, m_iSliderTestVal );
 }
 
 void CKickScreen::Enter()
@@ -413,7 +419,7 @@ void CKickScreen::Exit()
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
 	pStateMan->m_pGui->ClearBuffers();
 
-	cl_kickreason->SetString("");
+	cl_kickreason->SetString( "" );
 }
 void CKickScreen::Update()
 {
@@ -424,14 +430,16 @@ void CKickScreen::Update()
 	pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pBGTex, CVector( 0, 0 ),
 							  pStateMan->m_pGui->m_vScreenDimensions / pStateMan->m_pGui->m_iGuiUnit, CVector( 0, 0 ),
 							  CVector( 0.5, 0.5, 0.5 ) );
-	
-	pStateMan->m_pGui->Label("Kicked!", CVector(pStateMan->m_pGui->m_vScreenCentre.x, -2), Color(1,1,1), CGui::TEXTALIGN_CENTER);
-	
-	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Back", CVector(pStateMan->m_pGui->m_vScreenCentre.x, 2 ),
+
+	pStateMan->m_pGui->Label( "Kicked!", CVector( pStateMan->m_pGui->m_vScreenCentre.x, -2 ), Color( 1, 1, 1 ),
+							  CGui::TEXTALIGN_CENTER );
+
+	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Back", CVector( pStateMan->m_pGui->m_vScreenCentre.x, 2 ),
 										 CVector( 0.5, 0.5 ) ) )
 	{
 		m_pStateMan->PopState();
 	}
 
-	pStateMan->m_pGui->Label(cl_kickreason->GetString(), pStateMan->m_pGui->m_vScreenCentre, Color(1,0.5,0.5), CGui::TEXTALIGN_CENTER);
+	pStateMan->m_pGui->Label( cl_kickreason->GetString(), pStateMan->m_pGui->m_vScreenCentre, Color( 1, 0.5, 0.5 ),
+							  CGui::TEXTALIGN_CENTER );
 }
