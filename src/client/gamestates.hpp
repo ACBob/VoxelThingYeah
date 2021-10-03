@@ -28,6 +28,7 @@ class CGameStateMachine : public CStateMachine
 class CStatePlay : public CState
 {
 	void Enter();
+	void ReturnedTo();
 	void Exit();
 	void Update();
 
@@ -60,6 +61,7 @@ class CStatePlay : public CState
 class CStateMenu : public CState
 {
 	void Enter();
+	void ReturnedTo();
 	void Exit();
 	void Update();
 };
@@ -67,12 +69,14 @@ class CStateMenu : public CState
 class CStateOptionsMenu : public CState
 {
 	void Enter();
+	void ReturnedTo();
 	void Exit();
 	void Update();
 };
 class CKickScreen : public CState
 {
 	void Enter();
+	void ReturnedTo();
 	void Exit();
 	void Update();
 };

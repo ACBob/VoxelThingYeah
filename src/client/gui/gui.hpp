@@ -53,6 +53,8 @@ class CGui
 	CTexture *m_pButtonTex	= nullptr;
 	CTexture *m_pTextInpTex = nullptr;
 
+	std::map<int, std::string> m_textBuffers;
+
   public:
 	CGui( int screenW, int screenH );
 	~CGui();
@@ -107,7 +109,11 @@ class CGui
 	// Gui Size
 	int m_iGuiUnit;
 
-	std::map<int, std::string> m_textBuffers;
+	// Clears all the stored buffer stuff
+	void ClearBuffers();
+
+	void SetTextBuffer(int id, const char* text);
+	const char* GetTextBuffer(int id);
 
 	// Z Ignored!
 	bool RegionHit( CVector vPosition, CVector vSize );

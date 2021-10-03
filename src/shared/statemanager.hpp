@@ -12,9 +12,10 @@ class CStateMachine; // Forward decl
 class CState
 {
   public:
-	virtual void Enter()  = 0;
-	virtual void Exit()	  = 0;
-	virtual void Update() = 0;
+	virtual void Enter()  = 0; // Newly Entered
+	virtual void ReturnedTo() = 0; // A state exited into us
+	virtual void Exit()	  = 0; // We're closing
+	virtual void Update() = 0; // Frame in us
 
 	CStateMachine *m_pStateMan = nullptr;
 };

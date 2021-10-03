@@ -234,6 +234,21 @@ std::vector<CGui::Vertex> CGui::GetCharQuad( const int c, CVector pos, CVector s
 	return GetQuad( pos, size, color, uStart, uEnd );
 }
 
+void CGui::ClearBuffers()
+{
+	m_textBuffers.clear();
+}
+
+void CGui::SetTextBuffer(int id, const char* text)
+{
+	m_textBuffers[id] = text;
+}
+
+const char* CGui::GetTextBuffer(int id)
+{
+	return m_textBuffers[id].c_str();
+}
+
 bool CGui::RegionHit( CVector pos, CVector size )
 {
 	pos.y = m_vScreenDimensions.y - pos.y;

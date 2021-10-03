@@ -11,6 +11,7 @@
 void CStatePlay::Enter()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+	pStateMan->m_pGui->ClearBuffers();
 
 	m_projectionMatrix = glm::perspective( glm::radians( fov->GetFloat() ),
 										   scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f );
@@ -45,10 +46,12 @@ void CStatePlay::Enter()
 	pStateMan->m_pClient->m_pLocalWorld	 = m_pLocalWorld;
 	pStateMan->m_pClient->m_pParticleMan = &m_particleMan;
 }
+void CStatePlay::ReturnedTo() {}
 
 void CStatePlay::Exit()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+	pStateMan->m_pGui->ClearBuffers();
 
 	delete m_pLocalPlayer;
 	delete m_pLocalWorld;
@@ -284,16 +287,34 @@ void CStatePlay::Update()
 void CStateMenu::Enter()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+	pStateMan->m_pGui->ClearBuffers();
 
 	// 3 and 4 are used for ip and port respectively
-	pStateMan->m_pGui->m_textBuffers[3] = cl_ip->GetString();
-	pStateMan->m_pGui->m_textBuffers[4] = cl_port->GetString();
-	pStateMan->m_pGui->m_textBuffers[5] = username->GetString();
+	pStateMan->m_pGui->SetTextBuffer(3, cl_ip->GetString());
+	pStateMan->m_pGui->SetTextBuffer(4, cl_port->GetString());
+	pStateMan->m_pGui->SetTextBuffer(5, username->GetString());
+}
+
+void CStateMenu::ReturnedTo()
+{
+	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+
+	// 3 and 4 are used for ip and port respectively
+	pStateMan->m_pGui->SetTextBuffer(3, cl_ip->GetString());
+	pStateMan->m_pGui->SetTextBuffer(4, cl_port->GetString());
+	pStateMan->m_pGui->SetTextBuffer(5, username->GetString());
+
+	// If there's a kick reason, it's safe to assume we've been kicked. In such case, display the kick screen.
+	if (strlen(cl_kickreason->GetString()))
+	{
+		pStateMan->PushState(std::make_unique<CKickScreen>());
+	}
 }
 
 void CStateMenu::Exit()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+	pStateMan->m_pGui->ClearBuffers();
 
 	pStateMan->m_pClient->Disconnect();
 }
@@ -301,12 +322,6 @@ void CStateMenu::Exit()
 void CStateMenu::Update()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
-
-	// If there's a kick reason, it's safe to assume we've been kicked. In such case, display the kick screen.
-	if (strlen(cl_kickreason->GetString()))
-	{
-		pStateMan->PushState(std::make_unique<CKickScreen>());
-	}
 
 	pStateMan->m_pInputMan->m_bInGui = true;
 
@@ -319,9 +334,9 @@ void CStateMenu::Update()
 
 	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Play", pStateMan->m_pGui->m_vScreenCentre, CVector( 0.5, 0.5 ) ) )
 	{
-		cl_ip->SetString( pStateMan->m_pGui->m_textBuffers[3].c_str() );
-		cl_port->SetString( pStateMan->m_pGui->m_textBuffers[4].c_str() );
-		username->SetString( pStateMan->m_pGui->m_textBuffers[5].c_str() );
+		cl_ip->SetString( pStateMan->m_pGui->GetTextBuffer(3) );
+		cl_port->SetString( pStateMan->m_pGui->GetTextBuffer(4) );
+		username->SetString( pStateMan->m_pGui->GetTextBuffer(5) );
 
 		pStateMan->m_pClient->Connect( cl_ip->GetString(), cl_port->GetInt() );
 		m_pStateMan->PushState( std::make_unique<CStatePlay>() );
@@ -330,6 +345,9 @@ void CStateMenu::Update()
 	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Options", pStateMan->m_pGui->m_vScreenCentre - CVector( 0, 2 ),
 										 CVector( 0.5, 0.5 ) ) )
 	{
+		cl_ip->SetString( pStateMan->m_pGui->GetTextBuffer(3) );
+		cl_port->SetString( pStateMan->m_pGui->GetTextBuffer(4) );
+		username->SetString( pStateMan->m_pGui->GetTextBuffer(5) );
 		m_pStateMan->PushState( std::make_unique<CStateOptionsMenu>() );
 	}
 	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Quit", pStateMan->m_pGui->m_vScreenCentre - CVector( 0, 4 ),
@@ -355,10 +373,13 @@ void CStateMenu::Update()
 void CStateOptionsMenu::Enter()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+	pStateMan->m_pGui->ClearBuffers();
 }
+void CStateOptionsMenu::ReturnedTo() {}
 void CStateOptionsMenu::Exit()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+	pStateMan->m_pGui->ClearBuffers();
 }
 void CStateOptionsMenu::Update()
 {
@@ -384,10 +405,13 @@ void CStateOptionsMenu::Update()
 void CKickScreen::Enter()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+	pStateMan->m_pGui->ClearBuffers();
 }
+void CKickScreen::ReturnedTo() {}
 void CKickScreen::Exit()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+	pStateMan->m_pGui->ClearBuffers();
 
 	cl_kickreason->SetString("");
 }
