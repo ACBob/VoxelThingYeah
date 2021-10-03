@@ -12,3 +12,4 @@ shaders/*.spv
 
 # Custom Skin
 assets/skin.png
+assets/usr/
