@@ -70,3 +70,9 @@ class CStateOptionsMenu : public CState
 	void Exit();
 	void Update();
 };
+class CKickScreen : public CState
+{
+	void Enter();
+	void Exit();
+	void Update();
+};

@@ -21,4 +21,6 @@ extern ConVar::CConVar *cl_reverb;
 
 extern ConVar::CConVar *playerskin;
 
+extern ConVar::CConVar *cl_kickreason;
+
 void SetupClientSideConvars();

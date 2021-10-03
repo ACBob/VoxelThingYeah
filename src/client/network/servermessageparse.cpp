@@ -194,6 +194,7 @@ namespace protocol
 				if ( isKick )
 				{
 					con_warning( "Kicked from server for: %s", message.c_str() );
+					cl_kickreason->SetString(message.c_str());
 					client->Disconnect();
 				}
 			}

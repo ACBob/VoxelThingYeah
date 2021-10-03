@@ -302,6 +302,12 @@ void CStateMenu::Update()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
 
+	// If there's a kick reason, it's safe to assume we've been kicked. In such case, display the kick screen.
+	if (strlen(cl_kickreason->GetString()))
+	{
+		pStateMan->PushState(std::make_unique<CKickScreen>());
+	}
+
 	pStateMan->m_pInputMan->m_bInGui = true;
 
 	pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pBGTex, CVector( 0, 0 ),
@@ -373,4 +379,35 @@ void CStateOptionsMenu::Update()
 	}
 
 	pStateMan->m_pGui->Label("Sorry Nothing", pStateMan->m_pGui->m_vScreenCentre, Color(1,0.5,0.5), CGui::TEXTALIGN_CENTER);
+}
+
+void CKickScreen::Enter()
+{
+	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+}
+void CKickScreen::Exit()
+{
+	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+
+	cl_kickreason->SetString("");
+}
+void CKickScreen::Update()
+{
+	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+
+	pStateMan->m_pInputMan->m_bInGui = true;
+
+	pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pBGTex, CVector( 0, 0 ),
+							  pStateMan->m_pGui->m_vScreenDimensions / pStateMan->m_pGui->m_iGuiUnit, CVector( 0, 0 ),
+							  CVector( 0.5, 0.5, 0.5 ) );
+	
+	pStateMan->m_pGui->Label("Kicked!", CVector(pStateMan->m_pGui->m_vScreenCentre.x, -2), Color(1,1,1), CGui::TEXTALIGN_CENTER);
+	
+	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Back", CVector(pStateMan->m_pGui->m_vScreenCentre.x, 2 ),
+										 CVector( 0.5, 0.5 ) ) )
+	{
+		m_pStateMan->PopState();
+	}
+
+	pStateMan->m_pGui->Label(cl_kickreason->GetString(), pStateMan->m_pGui->m_vScreenCentre, Color(1,0.5,0.5), CGui::TEXTALIGN_CENTER);
 }
