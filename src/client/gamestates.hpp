@@ -73,7 +73,7 @@ class CStateOptionsMenu : public CState
 	void Exit();
 	void Update();
 
-	int m_iSliderTestVal = 0;
+	int m_iVolumeSlider = 100;
 };
 class CKickScreen : public CState
 {

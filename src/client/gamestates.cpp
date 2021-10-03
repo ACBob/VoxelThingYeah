@@ -376,6 +376,8 @@ void CStateOptionsMenu::Enter()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
 	pStateMan->m_pGui->ClearBuffers();
+
+	m_iVolumeSlider = cl_volume->GetFloat() * 100;
 }
 void CStateOptionsMenu::ReturnedTo() {}
 void CStateOptionsMenu::Exit()
@@ -402,11 +404,11 @@ void CStateOptionsMenu::Update()
 		m_pStateMan->PopState();
 	}
 
-	// pStateMan->m_pGui->Label("Sorry Nothing", pStateMan->m_pGui->m_vScreenCentre, Color(1,0.5,0.5),
-	// CGui::TEXTALIGN_CENTER);
-
-	pStateMan->m_pGui->Slider( 69, pStateMan->m_pGui->m_vScreenCentre, CVector( 1.5, 10 ), 100, m_iSliderTestVal );
-	pStateMan->m_pGui->HorzSlider( 70, pStateMan->m_pGui->m_vScreenCentre + CVector(0,2), CVector( 10, 2 ), 100, m_iSliderTestVal );
+	pStateMan->m_pGui->Label("Master Volume Slider", pStateMan->m_pGui->m_vScreenCentre + CVector(-16,6));
+	if (pStateMan->m_pGui->HorzSlider( 70, pStateMan->m_pGui->m_vScreenCentre + CVector(-16,4), CVector( 32, 2 ), 100, m_iVolumeSlider ))
+	{
+		cl_volume->SetFloat(m_iVolumeSlider / 100.0f);
+	}
 }
 
 void CKickScreen::Enter()
