@@ -47,6 +47,7 @@ namespace ConVar
 
 		// Returns if the value has been changed
 		bool IsModified() { return m_bModified; };
+		bool ShouldArchive() { return m_iFlags & CVAR_ARCHIVE; }
 
 	  private:
 		int m_iFlags;

@@ -61,6 +61,11 @@ namespace ConVar
 
 		for ( auto &c : Cvars )
 		{
+			if (!c.second->ShouldArchive())
+				continue;
+			if (!c.second->IsModified())
+				continue;
+			
 			out += c.first;
 			out += ' ';
 			out += c.second->GetString();

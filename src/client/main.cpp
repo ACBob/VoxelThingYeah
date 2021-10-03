@@ -88,6 +88,13 @@ int main( int argc, char *args[] )
 		con_error( "Couldn't mount assets for some reason... nothing will work!" );
 	if ( !fileSystem::MountWrite("assets/usr/") )
 		con_error( "Couldn't set the write directory, your saves are in jeapordy!" );
+	
+	con_info("Parsing config.cfg...");
+	bool succeed;
+	int64_t l;
+	char *file = (char *)fileSystem::LoadFile( "usr/config.cfg", l, succeed );
+	if (succeed)
+		conVarHandle.Parse(file);
 
 	con_info( "Init Network..." );
 	if ( !network::Init() )
