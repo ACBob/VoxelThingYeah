@@ -86,6 +86,8 @@ int main( int argc, char *args[] )
 	con_info( "Mount assets..." );
 	if ( !fileSystem::Mount( "assets/", "/" ) )
 		con_error( "Couldn't mount assets for some reason... nothing will work!" );
+	if ( !fileSystem::MountWrite("assets/usr/") )
+		con_error( "Couldn't set the write directory, your saves are in jeapordy!" );
 
 	con_info( "Init Network..." );
 	if ( !network::Init() )
@@ -244,6 +246,8 @@ int main( int argc, char *args[] )
 			break;
 	}
 	gameStateMan.Flush();
+
+	conVarHandle.WriteCFG();
 
 	return EXIT_SUCCESS;
 }

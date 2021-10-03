@@ -81,6 +81,8 @@ namespace ConVar
 		CConVarHandler();
 		~CConVarHandler();
 
+		void WriteCFG();
+
 		CConVar *DeclareConvar( const char *name, const char *defVal, int flags = F::CVAR_NOFLAGS );
 
 		// Find Cvar by name

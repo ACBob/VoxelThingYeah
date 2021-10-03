@@ -69,11 +69,47 @@ namespace fileSystem
 		return out;
 	}
 
+	void WriteFile( const char *virtualPath, const uchar_t *data, int64_t dataLength, bool &success )
+	{
+		PHYSFS_File *f = PHYSFS_openWrite( virtualPath );
+
+		if ( !f )
+		{
+			con_error( "%s: %s", virtualPath, PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ) );
+			PHYSFS_close( f );
+			success = false;
+			return;
+		}
+
+		if ( PHYSFS_writeBytes( f, data, dataLength ) < dataLength )
+		{
+			con_error( "%s: %s", virtualPath, PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ) );
+			PHYSFS_close( f );
+			success = false;
+			return;
+		}
+
+		PHYSFS_close( f );
+
+		success = true;
+	}
+
 	bool Mount( const char *realPath, const char *virtualPath, bool prepend )
 	{
 		if ( PHYSFS_mount( realPath, virtualPath, prepend ? 0 : 1 ) == 0 )
 		{
 			con_error( "%s->%s: %s", virtualPath, realPath, PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ) );
+			return false;
+		}
+
+		return true;
+	}
+
+	bool MountWrite( const char *realPath )
+	{
+		if ( PHYSFS_setWriteDir( realPath ) == 0 )
+		{
+			con_error( "%s->Write Path: %s", realPath, PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ) );
 			return false;
 		}
 

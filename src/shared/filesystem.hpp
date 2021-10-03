@@ -13,10 +13,18 @@ namespace fileSystem
 	// Success is set depending on if it succeeds or not
 	const uchar_t *LoadFile( const char *virtualPath, int64_t &len, bool &success );
 
+	// data is the bytes to write
+	// dataLength is the length of the bytes
+	// Success is set depending on if it succeeds or not
+	void WriteFile( const char *virtualPath, const uchar_t *data, int64_t dataLength, bool &success );
+
 	// Mounts realPath at virtualPath in PhysFS
 	// Prepend will place the directory first in the search path, else at the end
 	// TODO: realPath seems to be relative to the CWD??
 	bool Mount( const char *realPath, const char *virtalPath, bool prepend = false );
+
+	// Sets the path for writing.
+	bool MountWrite( const char *realPath );
 
 	void UnInit();
 } // namespace fileSystem

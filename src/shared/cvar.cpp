@@ -5,6 +5,8 @@
 #include <cstring>
 #include <memory>
 
+#include "filesystem.hpp"
+
 // Global Convar Handler
 ConVar::CConVarHandler conVarHandle;
 
@@ -51,6 +53,24 @@ namespace ConVar
 	{
 		for ( auto &c : Cvars )
 			delete c.second;
+	}
+
+	void CConVarHandler::WriteCFG()
+	{
+		std::string out;
+
+		for ( auto &c : Cvars )
+		{
+			out += c.first;
+			out += ' ';
+			out += c.second->GetString();
+			out += '\n';
+		}
+
+		bool bSuccess = false;
+		fileSystem::WriteFile("config.cfg", (uchar_t*)out.c_str(), out.size(), bSuccess);
+		if (!bSuccess)
+			con_error("Failed to write config.cfg...");
 	}
 
 	CConVar *CConVarHandler::DeclareConvar( const char *name, const char *defVal, int flags )
