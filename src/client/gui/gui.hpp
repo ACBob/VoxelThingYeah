@@ -14,6 +14,12 @@
 // Reference taken / tutorial followed
 // https://sol.gfxile.net/imgui/
 
+#ifdef GUI_SRC_ID
+#define GUIGEN_ID ((IMGUI_SRC_ID) + (__LINE__))
+#else
+#define GUIGEN_ID (__LINE__)
+#endif
+
 // OOP POO
 class CGui
 {

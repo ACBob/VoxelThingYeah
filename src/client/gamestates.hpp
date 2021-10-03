@@ -63,3 +63,10 @@ class CStateMenu : public CState
 	void Exit();
 	void Update();
 };
+
+class CStateOptionsMenu : public CState
+{
+	void Enter();
+	void Exit();
+	void Update();
+};
