@@ -312,10 +312,13 @@ int CGui::AtlasButton( int id, CTexture *tex, Atlas atlas, float atlasDivisions,
 	return b;
 }
 
-int CGui::LabelButton( int id, const char *msg, CVector pos, CVector origin, CVector padding )
+int CGui::LabelButton( int id, const char *msg, CVector pos, CVector origin, CVector padding, CVector minsize )
 {
 	// Get size, fixed position
 	CVector size = ( CVector( GetTextLength( msg ), TEXTHEIGHT ) + padding * GUIUNIT );
+
+	size.x = fmaxf( size.x, minsize.x * GUIUNIT );
+	size.y = fmaxf( size.y, minsize.y * GUIUNIT );
 
 	// Render and get output of button
 	int buttonOut = Button( id, pos, size / GUIUNIT, origin );
@@ -507,10 +510,9 @@ bool CGui::Slider( int id, CVector pos, CVector size, int max, int &value )
 
 	Image9Rect( m_pSliderTex, pos / GUIUNIT, size / GUIUNIT, Color( 1, 1, 1 ) );
 
-	float ypos = ( (size.y - 2 * GUIUNIT) * value ) / max;
+	float ypos = ( ( size.y - 2 * GUIUNIT ) * value ) / max;
 
-	Image( m_pThumbTex, ( pos + CVector( 0, ypos ) ) / GUIUNIT, CVector( 2, 2 ), CVector( 0, 0 ),
-		   Color( 1, 1, 1 ) );
+	Image( m_pThumbTex, ( pos + CVector( 0, ypos ) ) / GUIUNIT, CVector( 2, 2 ), CVector( 0, 0 ), Color( 1, 1, 1 ) );
 
 	if ( RegionHit( pos, size ) )
 	{
@@ -547,10 +549,9 @@ bool CGui::HorzSlider( int id, CVector pos, CVector size, int max, int &value )
 
 	Image9Rect( m_pSliderTex, pos / GUIUNIT, size / GUIUNIT, Color( 1, 1, 1 ) );
 
-	float xpos = ( (size.x - 2 * GUIUNIT) * value ) / max;
+	float xpos = ( ( size.x - 2 * GUIUNIT ) * value ) / max;
 
-	Image( m_pThumbTex, ( pos + CVector( xpos, 0 ) ) / GUIUNIT, CVector( 2, 2 ), CVector( 0, 0 ),
-		   Color( 1, 1, 1 ) );
+	Image( m_pThumbTex, ( pos + CVector( xpos, 0 ) ) / GUIUNIT, CVector( 2, 2 ), CVector( 0, 0 ), Color( 1, 1, 1 ) );
 
 	if ( RegionHit( pos, size ) )
 	{

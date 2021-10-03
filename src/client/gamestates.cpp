@@ -237,14 +237,15 @@ void CStatePlay::Update()
 		}
 		else if ( m_bInPause )
 		{
-			if ( pStateMan->m_pGui->LabelButton(
-					 GUIGEN_ID, "Options", pStateMan->m_pGui->m_vScreenCentre - CVector( 0, 0 ), CVector( 0.5, 0.5 ) ) )
+			if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Options",
+												 pStateMan->m_pGui->m_vScreenCentre - CVector( 0, 0 ),
+												 CVector( 0.5, 0.5 ), CVector( 2, 1 ), CVector( 14, 2 ) ) )
 			{
 				m_pStateMan->PushState( std::make_unique<CStateOptionsMenu>() );
 			}
 			if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Disconnect",
 												 pStateMan->m_pGui->m_vScreenCentre - CVector( 0, 4 ),
-												 CVector( 0.5, 0.5 ) ) )
+												 CVector( 0.5, 0.5 ), CVector( 2, 1 ), CVector( 14, 2 ) ) )
 			{
 				pStateMan->m_pClient->Disconnect();
 				pStateMan->PopState();
@@ -334,7 +335,8 @@ void CStateMenu::Update()
 	pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pLogoTex, CVector( pStateMan->m_pGui->m_vScreenCentre.x, -1 ),
 							  CVector( 10 * 5.25, 10 ), CVector( 0.5, 1 ) );
 
-	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Play", pStateMan->m_pGui->m_vScreenCentre, CVector( 0.5, 0.5 ) ) )
+	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Play", pStateMan->m_pGui->m_vScreenCentre, CVector( 0.5, 0.5 ),
+										 CVector( 2, 1 ), CVector( 14, 2 ) ) )
 	{
 		cl_ip->SetString( pStateMan->m_pGui->GetTextBuffer( 3 ) );
 		cl_port->SetString( pStateMan->m_pGui->GetTextBuffer( 4 ) );
@@ -345,7 +347,7 @@ void CStateMenu::Update()
 	}
 
 	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Options", pStateMan->m_pGui->m_vScreenCentre - CVector( 0, 2 ),
-										 CVector( 0.5, 0.5 ) ) )
+										 CVector( 0.5, 0.5 ), CVector( 2, 1 ), CVector( 14, 2 ) ) )
 	{
 		cl_ip->SetString( pStateMan->m_pGui->GetTextBuffer( 3 ) );
 		cl_port->SetString( pStateMan->m_pGui->GetTextBuffer( 4 ) );
@@ -353,7 +355,7 @@ void CStateMenu::Update()
 		m_pStateMan->PushState( std::make_unique<CStateOptionsMenu>() );
 	}
 	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Quit", pStateMan->m_pGui->m_vScreenCentre - CVector( 0, 4 ),
-										 CVector( 0.5, 0.5 ) ) )
+										 CVector( 0.5, 0.5 ), CVector( 2, 1 ), CVector( 14, 2 ) ) )
 	{
 		pStateMan->PopState();
 	}
@@ -389,7 +391,7 @@ void CStateOptionsMenu::Update()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
 
-	soundSystem::SetListener( nullptr, CVector(0,0,0), CVector(0,0,1), CVector(0,0,0) );
+	soundSystem::SetListener( nullptr, CVector( 0, 0, 0 ), CVector( 0, 0, 1 ), CVector( 0, 0, 0 ) );
 
 	pStateMan->m_pInputMan->m_bInGui = true;
 
@@ -401,15 +403,16 @@ void CStateOptionsMenu::Update()
 							  CGui::TEXTALIGN_CENTER );
 
 	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Return", CVector( pStateMan->m_pGui->m_vScreenCentre.x, 2 ),
-										 CVector( 0.5, 0.5 ) ) )
+										 CVector( 0.5, 0.5 ), CVector( 2, 1 ), CVector( 14, 2 ) ) )
 	{
 		m_pStateMan->PopState();
 	}
 
-	pStateMan->m_pGui->Label("Master Volume Slider", pStateMan->m_pGui->m_vScreenCentre + CVector(-16,6));
-	if (pStateMan->m_pGui->HorzSlider( 70, pStateMan->m_pGui->m_vScreenCentre + CVector(-16,4), CVector( 32, 2 ), 100, m_iVolumeSlider ))
+	pStateMan->m_pGui->Label( "Master Volume Slider", pStateMan->m_pGui->m_vScreenCentre + CVector( -16, 6 ) );
+	if ( pStateMan->m_pGui->HorzSlider( 70, pStateMan->m_pGui->m_vScreenCentre + CVector( -16, 4 ), CVector( 32, 2 ),
+										100, m_iVolumeSlider ) )
 	{
-		cl_volume->SetFloat(m_iVolumeSlider / 100.0f);
+		cl_volume->SetFloat( m_iVolumeSlider / 100.0f );
 	}
 }
 

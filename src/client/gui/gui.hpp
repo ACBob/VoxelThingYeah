@@ -138,7 +138,7 @@ class CGui
 	int AtlasButton( int id, CTexture *tex, Atlas atlas, float atlasDivisions, CVector pos, CVector size,
 					 CVector vOrigin = CVector( 0, 0 ) );
 	int LabelButton( int id, const char *msg, CVector pos, CVector vOrigin = CVector( 0, 0 ),
-					 CVector padding = CVector( 2, 1, 0 ) );
+					 CVector padding = CVector( 2, 1, 0 ), CVector minsize = CVector( 0, 0 ) );
 	void Label( const char *cText, CVector vPosition, Colour colour = Color( 1, 1, 1 ),
 				TextAlignment textAlign = TEXTALIGN_LEFT );
 	void Image( CTexture *pTex, CVector vPosition, CVector vSize, CVector vOrigin = CVector( 0, 0 ),
