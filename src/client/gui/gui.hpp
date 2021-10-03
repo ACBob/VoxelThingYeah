@@ -152,4 +152,5 @@ class CGui
 									 CTexture *pTex = nullptr ); // Variant of TextInput that has support for selection,
 																 // also rendering with a background
 	bool Slider( int id, CVector pos, CVector size, int max, int &value );
+	bool HorzSlider( int id, CVector pos, CVector size, int max, int &value ); // Same as Slider but horizontal
 };

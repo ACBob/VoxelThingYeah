@@ -540,3 +540,43 @@ bool CGui::Slider( int id, CVector pos, CVector size, int max, int &value )
 
 	return false;
 }
+bool CGui::HorzSlider( int id, CVector pos, CVector size, int max, int &value )
+{
+	pos	 = GetInScreen( pos );
+	size = size * GUIUNIT;
+
+	Image9Rect( m_pSliderTex, pos / GUIUNIT, size / GUIUNIT, Color( 1, 1, 1 ) );
+
+	float xpos = ( (size.x - 2 * GUIUNIT) * value ) / max;
+
+	Image( m_pThumbTex, ( pos + CVector( xpos, 0 ) ) / GUIUNIT, CVector( 2, 2 ), CVector( 0, 0 ),
+		   Color( 1, 1, 1 ) );
+
+	if ( RegionHit( pos, size ) )
+	{
+		m_iHotItem = id;
+
+		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
+		{
+			m_iActiveItem = id;
+		}
+	}
+
+	if ( m_iActiveItem == id )
+	{
+		float p = m_vMousePos.x - pos.x;
+		if ( p < 0 )
+			p = 0;
+		if ( p > size.x )
+			p = size.x;
+		int val = ( p * max ) / size.x;
+
+		if ( val != value )
+		{
+			value = val;
+			return true;
+		}
+	}
+
+	return false;
+}

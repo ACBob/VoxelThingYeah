@@ -406,6 +406,7 @@ void CStateOptionsMenu::Update()
 	// CGui::TEXTALIGN_CENTER);
 
 	pStateMan->m_pGui->Slider( 69, pStateMan->m_pGui->m_vScreenCentre, CVector( 1.5, 10 ), 100, m_iSliderTestVal );
+	pStateMan->m_pGui->HorzSlider( 70, pStateMan->m_pGui->m_vScreenCentre + CVector(0,2), CVector( 10, 2 ), 100, m_iSliderTestVal );
 }
 
 void CKickScreen::Enter()
