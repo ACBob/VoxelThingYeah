@@ -195,3 +195,20 @@ Notifies the client of a custom skin another player may have.
 |-------|------|-------------|
 | Username | std::string | Username of the player. |
 | Skin Data | RGBA Array | Texture Data |
+
+### 0x0B (SPECIAL_EFFECT)
+Dispatches a "Special Effect", which is just a fancy term for 'Particles or Sound Effect'.\
+The current effects are such;
+| ID | Name | Attribute |
+|-------|----|------|
+| 0x00 | Block Break | Block ID |
+| 0x01 | Block Place | Block ID |
+
+
+| Value | Type | Description |
+|-------|------|-------------|
+| X | Integer | X Coord |
+| Y | Integer | Y Coord |
+| Z | Integer | Z Coord |
+| Effect ID | Integer | The ID of the effect we want to dispatch |
+| Attribute | Integer | Any additional options |
