@@ -232,6 +232,14 @@ void CStatePlay::Update()
 				}
 			}
 		}
+		else if (m_bInPause) 
+		{
+			if (pStateMan->m_pGui->LabelButton( 1, "Disconnect", pStateMan->m_pGui->m_vScreenCentre, CVector( 0.5, 0.5 )))
+			{
+				pStateMan->m_pClient->Disconnect();
+				pStateMan->PopState();
+			}
+		}
 		else
 		{
 			pStateMan->m_pGui->Crosshair();

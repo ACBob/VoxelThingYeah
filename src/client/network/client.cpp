@@ -78,6 +78,7 @@ void CNetworkClient::Disconnect()
 		}
 	}
 
+	enet_peer_reset( m_pPeer );
 	m_pPeer		 = nullptr;
 	m_bConnected = false;
 }
