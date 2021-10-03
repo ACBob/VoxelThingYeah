@@ -1,8 +1,8 @@
 #include "enet/enet.h"
 #include "entities/entityplayer.hpp"
 #include "network/protocol.hpp"
-#include "world/world.hpp"
 #include "particles/particlesystem.hpp"
+#include "world/world.hpp"
 
 #include "specialeffectdef.hpp"
 
@@ -26,7 +26,7 @@ class CNetworkClient
 
 	void DecodeChunkData( ArchiveIntermediary data );
 
-	void SpecialEffectHandle(CVector pos, SpecialEffect specialEffect, int attrib);
+	void SpecialEffectHandle( CVector pos, SpecialEffect specialEffect, int attrib );
 
 	// Pointer to the local world
 	CWorld *m_pLocalWorld = nullptr;

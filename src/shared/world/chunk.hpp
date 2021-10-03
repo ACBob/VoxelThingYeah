@@ -77,7 +77,7 @@ class CChunk
 
 	PortableChunkRepresentation m_portableDef;
 
-	bool m_bDirty = false; // We need to update regardless of if we're near anyone
+	bool m_bDirty		= false; // We need to update regardless of if we're near anyone
 	bool m_bReallyDirty = false; // We need to be completely resent
 
 	int64_t m_iLastTick = 0;

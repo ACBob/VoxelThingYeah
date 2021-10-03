@@ -29,8 +29,8 @@ void CStatePlay::Enter()
 
 	m_pStellarModel->SetTexture( materialSystem::LoadTexture( "sun.png" ) );
 
-	m_pTerrainPNG = materialSystem::LoadTexture( "terrain.png" );
-	m_pHotbarTex = materialSystem::LoadTexture( "hotbar.png" );
+	m_pTerrainPNG	   = materialSystem::LoadTexture( "terrain.png" );
+	m_pHotbarTex	   = materialSystem::LoadTexture( "hotbar.png" );
 	m_pHotbarSelectTex = materialSystem::LoadTexture( "hotbar-selected.png" );
 
 	m_pLocalPlayer = new CEntityPlayer();
@@ -125,21 +125,22 @@ void CStatePlay::Update()
 		m_pLocalWorld->Render();
 
 		// Particles Last
-		m_particleMan.Render(m_pLocalPlayer->m_camera.m_vRotation);
+		m_particleMan.Render( m_pLocalPlayer->m_camera.m_vRotation );
 
-		// m_particleMan.CreateParticle(m_pLocalPlayer->m_vPosition, CVector(2.5f - (rand() % 500) / 100.0f, 5.0f - (rand() % 1000) / 100.0f, 2.5f - (rand() % 500) / 100.0f), {0,-.98,0}, 5, true);
+		// m_particleMan.CreateParticle(m_pLocalPlayer->m_vPosition, CVector(2.5f - (rand() % 500) / 100.0f, 5.0f -
+		// (rand() % 1000) / 100.0f, 2.5f - (rand() % 500) / 100.0f), {0,-.98,0}, 5, true);
 
 		// -----------------------
 		// Input
 		// -----------------------
-		if (!m_bInPause && !m_bInChat)
+		if ( !m_bInPause && !m_bInChat )
 		{
 			if ( pStateMan->m_pInputMan->m_bInputState[INKEY_INV] &&
-				!pStateMan->m_pInputMan->m_bOldInputState[INKEY_INV] )
+				 !pStateMan->m_pInputMan->m_bOldInputState[INKEY_INV] )
 				m_pLocalPlayer->m_bInInventory = !m_pLocalPlayer->m_bInInventory;
 
 			if ( pStateMan->m_pInputMan->m_bInputState[INKEY_CHAT] &&
-				!pStateMan->m_pInputMan->m_bOldInputState[INKEY_CHAT] )
+				 !pStateMan->m_pInputMan->m_bOldInputState[INKEY_CHAT] )
 				m_bInChat = !m_bInChat;
 		}
 
@@ -147,7 +148,7 @@ void CStatePlay::Update()
 		{
 			if ( m_pLocalPlayer->m_bInInventory )
 				m_pLocalPlayer->m_bInInventory = false;
-			else if (m_bInChat)
+			else if ( m_bInChat )
 				m_bInChat = false;
 			else
 				m_bInPause = !m_bInPause;
@@ -166,40 +167,45 @@ void CStatePlay::Update()
 		pStateMan->m_pGui->Label( guiBuf, CVector( pStateMan->m_pGui->m_vScreenCentre.x, -1 ), Color( 1, 1, 1 ),
 								  CGui::TEXTALIGN_CENTER );
 
-		pStateMan->m_pGui->Image(m_pHotbarTex, CVector(pStateMan->m_pGui->m_vScreenCentre.x, 0), CVector(18.5, 2.5), CVector(0.5, 0));
+		pStateMan->m_pGui->Image( m_pHotbarTex, CVector( pStateMan->m_pGui->m_vScreenCentre.x, 0 ),
+								  CVector( 18.5, 2.5 ), CVector( 0.5, 0 ) );
 		float p;
-		
-		for (int i = 0; i < 8; i++)
-		{
-			p = 8.0f * (i / 4.0f -1.0f);
 
-			if (m_pLocalPlayer->m_inventory.Slot(i) == nullptr || m_pLocalPlayer->m_inventory.Slot(i)->GetCount() == 0)
+		for ( int i = 0; i < 8; i++ )
+		{
+			p = 8.0f * ( i / 4.0f - 1.0f );
+
+			if ( m_pLocalPlayer->m_inventory.Slot( i ) == nullptr ||
+				 m_pLocalPlayer->m_inventory.Slot( i )->GetCount() == 0 )
 				continue;
-				
-			BlockTexture bTex = GetDefaultBlockTextureSide( reinterpret_cast<CBlockItem*>(m_pLocalPlayer->m_inventory.Slot(i))->m_iBlockType, Direction::NORTH );
-			pStateMan->m_pGui->ImageAtlas( m_pTerrainPNG,
-										{ (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey },
-										16.0f, CVector(p + pStateMan->m_pGui->m_vScreenCentre.x, 1.25), CVector( 2, 2 ), CVector( 0.5, 0.5 ) );
-			
-			snprintf( guiBuf, 100, "%d", m_pLocalPlayer->m_inventory.Slot(i)->GetCount() );
-			pStateMan->m_pGui->Label(guiBuf, CVector(p + pStateMan->m_pGui->m_vScreenCentre.x, 0));
+
+			BlockTexture bTex = GetDefaultBlockTextureSide(
+				reinterpret_cast<CBlockItem *>( m_pLocalPlayer->m_inventory.Slot( i ) )->m_iBlockType,
+				Direction::NORTH );
+			pStateMan->m_pGui->ImageAtlas(
+				m_pTerrainPNG, { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey }, 16.0f,
+				CVector( p + pStateMan->m_pGui->m_vScreenCentre.x, 1.25 ), CVector( 2, 2 ), CVector( 0.5, 0.5 ) );
+
+			snprintf( guiBuf, 100, "%d", m_pLocalPlayer->m_inventory.Slot( i )->GetCount() );
+			pStateMan->m_pGui->Label( guiBuf, CVector( p + pStateMan->m_pGui->m_vScreenCentre.x, 0 ) );
 		}
-		p = 8.0f * (m_pLocalPlayer->m_iSelectedItemIDX / 4.0f -1.0f);
-		pStateMan->m_pGui->Image(m_pHotbarSelectTex, CVector(p + pStateMan->m_pGui->m_vScreenCentre.x, 1.25), CVector(3,3), CVector(0.5, 0.5));
+		p = 8.0f * ( m_pLocalPlayer->m_iSelectedItemIDX / 4.0f - 1.0f );
+		pStateMan->m_pGui->Image( m_pHotbarSelectTex, CVector( p + pStateMan->m_pGui->m_vScreenCentre.x, 1.25 ),
+								  CVector( 3, 3 ), CVector( 0.5, 0.5 ) );
 
 		if ( m_pLocalPlayer->m_bInInventory )
 		{
 			pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pInventoryTex, pStateMan->m_pGui->m_vScreenCentre,
 									  CVector( 22, 22 ), CVector( 0.5, 0.5 ) );
-			pStateMan->m_pGui->Label( "Inventory...", pStateMan->m_pGui->m_vScreenCentre + CVector(-9.625, 9.625) );
+			pStateMan->m_pGui->Label( "Inventory...", pStateMan->m_pGui->m_vScreenCentre + CVector( -9.625, 9.625 ) );
 
 			CVector p  = pStateMan->m_pGui->m_vScreenCentre + CVector( -8, 8 );
 			CVector op = p;
-			int j = 0;
+			int j	   = 0;
 			for ( int i = blocktype_t::STONE; i <= blocktype_t::ICE; i++ )
 			{
 				// Skip useless liquid flow variants
-				if (i == WATER || i == LAVA)
+				if ( i == WATER || i == LAVA )
 					continue;
 				j++;
 
@@ -207,13 +213,14 @@ void CStatePlay::Update()
 				if ( pStateMan->m_pGui->AtlasButton(
 						 'b' + i, m_pTerrainPNG,
 						 { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey }, 16.0f, p,
-						 CVector( 2, 2 ), CVector(0.5, 0.5) ) )
+						 CVector( 2, 2 ), CVector( 0.5, 0.5 ) ) )
 				{
-					if (m_pLocalPlayer->m_pSelectedItem != nullptr)
+					if ( m_pLocalPlayer->m_pSelectedItem != nullptr )
 					{
 						// TODO: assuming blockitem
-						m_pLocalPlayer->m_pSelectedItem->SetCount(ITEMSTACK_MAX);
-						reinterpret_cast<CBlockItem*>(m_pLocalPlayer->m_pSelectedItem)->m_iBlockType = (blocktype_t)i;
+						m_pLocalPlayer->m_pSelectedItem->SetCount( ITEMSTACK_MAX );
+						reinterpret_cast<CBlockItem *>( m_pLocalPlayer->m_pSelectedItem )->m_iBlockType =
+							(blocktype_t)i;
 					}
 				}
 
@@ -231,22 +238,24 @@ void CStatePlay::Update()
 		}
 
 		// Chat Rendering
-		for (int i = 5; i > 0; i--)
+		for ( int i = 5; i > 0; i-- )
 		{
-			if (i > pStateMan->m_pClient->m_chatBuffer.size())
+			if ( i > pStateMan->m_pClient->m_chatBuffer.size() )
 				continue;
 
-			pStateMan->m_pGui->Label(pStateMan->m_pClient->m_chatBuffer[pStateMan->m_pClient->m_chatBuffer.size() - i].c_str(), CVector(0, i+1));
+			pStateMan->m_pGui->Label(
+				pStateMan->m_pClient->m_chatBuffer[pStateMan->m_pClient->m_chatBuffer.size() - i].c_str(),
+				CVector( 0, i + 1 ) );
 		}
 
-		if (m_bInChat)
+		if ( m_bInChat )
 		{
 			// Chat
-			const char *chat = pStateMan->m_pGui->TextInput(69, CVector(0,0));
+			const char *chat = pStateMan->m_pGui->TextInput( 69, CVector( 0, 0 ) );
 
-			if (chat != nullptr)
+			if ( chat != nullptr )
 			{
-				protocol::SendClientChatMessage(pStateMan->m_pClient->m_pPeer, chat);
+				protocol::SendClientChatMessage( pStateMan->m_pClient->m_pPeer, chat );
 
 				m_bInChat = false;
 			}
@@ -286,27 +295,35 @@ void CStateMenu::Update()
 							  pStateMan->m_pGui->m_vScreenDimensions / pStateMan->m_pGui->m_iGuiUnit, CVector( 0, 0 ),
 							  CVector( 0.5, 0.5, 0.5 ) );
 
-	pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pLogoTex, CVector(pStateMan->m_pGui->m_vScreenCentre.x, -1), CVector(10 * 5.25,10), CVector(0.5, 1) );
+	pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pLogoTex, CVector( pStateMan->m_pGui->m_vScreenCentre.x, -1 ),
+							  CVector( 10 * 5.25, 10 ), CVector( 0.5, 1 ) );
 
 	if ( pStateMan->m_pGui->LabelButton( 1, "Play", pStateMan->m_pGui->m_vScreenCentre, CVector( 0.5, 0.5 ) ) )
 	{
-		cl_ip->SetString(pStateMan->m_pGui->m_textBuffers[3].c_str());
-		cl_port->SetString(pStateMan->m_pGui->m_textBuffers[4].c_str());
-		username->SetString(pStateMan->m_pGui->m_textBuffers[5].c_str());
+		cl_ip->SetString( pStateMan->m_pGui->m_textBuffers[3].c_str() );
+		cl_port->SetString( pStateMan->m_pGui->m_textBuffers[4].c_str() );
+		username->SetString( pStateMan->m_pGui->m_textBuffers[5].c_str() );
 
 		pStateMan->m_pClient->Connect( cl_ip->GetString(), cl_port->GetInt() );
 		m_pStateMan->PushState( std::make_unique<CStatePlay>() );
 	}
 
-	if ( pStateMan->m_pGui->LabelButton( 2, "Quit", pStateMan->m_pGui->m_vScreenCentre - CVector(0,2), CVector( 0.5, 0.5 ) ) )
+	if ( pStateMan->m_pGui->LabelButton( 2, "Quit", pStateMan->m_pGui->m_vScreenCentre - CVector( 0, 2 ),
+										 CVector( 0.5, 0.5 ) ) )
 	{
 		pStateMan->PopState();
 	}
 
-	pStateMan->m_pGui->Label("IP:", pStateMan->m_pGui->m_vScreenCentre - CVector(16,4.5), Color(1,1,1), CGui::TEXTALIGN_CENTER);
-	pStateMan->m_pGui->SelectableTextInput(3, pStateMan->m_pGui->m_vScreenCentre - CVector(24,7), CVector(16,2));
-	pStateMan->m_pGui->Label("Port:", pStateMan->m_pGui->m_vScreenCentre - CVector(16,9.5), Color(1,1,1), CGui::TEXTALIGN_CENTER);
-	pStateMan->m_pGui->SelectableTextInput(4, pStateMan->m_pGui->m_vScreenCentre - CVector(24,12), CVector(16,2));
-	pStateMan->m_pGui->Label("Username:", pStateMan->m_pGui->m_vScreenCentre - CVector(-16,4.5), Color(1,1,1), CGui::TEXTALIGN_CENTER);
-	pStateMan->m_pGui->SelectableTextInput(5, pStateMan->m_pGui->m_vScreenCentre - CVector(-8,7), CVector(16,2));
+	pStateMan->m_pGui->Label( "IP:", pStateMan->m_pGui->m_vScreenCentre - CVector( 16, 4.5 ), Color( 1, 1, 1 ),
+							  CGui::TEXTALIGN_CENTER );
+	pStateMan->m_pGui->SelectableTextInput( 3, pStateMan->m_pGui->m_vScreenCentre - CVector( 24, 7 ),
+											CVector( 16, 2 ) );
+	pStateMan->m_pGui->Label( "Port:", pStateMan->m_pGui->m_vScreenCentre - CVector( 16, 9.5 ), Color( 1, 1, 1 ),
+							  CGui::TEXTALIGN_CENTER );
+	pStateMan->m_pGui->SelectableTextInput( 4, pStateMan->m_pGui->m_vScreenCentre - CVector( 24, 12 ),
+											CVector( 16, 2 ) );
+	pStateMan->m_pGui->Label( "Username:", pStateMan->m_pGui->m_vScreenCentre - CVector( -16, 4.5 ), Color( 1, 1, 1 ),
+							  CGui::TEXTALIGN_CENTER );
+	pStateMan->m_pGui->SelectableTextInput( 5, pStateMan->m_pGui->m_vScreenCentre - CVector( -8, 7 ),
+											CVector( 16, 2 ) );
 }

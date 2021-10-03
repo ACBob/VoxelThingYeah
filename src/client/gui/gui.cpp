@@ -39,7 +39,8 @@ int CGui::GetTextLength( const char *msg )
 	int i = 0;
 	while ( msg[i] != NULL )
 	{
-		l += fontWidths[std::distance(CP437UNICODE, std::find(CP437UNICODE, CP437UNICODE + 256, msg[i]))] * TEXTWIDTH;
+		l += fontWidths[std::distance( CP437UNICODE, std::find( CP437UNICODE, CP437UNICODE + 256, msg[i] ) )] *
+			 TEXTWIDTH;
 		l += 2.0f / 16.0f * (float)GUIUNIT;
 
 		i++;
@@ -48,7 +49,8 @@ int CGui::GetTextLength( const char *msg )
 	return l;
 }
 
-CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActiveItem( 0 ), m_iHotItem( 0 ), m_iKeyboardItem( 0 )
+CGui::CGui( int screenW, int screenH )
+	: m_iMouseState( IN_NO_MOUSE ), m_iActiveItem( 0 ), m_iHotItem( 0 ), m_iKeyboardItem( 0 )
 {
 	// OpenGl
 	{
@@ -83,7 +85,7 @@ CGui::CGui( int screenW, int screenH ) : m_iMouseState( IN_NO_MOUSE ), m_iActive
 	m_pBGTex		= materialSystem::LoadTexture( "guibg.png" );
 	m_pCrosshairTex = materialSystem::LoadTexture( "crosshair.png" );
 	m_pInventoryTex = materialSystem::LoadTexture( "inventory.png" );
-	m_pLogoTex = materialSystem::LoadTexture( "title.png" );
+	m_pLogoTex		= materialSystem::LoadTexture( "title.png" );
 
 	m_textBuffers = {};
 
@@ -258,7 +260,7 @@ int CGui::Button( int id, CVector pos, CVector size, CVector origin, CTexture *t
 {
 	pos	 = GetInScreen( pos );
 	size = size * GUIUNIT;
-	pos = pos - (size * origin);
+	pos	 = pos - ( size * origin );
 	if ( tex == nullptr )
 		tex = m_pButtonTex;
 
@@ -286,15 +288,16 @@ int CGui::Button( int id, CVector pos, CVector size, CVector origin, CTexture *t
 	CVector p = pos / GUIUNIT;
 	CVector s = size / GUIUNIT;
 
-	if (!hide)
+	if ( !hide )
 	{
-		Image9Rect(tex, p, s, color);
+		Image9Rect( tex, p, s, color );
 	}
 
 	return returnCode;
 }
 
-int CGui::AtlasButton( int id, CTexture *tex, Atlas atlas, float atlasDivisions, CVector pos, CVector size, CVector origin )
+int CGui::AtlasButton( int id, CTexture *tex, Atlas atlas, float atlasDivisions, CVector pos, CVector size,
+					   CVector origin )
 {
 	int b = Button( id, pos, size, origin, nullptr, true );
 	ImageAtlas( tex, atlas, atlasDivisions, pos, size, origin );
@@ -309,10 +312,10 @@ int CGui::LabelButton( int id, const char *msg, CVector pos, CVector origin, CVe
 	// Render and get output of button
 	int buttonOut = Button( id, pos, size / GUIUNIT, origin );
 
-	pos			 = pos - ( size / GUIUNIT ) * origin;
+	pos = pos - ( size / GUIUNIT ) * origin;
 
 	// TODO: it's in the floor
-	Label( msg, ( pos + CVector(0,-0.5) + ( size / GUIUNIT ) * origin ), CVector( 1, 1, 1 ), TEXTALIGN_CENTER );
+	Label( msg, ( pos + CVector( 0, -0.5 ) + ( size / GUIUNIT ) * origin ), CVector( 1, 1, 1 ), TEXTALIGN_CENTER );
 	return buttonOut;
 }
 
@@ -332,17 +335,17 @@ void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment tex
 
 		int c;
 
-		while ( utfz::next(text, c) )
+		while ( utfz::next( text, c ) )
 		{
 			// Get vertices
 			// Shadow
-			int j = std::distance(CP437UNICODE, std::find(CP437UNICODE, CP437UNICODE + 256, c));
+			int j = std::distance( CP437UNICODE, std::find( CP437UNICODE, CP437UNICODE + 256, c ) );
 
-			if (j == 0 || j >= 256)
+			if ( j == 0 || j >= 256 )
 				j = 255;
 
-			std::vector<CGui::Vertex> g = GetCharQuad( j, pos - ( 2.0f / 16.0f * (float)GUIUNIT ),
-													   CVector( TEXTWIDTH, TEXTHEIGHT ), color / 2 );
+			std::vector<CGui::Vertex> g =
+				GetCharQuad( j, pos - ( 2.0f / 16.0f * (float)GUIUNIT ), CVector( TEXTWIDTH, TEXTHEIGHT ), color / 2 );
 			std::copy( g.begin(), g.end(), std::back_inserter( m_textVertiecs ) );
 
 			g = GetCharQuad( j, pos, CVector( TEXTWIDTH, TEXTHEIGHT ), color );
@@ -367,16 +370,17 @@ void CGui::Image( CTexture *tex, CVector pos, CVector size, CVector origin, Colo
 	}
 }
 
-void CGui::ImageAtlas( CTexture *tex, Atlas atlas, float atlasDivisions, CVector pos, CVector size, CVector origin, CVector tint )
+void CGui::ImageAtlas( CTexture *tex, Atlas atlas, float atlasDivisions, CVector pos, CVector size, CVector origin,
+					   CVector tint )
 {
 	pos	 = GetInScreen( pos );
 	size = size * GUIUNIT;
 
 	{
 		CGui::_Image img;
-		img.m_vertices = GetQuad(
-			pos - ( size * origin ), size, tint, { atlas.x / atlasDivisions, atlas.y / atlasDivisions },
-			{ ( atlas.x + atlas.sizex ) / atlasDivisions, ( atlas.y + atlas.sizey ) / atlasDivisions } );
+		img.m_vertices =
+			GetQuad( pos - ( size * origin ), size, tint, { atlas.x / atlasDivisions, atlas.y / atlasDivisions },
+					 { ( atlas.x + atlas.sizex ) / atlasDivisions, ( atlas.y + atlas.sizey ) / atlasDivisions } );
 		img.m_pTex = tex;
 		m_images.push_back( img );
 	}
@@ -385,20 +389,24 @@ void CGui::ImageAtlas( CTexture *tex, Atlas atlas, float atlasDivisions, CVector
 void CGui::Image9Rect( CTexture *tex, CVector pos, CVector size, Colour color )
 {
 	// Corners of the 9rect
-	ImageAtlas( tex, {0,0, 1,1}, 3, pos + CVector(0, size.y - 0.5), CVector(0.5, 0.5), CVector(0,0), color);
-	ImageAtlas( tex, {2,0, 1,1}, 3, pos + CVector(size.x, size.y - 0.5), CVector(0.5, 0.5), CVector(0,0), color);
-	ImageAtlas( tex, {0,2, 1,1}, 3, pos, CVector(0.5, 0.5), CVector(0,0), color);
-	ImageAtlas( tex, {2,2, 1,1}, 3, pos + CVector(size.x, 0), CVector(0.5, 0.5), CVector(0,0), color);
+	ImageAtlas( tex, { 0, 0, 1, 1 }, 3, pos + CVector( 0, size.y - 0.5 ), CVector( 0.5, 0.5 ), CVector( 0, 0 ), color );
+	ImageAtlas( tex, { 2, 0, 1, 1 }, 3, pos + CVector( size.x, size.y - 0.5 ), CVector( 0.5, 0.5 ), CVector( 0, 0 ),
+				color );
+	ImageAtlas( tex, { 0, 2, 1, 1 }, 3, pos, CVector( 0.5, 0.5 ), CVector( 0, 0 ), color );
+	ImageAtlas( tex, { 2, 2, 1, 1 }, 3, pos + CVector( size.x, 0 ), CVector( 0.5, 0.5 ), CVector( 0, 0 ), color );
 
 	// Edges
-	ImageAtlas( tex, {1,0, 1,1}, 3, pos + CVector(0.5, size.y - 0.5), CVector(size.x - 0.5, 0.5), CVector(0,0), color);
-	ImageAtlas( tex, {1,2, 1,1}, 3, pos + CVector(0.5, 0), CVector(size.x - 0.5, 0.5), CVector(0,0), color);
+	ImageAtlas( tex, { 1, 0, 1, 1 }, 3, pos + CVector( 0.5, size.y - 0.5 ), CVector( size.x - 0.5, 0.5 ),
+				CVector( 0, 0 ), color );
+	ImageAtlas( tex, { 1, 2, 1, 1 }, 3, pos + CVector( 0.5, 0 ), CVector( size.x - 0.5, 0.5 ), CVector( 0, 0 ), color );
 
-	ImageAtlas( tex, {0,1, 1,1}, 3, pos + CVector(0, 0.5), CVector(0.5, size.y - 1), CVector(0,0), color);
-	ImageAtlas( tex, {2,1, 1,1}, 3, pos + CVector(size.x, 0.5), CVector(0.5, size.y - 1), CVector(0,0), color);
+	ImageAtlas( tex, { 0, 1, 1, 1 }, 3, pos + CVector( 0, 0.5 ), CVector( 0.5, size.y - 1 ), CVector( 0, 0 ), color );
+	ImageAtlas( tex, { 2, 1, 1, 1 }, 3, pos + CVector( size.x, 0.5 ), CVector( 0.5, size.y - 1 ), CVector( 0, 0 ),
+				color );
 
 	// Middle
-	ImageAtlas( tex, {1,1, 1,1}, 3, pos + CVector(0.5, 0.5), CVector(size.x - 0.5, size.y - 1), CVector( 0, 0 ), color );
+	ImageAtlas( tex, { 1, 1, 1, 1 }, 3, pos + CVector( 0.5, 0.5 ), CVector( size.x - 0.5, size.y - 1 ), CVector( 0, 0 ),
+				color );
 }
 
 void CGui::Crosshair() { Image( m_pCrosshairTex, m_vScreenCentre, CVector( 3, 3 ), CVector( 0.5, 0.5 ) ); }
@@ -410,34 +418,34 @@ const char *CGui::TextInput( int id, CVector pos )
 {
 	std::string text = m_textBuffers[id];
 
-	Label( (text + (((m_iTick / 8) % 2 == 0) ? "_" : "")).c_str(), pos );
+	Label( ( text + ( ( ( m_iTick / 8 ) % 2 == 0 ) ? "_" : "" ) ).c_str(), pos );
 
-	if (m_pInputMan->m_cTypeKey != nullptr)
+	if ( m_pInputMan->m_cTypeKey != nullptr )
 	{
 		text += m_pInputMan->m_cTypeKey;
 	}
 
-	if (m_pInputMan->m_clipboard.size())
+	if ( m_pInputMan->m_clipboard.size() )
 		text += m_pInputMan->m_clipboard;
 
 	if ( m_pInputMan->m_bKeyboardState[KBD_BACKSPACE] && !m_pInputMan->m_bOldKeyboardState[KBD_BACKSPACE] )
 	{
 		if ( text.length() )
 		{
-			if (text.length() >= 2)
+			if ( text.length() >= 2 )
 			{
 				std::string g = text.substr( text.length() - 2 );
 
-				int a = utfz::decode(g.c_str());
-				if (a > 127 && a != utfz::replace)
+				int a = utfz::decode( g.c_str() );
+				if ( a > 127 && a != utfz::replace )
 				{
 					// HACK: Remove two :trollface:
 					text.pop_back();
 				}
 			}
 
-			text.pop_back();			
-		}			
+			text.pop_back();
+		}
 	}
 
 	m_textBuffers[id] = text;
@@ -455,33 +463,31 @@ const char *CGui::SelectableTextInput( int id, CVector pos, CVector size, CTextu
 
 	if ( pTex == nullptr )
 		pTex = m_pTextInpTex;
-	
-	Colour color(1,1,1);
-	Colour textColor(1,1,1);
 
-	if (RegionHit(pos, size))
+	Colour color( 1, 1, 1 );
+	Colour textColor( 1, 1, 1 );
+
+	if ( RegionHit( pos, size ) )
 	{
 		m_iHotItem = id;
 		color	   = Colour( 0.75, 0.75, 1 );
-		textColor = Colour(1,1,0.75);
+		textColor  = Colour( 1, 1, 0.75 );
 
 		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
 		{
-			m_iActiveItem = id;
+			m_iActiveItem	= id;
 			m_iKeyboardItem = id;
 		}
-	}		
-
-	if (m_iKeyboardItem != id)
-		Label(m_textBuffers[id].c_str(), (pos / GUIUNIT) + CVector(0,0.5), textColor);
-	else
-	{
-		TextInput(id, (pos / GUIUNIT) + CVector(0,0.5));
-
-
 	}
 
-	Image9Rect(pTex, pos / GUIUNIT, size / GUIUNIT, Colour(1,1,1));
+	if ( m_iKeyboardItem != id )
+		Label( m_textBuffers[id].c_str(), ( pos / GUIUNIT ) + CVector( 0, 0.5 ), textColor );
+	else
+	{
+		TextInput( id, ( pos / GUIUNIT ) + CVector( 0, 0.5 ) );
+	}
+
+	Image9Rect( pTex, pos / GUIUNIT, size / GUIUNIT, Colour( 1, 1, 1 ) );
 
 	return nullptr;
 }

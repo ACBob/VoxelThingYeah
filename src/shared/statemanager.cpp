@@ -28,7 +28,4 @@ void CStateMachine::Update()
 		m_stateStack.back()->Update();
 }
 
-bool CStateMachine::IsEmpty()
-{
-	return m_stateStack.empty();
-}
+bool CStateMachine::IsEmpty() { return m_stateStack.empty(); }

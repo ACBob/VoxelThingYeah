@@ -23,44 +23,42 @@ CGameWindow::CGameWindow( const char *title, CVector size, bool resizeable )
 	if ( m_pInternalWindow == NULL )
 	{
 		char *errBuf = new char[512];
-		snprintf(errBuf, 512, "Window could not be created!\nSDL_Error:%s", SDL_GetError());
+		snprintf( errBuf, 512, "Window could not be created!\nSDL_Error:%s", SDL_GetError() );
 		Panic( errBuf );
 	}
 
 	// For any SDL stuff we render
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+	SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "0" );
 }
 CGameWindow::~CGameWindow() {}
 
-void CGameWindow::GatherCTX()
-{
-	m_glctx = SDL_GL_CreateContext( m_pInternalWindow.get() );
-}
+void CGameWindow::GatherCTX() { m_glctx = SDL_GL_CreateContext( m_pInternalWindow.get() ); }
 
-void CGameWindow::SetIcon(const char* texName)
+void CGameWindow::SetIcon( const char *texName )
 {
-	if (texName != nullptr)
+	if ( texName != nullptr )
 	{
-		m_pIcon = materialSystem::LoadTexture(texName);
+		m_pIcon = materialSystem::LoadTexture( texName );
 
-		SDL_Surface *ico = SDL_CreateRGBSurface(0, m_pIcon->m_iWidth, m_pIcon->m_iHeight, 32, 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff);
+		SDL_Surface *ico = SDL_CreateRGBSurface( 0, m_pIcon->m_iWidth, m_pIcon->m_iHeight, 32, 0xff000000, 0x00ff0000,
+												 0x0000ff00, 0x000000ff );
 
-		for (int y = 0; y < m_pIcon->m_iHeight; y ++)
+		for ( int y = 0; y < m_pIcon->m_iHeight; y++ )
 		{
-			for (int x = 0; x < m_pIcon->m_iWidth; x ++)
+			for ( int x = 0; x < m_pIcon->m_iWidth; x++ )
 			{
 				uint32_t r = m_pIcon->m_imageData[4 * y * m_pIcon->m_iWidth + 4 * x + 0];
 				uint32_t g = m_pIcon->m_imageData[4 * y * m_pIcon->m_iWidth + 4 * x + 1];
 				uint32_t b = m_pIcon->m_imageData[4 * y * m_pIcon->m_iWidth + 4 * x + 2];
 				uint32_t a = m_pIcon->m_imageData[4 * y * m_pIcon->m_iWidth + 4 * x + 3];
 
-				uint32_t* bufp;
-				bufp = (uint32_t *)ico->pixels + (y * ico->pitch / 4) + x;
+				uint32_t *bufp;
+				bufp  = (uint32_t *)ico->pixels + ( y * ico->pitch / 4 ) + x;
 				*bufp = 16777216 * r + 65536 * g + 256 * b + a;
 			}
 		}
 
-		SDL_SetWindowIcon(m_pInternalWindow.get(), ico);
+		SDL_SetWindowIcon( m_pInternalWindow.get(), ico );
 	}
 }
 
@@ -147,14 +145,13 @@ const int scancodeToStateIndex[] = {
 	SDL_SCANCODE_Y,			'Y',		SDL_SCANCODE_Z,		 'Z',
 
 	SDL_SCANCODE_ESCAPE,	KBD_ESCAPE, SDL_SCANCODE_LSHIFT, KBD_SHIFT, SDL_SCANCODE_BACKSPACE, KBD_BACKSPACE,
-	SDL_SCANCODE_RETURN,	KBD_RETURN, SDL_SCANCODE_LCTRL, KBD_CNTRL
-};
+	SDL_SCANCODE_RETURN,	KBD_RETURN, SDL_SCANCODE_LCTRL,	 KBD_CNTRL };
 
 void CGameWindow::PollEvents()
 {
 	SDL_SetRelativeMouseMode( !m_pInputMan->m_bInGui ? SDL_TRUE : SDL_FALSE );
-	if (m_pInputMan->m_bInGui)
-	    SDL_StartTextInput();
+	if ( m_pInputMan->m_bInGui )
+		SDL_StartTextInput();
 	else
 		SDL_StopTextInput();
 
@@ -165,7 +162,7 @@ void CGameWindow::PollEvents()
 
 	m_pInputMan->m_clipboard = "";
 
-	if (m_pInputMan->m_cTypeKey != nullptr)
+	if ( m_pInputMan->m_cTypeKey != nullptr )
 		delete m_pInputMan->m_cTypeKey;
 	m_pInputMan->m_cTypeKey = nullptr;
 
@@ -194,10 +191,10 @@ void CGameWindow::PollEvents()
 			case SDL_MOUSEWHEEL:
 				m_pInputMan->m_iMouseState |= ( currentEvent.wheel.y > 0 ) ? IN_WHEEL_UP : IN_WHEEL_DOWN;
 				break;
-			
+
 			case SDL_TEXTINPUT:
 				m_pInputMan->m_cTypeKey = new char[32];
-				strncpy(m_pInputMan->m_cTypeKey, currentEvent.text.text, 32);
+				strncpy( m_pInputMan->m_cTypeKey, currentEvent.text.text, 32 );
 				m_pInputMan->m_cTypeKey[32] = '\0';
 
 				// con_info("It thinks %s", m_pInputMan->m_cTypeKey);
@@ -228,11 +225,12 @@ void CGameWindow::PollEvents()
 	}
 
 	// Detect when CTRL+V has been pressed
-	if ( m_pInputMan->m_bKeyboardState[KBD_CNTRL] && (m_pInputMan->m_bKeyboardState['V'] && !m_pInputMan->m_bOldKeyboardState['V']) )
+	if ( m_pInputMan->m_bKeyboardState[KBD_CNTRL] &&
+		 ( m_pInputMan->m_bKeyboardState['V'] && !m_pInputMan->m_bOldKeyboardState['V'] ) )
 	{
-		char *clipboard = SDL_GetClipboardText();
+		char *clipboard			 = SDL_GetClipboardText();
 		m_pInputMan->m_clipboard = clipboard;
-		SDL_free(clipboard);
+		SDL_free( clipboard );
 	}
 }
 
@@ -242,9 +240,9 @@ void CGameWindow::CaptureMouse()
 	SDL_WarpMouseInWindow( m_pInternalWindow.get(), size.x / 2, size.y / 2 );
 }
 
-void CGameWindow::Panic(const char *err)
+void CGameWindow::Panic( const char *err )
 {
-	con_critical("ENGINE PANIC: %s", err);
-	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Engine Panic!", err, m_pInternalWindow.get());
-	std::exit(EXIT_FAILURE);
+	con_critical( "ENGINE PANIC: %s", err );
+	SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR, "Engine Panic!", err, m_pInternalWindow.get() );
+	std::exit( EXIT_FAILURE );
 }

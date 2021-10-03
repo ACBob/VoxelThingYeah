@@ -13,8 +13,8 @@
 
 class CGameWindow : public CBobWindow
 {
-	private:
-		CTexture *m_pIcon;
+  private:
+	CTexture *m_pIcon;
 
   public:
 	CGameWindow( const char *title = "GameWindow", CVector size = CVector( 800, 600 ),
@@ -24,7 +24,7 @@ class CGameWindow : public CBobWindow
 	// Gets the OpenGL Context
 	void GatherCTX();
 
-	void SetIcon(const char *texName);
+	void SetIcon( const char *texName );
 
 	// SDL_HideWindow / SDL_ShowWindow
 	bool IsVisible();		   // getter(?)
@@ -46,7 +46,7 @@ class CGameWindow : public CBobWindow
 	void SetPos( CVector p );
 
 	// Displays an error message somehow, Use for when shit hits the fans and we need to exit immediately
-	void Panic(const char *err);
+	void Panic( const char *err );
 
 	float GetSPF();
 	double GetTime();

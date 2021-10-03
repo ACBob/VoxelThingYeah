@@ -7,7 +7,7 @@ class CBobWindow
 	// BobWindow(const char *title = "BobWindow", Vector size = Vector(800,600)); // SDL_CreateWindow
 	// ~BobWindow(); // SDL_DestroyWindow
 
-	virtual void SetIcon(const char *texName) = 0;
+	virtual void SetIcon( const char *texName ) = 0;
 
 	// SDL_HideWindow / SDL_ShowWindow
 	virtual bool IsVisible()		  = 0; // getter(?)
@@ -48,7 +48,7 @@ class CBobWindow
 	virtual void SwapBuffers() = 0;
 
 	// Displays an error message somehow, Use for when shit hits the fans and we need to exit immediately
-	virtual void Panic(const char *err) = 0;
+	virtual void Panic( const char *err ) = 0;
 
 	bool m_bSizeChanged = false;
 

@@ -14,13 +14,14 @@ CChunk::CChunk()
 		m_blocks[i].m_iBlockType   = blocktype_t::AIR;
 		m_iLightingValue[i]		   = 0x00000000;
 		m_portableDef.m_iBlocks[i] = m_blocks[i].m_iBlockType;
-		m_portableDef.m_iVal[i] = m_blocks[i].m_iValueA;
-		m_portableDef.m_iValB[i] = m_blocks[i].m_iValueB;
+		m_portableDef.m_iVal[i]	   = m_blocks[i].m_iValueA;
+		m_portableDef.m_iValB[i]   = m_blocks[i].m_iValueB;
 	}
 
 	m_bDirty = true;
 }
-CChunk::~CChunk() {
+CChunk::~CChunk()
+{
 	// con_debug("deleting chunk @ <%.0f, %.0f, %.0f>", m_vPosition.x, m_vPosition.y, m_vPosition.z);
 }
 #elif SERVEREXE
@@ -30,8 +31,8 @@ CChunk::CChunk()
 	{
 		m_blocks[i].m_iBlockType   = blocktype_t::AIR;
 		m_portableDef.m_iBlocks[i] = m_blocks[i].m_iBlockType;
-		m_portableDef.m_iVal[i] = m_blocks[i].m_iValueA;
-		m_portableDef.m_iValB[i] = m_blocks[i].m_iValueB;
+		m_portableDef.m_iVal[i]	   = m_blocks[i].m_iValueA;
+		m_portableDef.m_iValB[i]   = m_blocks[i].m_iValueB;
 	}
 
 	m_bDirty = true;
@@ -61,9 +62,9 @@ void CChunk::Update( int64_t iTick )
 	// If true we're dirty next tick
 	bool bDirtyAgain = false;
 
-	if (iTick == m_iLastTick)
+	if ( iTick == m_iLastTick )
 		return;
-	
+
 	m_iLastTick = iTick;
 
 #ifdef SERVEREXE
@@ -97,13 +98,13 @@ void CChunk::Update( int64_t iTick )
 
 	for ( CVector pos : liquidBlocks )
 	{
-		CBlock *blockHandling = GetBlockAtLocal( pos );
-		blocktype_t blockType = blockHandling->m_iBlockType;
-		BlockFeatures blockFeatures = GetBlockFeatures(blockType);
+		CBlock *blockHandling		= GetBlockAtLocal( pos );
+		blocktype_t blockType		= blockHandling->m_iBlockType;
+		BlockFeatures blockFeatures = GetBlockFeatures( blockType );
 
-		if (blockFeatures.isLiquidSource)
+		if ( blockFeatures.isLiquidSource )
 			blockHandling->m_iValueA = blockFeatures.liquidRange;
-		else if (blockHandling->m_iValueA == 0)
+		else if ( blockHandling->m_iValueA == 0 )
 			continue;
 
 		// Test Bottom first
@@ -116,9 +117,10 @@ void CChunk::Update( int64_t iTick )
 		if ( blockF.floodable && pBlock->m_iBlockType != blockType )
 		{
 			pBlock->m_iBlockType = blockFeatures.liquidFlow;
-			pBlock->m_iValueA = blockFeatures.liquidRange;
+			pBlock->m_iValueA	 = blockFeatures.liquidRange;
 		}
-		else if ( pBlock->m_iBlockType == blockFeatures.liquidFlow || pBlock->m_iBlockType == blockFeatures.liquidSource )
+		else if ( pBlock->m_iBlockType == blockFeatures.liquidFlow ||
+				  pBlock->m_iBlockType == blockFeatures.liquidSource )
 			continue;
 		else
 		{
@@ -143,12 +145,12 @@ void CChunk::Update( int64_t iTick )
 				if ( bF.floodable )
 				{
 					b->m_iBlockType = blockFeatures.liquidFlow;
-					b->m_iValueA = blockHandling->m_iValueA - 1;
+					b->m_iValueA	= blockHandling->m_iValueA - 1;
 					bDirtyAgain		= true; // Something within us changed, we should update next tick too
 				}
-				else if (b->m_iBlockType == blockFeatures.liquidFlow)
+				else if ( b->m_iBlockType == blockFeatures.liquidFlow )
 				{
-					if (b->m_iValueA < (blockHandling->m_iValueA - 1))
+					if ( b->m_iValueA < ( blockHandling->m_iValueA - 1 ) )
 						b->m_iValueA = blockHandling->m_iValueA - 1;
 				}
 			}
@@ -164,14 +166,14 @@ void CChunk::Update( int64_t iTick )
 	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
 	{
 		m_portableDef.m_iBlocks[j] = m_blocks[j].m_iBlockType;
-		m_portableDef.m_iVal[j] = m_blocks[j].m_iValueA;
-		m_portableDef.m_iValB[j] = m_blocks[j].m_iValueB;
+		m_portableDef.m_iVal[j]	   = m_blocks[j].m_iValueA;
+		m_portableDef.m_iValB[j]   = m_blocks[j].m_iValueB;
 	}
 
 #ifdef CLIENTEXE
 	// Chunk update makes neighbours and ourself update our model
 	// Hahahahahahah slow
-	if (m_bDirty) // You're a dirty little purple chunk
+	if ( m_bDirty ) // You're a dirty little purple chunk
 	{
 		RebuildMdl();
 		for ( int i = 0; i < 6; i++ )

@@ -1,8 +1,7 @@
 // Built-in error shaders for when we can't load any
 // Used in dire situations (or if the user deleted something)
 
-const char* const ERRORVERT =
-"#version 450 core \n \ 
+const char *const ERRORVERT = "#version 450 core \n \ 
 layout (location = 0) in vec3 aPos; \n \ 
 layout (location = 1) in vec3 aNormal; \n \ 
 layout (location = 2) in vec2 aTexCoord; \n \ 
@@ -17,8 +16,7 @@ void main() \n \
 	TexCoord = vec2(aTexCoord.x, aTexCoord.y); \n \ 
 }";
 
-const char* const ERRORFRAG =
-"#version 450 core \n \ 
+const char *const ERRORFRAG = "#version 450 core \n \ 
 out vec4 FragColor; \n \ 
 in vec2 TexCoord; \n \ 
 uniform sampler2D diffuse; \n \ 

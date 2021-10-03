@@ -14,7 +14,7 @@
 
 #ifdef CLIENTEXE
 CWorld::CWorld( CShader *shader, CShader *entShader, CShader *waterShader, CTexture *worldTex )
-	: m_pWorldShader( shader ), m_pEntityShader( entShader ), m_pWaterShader( waterShader ), m_pWorldTex(worldTex)
+	: m_pWorldShader( shader ), m_pEntityShader( entShader ), m_pWaterShader( waterShader ), m_pWorldTex( worldTex )
 #elif SERVEREXE
 CWorld::CWorld()
 #endif
@@ -38,7 +38,7 @@ CWorld::~CWorld()
 CChunk *CWorld::ChunkAtChunkPos( CVector pos )
 {
 	// TODO: std::map
-	for (auto &&c : m_chunks )
+	for ( auto &&c : m_chunks )
 		if ( c.get()->m_vPosition == pos )
 			return c.get();
 
@@ -52,13 +52,13 @@ CChunk *CWorld::GetChunkGenerateAtWorldPos( CVector pos )
 	if ( c != nullptr )
 		return c;
 
-	m_chunks.push_back(std::make_unique<CChunk>());
-	c = m_chunks.back().get();
-	c->m_vPosition = ( pos / CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
+	m_chunks.push_back( std::make_unique<CChunk>() );
+	c				   = m_chunks.back().get();
+	c->m_vPosition	   = ( pos / CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
 	c->m_portableDef.x = c->m_vPosition.x;
 	c->m_portableDef.y = c->m_vPosition.y;
 	c->m_portableDef.z = c->m_vPosition.z;
-	c->m_pChunkMan = this;
+	c->m_pChunkMan	   = this;
 #ifdef CLIENTEXE
 	c->m_blocksMdl.m_vPosition = c->GetPosInWorld();
 	c->m_blocksMdl.SetShader( m_pWorldShader );
@@ -74,7 +74,9 @@ CChunk *CWorld::GetChunkGenerateAtWorldPos( CVector pos )
 
 void CWorld::UnloadChunk( CVector pos )
 {
-	m_chunks.erase(std::remove_if(m_chunks.begin(), m_chunks.end(), [pos](auto &&c) { return c.get()->m_vPosition == pos; }), m_chunks.end());
+	m_chunks.erase(
+		std::remove_if( m_chunks.begin(), m_chunks.end(), [pos]( auto &&c ) { return c.get()->m_vPosition == pos; } ),
+		m_chunks.end() );
 }
 
 // Return in good faith that it's a valid position
@@ -122,7 +124,7 @@ void *CWorld::GetEntityByName( const char *name )
 void CWorld::Render()
 {
 	// Render regular blocks
-	for (auto &&c : m_chunks )
+	for ( auto &&c : m_chunks )
 		c.get()->Render();
 	// Render entities
 	for ( void *ent : m_ents )
@@ -130,7 +132,7 @@ void CWorld::Render()
 		( (CEntityBase *)ent )->Render();
 	}
 	// Render stuff like water
-	for (auto &&c : m_chunks )
+	for ( auto &&c : m_chunks )
 		c.get()->RenderTrans();
 }
 #endif
@@ -193,17 +195,16 @@ void CWorld::WorldTick( int64_t iTick, float delta )
 		reinterpret_cast<CEntityBase *>( ent )->Tick( iTick );
 		reinterpret_cast<CEntityBase *>( ent )->PhysicsTick( delta, this );
 
-		if (reinterpret_cast<CEntityBase *>( ent )->IsPlayer())
-			playerPositions.push_back(
-				(reinterpret_cast<CEntityBase *>( ent )->m_vPosition / CVector(CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z)).Floor()
-			);
-			
+		if ( reinterpret_cast<CEntityBase *>( ent )->IsPlayer() )
+			playerPositions.push_back( ( reinterpret_cast<CEntityBase *>( ent )->m_vPosition /
+										 CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) )
+										   .Floor() );
 	}
 
 	if ( iTick == m_iLastTick )
 		return;
 
-	for (auto &&c : m_chunks )
+	for ( auto &&c : m_chunks )
 	{
 		CChunk *chunk = c.get();
 		if ( chunk->m_bDirty )
@@ -212,10 +213,9 @@ void CWorld::WorldTick( int64_t iTick, float delta )
 			continue;
 		}
 
-
-		for (CVector plyrPos : playerPositions)
+		for ( CVector plyrPos : playerPositions )
 		{
-			if ( (plyrPos - chunk->m_vPosition).Magnitude() < 7 )
+			if ( ( plyrPos - chunk->m_vPosition ).Magnitude() < 7 )
 			{
 				chunk->Update( iTick );
 				break;
@@ -251,8 +251,8 @@ void CWorld::UsePortable( PortableChunkRepresentation rep )
 	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
 	{
 		c->m_blocks[j].m_iBlockType = (blocktype_t)rep.m_iBlocks[j];
-		c->m_blocks[j].m_iValueA = rep.m_iVal[j];
-		c->m_blocks[j].m_iValueB = rep.m_iValB[j];
+		c->m_blocks[j].m_iValueA	= rep.m_iVal[j];
+		c->m_blocks[j].m_iValueB	= rep.m_iValB[j];
 	}
 
 	c->m_bDirty = true;

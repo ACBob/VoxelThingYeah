@@ -21,6 +21,6 @@ namespace particleSystem
 		particleMdl->SetTexture( materialSystem::LoadTexture( "test.png" ) );
 	}
 	void UnInit() { delete particleMdl; }
-	
+
 	CModel *particleMdl = nullptr;
 } // namespace particleSystem

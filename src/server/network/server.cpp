@@ -69,7 +69,7 @@ void CNetworkServer::KickPlayer( const char *username, const char *reason )
 }
 CNetworkPlayer::~CNetworkPlayer()
 {
-	if (m_pEntity != nullptr)
+	if ( m_pEntity != nullptr )
 		m_pEntity->Kill();
 }
 
@@ -115,19 +115,20 @@ void CNetworkServer::Update()
 	}
 
 	// Check for outdated chunks and queue them
-	for (auto &&c : m_world.m_chunks )
+	for ( auto &&c : m_world.m_chunks )
 	{
 		for ( CNetworkPlayer *cl : m_players )
 		{
-			if (c->m_bReallyDirty)
+			if ( c->m_bReallyDirty )
 				cl->m_pChunkQueue.push_back( c.get()->m_vPosition );
 		}
 	}
 
 	for ( CNetworkPlayer *c : m_players )
 	{
-		if (c->m_pEntity == nullptr)
-			continue; // we can assume they probably no longer exist, or are in the process of joining/leaving or something
+		if ( c->m_pEntity == nullptr )
+			continue; // we can assume they probably no longer exist, or are in the process of joining/leaving or
+					  // something
 
 		// Update chunk pos
 		// Unfortunate name

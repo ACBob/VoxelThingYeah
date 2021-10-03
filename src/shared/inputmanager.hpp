@@ -37,7 +37,7 @@ enum KBDKEY // Keys unrepresentable by a char
   KBD_SHIFT		= 1,
   KBD_BACKSPACE = 2,
   KBD_RETURN	= 3,
-  KBD_CNTRL = 4,
+  KBD_CNTRL		= 4,
 };
 
 class CInputManager

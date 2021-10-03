@@ -113,9 +113,9 @@ void COverworldJeneration::BiomeBlocks( CChunk *c )
 
 				if ( b->m_iBlockType == AIR )
 				{
-					if (blk->m_iBlockType == STONE)
+					if ( blk->m_iBlockType == STONE )
 					{
-						b->m_iBlockType = biome->m_iBlockDust;
+						b->m_iBlockType	  = biome->m_iBlockDust;
 						blk->m_iBlockType = biome->m_iBlockSurface;
 						grassDepth--;
 					}
@@ -184,20 +184,21 @@ void COverworldJeneration::Generate( CChunk *c )
 
 CBiome *COverworldJeneration::GetBiomeAtPos( CVector p )
 {
-	float fTemperature = (fnlGetNoise2D( &m_biomesOvergroundTemperatureNoise, p.x, p.z ) + 1.0f);
+	float fTemperature = ( fnlGetNoise2D( &m_biomesOvergroundTemperatureNoise, p.x, p.z ) + 1.0f );
 	// float fHumidity = fnlGetNoise2D( &m_biomesOvergroundHumidityNoise, p.x, p.z );
 
 	CBiome *closestBiome = biomes::biomeList[0];
 
 	for ( CBiome *biome : biomes::biomeList )
 	{
-		if (fTemperature >= biome->m_fMinTemperature && fTemperature <= biome->m_fMaxTemperature)
+		if ( fTemperature >= biome->m_fMinTemperature && fTemperature <= biome->m_fMaxTemperature )
 		{
 			return biome;
 		}
 
 		// Else try to find the closest to the max temperature
-		if ( fabsf( biome->m_fMaxTemperature - fTemperature ) < fabsf( closestBiome->m_fMaxTemperature - fTemperature ) )
+		if ( fabsf( biome->m_fMaxTemperature - fTemperature ) <
+			 fabsf( closestBiome->m_fMaxTemperature - fTemperature ) )
 			closestBiome = biome;
 	}
 

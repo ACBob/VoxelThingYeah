@@ -36,8 +36,8 @@
 #include "gamestates.hpp"
 
 #ifdef _WIN32
-#include <windows.h>
-#include <stdio.h>
+	#include <stdio.h>
+	#include <windows.h>
 #endif
 
 int main( int argc, char *args[] )
@@ -58,17 +58,17 @@ int main( int argc, char *args[] )
 	conVarHandle.Parse( argstring );
 
 	// seed random
-	srand(time(NULL));
+	srand( time( NULL ) );
 
-	con_debug("Your random number today is %d", rand() % 500);
+	con_debug( "Your random number today is %d", rand() % 500 );
 
-	con_info("Creating Display...");
+	con_info( "Creating Display..." );
 	// Initialize SDL systems
 	if ( SDL_Init( SDL_INIT_VIDEO ) )
 	{
 		char *errBuf = new char[512];
-		snprintf(errBuf, 512, "SDL could not initialize!\n SDL_Error: %s", SDL_GetError());
-		con_critical("ENGINE PANIC: %s", errBuf);
+		snprintf( errBuf, 512, "SDL could not initialize!\n SDL_Error: %s", SDL_GetError() );
+		con_critical( "ENGINE PANIC: %s", errBuf );
 		SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR, "Engine Panic!", errBuf, NULL );
 
 		delete errBuf;
@@ -93,7 +93,7 @@ int main( int argc, char *args[] )
 		window.Panic( "Couldn't initialise Network! Unrecoverable!" );
 	}
 	atexit( network::Uninit );
-	
+
 	CInputManager inputMan;
 	window.m_pInputMan = &inputMan;
 
@@ -118,7 +118,7 @@ int main( int argc, char *args[] )
 	{
 		if ( !gladLoadGLLoader( SDL_GL_GetProcAddress ) )
 		{
-			window.Panic("GLAD Could not be loaded!");
+			window.Panic( "GLAD Could not be loaded!" );
 		}
 	}
 
@@ -142,7 +142,7 @@ int main( int argc, char *args[] )
 	soundSystem::Init();
 	atexit( soundSystem::UnInit );
 
-	window.SetIcon("logo1664.png");
+	window.SetIcon( "logo1664.png" );
 
 	con_info( "Init ParticleSystem..." );
 	particleSystem::Init();
@@ -212,12 +212,12 @@ int main( int argc, char *args[] )
 			shd->SetMat4( "screen", screen );
 		}
 
-		if (gameStateMan.m_iTick >= musicTick)
+		if ( gameStateMan.m_iTick >= musicTick )
 		{
 			musicTick = gameStateMan.m_iTick + 20000;
 
-			if (rand() % 100 > 50)
-				soundSystem::PlaySoundEvent("game.music", CVector(0,0,0));
+			if ( rand() % 100 > 50 )
+				soundSystem::PlaySoundEvent( "game.music", CVector( 0, 0, 0 ) );
 		}
 
 		gameStateMan.Update();
@@ -240,7 +240,7 @@ int main( int argc, char *args[] )
 
 		gameStateMan.m_fDelta = delta / 1000.0f;
 
-		if (gameStateMan.IsEmpty())
+		if ( gameStateMan.IsEmpty() )
 			break;
 	}
 	gameStateMan.Flush();

@@ -50,7 +50,7 @@ bool CNetworkClient::Connect( const char *address, int port )
 	else
 	{
 		con_error( "Nobody said hello back :(" );
-		enet_peer_reset(m_pPeer);
+		enet_peer_reset( m_pPeer );
 		m_pPeer = nullptr;
 		return false;
 	}
@@ -82,12 +82,12 @@ void CNetworkClient::Disconnect()
 	m_bConnected = false;
 }
 
-void CNetworkClient::SpecialEffectHandle(CVector pos, SpecialEffect specialEffect, int attrib)
+void CNetworkClient::SpecialEffectHandle( CVector pos, SpecialEffect specialEffect, int attrib )
 {
-	if (m_pParticleMan == nullptr)
+	if ( m_pParticleMan == nullptr )
 		return;
-	
-	switch (specialEffect)
+
+	switch ( specialEffect )
 	{
 		case SPECIALEFFECT_BLOCKBREAK: {
 			// Attrib is taken to be the block id
@@ -97,18 +97,19 @@ void CNetworkClient::SpecialEffectHandle(CVector pos, SpecialEffect specialEffec
 			if ( b == AIR )
 				return;
 
-			BlockTexture tex = GetDefaultBlockTextureSide(b, NORTH);
+			BlockTexture tex = GetDefaultBlockTextureSide( b, NORTH );
 
-			ParticleDef blockBreak = PARTICLE_BREAKBLOCK;
-			blockBreak.vUVOffsetMin = blockBreak.vUVOffsetMax = CVector(tex.sizex / 16.0f, tex.sizey / 16.0f, tex.x / 16.0f, tex.y / 16.0f);
-			blockBreak.pTexture = materialSystem::LoadTexture("terrain.png");
+			ParticleDef blockBreak	= PARTICLE_BREAKBLOCK;
+			blockBreak.vUVOffsetMin = blockBreak.vUVOffsetMax =
+				CVector( tex.sizex / 16.0f, tex.sizey / 16.0f, tex.x / 16.0f, tex.y / 16.0f );
+			blockBreak.pTexture = materialSystem::LoadTexture( "terrain.png" );
 
 			soundSystem::PlayBreakSound( b, pos + CVector( 0.5, 0.5, 0.5 ) );
 
-			for (int x = 0; x < 4; x++)
-				for (int y = 0; y < 4; y++)
-					for (int z = 0; z < 4; z++)
-						m_pParticleMan->CreateParticle(pos + CVector( x/4.0f,y/4.0f,z/4.0f ), blockBreak);
+			for ( int x = 0; x < 4; x++ )
+				for ( int y = 0; y < 4; y++ )
+					for ( int z = 0; z < 4; z++ )
+						m_pParticleMan->CreateParticle( pos + CVector( x / 4.0f, y / 4.0f, z / 4.0f ), blockBreak );
 		}
 		break;
 		case SPECIALEFFECT_BLOCKPLACE: {
@@ -122,8 +123,8 @@ void CNetworkClient::SpecialEffectHandle(CVector pos, SpecialEffect specialEffec
 		}
 		break;
 		default:
-			con_error("Unknown Effect %#010x!", specialEffect);
-		break;
+			con_error( "Unknown Effect %#010x!", specialEffect );
+			break;
 	}
 }
 
@@ -157,5 +158,8 @@ void CNetworkClient::Update()
 	CVector cP = ( m_pLocalPlayer->m_vPosition / CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
 	// MAGIC NUMBER: 4 == render distance
 	// TODO: tie to cvar
-	m_pLocalWorld->m_chunks.erase(std::remove_if(m_pLocalWorld->m_chunks.begin(), m_pLocalWorld->m_chunks.end(), [cP](auto &&c) { return ( (cP - c.get()->m_vPosition).Magnitude() > 6 ); }), m_pLocalWorld->m_chunks.end());
+	m_pLocalWorld->m_chunks.erase(
+		std::remove_if( m_pLocalWorld->m_chunks.begin(), m_pLocalWorld->m_chunks.end(),
+						[cP]( auto &&c ) { return ( ( cP - c.get()->m_vPosition ).Magnitude() > 6 ); } ),
+		m_pLocalWorld->m_chunks.end() );
 }

@@ -61,7 +61,7 @@ namespace soundSystem
 	void PlayPlaceSound( blocktype_t blockType, CVector pos );
 	void PlayStepSound( blocktype_t blockType, CVector pos );
 
-	void PlaySoundEvent( const char* eventName, CVector pos );
+	void PlaySoundEvent( const char *eventName, CVector pos );
 } // namespace soundSystem
 
 // Stubs when sound is disabled
@@ -109,8 +109,8 @@ namespace soundSystem
 
 	inline void PlayBreakSound( blocktype_t blockType, CVector pos ){};
 	inline void PlayPlaceSound( blocktype_t blockType, CVector pos ){};
-	inline void PlayStepSound( blocktype_t blockType, CVector pos ) {};
-	inline void PlaySoundEvent( const char* eventName, CVector pos ){};
+	inline void PlayStepSound( blocktype_t blockType, CVector pos ){};
+	inline void PlaySoundEvent( const char *eventName, CVector pos ){};
 } // namespace soundSystem
 
 #endif

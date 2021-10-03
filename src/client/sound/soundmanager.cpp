@@ -97,7 +97,7 @@ CSoundEvent::CSoundEvent( std::vector<std::string> sounds, const char *type, flo
 	{
 		m_iSoundType = SOUNDTYPE_BLOCK;
 	}
-	else if ( strcmp(type, "music") )
+	else if ( strcmp( type, "music" ) )
 	{
 		m_iSoundType = SOUNDTYPE_MUSIC;
 	}
@@ -114,10 +114,14 @@ void CSoundEvent::Play( CVector pos )
 
 	// TODO: Seperate volume variables
 	float gain = 1.0;
-	switch(m_iSoundType)
+	switch ( m_iSoundType )
 	{
-		case SOUNDTYPE_BLOCK: gain = 1.0f; break;
-		case SOUNDTYPE_MUSIC: gain = 0.25f; break;
+		case SOUNDTYPE_BLOCK:
+			gain = 1.0f;
+			break;
+		case SOUNDTYPE_MUSIC:
+			gain = 0.25f;
+			break;
 	}
 
 	m_sounds.at( soundIdx )->Play( pos, pitch, gain );
@@ -295,10 +299,10 @@ void soundSystem::SetListener( CWorld *world, CVector pos, CVector forward, CVec
 
 CSound *soundSystem::LoadSound( const char *path )
 {
-	if (loadedSounds.count(path))
+	if ( loadedSounds.count( path ) )
 		return loadedSounds[path];
 
-	CSound *snd = new CSound( path );
+	CSound *snd		   = new CSound( path );
 	loadedSounds[path] = snd;
 
 	return snd;
@@ -309,7 +313,7 @@ void soundSystem::PlayBreakSound( blocktype_t blockType, CVector pos )
 	blockmaterial_t mat = GetBlockMaterial( blockType );
 
 	char *buf = new char[512];
-	snprintf(buf, 512, "block.break.%s", BlockMaterialSTR(mat));
+	snprintf( buf, 512, "block.break.%s", BlockMaterialSTR( mat ) );
 	soundEvents[buf]->Play( pos );
 
 	delete buf;
@@ -319,8 +323,8 @@ void soundSystem::PlayPlaceSound( blocktype_t blockType, CVector pos )
 	blockmaterial_t mat = GetBlockMaterial( blockType );
 
 	char *buf = new char[512];
-	snprintf(buf, 512, "block.place.%s", BlockMaterialSTR(mat));
-	PlaySoundEvent(buf, pos);
+	snprintf( buf, 512, "block.place.%s", BlockMaterialSTR( mat ) );
+	PlaySoundEvent( buf, pos );
 
 	delete buf;
 }
@@ -329,15 +333,15 @@ void soundSystem::PlayStepSound( blocktype_t blockType, CVector pos )
 	blockmaterial_t mat = GetBlockMaterial( blockType );
 
 	char *buf = new char[512];
-	snprintf(buf, 512, "block.step.%s", BlockMaterialSTR(mat));
-	PlaySoundEvent(buf, pos);
+	snprintf( buf, 512, "block.step.%s", BlockMaterialSTR( mat ) );
+	PlaySoundEvent( buf, pos );
 	delete buf;
 }
-void soundSystem::PlaySoundEvent(const char *soundEvent, CVector pos)
+void soundSystem::PlaySoundEvent( const char *soundEvent, CVector pos )
 {
-	if (!soundEvents.count(soundEvent))
+	if ( !soundEvents.count( soundEvent ) )
 	{
-		con_error("Unknown Sound Event %s", soundEvent);
+		con_error( "Unknown Sound Event %s", soundEvent );
 		return;
 	}
 

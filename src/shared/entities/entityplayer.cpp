@@ -9,8 +9,7 @@
 
 #include "inventory/blockitem.hpp"
 
-CEntityPlayer::CEntityPlayer() :
-	m_inventory(36)
+CEntityPlayer::CEntityPlayer() : m_inventory( 36 )
 {
 	m_vPosition = CVector( 0, 0, 0 );
 #ifdef CLIENTEXE
@@ -79,32 +78,33 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 			if ( m_pSelectedItem != nullptr && m_pSelectedItem->GetCount() > 0 && b != nullptr && bF.selectable )
 			{
 				blocktype_t oldType = b->m_iBlockType; // TODO: We're assuming it's a block item
-				b->m_iBlockType		= reinterpret_cast<CBlockItem*>(m_pSelectedItem)->m_iBlockType;
+				b->m_iBlockType		= reinterpret_cast<CBlockItem *>( m_pSelectedItem )->m_iBlockType;
 				if ( !clientSideWorld->TestAABBCollision( m_collisionBox ) )
 				{
 					b->Update();
-					m_pSelectedItem->SetCount(m_pSelectedItem->GetCount() - 1);
+					m_pSelectedItem->SetCount( m_pSelectedItem->GetCount() - 1 );
 				}
 				else
 					b->m_iBlockType = oldType;
 
 				protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer,
-											  ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, b->m_iBlockType, 0, 0 );
+											  ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, b->m_iBlockType, 0,
+											  0 );
 			}
 		}
 
 		if ( m_pInputMan->m_iMouseState & IN_WHEEL_UP )
 		{
-			m_iSelectedItemIDX --;
+			m_iSelectedItemIDX--;
 			m_iSelectedItemIDX = m_iSelectedItemIDX >= 0 ? m_iSelectedItemIDX : 8;
 		}
 		else if ( m_pInputMan->m_iMouseState & IN_WHEEL_DOWN )
 		{
-			m_iSelectedItemIDX ++;
+			m_iSelectedItemIDX++;
 			m_iSelectedItemIDX = m_iSelectedItemIDX < 9 ? m_iSelectedItemIDX : 0;
 		}
 
-		m_pSelectedItem = m_inventory.Slot(m_iSelectedItemIDX);
+		m_pSelectedItem = m_inventory.Slot( m_iSelectedItemIDX );
 	}
 }
 #endif

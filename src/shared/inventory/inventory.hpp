@@ -10,14 +10,14 @@
 
 class CInventory
 {
-	public:
-		CInventory(int slots);
-		~CInventory();
+  public:
+	CInventory( int slots );
+	~CInventory();
 
-		// Returns the item at slot
-		CItem *Slot(int slot);
+	// Returns the item at slot
+	CItem *Slot( int slot );
 
-		// itemSlots big
-		std::vector<CItem*> m_items;
-		int m_iItemSlots; // The amount of slots we have
+	// itemSlots big
+	std::vector<CItem *> m_items;
+	int m_iItemSlots; // The amount of slots we have
 };

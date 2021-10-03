@@ -53,36 +53,44 @@ blockmaterial_t GetBlockMaterial( blocktype_t blockType )
 
 const char *BlockMaterialSTR( blockmaterial_t mat )
 {
-	switch (mat)
+	switch ( mat )
 	{
 		case MAT_NONE:
-		default: return "none";
-		case MAT_STONE: return "stone";
-		case MAT_LOOSE: return "loose";
-		case MAT_WOOD:  return "wood";
-		case MAT_GLASS:  return "glass";
-		case MAT_ORGANIC: return "organic";
-		case MAT_LIQUID: return "liquid";
-		case MAT_DUST: return "dust";
+		default:
+			return "none";
+		case MAT_STONE:
+			return "stone";
+		case MAT_LOOSE:
+			return "loose";
+		case MAT_WOOD:
+			return "wood";
+		case MAT_GLASS:
+			return "glass";
+		case MAT_ORGANIC:
+			return "organic";
+		case MAT_LIQUID:
+			return "liquid";
+		case MAT_DUST:
+			return "dust";
 	}
 }
 
 BlockFeatures GetBlockFeatures( blocktype_t blockType )
 {
 	BlockFeatures bF;
-	bF.breakable   = true;
-	bF.selectable  = true;
-	bF.solid	   = true;
-	bF.walkable	   = true;
-	bF.floodable   = false;
-	bF.isLiquid	   = false;
+	bF.breakable	  = true;
+	bF.selectable	  = true;
+	bF.solid		  = true;
+	bF.walkable		  = true;
+	bF.floodable	  = false;
+	bF.isLiquid		  = false;
 	bF.isLiquidSource = false;
-	bF.liquidFlow = AIR;
-	bF.liquidSource = AIR;
-	bF.liquidRange = 0;
-	bF.liquidSpeed = 0;
-	bF.rule		   = OBSCURERULE_ALWAYS;
-	bF.model	   = BLOCKMODEL_CUBE;
+	bF.liquidFlow	  = AIR;
+	bF.liquidSource	  = AIR;
+	bF.liquidRange	  = 0;
+	bF.liquidSpeed	  = 0;
+	bF.rule			  = OBSCURERULE_ALWAYS;
+	bF.model		  = BLOCKMODEL_CUBE;
 
 	switch ( blockType )
 	{
@@ -112,16 +120,16 @@ BlockFeatures GetBlockFeatures( blocktype_t blockType )
 			bF.isLiquidSource = true;
 		case WATER:
 		case LAVA:
-			bF.breakable   = false;
-			bF.selectable  = false;
-			bF.walkable	   = false;
-			bF.solid	   = false;
-			bF.isLiquid	   = true;
-			bF.liquidSpeed = blockType == LAVA ? 15 : 5;
-			bF.rule		   = OBSCURERULE_SIMILAR;
-			bF.liquidFlow = (blockType == WATERSRC || blockType == WATER) ? WATER : LAVA;
-			bF.liquidSource = (blockType == WATERSRC || blockType == WATER) ? WATERSRC : LAVASRC;
-			bF.liquidRange = (blockType == WATERSRC || blockType == WATER) ? 7 : 4;
+			bF.breakable	= false;
+			bF.selectable	= false;
+			bF.walkable		= false;
+			bF.solid		= false;
+			bF.isLiquid		= true;
+			bF.liquidSpeed	= blockType == LAVA ? 15 : 5;
+			bF.rule			= OBSCURERULE_SIMILAR;
+			bF.liquidFlow	= ( blockType == WATERSRC || blockType == WATER ) ? WATER : LAVA;
+			bF.liquidSource = ( blockType == WATERSRC || blockType == WATER ) ? WATERSRC : LAVASRC;
+			bF.liquidRange	= ( blockType == WATERSRC || blockType == WATER ) ? 7 : 4;
 			break;
 
 		case AIR:

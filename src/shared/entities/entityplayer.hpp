@@ -7,7 +7,7 @@
 #include "inventory/inventory.hpp"
 
 #ifdef CLIENTEXE
-#include "particles/particlemanager.hpp"
+	#include "particles/particlemanager.hpp"
 #endif
 
 #pragma once

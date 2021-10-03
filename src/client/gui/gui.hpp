@@ -44,7 +44,7 @@ class CGui
 	CTexture *m_pTextTex   = nullptr;
 	CShader *m_pTextShader = nullptr;
 
-	CTexture *m_pButtonTex = nullptr;
+	CTexture *m_pButtonTex	= nullptr;
 	CTexture *m_pTextInpTex = nullptr;
 
   public:
@@ -85,7 +85,7 @@ class CGui
 	CTexture *m_pBGTex		  = nullptr;
 	CTexture *m_pCrosshairTex = nullptr;
 	CTexture *m_pInventoryTex = nullptr;
-	CTexture *m_pLogoTex = nullptr;
+	CTexture *m_pLogoTex	  = nullptr;
 
 	// Current button pressed down
 	int m_iMouseState;
@@ -119,8 +119,10 @@ class CGui
 	int GetTextLength( const char *text );
 
 	// Elements
-	int Button( int iId, CVector vPosition, CVector vSize, CVector vOrigin = CVector(0,0), CTexture *tex = nullptr, bool hide = false );
-	int AtlasButton( int id, CTexture *tex, Atlas atlas, float atlasDivisions, CVector pos, CVector size, CVector vOrigin = CVector(0,0) );
+	int Button( int iId, CVector vPosition, CVector vSize, CVector vOrigin = CVector( 0, 0 ), CTexture *tex = nullptr,
+				bool hide = false );
+	int AtlasButton( int id, CTexture *tex, Atlas atlas, float atlasDivisions, CVector pos, CVector size,
+					 CVector vOrigin = CVector( 0, 0 ) );
 	int LabelButton( int id, const char *msg, CVector pos, CVector vOrigin = CVector( 0, 0 ),
 					 CVector padding = CVector( 2, 1, 0 ) );
 	void Label( const char *cText, CVector vPosition, Colour colour = Color( 1, 1, 1 ),
@@ -128,9 +130,11 @@ class CGui
 	void Image( CTexture *pTex, CVector vPosition, CVector vSize, CVector vOrigin = CVector( 0, 0 ),
 				Colour tint = Colour( 1, 1, 1 ) );
 	void ImageAtlas( CTexture *pTex, Atlas atlas, float fAtlasDivisions, CVector vPosition, CVector vSize,
-					 CVector vOrigin = CVector( 0, 0 ), Color tint = Color(1,1,1) );
+					 CVector vOrigin = CVector( 0, 0 ), Color tint = Color( 1, 1, 1 ) );
 	void Image9Rect( CTexture *pTex, CVector pos, CVector size, Colour color );
 	void Crosshair(); // A wrapper for Image
 	const char *TextInput( int iId, CVector vPosition );
-	const char *SelectableTextInput( int id, CVector pos, CVector size, CTexture *pTex = nullptr ); // Variant of TextInput that has support for selection, also rendering with a background
+	const char *SelectableTextInput( int id, CVector pos, CVector size,
+									 CTexture *pTex = nullptr ); // Variant of TextInput that has support for selection,
+																 // also rendering with a background
 };

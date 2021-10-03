@@ -18,9 +18,10 @@ class CVector
 	CVector Floor() const;							 // returns a floored vector
 	CVector Ceil() const;							 // returns a ceiled vector
 	CVector Lerp( CVector oVec, float perc ) const;	 // lerps
-	CVector Inverse() const; // Gets the inverse vector
-	CVector LookingAt(CVector oVec, CVector up = {0,1,0}) const; // Returns a vector of degrees for a rotation that would point at oVec from here
-	float Dot(CVector oVec) const;
+	CVector Inverse() const;						 // Gets the inverse vector
+	CVector LookingAt( CVector oVec, CVector up = { 0, 1, 0 } )
+		const; // Returns a vector of degrees for a rotation that would point at oVec from here
+	float Dot( CVector oVec ) const;
 
 	// Operators
 	// Math, with other vectors
@@ -44,7 +45,7 @@ class CVector
 	bool operator<=( CVector oVec ) const;
 };
 
-CVector RandomVector(CVector min = {0,0,0}, CVector max = {1,1,1});
+CVector RandomVector( CVector min = { 0, 0, 0 }, CVector max = { 1, 1, 1 } );
 
 const CVector VEC_UP( 0.0f, 1.0f, 0.0f );
 const CVector VEC_RIGHT( 1.0f, 0.0f, 0.0f );

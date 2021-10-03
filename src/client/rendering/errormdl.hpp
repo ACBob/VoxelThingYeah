@@ -1,7 +1,6 @@
 // Hard-coded OBJ model to load when we can't find the actual one.
 
-const char* const ERRORMDLOBJ =
-"o ERROR \n \ 
+const char *const ERRORMDLOBJ = "o ERROR \n \ 
 v 1.521408 -0.000000 0.100000 \n \ 
 v 1.427566 -0.000000 0.100000 \n \ 
 v 1.052199 0.844575 0.100000 \n \ 

@@ -2,8 +2,8 @@
 
 #include "logging.hpp"
 
-#include "modelloader.hpp"
 #include "errormdl.hpp"
+#include "modelloader.hpp"
 
 #include <iostream>
 
@@ -21,9 +21,9 @@ void BOBJLoadModel( CModel *m, const char *fp )
 	{
 		delete file;
 
-		file = new char[strlen(ERRORMDLOBJ) + 1];
-		strcpy(file, ERRORMDLOBJ);
-		file[strlen(ERRORMDLOBJ) + 1] = '\0';
+		file = new char[strlen( ERRORMDLOBJ ) + 1];
+		strcpy( file, ERRORMDLOBJ );
+		file[strlen( ERRORMDLOBJ ) + 1] = '\0';
 	}
 
 	char *token;

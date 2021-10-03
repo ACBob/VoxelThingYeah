@@ -10,17 +10,17 @@
 class CParticleEmitter
 {
   public:
-	CParticleEmitter(ParticleDef pdef);
+	CParticleEmitter( ParticleDef pdef );
 	~CParticleEmitter();
 
-	void Render(CVector camRot);
+	void Render( CVector camRot );
 
-	void PhysicsTick(CWorld *pWorld, int64_t iTick, float fDelta);
+	void PhysicsTick( CWorld *pWorld, int64_t iTick, float fDelta );
 
 	CVector m_vPosition;
 
-	CVector m_vExplosion = {1, 1, 1};
-	CVector m_vLinear = {0, -.98, 0};
+	CVector m_vExplosion = { 1, 1, 1 };
+	CVector m_vLinear	 = { 0, -.98, 0 };
 
 	int64_t m_iLastTick = 0;
 

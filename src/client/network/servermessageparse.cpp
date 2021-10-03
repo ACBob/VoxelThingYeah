@@ -87,8 +87,8 @@ namespace protocol
 				{
 					con_info( "Update Block At <%f,%f,%f>", x, y, z );
 					b->m_iBlockType = blocktype_t( blockType );
-					b->m_iValueA = valA;
-					b->m_iValueB = valB;
+					b->m_iValueA	= valA;
+					b->m_iValueB	= valB;
 					b->Update();
 				}
 			}
@@ -244,7 +244,7 @@ namespace protocol
 			}
 			break;
 			case ServerPacket::SPECIALEFFECT: {
-				int x,y,z;
+				int x, y, z;
 				int effectId;
 				int effectAttrib;
 
@@ -254,7 +254,7 @@ namespace protocol
 				bufAccess >> effectId;
 				bufAccess >> effectAttrib;
 
-				client->SpecialEffectHandle(CVector(x,y,z), (SpecialEffect)effectId, effectAttrib);
+				client->SpecialEffectHandle( CVector( x, y, z ), (SpecialEffect)effectId, effectAttrib );
 			}
 			break;
 

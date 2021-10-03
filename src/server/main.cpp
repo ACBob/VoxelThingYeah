@@ -17,7 +17,7 @@
 #include "world/world.hpp"
 
 #ifdef _WIN32
-#include <windows.h>
+	#include <windows.h>
 #endif
 
 int main( int argc, char *args[] )
@@ -79,7 +79,7 @@ int main( int argc, char *args[] )
 
 			// World
 			server.m_world.WorldTick( i, sv_tickms->GetFloat() / 1000.0f );
-			
+
 			// Networking
 			server.Update();
 			server.m_iCurrentTick = i;

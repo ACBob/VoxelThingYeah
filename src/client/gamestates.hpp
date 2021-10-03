@@ -1,6 +1,7 @@
 #include "entities/entityplayer.hpp"
 #include "gui/gui.hpp"
 #include "network/client.hpp"
+#include "particles/particlesystem.hpp"
 #include "rendering/modelmanager.hpp"
 #include "rendering/shadermanager.hpp"
 #include "rendering/texturemanager.hpp"
@@ -8,7 +9,6 @@
 #include "shared/statemanager.hpp"
 #include "sound/soundmanager.hpp"
 #include "world/world.hpp"
-#include "particles/particlesystem.hpp"
 
 #pragma once
 
@@ -52,7 +52,7 @@ class CStatePlay : public CState
 	CTexture *m_pHotbarSelectTex;
 
 	bool m_bInPause = false;
-	bool m_bInChat = false;
+	bool m_bInChat	= false;
 
 	int64_t m_iLastTick = 0;
 };

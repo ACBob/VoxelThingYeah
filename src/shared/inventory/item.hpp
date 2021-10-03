@@ -6,14 +6,14 @@
 
 class CItem
 {
-	public:
-		CItem();
-		~CItem();
+  public:
+	CItem();
+	~CItem();
 
-		virtual int GetCount();
-		virtual void SetCount(int c);
+	virtual int GetCount();
+	virtual void SetCount( int c );
 
-	private:
-		// How many of this item does this stack represent
-		int m_iCount;
+  private:
+	// How many of this item does this stack represent
+	int m_iCount;
 };

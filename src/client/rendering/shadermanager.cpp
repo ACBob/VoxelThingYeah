@@ -19,33 +19,33 @@
 std::vector<CShader *> shaderSystem::loadedShaders;
 
 // TODO: not as verbose
-void ShaderPreprocess(std::string &source, int d = 0)
+void ShaderPreprocess( std::string &source, int d = 0 )
 {
-	if (d >= SHADERSYS_MAX_INCLUDE_DEPTH)
+	if ( d >= SHADERSYS_MAX_INCLUDE_DEPTH )
 	{
-		con_error("Shader include depth exceeded! (%d)", SHADERSYS_MAX_INCLUDE_DEPTH);
+		con_error( "Shader include depth exceeded! (%d)", SHADERSYS_MAX_INCLUDE_DEPTH );
 		return;
 	}
 
-	std::stringstream ss(source);
+	std::stringstream ss( source );
 
 	std::string o;
 
-	std::regex include("#.*include ((<[^>]+>)|(\"[^\"]+\"))");
-	std::regex strng("[\"<](.*?)[\">]");
+	std::regex include( "#.*include ((<[^>]+>)|(\"[^\"]+\"))" );
+	std::regex strng( "[\"<](.*?)[\">]" );
 
-	for (std::string l; std::getline(ss, l); )
+	for ( std::string l; std::getline( ss, l ); )
 	{
-		if (std::regex_match(l, include))
+		if ( std::regex_match( l, include ) )
 		{
 			std::smatch match;
-			std::regex_search(l, match, strng);
+			std::regex_search( l, match, strng );
 			std::string fp = match.str();
-			fp = fp.substr(1, fp.length() - 2); // Cut off first and last character
+			fp			   = fp.substr( 1, fp.length() - 2 ); // Cut off first and last character
 
 			int64_t iLength = 0;
-			bool bSuccess = false;
-			char *src = (char *)fileSystem::LoadFile( fp.c_str(), iLength, bSuccess );
+			bool bSuccess	= false;
+			char *src		= (char *)fileSystem::LoadFile( fp.c_str(), iLength, bSuccess );
 			if ( !bSuccess )
 			{
 				con_error( "Cannot load Included Shader %s!", fp.c_str() );
@@ -54,35 +54,35 @@ void ShaderPreprocess(std::string &source, int d = 0)
 				continue;
 			}
 
-			std::string ssrc(src);
+			std::string ssrc( src );
 
-			ShaderPreprocess(ssrc, d+1);
+			ShaderPreprocess( ssrc, d + 1 );
 
-			o.append(ssrc + "\n");
+			o.append( ssrc + "\n" );
 		}
 		else
-			o.append(l + "\n");
+			o.append( l + "\n" );
 	}
 
 	source = o;
 }
 
-void ShaderPreprocess(char *&cSource, int d = 0)
+void ShaderPreprocess( char *&cSource, int d = 0 )
 {
-	if (d >= SHADERSYS_MAX_INCLUDE_DEPTH)
+	if ( d >= SHADERSYS_MAX_INCLUDE_DEPTH )
 	{
-		con_error("Shader include depth exceeded! (%d)", SHADERSYS_MAX_INCLUDE_DEPTH);
+		con_error( "Shader include depth exceeded! (%d)", SHADERSYS_MAX_INCLUDE_DEPTH );
 		return;
 	}
 
 	// Convert to std::string :trollface:
-	std::string s(cSource);
+	std::string s( cSource );
 
-	ShaderPreprocess(s, d);
+	ShaderPreprocess( s, d );
 
 	delete cSource;
 	cSource = new char[s.size() + 1];
-	strcpy(cSource, s.c_str());
+	strcpy( cSource, s.c_str() );
 }
 
 CShader::CShader( const char *vs, const char *fs )
@@ -97,12 +97,12 @@ CShader::CShader( const char *vs, const char *fs )
 		// use the error instead
 		delete cVertexShaderSource;
 
-		cVertexShaderSource = new char[strlen(ERRORVERT) + 1];
-		strcpy(cVertexShaderSource, ERRORVERT);
-		cVertexShaderSource[strlen(ERRORVERT) + 1] = '\0';
+		cVertexShaderSource = new char[strlen( ERRORVERT ) + 1];
+		strcpy( cVertexShaderSource, ERRORVERT );
+		cVertexShaderSource[strlen( ERRORVERT ) + 1] = '\0';
 	}
 
-	ShaderPreprocess(cVertexShaderSource);
+	ShaderPreprocess( cVertexShaderSource );
 
 	unsigned int iVertexShader = glCreateShader( GL_VERTEX_SHADER );
 	glShaderSource( iVertexShader, 1, (const GLchar **)&cVertexShaderSource, NULL );
@@ -114,12 +114,12 @@ CShader::CShader( const char *vs, const char *fs )
 		// use the error instead
 		delete cFragmentShaderSource;
 
-		cFragmentShaderSource = new char[strlen(ERRORFRAG) + 1];
-		strcpy(cFragmentShaderSource, ERRORFRAG);
-		cFragmentShaderSource[strlen(ERRORFRAG) + 1] = '\0';
+		cFragmentShaderSource = new char[strlen( ERRORFRAG ) + 1];
+		strcpy( cFragmentShaderSource, ERRORFRAG );
+		cFragmentShaderSource[strlen( ERRORFRAG ) + 1] = '\0';
 	}
 
-	ShaderPreprocess(cFragmentShaderSource);
+	ShaderPreprocess( cFragmentShaderSource );
 
 	unsigned int iFragmentShader = glCreateShader( GL_FRAGMENT_SHADER );
 	glShaderSource( iFragmentShader, 1, (const GLchar **)&cFragmentShaderSource, NULL );

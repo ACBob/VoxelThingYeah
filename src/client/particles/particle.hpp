@@ -11,12 +11,12 @@ class CParticle
 {
 
   public:
-	CParticle(ParticleDef pdef);
+	CParticle( ParticleDef pdef );
 	~CParticle();
 
-	void Render(CVector camRot);
+	void Render( CVector camRot );
 
-	void PhysicsTick(CWorld *pWorld, float fDelta);
+	void PhysicsTick( CWorld *pWorld, float fDelta );
 
 	CVector m_vPosition;
 	CVector m_vSize; // Z Ignored!!!

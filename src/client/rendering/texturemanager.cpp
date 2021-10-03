@@ -20,9 +20,9 @@ CTexture::CTexture( const char *path )
 	m_cFilePath			= path;
 
 	const uchar_t *cPNGData = fileSystem::LoadFile( path, iFileLength, bSuccess );
-	uint iError = lodepng::decode( m_imageData, m_iWidth, m_iHeight, cPNGData, iFileLength );
+	uint iError				= lodepng::decode( m_imageData, m_iWidth, m_iHeight, cPNGData, iFileLength );
 	delete[] cPNGData;
-	if ( iFileLength < 10 || !bSuccess || iError != 0)
+	if ( iFileLength < 10 || !bSuccess || iError != 0 )
 	{
 		if ( iError != 0 )
 		{
@@ -34,13 +34,10 @@ CTexture::CTexture( const char *path )
 		// The image data is RGBA
 		// So the data can be written like this for a classic source-style checkerboard
 		m_imageData = {
-			255, 0, 255, 255,
-			0, 0, 0, 255,
-			0, 0, 0, 255,
-			255, 0, 255, 255,
+			255, 0, 255, 255, 0, 0, 0, 255, 0, 0, 0, 255, 255, 0, 255, 255,
 		};
 
-		m_iWidth = 2;
+		m_iWidth  = 2;
 		m_iHeight = 2;
 	}
 

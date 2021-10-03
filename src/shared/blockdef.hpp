@@ -22,7 +22,7 @@ enum blocktype_t {
 	WATER	  = 10,
 	WATERSRC  = 11,
 	LAVA	  = 12,
-	LAVASRC   = 13,
+	LAVASRC	  = 13,
 	ORE_COAL  = 14,
 	ORE_IRON  = 15,
 	FLOWER	  = 16,
@@ -33,7 +33,7 @@ enum blocktype_t {
 	MOSSCBBLE = 21,
 	SNOW	  = 22,
 	SNOWGRASS = 23,
-	ICE       = 24
+	ICE		  = 24
 };
 
 enum blockmaterial_t {

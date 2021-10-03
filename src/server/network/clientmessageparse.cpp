@@ -58,7 +58,7 @@ namespace protocol
 				// Then send it to spawn
 				int x = 8 + rand() % 8;
 				int z = 8 + rand() % 8;
-				
+
 				p->m_vPosition = CVector( x, 20, z );
 				p->m_vRotation = CVector( 0, 0, 0 );
 
@@ -98,24 +98,23 @@ namespace protocol
 				if ( true ) // If it's a valid block placement (for now no check)
 				{
 					b->m_iBlockType = (blocktype_t)blockType;
-					b->m_iValueA = valA;
-					b->m_iValueB = valB;
+					b->m_iValueA	= valA;
+					b->m_iValueB	= valB;
 					b->Update();
 
 					for ( CNetworkPlayer *c : pServer->m_players )
 					{
 						SendServerUpdateBlock( c->m_pPeer, CVector( x, y, z ), blocktype_t( blockType ), valA, valB );
 
-						if (blockType == AIR)
-							SendServerSpecialEffect(c->m_pPeer, x,y,z, SPECIALEFFECT_BLOCKBREAK, oldBlockType);
+						if ( blockType == AIR )
+							SendServerSpecialEffect( c->m_pPeer, x, y, z, SPECIALEFFECT_BLOCKBREAK, oldBlockType );
 						else
-							SendServerSpecialEffect(c->m_pPeer, x,y,z, SPECIALEFFECT_BLOCKPLACE, blockType);
-
+							SendServerSpecialEffect( c->m_pPeer, x, y, z, SPECIALEFFECT_BLOCKPLACE, blockType );
 					}
 				}
 				else
 				{
-					SendServerUpdateBlock(pPeer, CVector(x,y,z), b->m_iBlockType, b->m_iValueA, b->m_iValueB);
+					SendServerUpdateBlock( pPeer, CVector( x, y, z ), b->m_iBlockType, b->m_iValueA, b->m_iValueB );
 				}
 			}
 			break;
