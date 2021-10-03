@@ -234,15 +234,15 @@ void CStatePlay::Update()
 		}
 		else if (m_bInPause) 
 		{
-			if (pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Disconnect", pStateMan->m_pGui->m_vScreenCentre, CVector( 0.5, 0.5 )))
-			{
-				pStateMan->m_pClient->Disconnect();
-				pStateMan->PopState();
-			}
-			if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Options", pStateMan->m_pGui->m_vScreenCentre - CVector( 0, 2 ),
+			if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Options", pStateMan->m_pGui->m_vScreenCentre - CVector( 0, 0 ),
 												CVector( 0.5, 0.5 ) ) )
 			{
 				m_pStateMan->PushState( std::make_unique<CStateOptionsMenu>() );
+			}
+			if (pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Disconnect", pStateMan->m_pGui->m_vScreenCentre - CVector( 0, 4 ), CVector( 0.5, 0.5 )))
+			{
+				pStateMan->m_pClient->Disconnect();
+				pStateMan->PopState();
 			}
 		}
 		else
