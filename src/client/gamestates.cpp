@@ -389,6 +389,8 @@ void CStateOptionsMenu::Update()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
 
+	soundSystem::SetListener( nullptr, CVector(0,0,0), CVector(0,0,1), CVector(0,0,0) );
+
 	pStateMan->m_pInputMan->m_bInGui = true;
 
 	pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pBGTex, CVector( 0, 0 ),

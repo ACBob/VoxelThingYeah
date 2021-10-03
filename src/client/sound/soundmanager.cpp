@@ -244,7 +244,7 @@ void soundSystem::SetListener( CWorld *world, CVector pos, CVector forward, CVec
 
 #ifdef __linux__
 
-	if (cl_reverb->GetBool())
+	if (cl_reverb->GetBool() && world != nullptr)
 	{
 		// Now the magic reverb stuff
 		CVoxRaycast cast;
