@@ -236,7 +236,11 @@ std::vector<CGui::Vertex> CGui::GetCharQuad( const int c, CVector pos, CVector s
 	return GetQuad( pos, size, color, uStart, uEnd );
 }
 
-void CGui::ClearBuffers() { m_textBuffers.clear(); }
+void CGui::ClearBuffers()
+{
+	m_textBuffers.clear();
+	m_iActiveItem = m_iHotItem = m_iKeyboardItem = m_iMouseState = 0;
+}
 
 void CGui::SetTextBuffer( int id, const char *text ) { m_textBuffers[id] = text; }
 
