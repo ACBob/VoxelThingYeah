@@ -546,6 +546,9 @@ bool CGui::Slider( int id, CVector pos, CVector size, int max, int &value )
 
 		if ( val != value )
 		{
+			if (m_iTick % 2 == 0)
+				soundSystem::PlaySoundEvent("ui.tick", CVector(0,0,0));
+				
 			value = val;
 			return true;
 		}
@@ -585,6 +588,9 @@ bool CGui::HorzSlider( int id, CVector pos, CVector size, int max, int &value )
 
 		if ( val != value )
 		{
+			if (m_iTick % 2 == 0)
+				soundSystem::PlaySoundEvent("ui.tick", CVector(0,0,0));
+
 			value = val;
 			return true;
 		}

@@ -27,6 +27,12 @@ appendSounds = false
 sounds = ["sound/uiclick.ogg"]
 pitch = [0.9, 1.1]
 
+["ui.tick"]
+type = "ui"
+appendSounds = false
+sounds = ["sound/uitick.ogg"]
+pitch = [0.8, 1.2]
+
 ##########################################
 # Breaking Sounds                        #
 ##########################################
