@@ -74,6 +74,7 @@ class CStateOptionsMenu : public CState
 	void Update();
 
 	int m_iVolumeSlider = 100;
+	bool m_bEnableReverb = true;
 };
 class CKickScreen : public CState
 {

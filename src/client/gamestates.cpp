@@ -386,6 +386,7 @@ void CStateOptionsMenu::Enter()
 	pStateMan->m_pGui->ClearBuffers();
 
 	m_iVolumeSlider = cl_volume->GetFloat() * 100;
+	m_bEnableReverb = cl_reverb->GetBool();
 }
 void CStateOptionsMenu::ReturnedTo() {}
 void CStateOptionsMenu::Exit()
@@ -415,10 +416,15 @@ void CStateOptionsMenu::Update()
 	}
 
 	pStateMan->m_pGui->Label( "Master Volume Slider", pStateMan->m_pGui->m_vScreenCentre + CVector( -16, 6 ) );
-	if ( pStateMan->m_pGui->HorzSlider( 70, pStateMan->m_pGui->m_vScreenCentre + CVector( -16, 4 ), CVector( 32, 2 ),
+	if ( pStateMan->m_pGui->HorzSlider( GUIGEN_ID, pStateMan->m_pGui->m_vScreenCentre + CVector( -16, 4 ), CVector( 32, 2 ),
 										100, m_iVolumeSlider ) )
 	{
 		cl_volume->SetFloat( m_iVolumeSlider / 100.0f );
+	}
+	pStateMan->m_pGui->Label( "Enable Reverb", pStateMan->m_pGui->m_vScreenCentre + CVector( -16, 2 ) );
+	if ( pStateMan->m_pGui->CheckBox( GUIGEN_ID, pStateMan->m_pGui->m_vScreenCentre + CVector( -16, 0 ), CVector(2,2), m_bEnableReverb ) )
+	{
+		cl_reverb->SetBool( m_bEnableReverb );
 	}
 }
 

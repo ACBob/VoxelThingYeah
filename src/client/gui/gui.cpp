@@ -88,6 +88,8 @@ CGui::CGui( int screenW, int screenH )
 	m_pLogoTex		= materialSystem::LoadTexture( "title.png" );
 	m_pSliderTex	= materialSystem::LoadTexture( "slider.png" );
 	m_pThumbTex		= materialSystem::LoadTexture( "thumb.png" );
+	m_pCheckedTex	= materialSystem::LoadTexture( "checkbox-checked.png" );
+	m_pUncheckedTex = materialSystem::LoadTexture( "checkbox-unchecked.png" );
 
 	m_textBuffers = {};
 
@@ -579,6 +581,33 @@ bool CGui::HorzSlider( int id, CVector pos, CVector size, int max, int &value )
 		if ( val != value )
 		{
 			value = val;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool CGui::CheckBox( int id, CVector pos, CVector size, bool &value )
+{
+	pos	 = GetInScreen( pos );
+	size = size * GUIUNIT;
+
+	CTexture *tex = m_pUncheckedTex;
+	if (value)
+		tex = m_pCheckedTex;
+
+	Image(tex, pos / GUIUNIT, size / GUIUNIT);
+
+	if ( RegionHit( pos, size ) )
+	{
+		m_iHotItem = id;
+
+		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
+		{
+			m_iActiveItem = id;
+
+			value = !value;
 			return true;
 		}
 	}

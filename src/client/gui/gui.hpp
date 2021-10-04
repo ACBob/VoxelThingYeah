@@ -54,6 +54,8 @@ class CGui
 	CTexture *m_pTextInpTex = nullptr;
 	CTexture *m_pSliderTex	= nullptr;
 	CTexture *m_pThumbTex	= nullptr;
+	CTexture *m_pCheckedTex	= nullptr;
+	CTexture *m_pUncheckedTex	= nullptr;
 
 	std::map<int, std::string> m_textBuffers;
 
@@ -153,4 +155,5 @@ class CGui
 																 // also rendering with a background
 	bool Slider( int id, CVector pos, CVector size, int max, int &value );
 	bool HorzSlider( int id, CVector pos, CVector size, int max, int &value ); // Same as Slider but horizontal
+	bool CheckBox( int id, CVector pos, CVector size, bool &value );
 };
