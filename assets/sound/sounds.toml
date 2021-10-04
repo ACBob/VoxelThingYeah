@@ -31,13 +31,13 @@ pitch = [0.9, 1.1]
 type = "ui"
 appendSounds = false
 sounds = ["sound/uiclick.ogg"]
-pitch = [0.75, 0.75]
+pitch = [0.9]
 
 ["ui.uncheck"]
 type = "ui"
 appendSounds = false
 sounds = ["sound/uiclick.ogg"]
-pitch = [0.9,0.9]
+pitch = [0.75]
 
 ["ui.tick"]
 type = "ui"
