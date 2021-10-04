@@ -496,10 +496,10 @@ const char *CGui::SelectableTextInput( int id, CVector pos, CVector size, CTextu
 	}
 
 	if ( m_iKeyboardItem != id )
-		Label( m_textBuffers[id].c_str(), ( pos / GUIUNIT ) + CVector( 0, 0.5 ), textColor );
+		Label( m_textBuffers[id].c_str(), ( pos / GUIUNIT ) + CVector( 0.5, 0.5 ), textColor );
 	else
 	{
-		TextInput( id, ( pos / GUIUNIT ) + CVector( 0, 0.5 ) );
+		TextInput( id, ( pos / GUIUNIT ) + CVector( 0.5, 0.5 ) );
 	}
 
 	Image9Rect( pTex, pos / GUIUNIT, size / GUIUNIT, Colour( 1, 1, 1 ) );
