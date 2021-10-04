@@ -233,7 +233,7 @@ namespace protocol
 	void SendServerPlayerLeave( ENetPeer *pPeer, std::string username );
 	void SendServerPlayerSkin( ENetPeer *pPeer, std::string username, std::vector<unsigned char> imageData,
 							   unsigned int resolution );
-	void SendServerSpecialEffect( ENetPeer *pPeer, int x, int y, int z, int id, int attrib );
+	void SendServerSpecialEffect( ENetPeer *pPeer, CVector pos, int id, int attrib );
 
 	/****************************************************/
 	/******************* CLIENT *************************/

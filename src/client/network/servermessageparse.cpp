@@ -245,7 +245,7 @@ namespace protocol
 			}
 			break;
 			case ServerPacket::SPECIALEFFECT: {
-				int x, y, z;
+				float x, y, z;
 				int effectId;
 				int effectAttrib;
 
