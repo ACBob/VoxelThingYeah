@@ -548,7 +548,7 @@ bool CGui::Slider( int id, CVector pos, CVector size, int max, int &value )
 		{
 			if (m_iTick % 2 == 0)
 				soundSystem::PlaySoundEvent("ui.tick", CVector(0,0,0));
-				
+
 			value = val;
 			return true;
 		}
@@ -619,6 +619,7 @@ bool CGui::CheckBox( int id, CVector pos, CVector size, bool &value )
 			m_iActiveItem = id;
 
 			value = !value;
+			soundSystem::PlaySoundEvent(value ? "ui.check" : "ui.uncheck", CVector(0,0,0));
 			return true;
 		}
 	}

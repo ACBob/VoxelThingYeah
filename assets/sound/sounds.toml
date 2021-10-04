@@ -27,6 +27,18 @@ appendSounds = false
 sounds = ["sound/uiclick.ogg"]
 pitch = [0.9, 1.1]
 
+["ui.check"]
+type = "ui"
+appendSounds = false
+sounds = ["sound/uiclick.ogg"]
+pitch = [0.75, 0.75]
+
+["ui.uncheck"]
+type = "ui"
+appendSounds = false
+sounds = ["sound/uiclick.ogg"]
+pitch = [0.9,0.9]
+
 ["ui.tick"]
 type = "ui"
 appendSounds = false
