@@ -12,6 +12,8 @@
 
 #include <algorithm>
 
+#include "sound/soundmanager.hpp"
+
 // The whole coordinate system is based on these GUIUUNITs.
 // When we start to dynamically rescale the GUI based on resolution this will come in handy. for now, 16px.
 #define GUIUNIT m_iGuiUnit
@@ -290,6 +292,9 @@ int CGui::Button( int id, CVector pos, CVector size, CVector origin, CTexture *t
 		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
 		{
 			m_iActiveItem = id;
+
+			if (!hide)
+				soundSystem::PlaySoundEvent("ui.click", CVector(0,0,0));
 		}
 	}
 

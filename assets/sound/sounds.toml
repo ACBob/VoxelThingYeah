@@ -5,6 +5,10 @@
 # sounds = [] - Array of sound names to load
 # pitch = [a,b] - The pitch played will be between a and b, if absent assumed [1,1]
 
+##########################################
+# UI And Miscellaneous                   #
+##########################################
+
 ["soundtest"]
 type = "block"
 appendSounds = false
@@ -16,6 +20,12 @@ type = "music"
 appendSounds = false
 sounds = ["sound/music/mojyjes.ogg", "sound/music/shestenar.ogg", "sound/music/isteke.ogg"]
 pitch = [1.0]
+
+["ui.click"]
+type = "ui"
+appendSounds = false
+sounds = ["sound/uiclick.ogg"]
+pitch = [0.9, 1.1]
 
 ##########################################
 # Breaking Sounds                        #

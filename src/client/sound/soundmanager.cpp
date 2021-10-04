@@ -97,9 +97,13 @@ CSoundEvent::CSoundEvent( std::vector<std::string> sounds, const char *type, flo
 	{
 		m_iSoundType = SOUNDTYPE_BLOCK;
 	}
-	else if ( strcmp( type, "music" ) )
+	else if ( strcmp( type, "music" ) == 0 )
 	{
 		m_iSoundType = SOUNDTYPE_MUSIC;
+	}
+	else if ( strcmp( type, "ui" ) == 0 )
+	{
+		m_iSoundType = SOUNDTYPE_GUI;
 	}
 
 	m_fMinPitch = minpitch;
