@@ -56,7 +56,7 @@ namespace modelSystem
 
 		bool m_bVisible = true;
 
-	  private:
+	  protected:
 		CShader *m_pShader = nullptr;
 		CTexture *m_pTex   = nullptr;
 

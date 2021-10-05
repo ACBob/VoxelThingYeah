@@ -16,7 +16,7 @@ class CModelRenderer
 
 	void Render( CVector pos, CVector rot, CVector size, CVector uvOffset, CShader *shader, CTexture *tex );
 
-  private:
+  protected:
 	// Vertex Buffer
 	unsigned int m_iVbo;
 	// Array buffer

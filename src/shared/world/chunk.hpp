@@ -61,8 +61,8 @@ class CChunk
 	CBlock m_blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 
 #ifdef CLIENTEXE
-	CModel m_blocksMdl;
-	CModel m_waterMdl;
+	CChunkModel m_blocksMdl;
+	CChunkModel m_waterMdl;
 	// 16 bits
 	// 4 red, 4 green, 4 blue and 4 extra for the sky/natural light
 	uint16_t m_iLightingValue[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];

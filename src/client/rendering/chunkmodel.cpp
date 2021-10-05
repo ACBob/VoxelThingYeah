@@ -5,9 +5,77 @@
 
 #include <iostream>
 
-int indexArray( int x, int y, int z ) { return CHUNK3D_TO_1D( x, y, z ); }
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
-const CModel::Vertex cubeVertices[] = {
+#include <glad/glad.h>
+
+CChunkRenderer::CChunkRenderer()
+{
+	glGenVertexArrays( 1, &m_iVao );
+	glGenBuffers( 1, &m_iVbo );
+	glGenBuffers( 1, &m_iEbo );
+
+	glBindBuffer( GL_ARRAY_BUFFER, m_iVbo );
+
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_iEbo );
+
+	glBindVertexArray( m_iVao );
+
+	// Position
+	glVertexAttribPointer( 0, 3, GL_FLOAT, false, 12 * sizeof( float ), (void *)offsetof( CChunkModel::Vertex, x ) );
+	glEnableVertexAttribArray( 0 );
+	// Normal
+	glVertexAttribPointer( 1, 3, GL_FLOAT, false, 12 * sizeof( float ), (void *)offsetof( CChunkModel::Vertex, nx ) );
+	glEnableVertexAttribArray( 1 );
+	// texture coordinate
+	glVertexAttribPointer( 2, 2, GL_FLOAT, false, 12 * sizeof( float ), (void *)offsetof( CChunkModel::Vertex, u ) );
+	glEnableVertexAttribArray( 2 );
+	// Lighting
+	glVertexAttribPointer( 3, 4, GL_FLOAT, false, 12 * sizeof( float ), (void *)offsetof( CChunkModel::Vertex, r ) );
+	glEnableVertexAttribArray( 2 );
+
+	glBindVertexArray( 0 );
+}
+
+void CChunkRenderer::Populate( void *_mdl )
+{
+	CChunkModel *mdl = reinterpret_cast<CChunkModel *>( _mdl );
+
+	m_nVertices = mdl->m_vertices.size();
+	m_nFaces	= mdl->m_faces.size();
+
+	glBindBuffer( GL_ARRAY_BUFFER, m_iVbo );
+	glBufferData( GL_ARRAY_BUFFER, m_nVertices * sizeof( CChunkModel::Vertex ), mdl->m_vertices.data(), GL_DYNAMIC_DRAW );
+
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_iEbo );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, m_nFaces * sizeof( CChunkModel::Face ), mdl->m_faces.data(), GL_DYNAMIC_DRAW );
+
+	glBindBuffer( GL_ARRAY_BUFFER, 0 );
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
+}
+
+CChunkModel::CChunkModel( std::vector<Vertex> verts, std::vector<Face> faces ) : m_vertices( verts ), m_faces( faces )
+{
+	m_pRenderer = new CChunkRenderer();
+}
+
+void CChunkModel::Update() { m_pRenderer->Populate( this ); }
+
+void CChunkModel::Render()
+{
+	// Don't waste time trying to render
+	if ( m_vertices.size() == 0 || m_faces.size() == 0 )
+		return;
+	// If we're not visible, don't bother
+	if ( !m_bVisible )
+		return;
+
+	m_pShader->Use();
+	m_pRenderer->Render( m_vPosition, m_vRotation, m_vSize, m_vUvOffset, m_pShader, m_pTex );
+}
+
+const CChunkModel::Vertex cubeVertices[] = {
 	// NORTH +Z
 	{ BLOCKUNIT, BLOCKUNIT, BLOCKUNIT },
 	{ 0, BLOCKUNIT, BLOCKUNIT },
@@ -19,7 +87,7 @@ const CModel::Vertex cubeVertices[] = {
 	{ BLOCKUNIT, 0, 0 },
 	{ 0, 0, 0 },
 };
-const CModel::Vertex plantVertices[] = {
+const CChunkModel::Vertex plantVertices[] = {
 	{ 0, BLOCKUNIT, 0 },		 { BLOCKUNIT, 0, BLOCKUNIT }, { 0, 0, 0 },		   { BLOCKUNIT, BLOCKUNIT, BLOCKUNIT },
 
 	{ BLOCKUNIT, BLOCKUNIT, 0 }, { 0, 0, BLOCKUNIT },		  { BLOCKUNIT, 0, 0 }, { 0, BLOCKUNIT, BLOCKUNIT },
@@ -38,9 +106,9 @@ const std::vector<std::vector<int>> cubeTris = {
 
 const std::vector<int> plantTris = { 2, 1, 3, 0, 6, 5, 7, 4 };
 
-std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlock block, int x = 0, int y = 0, int z = 0 )
+std::vector<CChunkModel::Vertex> sampleCubeFace( Direction dir, CBlock block, int x, int y, int z, int lr, int lg, int lb, int ls )
 {
-	std::vector<CModel::Vertex> g;
+	std::vector<CChunkModel::Vertex> g;
 	for ( int i = 0; i < 4; i++ )
 	{
 		g.push_back( cubeVertices[cubeTris[dir][i]] );
@@ -48,6 +116,11 @@ std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlock block, int x =
 		g[i].x += x;
 		g[i].y += y;
 		g[i].z += z;
+
+		g[i].r = lr / 16.0f;
+		g[i].g = lg / 16.0f;
+		g[i].b = lb / 16.0f;
+		g[i].s = ls / 16.0f;
 
 		CVector normal = DirectionVector[dir];
 
@@ -81,9 +154,9 @@ std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlock block, int x =
 	return g;
 }
 
-std::vector<CModel::Vertex> samplePlant( CBlock block, int x = 0, int y = 0, int z = 0 )
+std::vector<CChunkModel::Vertex> samplePlant( CBlock block, int x, int y, int z, int lr, int lg, int lb, int ls )
 {
-	std::vector<CModel::Vertex> g;
+	std::vector<CChunkModel::Vertex> g;
 	for ( int i = 0; i < 8; i++ )
 	{
 		g.push_back( plantVertices[plantTris[i]] );
@@ -92,8 +165,14 @@ std::vector<CModel::Vertex> samplePlant( CBlock block, int x = 0, int y = 0, int
 		g[i].y += y;
 		g[i].z += z;
 
+		g[i].r = lr / 16.0f;
+		g[i].g = lg / 16.0f;
+		g[i].b = lb / 16.0f;
+		g[i].s = ls / 16.0f;
+
 		CVector normal = DirectionVector[i > 4 ? SOUTH : NORTH];
 
+		// TODO:
 		g[i].nx = normal.x;
 		g[i].ny = normal.y;
 		g[i].nz = normal.z;
@@ -129,7 +208,7 @@ std::vector<CModel::Vertex> samplePlant( CBlock block, int x = 0, int y = 0, int
 }
 
 // We include the chunk manager here so we can test our neighbouring chunks
-void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, void *chunk )
+void BuildChunkModel( CChunkModel &mdl, CChunkModel &wmdl, CBlock blocks[], CVector pos, void *chunk )
 {
 	mdl.m_vertices.clear();
 	mdl.m_faces.clear();
@@ -142,7 +221,7 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 		{
 			for ( int z = 0; z < CHUNKSIZE_Z; z++ )
 			{
-				CBlock block = blocks[indexArray( x, y, z )];
+				CBlock block = blocks[CHUNK3D_TO_1D( x, y, z )];
 
 				// block here! Construct!
 				if ( block.m_iBlockType != AIR )
@@ -153,6 +232,8 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 						case BLOCKMODEL_CUBE:
 							for ( int i = 0; i < 6; i++ )
 							{
+								Colour colour;
+
 								CVector neighbour = CVector( x, y, z ) + DirectionVector[i];
 								if ( ValidChunkPosition( neighbour ) )
 								{
@@ -162,6 +243,8 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 									if ( bF.rule == OBSCURERULE_ALWAYS ||
 										 ( bF.rule == OBSCURERULE_SIMILAR && blockType == block.m_iBlockType ) )
 										continue;
+
+									colour = reinterpret_cast<CChunk *>( chunk )->GetLightingLocal( neighbour );
 								}
 								else
 								{
@@ -181,10 +264,14 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 											 ( bF.rule == OBSCURERULE_SIMILAR &&
 											   b->m_iBlockType == block.m_iBlockType ) )
 											continue;
+											
+										colour = chunkNeighbour->GetLightingLocal( neighbour );
 									}
 								}
 
-								std::vector<CModel::Vertex> g = sampleCubeFace( Direction( i ), block, x, y, z );
+								
+
+								std::vector<CChunkModel::Vertex> g = sampleCubeFace( Direction( i ), block, x, y, z, (int)colour.x, (int)colour.y, (int)colour.z, (int)colour.w );
 
 								if ( block.m_iBlockType == WATER || block.m_iBlockType == WATERSRC )
 								{
@@ -214,7 +301,7 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 							break;
 
 						case BLOCKMODEL_PLANT:
-							std::vector<CModel::Vertex> g = samplePlant( block, x, y, z );
+							std::vector<CChunkModel::Vertex> g = samplePlant( block, x, y, z, 16, 16, 16, 16 );
 							std::copy( g.begin(), g.end(), std::back_inserter( mdl.m_vertices ) );
 
 							int nVertices = mdl.m_vertices.size();
