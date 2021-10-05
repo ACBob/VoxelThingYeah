@@ -19,6 +19,7 @@ namespace modelSystem
 			float x, y, z;	  // Position
 			float nx, ny, nz; // Normal
 			float u, v;		  // Texture U/V
+			float r, g, b, a; // Vertex Colours
 							  // TODO: Texture, Lighting, Etc.
 		};
 
