@@ -86,7 +86,8 @@ BlockFeatures GetBlockFeatures( blocktype_t blockType )
 	bF.isLiquid		  = false;
 	bF.isLiquidSource = false;
 	bF.isLightSource  = false;
-	bF.lightColour    = 0;
+	bF.lightColour    = 0x000;
+	bF.opaqueness     = 0xFFF;
 	bF.liquidFlow	  = AIR;
 	bF.liquidSource	  = AIR;
 	bF.liquidRange	  = 0;
@@ -117,7 +118,8 @@ BlockFeatures GetBlockFeatures( blocktype_t blockType )
 			bF.model = BLOCKMODEL_PLANT;
 			// TODO: DEBUGGING, flowers do not give off light
 			bF.isLightSource = true;
-			bF.lightColour = 0xFFF;
+			bF.lightColour = 0x0F0;
+			bF.opaqueness = 0x000; // doesn't block light
 			break;
 
 		case WATERSRC:
@@ -135,6 +137,7 @@ BlockFeatures GetBlockFeatures( blocktype_t blockType )
 			bF.liquidFlow	= ( blockType == WATERSRC || blockType == WATER ) ? WATER : LAVA;
 			bF.liquidSource = ( blockType == WATERSRC || blockType == WATER ) ? WATERSRC : LAVASRC;
 			bF.liquidRange	= ( blockType == WATERSRC || blockType == WATER ) ? 7 : 4;
+			bF.opaqueness = 0xAAE;
 			break;
 
 		case AIR:
@@ -144,6 +147,7 @@ BlockFeatures GetBlockFeatures( blocktype_t blockType )
 			bF.walkable	  = false;
 			bF.floodable  = true;
 			bF.rule		  = OBSCURERULE_NEVER;
+			bF.opaqueness = 0x000; // doesn't block light
 			break;
 	}
 

@@ -236,7 +236,8 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 							break;
 
 						case BLOCKMODEL_PLANT:
-							std::vector<CModel::Vertex> g = samplePlant( block, x, y, z, 16, 16, 16, 16 );
+							CVector colour = reinterpret_cast<CChunk *>( chunk )->GetLightingLocal( CVector(x,y,z) );
+							std::vector<CModel::Vertex> g = samplePlant( block, x, y, z, colour.x, colour.y, colour.z, colour.w );
 							std::copy( g.begin(), g.end(), std::back_inserter( mdl.m_vertices ) );
 
 							int nVertices = mdl.m_vertices.size();

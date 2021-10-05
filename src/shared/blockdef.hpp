@@ -80,8 +80,10 @@ struct BlockFeatures
 	bool isLiquidSource;
 	// is a light source
 	bool isLightSource;
+	// Opaqueness, similar to colour, set to 0xFFF to act fully opaque
+	uint16_t opaqueness;
 	// The colour of light
-	int8_t lightColour;
+	uint16_t lightColour;
 	// Flow/Source variants
 	blocktype_t liquidFlow;
 	blocktype_t liquidSource;
