@@ -318,6 +318,7 @@ void Zoop(CChunk *c, int r, int g, int b, int s, int x, int y, int z)
 
 void CChunk::UpdateLighting()
 {
+	// TODO: sunlight
 	// Zero out & reset
 	for (int i = 0; i < CHUNKSIZE_X*CHUNKSIZE_Y*CHUNKSIZE_Z; i++) 
 		m_iLightingValue[i] = 0;
