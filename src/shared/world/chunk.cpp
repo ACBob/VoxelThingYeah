@@ -12,7 +12,7 @@ CChunk::CChunk()
 	for ( int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++ )
 	{
 		m_blocks[i].m_iBlockType   = blocktype_t::AIR;
-		m_iLightingValue[i]		   = 0x00000000;
+		m_iLightingValue[i]		   = rand() % 65536;
 		m_portableDef.m_iBlocks[i] = m_blocks[i].m_iBlockType;
 		m_portableDef.m_iValue[i] = ( m_blocks[i].m_iValueA & 0xff ) | ( m_blocks[i].m_iValueB << 8 );
 	}

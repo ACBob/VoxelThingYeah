@@ -32,7 +32,7 @@ CModelRenderer::CModelRenderer() : m_nFaces( 0 ), m_nVertices( 0 )
 	glEnableVertexAttribArray( 2 );
 	// Vertex Colour
 	glVertexAttribPointer( 3, 4, GL_FLOAT, false, 12 * sizeof( float ), (void *)offsetof( CModel::Vertex, r ) );
-	glEnableVertexAttribArray( 2 );
+	glEnableVertexAttribArray( 3 );
 
 	glBindVertexArray( 0 );
 }

@@ -14,6 +14,7 @@ void main()
 	texCoord.y = 1 - texCoord.y;
 	FragColor = texture(diffuse, texCoord);
 	if (FragColor.a == 0.0) discard;
-	FragColor.rgb *= Light.rgb;
-	FragColor.rgb += Light.a;
+
+	// FragColor.rgb *= Light.a;
+	FragColor.rgb = Light.rgb;
 }
