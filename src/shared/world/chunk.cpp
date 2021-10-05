@@ -231,7 +231,7 @@ void CChunk::SetLightingLocal( CVector pos, Colour colour )
 	l		   = ( l & 0xFFF0 ) | ( (int)colour.w );
 }
 
-void Zoop(CChunk *c, int r, int g, int b, int s, int x, int y, int z, int R = 0)
+void Zoop(CChunk *c, int r, int g, int b, int s, int x, int y, int z)
 {
 	if ( (x < 0 || x >= CHUNKSIZE_X) || (y < 0 || y >= CHUNKSIZE_Y) || (z < 0 || z >= CHUNKSIZE_Z) )
 	{
@@ -252,20 +252,27 @@ void Zoop(CChunk *c, int r, int g, int b, int s, int x, int y, int z, int R = 0)
 
 	// TODO: opaqueness S
 
+	bool set = false;
 	int light = c->m_iLightingValue[j];
 	if ( r > (( light >> 12 ) & 0xF) )
 	{
 		light = ( light & 0x0FFF ) | ( r << 12 );
+		set = true;
 	}
 	if ( g > (( light >> 8 ) & 0xF) )
 	{
 		light = ( light & 0xF0FF ) | ( g << 8 );
+		set = true;
 	}
 	if ( b > (( light >> 4 ) & 0xF) )
 	{
 		light = ( light & 0xFF0F ) | ( b << 4 );
+		set = true;
 	}
 	c->m_iLightingValue[j] = light;
+
+	if (!set)
+		return;
 
 	r--;
 	r = r > 0 ? r : 0;
@@ -279,16 +286,12 @@ void Zoop(CChunk *c, int r, int g, int b, int s, int x, int y, int z, int R = 0)
 	if (r <= 0 && g <= 0 && b <= 0 && s <= 0)
 		return;
 
-	R++;
-	if (R > 8)
-		return;
-
-	Zoop( c, r, g, b, s, x+1, y, z, R );
-	Zoop( c, r, g, b, s, x-1, y, z, R );
-	Zoop( c, r, g, b, s, x, y+1, z, R );
-	Zoop( c, r, g, b, s, x, y-1, z, R );
-	Zoop( c, r, g, b, s, x, y, z+1, R );
-	Zoop( c, r, g, b, s, x, y, z-1, R );
+	Zoop( c, r, g, b, s, x+1, y, z );
+	Zoop( c, r, g, b, s, x-1, y, z );
+	Zoop( c, r, g, b, s, x, y+1, z );
+	Zoop( c, r, g, b, s, x, y-1, z );
+	Zoop( c, r, g, b, s, x, y, z+1 );
+	Zoop( c, r, g, b, s, x, y, z-1 );
 }
 
 void CChunk::UpdateLighting()

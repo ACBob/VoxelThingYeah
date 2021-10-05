@@ -105,10 +105,13 @@ BlockFeatures GetBlockFeatures( blocktype_t blockType )
 			break;
 
 		case LEAVES:
+			bF.opaqueness = 0x444;
 		case GLASS:
+			bF.opaqueness = 0x111;
 		case ICE:
 			bF.rule	 = blockType == LEAVES ? OBSCURERULE_NEVER : OBSCURERULE_SIMILAR;
 			bF.solid = false;
+			bF.opaqueness = blockType == ICE ? 0x110 : bF.opaqueness;
 			break;
 
 		case FLOWER:
@@ -137,7 +140,7 @@ BlockFeatures GetBlockFeatures( blocktype_t blockType )
 			bF.liquidFlow	= ( blockType == WATERSRC || blockType == WATER ) ? WATER : LAVA;
 			bF.liquidSource = ( blockType == WATERSRC || blockType == WATER ) ? WATERSRC : LAVASRC;
 			bF.liquidRange	= ( blockType == WATERSRC || blockType == WATER ) ? 7 : 4;
-			bF.opaqueness = 0x220;
+			bF.opaqueness = 0x221;
 			break;
 
 		case AIR:
