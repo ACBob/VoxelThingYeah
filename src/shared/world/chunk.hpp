@@ -55,6 +55,7 @@ class CChunk
 #endif
 	void Update( int64_t iTick );
 
+	CVector PosToWorld( int x, int y, int z );
 	CVector PosToWorld( CVector pos );
 
 	// Flat array of blocks, access with

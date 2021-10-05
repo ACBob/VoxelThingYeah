@@ -201,11 +201,15 @@ CBlock *CChunk::GetBlockAtLocal( CVector pos )
 	return &m_blocks[int( CHUNK3D_TO_1D( pos.x, pos.y, pos.z ) )];
 }
 
+bool ValidChunkPosition( int x, int y, int z )
+{
+	// If the position is valid
+	return !( x < 0 || y < 0 || z < 0 || x >= CHUNKSIZE_X || y >= CHUNKSIZE_Y || z >= CHUNKSIZE_Z );
+}
 bool ValidChunkPosition( CVector pos )
 {
 	// If the position is valid
-	return !( pos.x < 0 || pos.y < 0 || pos.z < 0 || pos.x >= CHUNKSIZE_X || pos.y >= CHUNKSIZE_Y ||
-			  pos.z >= CHUNKSIZE_Z );
+	return ValidChunkPosition(pos.x, pos.y, pos.z);
 }
 
 #ifdef CLIENTEXE
@@ -233,8 +237,26 @@ void CChunk::SetLightingLocal( CVector pos, Colour colour )
 
 void Zoop(CChunk *c, int r, int g, int b, int s, int x, int y, int z)
 {
-	if ( (x < 0 || x >= CHUNKSIZE_X) || (y < 0 || y >= CHUNKSIZE_Y) || (z < 0 || z >= CHUNKSIZE_Z) )
-	{
+	if (c == nullptr)
+		return; // Run away!
+
+	if ( !ValidChunkPosition(x,y,z) )
+	{ // Pass the zoopening
+		int nx, ny, nz = 0;
+
+		if (x >= CHUNKSIZE_X) nx = 1;
+		else if (x < 0) nx = -1;
+		if (y >= CHUNKSIZE_Y) ny = 1;
+		else if (y < 0) ny = -1;
+		if (z >= CHUNKSIZE_Z) nz = 1;
+		else if (z < 0) nz = -1;
+		
+		x -= CHUNKSIZE_X * nx;
+		y -= CHUNKSIZE_Y * ny;
+		z -= CHUNKSIZE_Z * nz;
+
+		Zoop(c->Neighbour(CVector(nx, ny, nz)), r, g, b, s, x, y, z);
+
 		return;
 	}
 
