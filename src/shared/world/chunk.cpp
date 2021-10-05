@@ -43,6 +43,11 @@ CChunk *CChunk::Neighbour( Direction dir )
 	CVector neighbourPos = m_vPosition + DirectionVector[dir];
 	return ( reinterpret_cast<CWorld *>( m_pChunkMan ) )->ChunkAtChunkPos( neighbourPos );
 }
+CChunk *CChunk::Neighbour( CVector dir )
+{
+	CVector neighbourPos = m_vPosition + dir;
+	return ( reinterpret_cast<CWorld *>( m_pChunkMan ) )->ChunkAtChunkPos( neighbourPos );
+}
 
 #ifdef CLIENTEXE
 void CChunk::Render() { m_blocksMdl.Render(); }
@@ -209,7 +214,7 @@ Colour CChunk::GetLightingLocal( CVector pos )
 {
 	Colour c;
 	uint16_t l = m_iLightingValue[int( CHUNK3D_TO_1D( pos.x, pos.y, pos.z ) )];
-	c.x		   = ( l >> 16) & 0xF;
+	c.x		   = ( l >> 12) & 0xF;
 	c.y		   = ( l >> 8 ) & 0xF;
 	c.z		   = ( l >> 4 ) & 0xF;
 	c.w		   = l & 0xF;
@@ -220,7 +225,7 @@ Colour CChunk::GetLightingLocal( CVector pos )
 void CChunk::SetLightingLocal( CVector pos, Colour colour )
 {
 	uint16_t l = m_iLightingValue[int( CHUNK3D_TO_1D( pos.x, pos.y, pos.z ) )];
-	l		   = ( l & 0x0FFF ) | ( (int)colour.x << 16 );
+	l		   = ( l & 0x0FFF ) | ( (int)colour.x << 12 );
 	l		   = ( l & 0xF0FF ) | ( (int)colour.y << 8 );
 	l		   = ( l & 0xFF0F ) | ( (int)colour.z << 4 );
 	l		   = ( l & 0xFFF0 ) | ( (int)colour.w );
@@ -229,7 +234,9 @@ void CChunk::SetLightingLocal( CVector pos, Colour colour )
 void Zoop(CChunk *c, int r, int g, int b, int s, int x, int y, int z, int R = 0)
 {
 	if ( (x < 0 || x >= CHUNKSIZE_X) || (y < 0 || y >= CHUNKSIZE_Y) || (z < 0 || z >= CHUNKSIZE_Z) )
+	{
 		return;
+	}
 
 	int j = CHUNK3D_TO_1D(x,y,z);
 
@@ -238,11 +245,17 @@ void Zoop(CChunk *c, int r, int g, int b, int s, int x, int y, int z, int R = 0)
 	// Fully Opaque, doesn't let light through
 	if ( bf.opaqueness == 0xFFF )
 		return;
+	
+	r -= ( bf.opaqueness >> 8 ) & 0xF;
+	g -= ( bf.opaqueness >> 4 ) & 0xF;
+	b -= ( bf.opaqueness ) & 0xF;
+
+	// TODO: opaqueness S
 
 	int light = c->m_iLightingValue[j];
-	if ( r > (( light >> 16 ) & 0xF) )
+	if ( r > (( light >> 12 ) & 0xF) )
 	{
-		light = ( light & 0x0FFF ) | ( r << 16 );
+		light = ( light & 0x0FFF ) | ( r << 12 );
 	}
 	if ( g > (( light >> 8 ) & 0xF) )
 	{

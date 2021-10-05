@@ -40,6 +40,7 @@ class CChunk
 	~CChunk();
 
 	CChunk *Neighbour( Direction dir );
+	CChunk *Neighbour( CVector dir );
 
 	CVector m_vPosition;
 	CVector GetPosInWorld() { return m_vPosition * CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ); }
