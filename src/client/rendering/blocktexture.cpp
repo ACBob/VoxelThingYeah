@@ -111,5 +111,20 @@ BlockTexture GetDefaultBlockTextureSide( blocktype_t type, Direction side )
 		case ICE:
 			return { 10, 1, 1, 1 };
 			break;
+		case LIGHT_YELLOW:
+			return { 11, 1, 1, 1 };
+			break;
+		case LIGHT_WHITE:
+			return { 12, 1, 1, 1 };
+			break;
+		case LIGHT_RED:
+			return { 13, 1, 1, 1 };
+			break;
+		case LIGHT_GREEN:
+			return { 14, 1, 1, 1 };
+			break;
+		case LIGHT_BLUE:
+			return { 15, 1, 1, 1 };
+			break;
 	}
 }

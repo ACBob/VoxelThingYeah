@@ -33,7 +33,12 @@ enum blocktype_t {
 	MOSSCBBLE = 21,
 	SNOW	  = 22,
 	SNOWGRASS = 23,
-	ICE		  = 24
+	ICE		  = 24,
+	LIGHT_YELLOW = 25,
+	LIGHT_WHITE = 26,
+	LIGHT_RED = 27,
+	LIGHT_GREEN = 28,
+	LIGHT_BLUE = 29
 };
 
 enum blockmaterial_t {

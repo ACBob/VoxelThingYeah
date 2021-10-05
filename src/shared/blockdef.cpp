@@ -26,6 +26,11 @@ blockmaterial_t GetBlockMaterial( blocktype_t blockType )
 
 		case GLASS:
 		case ICE:
+		case LIGHT_RED:
+		case LIGHT_BLUE:
+		case LIGHT_GREEN:
+		case LIGHT_WHITE:
+		case LIGHT_YELLOW:
 			return blockmaterial_t::MAT_GLASS;
 			break;
 
@@ -119,9 +124,6 @@ BlockFeatures GetBlockFeatures( blocktype_t blockType )
 			bF.rule	 = OBSCURERULE_NEVER;
 			bF.solid = false;
 			bF.model = BLOCKMODEL_PLANT;
-			// TODO: DEBUGGING, flowers do not give off light
-			bF.isLightSource = true;
-			bF.lightColour = 0xFFF;
 			bF.opaqueness = 0x000; // doesn't block light
 			break;
 
@@ -135,12 +137,29 @@ BlockFeatures GetBlockFeatures( blocktype_t blockType )
 			bF.walkable		= false;
 			bF.solid		= false;
 			bF.isLiquid		= true;
+			bF.isLightSource = blockType == LAVA || blockType == LAVASRC;
+			bF.lightColour = (blockType == LAVA || blockType == LAVASRC) ? 0xEA3 : 0x000;
 			bF.liquidSpeed	= blockType == LAVA ? 15 : 5;
 			bF.rule			= OBSCURERULE_SIMILAR;
 			bF.liquidFlow	= ( blockType == WATERSRC || blockType == WATER ) ? WATER : LAVA;
 			bF.liquidSource = ( blockType == WATERSRC || blockType == WATER ) ? WATERSRC : LAVASRC;
 			bF.liquidRange	= ( blockType == WATERSRC || blockType == WATER ) ? 7 : 4;
 			bF.opaqueness = 0x221;
+			break;
+		
+		case LIGHT_RED:
+		case LIGHT_GREEN:
+		case LIGHT_BLUE:
+		case LIGHT_YELLOW:
+		case LIGHT_WHITE:
+			bF.isLightSource = true;
+			bF.lightColour = blockType == LIGHT_WHITE ? 0xFFF : 
+							blockType == LIGHT_YELLOW ? 0xFD9 : 
+							blockType == LIGHT_RED ? 0xF00 :
+							blockType == LIGHT_GREEN ? 0x0F0 :
+							blockType == LIGHT_BLUE ? 0x00F :
+							0xF0F;
+			bF.opaqueness = 0x000;
 			break;
 
 		case AIR:
