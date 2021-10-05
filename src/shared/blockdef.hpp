@@ -78,6 +78,10 @@ struct BlockFeatures
 	bool isLiquid;
 	// IS a source of a liquid (i.e act infinite and create flow)
 	bool isLiquidSource;
+	// is a light source
+	bool isLightSource;
+	// The colour of light
+	int8_t lightColour;
 	// Flow/Source variants
 	blocktype_t liquidFlow;
 	blocktype_t liquidSource;

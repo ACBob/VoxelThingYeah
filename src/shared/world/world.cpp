@@ -253,10 +253,10 @@ void CWorld::UsePortable( PortableChunkRepresentation rep )
 		c->m_blocks[j].m_iBlockType = (blocktype_t)rep.m_iBlocks[j];
 		c->m_blocks[j].m_iValueA	= ( rep.m_iValue[j] >> 8 ) & 0xF;
 		c->m_blocks[j].m_iValueB	= rep.m_iValue[j] & 0xF;
-#ifdef CLIENTEXE
-		c->m_iLightingValue[j] = rand() % 65536;
-#endif
 	}
+#ifdef CLIENTEXE
+	c->UpdateLighting();
+#endif
 
 	c->m_bDirty = true;
 }

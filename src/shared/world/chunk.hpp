@@ -70,6 +70,8 @@ class CChunk
 	// Alpha (w) is the sun value
 	Colour GetLightingLocal( CVector pos );
 	void SetLightingLocal( CVector pos, Colour color );
+
+	void UpdateLighting();
 #endif
 
 	// World pointer (can't set type because circular include :lenny:)
