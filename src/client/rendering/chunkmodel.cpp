@@ -41,7 +41,8 @@ const std::vector<std::vector<int>> cubeTris = {
 
 const std::vector<int> plantTris = { 2, 1, 3, 0, 6, 5, 7, 4 };
 
-std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlock block, int x, int y, int z, int lr, int lg, int lb, int ls )
+std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlock block, int x, int y, int z, int lr, int lg, int lb,
+											int ls )
 {
 	std::vector<CModel::Vertex> g;
 	for ( int i = 0; i < 4; i++ )
@@ -199,14 +200,14 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 											 ( bF.rule == OBSCURERULE_SIMILAR &&
 											   b->m_iBlockType == block.m_iBlockType ) )
 											continue;
-											
+
 										colour = chunkNeighbour->GetLightingLocal( neighbour );
 									}
 								}
 
-								
-
-								std::vector<CModel::Vertex> g = sampleCubeFace( Direction( i ), block, x, y, z, (int)colour.x, (int)colour.y, (int)colour.z, (int)colour.w );
+								std::vector<CModel::Vertex> g =
+									sampleCubeFace( Direction( i ), block, x, y, z, (int)colour.x, (int)colour.y,
+													(int)colour.z, (int)colour.w );
 
 								if ( block.m_iBlockType == WATER || block.m_iBlockType == WATERSRC )
 								{
@@ -236,8 +237,10 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 							break;
 
 						case BLOCKMODEL_PLANT:
-							CVector colour = reinterpret_cast<CChunk *>( chunk )->GetLightingLocal( CVector(x,y,z) );
-							std::vector<CModel::Vertex> g = samplePlant( block, x, y, z, colour.x, colour.y, colour.z, colour.w );
+							CVector colour =
+								reinterpret_cast<CChunk *>( chunk )->GetLightingLocal( CVector( x, y, z ) );
+							std::vector<CModel::Vertex> g =
+								samplePlant( block, x, y, z, colour.x, colour.y, colour.z, colour.w );
 							std::copy( g.begin(), g.end(), std::back_inserter( mdl.m_vertices ) );
 
 							int nVertices = mdl.m_vertices.size();

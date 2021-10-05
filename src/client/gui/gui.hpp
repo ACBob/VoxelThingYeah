@@ -50,12 +50,12 @@ class CGui
 	CTexture *m_pTextTex   = nullptr;
 	CShader *m_pTextShader = nullptr;
 
-	CTexture *m_pButtonTex	= nullptr;
-	CTexture *m_pTextInpTex = nullptr;
-	CTexture *m_pSliderTex	= nullptr;
-	CTexture *m_pThumbTex	= nullptr;
-	CTexture *m_pCheckedTex	= nullptr;
-	CTexture *m_pUncheckedTex	= nullptr;
+	CTexture *m_pButtonTex	  = nullptr;
+	CTexture *m_pTextInpTex	  = nullptr;
+	CTexture *m_pSliderTex	  = nullptr;
+	CTexture *m_pThumbTex	  = nullptr;
+	CTexture *m_pCheckedTex	  = nullptr;
+	CTexture *m_pUncheckedTex = nullptr;
 
 	std::map<int, std::string> m_textBuffers;
 

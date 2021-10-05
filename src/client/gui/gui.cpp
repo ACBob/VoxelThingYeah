@@ -293,8 +293,8 @@ int CGui::Button( int id, CVector pos, CVector size, CVector origin, CTexture *t
 		{
 			m_iActiveItem = id;
 
-			if (!hide)
-				soundSystem::PlaySoundEvent("ui.click", CVector(0,0,0));
+			if ( !hide )
+				soundSystem::PlaySoundEvent( "ui.click", CVector( 0, 0, 0 ) );
 		}
 	}
 
@@ -546,8 +546,8 @@ bool CGui::Slider( int id, CVector pos, CVector size, int max, int &value )
 
 		if ( val != value )
 		{
-			if (m_iTick % 2 == 0)
-				soundSystem::PlaySoundEvent("ui.tick", CVector(0,0,0));
+			if ( m_iTick % 2 == 0 )
+				soundSystem::PlaySoundEvent( "ui.tick", CVector( 0, 0, 0 ) );
 
 			value = val;
 			return true;
@@ -588,8 +588,8 @@ bool CGui::HorzSlider( int id, CVector pos, CVector size, int max, int &value )
 
 		if ( val != value )
 		{
-			if (m_iTick % 2 == 0)
-				soundSystem::PlaySoundEvent("ui.tick", CVector(0,0,0));
+			if ( m_iTick % 2 == 0 )
+				soundSystem::PlaySoundEvent( "ui.tick", CVector( 0, 0, 0 ) );
 
 			value = val;
 			return true;
@@ -605,10 +605,10 @@ bool CGui::CheckBox( int id, CVector pos, CVector size, bool &value )
 	size = size * GUIUNIT;
 
 	CTexture *tex = m_pUncheckedTex;
-	if (value)
+	if ( value )
 		tex = m_pCheckedTex;
 
-	Image(tex, pos / GUIUNIT, size / GUIUNIT);
+	Image( tex, pos / GUIUNIT, size / GUIUNIT );
 
 	if ( RegionHit( pos, size ) )
 	{
@@ -619,7 +619,7 @@ bool CGui::CheckBox( int id, CVector pos, CVector size, bool &value )
 			m_iActiveItem = id;
 
 			value = !value;
-			soundSystem::PlaySoundEvent(value ? "ui.check" : "ui.uncheck", CVector(0,0,0));
+			soundSystem::PlaySoundEvent( value ? "ui.check" : "ui.uncheck", CVector( 0, 0, 0 ) );
 			return true;
 		}
 	}

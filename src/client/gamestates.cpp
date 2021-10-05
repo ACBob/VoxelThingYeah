@@ -244,8 +244,7 @@ void CStatePlay::Update()
 			{
 				m_bInPause = false;
 			}
-			if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Options",
-												 pStateMan->m_pGui->m_vScreenCentre,
+			if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Options", pStateMan->m_pGui->m_vScreenCentre,
 												 CVector( 0.5, 0.5 ), CVector( 2, 1 ), CVector( 14, 2 ) ) )
 			{
 				m_pStateMan->PushState( std::make_unique<CStateOptionsMenu>() );
@@ -417,13 +416,14 @@ void CStateOptionsMenu::Update()
 	}
 
 	pStateMan->m_pGui->Label( "Master Volume Slider", pStateMan->m_pGui->m_vScreenCentre + CVector( -16, 6 ) );
-	if ( pStateMan->m_pGui->HorzSlider( GUIGEN_ID, pStateMan->m_pGui->m_vScreenCentre + CVector( -16, 4 ), CVector( 32, 2 ),
-										100, m_iVolumeSlider ) )
+	if ( pStateMan->m_pGui->HorzSlider( GUIGEN_ID, pStateMan->m_pGui->m_vScreenCentre + CVector( -16, 4 ),
+										CVector( 32, 2 ), 100, m_iVolumeSlider ) )
 	{
 		cl_volume->SetFloat( m_iVolumeSlider / 100.0f );
 	}
 	pStateMan->m_pGui->Label( "Enable Reverb", pStateMan->m_pGui->m_vScreenCentre + CVector( -16, 2 ) );
-	if ( pStateMan->m_pGui->CheckBox( GUIGEN_ID, pStateMan->m_pGui->m_vScreenCentre + CVector( -16, 0 ), CVector(2,2), m_bEnableReverb ) )
+	if ( pStateMan->m_pGui->CheckBox( GUIGEN_ID, pStateMan->m_pGui->m_vScreenCentre + CVector( -16, 0 ),
+									  CVector( 2, 2 ), m_bEnableReverb ) )
 	{
 		cl_reverb->SetBool( m_bEnableReverb );
 	}

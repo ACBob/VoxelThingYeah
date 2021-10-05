@@ -91,8 +91,8 @@ BlockFeatures GetBlockFeatures( blocktype_t blockType )
 	bF.isLiquid		  = false;
 	bF.isLiquidSource = false;
 	bF.isLightSource  = false;
-	bF.lightColour    = 0x000;
-	bF.opaqueness     = 0xFFF;
+	bF.lightColour	  = 0x000;
+	bF.opaqueness	  = 0xFFF;
 	bF.liquidFlow	  = AIR;
 	bF.liquidSource	  = AIR;
 	bF.liquidRange	  = 0;
@@ -114,16 +114,16 @@ BlockFeatures GetBlockFeatures( blocktype_t blockType )
 		case GLASS:
 			bF.opaqueness = 0x111;
 		case ICE:
-			bF.rule	 = blockType == LEAVES ? OBSCURERULE_NEVER : OBSCURERULE_SIMILAR;
-			bF.solid = false;
+			bF.rule		  = blockType == LEAVES ? OBSCURERULE_NEVER : OBSCURERULE_SIMILAR;
+			bF.solid	  = false;
 			bF.opaqueness = blockType == ICE ? 0x110 : bF.opaqueness;
 			break;
 
 		case FLOWER:
 		case LGRASS:
-			bF.rule	 = OBSCURERULE_NEVER;
-			bF.solid = false;
-			bF.model = BLOCKMODEL_PLANT;
+			bF.rule		  = OBSCURERULE_NEVER;
+			bF.solid	  = false;
+			bF.model	  = BLOCKMODEL_PLANT;
 			bF.opaqueness = 0x000; // doesn't block light
 			break;
 
@@ -132,33 +132,35 @@ BlockFeatures GetBlockFeatures( blocktype_t blockType )
 			bF.isLiquidSource = true;
 		case WATER:
 		case LAVA:
-			bF.breakable	= false;
-			bF.selectable	= false;
-			bF.walkable		= false;
-			bF.solid		= false;
-			bF.isLiquid		= true;
+			bF.breakable	 = false;
+			bF.selectable	 = false;
+			bF.walkable		 = false;
+			bF.solid		 = false;
+			bF.isLiquid		 = true;
 			bF.isLightSource = blockType == LAVA || blockType == LAVASRC;
-			bF.lightColour = (blockType == LAVA || blockType == LAVASRC) ? 0xEA3 : 0x000;
-			bF.liquidSpeed	= blockType == LAVA ? 15 : 5;
-			bF.rule			= OBSCURERULE_SIMILAR;
-			bF.liquidFlow	= ( blockType == WATERSRC || blockType == WATER ) ? WATER : LAVA;
-			bF.liquidSource = ( blockType == WATERSRC || blockType == WATER ) ? WATERSRC : LAVASRC;
-			bF.liquidRange	= ( blockType == WATERSRC || blockType == WATER ) ? 7 : 4;
-			bF.opaqueness = 0x221;
+			bF.lightColour	 = ( blockType == LAVA || blockType == LAVASRC ) ? 0xEA3 : 0x000;
+			bF.liquidSpeed	 = blockType == LAVA ? 15 : 5;
+			bF.rule			 = OBSCURERULE_SIMILAR;
+			bF.liquidFlow	 = ( blockType == WATERSRC || blockType == WATER ) ? WATER : LAVA;
+			bF.liquidSource	 = ( blockType == WATERSRC || blockType == WATER ) ? WATERSRC : LAVASRC;
+			bF.liquidRange	 = ( blockType == WATERSRC || blockType == WATER ) ? 7 : 4;
+			bF.opaqueness	 = 0x221;
 			break;
-		
+
 		case LIGHT_RED:
 		case LIGHT_GREEN:
 		case LIGHT_BLUE:
 		case LIGHT_YELLOW:
 		case LIGHT_WHITE:
 			bF.isLightSource = true;
-			bF.lightColour = blockType == LIGHT_WHITE ? 0xFFF : 
-							blockType == LIGHT_YELLOW ? 0xFD9 : 
-							blockType == LIGHT_RED ? 0xF00 :
-							blockType == LIGHT_GREEN ? 0x0F0 :
-							blockType == LIGHT_BLUE ? 0x00F :
-							0xF0F;
+			bF.lightColour =
+				blockType == LIGHT_WHITE
+					? 0xFFF
+					: blockType == LIGHT_YELLOW
+						  ? 0xFD9
+						  : blockType == LIGHT_RED
+								? 0xF00
+								: blockType == LIGHT_GREEN ? 0x0F0 : blockType == LIGHT_BLUE ? 0x00F : 0xF0F;
 			bF.opaqueness = 0x000;
 			break;
 

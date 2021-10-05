@@ -14,7 +14,7 @@ CChunk::CChunk()
 		m_blocks[i].m_iBlockType   = blocktype_t::AIR;
 		m_iLightingValue[i]		   = 0;
 		m_portableDef.m_iBlocks[i] = m_blocks[i].m_iBlockType;
-		m_portableDef.m_iValue[i] = ( m_blocks[i].m_iValueA & 0xff ) | ( m_blocks[i].m_iValueB << 8 );
+		m_portableDef.m_iValue[i]  = ( m_blocks[i].m_iValueA & 0xff ) | ( m_blocks[i].m_iValueB << 8 );
 	}
 
 	m_bDirty = true;
@@ -30,7 +30,7 @@ CChunk::CChunk()
 	{
 		m_blocks[i].m_iBlockType   = blocktype_t::AIR;
 		m_portableDef.m_iBlocks[i] = m_blocks[i].m_iBlockType;
-		m_portableDef.m_iValue[i] = ( m_blocks[i].m_iValueA & 0xff ) | ( m_blocks[i].m_iValueB << 8 );
+		m_portableDef.m_iValue[i]  = ( m_blocks[i].m_iValueA & 0xff ) | ( m_blocks[i].m_iValueB << 8 );
 	}
 
 	m_bDirty = true;
@@ -169,7 +169,7 @@ void CChunk::Update( int64_t iTick )
 	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
 	{
 		m_portableDef.m_iBlocks[j] = m_blocks[j].m_iBlockType;
-		m_portableDef.m_iValue[j] = ( m_blocks[j].m_iValueA & 0xff ) | ( m_blocks[j].m_iValueB << 8 );
+		m_portableDef.m_iValue[j]  = ( m_blocks[j].m_iValueA & 0xff ) | ( m_blocks[j].m_iValueB << 8 );
 	}
 
 #ifdef CLIENTEXE
@@ -209,7 +209,7 @@ bool ValidChunkPosition( int x, int y, int z )
 bool ValidChunkPosition( CVector pos )
 {
 	// If the position is valid
-	return ValidChunkPosition(pos.x, pos.y, pos.z);
+	return ValidChunkPosition( pos.x, pos.y, pos.z );
 }
 
 #ifdef CLIENTEXE
@@ -218,7 +218,7 @@ Colour CChunk::GetLightingLocal( CVector pos )
 {
 	Colour c;
 	uint16_t l = m_iLightingValue[int( CHUNK3D_TO_1D( pos.x, pos.y, pos.z ) )];
-	c.x		   = ( l >> 12) & 0xF;
+	c.x		   = ( l >> 12 ) & 0xF;
 	c.y		   = ( l >> 8 ) & 0xF;
 	c.z		   = ( l >> 4 ) & 0xF;
 	c.w		   = l & 0xF;
@@ -235,65 +235,71 @@ void CChunk::SetLightingLocal( CVector pos, Colour colour )
 	l		   = ( l & 0xFFF0 ) | ( (int)colour.w );
 }
 
-void Zoop(CChunk *c, int r, int g, int b, int s, int x, int y, int z)
+void Zoop( CChunk *c, int r, int g, int b, int s, int x, int y, int z )
 {
-	if (c == nullptr)
+	if ( c == nullptr )
 		return; // Run away!
 
-	if ( !ValidChunkPosition(x,y,z) )
+	if ( !ValidChunkPosition( x, y, z ) )
 	{ // Pass the zoopening
 		int nx, ny, nz = 0;
 
-		if (x >= CHUNKSIZE_X) nx = 1;
-		else if (x < 0) nx = -1;
-		if (y >= CHUNKSIZE_Y) ny = 1;
-		else if (y < 0) ny = -1;
-		if (z >= CHUNKSIZE_Z) nz = 1;
-		else if (z < 0) nz = -1;
-		
+		if ( x >= CHUNKSIZE_X )
+			nx = 1;
+		else if ( x < 0 )
+			nx = -1;
+		if ( y >= CHUNKSIZE_Y )
+			ny = 1;
+		else if ( y < 0 )
+			ny = -1;
+		if ( z >= CHUNKSIZE_Z )
+			nz = 1;
+		else if ( z < 0 )
+			nz = -1;
+
 		x -= CHUNKSIZE_X * nx;
 		y -= CHUNKSIZE_Y * ny;
 		z -= CHUNKSIZE_Z * nz;
 
-		Zoop(c->Neighbour(CVector(nx, ny, nz)), r, g, b, s, x, y, z);
+		Zoop( c->Neighbour( CVector( nx, ny, nz ) ), r, g, b, s, x, y, z );
 
 		return;
 	}
 
-	int j = CHUNK3D_TO_1D(x,y,z);
+	int j = CHUNK3D_TO_1D( x, y, z );
 
 	BlockFeatures bf = GetBlockFeatures( c->m_blocks[j].m_iBlockType );
 
 	// Fully Opaque, doesn't let light through
 	if ( bf.opaqueness == 0xFFF )
 		return;
-	
+
 	r -= ( bf.opaqueness >> 8 ) & 0xF;
 	g -= ( bf.opaqueness >> 4 ) & 0xF;
 	b -= ( bf.opaqueness ) & 0xF;
 
 	// TODO: opaqueness S
 
-	bool set = false;
+	bool set  = false;
 	int light = c->m_iLightingValue[j];
-	if ( r > (( light >> 12 ) & 0xF) )
+	if ( r > ( ( light >> 12 ) & 0xF ) )
 	{
 		light = ( light & 0x0FFF ) | ( r << 12 );
-		set = true;
+		set	  = true;
 	}
-	if ( g > (( light >> 8 ) & 0xF) )
+	if ( g > ( ( light >> 8 ) & 0xF ) )
 	{
 		light = ( light & 0xF0FF ) | ( g << 8 );
-		set = true;
+		set	  = true;
 	}
-	if ( b > (( light >> 4 ) & 0xF) )
+	if ( b > ( ( light >> 4 ) & 0xF ) )
 	{
 		light = ( light & 0xFF0F ) | ( b << 4 );
-		set = true;
+		set	  = true;
 	}
 	c->m_iLightingValue[j] = light;
 
-	if (!set)
+	if ( !set )
 		return;
 
 	r--;
@@ -305,33 +311,34 @@ void Zoop(CChunk *c, int r, int g, int b, int s, int x, int y, int z)
 	s--;
 	s = s > 0 ? s : 0;
 
-	if (r <= 0 && g <= 0 && b <= 0 && s <= 0)
+	if ( r <= 0 && g <= 0 && b <= 0 && s <= 0 )
 		return;
 
-	Zoop( c, r, g, b, s, x+1, y, z );
-	Zoop( c, r, g, b, s, x-1, y, z );
-	Zoop( c, r, g, b, s, x, y+1, z );
-	Zoop( c, r, g, b, s, x, y-1, z );
-	Zoop( c, r, g, b, s, x, y, z+1 );
-	Zoop( c, r, g, b, s, x, y, z-1 );
+	Zoop( c, r, g, b, s, x + 1, y, z );
+	Zoop( c, r, g, b, s, x - 1, y, z );
+	Zoop( c, r, g, b, s, x, y + 1, z );
+	Zoop( c, r, g, b, s, x, y - 1, z );
+	Zoop( c, r, g, b, s, x, y, z + 1 );
+	Zoop( c, r, g, b, s, x, y, z - 1 );
 }
 
 void CChunk::UpdateLighting()
 {
 	// TODO: sunlight
 	// Zero out & reset
-	for (int i = 0; i < CHUNKSIZE_X*CHUNKSIZE_Y*CHUNKSIZE_Z; i++) 
+	for ( int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++ )
 		m_iLightingValue[i] = 0;
-	
-	for (int i = 0; i < CHUNKSIZE_X*CHUNKSIZE_Y*CHUNKSIZE_Z; i++)
-	{
-		BlockFeatures bF = GetBlockFeatures(m_blocks[i].m_iBlockType);
 
-		if (bF.isLightSource)
+	for ( int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++ )
+	{
+		BlockFeatures bF = GetBlockFeatures( m_blocks[i].m_iBlockType );
+
+		if ( bF.isLightSource )
 		{
-			int x,y,z;
-			CHUNK1D_TO_3D(i, x,y,z);
-			Zoop(this, ( bF.lightColour >> 8 ) & 0xF, ( bF.lightColour >> 4 ) & 0xF, ( bF.lightColour ) & 0xF, 0, x,y,z);
+			int x, y, z;
+			CHUNK1D_TO_3D( i, x, y, z );
+			Zoop( this, ( bF.lightColour >> 8 ) & 0xF, ( bF.lightColour >> 4 ) & 0xF, ( bF.lightColour ) & 0xF, 0, x, y,
+				  z );
 		}
 	}
 }

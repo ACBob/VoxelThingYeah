@@ -107,9 +107,11 @@ namespace protocol
 						SendServerUpdateBlock( c->m_pPeer, CVector( x, y, z ), blocktype_t( blockType ), valA, valB );
 
 						if ( blockType == AIR )
-							SendServerSpecialEffect( c->m_pPeer, CVector(x, y, z).Floor(), SPECIALEFFECT_BLOCKBREAK, oldBlockType );
+							SendServerSpecialEffect( c->m_pPeer, CVector( x, y, z ).Floor(), SPECIALEFFECT_BLOCKBREAK,
+													 oldBlockType );
 						else
-							SendServerSpecialEffect( c->m_pPeer, CVector(x, y, z).Floor(), SPECIALEFFECT_BLOCKPLACE, blockType );
+							SendServerSpecialEffect( c->m_pPeer, CVector( x, y, z ).Floor(), SPECIALEFFECT_BLOCKPLACE,
+													 blockType );
 					}
 				}
 				else

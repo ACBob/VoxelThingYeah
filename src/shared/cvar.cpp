@@ -61,11 +61,11 @@ namespace ConVar
 
 		for ( auto &c : Cvars )
 		{
-			if (!c.second->ShouldArchive())
+			if ( !c.second->ShouldArchive() )
 				continue;
-			if (!c.second->IsModified())
+			if ( !c.second->IsModified() )
 				continue;
-			
+
 			out += c.first;
 			out += ' ';
 			out += c.second->GetString();
@@ -73,9 +73,9 @@ namespace ConVar
 		}
 
 		bool bSuccess = false;
-		fileSystem::WriteFile("config.cfg", (uchar_t*)out.c_str(), out.size(), bSuccess);
-		if (!bSuccess)
-			con_error("Failed to write config.cfg...");
+		fileSystem::WriteFile( "config.cfg", (uchar_t *)out.c_str(), out.size(), bSuccess );
+		if ( !bSuccess )
+			con_error( "Failed to write config.cfg..." );
 	}
 
 	CConVar *CConVarHandler::DeclareConvar( const char *name, const char *defVal, int flags )
