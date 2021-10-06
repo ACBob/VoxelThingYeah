@@ -11,7 +11,7 @@ namespace protocol
 		bufAccess << PROTOCOL_VERSION;
 		bufAccess << std::string( username->GetString() );
 
-		protocol::SendPacket( pPeer, p );
+		protocol::SendPacket( pPeer, p, true );
 	}
 	void SendClientSetBlock( ENetPeer *pPeer, CVector pos, blocktype_t blockType, uint8_t valA, uint8_t valB )
 	{
@@ -25,7 +25,7 @@ namespace protocol
 		bufAcc << valA;
 		bufAcc << valB;
 
-		protocol::SendPacket( pPeer, p );
+		protocol::SendPacket( pPeer, p, true );
 	}
 	void SendClientPlayerPos( ENetPeer *pPeer, CVector pos, CVector rot )
 	{
@@ -54,7 +54,7 @@ namespace protocol
 		ClientPacket p;
 		p.type = ClientPacket::LEAVE;
 
-		protocol::SendPacket( pPeer, p );
+		protocol::SendPacket( pPeer, p, true );
 		enet_peer_disconnect( pPeer, 0 );
 	}
 	void SendClientSkin( ENetPeer *pPeer, std::vector<unsigned char> imageData, unsigned int resolution )
@@ -66,6 +66,6 @@ namespace protocol
 		bufAccess << imageData;
 		bufAccess << resolution;
 
-		protocol::SendPacket( pPeer, p );
+		protocol::SendPacket( pPeer, p, true );
 	}
 } // namespace protocol

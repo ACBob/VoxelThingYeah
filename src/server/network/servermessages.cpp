@@ -15,7 +15,7 @@ namespace protocol
 		bufAcc << std::string( sv_desc->GetString() );
 		bufAcc << isOp;
 
-		protocol::SendPacket( pPeer, p );
+		protocol::SendPacket( pPeer, p, true );
 	}
 	void SendServerChunkData( ENetPeer *pPeer, CWorld *world, CVector pos )
 	{
@@ -135,7 +135,7 @@ namespace protocol
 		bufAccess << imageData;
 		bufAccess << resolution;
 
-		protocol::SendPacket( pPeer, p );
+		protocol::SendPacket( pPeer, p, true );
 	}
 	void SendServerSpecialEffect( ENetPeer *pPeer, CVector pos, int id, int attrib )
 	{
