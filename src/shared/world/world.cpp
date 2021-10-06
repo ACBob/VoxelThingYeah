@@ -107,7 +107,7 @@ Colour CWorld::GetLightingAtWorldPos( CVector pos )
 		return 0;
 	CVector localPos = ( pos - chunk->GetPosInWorld() );
 
-	return chunk->GetLightingLocal( pos );
+	return chunk->GetLightingLocal( localPos );
 }
 #endif
 
