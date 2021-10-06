@@ -12,7 +12,7 @@
 
 namespace protocol
 {
-	void SendPacket( ENetPeer *pPeer, NetworkPacket &p )
+	void SendPacket( ENetPeer *pPeer, NetworkPacket &p, bool important )
 	{
 		ArchiveBuf buf;
 		Archive<ArchiveBuf> bufAccess( buf );
@@ -21,7 +21,7 @@ namespace protocol
 
 		ArchiveIntermediary g = buf.str();
 
-		ENetPacket *packet = enet_packet_create( &g.begin()[0], g.size(), ENET_PACKET_FLAG_RELIABLE );
+		ENetPacket *packet = enet_packet_create( &g.begin()[0], g.size(), important ? ENET_PACKET_FLAG_RELIABLE : 0 );
 		enet_peer_send( pPeer, 0, packet );
 	}
 

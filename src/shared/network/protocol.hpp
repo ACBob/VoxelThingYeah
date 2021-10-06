@@ -216,7 +216,7 @@ namespace protocol
 	void DealWithPacket( NetworkPacket &p, void *side, ENetPeer *pPeer );
 
 	// Pew pew
-	void SendPacket( ENetPeer *pPeer, NetworkPacket &p );
+	void SendPacket( ENetPeer *pPeer, NetworkPacket &p, bool important = false );
 
 	/****************************************************/
 	/******************* SERVER *************************/
