@@ -61,7 +61,8 @@ CModelRenderer::~CModelRenderer()
 	glDeleteBuffers( 1, &m_iEbo );
 }
 
-void CModelRenderer::Render( CVector pos, CVector rot, CVector size, CVector uvOffset, Colour light, CShader *shader, CTexture *tex )
+void CModelRenderer::Render( CVector pos, CVector rot, CVector size, CVector uvOffset, Colour light, CShader *shader,
+							 CTexture *tex )
 {
 
 	glm::mat4 model = glm::mat4( 1.0f );

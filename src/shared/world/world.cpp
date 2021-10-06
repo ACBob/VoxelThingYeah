@@ -99,7 +99,7 @@ CBlock *CWorld::BlockAtWorldPos( CVector pos )
 }
 
 #ifdef CLIENTEXE
-Colour CWorld::GetLightingAtWorldPos(CVector pos)
+Colour CWorld::GetLightingAtWorldPos( CVector pos )
 {
 	pos			  = pos.Floor();
 	CChunk *chunk = ChunkAtWorldPos( pos );
@@ -107,7 +107,7 @@ Colour CWorld::GetLightingAtWorldPos(CVector pos)
 		return 0;
 	CVector localPos = ( pos - chunk->GetPosInWorld() );
 
-	return chunk->GetLightingLocal(pos);
+	return chunk->GetLightingLocal( pos );
 }
 #endif
 

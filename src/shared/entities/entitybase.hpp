@@ -74,7 +74,7 @@ class CEntityBase
 	CVector m_vVelocity;
 #ifdef CLIENTEXE
 	// Lighting
-	Colour m_vLighting = {1,1,1,1};
+	Colour m_vLighting = { 1, 1, 1, 1 };
 #endif
 
 	bool m_bOnFloor		   = false;
