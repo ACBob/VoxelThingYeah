@@ -55,6 +55,8 @@ namespace modelSystem
 
 		CVector m_vUvOffset = { 1, 1, 0, 0 };
 
+		Color m_vLighting = {1,1,1,1};
+
 		bool m_bVisible = true;
 
 	  protected:

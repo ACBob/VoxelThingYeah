@@ -4,7 +4,6 @@ layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoord;
 
 out vec2 TexCoord;
-out vec3 Light;
 
 #include "shaders/include/uniforms.glsl"
 
@@ -13,5 +12,4 @@ out vec3 Light;
 void main()
 {
 #	include "shaders/include/inworld.glsl"
-#	include "shaders/include/diffuse.glsl"
 }

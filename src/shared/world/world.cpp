@@ -98,6 +98,19 @@ CBlock *CWorld::BlockAtWorldPos( CVector pos )
 	return chunk->GetBlockAtLocal( localPos );
 }
 
+#ifdef CLIENTEXE
+Colour CWorld::GetLightingAtWorldPos(CVector pos)
+{
+	pos			  = pos.Floor();
+	CChunk *chunk = ChunkAtWorldPos( pos );
+	if ( chunk == nullptr )
+		return 0;
+	CVector localPos = ( pos - chunk->GetPosInWorld() );
+
+	return chunk->GetLightingLocal(pos);
+}
+#endif
+
 bool CWorld::ValidChunkPos( const CVector pos ) { return ChunkAtWorldPos( pos ) != nullptr; }
 
 void CWorld::AddEntity( void *e )

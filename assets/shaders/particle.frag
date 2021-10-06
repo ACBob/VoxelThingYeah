@@ -2,7 +2,6 @@
 out vec4 FragColor;
 
 in vec2 TexCoord;
-in vec3 Light;
 
 #include "shaders/include/uniforms.glsl"
 
@@ -14,5 +13,7 @@ void main()
 	texCoord.y = 1 - texCoord.y;
 	FragColor = texture(diffuse, texCoord);
 	if (FragColor.a == 0.0) discard;
-	FragColor.rgb *= Light;
+
+	FragColor.rgb *= 0.5;
+	FragColor.rgb *= (1 + lighting.rgb);
 }

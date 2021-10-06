@@ -4,7 +4,6 @@ layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoord;
 
 out vec2 TexCoord;
-out vec3 Light;
 
 #include "shaders/include/uniforms.glsl"
 
@@ -16,5 +15,4 @@ void main()
 
 	float f = 0.5 + 0.5 * cos(PI - PI * (timeOfDay / 12000.0)) * 0.75;
 	f += 0.25 + 0.5 * f;
-	Light = vec3(f);
 }

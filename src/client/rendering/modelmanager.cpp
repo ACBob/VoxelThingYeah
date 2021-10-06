@@ -24,7 +24,7 @@ void CModel::Render()
 		return;
 
 	m_pShader->Use();
-	m_pRenderer->Render( m_vPosition, m_vRotation, m_vSize, m_vUvOffset, m_pShader, m_pTex );
+	m_pRenderer->Render( m_vPosition, m_vRotation, m_vSize, m_vUvOffset, m_vLighting, m_pShader, m_pTex );
 }
 
 void CModel::SetShader( CShader *shader ) { this->m_pShader = shader; }

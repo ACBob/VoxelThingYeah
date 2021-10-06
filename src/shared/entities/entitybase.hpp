@@ -45,6 +45,7 @@ class CEntityBase
 	// Renders our Model.
 	virtual void Render()
 	{
+		m_pMdl->m_vLighting = m_vLighting;
 		m_pMdl->m_vPosition = m_vPosition;
 		m_pMdl->m_vRotation = m_vRotation;
 		m_pMdl->Render();
@@ -71,6 +72,10 @@ class CEntityBase
 	CVector m_vRotation;
 	// Velocity
 	CVector m_vVelocity;
+#ifdef CLIENTEXE
+	// Lighting
+	Colour m_vLighting = {1,1,1,1};
+#endif
 
 	bool m_bOnFloor		   = false;
 	bool m_bApplyGravity   = true;

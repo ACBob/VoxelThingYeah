@@ -73,6 +73,8 @@ class CWorld
 #ifdef CLIENTEXE
 	void Render();
 
+	Colour GetLightingAtWorldPos(CVector pos);
+
 	void *m_pLocalPlayer = nullptr;
 
 	// Shader we render with
