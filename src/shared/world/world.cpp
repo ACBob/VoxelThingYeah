@@ -267,9 +267,6 @@ void CWorld::UsePortable( PortableChunkRepresentation rep )
 		c->m_blocks[j].m_iValueA	= ( rep.m_iValue[j] >> 8 ) & 0xF;
 		c->m_blocks[j].m_iValueB	= rep.m_iValue[j] & 0xF;
 	}
-#ifdef CLIENTEXE
-	c->UpdateLighting();
-#endif
 
 	c->m_bDirty = true;
 }
