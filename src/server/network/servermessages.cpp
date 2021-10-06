@@ -37,7 +37,7 @@ namespace protocol
 
 		// con_debug("SEND <%d,%d,%d>", crep.x, crep.y, crep.z);
 
-		SendPacket( pPeer, p );
+		SendPacket( pPeer, p, true );
 	}
 	void SendServerUpdateBlock( ENetPeer *pPeer, CVector pos, blocktype_t blockType, uint8_t valA, uint8_t valB )
 	{
@@ -51,7 +51,7 @@ namespace protocol
 		bufAcc << valA;
 		bufAcc << valB;
 
-		protocol::SendPacket( pPeer, p );
+		protocol::SendPacket( pPeer, p, true );
 	}
 	void SendServerPlayerSpawn( ENetPeer *pPeer, std::string username, CVector pos, CVector rot, bool join )
 	{
@@ -66,7 +66,7 @@ namespace protocol
 		bufAcc << rot.y;
 		bufAcc << join;
 
-		SendPacket( pPeer, p );
+		SendPacket( pPeer, p, true );
 	}
 	void SendServerPlayerPos( ENetPeer *pPeer, std::string username, CVector pos, CVector rot )
 	{
@@ -91,7 +91,7 @@ namespace protocol
 		bufAccess << username;
 		bufAccess << message;
 
-		SendPacket( pPeer, p );
+		SendPacket( pPeer, p, true );
 	}
 	void SendServerPlayerDisconnect( ENetPeer *pPeer, bool isKick, std::string reason )
 	{
@@ -102,7 +102,7 @@ namespace protocol
 		bufAccess << isKick;
 		bufAccess << reason;
 
-		protocol::SendPacket( pPeer, p );
+		protocol::SendPacket( pPeer, p, true );
 	}
 	void SendServerTimeOfDay( ENetPeer *pPeer, int ticks )
 	{
@@ -122,7 +122,7 @@ namespace protocol
 
 		bufAccess << username;
 
-		protocol::SendPacket( pPeer, p );
+		protocol::SendPacket( pPeer, p, true );
 	}
 	void SendServerPlayerSkin( ENetPeer *pPeer, std::string username, std::vector<unsigned char> imageData,
 							   unsigned int resolution )
