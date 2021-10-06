@@ -110,13 +110,11 @@ BlockFeatures GetBlockFeatures( blocktype_t blockType )
 			break;
 
 		case LEAVES:
-			bF.opaqueness = 0x444;
 		case GLASS:
-			bF.opaqueness = 0x111;
 		case ICE:
 			bF.rule		  = blockType == LEAVES ? OBSCURERULE_NEVER : OBSCURERULE_SIMILAR;
 			bF.solid	  = false;
-			bF.opaqueness = blockType == ICE ? 0x110 : bF.opaqueness;
+			bF.opaqueness = blockType == ICE ? 0x110 : blockType == LEAVES ? 0x444 : 0x111;
 			break;
 
 		case FLOWER:
