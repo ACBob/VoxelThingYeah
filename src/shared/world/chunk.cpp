@@ -14,7 +14,7 @@ CChunk::CChunk()
 		m_blocks[i].m_iBlockType   = blocktype_t::AIR;
 		m_iLightingValue[i]		   = 0;
 		m_portableDef.m_iBlocks[i] = m_blocks[i].m_iBlockType;
-		m_portableDef.m_iValue[i]  = ( m_blocks[i].m_iValueA & 0xff ) | ( m_blocks[i].m_iValueB << 8 );
+		// m_portableDef.m_iValue[i]  = ( m_blocks[i].m_iValueA & 0xff ) | ( m_blocks[i].m_iValueB << 8 );
 	}
 
 	m_bDirty = true;
@@ -30,7 +30,7 @@ CChunk::CChunk()
 	{
 		m_blocks[i].m_iBlockType   = blocktype_t::AIR;
 		m_portableDef.m_iBlocks[i] = m_blocks[i].m_iBlockType;
-		m_portableDef.m_iValue[i]  = ( m_blocks[i].m_iValueA & 0xff ) | ( m_blocks[i].m_iValueB << 8 );
+		// m_portableDef.m_iValue[i]  = ( m_blocks[i].m_iValueA & 0xff ) | ( m_blocks[i].m_iValueB << 8 );
 	}
 
 	m_bDirty = true;
@@ -169,7 +169,7 @@ void CChunk::Update( int64_t iTick )
 	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
 	{
 		m_portableDef.m_iBlocks[j] = m_blocks[j].m_iBlockType;
-		m_portableDef.m_iValue[j]  = ( m_blocks[j].m_iValueA & 0xff ) | ( m_blocks[j].m_iValueB << 8 );
+		// m_portableDef.m_iBlocks[j]  = (( m_blocks[j].m_iValueA & 0xff ) | ( m_blocks[j].m_iValueB << 8 )) << 32;
 	}
 
 #ifdef CLIENTEXE

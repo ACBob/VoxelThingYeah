@@ -16,6 +16,12 @@ CNetworkServer::CNetworkServer( int port, int maxClients )
 		con_error( "Couldn't create ENet server object" );
 		return;
 	}
+
+	if ( enet_host_compress_with_range_coder(m_pEnetHost) != 0 )
+	{
+		con_error("Couldn't enable compression!");
+		return;
+	}
 }
 CNetworkServer::~CNetworkServer()
 {

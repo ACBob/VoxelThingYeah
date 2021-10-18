@@ -13,6 +13,12 @@ CNetworkClient::CNetworkClient()
 		con_error( "Couldn't create ENet client object" );
 		return;
 	}
+
+	if ( enet_host_compress_with_range_coder(m_pEnetHost) != 0 )
+	{
+		con_error("Couldn't enable compression!");
+		return;
+	}
 }
 CNetworkClient::~CNetworkClient() { enet_host_destroy( m_pEnetHost ); }
 
