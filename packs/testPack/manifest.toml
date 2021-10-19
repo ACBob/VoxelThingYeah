@@ -1,0 +1,14 @@
+[pack-info]
+name = "Testing Resource Pack!"
+desc = "Tests a lot of possible features"
+license = "CC 0.0" # This would be one of a few supported licenses, along with any generic string
+format = 0x01 # Hexadecimal OR integer, best practice being hexadecimal
+
+[pack-support]
+# This would enable/disable loading of certain portions of a resource pack
+# Possibly in the case of scripts, it'd show you a warning when enabling it.
+textures = true
+sounds = false
+shaders = true
+models = false
+scripts = false
