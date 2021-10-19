@@ -85,7 +85,7 @@ namespace protocol
 				CBlock *b = client->m_pLocalWorld->BlockAtWorldPos( CVector( x, y, z ) );
 				if ( b != nullptr )
 				{
-					con_info( "Update Block At <%f,%f,%f>", x, y, z );
+					// con_info( "Update Block At <%f,%f,%f>", x, y, z );
 					b->m_iBlockType = blocktype_t( blockType );
 					b->m_iValueA	= valA;
 					b->m_iValueB	= valB;
