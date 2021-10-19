@@ -112,7 +112,7 @@ namespace fileSystem
 	{
 		if ( PHYSFS_unmount(realPath) == 0 )
 		{
-			con_error("unmount %s: %s", realpath, PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ));
+			con_error("unmount %s: %s", realPath, PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ));
 		}
 
 		mountedPaths.erase(
