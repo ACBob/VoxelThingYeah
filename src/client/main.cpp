@@ -35,6 +35,8 @@
 
 #include "gamestates.hpp"
 
+#include "packs.hpp"
+
 #ifdef _WIN32
 	#include <stdio.h>
 	#include <windows.h>
@@ -112,30 +114,19 @@ int main( int argc, char *args[] )
 
 		while ( t != NULL )
 		{
-			con_info("Found Pack %s", t);
+			resourcePacks::packInfo inf = resourcePacks::GetPackInfo(t);
 
-			char *path = new char[strlen(t) + 8];
-			strcpy(path, "/packs/");
-			strcat(path, t);
-			path[strlen(t) + 8] = 0;
-
-			if (fileSystem::Exists(path))
+			if (inf.format == 0x00)
 			{
-				// Mount its' asset directory
-				char *assetpath = new char[strlen(path) + 13];
-				strcpy(assetpath, "files");
-				strcat(assetpath, path);
-				strcat(assetpath, "/assets");
-				assetpath[strlen(path) + 13] = 0;
-
-				fileSystem::Mount(assetpath, "/assets/", true);
+				con_warning("Unknown Pack %s", t);
 			}
 			else
 			{
-				con_warning("Unknown pack %s", t);	
+				con_info("%s (%s)", inf.name.c_str(), inf.path.c_str());
+
+				resourcePacks::MountPack(inf);
 			}
 
-			delete[] path;
 			t = strtok_r( NULL, ",", &saveptr );
 		}
 	}

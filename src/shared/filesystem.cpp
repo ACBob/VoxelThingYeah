@@ -12,6 +12,7 @@
 
 namespace fileSystem
 {
+	std::vector<const char*> mountedPaths;
 
 	bool Init( const char *exePath )
 	{
@@ -100,7 +101,30 @@ namespace fileSystem
 			return false;
 		}
 
+		char* cachepath = new char[strlen(realPath) + 1];
+		strcpy(cachepath, realPath);
+		mountedPaths.push_back(cachepath);
+
 		return true;
+	}
+
+	void UnMount( const char* realPath )
+	{
+		if ( PHYSFS_unmount(realPath) == 0 )
+		{
+			con_error("unmount %s: %s", realpath, PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ));
+		}
+
+		mountedPaths.erase(
+			std::remove_if( mountedPaths.begin(), mountedPaths.end(),
+							[realPath]( auto &c ) { return strcmp(realPath, c) == 0; } ),
+			mountedPaths.end() );
+	}
+
+	void UnMountAll()
+	{
+		while (mountedPaths.size() > 0)
+			UnMount(mountedPaths.front());
 	}
 
 	bool MountWrite( const char *realPath )

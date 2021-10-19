@@ -25,6 +25,14 @@ namespace fileSystem
 	// TODO: realPath seems to be relative to the CWD??
 	bool Mount( const char *realPath, const char *virtalPath, bool prepend = false );
 
+	// Unmounts the realpath
+	void UnMount( const char *realPath );
+
+	// Unmounts every directory already mounted
+	void UnMountAll();
+
+	extern std::vector<const char*> mountedPaths;
+
 	// Sets the path for writing.
 	bool MountWrite( const char *realPath );
 
