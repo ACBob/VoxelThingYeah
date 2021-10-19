@@ -7,15 +7,17 @@
 
 #include <string.h>
 
-#include "logging.hpp"
+#include "shared/logging.hpp"
 
-CGameWindow::CGameWindow( const char *title, CVector size, bool resizeable )
+CGameWindow::CGameWindow( const char *title, CVector size, bool resizeable, CVector minSize )
 	: m_pInternalWindow( nullptr, &SDL_DestroyWindow ), m_iTick( 0 ), m_iFrameTicks( 0 ), m_dDelta( 0 ),
 	  m_iFramesInTheLastSecond( 0 ), m_fSecondsPerFrame( 0.0f ), m_pInputMan( nullptr ), m_bShouldClose( false )
 {
 	m_pInternalWindow.reset(
-		SDL_CreateWindow( "VoxelThingYeah", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, size.x, size.y,
+		SDL_CreateWindow( title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, size.x, size.y,
 						  SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | ( resizeable ? SDL_WINDOW_RESIZABLE : 0 ) ) );
+
+	SDL_SetWindowMinimumSize(m_pInternalWindow.get(), minSize.x, minSize.y);
 
 	// if (resizeable);
 	// 	flags |= SDL_WINDOW_RESIZABLE;
@@ -101,6 +103,15 @@ CVector CGameWindow::GetPos()
 }
 void CGameWindow::SetPos( CVector pos ) { SDL_SetWindowPosition( m_pInternalWindow.get(), pos.x, pos.y ); }
 
+bool CGameWindow::GetMouseVisibility()
+{
+	return SDL_ShowCursor(SDL_QUERY);
+}
+void CGameWindow::SetMouseVisibility(bool bVisible)
+{
+	SDL_ShowCursor(bVisible ? SDL_ENABLE : SDL_DISABLE);
+}
+
 float CGameWindow::GetSPF()
 {
 	m_iFramesInTheLastSecond++;
@@ -145,7 +156,17 @@ const int scancodeToStateIndex[] = {
 	SDL_SCANCODE_Y,			'Y',		SDL_SCANCODE_Z,		 'Z',
 
 	SDL_SCANCODE_ESCAPE,	KBD_ESCAPE, SDL_SCANCODE_LSHIFT, KBD_SHIFT, SDL_SCANCODE_BACKSPACE, KBD_BACKSPACE,
-	SDL_SCANCODE_RETURN,	KBD_RETURN, SDL_SCANCODE_LCTRL,	 KBD_CNTRL };
+	SDL_SCANCODE_RETURN,	KBD_RETURN, SDL_SCANCODE_LCTRL,	 KBD_CNTRL,
+	
+	SDL_SCANCODE_UP, KBD_UP,
+	SDL_SCANCODE_DOWN, KBD_DOWN,
+	SDL_SCANCODE_LEFT, KBD_LEFT,
+	SDL_SCANCODE_RIGHT, KBD_RIGHT,
+	
+	SDL_SCANCODE_PAGEUP, KBD_PGUP,
+	SDL_SCANCODE_PAGEDOWN, KBD_PGDN,
+	SDL_SCANCODE_DELETE, KBD_DELETE,
+	SDL_SCANCODE_LALT, KBD_ALT };
 
 void CGameWindow::PollEvents()
 {
@@ -196,9 +217,6 @@ void CGameWindow::PollEvents()
 				m_pInputMan->m_cTypeKey = new char[32];
 				strncpy( m_pInputMan->m_cTypeKey, currentEvent.text.text, 32 );
 				m_pInputMan->m_cTypeKey[32] = '\0';
-
-				// con_info("It thinks %s", m_pInputMan->m_cTypeKey);
-				// con_info("Actually %s", currentEvent.text.text);
 				break;
 		}
 	}

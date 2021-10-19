@@ -1,6 +1,8 @@
 #pragma once
 
-#include "types.hpp"
+#include <inttypes.h>
+
+#include <vector>
 
 // Thin wrapper around PhysFS.
 namespace fileSystem
@@ -11,12 +13,12 @@ namespace fileSystem
 	// Len is set to the length of the file
 	// Returns loaded content (if any) even on error
 	// Success is set depending on if it succeeds or not
-	const uchar_t *LoadFile( const char *virtualPath, int64_t &len, bool &success );
+	const unsigned char *LoadFile( const char *virtualPath, int64_t &len, bool &success );
 
 	// data is the bytes to write
 	// dataLength is the length of the bytes
 	// Success is set depending on if it succeeds or not
-	void WriteFile( const char *virtualPath, const uchar_t *data, int64_t dataLength, bool &success );
+	void WriteFile( const char *virtualPath, const unsigned char *data, int64_t dataLength, bool &success );
 
 	// Mounts realPath at virtualPath in PhysFS
 	// Prepend will place the directory first in the search path, else at the end
@@ -25,6 +27,12 @@ namespace fileSystem
 
 	// Sets the path for writing.
 	bool MountWrite( const char *realPath );
+
+	// TRUE if the path exists on the virtual file system at all
+	bool Exists( const char *virtualPath );
+
+	// Lists the directory
+	std::vector<const char*> List(const char* path);
 
 	void UnInit();
 } // namespace fileSystem

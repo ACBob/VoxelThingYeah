@@ -32,12 +32,24 @@ enum INKEY {
 	INKEY_LAST // used only to get the possible inkeys, not a key of its own
 };
 
-enum KBDKEY // Keys unrepresentable by a char
+enum KBDKEY // Keys unrepresentable by a char, we have about 32 of these available to us
 { KBD_ESCAPE	= 0,
   KBD_SHIFT		= 1,
   KBD_BACKSPACE = 2,
   KBD_RETURN	= 3,
   KBD_CNTRL		= 4,
+
+  // arrow keys
+  KBD_UP = 5,
+  KBD_DOWN = 6,
+  KBD_LEFT = 7,
+  KBD_RIGHT = 8,
+
+  // Other keys
+  KBD_PGUP = 9,
+  KBD_PGDN = 10,
+  KBD_DELETE = 11,
+  KBD_ALT = 12
 };
 
 class CInputManager

@@ -5,6 +5,8 @@
 #include <cstring>
 #include <memory>
 
+#include "types.hpp"
+
 #include "filesystem.hpp"
 
 // Global Convar Handler
