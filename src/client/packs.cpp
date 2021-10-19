@@ -9,9 +9,14 @@
 
 #include "logging.hpp"
 
-std::vector<const char*>resourcePacks::ListPacks()
+std::vector<resourcePacks::packInfo>resourcePacks::ListPacks()
 {
-	return fileSystem::List("/packs/");
+	std::vector<packInfo> packList;
+	std::vector<const char*> fps = fileSystem::List("/packs/");
+	for (auto f : fps)
+		packList.push_back(GetPackInfo(f));
+
+	return packList;
 }
 
 resourcePacks::packInfo resourcePacks::GetPackInfo(const char *pck)
@@ -23,6 +28,7 @@ resourcePacks::packInfo resourcePacks::GetPackInfo(const char *pck)
 
 	if (!fileSystem::Exists(path))
 	{
+		con_error("No such resource pack, %s", path);
 		delete[] path;
 		return packInfo();
 	}
@@ -56,7 +62,7 @@ resourcePacks::packInfo resourcePacks::GetPackInfo(const char *pck)
 	int format;
 
 	auto str = root->getString("name");
-	name = str.first;
+	name = str.second;
 	if (!str.first)
 	{
 		con_warning("%s does not have a name in its' manifest, resorting to path...", pck);
@@ -88,6 +94,9 @@ resourcePacks::packInfo resourcePacks::GetPackInfo(const char *pck)
 	info.desc = desc;
 	info.license = license;
 	info.format = format;
+
+	info.hasPackPng = fileSystem::Exists((info.path + "/pack.png").c_str());
+	info.internalName = pck;
 
 	delete[] path;
 	delete[] manifestPath;

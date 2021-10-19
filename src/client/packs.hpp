@@ -3,6 +3,8 @@
 #include <vector>
 #include <string>
 
+#pragma once
+
 #define CURRENT_PACK_FORMAT 0x01
 
 namespace resourcePacks {
@@ -22,9 +24,11 @@ namespace resourcePacks {
 
 		// Not stored in the toml
 		std::string path = "";
+		bool hasPackPng = false; // use default or pack's provided packpng
+		std::string internalName = "";
 	};
 
-	std::vector<const char*> ListPacks();
+	std::vector<packInfo> ListPacks();
 
 	packInfo GetPackInfo(const char* packname);
 

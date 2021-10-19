@@ -9,6 +9,7 @@
 #include "shared/statemanager.hpp"
 #include "sound/soundmanager.hpp"
 #include "world/world.hpp"
+#include "packs.hpp"
 
 #pragma once
 
@@ -83,4 +84,15 @@ class CKickScreen : public CState
 	void ReturnedTo();
 	void Exit();
 	void Update();
+};
+
+class CStatePackMenu : public CState
+{
+	void Enter();
+	void ReturnedTo();
+	void Exit();
+	void Update();
+
+	std::vector<resourcePacks::packInfo> m_packList;
+	std::vector<bool> m_packEnabled;
 };

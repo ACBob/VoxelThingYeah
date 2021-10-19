@@ -4,9 +4,15 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "packs.hpp"
+#include "filesystem.hpp"
+#include "rendering/texturemanager.hpp"
+
 #include "rendering/modelloader.hpp"
 
 #include "cvar_clientside.hpp"
+
+#include <cstring>
 
 void CStatePlay::Enter()
 {
@@ -415,6 +421,12 @@ void CStateOptionsMenu::Update()
 		m_pStateMan->PopState();
 	}
 
+	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Resource Packs", CVector( pStateMan->m_pGui->m_vScreenCentre.x, 8 ),
+										 CVector( 0.5, 0.5 ), CVector( 2, 1 ), CVector( 14, 2 ) ) )
+	{
+		m_pStateMan->PushState(std::make_unique<CStatePackMenu>());
+	}
+
 	pStateMan->m_pGui->Label( "Master Volume Slider", pStateMan->m_pGui->m_vScreenCentre + CVector( -16, 6 ) );
 	if ( pStateMan->m_pGui->HorzSlider( GUIGEN_ID, pStateMan->m_pGui->m_vScreenCentre + CVector( -16, 4 ),
 										CVector( 32, 2 ), 100, m_iVolumeSlider ) )
@@ -463,4 +475,81 @@ void CKickScreen::Update()
 
 	pStateMan->m_pGui->Label( cl_kickreason->GetString(), pStateMan->m_pGui->m_vScreenCentre, Color( 1, 0.5, 0.5 ),
 							  CGui::TEXTALIGN_CENTER );
+}
+
+
+void CStatePackMenu::Enter()
+{
+	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+	pStateMan->m_pGui->ClearBuffers();
+
+	// List resource packs
+	m_packList = resourcePacks::ListPacks();
+	m_packEnabled.resize(m_packList.size(), false);
+}
+void CStatePackMenu::ReturnedTo() {}
+void CStatePackMenu::Exit()
+{
+	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+	pStateMan->m_pGui->ClearBuffers();
+
+	// Remount everything!
+	fileSystem::UnMountAll();
+	fileSystem::Mount("files", "/", true);
+
+	cl_resourcepacks->SetString("");
+
+	for (int i = 0; i < m_packList.size(); i++)
+	{
+		if (m_packEnabled[i])
+		{
+			const char *c = cl_resourcepacks->GetString();
+			char *nc = new char[strlen(c) + 2 + m_packList[i].internalName.size()];
+			strcpy(nc, c);
+			strcat(nc, ",");
+			strcat(nc, m_packList[i].internalName.c_str());
+
+			cl_resourcepacks->SetString(nc);
+
+			// Mount it
+			fileSystem::Mount(("files" + m_packList[i].path + "/assets").c_str(), "/assets", true);
+		}
+	}
+
+	// Now reload all assets!
+	materialSystem::ReloadTextures();
+}
+void CStatePackMenu::Update()
+{
+	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+
+	pStateMan->m_pInputMan->m_bInGui = true;
+
+	pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pBGTex, CVector( 0, 0 ),
+							  pStateMan->m_pGui->m_vScreenDimensions / pStateMan->m_pGui->m_iGuiUnit, CVector( 0, 0 ),
+							  CVector( 0.5, 0.5, 0.5 ) );
+
+	pStateMan->m_pGui->Label( "Resource Packs...", CVector( pStateMan->m_pGui->m_vScreenCentre.x, -2 ), Color( 1, 1, 1 ),
+							  CGui::TEXTALIGN_CENTER );
+
+	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Back", CVector( pStateMan->m_pGui->m_vScreenCentre.x, 2 ),
+										 CVector( 0.5, 0.5 ) ) )
+	{
+		m_pStateMan->PopState();
+	}
+
+
+	int y = 0;
+	for (resourcePacks::packInfo &pack : m_packList)
+	{
+		pStateMan->m_pGui->Image(pStateMan->m_pGui->m_pPackPNG, CVector(1, 24 - y), CVector(4,4), CVector(0, 0.5));
+		pStateMan->m_pGui->Label(pack.name.c_str(), CVector(5,  24 - y));
+		bool enable = m_packEnabled[y];
+		if (pStateMan->m_pGui->CheckBox(GUIGEN_ID + y, CVector(5, 22 - y), CVector(2,2), enable))
+		{
+			m_packEnabled[y] = enable;
+		} 
+
+		y = y + 1;
+	}
 }

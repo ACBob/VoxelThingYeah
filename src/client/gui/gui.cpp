@@ -92,6 +92,7 @@ CGui::CGui( int screenW, int screenH )
 	m_pThumbTex		= materialSystem::LoadTexture( "thumb.png" );
 	m_pCheckedTex	= materialSystem::LoadTexture( "checkbox-checked.png" );
 	m_pUncheckedTex = materialSystem::LoadTexture( "checkbox-unchecked.png" );
+	m_pPackPNG = materialSystem::LoadTexture( "pack.png" );
 
 	m_textBuffers = {};
 

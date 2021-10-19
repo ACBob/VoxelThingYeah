@@ -56,7 +56,7 @@ class CGui
 	CTexture *m_pThumbTex	  = nullptr;
 	CTexture *m_pCheckedTex	  = nullptr;
 	CTexture *m_pUncheckedTex = nullptr;
-
+	
 	std::map<int, std::string> m_textBuffers;
 
   public:
@@ -98,6 +98,7 @@ class CGui
 	CTexture *m_pCrosshairTex = nullptr;
 	CTexture *m_pInventoryTex = nullptr;
 	CTexture *m_pLogoTex	  = nullptr;
+	CTexture *m_pPackPNG = nullptr;
 
 	// Current button pressed down
 	int m_iMouseState;
