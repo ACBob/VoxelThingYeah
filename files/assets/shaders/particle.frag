@@ -3,7 +3,7 @@ out vec4 FragColor;
 
 in vec2 TexCoord;
 
-#include "shaders/include/uniforms.glsl"
+#include "include/uniforms.glsl"
 
 uniform sampler2D diffuse;
 

@@ -5,13 +5,13 @@ layout (location = 2) in vec2 aTexCoord;
 
 out vec2 TexCoord;
 
-#include "shaders/include/uniforms.glsl"
+#include "include/uniforms.glsl"
 
 #define PI 3.1415926538
 
 void main()
 {
-#	include "shaders/include/inworld.glsl"
+#	include "include/inworld.glsl"
 
 	float f = 0.5 + 0.5 * cos(PI - PI * (timeOfDay / 12000.0)) * 0.75;
 	f += 0.25 + 0.5 * f;

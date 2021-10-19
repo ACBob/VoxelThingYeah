@@ -6,7 +6,7 @@ layout (location = 2) in vec2 aTexCoord;
 out vec2 TexCoord;
 out vec3 Light;
 
-#include "shaders/include/uniforms.glsl"
+#include "include/uniforms.glsl"
 
 uniform int time;
 
@@ -29,5 +29,5 @@ void main()
 	gl_Position = projection * view * model * vec4(pos, 1.0f);
 	TexCoord = vec2(aTexCoord.x, aTexCoord.y);
 
-#	include "shaders/include/diffuse.glsl"
+#	include "include/diffuse.glsl"
 }

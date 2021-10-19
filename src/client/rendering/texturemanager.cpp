@@ -17,7 +17,10 @@ CTexture::CTexture( const char *path )
 {
 	bool bSuccess		= false;
 	int64_t iFileLength = 0;
-	m_cFilePath			= path;
+
+	m_cFilePath = new char[strlen(path) + 1];
+	strcpy(m_cFilePath, path);
+	m_cFilePath[strlen(path) + 1] = 0;
 
 	const uchar_t *cPNGData = fileSystem::LoadFile( path, iFileLength, bSuccess );
 	uint iError				= lodepng::decode( m_imageData, m_iWidth, m_iHeight, cPNGData, iFileLength );
@@ -68,13 +71,23 @@ void materialSystem::Init() {}
 
 CTexture *materialSystem::LoadTexture( const char *path )
 {
-	for ( CTexture *t : loadedTextures )
-		if ( t->m_cFilePath == path )
-			return t;
+	char *fp = new char[strlen(path) + 1 + 18];
+	fp = strcpy(fp, "/assets/textures/");
+	fp = strcat(fp, path);
 
-	CTexture *tex = new CTexture( path );
+	for ( CTexture *t : loadedTextures )
+	{
+		if ( strcmp(t->m_cFilePath, fp) == 0 )
+		{
+			delete[] fp;
+			return t;
+		}
+	}
+
+	CTexture *tex = new CTexture( fp );
 	loadedTextures.push_back( tex );
 
+	delete[] fp;
 	return loadedTextures.back();
 }
 

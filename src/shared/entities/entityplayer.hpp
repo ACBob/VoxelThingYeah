@@ -25,7 +25,7 @@ class CEntityPlayer : public CEntityBase
 	{
 		BaseClass::Spawn();
 #ifdef CLIENTEXE
-		m_pMdl = modelSystem::LoadModel( "models/player.obj" );
+		m_pMdl = modelSystem::LoadModel( "player.obj" );
 		m_pMdl->SetTexture( materialSystem::LoadTexture( "player.png" ) );
 #endif
 	};

@@ -13,9 +13,15 @@
 
 void BOBJLoadModel( CModel *m, const char *fp )
 {
+	char *mdlfp = new char[strlen(fp) + 16];
+	strcpy(mdlfp, "/assets/models/");
+	strcat(mdlfp, fp);
+
 	bool succeed;
 	int64_t l;
-	char *file = (char *)fileSystem::LoadFile( fp, l, succeed );
+	char *file = (char *)fileSystem::LoadFile( mdlfp, l, succeed );
+
+	delete[] mdlfp;
 
 	if ( !succeed )
 	{

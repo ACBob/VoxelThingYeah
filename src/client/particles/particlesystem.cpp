@@ -17,7 +17,7 @@ namespace particleSystem
 		std::copy( particlePlaneFaces, particlePlaneFaces + 2, std::back_inserter( particleMdl->m_faces ) );
 		particleMdl->Update();
 
-		particleMdl->SetShader( shaderSystem::LoadShader( "shaders/particle.vert", "shaders/particle.frag" ) );
+		particleMdl->SetShader( shaderSystem::LoadShader( "particle.vert", "particle.frag" ) );
 		particleMdl->SetTexture( materialSystem::LoadTexture( "test.png" ) );
 	}
 	void UnInit() { delete particleMdl; }

@@ -42,6 +42,7 @@ void ShaderPreprocess( std::string &source, int d = 0 )
 			std::regex_search( l, match, strng );
 			std::string fp = match.str();
 			fp			   = fp.substr( 1, fp.length() - 2 ); // Cut off first and last character
+			fp = "/assets/shaders/" + fp; // Move it to the right place
 
 			int64_t iLength = 0;
 			bool bSuccess	= false;
@@ -206,8 +207,18 @@ void shaderSystem::SetUniforms( glm::mat4 &view, glm::mat4 &projection, unsigned
 
 CShader *shaderSystem::LoadShader( const char *vs, const char *fs )
 {
-	CShader *shader = new CShader( vs, fs );
+	char *vsfp = new char[strlen(vs) + 17];
+	char *fsfp = new char[strlen(fs) + 17];
+	strcpy(vsfp, "/assets/shaders/");
+	strcpy(fsfp, "/assets/shaders/");
+	strcat(vsfp, vs);
+	strcat(fsfp, fs);
+
+	CShader *shader = new CShader( vsfp, fsfp );
 	loadedShaders.push_back( shader );
+
+	delete[] vsfp;
+	delete[] fsfp;
 
 	return loadedShaders.back();
 }

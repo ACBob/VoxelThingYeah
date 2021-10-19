@@ -15,7 +15,7 @@ namespace materialSystem
 		std::vector<unsigned char> m_imageData;
 		unsigned int m_iWidth, m_iHeight, m_iId;
 
-		const char *m_cFilePath = nullptr;
+		char *m_cFilePath = nullptr;
 	};
 
 	void Init();

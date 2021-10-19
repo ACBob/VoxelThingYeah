@@ -81,7 +81,7 @@ CGui::CGui( int screenW, int screenH )
 
 	// Setup some stff that'll be used by most things using the GUI
 	m_pTextTex		= materialSystem::LoadTexture( "font.png" );
-	m_pTextShader	= shaderSystem::LoadShader( "shaders/text.vert", "shaders/text.frag" );
+	m_pTextShader	= shaderSystem::LoadShader( "text.vert", "text.frag" );
 	m_pButtonTex	= materialSystem::LoadTexture( "button.png" );
 	m_pTextInpTex	= materialSystem::LoadTexture( "textinput.png" );
 	m_pBGTex		= materialSystem::LoadTexture( "guibg.png" );

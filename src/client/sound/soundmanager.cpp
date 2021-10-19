@@ -89,7 +89,7 @@ CSoundEvent::CSoundEvent( std::vector<std::string> sounds, const char *type, flo
 {
 	for ( std::string soundName : sounds )
 	{
-		CSound *s = soundSystem::LoadSound( soundName.c_str() );
+		CSound *s = soundSystem::LoadSound( ("/assets/sounds/" + soundName).c_str() );
 		m_sounds.push_back( s );
 	}
 
@@ -185,7 +185,7 @@ void soundSystem::Init()
 
 	int64_t fl				  = 0;
 	bool bSuccess			  = false;
-	const uchar_t *soundsToml = fileSystem::LoadFile( "sound/sounds.toml", fl, bSuccess );
+	const uchar_t *soundsToml = fileSystem::LoadFile( "/assets/sounds/sounds.toml", fl, bSuccess );
 
 	toml::Result data = toml::parse( bSuccess ? (char *)soundsToml : "\0" );
 

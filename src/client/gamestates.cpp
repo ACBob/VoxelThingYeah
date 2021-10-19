@@ -17,14 +17,14 @@ void CStatePlay::Enter()
 										   scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f );
 	m_screenMatrix	   = glm::ortho( 0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat() );
 
-	m_pDiffuseShader = shaderSystem::LoadShader( "shaders/generic.vert", "shaders/generic.frag" );
-	m_pUnlitShader	 = shaderSystem::LoadShader( "shaders/generic.vert", "shaders/unlit.frag" );
-	m_pSkyboxShader	 = shaderSystem::LoadShader( "shaders/sky.vert", "shaders/sky.frag" );
-	m_pChunkShader	 = shaderSystem::LoadShader( "shaders/chunk.vert", "shaders/chunk.frag" );
-	m_pWaterShader	 = shaderSystem::LoadShader( "shaders/water.vert", "shaders/generic.frag" );
+	m_pDiffuseShader = shaderSystem::LoadShader( "generic.vert", "generic.frag" );
+	m_pUnlitShader	 = shaderSystem::LoadShader( "generic.vert", "unlit.frag" );
+	m_pSkyboxShader	 = shaderSystem::LoadShader( "sky.vert", "sky.frag" );
+	m_pChunkShader	 = shaderSystem::LoadShader( "chunk.vert", "chunk.frag" );
+	m_pWaterShader	 = shaderSystem::LoadShader( "water.vert", "generic.frag" );
 
 	GetCubeModel( m_skyboxModel, CVector( -5, -5, -5 ) );
-	m_pStellarModel = modelSystem::LoadModel( "models/sun.obj" );
+	m_pStellarModel = modelSystem::LoadModel( "sun.obj" );
 
 	m_pStellarModel->SetShader( m_pUnlitShader );
 	m_skyboxModel.SetShader( m_pSkyboxShader );

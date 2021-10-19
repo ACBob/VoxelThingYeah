@@ -83,10 +83,10 @@ int main( int argc, char *args[] )
 	}
 	atexit( fileSystem::UnInit );
 
-	con_info( "Mount assets..." );
-	if ( !fileSystem::Mount( "assets/", "/" ) )
+	con_info( "Mount game files..." );
+	if ( !fileSystem::Mount( "files/", "/" ) )
 		con_error( "Couldn't mount assets for some reason... nothing will work!" );
-	if ( !fileSystem::MountWrite( "assets/usr/" ) )
+	if ( !fileSystem::MountWrite( "files/usr/" ) )
 		con_error( "Couldn't set the write directory, your saves are in jeapordy!" );
 
 	con_info( "Parsing config.cfg..." );

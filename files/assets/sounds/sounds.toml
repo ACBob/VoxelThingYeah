@@ -12,37 +12,37 @@
 ["soundtest"]
 type = "block"
 appendSounds = false
-sounds = ["sound/red.ogg", "sound/green.ogg", "sound/blue.ogg"]
+sounds = ["red.ogg", "green.ogg", "blue.ogg"]
 pitch = [1.0,2.0]
 
 ["game.music"]
 type = "music"
 appendSounds = false
-sounds = ["sound/music/mojyjes.ogg", "sound/music/shestenar.ogg", "sound/music/isteke.ogg"]
+sounds = ["music/mojyjes.ogg", "music/shestenar.ogg", "music/isteke.ogg"]
 pitch = [1.0]
 
 ["ui.click"]
 type = "ui"
 appendSounds = false
-sounds = ["sound/uiclick.ogg"]
+sounds = ["uiclick.ogg"]
 pitch = [0.9, 1.1]
 
 ["ui.check"]
 type = "ui"
 appendSounds = false
-sounds = ["sound/uiclick.ogg"]
+sounds = ["uiclick.ogg"]
 pitch = [0.9]
 
 ["ui.uncheck"]
 type = "ui"
 appendSounds = false
-sounds = ["sound/uiclick.ogg"]
+sounds = ["uiclick.ogg"]
 pitch = [0.75]
 
 ["ui.tick"]
 type = "ui"
 appendSounds = false
-sounds = ["sound/uitick.ogg"]
+sounds = ["uitick.ogg"]
 pitch = [0.8, 1.2]
 
 ##########################################
@@ -52,37 +52,37 @@ pitch = [0.8, 1.2]
 ["block.break.stone"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/breakstone.ogg" ]
+sounds = [ "breakstone.ogg" ]
 pitch = [ 0.6, 1.2 ]
 
 ["block.break.loose"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/breakloose.ogg" ]
+sounds = [ "breakloose.ogg" ]
 pitch = [ 0.6, 1.2 ]
 
 ["block.break.wood"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/breakwood.ogg" ]
+sounds = [ "breakwood.ogg" ]
 pitch = [ 0.6, 1.2 ]
 
 ["block.break.glass"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/breakglass.ogg" ]
+sounds = [ "breakglass.ogg" ]
 pitch = [ 0.6, 1.2 ]
 
 ["block.break.organic"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/breakorganic.ogg" ]
+sounds = [ "breakorganic.ogg" ]
 pitch = [ 0.6, 1.2 ]
 
 ["block.break.dust"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/breaksand.ogg" ]
+sounds = [ "breaksand.ogg" ]
 pitch = [ 0.6, 1.2 ]
 
 ##########################################
@@ -92,37 +92,37 @@ pitch = [ 0.6, 1.2 ]
 ["block.place.stone"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/placestone.ogg" ]
+sounds = [ "placestone.ogg" ]
 pitch = [ 0.6, 1.2 ]
 
 ["block.place.loose"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/placeloose.ogg" ]
+sounds = [ "placeloose.ogg" ]
 pitch = [ 0.6, 1.2 ]
 
 ["block.place.wood"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/placewood.ogg" ]
+sounds = [ "placewood.ogg" ]
 pitch = [ 0.6, 1.2 ]
 
 ["block.place.glass"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/placestone.ogg" ]
+sounds = [ "placestone.ogg" ]
 pitch = [ 0.6, 1.2 ]
 
 ["block.place.organic"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/placeorganic.ogg" ]
+sounds = [ "placeorganic.ogg" ]
 pitch = [ 0.6, 1.2 ]
 
 ["block.place.dust"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/placesand.ogg" ]
+sounds = [ "placesand.ogg" ]
 pitch = [ 0.6, 1.2 ]
 
 ##########################################
@@ -131,35 +131,35 @@ pitch = [ 0.6, 1.2 ]
 ["block.step.stone"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/placestone.ogg", "sound/breakstone.ogg" ]
+sounds = [ "placestone.ogg", "breakstone.ogg" ]
 pitch = [ 0.9, 1.1 ]
 
 ["block.step.loose"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/placeloose.ogg", "sound/breakloose.ogg" ]
+sounds = [ "placeloose.ogg", "breakloose.ogg" ]
 pitch = [ 0.9, 1.1 ]
 
 ["block.step.wood"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/placewood.ogg", "sound/breakwood.ogg" ]
+sounds = [ "placewood.ogg", "breakwood.ogg" ]
 pitch = [ 0.9, 1.1 ]
 
 ["block.step.glass"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/placestone.ogg", "sound/breakstone.ogg" ]
+sounds = [ "placestone.ogg", "breakstone.ogg" ]
 pitch = [ 0.9, 1.1 ]
 
 ["block.step.organic"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/placeorganic.ogg", "sound/breakorganic.ogg" ]
+sounds = [ "placeorganic.ogg", "breakorganic.ogg" ]
 pitch = [ 0.9, 1.1 ]
 
 ["block.step.dust"]
 type = "block"
 appendSounds = false
-sounds = [ "sound/placesand.ogg", "sound/breaksand.ogg" ]
+sounds = [ "placesand.ogg", "breaksand.ogg" ]
 pitch = [ 0.9, 1.1 ]

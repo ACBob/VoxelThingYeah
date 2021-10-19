@@ -2,7 +2,7 @@
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 
-#include "shaders/include/uniforms.glsl"
+#include "include/uniforms.glsl"
 
 out vec3 vPosition;
 out vec3 vSunAngle;
