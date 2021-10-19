@@ -19,6 +19,8 @@ ConVar::CConVar *playerskin = nullptr;
 
 ConVar::CConVar *cl_kickreason = nullptr;
 
+ConVar::CConVar *cl_resourcepacks = nullptr;
+
 void SetupClientSideConvars()
 {
 	fov = conVarHandle.DeclareConvar( "fov", "70", ConVar::CVAR_ARCHIVE );
@@ -39,4 +41,6 @@ void SetupClientSideConvars()
 	playerskin = conVarHandle.DeclareConvar( "playerskin", "", ConVar::CVAR_ARCHIVE );
 
 	cl_kickreason = conVarHandle.DeclareConvar( "cl_kickreason", "", ConVar::CVAR_READONLY );
+
+	cl_resourcepacks = conVarHandle.DeclareConvar( "cl_resourcepacks", "", ConVar::CVAR_ARCHIVE );
 }

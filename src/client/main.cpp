@@ -95,6 +95,50 @@ int main( int argc, char *args[] )
 	char *file = (char *)fileSystem::LoadFile( "usr/config.cfg", l, succeed );
 	if ( succeed )
 		conVarHandle.Parse( file );
+	
+	con_info("Scan for resource pack...");
+	if (cl_resourcepacks->IsModified())
+	{
+		size_t n = strlen(cl_resourcepacks->GetString());
+		char *l = new char[n + 1];
+		strcpy(l, cl_resourcepacks->GetString());
+		l[n + 1] = 0;
+
+
+		// test each pack
+		char *t;
+		char *saveptr;
+		t = strtok_r( l, ",", &saveptr );
+
+		while ( t != NULL )
+		{
+			con_info("Found Pack %s", t);
+
+			char *path = new char[strlen(t) + 8];
+			strcpy(path, "/packs/");
+			strcat(path, t);
+			path[strlen(t) + 8] = 0;
+
+			if (fileSystem::Exists(path))
+			{
+				// Mount its' asset directory
+				char *assetpath = new char[strlen(path) + 13];
+				strcpy(assetpath, "files");
+				strcat(assetpath, path);
+				strcat(assetpath, "/assets");
+				assetpath[strlen(path) + 13] = 0;
+
+				fileSystem::Mount(assetpath, "/assets/", true);
+			}
+			else
+			{
+				con_warning("Unknown pack %s", t);	
+			}
+
+			delete[] path;
+			t = strtok_r( NULL, ",", &saveptr );
+		}
+	}
 
 	con_info( "Init Network..." );
 	if ( !network::Init() )

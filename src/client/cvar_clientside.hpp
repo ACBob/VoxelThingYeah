@@ -23,4 +23,6 @@ extern ConVar::CConVar *playerskin;
 
 extern ConVar::CConVar *cl_kickreason;
 
+extern ConVar::CConVar *cl_resourcepacks;
+
 void SetupClientSideConvars();
