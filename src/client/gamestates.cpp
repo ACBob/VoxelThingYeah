@@ -539,13 +539,14 @@ void CStatePackMenu::Update()
 	}
 
 
+	// TODO: fix this to be scrollable
 	int y = 0;
 	for (resourcePacks::packInfo &pack : m_packList)
 	{
-		pStateMan->m_pGui->Image(pStateMan->m_pGui->m_pPackPNG, CVector(1, 24 - y), CVector(4,4), CVector(0, 0.5));
-		pStateMan->m_pGui->Label(pack.name.c_str(), CVector(5,  24 - y));
+		pStateMan->m_pGui->Image(pStateMan->m_pGui->m_pPackPNG, CVector(1, 24 - y * 4), CVector(4,4), CVector(0, 0.5));
+		pStateMan->m_pGui->Label(pack.name.c_str(), CVector(5,  24 - y * 4));
 		bool enable = m_packEnabled[y];
-		if (pStateMan->m_pGui->CheckBox(GUIGEN_ID + y, CVector(5, 22 - y), CVector(2,2), enable))
+		if (pStateMan->m_pGui->CheckBox(GUIGEN_ID + y, CVector(5, 22 - y * 4), CVector(2,2), enable))
 		{
 			m_packEnabled[y] = enable;
 		} 
