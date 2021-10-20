@@ -150,14 +150,13 @@ namespace ConVar
 
 		con_debug( "SET %s TO %s", cmd, args );
 
-		CConVar *conv = Cvars[cmd];
-		if ( conv == nullptr )
+		if ( Cvars.find(cmd) == Cvars.end() )
 		{
 			con_error( "Unknown ConVar %s", cmd );
 		}
 		else
 		{
-			conv->SetString( args );
+			Cvars[cmd]->SetString( args );
 		}
 	}
 } // namespace ConVar
