@@ -33,6 +33,7 @@ namespace soundSystem
 			SOUNDTYPE_BLOCK = 0x0,
 			SOUNDTYPE_MUSIC = 0x1,
 			SOUNDTYPE_GUI	= 0x2,
+			SOUNDTYPE_ENTITY = 0x3,
 		};
 
 	  public:

@@ -30,6 +30,11 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	UpdateCollision();
 	if ( pWorld->TestAABBCollision( this->m_collisionBox ) )
 	{
+#ifdef CLIENTEXE
+		if (m_vVelocity.x >= SMACK_SPEED)
+			soundSystem::PlaySoundEvent( "entity.fastsmack", m_vPosition );
+#endif
+
 		m_vPosition.x -= m_vVelocity.x * fDelta;
 		m_vVelocity.x /= 2;
 	}
@@ -38,6 +43,11 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	m_pLastBlockFloor = pWorld->TestAABBCollision( this->m_collisionBox );
 	if ( m_pLastBlockFloor )
 	{
+#ifdef CLIENTEXE
+		if (m_vVelocity.y >= SMACK_SPEED)
+			soundSystem::PlaySoundEvent( "entity.fastsmack", m_vPosition );
+#endif
+
 		if (m_vVelocity.y < 0)
 			m_bOnFloor = true;
 
@@ -48,6 +58,11 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	UpdateCollision();
 	if ( pWorld->TestAABBCollision( this->m_collisionBox ) )
 	{
+#ifdef CLIENTEXE
+		if (m_vVelocity.z >= SMACK_SPEED)
+			soundSystem::PlaySoundEvent( "entity.fastsmack", m_vPosition );
+#endif
+
 		m_vPosition.z -= m_vVelocity.z * fDelta;
 		m_vVelocity.z /= 2;
 	}

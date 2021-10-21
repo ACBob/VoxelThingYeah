@@ -128,6 +128,7 @@ pitch = [ 0.6, 1.2 ]
 ##########################################
 # Footstep Sounds                        #
 ##########################################
+
 ["block.step.stone"]
 type = "block"
 appendSounds = false
@@ -163,3 +164,13 @@ type = "block"
 appendSounds = false
 sounds = [ "placesand.ogg", "breaksand.ogg" ]
 pitch = [ 0.9, 1.1 ]
+
+##########################################
+# Entity Sounds                          #
+##########################################
+
+["entity.fastsmack"]
+type = "entity"
+appendSounds = false
+sounds = [ "smack.ogg" ]
+pitch = [ 1.0, 1.2 ]

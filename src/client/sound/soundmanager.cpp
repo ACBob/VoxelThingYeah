@@ -93,6 +93,8 @@ CSoundEvent::CSoundEvent( std::vector<std::string> sounds, const char *type, flo
 		m_sounds.push_back( s );
 	}
 
+	// TODO: figure out better
+
 	if ( strcmp( type, "block" ) == 0 )
 	{
 		m_iSoundType = SOUNDTYPE_BLOCK;
@@ -104,6 +106,10 @@ CSoundEvent::CSoundEvent( std::vector<std::string> sounds, const char *type, flo
 	else if ( strcmp( type, "ui" ) == 0 )
 	{
 		m_iSoundType = SOUNDTYPE_GUI;
+	}
+	else if ( strcmp( type, "entity" ) == 0 )
+	{
+		m_iSoundType = SOUNDTYPE_ENTITY;
 	}
 
 	m_fMinPitch = minpitch;
@@ -130,6 +136,12 @@ void CSoundEvent::Play( CVector pos )
 			break;
 		case SOUNDTYPE_MUSIC:
 			gain = 0.25f;
+			break;
+		case SOUNDTYPE_GUI:
+			gain = 1.0f;
+			break;
+		case SOUNDTYPE_ENTITY:
+			gain = 1.0f;
 			break;
 	}
 

@@ -8,6 +8,9 @@
 #ifdef CLIENTEXE
 	#include "rendering/modelmanager.hpp"
 	#include "rendering/shadermanager.hpp"
+
+	// Move faster than this? Smack!
+	#define SMACK_SPEED 30
 #endif
 
 #include <string>
