@@ -6,7 +6,13 @@ layout (location = 2) in vec2 aTexCoord;
 out vec2 TexCoord;
 out vec3 Light;
 
-#include "include/uniforms.glsl"
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+uniform mat3 normalMat;
+
+uniform int timeOfDay;
+uniform vec3 sunAngle;
 
 uniform int time;
 
@@ -28,6 +34,4 @@ void main()
 
 	gl_Position = projection * view * model * vec4(pos, 1.0f);
 	TexCoord = vec2(aTexCoord.x, aTexCoord.y);
-
-#	include "include/diffuse.glsl"
 }

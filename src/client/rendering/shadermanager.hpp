@@ -6,10 +6,6 @@
 
 #pragma once
 
-// After this many includes give up
-// Mostly for circular includes
-#define SHADERSYS_MAX_INCLUDE_DEPTH 1024
-
 namespace shaderSystem
 {
 	class CShader

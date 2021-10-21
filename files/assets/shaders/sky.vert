@@ -2,7 +2,11 @@
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 
-#include "include/uniforms.glsl"
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
+uniform vec3 sunAngle;
 
 out vec3 vPosition;
 out vec3 vSunAngle;

@@ -6,7 +6,10 @@ layout (location = 2) in vec3 aColor;
 out vec2 TexCoord;
 out vec3 Color;
 
-#include "include/uniforms.glsl"
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+uniform mat4 screen;
 
 void main()
 {
