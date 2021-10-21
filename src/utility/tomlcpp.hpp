@@ -27,6 +27,7 @@
 
 #include <memory>
 #include <vector>
+#include <string>
 
 struct toml_table_t;
 struct toml_array_t;

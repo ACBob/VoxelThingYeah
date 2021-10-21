@@ -4,6 +4,9 @@
 
 #include <cstring>
 #include <memory>
+#include <cstdlib>
+
+#include <string>
 
 #include "types.hpp"
 
