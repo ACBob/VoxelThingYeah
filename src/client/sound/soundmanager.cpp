@@ -71,7 +71,7 @@ CSound::CSound( const char *path )
 
 	alSourcei( m_iId, AL_BUFFER, m_iBuffer );
 
-	delete soundData;
+	delete[] soundData;
 }
 void CSound::Play( CVector src, float pitch, float gain )
 {
@@ -112,9 +112,14 @@ CSoundEvent::CSoundEvent( std::vector<std::string> sounds, const char *type, flo
 
 void CSoundEvent::Play( CVector pos )
 {
+	if (m_sounds.size() <= 0)
+		return;
+
 	float pitch = m_fMinPitch + ( m_fMaxPitch - m_fMinPitch ) * ( ( rand() ) / (float)RAND_MAX );
 
-	int soundIdx = ( rand() % m_sounds.size() );
+	int soundIdx = 0;
+	if (m_sounds.size() >= 2)
+		soundIdx = ( rand() % m_sounds.size() );
 
 	// TODO: Seperate volume variables
 	float gain = 1.0;
