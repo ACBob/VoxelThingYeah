@@ -49,7 +49,8 @@ class CWorld
 	bool TestPointCollision( CVector pos );
 
 	// Tests in world coordinates
-	bool TestAABBCollision( CBoundingBox col );
+	// Returning the first block that collides
+	CBlock* TestAABBCollision( CBoundingBox col );
 
 	// Is the position within our place
 	bool ValidChunkPos( const CVector pos );

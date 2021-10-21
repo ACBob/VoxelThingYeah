@@ -35,14 +35,14 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	}
 	m_vPosition.y += m_vVelocity.y * fDelta;
 	UpdateCollision();
-	if ( pWorld->TestAABBCollision( this->m_collisionBox ) )
+	m_pLastBlockFloor = pWorld->TestAABBCollision( this->m_collisionBox );
+	if ( m_pLastBlockFloor )
 	{
-		m_pLastBlockFloor = pWorld->BlockAtWorldPos( m_vPosition );
+		if (m_vVelocity.y < 0)
+			m_bOnFloor = true;
 
 		m_vPosition.y -= m_vVelocity.y * fDelta;
 		m_vVelocity.y /= 2;
-
-		m_bOnFloor = true;
 	}
 	m_vPosition.z += m_vVelocity.z * fDelta;
 	UpdateCollision();

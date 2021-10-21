@@ -115,7 +115,11 @@ void CEntityPlayer::Tick( int64_t iTick )
 
 #ifdef CLIENTEXE
 	if ( m_pInputMan == nullptr )
+	{
+		// Don't apply gravity to players not owned by us (we'll get their pos from the server)
+		m_bApplyGravity = false;
 		return; // This isn't owned by us, don't do anything
+	}
 
 	CVector forward = GetForward();
 	CVector right	= forward.Rotate( 2, 90 );

@@ -163,11 +163,11 @@ bool CWorld::TestPointCollision( CVector pos )
 	return CBoundingBox( pos.Floor(), CVector( 1, 1, 1 ), CVector( 0 ) ).TestPointCollide( pos );
 }
 
-bool CWorld::TestAABBCollision( CBoundingBox col )
+CBlock* CWorld::TestAABBCollision( CBoundingBox col )
 {
 	CChunk *chunk = ChunkAtWorldPos( col.m_vPosition );
 	if ( chunk == nullptr )
-		return false;
+		return nullptr;
 
 	// Test A (pos)
 	for ( int i = 0; i < ( CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z ); i++ )
@@ -183,10 +183,10 @@ bool CWorld::TestAABBCollision( CBoundingBox col )
 
 		if ( col.TestCollide(
 				 CBoundingBox( chunk->GetPosInWorld() + CVector( x, y, z ), CVector( 1, 1, 1 ), CVector( 0 ) ) ) )
-			return true;
+			return &chunk->m_blocks[i];
 	}
 
-	return false;
+	return nullptr;
 }
 
 void CWorld::WorldTick( int64_t iTick, float delta )
