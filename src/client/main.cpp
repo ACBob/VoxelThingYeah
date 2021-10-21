@@ -176,6 +176,12 @@ int main( int argc, char *args[] )
 	glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
 	glBlendEquation( GL_FUNC_ADD );
 
+	// TODO: Proper loading screen
+	glClearColor(0.19f, 0.2f, 0.13f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	window.SwapBuffers();
+
 	shaderSystem::Init();
 	atexit( shaderSystem::UnInit );
 	materialSystem::Init();
