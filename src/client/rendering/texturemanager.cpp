@@ -17,7 +17,6 @@ CTexture::CTexture( const char *path )
 {
 	m_cFilePath = new char[strlen(path) + 1];
 	strcpy(m_cFilePath, path);
-	m_cFilePath[strlen(path) + 1] = 0;
 
 
 	// The image data is RGBA
