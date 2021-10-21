@@ -21,10 +21,9 @@ std::vector<resourcePacks::packInfo>resourcePacks::ListPacks()
 
 resourcePacks::packInfo resourcePacks::GetPackInfo(const char *pck)
 {
-	char *path = new char[strlen(pck) + 8];
+	char *path = new char[strlen(pck) + 8]();
 	strcpy(path, "/packs/");
 	strcat(path, pck);
-	path[strlen(pck) + 8] = 0;
 
 	if (!fileSystem::Exists(path))
 	{
@@ -33,10 +32,9 @@ resourcePacks::packInfo resourcePacks::GetPackInfo(const char *pck)
 		return packInfo();
 	}
 
-	char *manifestPath = new char[strlen(path) + 15];
+	char *manifestPath = new char[strlen(path) + 15]();
 	strcpy(manifestPath, path);
 	strcat(manifestPath, "/manifest.toml");
-	manifestPath[strlen(path) + 15] = 0;
 
 	int64_t fl				  = 0;
 	bool bSuccess			  = false;

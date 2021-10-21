@@ -102,9 +102,8 @@ int main( int argc, char *args[] )
 	if (cl_resourcepacks->IsModified())
 	{
 		size_t n = strlen(cl_resourcepacks->GetString());
-		char *l = new char[n + 1];
+		char *l = new char[n + 1]();
 		strcpy(l, cl_resourcepacks->GetString());
-		l[n + 1] = 0;
 
 
 		// test each pack

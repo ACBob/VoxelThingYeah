@@ -23,13 +23,13 @@ namespace ConVar
 		m_cVal	  = defval;
 		m_cDefVal = defval;
 		m_iFlags  = flags;
+		m_bModified = false;
 	}
 
 	void CConVar::SetString( const char *val )
 	{
-		char *cval = new char[strlen( val ) + 1];
+		char *cval = new char[strlen( val ) + 1]();
 		strcpy( cval, val );
-		cval[strlen( val ) + 1] = '\0';
 
 		m_bModified = ( strcmp( cval, m_cDefVal ) != 0 );
 		m_cVal		= cval;
@@ -99,7 +99,7 @@ namespace ConVar
 		if ( strlen( str ) == 0 )
 			return;
 
-		char *in = new char[strlen( str )];
+		char *in = new char[strlen( str ) + 1];
 		strcpy( in, str );
 
 		char *token	 = new char[1];
@@ -135,7 +135,6 @@ namespace ConVar
 			}
 			oToken = new char[strlen( token ) + 1];
 			strcpy( oToken, token );
-			oToken[strlen( token ) + 1] = '\0';
 
 			token = strtok_r( NULL, sep, &saveptr );
 		}
