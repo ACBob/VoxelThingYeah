@@ -58,6 +58,8 @@ class CStatePlay : public CState
 	bool m_bInChat	= false;
 
 	int64_t m_iLastTick = 0;
+
+	float m_fSunAngle = 90.0f;
 };
 
 class CStateMenu : public CState

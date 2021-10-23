@@ -91,7 +91,7 @@ int main( int argc, char *args[] )
 			server.Update();
 			server.m_iCurrentTick = i;
 
-			if ( i % 5 == 0 )
+			if ( i % 20 == 0 )
 			{
 				for ( CNetworkPlayer *c : server.m_players )
 					protocol::SendServerTimeOfDay( c->m_pPeer, server.m_world.m_iTimeOfDay );
