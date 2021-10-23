@@ -80,7 +80,7 @@ void CStatePlay::Update()
 	bool leave = false;
 
 	m_fSunAngle	= lerp(m_fSunAngle, 180 * ( 1 - ( m_pLocalWorld->m_iTimeOfDay / 12000.0f ) ), 1/60.0f);
-	CVector vSunForward = CVector( 0, 1, 0 ).Rotate( 3, m_fSunAngle );
+	CVector vSunForward = CVector( 0, 1, 0 ).Rotate(1, cl_sunroll->GetFloat()).Rotate(2, cl_sunyaw->GetFloat()).Rotate( 3, m_fSunAngle );
 
 	if ( !pStateMan->m_pClient->m_bConnected )
 		leave = true;
@@ -123,7 +123,7 @@ void CStatePlay::Update()
 			m_skyboxModel.Render();
 
 			m_pStellarModel->m_vPosition = m_skyboxModel.m_vPosition;
-			m_pStellarModel->m_vRotation = CVector( 0, 0, -m_fSunAngle );
+			m_pStellarModel->m_vRotation = CVector( cl_sunroll->GetFloat(), cl_sunyaw->GetFloat(), -m_fSunAngle );
 			m_pStellarModel->Render();
 		}
 		glEnable( GL_DEPTH_TEST );

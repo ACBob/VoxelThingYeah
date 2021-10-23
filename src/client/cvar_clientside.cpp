@@ -22,6 +22,8 @@ ConVar::CConVar *cl_kickreason = nullptr;
 ConVar::CConVar *cl_resourcepacks = nullptr;
 
 ConVar::CConVar *cl_dodaylightcycle = nullptr;
+ConVar::CConVar *cl_sunroll = nullptr;
+ConVar::CConVar *cl_sunyaw = nullptr;
 
 void SetupClientSideConvars()
 {
@@ -47,4 +49,6 @@ void SetupClientSideConvars()
 	cl_resourcepacks = conVarHandle.DeclareConvar( "cl_resourcepacks", "", ConVar::CVAR_ARCHIVE );
 
 	cl_dodaylightcycle = conVarHandle.DeclareConvar( "cl_dodaylightcycle", "true" );
+	cl_sunroll = conVarHandle.DeclareConvar( "cl_sunroll", "0", ConVar::CVAR_SESSION );
+	cl_sunyaw = conVarHandle.DeclareConvar( "cl_sunyaw", "0", ConVar::CVAR_SESSION );
 }

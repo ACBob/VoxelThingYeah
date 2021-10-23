@@ -26,5 +26,7 @@ extern ConVar::CConVar *cl_kickreason;
 extern ConVar::CConVar *cl_resourcepacks;
 
 extern ConVar::CConVar *cl_dodaylightcycle;
+extern ConVar::CConVar *cl_sunroll;
+extern ConVar::CConVar *cl_sunyaw;
 
 void SetupClientSideConvars();
