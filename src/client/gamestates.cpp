@@ -288,6 +288,8 @@ void CStatePlay::Update()
 			{
 				protocol::SendClientChatMessage( pStateMan->m_pClient->m_pPeer, chat );
 
+				pStateMan->m_pGui->SetTextBuffer(69, "");
+
 				m_bInChat = false;
 			}
 		}
