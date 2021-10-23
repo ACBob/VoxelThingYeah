@@ -151,9 +151,8 @@ namespace fileSystem
 		int i = 0;
 		while (p[i] != NULL)
 		{
-			char *c = new char[strlen(p[i]) + 1];
+			char *c = new char[strlen(p[i]) + 1]();
 			strcpy(c, p[i]);
-			c[strlen(p[i]) + 1] = 0;
 
 			l.push_back(c);
 
