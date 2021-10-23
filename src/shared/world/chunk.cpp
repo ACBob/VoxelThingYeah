@@ -169,7 +169,7 @@ void CChunk::Update( int64_t iTick )
 	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
 	{
 		m_portableDef.m_iBlocks[j] = m_blocks[j].m_iBlockType;
-		// m_portableDef.m_iBlocks[j]  = (( m_blocks[j].m_iValueA & 0xff ) | ( m_blocks[j].m_iValueB << 8 )) << 32;
+		m_portableDef.m_iValue[j]  = (m_blocks[j].m_iValueA << 8) | m_blocks[j].m_iValueB;
 	}
 
 #ifdef CLIENTEXE

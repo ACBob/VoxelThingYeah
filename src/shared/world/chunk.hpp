@@ -29,7 +29,7 @@ struct PortableChunkRepresentation
 {
 	// CVector can't be used in this context
 	int32_t x, y, z;
-	// uint16_t m_iValue[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
+	uint16_t m_iValue[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 	uint64_t m_iBlocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 };
 
