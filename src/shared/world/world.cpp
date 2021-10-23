@@ -8,6 +8,8 @@
 
 #ifdef SERVEREXE
 	#include "server/cvar_serverside.hpp"
+#elif CLIENTEXE
+	#include "client/cvar_clientside.hpp"
 #endif
 
 #include <algorithm>
@@ -238,7 +240,10 @@ void CWorld::WorldTick( int64_t iTick, float delta )
 	}
 
 	// Progress time
-	m_iTimeOfDay++;
+#ifdef CLIENTEXE
+	if (cl_dodaylightcycle->GetBool())
+#endif
+		m_iTimeOfDay++;
 
 	if ( m_iTimeOfDay > 24000 )
 	{
