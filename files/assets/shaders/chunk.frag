@@ -2,29 +2,17 @@
 out vec4 FragColor;
 
 in vec2 TexCoord;
-
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
-uniform mat4 screen;
-uniform mat3 normalMat;
-
-uniform int timeOfDay;
-uniform vec3 sunAngle;
-
-uniform vec4 texCoordOffset;
+in vec3 Light;
 
 uniform vec4 lighting;
 
-uniform sampler2D diffuse;
+uniform sampler2D texture1;
 
 void main()
 {
-	vec2 texCoord = vec2(TexCoord.x, TexCoord.y) * texCoordOffset.xy + texCoordOffset.zw;
-	texCoord.y = 1 - texCoord.y;
-	FragColor = texture(diffuse, texCoord);
+	FragColor = texture(texture1, vec2(TexCoord.x, 1 - TexCoord.y));
 	if (FragColor.a == 0.0) discard;
 
-	FragColor.rgb *= 0.5;
+	FragColor.rgb *= Light * 0.5;
 	FragColor.rgb *= (1 + lighting.rgb);
 }

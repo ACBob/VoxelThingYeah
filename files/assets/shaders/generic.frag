@@ -2,6 +2,7 @@
 out vec4 FragColor;
 
 in vec2 TexCoord;
+in vec3 Light;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -25,6 +26,6 @@ void main()
 	FragColor = texture(diffuse, texCoord);
 	if (FragColor.a == 0.0) discard;
 
-	FragColor.rgb *= 0.5;
+	FragColor.rgb *= Light * 0.5;
 	FragColor.rgb *= (1 + lighting.rgb);
 }
