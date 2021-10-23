@@ -87,14 +87,9 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 				else
 					b->m_iBlockType = oldType;
 
-				if (b->m_iBlockType == WOOL)
-					protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer,
-											  ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, b->m_iBlockType, random() % 255,
-											  random() % 255 );
-				else
-					protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer,
-											  ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, b->m_iBlockType, 0,
-											  0 );
+				protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer,
+											( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, b->m_iBlockType, 0,
+											0 );
 			}
 		}
 

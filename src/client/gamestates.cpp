@@ -181,12 +181,12 @@ void CStatePlay::Update()
 								  CVector( 18.5, 2.5 ), CVector( 0.5, 0 ) );
 		float p;
 
-		if (m_pLocalPlayer->m_pointed.m_pBlock != nullptr)
-		{
-			snprintf(guiBuf, 100, "A:%d B:%d", m_pLocalPlayer->m_pointed.m_pBlock->m_iValueA, m_pLocalPlayer->m_pointed.m_pBlock->m_iValueB);
-			pStateMan->m_pGui->Label( guiBuf, CVector( pStateMan->m_pGui->m_vScreenCentre.x, -5 ), Color( 1, 1, 1 ),
-									CGui::TEXTALIGN_CENTER );
-		}
+		// if (m_pLocalPlayer->m_pointed.m_pBlock != nullptr)
+		// {
+		// 	snprintf(guiBuf, 100, "A:%d B:%d", m_pLocalPlayer->m_pointed.m_pBlock->m_iValueA, m_pLocalPlayer->m_pointed.m_pBlock->m_iValueB);
+		// 	pStateMan->m_pGui->Label( guiBuf, CVector( pStateMan->m_pGui->m_vScreenCentre.x, -5 ), Color( 1, 1, 1 ),
+		// 							CGui::TEXTALIGN_CENTER );
+		// }
 
 		for ( int i = 0; i < 8; i++ )
 		{
