@@ -13,8 +13,10 @@ std::vector<resourcePacks::packInfo>resourcePacks::ListPacks()
 {
 	std::vector<packInfo> packList;
 	std::vector<const char*> fps = fileSystem::List("/packs/");
-	for (auto f : fps)
+	for (auto f : fps) {
 		packList.push_back(GetPackInfo(f));
+		delete[] f;
+	}
 
 	return packList;
 }
