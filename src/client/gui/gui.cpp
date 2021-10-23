@@ -368,7 +368,7 @@ void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment tex
 				j = 255;
 
 			std::vector<CGui::Vertex> g =
-				GetCharQuad( j, pos - ( 2.0f / 16.0f * (float)GUIUNIT ), CVector( TEXTWIDTH, TEXTHEIGHT ), color / 2 );
+				GetCharQuad( j, pos - ( CVector(-GUIUNIT, GUIUNIT ) * 2.0f / 16.0f ), CVector( TEXTWIDTH, TEXTHEIGHT ), color / 2 );
 			std::copy( g.begin(), g.end(), std::back_inserter( m_textVertiecs ) );
 
 			g = GetCharQuad( j, pos, CVector( TEXTWIDTH, TEXTHEIGHT ), color );
