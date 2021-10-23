@@ -218,7 +218,6 @@ int main( int argc, char *args[] )
 	CDevConsole console;
 	console.m_pGui = &gui;
 	console.m_pInputMan = &inputMan;
-	console.m_bVisible = true;
 
 	con_info( "Init Game State..." );
 	CGameStateMachine gameStateMan;
