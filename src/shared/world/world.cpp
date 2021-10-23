@@ -216,6 +216,7 @@ void CWorld::WorldTick( int64_t iTick, float delta )
 
 	if ( iTick == m_iLastTick )
 		return;
+	m_iLastTick = iTick;
 
 	for ( auto &&c : m_chunks )
 	{
@@ -236,10 +237,8 @@ void CWorld::WorldTick( int64_t iTick, float delta )
 		}
 	}
 
-#ifdef SERVEREXE
 	// Progress time
 	m_iTimeOfDay++;
-#endif
 
 	if ( m_iTimeOfDay > 24000 )
 	{

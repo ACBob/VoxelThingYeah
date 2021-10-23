@@ -59,7 +59,7 @@ class CStatePlay : public CState
 
 	int64_t m_iLastTick = 0;
 
-	float m_fSunAngle = 90.0f;
+	float m_fSunAngle = 76.65f;
 };
 
 class CStateMenu : public CState
