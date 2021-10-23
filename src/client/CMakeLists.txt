@@ -22,5 +22,6 @@ set(client_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/cvar_clientside.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/gamestates.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/packs.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/devconsole.cpp
 	PARENT_SCOPE
 )

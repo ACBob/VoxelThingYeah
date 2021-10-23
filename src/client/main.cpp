@@ -37,6 +37,8 @@
 
 #include "packs.hpp"
 
+#include "devconsole.hpp"
+
 #ifdef _WIN32
 	#include <stdio.h>
 	#include <windows.h>
@@ -212,6 +214,12 @@ int main( int argc, char *args[] )
 	gui.m_iGuiUnit	= floor( window.GetSize().x / 53 );
 	gui.Resize( scr_width->GetInt(), scr_height->GetInt() );
 
+	con_info( "Init Dev-Console..." );
+	CDevConsole console;
+	console.m_pGui = &gui;
+	console.m_pInputMan = &inputMan;
+	console.m_bVisible = true;
+
 	con_info( "Init Game State..." );
 	CGameStateMachine gameStateMan;
 	gameStateMan.m_pClient	 = &client;
@@ -270,6 +278,10 @@ int main( int argc, char *args[] )
 		}
 
 		gameStateMan.Update();
+		
+		// Update dev console after this to remain on-top
+		console.Update();
+
 		gui.m_iTick = gameStateMan.m_iTick;
 		gui.Update();
 		client.Update();
