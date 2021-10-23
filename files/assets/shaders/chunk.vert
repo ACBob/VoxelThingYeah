@@ -2,9 +2,11 @@
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoord;
+layout (location = 3) in vec4 aLighting;
 
 out vec2 TexCoord;
-out vec3 Light;
+out vec3 SunLight;
+out vec4 AmbientLight;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -27,6 +29,7 @@ void main()
 	vec3 Normal = normalMat * aNormal;
 
 	float lightForTime = 0.5 + 0.5 * cos(PI - PI * (timeOfDay / 12000.0)) * 0.75;
-	Light.x = 0.25 + (max(dot(Normal, absSunAngle) * 0.25, 0) * lightForTime) + (0.5 * lightForTime);
-	Light.z = Light.y = Light.x;
+	SunLight.r = SunLight.g = SunLight.b = 0.25 + (max(dot(Normal, absSunAngle) * 0.25, 0) * lightForTime) + (0.5 * lightForTime);
+
+	AmbientLight = aLighting;
 }

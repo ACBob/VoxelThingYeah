@@ -2,9 +2,8 @@
 out vec4 FragColor;
 
 in vec2 TexCoord;
-in vec3 Light;
-
-uniform vec4 lighting;
+in vec3 SunLight;
+in vec4 AmbientLight;
 
 uniform sampler2D texture1;
 
@@ -13,6 +12,6 @@ void main()
 	FragColor = texture(texture1, vec2(TexCoord.x, 1 - TexCoord.y));
 	if (FragColor.a == 0.0) discard;
 
-	FragColor.rgb *= Light * 0.5;
-	FragColor.rgb *= (1 + lighting.rgb);
+	FragColor.rgb *= 0.75 * SunLight;
+	FragColor.rgb *= (1 + AmbientLight.rgb);
 }
