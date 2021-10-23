@@ -34,6 +34,7 @@ namespace protocol
 		bufAcc << crep.z;
 		bufAcc << CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z;
 		bufAcc << crep.m_iBlocks;
+		bufAcc << crep.m_iValue;
 
 		// con_debug("SEND <%d,%d,%d>", crep.x, crep.y, crep.z);
 

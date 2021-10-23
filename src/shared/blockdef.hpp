@@ -50,8 +50,8 @@ enum blockmaterial_t {
 	MAT_GLASS	= 4, // It's glass
 	MAT_ORGANIC = 5, // Grass, Leaves, Plants
 	MAT_LIQUID	= 6, // Water, Lava
-	MAT_DUST	= 7,	 // Sand
-	MAT_FABRIC  = 8
+	MAT_DUST	= 7, // Sand
+	MAT_FABRIC  = 8  // Wool
 };
 
 enum blockobscurerule_t {
@@ -63,6 +63,11 @@ enum blockobscurerule_t {
 enum blockmodel_t {
 	BLOCKMODEL_CUBE	 = 0, // Default cube
 	BLOCKMODEL_PLANT = 1, // X-Shape
+};
+
+enum blockcoloration_t {
+	BLOCKCOLOURATION_NONE = 0, // NEVER Treat the block data as colour
+	BLOCKCOLOURATION_16BIT = 1, // Treat all our 16 bits of value as colour (actually 15 bit :trollface:)
 };
 
 blockmaterial_t GetBlockMaterial( blocktype_t blockType );
@@ -85,6 +90,9 @@ struct BlockFeatures
 	bool isLiquid;
 	// IS a source of a liquid (i.e act infinite and create flow)
 	bool isLiquidSource;
+	// Colourate?
+	// TODO: Specify a mask somehow??
+	blockcoloration_t colouration;
 	// is a light source
 	bool isLightSource;
 	// Opaqueness, similar to colour, set to 0xFFF to act fully opaque

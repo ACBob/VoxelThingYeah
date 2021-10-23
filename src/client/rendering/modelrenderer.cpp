@@ -22,17 +22,20 @@ CModelRenderer::CModelRenderer() : m_nFaces( 0 ), m_nVertices( 0 )
 	glBindVertexArray( m_iVao );
 
 	// Position
-	glVertexAttribPointer( 0, 3, GL_FLOAT, false, 12 * sizeof( float ), (void *)offsetof( CModel::Vertex, x ) );
+	glVertexAttribPointer( 0, 3, GL_FLOAT, false, 15 * sizeof( float ), (void *)offsetof( CModel::Vertex, x ) );
 	glEnableVertexAttribArray( 0 );
 	// Normal
-	glVertexAttribPointer( 1, 3, GL_FLOAT, false, 12 * sizeof( float ), (void *)offsetof( CModel::Vertex, nx ) );
+	glVertexAttribPointer( 1, 3, GL_FLOAT, false, 15 * sizeof( float ), (void *)offsetof( CModel::Vertex, nx ) );
 	glEnableVertexAttribArray( 1 );
 	// texture coordinate
-	glVertexAttribPointer( 2, 2, GL_FLOAT, false, 12 * sizeof( float ), (void *)offsetof( CModel::Vertex, u ) );
+	glVertexAttribPointer( 2, 2, GL_FLOAT, false, 15 * sizeof( float ), (void *)offsetof( CModel::Vertex, u ) );
 	glEnableVertexAttribArray( 2 );
 	// Vertex Colour
-	glVertexAttribPointer( 3, 4, GL_FLOAT, false, 12 * sizeof( float ), (void *)offsetof( CModel::Vertex, r ) );
+	glVertexAttribPointer( 3, 3, GL_FLOAT, false, 15 * sizeof( float ), (void *)offsetof( CModel::Vertex, cr ) );
 	glEnableVertexAttribArray( 3 );
+	// Vertex Lighting
+	glVertexAttribPointer( 4, 3, GL_FLOAT, false, 15 * sizeof( float ), (void *)offsetof( CModel::Vertex, lr ) );
+	glEnableVertexAttribArray( 4 );
 
 	glBindVertexArray( 0 );
 }

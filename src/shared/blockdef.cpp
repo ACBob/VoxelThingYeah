@@ -97,6 +97,7 @@ BlockFeatures GetBlockFeatures( blocktype_t blockType )
 	bF.isLiquid		  = false;
 	bF.isLiquidSource = false;
 	bF.isLightSource  = false;
+	bF.colouration    = BLOCKCOLOURATION_NONE;
 	bF.lightColour	  = 0x000;
 	bF.opaqueness	  = 0xFFF;
 	bF.liquidFlow	  = AIR;
@@ -166,6 +167,10 @@ BlockFeatures GetBlockFeatures( blocktype_t blockType )
 								? 0xF00
 								: blockType == LIGHT_GREEN ? 0x0F0 : blockType == LIGHT_BLUE ? 0x00F : 0xF0F;
 			bF.opaqueness = 0x000;
+			break;
+		
+		case WOOL:
+			bF.colouration    = BLOCKCOLOURATION_16BIT;
 			break;
 
 		case AIR:

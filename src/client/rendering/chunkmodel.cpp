@@ -42,7 +42,7 @@ const std::vector<std::vector<int>> cubeTris = {
 const std::vector<int> plantTris = { 2, 1, 3, 0, 6, 5, 7, 4 };
 
 std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlock block, int x, int y, int z, int lr, int lg, int lb,
-											int ls )
+											int ls, int cr, int cg, int cb )
 {
 	std::vector<CModel::Vertex> g;
 	for ( int i = 0; i < 4; i++ )
@@ -53,10 +53,14 @@ std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlock block, int x, 
 		g[i].y += y;
 		g[i].z += z;
 
-		g[i].r = lr / 16.0f;
-		g[i].g = lg / 16.0f;
-		g[i].b = lb / 16.0f;
-		g[i].a = ls / 16.0f;
+		g[i].lr = lr / 16.0f;
+		g[i].lg = lg / 16.0f;
+		g[i].lb = lb / 16.0f;
+		g[i].la = ls / 16.0f;
+
+		g[i].cr = cr / 16.0f;
+		g[i].cg = cg / 16.0f;
+		g[i].cb = cb / 16.0f;
 
 		CVector normal = DirectionVector[dir];
 
@@ -101,10 +105,14 @@ std::vector<CModel::Vertex> samplePlant( CBlock block, int x, int y, int z, int 
 		g[i].y += y;
 		g[i].z += z;
 
-		g[i].r = lr / 16.0f;
-		g[i].g = lg / 16.0f;
-		g[i].b = lb / 16.0f;
-		g[i].a = ls / 16.0f;
+		g[i].lr = lr / 16.0f;
+		g[i].lg = lg / 16.0f;
+		g[i].lb = lb / 16.0f;
+		g[i].la = ls / 16.0f;
+
+		g[i].cr = 1.0f;
+		g[i].cg = 1.0f;
+		g[i].cb = 1.0f;
 
 		CVector normal = DirectionVector[i > 4 ? SOUTH : NORTH];
 
@@ -168,7 +176,17 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 						case BLOCKMODEL_CUBE:
 							for ( int i = 0; i < 6; i++ )
 							{
-								Colour colour;
+								Colour lightColour;
+								Colour blockColouration(16,16,16);
+
+								if ( blockFeatures.colouration == BLOCKCOLOURATION_16BIT )
+								{
+									// All 16 bits of the values are used to colour
+									// So valueA contains R & G, valueB has B.
+									blockColouration.x = (block.m_iValueA >> 4) & 0xF;
+									blockColouration.y = (block.m_iValueA >> 0) & 0xF;
+									blockColouration.z = (block.m_iValueB >> 4) & 0xF;
+								}
 
 								CVector neighbour = CVector( x, y, z ) + DirectionVector[i];
 								if ( ValidChunkPosition( neighbour ) )
@@ -180,7 +198,7 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 										 ( bF.rule == OBSCURERULE_SIMILAR && blockType == block.m_iBlockType ) )
 										continue;
 
-									colour = reinterpret_cast<CChunk *>( chunk )->GetLightingLocal( neighbour );
+									lightColour = reinterpret_cast<CChunk *>( chunk )->GetLightingLocal( neighbour );
 								}
 								else
 								{
@@ -201,13 +219,13 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 											   b->m_iBlockType == block.m_iBlockType ) )
 											continue;
 
-										colour = chunkNeighbour->GetLightingLocal( neighbour );
+										lightColour = chunkNeighbour->GetLightingLocal( neighbour );
 									}
 								}
 
 								std::vector<CModel::Vertex> g =
-									sampleCubeFace( Direction( i ), block, x, y, z, (int)colour.x, (int)colour.y,
-													(int)colour.z, (int)colour.w );
+									sampleCubeFace( Direction( i ), block, x, y, z, (int)lightColour.x, (int)lightColour.y,
+													(int)lightColour.z, (int)lightColour.w, (int)blockColouration.x, (int)blockColouration.y, (int)blockColouration.z );
 
 								if ( block.m_iBlockType == WATER || block.m_iBlockType == WATERSRC )
 								{
@@ -237,10 +255,10 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 							break;
 
 						case BLOCKMODEL_PLANT:
-							CVector colour =
+							CVector lightColour =
 								reinterpret_cast<CChunk *>( chunk )->GetLightingLocal( CVector( x, y, z ) );
 							std::vector<CModel::Vertex> g =
-								samplePlant( block, x, y, z, colour.x, colour.y, colour.z, colour.w );
+								samplePlant( block, x, y, z, lightColour.x, lightColour.y, lightColour.z, lightColour.w );
 							std::copy( g.begin(), g.end(), std::back_inserter( mdl.m_vertices ) );
 
 							int nVertices = mdl.m_vertices.size();

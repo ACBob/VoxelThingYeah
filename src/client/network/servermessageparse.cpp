@@ -60,6 +60,7 @@ namespace protocol
 				bufAccess >> crep.z;
 				bufAccess >> numBlocks;
 				bufAccess >> crep.m_iBlocks;
+				bufAccess >> crep.m_iValue;
 
 				// con_debug("ChunkData at <%d,%d,%d>", crep.x, crep.y, crep.z);
 				// con_info("%d Blocks", numBlocks);
