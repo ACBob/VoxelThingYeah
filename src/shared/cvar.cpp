@@ -60,7 +60,7 @@ namespace ConVar
 			delete c.second;
 	}
 
-	void CConVarHandler::WriteCFG()
+	void CConVarHandler::WriteCFG(const char* cfgName)
 	{
 		std::string out;
 
@@ -78,7 +78,7 @@ namespace ConVar
 		}
 
 		bool bSuccess = false;
-		fileSystem::WriteFile( "config.cfg", (uchar_t *)out.c_str(), out.size(), bSuccess );
+		fileSystem::WriteFile( cfgName, (uchar_t *)out.c_str(), out.size(), bSuccess );
 		if ( !bSuccess )
 			con_error( "Failed to write config.cfg..." );
 	}

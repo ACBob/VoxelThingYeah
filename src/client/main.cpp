@@ -305,7 +305,7 @@ int main( int argc, char *args[] )
 	}
 	gameStateMan.Flush();
 
-	conVarHandle.WriteCFG();
+	conVarHandle.WriteCFG("config.cfg");
 
 	return EXIT_SUCCESS;
 }

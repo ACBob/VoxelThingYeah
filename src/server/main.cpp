@@ -43,6 +43,13 @@ int main( int argc, char *args[] )
 	}
 	atexit( fileSystem::UnInit );
 
+	con_info( "Parsing svconfig.cfg..." );
+	bool succeed;
+	int64_t l;
+	char *file = (char *)fileSystem::LoadFile( "usr/svconfig.cfg", l, succeed );
+	if ( succeed )
+		conVarHandle.Parse( file );
+
 	con_info( "Init Network..." );
 	if ( !network::Init() )
 	{
@@ -91,6 +98,8 @@ int main( int argc, char *args[] )
 			}
 		}
 	}
+
+	conVarHandle.WriteCFG("svconfig.cfg");
 
 	return EXIT_SUCCESS;
 }

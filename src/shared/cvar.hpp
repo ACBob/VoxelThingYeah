@@ -82,7 +82,7 @@ namespace ConVar
 		CConVarHandler();
 		~CConVarHandler();
 
-		void WriteCFG();
+		void WriteCFG(const char* cfgName = "config.cfg");
 
 		CConVar *DeclareConvar( const char *name, const char *defVal, int flags = F::CVAR_NOFLAGS );
 
