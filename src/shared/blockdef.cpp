@@ -53,6 +53,10 @@ blockmaterial_t GetBlockMaterial( blocktype_t blockType )
 		case SNOW:
 			return blockmaterial_t::MAT_DUST;
 			break;
+		
+		case WOOL:
+			return blockmaterial_t::MAT_FABRIC;
+			break;
 	}
 }
 
@@ -77,6 +81,8 @@ const char *BlockMaterialSTR( blockmaterial_t mat )
 			return "liquid";
 		case MAT_DUST:
 			return "dust";
+		case MAT_FABRIC:
+			return "fabric";
 	}
 }
 

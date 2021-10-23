@@ -212,7 +212,7 @@ void CStatePlay::Update()
 			CVector p  = pStateMan->m_pGui->m_vScreenCentre + CVector( -8, 8 );
 			CVector op = p;
 			int j	   = 0;
-			for ( int i = blocktype_t::STONE; i <= blocktype_t::LIGHT_BLUE; i++ )
+			for ( int i = blocktype_t::STONE; i <= blocktype_t::WOOL; i++ )
 			{
 				// Skip useless liquid flow variants
 				if ( i == WATER || i == LAVA )

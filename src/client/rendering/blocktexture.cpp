@@ -126,5 +126,8 @@ BlockTexture GetDefaultBlockTextureSide( blocktype_t type, Direction side )
 		case LIGHT_BLUE:
 			return { 15, 1, 1, 1 };
 			break;
+		case WOOL:
+			return { 0, 2, 1, 1};
+			break;
 	}
 }

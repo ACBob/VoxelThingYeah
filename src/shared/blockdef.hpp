@@ -38,7 +38,8 @@ enum blocktype_t {
 	LIGHT_WHITE	 = 26,
 	LIGHT_RED	 = 27,
 	LIGHT_GREEN	 = 28,
-	LIGHT_BLUE	 = 29
+	LIGHT_BLUE	 = 29,
+	WOOL		 = 30
 };
 
 enum blockmaterial_t {
@@ -49,7 +50,8 @@ enum blockmaterial_t {
 	MAT_GLASS	= 4, // It's glass
 	MAT_ORGANIC = 5, // Grass, Leaves, Plants
 	MAT_LIQUID	= 6, // Water, Lava
-	MAT_DUST	= 7	 // Sand
+	MAT_DUST	= 7,	 // Sand
+	MAT_FABRIC  = 8
 };
 
 enum blockobscurerule_t {
