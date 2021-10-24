@@ -257,6 +257,10 @@ void CStatePlay::Update()
 				tint.x = (pBlockItem->m_iValA >> 4) & 0xF;
 				tint.y = (pBlockItem->m_iValA >> 0) & 0xF;
 				tint.z = (pBlockItem->m_iValB >> 4) & 0xF;
+
+				tint.x /= 16;
+				tint.y /= 16;
+				tint.z /= 16;
 			}
 
 			pStateMan->m_pGui->ImageAtlas(

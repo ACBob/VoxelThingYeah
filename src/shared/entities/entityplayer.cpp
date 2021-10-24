@@ -78,7 +78,10 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 			if ( m_pSelectedItem != nullptr && m_pSelectedItem->GetCount() > 0 && b != nullptr && bF.selectable )
 			{
 				blocktype_t oldType = b->m_iBlockType; // TODO: We're assuming it's a block item
-				b->m_iBlockType		= reinterpret_cast<CBlockItem *>( m_pSelectedItem )->m_iBlockType;
+				CBlockItem *blckItem = reinterpret_cast<CBlockItem *>( m_pSelectedItem );
+				b->m_iBlockType		= blckItem->m_iBlockType;
+				b->m_iValueA = blckItem->m_iValA;
+				b->m_iValueB = blckItem->m_iValB;
 				if ( !clientSideWorld->TestAABBCollision( m_collisionBox ) )
 				{
 					b->Update();
@@ -88,8 +91,8 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 					b->m_iBlockType = oldType;
 
 				protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer,
-											( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, b->m_iBlockType, 0,
-											0 );
+											( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, b->m_iBlockType, blckItem->m_iValA,
+											blckItem->m_iValB );
 			}
 		}
 
