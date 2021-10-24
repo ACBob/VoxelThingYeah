@@ -13,7 +13,7 @@ class CItem
 	virtual int GetCount();
 	virtual void SetCount( int c );
 
-  private:
+  protected:
 	// How many of this item does this stack represent
 	int m_iCount;
 };

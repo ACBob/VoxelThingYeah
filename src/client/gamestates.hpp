@@ -10,6 +10,7 @@
 #include "sound/soundmanager.hpp"
 #include "world/world.hpp"
 #include "packs.hpp"
+#include "inventory/inventory.hpp"
 
 #pragma once
 
@@ -53,6 +54,8 @@ class CStatePlay : public CState
 	CTexture *m_pTerrainPNG;
 	CTexture *m_pHotbarTex;
 	CTexture *m_pHotbarSelectTex;
+
+	CInventory *m_invCreative;
 
 	bool m_bInPause = false;
 	bool m_bInChat	= false;

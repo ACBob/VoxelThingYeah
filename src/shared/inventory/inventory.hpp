@@ -12,6 +12,7 @@ class CInventory
 {
   public:
 	CInventory( int slots );
+	CInventory( std::vector<CItem*> items );
 	~CInventory();
 
 	// Returns the item at slot

@@ -14,6 +14,8 @@
 
 #include <cstring>
 
+#include "colours.hpp"
+
 void CStatePlay::Enter()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
@@ -52,6 +54,54 @@ void CStatePlay::Enter()
 	pStateMan->m_pClient->m_pLocalPlayer = m_pLocalPlayer;
 	pStateMan->m_pClient->m_pLocalWorld	 = m_pLocalWorld;
 	pStateMan->m_pClient->m_pParticleMan = &m_particleMan;
+
+
+	m_invCreative = new CInventory({
+		new CBlockItem(64, STONE),
+		new CBlockItem(64, DIRT),
+		new CBlockItem(64, GRASS),
+		new CBlockItem(64, COBBLE),
+		new CBlockItem(64, PLANKS),
+		new CBlockItem(64, BEDROCK),
+		new CBlockItem(64, GLASS),
+		new CBlockItem(64, LOG	),
+		new CBlockItem(64, LEAVES),
+		new CBlockItem(64, WATERSRC),
+		new CBlockItem(64, LAVASRC),
+		new CBlockItem(64, ORE_COAL),
+		new CBlockItem(64, ORE_IRON),
+		new CBlockItem(64, FLOWER),
+		new CBlockItem(64, SAND),
+		new CBlockItem(64, SANDSTONE),
+		new CBlockItem(64, BRICKS),
+		new CBlockItem(64, LGRASS),
+		new CBlockItem(64, MOSSCBBLE),
+		new CBlockItem(64, SNOW),
+		new CBlockItem(64, SNOWGRASS),
+		new CBlockItem(64, ICE),
+		new CBlockItem(64, LIGHT_YELLOW),
+		new CBlockItem(64, LIGHT_WHITE),
+		new CBlockItem(64, LIGHT_RED),
+		new CBlockItem(64, LIGHT_GREEN),
+		new CBlockItem(64, LIGHT_BLUE),
+
+		new CBlockItem(64, WOOL, (DyePalette[0] >> 8) & 0xFF, DyePalette[0] & 0xFF),
+		new CBlockItem(64, WOOL, (DyePalette[1] >> 8) & 0xFF, DyePalette[1] & 0xFF),
+		new CBlockItem(64, WOOL, (DyePalette[2] >> 8) & 0xFF, DyePalette[2] & 0xFF),
+		new CBlockItem(64, WOOL, (DyePalette[3] >> 8) & 0xFF, DyePalette[3] & 0xFF),
+		new CBlockItem(64, WOOL, (DyePalette[4] >> 8) & 0xFF, DyePalette[4] & 0xFF),
+		new CBlockItem(64, WOOL, (DyePalette[5] >> 8) & 0xFF, DyePalette[5] & 0xFF),
+		new CBlockItem(64, WOOL, (DyePalette[6] >> 8) & 0xFF, DyePalette[6] & 0xFF),
+		new CBlockItem(64, WOOL, (DyePalette[7] >> 8) & 0xFF, DyePalette[7] & 0xFF),
+		new CBlockItem(64, WOOL, (DyePalette[8] >> 8) & 0xFF, DyePalette[8] & 0xFF),
+		new CBlockItem(64, WOOL, (DyePalette[9] >> 8) & 0xFF, DyePalette[9] & 0xFF),
+		new CBlockItem(64, WOOL, (DyePalette[10] >> 8) & 0xFF, DyePalette[10] & 0xFF),
+		new CBlockItem(64, WOOL, (DyePalette[11] >> 8) & 0xFF, DyePalette[11] & 0xFF),
+		new CBlockItem(64, WOOL, (DyePalette[12] >> 8) & 0xFF, DyePalette[12] & 0xFF),
+		new CBlockItem(64, WOOL, (DyePalette[13] >> 8) & 0xFF, DyePalette[13] & 0xFF),
+		new CBlockItem(64, WOOL, (DyePalette[14] >> 8) & 0xFF, DyePalette[14] & 0xFF),
+		new CBlockItem(64, WOOL, (DyePalette[15] >> 8) & 0xFF, DyePalette[15] & 0xFF),
+	});
 }
 void CStatePlay::ReturnedTo() {}
 
@@ -62,6 +112,7 @@ void CStatePlay::Exit()
 
 	delete m_pLocalPlayer;
 	delete m_pLocalWorld;
+	delete m_invCreative;
 
 	pStateMan->m_pClient->m_pLocalPlayer = nullptr;
 	pStateMan->m_pClient->m_pLocalWorld	 = nullptr;
@@ -196,12 +247,21 @@ void CStatePlay::Update()
 				 m_pLocalPlayer->m_inventory.Slot( i )->GetCount() == 0 )
 				continue;
 
-			BlockTexture bTex = GetDefaultBlockTextureSide(
-				reinterpret_cast<CBlockItem *>( m_pLocalPlayer->m_inventory.Slot( i ) )->m_iBlockType,
-				Direction::NORTH );
+			CBlockItem *pBlockItem = reinterpret_cast<CBlockItem *>( m_pLocalPlayer->m_inventory.Slot( i ) );
+			BlockTexture bTex = GetDefaultBlockTextureSide(pBlockItem->m_iBlockType, Direction::NORTH );
+
+			Colour tint(1,1,1);
+
+			if (GetBlockFeatures(pBlockItem->m_iBlockType).colouration == BLOCKCOLOURATION_16BIT)
+			{
+				tint.x = (pBlockItem->m_iValA >> 4) & 0xF;
+				tint.y = (pBlockItem->m_iValA >> 0) & 0xF;
+				tint.z = (pBlockItem->m_iValB >> 4) & 0xF;
+			}
+
 			pStateMan->m_pGui->ImageAtlas(
 				m_pTerrainPNG, { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey }, 16.0f,
-				CVector( p + pStateMan->m_pGui->m_vScreenCentre.x, 1.25 ), CVector( 2, 2 ), CVector( 0.5, 0.5 ) );
+				CVector( p + pStateMan->m_pGui->m_vScreenCentre.x, 1.25 ), CVector( 2, 2 ), CVector( 0.5, 0.5 ), tint );
 
 			snprintf( guiBuf, 100, "%d", m_pLocalPlayer->m_inventory.Slot( i )->GetCount() );
 			pStateMan->m_pGui->Label( guiBuf, CVector( p + pStateMan->m_pGui->m_vScreenCentre.x, 0 ) );
@@ -219,25 +279,40 @@ void CStatePlay::Update()
 			CVector p  = pStateMan->m_pGui->m_vScreenCentre + CVector( -8, 8 );
 			CVector op = p;
 			int j	   = 0;
-			for ( int i = blocktype_t::STONE; i <= blocktype_t::WOOL; i++ )
+			for ( int i = 0; i <= m_invCreative->m_iItemSlots - 1; i++ )
 			{
-				// Skip useless liquid flow variants
-				if ( i == WATER || i == LAVA )
-					continue;
 				j++;
 
-				BlockTexture bTex = GetDefaultBlockTextureSide( (blocktype_t)i, Direction::NORTH );
-				if ( pStateMan->m_pGui->AtlasButton(
-						 'b' + i, m_pTerrainPNG,
-						 { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey }, 16.0f, p,
-						 CVector( 2, 2 ), CVector( 0.5, 0.5 ) ) )
+
+				CBlockItem *pBlockItem = reinterpret_cast<CBlockItem *>( m_invCreative->Slot( i ) );
+				BlockTexture bTex = GetDefaultBlockTextureSide(pBlockItem->m_iBlockType, Direction::NORTH );
+
+				Colour tint(1,1,1);
+
+				if (GetBlockFeatures(pBlockItem->m_iBlockType).colouration == BLOCKCOLOURATION_16BIT)
+				{
+					tint.x = (pBlockItem->m_iValA >> 4) & 0xF;
+					tint.y = (pBlockItem->m_iValA >> 0) & 0xF;
+					tint.z = (pBlockItem->m_iValB >> 4) & 0xF;
+
+					tint.x /= 16;
+					tint.y /= 16;
+					tint.z /= 16;
+				}
+
+				pStateMan->m_pGui->ImageAtlas(m_pTerrainPNG, { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey }, 16.0f, p, CVector( 2, 2 ), CVector( 0.5, 0.5 ), tint );
+				if ( pStateMan->m_pGui->Button( 'b' + i, p, CVector(2,2), CVector(0.5, 0.5), nullptr, true ) )
 				{
 					if ( m_pLocalPlayer->m_pSelectedItem != nullptr )
 					{
 						// TODO: assuming blockitem
 						m_pLocalPlayer->m_pSelectedItem->SetCount( ITEMSTACK_MAX );
 						reinterpret_cast<CBlockItem *>( m_pLocalPlayer->m_pSelectedItem )->m_iBlockType =
-							(blocktype_t)i;
+							pBlockItem->m_iBlockType;
+						reinterpret_cast<CBlockItem *>( m_pLocalPlayer->m_pSelectedItem )->m_iValA =
+							pBlockItem->m_iValA;
+						reinterpret_cast<CBlockItem *>( m_pLocalPlayer->m_pSelectedItem )->m_iValB =
+							pBlockItem->m_iValB;
 					}
 				}
 
