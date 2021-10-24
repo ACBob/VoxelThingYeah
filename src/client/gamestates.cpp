@@ -16,6 +16,14 @@
 
 #include "colours.hpp"
 
+const CModel::Vertex cloudPlane[4] = {
+	// POSITION            NORMAL            UV
+	{ -512.0f,  0.0f, -512.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },
+	{  512.0f,  0.0f, -512.0f, 0.0f, 0.0f, 1.0f, 0.25f, 0.0f },
+	{  512.0f,  0.0f,  512.0f, 0.0f, 0.0f, 1.0f, 0.25f, 0.25f },
+	{ -512.0f,  0.0f,  512.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.25f } };
+const CModel::Face cloudPlaneFaces[4] = { { 2, 1, 0 }, { 0, 3, 2 }, { 0, 1, 2 }, { 2, 3, 0 } };
+
 void CStatePlay::Enter()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
@@ -36,6 +44,12 @@ void CStatePlay::Enter()
 
 	m_pStellarModel->SetShader( m_pUnlitShader );
 	m_skyboxModel.SetShader( m_pSkyboxShader );
+
+	std::copy( cloudPlane, cloudPlane + 4, std::back_inserter( m_cloudModel.m_vertices ) );
+	std::copy( cloudPlaneFaces, cloudPlaneFaces + 4, std::back_inserter( m_cloudModel.m_faces ) );
+	m_cloudModel.Update();
+	m_cloudModel.SetShader(m_pDiffuseShader);
+	m_cloudModel.SetTexture(materialSystem::LoadTexture("clouds.png"));
 
 	m_pStellarModel->SetTexture( materialSystem::LoadTexture( "sun.png" ) );
 
@@ -179,6 +193,21 @@ void CStatePlay::Update()
 		}
 		glEnable( GL_DEPTH_TEST );
 
+		m_cloudModel.m_vPosition = m_skyboxModel.m_vPosition;
+		m_cloudModel.m_vPosition.y = 256;
+		m_cloudOffset = m_cloudOffset + CVector(0, 0, .0015, 0) * pStateMan->m_fDelta;
+		{
+			CVector p;
+			p.z = m_pLocalPlayer->m_vPosition.x / 2048;
+			p.w = m_pLocalPlayer->m_vPosition.z / 2048;
+			p.x = 1;
+			p.y = 1;
+
+			m_cloudModel.m_vUvOffset = m_cloudOffset + p;
+		}
+		m_cloudModel.Render();
+		
+
 		m_pDiffuseShader->Use();
 
 		glBindTexture( GL_TEXTURE_2D, m_pTerrainPNG->m_iId );
@@ -187,9 +216,6 @@ void CStatePlay::Update()
 
 		// Particles Last
 		m_particleMan.Render( m_pLocalPlayer->m_camera.m_vRotation );
-
-		// m_particleMan.CreateParticle(m_pLocalPlayer->m_vPosition, CVector(2.5f - (rand() % 500) / 100.0f, 5.0f -
-		// (rand() % 1000) / 100.0f, 2.5f - (rand() % 500) / 100.0f), {0,-.98,0}, 5, true);
 
 		// -----------------------
 		// Input

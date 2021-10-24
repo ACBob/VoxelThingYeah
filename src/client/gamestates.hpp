@@ -47,7 +47,10 @@ class CStatePlay : public CState
 	CShader *m_pWaterShader;
 
 	CModel m_skyboxModel;
+	CModel m_cloudModel;
 	CModel *m_pStellarModel;
+
+	CVector m_cloudOffset;
 
 	CParticleManager m_particleMan;
 
