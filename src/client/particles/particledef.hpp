@@ -28,7 +28,8 @@ struct ParticleDef
 	CVector vShrinkage = { 0, 0 }; // How much to change size by every tick, negative grows
 
 	// Particle Emitter
-	int iEmissionTick = 1;	  // Create a new particle every thisth tick
+	float fEmissionRate = 1;  // Rate at which to create
+	int iEmissionSize = 1; // How many particles to create per rate
 	int iMaxParticles = 1024; // The maximum particles to create
 	bool bOneShot	  = true; // Stop creating if we've reached our max
 
@@ -50,6 +51,7 @@ const ParticleDef PARTICLE_BREAKBLOCK = { true,
 										  { 0.05f, 0.05f, 0.05f },
 										  { 0.25f, 0.25f, 0.25f },
 										  { 0, 0 },
+										  1,
 										  1,
 										  1024,
 										  true,

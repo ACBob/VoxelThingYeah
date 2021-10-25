@@ -10,20 +10,14 @@ CParticleManager::~CParticleManager()
 	m_emitters.clear();
 }
 
-CParticle &CParticleManager::CreateParticle( CVector pos, ParticleDef pdef )
+CParticle *CParticleManager::CreateParticle( CVector pos, ParticleDef pdef )
 {
-	CParticle &p  = m_particles.emplace_back( pdef );
-	p.m_vPosition = pos;
-
-	return p;
+	return &m_particles.emplace_back( pdef );
 }
 
-CParticleEmitter &CParticleManager::CreateEmitter( CVector pos, ParticleDef pdef )
+CParticleEmitter *CParticleManager::CreateEmitter( CVector pos, ParticleDef pdef )
 {
-	CParticleEmitter &p = m_emitters.emplace_back( pdef );
-	p.m_vPosition		= pos;
-
-	return p;
+	return &m_emitters.emplace_back( pdef );;
 }
 
 void CParticleManager::PhysicsTick( CWorld *pWorld, int64_t iTick, float fDelta )

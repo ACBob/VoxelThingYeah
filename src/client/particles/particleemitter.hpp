@@ -4,13 +4,11 @@
 
 #pragma once
 
-// A particle emitter may not make more than this many particles (seriously dude why)
-#define MAXEMITTERPARTICLEMASTER 8192
-
 class CParticleEmitter
 {
   public:
 	CParticleEmitter( ParticleDef pdef );
+	CParticleEmitter();
 	~CParticleEmitter();
 
 	void Render( CVector camRot );
@@ -28,6 +26,12 @@ class CParticleEmitter
 
 	// Properties
 	ParticleDef m_particleDef;
+
+	int GetCount();
+
+
+	float m_fTime = 0.0f;
+	float m_fNextEmission = 0.0f;
 
   private:
 	std::vector<CParticle> m_particles;
