@@ -62,6 +62,12 @@ void CParticle::PhysicsTick( CWorld *pWorld, float fDelta )
 			applyFriction = true;
 		}
 	}
+	else
+	{
+		m_vPosition.x += m_vVelocity.x * fDelta;
+		m_vPosition.y += m_vVelocity.y * fDelta;
+		m_vPosition.z += m_vVelocity.z * fDelta;
+	}
 
 	m_vVelocity = m_vVelocity + m_particleDef.vLinear;
 

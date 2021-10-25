@@ -12,12 +12,18 @@ CParticleManager::~CParticleManager()
 
 CParticle *CParticleManager::CreateParticle( CVector pos, ParticleDef pdef )
 {
-	return &m_particles.emplace_back( pdef );
+	CParticle *p  = &m_particles.emplace_back( pdef );
+	p->m_vPosition = pos;
+
+	return p;
 }
 
 CParticleEmitter *CParticleManager::CreateEmitter( CVector pos, ParticleDef pdef )
 {
-	return &m_emitters.emplace_back( pdef );;
+	CParticleEmitter *p = &m_emitters.emplace_back( pdef );
+	p->m_vPosition		= pos;
+
+	return p;
 }
 
 void CParticleManager::PhysicsTick( CWorld *pWorld, int64_t iTick, float fDelta )
