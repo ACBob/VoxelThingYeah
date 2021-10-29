@@ -6,13 +6,7 @@ layout (location = 2) in vec2 aTexCoord;
 out vec2 TexCoord;
 out vec3 Light;
 
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
-uniform mat3 normalMat;
-
-uniform int timeOfDay;
-uniform vec3 sunAngle;
+#include "include/uniforms.glsl"
 
 #define PI 3.1415926538
 
