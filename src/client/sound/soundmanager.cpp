@@ -333,7 +333,7 @@ CSound *soundSystem::LoadSound( const char *path )
 	return snd;
 }
 
-void soundSystem::PlayBreakSound( blocktype_t blockType, CVector pos )
+void soundSystem::PlayBreakSound( BLOCKID blockType, CVector pos )
 {
 	blockmaterial_t mat = GetBlockMaterial( blockType );
 
@@ -343,7 +343,7 @@ void soundSystem::PlayBreakSound( blocktype_t blockType, CVector pos )
 
 	delete buf;
 }
-void soundSystem::PlayPlaceSound( blocktype_t blockType, CVector pos )
+void soundSystem::PlayPlaceSound( BLOCKID blockType, CVector pos )
 {
 	blockmaterial_t mat = GetBlockMaterial( blockType );
 
@@ -353,7 +353,7 @@ void soundSystem::PlayPlaceSound( blocktype_t blockType, CVector pos )
 
 	delete buf;
 }
-void soundSystem::PlayStepSound( blocktype_t blockType, CVector pos )
+void soundSystem::PlayStepSound( BLOCKID blockType, CVector pos )
 {
 	blockmaterial_t mat = GetBlockMaterial( blockType );
 

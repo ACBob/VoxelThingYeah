@@ -59,9 +59,9 @@ namespace soundSystem
 	extern std::map<std::string, CSound *> loadedSounds;
 	extern std::map<std::string, CSoundEvent *> soundEvents;
 
-	void PlayBreakSound( blocktype_t blockType, CVector pos );
-	void PlayPlaceSound( blocktype_t blockType, CVector pos );
-	void PlayStepSound( blocktype_t blockType, CVector pos );
+	void PlayBreakSound( BLOCKID blockType, CVector pos );
+	void PlayPlaceSound( BLOCKID blockType, CVector pos );
+	void PlayStepSound( BLOCKID blockType, CVector pos );
 
 	void PlaySoundEvent( const char *eventName, CVector pos );
 } // namespace soundSystem
@@ -109,9 +109,9 @@ namespace soundSystem
 	extern std::vector<CSound *> loadedSounds;
 	extern std::map<std::string, CSoundEvent *> soundEvents;
 
-	inline void PlayBreakSound( blocktype_t blockType, CVector pos ){};
-	inline void PlayPlaceSound( blocktype_t blockType, CVector pos ){};
-	inline void PlayStepSound( blocktype_t blockType, CVector pos ){};
+	inline void PlayBreakSound( BLOCKID blockType, CVector pos ){};
+	inline void PlayPlaceSound( BLOCKID blockType, CVector pos ){};
+	inline void PlayStepSound( BLOCKID blockType, CVector pos ){};
 	inline void PlaySoundEvent( const char *eventName, CVector pos ){};
 } // namespace soundSystem
 

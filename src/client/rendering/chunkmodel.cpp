@@ -191,7 +191,7 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 								CVector neighbour = CVector( x, y, z ) + DirectionVector[i];
 								if ( ValidChunkPosition( neighbour ) )
 								{
-									blocktype_t blockType =
+									BLOCKID blockType =
 										reinterpret_cast<CChunk *>( chunk )->GetBlockAtLocal( neighbour )->m_iBlockType;
 									BlockFeatures bF = GetBlockFeatures( blockType );
 									if ( bF.rule == OBSCURERULE_ALWAYS ||

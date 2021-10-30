@@ -11,7 +11,7 @@ CChunk::CChunk()
 {
 	for ( int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++ )
 	{
-		m_blocks[i].m_iBlockType   = blocktype_t::AIR;
+		m_blocks[i].m_iBlockType   = BLOCKID::AIR;
 		m_iLightingValue[i]		   = 0;
 		m_portableDef.m_iBlocks[i] = m_blocks[i].m_iBlockType;
 		m_portableDef.m_iValue[i]  = 0;
@@ -28,7 +28,7 @@ CChunk::CChunk()
 {
 	for ( int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++ )
 	{
-		m_blocks[i].m_iBlockType   = blocktype_t::AIR;
+		m_blocks[i].m_iBlockType   = BLOCKID::AIR;
 		m_portableDef.m_iBlocks[i] = m_blocks[i].m_iBlockType;
 		m_portableDef.m_iValue[i]  = 0;
 	}
@@ -89,7 +89,7 @@ void CChunk::Update( int64_t iTick )
 		int x, y, z;
 		CHUNK1D_TO_3D( i, x, y, z );
 
-		blocktype_t blockType = m_blocks[i].m_iBlockType;
+		BLOCKID blockType = m_blocks[i].m_iBlockType;
 
 		// Every liquidSpeedth tick
 		BlockFeatures bF = GetBlockFeatures( blockType );
@@ -102,7 +102,7 @@ void CChunk::Update( int64_t iTick )
 	for ( CVector pos : liquidBlocks )
 	{
 		CBlock *blockHandling		= GetBlockAtLocal( pos );
-		blocktype_t blockType		= blockHandling->m_iBlockType;
+		BLOCKID blockType		= blockHandling->m_iBlockType;
 		BlockFeatures blockFeatures = GetBlockFeatures( blockType );
 
 		if ( blockFeatures.isLiquidSource )

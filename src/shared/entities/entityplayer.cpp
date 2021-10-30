@@ -63,11 +63,11 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 			BlockFeatures bF = GetBlockFeatures( m_pointed.m_pBlock->m_iBlockType );
 			if ( bF.breakable )
 			{
-				m_pointed.m_pBlock->m_iBlockType = blocktype_t::AIR;
+				m_pointed.m_pBlock->m_iBlockType = BLOCKID::AIR;
 				m_pointed.m_pBlock->Update();
 
 				protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5,
-											  blocktype_t::AIR, 0, 0 );
+											  BLOCKID::AIR, 0, 0 );
 			}
 		}
 		if ( m_pInputMan->m_iMouseState & IN_RIGHT_MOUSE && m_pInputMan->m_iOldMouseState == 0 &&
@@ -77,7 +77,7 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 			BlockFeatures bF = GetBlockFeatures( m_pointed.m_pBlock->m_iBlockType );
 			if ( m_pSelectedItem != nullptr && m_pSelectedItem->GetCount() > 0 && b != nullptr && bF.selectable )
 			{
-				blocktype_t oldType = b->m_iBlockType; // TODO: We're assuming it's a block item
+				BLOCKID oldType = b->m_iBlockType; // TODO: We're assuming it's a block item
 				CBlockItem *blckItem = reinterpret_cast<CBlockItem *>( m_pSelectedItem );
 				b->m_iBlockType		= blckItem->m_iBlockType;
 				b->m_iValueA = blckItem->m_iValA;

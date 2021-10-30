@@ -60,7 +60,7 @@ void COverworldJeneration::GenBase( CChunk *c )
 {
 	for ( int i = 0; i < sizeof( c->m_blocks ) / sizeof( CBlock ); i++ )
 	{
-		// blocks[i].m_iBlockType = blocktype_t(random() % 4);
+		// blocks[i].m_iBlockType = BLOCKID(random() % 4);
 		int x, y, z;
 		CHUNK1D_TO_3D( i, x, y, z );
 		CVector WorldPosition = c->PosToWorld( CVector( x, y, z ) );

@@ -1,6 +1,6 @@
 #include "blockdef.hpp"
 
-blockmaterial_t GetBlockMaterial( blocktype_t blockType )
+blockmaterial_t GetBlockMaterial( BLOCKID blockType )
 {
 	switch ( blockType )
 	{
@@ -86,7 +86,7 @@ const char *BlockMaterialSTR( blockmaterial_t mat )
 	}
 }
 
-BlockFeatures GetBlockFeatures( blocktype_t blockType )
+BlockFeatures GetBlockFeatures( BLOCKID blockType )
 {
 	BlockFeatures bF;
 	bF.breakable	  = true;

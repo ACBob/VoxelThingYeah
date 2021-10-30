@@ -36,5 +36,5 @@ class CBlockBase
 
     protected:
     
-    const blocktype_t m_iBlockType;
+    const BLOCKID m_iBlockType;
 }

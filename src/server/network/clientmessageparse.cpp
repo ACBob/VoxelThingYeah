@@ -94,17 +94,17 @@ namespace protocol
 
 				CBlock *b = pServer->m_world.BlockAtWorldPos( CVector( x, y, z ) );
 
-				blocktype_t oldBlockType = b->m_iBlockType;
+				BLOCKID oldBlockType = b->m_iBlockType;
 				if ( true ) // If it's a valid block placement (for now no check)
 				{
-					b->m_iBlockType = (blocktype_t)blockType;
+					b->m_iBlockType = (BLOCKID)blockType;
 					b->m_iValueA	= valA;
 					b->m_iValueB	= valB;
 					b->Update();
 
 					for ( CNetworkPlayer *c : pServer->m_players )
 					{
-						SendServerUpdateBlock( c->m_pPeer, CVector( x, y, z ), blocktype_t( blockType ), valA, valB );
+						SendServerUpdateBlock( c->m_pPeer, CVector( x, y, z ), BLOCKID( blockType ), valA, valB );
 
 						if ( blockType == AIR )
 							SendServerSpecialEffect( c->m_pPeer, CVector( x, y, z ).Floor(), SPECIALEFFECT_BLOCKBREAK,

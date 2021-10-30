@@ -13,7 +13,7 @@ namespace protocol
 
 		protocol::SendPacket( pPeer, p, true );
 	}
-	void SendClientSetBlock( ENetPeer *pPeer, CVector pos, blocktype_t blockType, uint8_t valA, uint8_t valB )
+	void SendClientSetBlock( ENetPeer *pPeer, CVector pos, BLOCKID blockType, uint8_t valA, uint8_t valB )
 	{
 		ClientPacket p;
 		p.type					   = ClientPacket::SET_BLOCK;

@@ -8,7 +8,7 @@
 
 #pragma once
 
-enum blocktype_t {
+enum BLOCKID {
 	AIR			 = 0,
 	STONE		 = 1,
 	DIRT		 = 2,
@@ -70,7 +70,7 @@ enum blockcoloration_t {
 	BLOCKCOLOURATION_16BIT = 1, // Treat all our 16 bits of value as colour (actually 15 bit :trollface:)
 };
 
-blockmaterial_t GetBlockMaterial( blocktype_t blockType );
+blockmaterial_t GetBlockMaterial( BLOCKID blockType );
 
 const char *BlockMaterialSTR( blockmaterial_t mat );
 
@@ -100,8 +100,8 @@ struct BlockFeatures
 	// The colour of light
 	uint16_t lightColour;
 	// Flow/Source variants
-	blocktype_t liquidFlow;
-	blocktype_t liquidSource;
+	BLOCKID liquidFlow;
+	BLOCKID liquidSource;
 	// How far the liquid should flow
 	uint8_t liquidRange;
 	// Every THIS tick, flow
@@ -112,4 +112,4 @@ struct BlockFeatures
 	blockobscurerule_t rule;
 };
 
-BlockFeatures GetBlockFeatures( blocktype_t blockType );
+BlockFeatures GetBlockFeatures( BLOCKID blockType );

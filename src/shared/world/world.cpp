@@ -178,7 +178,7 @@ CBlock* CWorld::TestAABBCollision( CBoundingBox col )
 		CHUNK1D_TO_3D( i, x, y, z );
 
 		// Don't collide with air
-		blocktype_t blockType = chunk->m_blocks[i].m_iBlockType;
+		BLOCKID blockType = chunk->m_blocks[i].m_iBlockType;
 		BlockFeatures bF	  = GetBlockFeatures( blockType );
 		if ( !bF.walkable )
 			continue;
@@ -267,7 +267,7 @@ void CWorld::UsePortable( PortableChunkRepresentation rep )
 
 	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
 	{
-		c->m_blocks[j].m_iBlockType = (blocktype_t)rep.m_iBlocks[j];
+		c->m_blocks[j].m_iBlockType = (BLOCKID)rep.m_iBlocks[j];
 		c->m_blocks[j].m_iValueA	= ( rep.m_iValue[j] >> 8 );
 		c->m_blocks[j].m_iValueB	= rep.m_iValue[j];
 	}
