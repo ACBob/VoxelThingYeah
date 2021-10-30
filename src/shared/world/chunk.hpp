@@ -45,7 +45,7 @@ class CChunk
 	CVector m_vPosition;
 	CVector GetPosInWorld() { return m_vPosition * CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ); }
 
-	CBlock *GetBlockAtLocal( CVector pos );
+	BLOCKID GetBlockAtLocal( CVector pos );
 
 #ifdef CLIENTEXE
 	void RebuildMdl();
@@ -58,9 +58,10 @@ class CChunk
 	CVector PosToWorld( int x, int y, int z );
 	CVector PosToWorld( CVector pos );
 
-	// Flat array of blocks, access with
-	// Indexed with [x + SIZEX * (y + SIZEZ * z)]
-	CBlock m_blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
+	// Flat array of blocks IDs
+	BLOCKID m_blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
+	// Flat array of block meta
+	int16_t m_iValues[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 
 #ifdef CLIENTEXE
 	CModel m_blocksMdl;

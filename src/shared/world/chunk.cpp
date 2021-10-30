@@ -99,66 +99,8 @@ void CChunk::Update( int64_t iTick )
 		}
 	}
 
-	for ( CVector pos : liquidBlocks )
-	{
-		CBlock *blockHandling		= GetBlockAtLocal( pos );
-		BLOCKID blockType		= blockHandling->m_iBlockType;
-		BlockFeatures blockFeatures = GetBlockFeatures( blockType );
-
-		if ( blockFeatures.isLiquidSource )
-			blockHandling->m_iValueA = blockFeatures.liquidRange;
-		else if ( blockHandling->m_iValueA == 0 )
-			continue;
-
-		// Test Bottom first
-		CBlock *pBlock = reinterpret_cast<CWorld *>( m_pChunkMan )
-							 ->BlockAtWorldPos( PosToWorld( CVector( pos.x, pos.y - 1, pos.z ) ) );
-		if ( pBlock == nullptr )
-			continue;
-
-		BlockFeatures blockF = GetBlockFeatures( pBlock->m_iBlockType );
-		if ( blockF.floodable && pBlock->m_iBlockType != blockType )
-		{
-			pBlock->m_iBlockType = blockFeatures.liquidFlow;
-			pBlock->m_iValueA	 = blockFeatures.liquidRange;
-		}
-		else if ( pBlock->m_iBlockType == blockFeatures.liquidFlow ||
-				  pBlock->m_iBlockType == blockFeatures.liquidSource )
-			continue;
-		else
-		{
-			for ( int i = 0; i < 4; i++ )
-			{
-				CVector dir = DirectionVector[i];
-				CBlock *b	= GetBlockAtLocal( CVector( pos.x, pos.y, pos.z ) + dir );
-				if ( b == nullptr )
-				{
-					// It's not in *this* chunk
-					CChunk *oChunk = Neighbour( (Direction)i );
-					if ( oChunk == nullptr )
-						continue; // Ok yeah it's outside reality
-					CVector p = CVector( pos.x + dir.x, pos.y + dir.y, pos.z + dir.z ) +
-								( dir * CVector( -CHUNKSIZE_X, -CHUNKSIZE_Y, -CHUNKSIZE_Z ) );
-					;
-					b = oChunk->GetBlockAtLocal( p );
-					if ( b == nullptr )
-						continue; // uh oh
-				}
-				BlockFeatures bF = GetBlockFeatures( b->m_iBlockType );
-				if ( bF.floodable )
-				{
-					b->m_iBlockType = blockFeatures.liquidFlow;
-					b->m_iValueA	= blockHandling->m_iValueA - 1;
-					bDirtyAgain		= true; // Something within us changed, we should update next tick too
-				}
-				else if ( b->m_iBlockType == blockFeatures.liquidFlow )
-				{
-					if ( b->m_iValueA < ( blockHandling->m_iValueA - 1 ) )
-						b->m_iValueA = blockHandling->m_iValueA - 1;
-				}
-			}
-		}
-	}
+	// TODO: Liquid *Again*
+	
 #endif
 
 	// Rebuild the portable information at last
@@ -194,11 +136,11 @@ void CChunk::Update( int64_t iTick )
 	m_bReallyDirty = bDirtyAgain;
 }
 
-CBlock *CChunk::GetBlockAtLocal( CVector pos )
+BLOCKID CChunk::GetBlockAtLocal( CVector pos )
 {
 	if ( !ValidChunkPosition( pos ) )
 		return nullptr;
-	return &m_blocks[int( CHUNK3D_TO_1D( pos.x, pos.y, pos.z ) )];
+	return m_blocks[int( CHUNK3D_TO_1D( pos.x, pos.y, pos.z ) )];
 }
 
 bool ValidChunkPosition( int x, int y, int z )

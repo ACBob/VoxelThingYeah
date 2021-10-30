@@ -14,13 +14,13 @@ CPointedThing CVoxRaycast::Cast( CWorld *pChunkMan, bool bUseCollision )
 	const float step = 0.01;
 	float i			 = 0;
 
-	CBlock *pBlock = nullptr;
+	BLOCKID Block = BLCK_NONE;
 	while ( i <= m_fLength )
 	{
 		vOtherRay = vRay;
 		vRay	  = m_vPosition + m_vDirection * i;
 		i += step;
-		pBlock = pChunkMan->BlockAtWorldPos( vRay );
+		Block = pChunkMan->BlockAtWorldPos( vRay );
 
 		if ( bUseCollision )
 		{
@@ -29,7 +29,7 @@ CPointedThing CVoxRaycast::Cast( CWorld *pChunkMan, bool bUseCollision )
 		}
 		else
 		{
-			if ( pBlock != nullptr && pBlock->m_iBlockType != BLCK_AIR )
+			if ( Block != BLCK_NONE && Block != BLCK_AIR )
 				break;
 		}
 	}

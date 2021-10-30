@@ -90,7 +90,7 @@ class CEntityBase
 
 	int64_t m_iFootstepTick = 0;
 
-	CBlock *m_pLastBlockFloor = nullptr;
+	BLOCKID m_pLastBlockFloor = BLCK_NONE;
 
 	CBoundingBox m_collisionBox;
 

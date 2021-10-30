@@ -89,12 +89,12 @@ CChunk *CWorld::ChunkAtWorldPos( CVector pos )
 	return ChunkAtChunkPos( pos.Floor() );
 }
 
-CBlock *CWorld::BlockAtWorldPos( CVector pos )
+BLOCKID CWorld::BlockAtWorldPos( CVector pos )
 {
 	pos			  = pos.Floor();
 	CChunk *chunk = ChunkAtWorldPos( pos );
 	if ( chunk == nullptr )
-		return nullptr;
+		return BLCK_NONE;
 	CVector localPos = ( pos - chunk->GetPosInWorld() );
 
 	return chunk->GetBlockAtLocal( localPos );
@@ -154,10 +154,10 @@ void CWorld::Render()
 
 bool CWorld::TestPointCollision( CVector pos )
 {
-	CBlock *b = BlockAtWorldPos( pos );
-	if ( b == nullptr )
+	BLOCKID b = BlockAtWorldPos( pos );
+	if ( b == BLCK_NONE )
 		return false;
-	BlockFeatures bF = GetBlockFeatures( b->m_iBlockType );
+	BlockFeatures bF = GetBlockFeatures( b );
 	if ( !bF.walkable )
 		return false;
 
@@ -165,7 +165,7 @@ bool CWorld::TestPointCollision( CVector pos )
 	return CBoundingBox( pos.Floor(), CVector( 1, 1, 1 ), CVector( 0 ) ).TestPointCollide( pos );
 }
 
-CBlock* CWorld::TestAABBCollision( CBoundingBox col )
+BLOCKID CWorld::TestAABBCollision( CBoundingBox col )
 {
 	CChunk *chunk = ChunkAtWorldPos( col.m_vPosition );
 	if ( chunk == nullptr )
@@ -185,10 +185,10 @@ CBlock* CWorld::TestAABBCollision( CBoundingBox col )
 
 		if ( col.TestCollide(
 				 CBoundingBox( chunk->GetPosInWorld() + CVector( x, y, z ), CVector( 1, 1, 1 ), CVector( 0 ) ) ) )
-			return &chunk->m_blocks[i];
+			return chunk->GetPosInWorld() + CVector( x, y, z );
 	}
 
-	return nullptr;
+	return {};
 }
 
 void CWorld::WorldTick( int64_t iTick, float delta )

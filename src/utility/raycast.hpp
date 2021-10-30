@@ -9,7 +9,7 @@ class CPointedThing
   public:
 	CPointedThing();
 
-	CBlock *m_pBlock = nullptr; // The block at the end
+	BLOCKID m_iBlock = BLCK_NONE; // The block at the end
 	CVector m_vPosition;		// The position of the hit item
 	CVector m_vNormal;			// Facing towards where the ray came from
 	float m_fDistance;			// The distance travelled

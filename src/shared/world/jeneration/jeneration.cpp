@@ -58,7 +58,7 @@ COverworldJeneration::COverworldJeneration()
 // Generates the base stone skeleton
 void COverworldJeneration::GenBase( CChunk *c )
 {
-	for ( int i = 0; i < sizeof( c->m_blocks ) / sizeof( CBlock ); i++ )
+	for ( int i = 0; i < sizeof( c->m_blocks ) / sizeof( BLOCKID ); i++ )
 	{
 		// blocks[i].m_iBlockType = BLOCKID(random() % 4);
 		int x, y, z;
@@ -101,38 +101,38 @@ void COverworldJeneration::BiomeBlocks( CChunk *c )
 			for ( int y = CHUNKSIZE_Y; y > -1; y-- )
 			{
 				// TODO: Actually fix this as it tries to query chunks that don't exist yet.
-				CBlock *blk = c->GetBlockAtLocal( CVector( x, y, z ) );
-				if ( blk != nullptr && blk->m_iBlockType == BLCK_AIR )
+				BLOCKID blk = c->GetBlockAtLocal( CVector( x, y, z ) );
+				if ( blk != BLCK_NONE && blk == BLCK_AIR )
 					continue;
 
-				CBlock *b = c->GetBlockAtLocal( CVector( x, y + 1, z ) );
+				BLOCKID b = c->GetBlockAtLocal( CVector( x, y + 1, z ) );
 				if ( b == nullptr )
 					continue;
 
 				CBiome *biome = GetBiomeAtPos( c->PosToWorld( CVector( x, y, z ) ) );
 
-				if ( b->m_iBlockType == BLCK_AIR )
+				if ( b == BLCK_AIR )
 				{
-					if ( blk->m_iBlockType == BLCK_STONE )
+					if ( blk == BLCK_STONE )
 					{
-						b->m_iBlockType	  = biome->m_iBlockDust;
-						blk->m_iBlockType = biome->m_iBlockSurface;
+						c->SetBlockAtLocal( CVector( x, y + 1, z ), biome->m_iBlockDust );
+						c->SetBlockAtLocal( CVector( x, y, z ), biome->m_iBlockSurface );
 						grassDepth--;
 					}
 					else
 					{
-						blk->m_iBlockType = biome->m_iBlockWaterSurf;
+						c->SetBlockAtLocal( CVector( x, y, z ), biome->m_iBlockWaterSurf );
 					}
 				}
-				else if ( b->m_iBlockType == biome->m_iBlockSurface ||
-						  b->m_iBlockType == biome->m_iBlockSubSurface && grassDepth > 0 )
+				else if ( b == biome->m_iBlockSurface ||
+						  b == biome->m_iBlockSubSurface && grassDepth > 0 )
 				{
-					blk->m_iBlockType = biome->m_iBlockSubSurface;
+						c->SetBlockAtLocal( CVector( x, y, z ), biome->m_iBlockSubSurface );
 					grassDepth--;
 				}
 				else if ( blk->m_iBlockType == BLCK_STONE )
 				{
-					blk->m_iBlockType = biome->m_iBlockRock;
+						c->SetBlockAtLocal( CVector( x, y, z ), biome->m_iBlockRock );
 				}
 			}
 		}
@@ -142,7 +142,7 @@ void COverworldJeneration::BiomeBlocks( CChunk *c )
 // Decorates with ores, plants, etc.
 void COverworldJeneration::Decorate( CChunk *c )
 {
-	for ( int i = 0; i < sizeof( c->m_blocks ) / sizeof( CBlock ); i++ )
+	for ( int i = 0; i < sizeof( c->m_blocks ) / sizeof( BLOCKID ); i++ )
 	{
 		int x, y, z;
 		CHUNK1D_TO_3D( i, x, y, z );

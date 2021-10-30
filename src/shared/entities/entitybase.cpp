@@ -88,8 +88,8 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	// Test if we're in water
 	m_bInWater = false;
 
-	CBlock *blockInside = pWorld->BlockAtWorldPos( m_vPosition );
-	if ( blockInside != nullptr && ( blockInside->m_iBlockType == BLCK_WATER || blockInside->m_iBlockType == BLCK_WATERSRC ) )
+	BLOCKID blockInside = pWorld->BlockAtWorldPos( m_vPosition );
+	if ( blockInside != BLCK_NONE && ( blockInside == BLCK_WATER || blockInside == BLCK_WATERSRC ) )
 		m_bInWater = true;
 
 #ifdef CLIENTEXE

@@ -9,6 +9,7 @@
 #pragma once
 
 enum BLOCKID {
+	BLCK_NONE = -1, // Generic error block, i.e it doesn't exist
 	BLCK_AIR			 = 0,
 	BLCK_STONE		 = 1,
 	BLCK_DIRT		 = 2,

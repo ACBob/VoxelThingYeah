@@ -10,6 +10,8 @@
 
 #include <glad/glad.h>
 
+#include "block/blockbase.hpp"
+
 const CModel::Vertex cubeVertices[] = {
 	// NORTH +Z
 	{ BLOCKUNIT, BLOCKUNIT, BLOCKUNIT },
@@ -41,7 +43,7 @@ const std::vector<std::vector<int>> cubeTris = {
 
 const std::vector<int> plantTris = { 2, 1, 3, 0, 6, 5, 7, 4 };
 
-std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlock block, int x, int y, int z, int lr, int lg, int lb,
+std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlockBase *block, int x, int y, int z, int lr, int lg, int lb,
 											int ls, int cr, int cg, int cb )
 {
 	std::vector<CModel::Vertex> g;
@@ -68,7 +70,7 @@ std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlock block, int x, 
 		g[i].ny = normal.y;
 		g[i].nz = normal.z;
 
-		BlockTexture tex = block.GetSideTexture( dir );
+		BlockTexture tex = block->GetSideTexture( dir );
 
 		switch ( i )
 		{
@@ -94,7 +96,7 @@ std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlock block, int x, 
 	return g;
 }
 
-std::vector<CModel::Vertex> samplePlant( CBlock block, int x, int y, int z, int lr, int lg, int lb, int ls )
+std::vector<CModel::Vertex> samplePlant( CBlockBase block, int x, int y, int z, int lr, int lg, int lb, int ls )
 {
 	std::vector<CModel::Vertex> g;
 	for ( int i = 0; i < 8; i++ )
@@ -121,7 +123,7 @@ std::vector<CModel::Vertex> samplePlant( CBlock block, int x, int y, int z, int 
 		g[i].ny = normal.y;
 		g[i].nz = normal.z;
 
-		BlockTexture tex = block.GetSideTexture( NORTH );
+		BlockTexture tex = block->GetSideTexture( NORTH );
 
 		switch ( i )
 		{
@@ -152,7 +154,7 @@ std::vector<CModel::Vertex> samplePlant( CBlock block, int x, int y, int z, int 
 }
 
 // We include the chunk manager here so we can test our neighbouring chunks
-void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, void *chunk )
+void BuildChunkModel( CModel &mdl, CModel &wmdl, BLOCKID blocks[], int16_t values[], CVector pos, void *chunk )
 {
 	mdl.m_vertices.clear();
 	mdl.m_faces.clear();
@@ -165,12 +167,12 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 		{
 			for ( int z = 0; z < CHUNKSIZE_Z; z++ )
 			{
-				CBlock block = blocks[CHUNK3D_TO_1D( x, y, z )];
+				BLOCKID block = blocks[CHUNK3D_TO_1D( x, y, z )];
 
 				// block here! Construct!
-				if ( block.m_iBlockType != BLCK_AIR )
+				if ( block != BLCK_AIR )
 				{
-					BlockFeatures blockFeatures = GetBlockFeatures( block.m_iBlockType );
+					BlockFeatures blockFeatures = GetBlockFeatures( block );
 					switch ( blockFeatures.model )
 					{
 						case BLOCKMODEL_CUBE:
@@ -191,11 +193,10 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 								CVector neighbour = CVector( x, y, z ) + DirectionVector[i];
 								if ( ValidChunkPosition( neighbour ) )
 								{
-									BLOCKID blockType =
-										reinterpret_cast<CChunk *>( chunk )->GetBlockAtLocal( neighbour )->m_iBlockType;
+									BLOCKID blockType = reinterpret_cast<CChunk *>( chunk )->GetBlockAtLocal( neighbour );
 									BlockFeatures bF = GetBlockFeatures( blockType );
 									if ( bF.rule == OBSCURERULE_ALWAYS ||
-										 ( bF.rule == OBSCURERULE_SIMILAR && blockType == block.m_iBlockType ) )
+										 ( bF.rule == OBSCURERULE_SIMILAR && blockType == block ) )
 										continue;
 
 									lightColour = reinterpret_cast<CChunk *>( chunk )->GetLightingLocal( neighbour );
@@ -210,10 +211,10 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 										neighbour = neighbour + ( DirectionVector[i] *
 																  CVector( -CHUNKSIZE_X, -CHUNKSIZE_Y, -CHUNKSIZE_Z ) );
 
-										CBlock *b = chunkNeighbour->GetBlockAtLocal( neighbour );
-										if ( b == nullptr )
+										BLOCKID b = chunkNeighbour->GetBlockAtLocal( neighbour );
+										if ( b == BLCK_NONE )
 											continue;
-										BlockFeatures bF = GetBlockFeatures( b->m_iBlockType );
+										BlockFeatures bF = GetBlockFeatures( b );
 										if ( bF.rule == OBSCURERULE_ALWAYS ||
 											 ( bF.rule == OBSCURERULE_SIMILAR &&
 											   b->m_iBlockType == block.m_iBlockType ) )

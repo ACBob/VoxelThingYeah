@@ -73,22 +73,21 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 		if ( m_pInputMan->m_iMouseState & IN_RIGHT_MOUSE && m_pInputMan->m_iOldMouseState == 0 &&
 			 m_pointed.m_pBlock != nullptr )
 		{
-			CBlock *b = clientSideWorld->BlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal );
-			BlockFeatures bF = GetBlockFeatures( m_pointed.m_pBlock->m_iBlockType );
-			if ( m_pSelectedItem != nullptr && m_pSelectedItem->GetCount() > 0 && b != nullptr && bF.selectable )
+			BLOCKID b = clientSideWorld->BlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal );
+			BlockFeatures bF = GetBlockFeatures( m_pointed.m_iBlock );
+			if ( m_pSelectedItem != nullptr && m_pSelectedItem->GetCount() > 0 && b != BLCK_NONE && bF.selectable )
 			{
-				BLOCKID oldType = b->m_iBlockType; // TODO: We're assuming it's a block item
+				BLOCKID oldType = b; // TODO: We're assuming it's a block item
+				int16_t oldVal = clientSideWorld->BlockAtWorldPosVal( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal );
 				CBlockItem *blckItem = reinterpret_cast<CBlockItem *>( m_pSelectedItem );
-				b->m_iBlockType		= blckItem->m_iBlockType;
-				b->m_iValueA = blckItem->m_iValA;
-				b->m_iValueB = blckItem->m_iValB;
+				clientSideWorld->SetBlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, blckItem->m_iBlockType, blckItem->m_iVal );
 				if ( !clientSideWorld->TestAABBCollision( m_collisionBox ) )
 				{
 					b->Update();
 					m_pSelectedItem->SetCount( m_pSelectedItem->GetCount() - 1 );
 				}
 				else
-					b->m_iBlockType = oldType;
+					clientSideWorld->SetBlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, oldType, oldVal );
 
 				protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer,
 											( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, b->m_iBlockType, blckItem->m_iValA,

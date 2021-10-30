@@ -16,8 +16,7 @@ class CBlockItem : public CItem
 	// AIR is functionally the same as 0.
 	BLOCKID m_iBlockType;
 
-	uint8_t m_iValA;
-	uint8_t m_iValB;
+	uint16_t m_iVal;
 
 	int GetCount();
 };

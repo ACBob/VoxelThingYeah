@@ -83,7 +83,7 @@ namespace protocol
 
 				// Woot, data!
 				// TODO: make sure the server isn't being malicious.. Somehow
-				CBlock *b = client->m_pLocalWorld->BlockAtWorldPos( CVector( x, y, z ) );
+				BLOCKID b = client->m_pLocalWorld->BlockAtWorldPos( CVector( x, y, z ) );
 				if ( b != nullptr )
 				{
 					// con_info( "Update Block At <%f,%f,%f>", x, y, z );
