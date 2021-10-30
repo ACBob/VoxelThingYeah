@@ -44,6 +44,7 @@ void ShaderPreprocess( std::string &source, int d = 0 )
 			std::regex_search( l, match, strng );
 			std::string fp = match.str();
 			fp			   = fp.substr( 1, fp.length() - 2 ); // Cut off first and last character
+			fp			   = "/assets/shaders/" + fp;
 
 			int64_t iLength = 0;
 			bool bSuccess	= false;
@@ -82,7 +83,8 @@ void ShaderPreprocess( char *&cSource, int d = 0 )
 
 	ShaderPreprocess( s, d );
 
-	delete cSource;
+	delete[] cSource;
+
 	cSource = new char[s.size() + 1]();
 	strcpy( cSource, s.c_str() );
 }
@@ -200,6 +202,7 @@ void shaderSystem::SetUniforms( glm::mat4 &view, glm::mat4 &projection, unsigned
 {
 	for ( CShader *s : loadedShaders )
 	{
+		s->Use();
 		s->SetMat4( "view", view );
 		s->SetMat4( "projection", projection );
 		// s->SetMat4( "screen", screen );
