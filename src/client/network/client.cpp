@@ -101,7 +101,7 @@ void CNetworkClient::SpecialEffectHandle( CVector pos, SpecialEffect specialEffe
 			BLOCKID b = (BLOCKID)attrib;
 
 			// Air has no break effect
-			if ( b == AIR )
+			if ( b == BLCK_AIR )
 				return;
 
 			BlockTexture tex = GetDefaultBlockTextureSide( b, NORTH );
@@ -126,7 +126,7 @@ void CNetworkClient::SpecialEffectHandle( CVector pos, SpecialEffect specialEffe
 			BLOCKID b = (BLOCKID)attrib;
 
 			// Air has no place effect
-			if ( b == AIR )
+			if ( b == BLCK_AIR )
 				return;
 			soundSystem::PlayPlaceSound( b, pos + CVector( 0.5, 0.5, 0.5 ) );
 		}

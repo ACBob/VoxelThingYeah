@@ -74,7 +74,7 @@ void COverworldJeneration::GenBase( CChunk *c )
 
 		if ( WorldPosition.y <= seaFloor )
 		{
-			c->m_blocks[i].m_iBlockType = STONE;
+			c->m_blocks[i].m_iBlockType = BLCK_STONE;
 			continue;
 		}
 
@@ -82,7 +82,7 @@ void COverworldJeneration::GenBase( CChunk *c )
 		float percentToTopSurface = 1.0f - ( WorldPosition.y / 32.0f );
 		noiseData3D *= percentToTopSurface;
 
-		c->m_blocks[i].m_iBlockType = noiseData3D > 0.7 ? STONE : ( WorldPosition.y > m_iSeaLevel ? AIR : WATERSRC );
+		c->m_blocks[i].m_iBlockType = noiseData3D > 0.7 ? BLCK_STONE : ( WorldPosition.y > m_iSeaLevel ? BLCK_AIR : BLCK_WATERSRC );
 	}
 }
 
@@ -102,7 +102,7 @@ void COverworldJeneration::BiomeBlocks( CChunk *c )
 			{
 				// TODO: Actually fix this as it tries to query chunks that don't exist yet.
 				CBlock *blk = c->GetBlockAtLocal( CVector( x, y, z ) );
-				if ( blk != nullptr && blk->m_iBlockType == AIR )
+				if ( blk != nullptr && blk->m_iBlockType == BLCK_AIR )
 					continue;
 
 				CBlock *b = c->GetBlockAtLocal( CVector( x, y + 1, z ) );
@@ -111,9 +111,9 @@ void COverworldJeneration::BiomeBlocks( CChunk *c )
 
 				CBiome *biome = GetBiomeAtPos( c->PosToWorld( CVector( x, y, z ) ) );
 
-				if ( b->m_iBlockType == AIR )
+				if ( b->m_iBlockType == BLCK_AIR )
 				{
-					if ( blk->m_iBlockType == STONE )
+					if ( blk->m_iBlockType == BLCK_STONE )
 					{
 						b->m_iBlockType	  = biome->m_iBlockDust;
 						blk->m_iBlockType = biome->m_iBlockSurface;
@@ -130,7 +130,7 @@ void COverworldJeneration::BiomeBlocks( CChunk *c )
 					blk->m_iBlockType = biome->m_iBlockSubSurface;
 					grassDepth--;
 				}
-				else if ( blk->m_iBlockType == STONE )
+				else if ( blk->m_iBlockType == BLCK_STONE )
 				{
 					blk->m_iBlockType = biome->m_iBlockRock;
 				}
@@ -149,12 +149,12 @@ void COverworldJeneration::Decorate( CChunk *c )
 		CVector WorldPosition = c->PosToWorld( CVector( x, y, z ) );
 
 		// Ore
-		if ( c->m_blocks[i].m_iBlockType == STONE )
+		if ( c->m_blocks[i].m_iBlockType == BLCK_STONE )
 		{
 			float noiseData = fnlGetNoise3D( &m_oreNoise, WorldPosition.x, WorldPosition.y, WorldPosition.z ) * 1.1;
 
 			if ( noiseData > 0.9 )
-				c->m_blocks[i].m_iBlockType = ORE_COAL;
+				c->m_blocks[i].m_iBlockType = BLCK_COALORE;
 		}
 
 		// Caves
@@ -165,11 +165,11 @@ void COverworldJeneration::Decorate( CChunk *c )
 
 		if ( caveVal < 0.04f )
 		{
-			if ( c->m_blocks[i].m_iBlockType == STONE || c->m_blocks[i].m_iBlockType == GRASS ||
-				 c->m_blocks[i].m_iBlockType == DIRT || c->m_blocks[i].m_iBlockType == ORE_COAL ||
-				 c->m_blocks[i].m_iBlockType == SAND || c->m_blocks[i].m_iBlockType == SANDSTONE )
+			if ( c->m_blocks[i].m_iBlockType == BLCK_STONE || c->m_blocks[i].m_iBlockType == BLCK_GRASS ||
+				 c->m_blocks[i].m_iBlockType == BLCK_DIRT || c->m_blocks[i].m_iBlockType == BLCK_COALORE ||
+				 c->m_blocks[i].m_iBlockType == BLCK_SAND || c->m_blocks[i].m_iBlockType == BLCK_SANDSTONE )
 			{
-				c->m_blocks[i].m_iBlockType = AIR;
+				c->m_blocks[i].m_iBlockType = BLCK_AIR;
 			}
 		}
 	}

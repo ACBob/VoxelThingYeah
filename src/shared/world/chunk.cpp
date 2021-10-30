@@ -11,7 +11,7 @@ CChunk::CChunk()
 {
 	for ( int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++ )
 	{
-		m_blocks[i].m_iBlockType   = BLOCKID::AIR;
+		m_blocks[i].m_iBlockType   = BLOCKID::BLCK_AIR;
 		m_iLightingValue[i]		   = 0;
 		m_portableDef.m_iBlocks[i] = m_blocks[i].m_iBlockType;
 		m_portableDef.m_iValue[i]  = 0;
@@ -28,7 +28,7 @@ CChunk::CChunk()
 {
 	for ( int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++ )
 	{
-		m_blocks[i].m_iBlockType   = BLOCKID::AIR;
+		m_blocks[i].m_iBlockType   = BLOCKID::BLCK_AIR;
 		m_portableDef.m_iBlocks[i] = m_blocks[i].m_iBlockType;
 		m_portableDef.m_iValue[i]  = 0;
 	}

@@ -5,7 +5,7 @@ CBlockItem::~CBlockItem(){};
 
 int CBlockItem::GetCount()
 {
-	if ( m_iBlockType != AIR )
+	if ( m_iBlockType != BLCK_AIR )
 		return BaseClass::GetCount();
 	return 0;
 }

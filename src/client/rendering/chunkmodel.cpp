@@ -168,7 +168,7 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 				CBlock block = blocks[CHUNK3D_TO_1D( x, y, z )];
 
 				// block here! Construct!
-				if ( block.m_iBlockType != AIR )
+				if ( block.m_iBlockType != BLCK_AIR )
 				{
 					BlockFeatures blockFeatures = GetBlockFeatures( block.m_iBlockType );
 					switch ( blockFeatures.model )
@@ -227,7 +227,7 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 									sampleCubeFace( Direction( i ), block, x, y, z, (int)lightColour.x, (int)lightColour.y,
 													(int)lightColour.z, (int)lightColour.w, (int)blockColouration.x, (int)blockColouration.y, (int)blockColouration.z );
 
-								if ( block.m_iBlockType == WATER || block.m_iBlockType == WATERSRC )
+								if ( block.m_iBlockType == BLCK_WATER || block.m_iBlockType == BLCK_WATERSRC )
 								{
 									std::copy( g.begin(), g.end(), std::back_inserter( wmdl.m_vertices ) );
 

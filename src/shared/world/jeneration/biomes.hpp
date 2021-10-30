@@ -9,11 +9,11 @@ class CBiome
 	~CBiome();
 
 	// These control blocks used
-	BLOCKID m_iBlockSurface	   = AIR;	   // GRASS
-	BLOCKID m_iBlockSubSurface = AIR;	   // DIRT
-	BLOCKID m_iBlockRock	   = AIR;	   // STONE
-	BLOCKID m_iBlockDust	   = AIR;	   // E.G SNOW
-	BLOCKID m_iBlockWaterSurf  = WATERSRC; // E.G ICE
+	BLOCKID m_iBlockSurface	   = BLCK_AIR;	   // BLCK_GRASS
+	BLOCKID m_iBlockSubSurface = BLCK_AIR;	   // DIRT
+	BLOCKID m_iBlockRock	   = BLCK_AIR;	   // STONE
+	BLOCKID m_iBlockDust	   = BLCK_AIR;	   // E.G BLCK_SNOW
+	BLOCKID m_iBlockWaterSurf  = BLCK_WATERSRC; // E.G BLCK_ICE
 
 	// 0 To 2, controls generation
 	float m_fMinTemperature = 0.0f;

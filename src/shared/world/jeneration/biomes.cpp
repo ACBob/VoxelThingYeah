@@ -23,27 +23,27 @@ void InitBiomes()
 	else
 		return;
 
-	biomePlains.m_iBlockSurface	   = GRASS;
-	biomePlains.m_iBlockSubSurface = DIRT;
-	biomePlains.m_iBlockRock	   = STONE;
+	biomePlains.m_iBlockSurface	   = BLCK_GRASS;
+	biomePlains.m_iBlockSubSurface = BLCK_DIRT;
+	biomePlains.m_iBlockRock	   = BLCK_STONE;
 	biomePlains.m_fMinTemperature  = 0.6f;
 	biomePlains.m_fMaxTemperature  = 1.6f;
 	biomePlains.m_fHumidity		   = 0.4f;
 	biomeList.push_back( &biomePlains );
 
-	biomeDesert.m_iBlockSurface	   = SAND;
-	biomeDesert.m_iBlockSubSurface = SAND;
-	biomeDesert.m_iBlockRock	   = SANDSTONE;
+	biomeDesert.m_iBlockSurface	   = BLCK_SAND;
+	biomeDesert.m_iBlockSubSurface = BLCK_SAND;
+	biomeDesert.m_iBlockRock	   = BLCK_SANDSTONE;
 	biomeDesert.m_fMinTemperature  = 1.6f;
 	biomeDesert.m_fMaxTemperature  = 2.0f;
 	biomeDesert.m_fHumidity		   = 0.0f;
 	biomeList.push_back( &biomeDesert );
 
-	biomeTundra.m_iBlockSurface	   = SNOWGRASS;
-	biomeTundra.m_iBlockSubSurface = DIRT;
-	biomeTundra.m_iBlockRock	   = STONE;
-	biomeTundra.m_iBlockDust	   = SNOW;
-	biomeTundra.m_iBlockWaterSurf  = ICE;
+	biomeTundra.m_iBlockSurface	   = BLCK_SNOWGRASS;
+	biomeTundra.m_iBlockSubSurface = BLCK_DIRT;
+	biomeTundra.m_iBlockRock	   = BLCK_STONE;
+	biomeTundra.m_iBlockDust	   = BLCK_SNOW;
+	biomeTundra.m_iBlockWaterSurf  = BLCK_ICE;
 	biomeTundra.m_fMinTemperature  = 0.0f;
 	biomeTundra.m_fMaxTemperature  = 0.6f;
 	biomeTundra.m_fHumidity		   = 0.5f;

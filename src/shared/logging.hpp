@@ -120,42 +120,42 @@
 #define CRITICAL 5
 #define SILENT 6
 
-/* DEBUG LOG */
+/* DEBUG BLCK_LOG */
 #if LOG_LEVEL == DEBUG
 	#define con_debug( ... ) emit_log( DEBUG_COLOUR, "[DEBUG]", __FILE__, __func__, __LINE__, __VA_ARGS__ )
 #else
 	#define con_debug( ... )
 #endif
 
-/* INFO LOG */
+/* INFO BLCK_LOG */
 #if LOG_LEVEL == DEBUG || LOG_LEVEL == INFO
 	#define con_info( ... ) emit_log( INFO_COLOUR, "[INFO]", __FILE__, __func__, __LINE__, __VA_ARGS__ )
 #else
 	#define con_info( ... )
 #endif
 
-/* NOTICE LOG */
+/* NOTICE BLCK_LOG */
 #if LOG_LEVEL == DEBUG || LOG_LEVEL == INFO || LOG_LEVEL == NOTICE
 	#define con_notice( ... ) emit_log( NOTICE_COLOUR, "[NOTICE]", __FILE__, __func__, __LINE__, __VA_ARGS__ )
 #else
 	#define con_notice( ... )
 #endif
 
-/* WARNING LOG */
+/* WARNING BLCK_LOG */
 #if LOG_LEVEL == DEBUG || LOG_LEVEL == INFO || LOG_LEVEL == NOTICE || LOG_LEVEL == WARNING
 	#define con_warning( ... ) emit_log( WARNING_COLOUR, "[WARNING]", __FILE__, __func__, __LINE__, __VA_ARGS__ )
 #else
 	#define con_warning( ... )
 #endif
 
-/* ERROR LOG */
+/* ERROR BLCK_LOG */
 #if LOG_LEVEL == DEBUG || LOG_LEVEL == INFO || LOG_LEVEL == NOTICE || LOG_LEVEL == WARNING || LOG_LEVEL == ERROR
 	#define con_error( ... ) emit_log( ERROR_COLOUR, "[ERROR]", __FILE__, __func__, __LINE__, __VA_ARGS__ )
 #else
 	#define con_error( ... )
 #endif
 
-/* CRITICAL LOG */
+/* CRITICAL BLCK_LOG */
 #if LOG_LEVEL == DEBUG || LOG_LEVEL == INFO || LOG_LEVEL == NOTICE || LOG_LEVEL == WARNING || LOG_LEVEL == ERROR ||    \
 	LOG_LEVEL == CRITICAL
 	#define con_critical( ... ) emit_log( CRITICAL_COLOUR, "[CRITICAL]", __FILE__, __func__, __LINE__, __VA_ARGS__ )

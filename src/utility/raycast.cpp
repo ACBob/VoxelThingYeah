@@ -29,7 +29,7 @@ CPointedThing CVoxRaycast::Cast( CWorld *pChunkMan, bool bUseCollision )
 		}
 		else
 		{
-			if ( pBlock != nullptr && pBlock->m_iBlockType != AIR )
+			if ( pBlock != nullptr && pBlock->m_iBlockType != BLCK_AIR )
 				break;
 		}
 	}

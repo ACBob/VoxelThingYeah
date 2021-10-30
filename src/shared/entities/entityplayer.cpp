@@ -63,11 +63,11 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 			BlockFeatures bF = GetBlockFeatures( m_pointed.m_pBlock->m_iBlockType );
 			if ( bF.breakable )
 			{
-				m_pointed.m_pBlock->m_iBlockType = BLOCKID::AIR;
+				m_pointed.m_pBlock->m_iBlockType = BLOCKID::BLCK_AIR;
 				m_pointed.m_pBlock->Update();
 
 				protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5,
-											  BLOCKID::AIR, 0, 0 );
+											  BLOCKID::BLCK_AIR, 0, 0 );
 			}
 		}
 		if ( m_pInputMan->m_iMouseState & IN_RIGHT_MOUSE && m_pInputMan->m_iOldMouseState == 0 &&

@@ -10,7 +10,7 @@ class CBlockItem : public CItem
 	DeclBaseClass( CItem );
 
   public:
-	CBlockItem(int count = 1, BLOCKID blockType = AIR, int valA = 0, int valB = 0);
+	CBlockItem(int count = 1, BLOCKID blockType = BLCK_AIR, int valA = 0, int valB = 0);
 	~CBlockItem();
 
 	// AIR is functionally the same as 0.

@@ -287,7 +287,7 @@ void soundSystem::SetListener( CWorld *world, CVector pos, CVector forward, CVec
 			}
 
 			float reverb		= 0.0f;
-			blockmaterial_t mat = GetBlockMaterial( a.m_pBlock->m_iBlockType );
+			MATERIAL mat = GetBlockMaterial( a.m_pBlock->m_iBlockType );
 			switch ( mat )
 			{
 				default:
@@ -335,7 +335,7 @@ CSound *soundSystem::LoadSound( const char *path )
 
 void soundSystem::PlayBreakSound( BLOCKID blockType, CVector pos )
 {
-	blockmaterial_t mat = GetBlockMaterial( blockType );
+	MATERIAL mat = GetBlockMaterial( blockType );
 
 	char *buf = new char[512];
 	snprintf( buf, 512, "block.break.%s", BlockMaterialSTR( mat ) );
@@ -345,7 +345,7 @@ void soundSystem::PlayBreakSound( BLOCKID blockType, CVector pos )
 }
 void soundSystem::PlayPlaceSound( BLOCKID blockType, CVector pos )
 {
-	blockmaterial_t mat = GetBlockMaterial( blockType );
+	MATERIAL mat = GetBlockMaterial( blockType );
 
 	char *buf = new char[512];
 	snprintf( buf, 512, "block.place.%s", BlockMaterialSTR( mat ) );
@@ -355,7 +355,7 @@ void soundSystem::PlayPlaceSound( BLOCKID blockType, CVector pos )
 }
 void soundSystem::PlayStepSound( BLOCKID blockType, CVector pos )
 {
-	blockmaterial_t mat = GetBlockMaterial( blockType );
+	MATERIAL mat = GetBlockMaterial( blockType );
 
 	char *buf = new char[512];
 	snprintf( buf, 512, "block.step.%s", BlockMaterialSTR( mat ) );

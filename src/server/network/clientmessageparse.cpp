@@ -106,7 +106,7 @@ namespace protocol
 					{
 						SendServerUpdateBlock( c->m_pPeer, CVector( x, y, z ), BLOCKID( blockType ), valA, valB );
 
-						if ( blockType == AIR )
+						if ( blockType == BLCK_AIR )
 							SendServerSpecialEffect( c->m_pPeer, CVector( x, y, z ).Floor(), SPECIALEFFECT_BLOCKBREAK,
 													 oldBlockType );
 						else
