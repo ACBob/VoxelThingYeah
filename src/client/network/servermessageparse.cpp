@@ -66,31 +66,27 @@ namespace protocol
 				// con_info("%d Blocks", numBlocks);
 
 				// Woot, data!
-				client->m_pLocalWorld->UsePortable( crep );
+				client->m_pLocalWorld->LoadFromData( crep );
 			}
 			break;
 
 			case ServerPacket::UPDATE_BLOCK: {
 				float x, y, z;
-				uint8_t valA, valB;
+				uint16_t val;
 				uint blockType;
 				bufAccess >> x;
 				bufAccess >> y;
 				bufAccess >> z;
 				bufAccess >> blockType;
-				bufAccess >> valA;
-				bufAccess >> valB;
+				bufAccess >> val;
 
 				// Woot, data!
 				// TODO: make sure the server isn't being malicious.. Somehow
-				BLOCKID b = client->m_pLocalWorld->BlockAtWorldPos( CVector( x, y, z ) );
-				if ( b != nullptr )
+				BLOCKID b = std::get<0>(client->m_pLocalWorld->GetBlockAtWorldPos( CVector( x, y, z ) ));
+				if ( b != BLCK_NONE )
 				{
 					// con_info( "Update Block At <%f,%f,%f>", x, y, z );
-					b->m_iBlockType = BLOCKID( blockType );
-					b->m_iValueA	= valA;
-					b->m_iValueB	= valB;
-					b->Update();
+					client->m_pLocalWorld->SetBlockAtWorldPos( CVector( x, y, z), (BLOCKID)blockType, val );
 				}
 			}
 			break;
@@ -126,19 +122,18 @@ namespace protocol
 					if ( client->m_pLocalWorld->GetEntityByName( username.c_str() ) != nullptr )
 					{
 						CEntityPlayer *plyr =
-							(CEntityPlayer *)client->m_pLocalWorld->GetEntityByName( username.c_str() );
+							(CEntityPlayer *)client->m_pLocalWorld->GetEntityByName( username );
 						plyr->m_vPosition = CVector( x, y, z );
 						plyr->m_vRotation = CVector( pitch, yaw, 0 );
 					}
 					else
 					{
 						// New player
-						CEntityPlayer *plyr = new CEntityPlayer();
+						CEntityPlayer *plyr = (CEntityPlayer*)client->m_pLocalWorld->AddEntity( std::make_unique<CEntityPlayer>() );
 						plyr->m_vPosition	= CVector( x, y, z );
 						plyr->m_vRotation	= CVector( pitch, yaw, 0 );
 						plyr->m_name		= username;
 
-						client->m_pLocalWorld->AddEntity( plyr );
 					}
 				}
 			}
@@ -206,7 +201,7 @@ namespace protocol
 
 				bufAccess >> ticks;
 
-				client->m_pLocalWorld->m_iTimeOfDay = ticks;
+				client->m_pLocalWorld->m_iWorldTime = ticks;
 			}
 			break;
 			case ServerPacket::PLAYERLEAVE: {

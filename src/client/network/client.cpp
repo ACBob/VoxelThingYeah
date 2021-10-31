@@ -4,6 +4,8 @@
 
 #include "sound/soundmanager.hpp"
 
+#include "rendering/blocktexture.hpp"
+
 CNetworkClient::CNetworkClient()
 {
 	m_pEnetHost = enet_host_create( NULL, 1, 1, 0, 0 );
@@ -166,9 +168,10 @@ void CNetworkClient::Update()
 
 	CVector cP = ( m_pLocalPlayer->m_vPosition / CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
 	// MAGIC NUMBER: 4 == render distance
-	// TODO: tie to cvar
-	m_pLocalWorld->m_chunks.erase(
-		std::remove_if( m_pLocalWorld->m_chunks.begin(), m_pLocalWorld->m_chunks.end(),
-						[cP]( auto &&c ) { return ( ( cP - c.get()->m_vPosition ).Magnitude() > 6 ); } ),
-		m_pLocalWorld->m_chunks.end() );
+	// TODO: tie view distnace to cvar
+	// TODO: re-implement inside world
+	// m_pLocalWorld->m_chunks.erase(
+	// 	std::remove_if( m_pLocalWorld->m_chunks.begin(), m_pLocalWorld->m_chunks.end(),
+	// 					[cP]( auto &&c ) { return ( ( cP - c.get()->m_vPosition ).Magnitude() > 6 ); } ),
+	// 	m_pLocalWorld->m_chunks.end() );
 }

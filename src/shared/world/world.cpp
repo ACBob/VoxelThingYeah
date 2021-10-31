@@ -1,9 +1,18 @@
 #include "world.hpp"
 
+#include "entities/entitybase.hpp"
+
 #include <algorithm>
 
-CWorld::CWorld()
-{
+#ifdef CLIENTEXE
+CWorld::CWorld(CShader *blockShader, CShader *entityShader, CShader *waterShader, CTexture *worldTex) {
+	m_pWorldTex = worldTex;
+	m_pBlockShader = blockShader;
+	m_pEntityShader = entityShader;
+	m_pLiquidShader = waterShader;
+#else
+CWorld::CWorld() {
+#endif
 
 }
 
@@ -27,6 +36,14 @@ CChunk *CWorld::ChunkAtPosCreate(CVector pos)
 		return c;
 
 	m_chunks[pos] = std::make_unique<CChunk>(pos, this);
+
+#ifdef CLIENTEXE
+	m_chunks[pos]->m_blockModel.SetShader(m_pBlockShader);
+	m_chunks[pos]->m_blockModel.SetTexture(m_pWorldTex);
+	m_chunks[pos]->m_liquidModel.SetShader(m_pLiquidShader);
+	m_chunks[pos]->m_liquidModel.SetTexture(m_pWorldTex);
+#endif
+
 	return m_chunks[pos].get();
 }
 
@@ -61,7 +78,23 @@ void CWorld::SetBlockAtWorldPos( CVector pos, BLOCKID id, BLOCKVAL val )
 	if (c == nullptr)
 		return;
 
+	pos = pos.Floor();
 	c->SetBlockAtLocal( (pos - (pos.Floor() / 16) * 16).Floor(), id, val );
+}
+
+std::tuple<BLOCKID, BLOCKVAL> CWorld::TestPointCollision( CVector p )
+{
+	BLOCKID b = std::get<0>(GetBlockAtWorldPos( p ));
+	if ( b == BLCK_NONE )
+		return { BLCK_NONE, 0 };
+	if ( b == BLCK_AIR )
+		return {BLCK_NONE, 0};
+
+	p = p - p.Floor();
+	if (CBoundingBox( p.Floor(), CVector( 1, 1, 1 ), CVector( 0 ) ).TestPointCollide( p ))
+		return GetBlockAtWorldPos(p);
+	else
+		return {BLCK_NONE, 0};
 }
 
 std::tuple<CVector, BLOCKID> CWorld::TestAABBCollision( CBoundingBox col )
@@ -92,7 +125,33 @@ std::tuple<CVector, BLOCKID> CWorld::TestAABBCollision( CBoundingBox col )
 CEntityBase *CWorld::AddEntity(std::unique_ptr<CEntityBase> ent)
 {
 	m_entities.push_back( std::move(ent) );
+#ifdef CLIENTEXE
+	m_entities.back()->m_pMdl->SetShader(m_pEntityShader);
+#endif
 	return m_entities.back().get();
+}
+
+CEntityBase *CWorld::GetEntityByName( std::string name )
+{
+	for (std::unique_ptr<CEntityBase> &ent : m_entities)
+	{
+		CEntityBase *e = ent.get();
+		if ( e->m_name == name )
+			return e;
+	}
+
+
+	return nullptr;
+}
+
+void CWorld::LoadFromData(ChunkData data)
+{
+	CChunk *c = ChunkAtPosCreate({ (float)data.x, (float)data.y, (float)data.z });
+
+	for (int i = 0; i < CHUNKLENGTH; i++)
+	{
+		c->SetBlockAtIDX(i, (BLOCKID)data.m_iBlocks[i], data.m_iValue[i]);
+	}
 }
 
 void CWorld::WorldTick(int nTick, float fDelta)
@@ -104,3 +163,28 @@ void CWorld::WorldTick(int nTick, float fDelta)
 	for (std::unique_ptr<CEntityBase> &ent : m_entities)
 		ent->Tick(nTick);
 }
+
+#ifdef CLIENTEXE
+
+void CWorld::Render()
+{
+	// Render regular blocks
+	std::map<CVector, std::unique_ptr<CChunk>>::iterator i = m_chunks.begin();
+	while ( i != m_chunks.end() )
+	{
+		i->second->Render();
+		i ++;
+	}
+	// Render entities
+	for (std::unique_ptr<CEntityBase> &ent : m_entities)
+		ent->Render();
+	// Render stuff like water
+	i = m_chunks.begin();
+	while ( i != m_chunks.end() )
+	{
+		i->second->RenderLiquid();
+		i ++;
+	}
+}
+
+#endif

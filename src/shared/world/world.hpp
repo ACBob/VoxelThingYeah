@@ -8,11 +8,19 @@
 
 #include "entities/entitybase.hpp"
 
+#ifdef CLIENTEXE
+#include "rendering/shadermanager.hpp"
+#include "rendering/texturemanager.cpp"
+#endif
 
 class CWorld
 {
   public:
+#ifdef CLIENTEXE
+	CWorld(CShader *blockShader, CShader *entityShader, CShader *waterShader, CTexture *worldTex);
+#else
 	CWorld();
+#endif
 	~CWorld();
 
 	// Returns the chunk at the position in chunk coordinates
@@ -34,6 +42,10 @@ class CWorld
 
 	void SetBlockAtWorldPos( CVector pos, BLOCKID id, BLOCKVAL val = 0 );
 
+	// Returns the ID and Value of the block we hit
+	// Position can therefore be inferred as the floor of p
+	std::tuple<BLOCKID, BLOCKVAL> TestPointCollision( CVector p );
+
 	// Returns the position and ID of the block we hit first
 	// On error, the W coordinate of the pos is 1 & the block id is BLCK_NONE
 	std::tuple<CVector, BLOCKID> TestAABBCollision( CBoundingBox col );
@@ -41,7 +53,22 @@ class CWorld
 	// Adds an entity to the world, taking ownership of it
 	CEntityBase *AddEntity(std::unique_ptr<CEntityBase> ent);
 
+	// Finds the first entity named such
+	CEntityBase *GetEntityByName( std::string name );
+
+	// Loads the data into a chunk
+	void LoadFromData(ChunkData data);
+
 	void WorldTick( int nTick, float delta );
+
+#ifdef CLIENTEXE
+	void Render();
+
+	CTexture* m_pWorldTex;
+	CShader* m_pBlockShader;
+	CShader* m_pEntityShader;
+	CShader* m_pLiquidShader;
+#endif
 
 	// The time in the day
 	int m_iWorldTime = 0;

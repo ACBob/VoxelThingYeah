@@ -46,6 +46,11 @@ std::tuple<BLOCKID, BLOCKVAL> CChunk::GetBlockAtIDX( int i )
 		m_value[i]
 	};
 }
+void CChunk::SetBlockAtIDX( int i, BLOCKID id, BLOCKVAL val )
+{
+	m_blockID[i] = id;
+	m_value[i] = val;
+}
 
 CVector CChunk::GetPosInWorld( CVector pos ) {
 	CVector p = { m_vPosition.x / CHUNKSIZE_X, m_vPosition.y / CHUNKSIZE_Y, m_vPosition.z / CHUNKSIZE_Z };
@@ -63,3 +68,43 @@ bool ValidChunkPosition(CVector pos)
 		(pos.y >= 0 && pos.y < CHUNKSIZE_Y) &&
 		(pos.z >= 0 && pos.z < CHUNKSIZE_Z);
 }
+
+void CChunk::Tick( int64_t tick )
+{
+	if (m_bDirty)
+	{
+		// Rebuild the portable information at last
+		m_data.x = m_vPosition.x;
+		m_data.y = m_vPosition.y;
+		m_data.z = m_vPosition.z;
+
+		for ( int j = 0; j < CHUNKLENGTH; j++ )
+		{
+			m_data.m_iBlocks[j] = m_blockID[j];
+			m_data.m_iValue[j]  = m_value[j];
+		}
+
+#ifdef CLIENTEXE
+		RebuildModel();
+		for ( int i = 0; i < 6; i++ )
+		{
+			CChunk *neighbour = Neighbour( (Direction)i );
+			if ( neighbour != nullptr )
+				neighbour->RebuildModel();
+		}
+#endif
+	}
+}
+
+#ifdef CLIENTEXE
+void CChunk::RebuildModel() {
+	BuildChunkModel( m_blockModel, m_liquidModel, m_blockID, m_value, GetPosInWorld(), this );
+}
+
+void CChunk::Render() {
+	m_blockModel.Render();
+}
+void CChunk::RenderLiquid() {
+	m_liquidModel.Render();
+}
+#endif

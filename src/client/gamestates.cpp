@@ -16,6 +16,8 @@
 
 #include "colours.hpp"
 
+#include "rendering/blocktexture.hpp"
+
 const CModel::Vertex cloudPlane[4] = {
 	// POSITION            NORMAL            UV
 	{ -512.0f,  0.0f, -512.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },
@@ -57,13 +59,12 @@ void CStatePlay::Enter()
 	m_pHotbarTex	   = materialSystem::LoadTexture( "hotbar.png" );
 	m_pHotbarSelectTex = materialSystem::LoadTexture( "hotbar-selected.png" );
 
-	m_pLocalPlayer = new CEntityPlayer();
-	m_pLocalWorld  = new CWorld( m_pChunkShader, m_pDiffuseShader, m_pWaterShader, m_pTerrainPNG );
-
+	m_pLocalPlayer = (CEntityPlayer*)m_pLocalWorld->AddEntity( std::make_unique<CEntityPlayer>() );
 	m_pLocalPlayer->m_pInputMan = pStateMan->m_pGui->m_pInputMan;
 	m_pLocalPlayer->m_pClient	= pStateMan->m_pClient;
 
-	m_pLocalWorld->AddEntity( m_pLocalPlayer );
+	m_pLocalWorld  = new CWorld( m_pChunkShader, m_pDiffuseShader, m_pWaterShader, m_pTerrainPNG );
+	
 
 	pStateMan->m_pClient->m_pLocalPlayer = m_pLocalPlayer;
 	pStateMan->m_pClient->m_pLocalWorld	 = m_pLocalWorld;
@@ -93,28 +94,23 @@ void CStatePlay::Enter()
 		new CBlockItem(64, BLCK_SNOW),
 		new CBlockItem(64, BLCK_SNOWGRASS),
 		new CBlockItem(64, BLCK_ICE),
-		new CBlockItem(64, LIGHT_YELLOW),
-		new CBlockItem(64, LIGHT_WHITE),
-		new CBlockItem(64, LIGHT_RED),
-		new CBlockItem(64, LIGHT_GREEN),
-		new CBlockItem(64, LIGHT_BLUE),
 
-		new CBlockItem(64, BLCK_WOOL, (DyePalette[0] >> 8) & 0xFF, DyePalette[0] & 0xFF),
-		new CBlockItem(64, BLCK_WOOL, (DyePalette[1] >> 8) & 0xFF, DyePalette[1] & 0xFF),
-		new CBlockItem(64, BLCK_WOOL, (DyePalette[2] >> 8) & 0xFF, DyePalette[2] & 0xFF),
-		new CBlockItem(64, BLCK_WOOL, (DyePalette[3] >> 8) & 0xFF, DyePalette[3] & 0xFF),
-		new CBlockItem(64, BLCK_WOOL, (DyePalette[4] >> 8) & 0xFF, DyePalette[4] & 0xFF),
-		new CBlockItem(64, BLCK_WOOL, (DyePalette[5] >> 8) & 0xFF, DyePalette[5] & 0xFF),
-		new CBlockItem(64, BLCK_WOOL, (DyePalette[6] >> 8) & 0xFF, DyePalette[6] & 0xFF),
-		new CBlockItem(64, BLCK_WOOL, (DyePalette[7] >> 8) & 0xFF, DyePalette[7] & 0xFF),
-		new CBlockItem(64, BLCK_WOOL, (DyePalette[8] >> 8) & 0xFF, DyePalette[8] & 0xFF),
-		new CBlockItem(64, BLCK_WOOL, (DyePalette[9] >> 8) & 0xFF, DyePalette[9] & 0xFF),
-		new CBlockItem(64, BLCK_WOOL, (DyePalette[10] >> 8) & 0xFF, DyePalette[10] & 0xFF),
-		new CBlockItem(64, BLCK_WOOL, (DyePalette[11] >> 8) & 0xFF, DyePalette[11] & 0xFF),
-		new CBlockItem(64, BLCK_WOOL, (DyePalette[12] >> 8) & 0xFF, DyePalette[12] & 0xFF),
-		new CBlockItem(64, BLCK_WOOL, (DyePalette[13] >> 8) & 0xFF, DyePalette[13] & 0xFF),
-		new CBlockItem(64, BLCK_WOOL, (DyePalette[14] >> 8) & 0xFF, DyePalette[14] & 0xFF),
-		new CBlockItem(64, BLCK_WOOL, (DyePalette[15] >> 8) & 0xFF, DyePalette[15] & 0xFF),
+		new CBlockItem(64, BLCK_WOOL, DyePalette[0]),
+		new CBlockItem(64, BLCK_WOOL, DyePalette[1]),
+		new CBlockItem(64, BLCK_WOOL, DyePalette[2]),
+		new CBlockItem(64, BLCK_WOOL, DyePalette[3]),
+		new CBlockItem(64, BLCK_WOOL, DyePalette[4]),
+		new CBlockItem(64, BLCK_WOOL, DyePalette[5]),
+		new CBlockItem(64, BLCK_WOOL, DyePalette[6]),
+		new CBlockItem(64, BLCK_WOOL, DyePalette[7]),
+		new CBlockItem(64, BLCK_WOOL, DyePalette[8]),
+		new CBlockItem(64, BLCK_WOOL, DyePalette[9]),
+		new CBlockItem(64, BLCK_WOOL, DyePalette[10]),
+		new CBlockItem(64, BLCK_WOOL, DyePalette[11]),
+		new CBlockItem(64, BLCK_WOOL, DyePalette[12]),
+		new CBlockItem(64, BLCK_WOOL, DyePalette[13]),
+		new CBlockItem(64, BLCK_WOOL, DyePalette[14]),
+		new CBlockItem(64, BLCK_WOOL, DyePalette[15]),
 	});
 }
 void CStatePlay::ReturnedTo() {}
@@ -124,7 +120,6 @@ void CStatePlay::Exit()
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
 	pStateMan->m_pGui->ClearBuffers();
 
-	delete m_pLocalPlayer;
 	delete m_pLocalWorld;
 	delete m_invCreative;
 
@@ -144,7 +139,7 @@ void CStatePlay::Update()
 	// Should we leave the game?
 	bool leave = false;
 
-	m_fSunAngle	= lerp(m_fSunAngle, 180 * ( 1 - ( m_pLocalWorld->m_iTimeOfDay / 12000.0f ) ), 1/60.0f);
+	m_fSunAngle	= lerp(m_fSunAngle, 180 * ( 1 - ( m_pLocalWorld->m_iWorldTime / 12000.0f ) ), 1/60.0f);
 	CVector vSunForward = CVector( 0, 1, 0 ).Rotate(1, cl_sunroll->GetFloat()).Rotate(2, cl_sunyaw->GetFloat()).Rotate( 3, m_fSunAngle );
 
 	if ( !pStateMan->m_pClient->m_bConnected )
@@ -180,7 +175,7 @@ void CStatePlay::Update()
 			glm::lookAt( glm::vec3( m_pLocalPlayer->m_camera.m_vPosition.x, m_pLocalPlayer->m_camera.m_vPosition.y,
 									m_pLocalPlayer->m_camera.m_vPosition.z ),
 						 glm::vec3( v.x, v.y, v.z ), glm::vec3( VEC_UP.x, VEC_UP.y, VEC_UP.z ) );
-		shaderSystem::SetUniforms( view, m_projectionMatrix, m_iLastTick, m_pLocalWorld->m_iTimeOfDay, vSunForward );
+		shaderSystem::SetUniforms( view, m_projectionMatrix, m_iLastTick, m_pLocalWorld->m_iWorldTime, vSunForward );
 
 		glDisable( GL_DEPTH_TEST ); // Skybox
 		{
@@ -248,8 +243,8 @@ void CStatePlay::Update()
 
 		pStateMan->m_pGui->Label( "\u263A Smiley!!!", CVector( 0, -2 ) );
 
-		int hours	= m_pLocalWorld->m_iTimeOfDay / 1000;
-		int minutes = ( m_pLocalWorld->m_iTimeOfDay - ( hours * 1000 ) ) / 16.6666;
+		int hours	= m_pLocalWorld->m_iWorldTime / 1000;
+		int minutes = ( m_pLocalWorld->m_iWorldTime - ( hours * 1000 ) ) / 16.6666;
 		snprintf( guiBuf, 100, "%02i:%02i", hours, minutes );
 		pStateMan->m_pGui->Label( guiBuf, CVector( pStateMan->m_pGui->m_vScreenCentre.x, -1 ), Color( 1, 1, 1 ),
 								  CGui::TEXTALIGN_CENTER );
@@ -274,20 +269,9 @@ void CStatePlay::Update()
 				continue;
 
 			CBlockItem *pBlockItem = reinterpret_cast<CBlockItem *>( m_pLocalPlayer->m_inventory.Slot( i ) );
-			BlockTexture bTex = GetDefaultBlockTextureSide(pBlockItem->m_iBlockType, Direction::NORTH );
+			BlockTexture bTex = GetDefaultBlockTextureSide( pBlockItem->m_blockType, Direction::NORTH );
 
 			Colour tint(1,1,1);
-
-			if (GetBlockFeatures(pBlockItem->m_iBlockType).colouration == BLOCKCOLOURATION_16BIT)
-			{
-				tint.x = (pBlockItem->m_iValA >> 4) & 0xF;
-				tint.y = (pBlockItem->m_iValA >> 0) & 0xF;
-				tint.z = (pBlockItem->m_iValB >> 4) & 0xF;
-
-				tint.x /= 16;
-				tint.y /= 16;
-				tint.z /= 16;
-			}
 
 			pStateMan->m_pGui->ImageAtlas(
 				m_pTerrainPNG, { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey }, 16.0f,
@@ -315,20 +299,9 @@ void CStatePlay::Update()
 
 
 				CBlockItem *pBlockItem = reinterpret_cast<CBlockItem *>( m_invCreative->Slot( i ) );
-				BlockTexture bTex = GetDefaultBlockTextureSide(pBlockItem->m_iBlockType, Direction::NORTH );
+				BlockTexture bTex = GetDefaultBlockTextureSide(pBlockItem->m_blockType, Direction::NORTH );
 
 				Colour tint(1,1,1);
-
-				if (GetBlockFeatures(pBlockItem->m_iBlockType).colouration == BLOCKCOLOURATION_16BIT)
-				{
-					tint.x = (pBlockItem->m_iValA >> 4) & 0xF;
-					tint.y = (pBlockItem->m_iValA >> 0) & 0xF;
-					tint.z = (pBlockItem->m_iValB >> 4) & 0xF;
-
-					tint.x /= 16;
-					tint.y /= 16;
-					tint.z /= 16;
-				}
 
 				pStateMan->m_pGui->ImageAtlas(m_pTerrainPNG, { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey }, 16.0f, p, CVector( 2, 2 ), CVector( 0.5, 0.5 ), tint );
 				if ( pStateMan->m_pGui->Button( 'b' + i, p, CVector(2,2), CVector(0.5, 0.5), nullptr, true ) )
@@ -337,12 +310,10 @@ void CStatePlay::Update()
 					{
 						// TODO: assuming blockitem
 						m_pLocalPlayer->m_pSelectedItem->SetCount( ITEMSTACK_MAX );
-						reinterpret_cast<CBlockItem *>( m_pLocalPlayer->m_pSelectedItem )->m_iBlockType =
-							pBlockItem->m_iBlockType;
-						reinterpret_cast<CBlockItem *>( m_pLocalPlayer->m_pSelectedItem )->m_iValA =
-							pBlockItem->m_iValA;
-						reinterpret_cast<CBlockItem *>( m_pLocalPlayer->m_pSelectedItem )->m_iValB =
-							pBlockItem->m_iValB;
+						reinterpret_cast<CBlockItem *>( m_pLocalPlayer->m_pSelectedItem )->m_blockType =
+							pBlockItem->m_blockType;
+						reinterpret_cast<CBlockItem *>( m_pLocalPlayer->m_pSelectedItem )->m_val =
+							pBlockItem->m_val;
 					}
 				}
 

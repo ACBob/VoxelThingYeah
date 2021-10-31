@@ -1,3 +1,5 @@
+#pragma once
+
 #include "utility/vector.hpp"
 
 #ifdef CLIENTEXE
@@ -48,17 +50,40 @@ class CChunk
 	std::tuple<BLOCKID, BLOCKVAL> GetBlockAtLocal( CVector pos );
 
 	// Sets the block at the local coordinates
-	void SetBlockAtLocal( CVector pos, BLOCKID block, BLOCKVAL val );
+	void SetBlockAtLocal( CVector pos, BLOCKID block, BLOCKVAL val = 0 );
 
 	// Gets the block at the idx
 	// Functionally equivalent to m_blockID[i]
 	std::tuple<BLOCKID, BLOCKVAL> GetBlockAtIDX( int i );
+
+	// Sets the block at the idx
+	// Functionally equivalent to m_blockID[i] =
+	void SetBlockAtIDX( int i, BLOCKID id, BLOCKVAL val = 0 );
 
 	// Returns the position corrected to world coordinates relative to this chunk
 	CVector GetPosInWorld( CVector pos = {0,0,0} );
 
 	// Returns the chunk that is next to us in direction (if it exists)
 	CChunk *Neighbour(Direction dir);
+
+	void Tick( int64_t tick );
+
+#ifdef CLIENTEXE
+	// Rebuilds the model
+	void RebuildModel();
+	
+	// Renders just the blocks, without liquid
+	void Render();
+
+	// Renders all the liquid
+	void RenderLiquid();
+
+	CModel m_blockModel;
+	CModel m_liquidModel;
+#endif
+
+	// Should we update
+	bool m_bDirty = false;
 
 	// Used for networking or saving
 	ChunkData m_data;
@@ -70,12 +95,6 @@ class CChunk
 	CVector m_vPosition;
 
 	CWorld *m_pWorld;
-
-  private:
-#ifdef CLIENTEXE
-	CModel m_blockModel;
-	CModel m_liquidModel;
-#endif
 };
 
 bool ValidChunkPosition( CVector pos );

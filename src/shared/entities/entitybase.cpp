@@ -94,9 +94,9 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	if ( blockInside != BLCK_NONE && ( blockInside == BLCK_WATER || blockInside == BLCK_WATERSRC ) )
 		m_bInWater = true;
 
-#ifdef CLIENTEXE
-	m_vLighting = pWorld->GetLightingAtWorldPos( m_vPosition ) / 16.0f;
-#endif
+// #ifdef CLIENTEXE
+// 	m_vLighting = pWorld->GetLightingAtWorldPos( m_vPosition ) / 16.0f;
+// #endif
 }
 
 void CEntityBase::Tick( int64_t iTick )

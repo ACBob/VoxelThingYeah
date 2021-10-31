@@ -58,40 +58,35 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 		m_pointed			= m_hand.Cast( clientSideWorld );
 
 		if ( m_pInputMan->m_iMouseState & IN_LEFT_MOUSE && m_pInputMan->m_iOldMouseState == 0 &&
-			 m_pointed.m_pBlock != nullptr )
+			 m_pointed.m_block != BLCK_NONE )
 		{
-			BlockFeatures bF = GetBlockFeatures( m_pointed.m_pBlock->m_iBlockType );
-			if ( bF.breakable )
-			{
-				m_pointed.m_pBlock->m_iBlockType = BLOCKID::BLCK_AIR;
-				m_pointed.m_pBlock->Update();
+			// BlockFeatures bF = GetBlockFeatures( m_pointed.m_pBlock->m_iBlockType );
+			// if ( bF.breakable )
+			// {
+			clientSideWorld->SetBlockAtWorldPos(m_pointed.m_vPosition, BLCK_AIR);
 
-				protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5,
-											  BLOCKID::BLCK_AIR, 0, 0 );
-			}
+			protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5,
+											BLOCKID::BLCK_AIR, 0 );
+			// }
 		}
 		if ( m_pInputMan->m_iMouseState & IN_RIGHT_MOUSE && m_pInputMan->m_iOldMouseState == 0 &&
-			 m_pointed.m_pBlock != nullptr )
+			 m_pointed.m_block != BLCK_NONE )
 		{
-			BLOCKID b = clientSideWorld->BlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal );
-			BlockFeatures bF = GetBlockFeatures( m_pointed.m_iBlock );
-			if ( m_pSelectedItem != nullptr && m_pSelectedItem->GetCount() > 0 && b != BLCK_NONE && bF.selectable )
+			BLOCKID b = std::get<0>(clientSideWorld->GetBlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal ));
+			if ( m_pSelectedItem != nullptr && m_pSelectedItem->GetCount() > 0 && b != BLCK_NONE && b != BLCK_NONE )
 			{
-				BLOCKID oldType = b; // TODO: We're assuming it's a block item
-				int16_t oldVal = clientSideWorld->BlockAtWorldPosVal( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal );
+				std::tuple<BLOCKID, BLOCKVAL> oldBlock = clientSideWorld->GetBlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal );
 				CBlockItem *blckItem = reinterpret_cast<CBlockItem *>( m_pSelectedItem );
-				clientSideWorld->SetBlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, blckItem->m_iBlockType, blckItem->m_iVal );
-				if ( !clientSideWorld->TestAABBCollision( m_collisionBox ) )
+				clientSideWorld->SetBlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, blckItem->m_blockType, blckItem->m_val );
+				if ( std::get<0>(clientSideWorld->TestAABBCollision( m_collisionBox )) == BLCK_NONE )
 				{
-					b->Update();
 					m_pSelectedItem->SetCount( m_pSelectedItem->GetCount() - 1 );
+
+					protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer,
+												( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, blckItem->m_blockType, blckItem->m_val );
 				}
 				else
-					clientSideWorld->SetBlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, oldType, oldVal );
-
-				protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer,
-											( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, b->m_iBlockType, blckItem->m_iValA,
-											blckItem->m_iValB );
+					clientSideWorld->SetBlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, std::get<0>(oldBlock), std::get<1>(oldBlock) );
 			}
 		}
 
