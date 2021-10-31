@@ -18,7 +18,7 @@ pitch = [1.0,2.0]
 ["game.music"]
 type = "music"
 appendSounds = false
-sounds = ["music/mojyjes.ogg", "music/shestenar.ogg", "music/isteke.ogg"]
+sounds = ["music/mojyjes.ogg", "music/shestenar.ogg", "music/isteke.ogg", "music/ino.ogg"]
 pitch = [1.0]
 
 ["ui.click"]
