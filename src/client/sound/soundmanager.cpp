@@ -279,7 +279,7 @@ void soundSystem::SetListener( CWorld *world, CVector pos, CVector forward, CVec
 			cast.m_vDirection = DirectionVector[i];
 			CPointedThing a	  = cast.Cast( world, false );
 
-			if ( a.m_pBlock == nullptr )
+			if ( a.m_block == BLCK_NONE )
 			{
 				// Add some reverb for things we can't touch, but be conservative of it
 				decayTime += 0.2f;
@@ -287,30 +287,30 @@ void soundSystem::SetListener( CWorld *world, CVector pos, CVector forward, CVec
 			}
 
 			float reverb		= 0.0f;
-			MATERIAL mat = GetBlockMaterial( a.m_pBlock->m_iBlockType );
-			switch ( mat )
-			{
-				default:
-					reverb = 0.05f;
-					break;
+			// MATERIAL mat = GetBlockMaterial( a.m_pBlock->m_iBlockType );
+			// switch ( mat )
+			// {
+			// 	default:
+			// 		reverb = 0.05f;
+			// 		break;
 
-				MAT_STONE:
-				MAT_GLASS:
-					reverb = 0.4f;
-					break;
+			// 	MAT_STONE:
+			// 	MAT_GLASS:
+			// 		reverb = 0.4f;
+			// 		break;
 
-				MAT_LOOSE:
-					reverb = 0.2f;
-					break;
+			// 	MAT_LOOSE:
+			// 		reverb = 0.2f;
+			// 		break;
 
-				MAT_ORGANIC:
-					reverb = 0.15f;
-					break;
+			// 	MAT_ORGANIC:
+			// 		reverb = 0.15f;
+			// 		break;
 
-				MAT_LIQUID:
-					reverb = 0.0f;
-					break;
-			}
+			// 	MAT_LIQUID:
+			// 		reverb = 0.0f;
+			// 		break;
+			// }
 
 			decayTime += reverb * ( a.m_fDistance / 4.0f );
 		}
@@ -333,32 +333,34 @@ CSound *soundSystem::LoadSound( const char *path )
 	return snd;
 }
 
+// TODO: use new block stuff
+
 void soundSystem::PlayBreakSound( BLOCKID blockType, CVector pos )
 {
-	MATERIAL mat = GetBlockMaterial( blockType );
+	// MATERIAL mat = GetBlockMaterial( blockType );
 
 	char *buf = new char[512];
-	snprintf( buf, 512, "block.break.%s", BlockMaterialSTR( mat ) );
+	snprintf( buf, 512, "block.break.%s", "stone" );
 	PlaySoundEvent( buf, pos );
 
 	delete buf;
 }
 void soundSystem::PlayPlaceSound( BLOCKID blockType, CVector pos )
 {
-	MATERIAL mat = GetBlockMaterial( blockType );
+	// MATERIAL mat = GetBlockMaterial( blockType );
 
 	char *buf = new char[512];
-	snprintf( buf, 512, "block.place.%s", BlockMaterialSTR( mat ) );
+	snprintf( buf, 512, "block.place.%s", "stone" );
 	PlaySoundEvent( buf, pos );
 
 	delete buf;
 }
 void soundSystem::PlayStepSound( BLOCKID blockType, CVector pos )
 {
-	MATERIAL mat = GetBlockMaterial( blockType );
+	// MATERIAL mat = GetBlockMaterial( blockType );
 
 	char *buf = new char[512];
-	snprintf( buf, 512, "block.step.%s", BlockMaterialSTR( mat ) );
+	snprintf( buf, 512, "block.step.%s", "stone" );
 	PlaySoundEvent( buf, pos );
 	delete buf;
 }

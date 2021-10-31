@@ -5,7 +5,7 @@
 
 #include <map>
 
-#include "world/block.hpp"
+#include "blockdef.hpp"
 #include "world/world.hpp"
 
 #include "shared/logging.hpp"

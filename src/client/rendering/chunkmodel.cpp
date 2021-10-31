@@ -12,6 +12,10 @@
 
 #include "block/blockbase.hpp"
 
+#include "direction.hpp"
+
+#include "blocktexture.hpp"
+
 const CModel::Vertex cubeVertices[] = {
 	// NORTH +Z
 	{ BLOCKUNIT, BLOCKUNIT, BLOCKUNIT },
@@ -43,7 +47,7 @@ const std::vector<std::vector<int>> cubeTris = {
 
 const std::vector<int> plantTris = { 2, 1, 3, 0, 6, 5, 7, 4 };
 
-std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlockBase *block, int x, int y, int z, int lr, int lg, int lb,
+std::vector<CModel::Vertex> sampleCubeFace( Direction dir, BLOCKID block, int x, int y, int z, int lr, int lg, int lb,
 											int ls, int cr, int cg, int cb )
 {
 	std::vector<CModel::Vertex> g;
@@ -70,7 +74,7 @@ std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlockBase *block, in
 		g[i].ny = normal.y;
 		g[i].nz = normal.z;
 
-		BlockTexture tex = block->GetSideTexture( dir );
+		BlockTexture tex = GetDefaultBlockTextureSide( block, dir );
 
 		switch ( i )
 		{
@@ -87,63 +91,6 @@ std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlockBase *block, in
 				g[i].v = (float)( tex.y + tex.sizey ) / 16.0f;
 				break;
 			case 3:
-				g[i].u = (float)tex.x / 16.0f;
-				g[i].v = (float)( tex.y + tex.sizey ) / 16.0f;
-				break;
-		}
-	}
-
-	return g;
-}
-
-std::vector<CModel::Vertex> samplePlant( CBlockBase block, int x, int y, int z, int lr, int lg, int lb, int ls )
-{
-	std::vector<CModel::Vertex> g;
-	for ( int i = 0; i < 8; i++ )
-	{
-		g.push_back( plantVertices[plantTris[i]] );
-
-		g[i].x += x;
-		g[i].y += y;
-		g[i].z += z;
-
-		g[i].lr = lr / 16.0f;
-		g[i].lg = lg / 16.0f;
-		g[i].lb = lb / 16.0f;
-		g[i].la = ls / 16.0f;
-
-		g[i].cr = 1.0f;
-		g[i].cg = 1.0f;
-		g[i].cb = 1.0f;
-
-		CVector normal = DirectionVector[i > 4 ? SOUTH : NORTH];
-
-		// TODO:
-		g[i].nx = normal.x;
-		g[i].ny = normal.y;
-		g[i].nz = normal.z;
-
-		BlockTexture tex = block->GetSideTexture( NORTH );
-
-		switch ( i )
-		{
-			case 0:
-			case 4:
-				g[i].u = (float)tex.x / 16.0f;
-				g[i].v = (float)tex.y / 16.0f;
-				break;
-			case 1:
-			case 5:
-				g[i].u = (float)( tex.x + tex.sizex ) / 16.0f;
-				g[i].v = (float)tex.y / 16.0f;
-				break;
-			case 2:
-			case 6:
-				g[i].u = (float)( tex.x + tex.sizex ) / 16.0f;
-				g[i].v = (float)( tex.y + tex.sizey ) / 16.0f;
-				break;
-			case 3:
-			case 7:
 				g[i].u = (float)tex.x / 16.0f;
 				g[i].v = (float)( tex.y + tex.sizey ) / 16.0f;
 				break;
@@ -154,6 +101,8 @@ std::vector<CModel::Vertex> samplePlant( CBlockBase block, int x, int y, int z, 
 }
 
 // We include the chunk manager here so we can test our neighbouring chunks
+// TODO: Rewrite entirely
+// (This may be one of the oldest pieces of unrewritten code)
 void BuildChunkModel( CModel &mdl, CModel &wmdl, BLOCKID blocks[], int16_t values[], CVector pos, void *chunk )
 {
 	mdl.m_vertices.clear();
@@ -172,108 +121,62 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, BLOCKID blocks[], int16_t value
 				// block here! Construct!
 				if ( block != BLCK_AIR )
 				{
-					BlockFeatures blockFeatures = GetBlockFeatures( block );
-					switch ( blockFeatures.model )
+					for ( int i = 0; i < 6; i++ )
 					{
-						case BLOCKMODEL_CUBE:
-							for ( int i = 0; i < 6; i++ )
+						Colour lightColour;
+						Colour blockColouration(16,16,16);
+
+						CVector neighbour = CVector( x, y, z ) + DirectionVector[i];
+						if ( ValidChunkPosition( neighbour ) )
+						{
+							BLOCKID blockType = std::get<0>(reinterpret_cast<CChunk *>( chunk )->GetBlockAtLocal( neighbour ));
+							if ( blockType != BLCK_NONE )
+								continue;
+						}
+						else
+						{
+							// Test a neighbour
+							CChunk *chunkNeighbour =
+								reinterpret_cast<CChunk *>( chunk )->Neighbour( Direction( i ) );
+							if ( chunkNeighbour != nullptr )
 							{
-								Colour lightColour;
-								Colour blockColouration(16,16,16);
+								neighbour = neighbour + ( DirectionVector[i] *
+															CVector( -CHUNKSIZE_X, -CHUNKSIZE_Y, -CHUNKSIZE_Z ) );
 
-								if ( blockFeatures.colouration == BLOCKCOLOURATION_16BIT )
-								{
-									// All 16 bits of the values are used to colour
-									// So valueA contains R & G, valueB has B.
-									blockColouration.x = (block.m_iValueA >> 4) & 0xF;
-									blockColouration.y = (block.m_iValueA >> 0) & 0xF;
-									blockColouration.z = (block.m_iValueB >> 4) & 0xF;
-								}
-
-								CVector neighbour = CVector( x, y, z ) + DirectionVector[i];
-								if ( ValidChunkPosition( neighbour ) )
-								{
-									BLOCKID blockType = reinterpret_cast<CChunk *>( chunk )->GetBlockAtLocal( neighbour );
-									BlockFeatures bF = GetBlockFeatures( blockType );
-									if ( bF.rule == OBSCURERULE_ALWAYS ||
-										 ( bF.rule == OBSCURERULE_SIMILAR && blockType == block ) )
-										continue;
-
-									lightColour = reinterpret_cast<CChunk *>( chunk )->GetLightingLocal( neighbour );
-								}
-								else
-								{
-									// Test a neighbour
-									CChunk *chunkNeighbour =
-										reinterpret_cast<CChunk *>( chunk )->Neighbour( Direction( i ) );
-									if ( chunkNeighbour != nullptr )
-									{
-										neighbour = neighbour + ( DirectionVector[i] *
-																  CVector( -CHUNKSIZE_X, -CHUNKSIZE_Y, -CHUNKSIZE_Z ) );
-
-										BLOCKID b = chunkNeighbour->GetBlockAtLocal( neighbour );
-										if ( b == BLCK_NONE )
-											continue;
-										BlockFeatures bF = GetBlockFeatures( b );
-										if ( bF.rule == OBSCURERULE_ALWAYS ||
-											 ( bF.rule == OBSCURERULE_SIMILAR &&
-											   b->m_iBlockType == block.m_iBlockType ) )
-											continue;
-
-										lightColour = chunkNeighbour->GetLightingLocal( neighbour );
-									}
-								}
-
-								std::vector<CModel::Vertex> g =
-									sampleCubeFace( Direction( i ), block, x, y, z, (int)lightColour.x, (int)lightColour.y,
-													(int)lightColour.z, (int)lightColour.w, (int)blockColouration.x, (int)blockColouration.y, (int)blockColouration.z );
-
-								if ( block.m_iBlockType == BLCK_WATER || block.m_iBlockType == BLCK_WATERSRC )
-								{
-									std::copy( g.begin(), g.end(), std::back_inserter( wmdl.m_vertices ) );
-
-									int nVertices = wmdl.m_vertices.size();
-
-									wmdl.m_faces.push_back( { nVertices - 4, nVertices - 3, nVertices - 2 } );
-									wmdl.m_faces.push_back( { nVertices - 4, nVertices - 2, nVertices - 1 } );
-
-									if ( i == UP )
-									{
-										wmdl.m_faces.push_back( { nVertices - 2, nVertices - 3, nVertices - 4 } );
-										wmdl.m_faces.push_back( { nVertices - 1, nVertices - 2, nVertices - 4 } );
-									}
-								}
-								else
-								{
-									std::copy( g.begin(), g.end(), std::back_inserter( mdl.m_vertices ) );
-
-									int nVertices = mdl.m_vertices.size();
-
-									mdl.m_faces.push_back( { nVertices - 4, nVertices - 3, nVertices - 2 } );
-									mdl.m_faces.push_back( { nVertices - 4, nVertices - 2, nVertices - 1 } );
-								}
+								BLOCKID b = std::get<0>(chunkNeighbour->GetBlockAtLocal( neighbour ));
+								if ( b != BLCK_NONE )
+									continue;
 							}
-							break;
+						}
 
-						case BLOCKMODEL_PLANT:
-							CVector lightColour =
-								reinterpret_cast<CChunk *>( chunk )->GetLightingLocal( CVector( x, y, z ) );
-							std::vector<CModel::Vertex> g =
-								samplePlant( block, x, y, z, lightColour.x, lightColour.y, lightColour.z, lightColour.w );
+						std::vector<CModel::Vertex> g =
+							sampleCubeFace( Direction( i ), block, x, y, z, (int)lightColour.x, (int)lightColour.y,
+											(int)lightColour.z, (int)lightColour.w, (int)blockColouration.x, (int)blockColouration.y, (int)blockColouration.z );
+
+						if ( block == BLCK_WATER || block == BLCK_WATERSRC )
+						{
+							std::copy( g.begin(), g.end(), std::back_inserter( wmdl.m_vertices ) );
+
+							int nVertices = wmdl.m_vertices.size();
+
+							wmdl.m_faces.push_back( { nVertices - 4, nVertices - 3, nVertices - 2 } );
+							wmdl.m_faces.push_back( { nVertices - 4, nVertices - 2, nVertices - 1 } );
+
+							if ( i == UP ) // Double the up faces for water
+							{
+								wmdl.m_faces.push_back( { nVertices - 2, nVertices - 3, nVertices - 4 } );
+								wmdl.m_faces.push_back( { nVertices - 1, nVertices - 2, nVertices - 4 } );
+							}
+						}
+						else
+						{
 							std::copy( g.begin(), g.end(), std::back_inserter( mdl.m_vertices ) );
 
 							int nVertices = mdl.m_vertices.size();
 
 							mdl.m_faces.push_back( { nVertices - 4, nVertices - 3, nVertices - 2 } );
 							mdl.m_faces.push_back( { nVertices - 4, nVertices - 2, nVertices - 1 } );
-							mdl.m_faces.push_back( { nVertices - 2, nVertices - 3, nVertices - 4 } );
-							mdl.m_faces.push_back( { nVertices - 1, nVertices - 2, nVertices - 4 } );
-
-							mdl.m_faces.push_back( { nVertices - 8, nVertices - 7, nVertices - 6 } );
-							mdl.m_faces.push_back( { nVertices - 8, nVertices - 6, nVertices - 5 } );
-							mdl.m_faces.push_back( { nVertices - 6, nVertices - 7, nVertices - 8 } );
-							mdl.m_faces.push_back( { nVertices - 5, nVertices - 6, nVertices - 8 } );
-							break;
+						}
 					}
 				}
 			}

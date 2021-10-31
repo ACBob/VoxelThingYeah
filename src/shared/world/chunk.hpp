@@ -7,7 +7,12 @@
 
 #include "blockdef.hpp"
 
+#include "direction.hpp"
+
 #include <tuple>
+
+// Forward decl.
+class CWorld;
 
 #define CHUNKSIZE_X 16
 #define CHUNKSIZE_Y 16
@@ -35,7 +40,7 @@ struct ChunkData
 class CChunk
 {
   public:
-	CChunk(CVector pos);
+	CChunk(CVector pos, CWorld *pWorld);
 	~CChunk();
 
 	// Returns {BLOCKID, META}
@@ -45,6 +50,16 @@ class CChunk
 	// Sets the block at the local coordinates
 	void SetBlockAtLocal( CVector pos, BLOCKID block, BLOCKVAL val );
 
+	// Gets the block at the idx
+	// Functionally equivalent to m_blockID[i]
+	std::tuple<BLOCKID, BLOCKVAL> GetBlockAtIDX( int i );
+
+	// Returns the position corrected to world coordinates relative to this chunk
+	CVector GetPosInWorld( CVector pos = {0,0,0} );
+
+	// Returns the chunk that is next to us in direction (if it exists)
+	CChunk *Neighbour(Direction dir);
+
 	// Used for networking or saving
 	ChunkData m_data;
 
@@ -53,6 +68,8 @@ class CChunk
 	BLOCKVAL m_value[CHUNKLENGTH];
 
 	CVector m_vPosition;
+
+	CWorld *m_pWorld;
 
   private:
 #ifdef CLIENTEXE

@@ -1,12 +1,16 @@
-#include "blockbase.hpp
+#include "blockbase.hpp"
 #include "blockair.hpp"
+
+#include "world/chunk.hpp"
+
+#include "entities/entitybase.hpp"
 
 
 void CBlockBase::BlockUpdate( CChunk *pChunk, CVector vPosition ) const {}
 
-void CBlockBase::OnPlace( CChunk *pChunk, CVector vPosition, int16_t metadata ) const {}
+void CBlockBase::OnPlace( CChunk *pChunk, CVector vPosition, BLOCKVAL metadata ) const {}
 
-void CBlockBase::OnBreak( CChunk *pChunk, CVector vPosition, int16_t metadata, CEntityBase *pBreaker ) const {}
+void CBlockBase::OnBreak( CChunk *pChunk, CVector vPosition, BLOCKVAL metadata, CEntityBase *pBreaker ) const {}
 
 bool CBlockBase::CanBeUsed() const {
     return false;

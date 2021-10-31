@@ -34,6 +34,10 @@ class CWorld
 
 	void SetBlockAtWorldPos( CVector pos, BLOCKID id, BLOCKVAL val = 0 );
 
+	// Returns the position and ID of the block we hit first
+	// On error, the W coordinate of the pos is 1 & the block id is BLCK_NONE
+	std::tuple<CVector, BLOCKID> TestAABBCollision( CBoundingBox col );
+
 	// Adds an entity to the world, taking ownership of it
 	CEntityBase *AddEntity(std::unique_ptr<CEntityBase> ent);
 

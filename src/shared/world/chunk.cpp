@@ -1,6 +1,8 @@
 #include "chunk.hpp"
 
-CChunk::CChunk(CVector pos)
+#include "world/world.hpp"
+
+CChunk::CChunk(CVector pos, CWorld *pWorld)
 {
 	for (int i = 0; i < CHUNKLENGTH; i++)
 	{
@@ -9,6 +11,7 @@ CChunk::CChunk(CVector pos)
 	}
 
 	m_vPosition = pos;
+	m_pWorld = pWorld;
 }
 
 CChunk::~CChunk()
@@ -34,4 +37,29 @@ void CChunk::SetBlockAtLocal(CVector pos, BLOCKID blockId, BLOCKVAL val)
 	int i = CHUNK3D_TO_1D(pos.x, pos.y, pos.z);
 	m_blockID[i] = blockId;
 	m_value[i] = val;
+}
+
+std::tuple<BLOCKID, BLOCKVAL> CChunk::GetBlockAtIDX( int i )
+{
+	return {
+		m_blockID[i],
+		m_value[i]
+	};
+}
+
+CVector CChunk::GetPosInWorld( CVector pos ) {
+	CVector p = { m_vPosition.x / CHUNKSIZE_X, m_vPosition.y / CHUNKSIZE_Y, m_vPosition.z / CHUNKSIZE_Z };
+	return p + pos;
+}
+
+CChunk *CChunk::Neighbour(Direction dir)
+{
+	return m_pWorld->ChunkAtPosNoCreate(m_vPosition + DirectionVector[dir]);
+}
+
+bool ValidChunkPosition(CVector pos)
+{
+	return (pos.x >= 0 && pos.x < CHUNKSIZE_X) &&
+		(pos.y >= 0 && pos.y < CHUNKSIZE_Y) &&
+		(pos.z >= 0 && pos.z < CHUNKSIZE_Z);
 }

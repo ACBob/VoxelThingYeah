@@ -26,7 +26,7 @@ CChunk *CWorld::ChunkAtPosCreate(CVector pos)
 	if (c)
 		return c;
 
-	m_chunks[pos] = std::make_unique<CChunk>();
+	m_chunks[pos] = std::make_unique<CChunk>(pos, this);
 	return m_chunks[pos].get();
 }
 
@@ -62,6 +62,31 @@ void CWorld::SetBlockAtWorldPos( CVector pos, BLOCKID id, BLOCKVAL val )
 		return;
 
 	c->SetBlockAtLocal( (pos - (pos.Floor() / 16) * 16).Floor(), id, val );
+}
+
+std::tuple<CVector, BLOCKID> CWorld::TestAABBCollision( CBoundingBox col )
+{
+	CChunk *chunk = ChunkAtWorldPos( col.m_vPosition );
+	if ( chunk == nullptr )
+		return { {0, 0, 0, 1}, BLCK_NONE };
+
+	// Test A (pos)
+	for ( int i = 0; i < ( CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z ); i++ )
+	{
+		int x, y, z;
+		CHUNK1D_TO_3D( i, x, y, z );
+
+		// Don't collide with air
+		std::tuple<BLOCKID, BLOCKVAL> block = chunk->GetBlockAtIDX(i);
+		if ( std::get<0>(block) == BLCK_AIR )
+			continue;
+
+		if ( col.TestCollide(
+				 CBoundingBox( chunk->GetPosInWorld( CVector( x, y, z ) ), CVector( 1, 1, 1 ), CVector( 0 ) ) ) )
+			return { chunk->GetPosInWorld( CVector( x, y, z ) ),  std::get<0>(block) };
+	}
+
+	return { {0, 0, 0, 1}, BLCK_NONE };
 }
 
 CEntityBase *CWorld::AddEntity(std::unique_ptr<CEntityBase> ent)

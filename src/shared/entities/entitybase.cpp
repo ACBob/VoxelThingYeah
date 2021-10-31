@@ -30,7 +30,7 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 
 	m_vPosition.x += m_vVelocity.x * fDelta;
 	UpdateCollision();
-	if ( pWorld->TestAABBCollision( this->m_collisionBox ) )
+	if ( std::get<1>(pWorld->TestAABBCollision( this->m_collisionBox )) != BLCK_NONE )
 	{
 #ifdef CLIENTEXE
 		if (m_vVelocity.x >= SMACK_SPEED)
@@ -42,8 +42,8 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	}
 	m_vPosition.y += m_vVelocity.y * fDelta;
 	UpdateCollision();
-	m_pLastBlockFloor = pWorld->TestAABBCollision( this->m_collisionBox );
-	if ( m_pLastBlockFloor )
+	m_lastBlockFloor = std::get<1>(pWorld->TestAABBCollision( this->m_collisionBox ));
+	if ( m_lastBlockFloor != BLCK_NONE )
 	{
 #ifdef CLIENTEXE
 		if (m_vVelocity.y >= SMACK_SPEED)
@@ -58,7 +58,7 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	}
 	m_vPosition.z += m_vVelocity.z * fDelta;
 	UpdateCollision();
-	if ( pWorld->TestAABBCollision( this->m_collisionBox ) )
+	if ( std::get<1>(pWorld->TestAABBCollision( this->m_collisionBox )) != BLCK_NONE )
 	{
 #ifdef CLIENTEXE
 		if (m_vVelocity.z >= SMACK_SPEED)
@@ -90,7 +90,7 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	// Test if we're in water
 	m_bInWater = false;
 
-	BLOCKID blockInside = pWorld->BlockAtWorldPos( m_vPosition );
+	BLOCKID blockInside = std::get<0>(pWorld->GetBlockAtWorldPos( m_vPosition ));
 	if ( blockInside != BLCK_NONE && ( blockInside == BLCK_WATER || blockInside == BLCK_WATERSRC ) )
 		m_bInWater = true;
 
@@ -106,11 +106,11 @@ void CEntityBase::Tick( int64_t iTick )
 	t.y		  = 0;
 	if ( t.Magnitude() > 1 )
 	{
-		if ( m_bFootstepSounds && m_bOnFloor && m_pLastBlockFloor != nullptr )
+		if ( m_bFootstepSounds && m_bOnFloor && m_lastBlockFloor != BLCK_NONE &&  m_lastBlockFloor != BLCK_AIR )
 		{
 			if ( iTick >= m_iFootstepTick )
 			{
-				soundSystem::PlayStepSound( m_pLastBlockFloor->m_iBlockType, m_vPosition );
+				soundSystem::PlayStepSound( m_lastBlockFloor, m_vPosition );
 				m_iFootstepTick = iTick + 9;
 			}
 		}

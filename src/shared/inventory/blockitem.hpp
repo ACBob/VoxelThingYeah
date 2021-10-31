@@ -10,13 +10,13 @@ class CBlockItem : public CItem
 	DeclBaseClass( CItem );
 
   public:
-	CBlockItem(int count = 1, BLOCKID blockType = BLCK_AIR, int valA = 0, int valB = 0);
+	CBlockItem(int count = 1, BLOCKID blockType = BLCK_AIR, BLOCKVAL val = 0);
 	~CBlockItem();
 
 	// AIR is functionally the same as 0.
-	BLOCKID m_iBlockType;
+	BLOCKID m_blockType;
 
-	uint16_t m_iVal;
+	BLOCKVAL m_val;
 
 	int GetCount();
 };
