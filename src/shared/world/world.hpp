@@ -10,7 +10,7 @@
 
 #ifdef CLIENTEXE
 #include "rendering/shadermanager.hpp"
-#include "rendering/texturemanager.cpp"
+#include "rendering/texturemanager.hpp"
 #endif
 
 class CWorld
