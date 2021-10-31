@@ -4,6 +4,7 @@ BlockTexture GetDefaultBlockTextureSide( BLOCKID type, Direction side )
 {
 	switch ( type )
 	{
+		case BLCK_NONE: // wee woo wee woo
 		case BLCK_AIR: // Shouldn't be possible
 			return { 0, 0, 0, 0 };
 			break;

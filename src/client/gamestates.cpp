@@ -59,11 +59,11 @@ void CStatePlay::Enter()
 	m_pHotbarTex	   = materialSystem::LoadTexture( "hotbar.png" );
 	m_pHotbarSelectTex = materialSystem::LoadTexture( "hotbar-selected.png" );
 
+	m_pLocalWorld  = new CWorld( m_pChunkShader, m_pDiffuseShader, m_pWaterShader, m_pTerrainPNG );
+
 	m_pLocalPlayer = (CEntityPlayer*)m_pLocalWorld->AddEntity( std::make_unique<CEntityPlayer>() );
 	m_pLocalPlayer->m_pInputMan = pStateMan->m_pGui->m_pInputMan;
 	m_pLocalPlayer->m_pClient	= pStateMan->m_pClient;
-
-	m_pLocalWorld  = new CWorld( m_pChunkShader, m_pDiffuseShader, m_pWaterShader, m_pTerrainPNG );
 	
 
 	pStateMan->m_pClient->m_pLocalPlayer = m_pLocalPlayer;

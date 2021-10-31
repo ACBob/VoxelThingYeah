@@ -130,7 +130,7 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, BLOCKID blocks[], BLOCKVAL meta
 						if ( ValidChunkPosition( neighbour ) )
 						{
 							BLOCKID blockType = std::get<0>(reinterpret_cast<CChunk *>( chunk )->GetBlockAtLocal( neighbour ));
-							if ( blockType != BLCK_NONE )
+							if ( blockType != BLCK_NONE && blockType != BLCK_AIR )
 								continue;
 						}
 						else
@@ -144,7 +144,7 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, BLOCKID blocks[], BLOCKVAL meta
 															CVector( -CHUNKSIZE_X, -CHUNKSIZE_Y, -CHUNKSIZE_Z ) );
 
 								BLOCKID b = std::get<0>(chunkNeighbour->GetBlockAtLocal( neighbour ));
-								if ( b != BLCK_NONE )
+								if ( b != BLCK_NONE && b != BLCK_AIR )
 									continue;
 							}
 						}

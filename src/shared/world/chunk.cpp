@@ -8,7 +8,15 @@ CChunk::CChunk(CVector pos, CWorld *pWorld)
 	{
 		m_blockID[i] = BLCK_AIR; // BLCK_NONE?
 		m_value[i] = 0;
+
+		m_data.m_iBlocks[i] = BLCK_AIR;
+		m_value[i] = 0;
+		
 	}
+
+	m_data.x = pos.x;
+	m_data.y = pos.y;
+	m_data.z = pos.z;
 
 	m_vPosition = pos;
 	m_pWorld = pWorld;
@@ -93,6 +101,8 @@ void CChunk::Tick( int64_t tick )
 				neighbour->RebuildModel();
 		}
 #endif
+
+		m_bDirty = false;
 	}
 }
 

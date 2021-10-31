@@ -58,15 +58,12 @@ COverworldJeneration::COverworldJeneration()
 // Generates the base stone skeleton
 void COverworldJeneration::GenBase( CChunk *c )
 {
-	for ( int i = 0; i < sizeof( c->m_blocks ) / sizeof( BLOCKID ); i++ )
+	for ( int i = 0; i < CHUNKLENGTH; i++ )
 	{
 		// blocks[i].m_iBlockType = BLOCKID(random() % 4);
 		int x, y, z;
 		CHUNK1D_TO_3D( i, x, y, z );
-		CVector WorldPosition = c->PosToWorld( CVector( x, y, z ) );
-
-		// Make the block aware of our existence
-		c->m_blocks[i].m_pChunk = c;
+		CVector WorldPosition = c->GetPosInWorld( CVector( x, y, z ) );
 
 		// First try the seafloor
 		float noiseDataFloor = fnlGetNoise2D( &m_seafloorNoise, WorldPosition.x, WorldPosition.z );
@@ -74,7 +71,7 @@ void COverworldJeneration::GenBase( CChunk *c )
 
 		if ( WorldPosition.y <= seaFloor )
 		{
-			c->m_blocks[i].m_iBlockType = BLCK_STONE;
+			c->SetBlockAtIDX(i, BLCK_STONE);
 			continue;
 		}
 
@@ -82,97 +79,99 @@ void COverworldJeneration::GenBase( CChunk *c )
 		float percentToTopSurface = 1.0f - ( WorldPosition.y / 32.0f );
 		noiseData3D *= percentToTopSurface;
 
-		c->m_blocks[i].m_iBlockType = noiseData3D > 0.7 ? BLCK_STONE : ( WorldPosition.y > m_iSeaLevel ? BLCK_AIR : BLCK_WATERSRC );
+		c->SetBlockAtIDX(i, noiseData3D > 0.7 ? BLCK_STONE : ( WorldPosition.y > m_iSeaLevel ? BLCK_AIR : BLCK_WATERSRC ) );
 	}
 }
 
 // Replaces the surface and sometimes under that with block suiteable for the biome
 void COverworldJeneration::BiomeBlocks( CChunk *c )
 {
+	// TODO: total re-implementation
 	// Grassification
-	for ( int x = 0; x < CHUNKSIZE_X; x++ )
-	{
-		for ( int z = 0; z < CHUNKSIZE_Z; z++ )
-		{
-			int grassDepth =
-				2 + ( 2 * ( 1 + fnlGetNoise2D( &m_dirtNoise, x + c->GetPosInWorld().x, z + c->GetPosInWorld().z ) ) );
+	// for ( int x = 0; x < CHUNKSIZE_X; x++ )
+	// {
+	// 	for ( int z = 0; z < CHUNKSIZE_Z; z++ )
+	// 	{
+	// 		int grassDepth =
+	// 			2 + ( 2 * ( 1 + fnlGetNoise2D( &m_dirtNoise, x + c->GetPosInWorld().x, z + c->GetPosInWorld().z ) ) );
 
-			// We follow down to -1 so we can alter the blocks in the chunk below
-			for ( int y = CHUNKSIZE_Y; y > -1; y-- )
-			{
-				// TODO: Actually fix this as it tries to query chunks that don't exist yet.
-				BLOCKID blk = c->GetBlockAtLocal( CVector( x, y, z ) );
-				if ( blk != BLCK_NONE && blk == BLCK_AIR )
-					continue;
+	// 		// We follow down to -1 so we can alter the blocks in the chunk below
+	// 		for ( int y = CHUNKSIZE_Y; y > -1; y-- )
+	// 		{
+	// 			// TODO: Actually fix this as it tries to query chunks that don't exist yet.
+	// 			BLOCKID blk = c->GetBlockAtLocal( CVector( x, y, z ) );
+	// 			if ( blk != BLCK_NONE && blk == BLCK_AIR )
+	// 				continue;
 
-				BLOCKID b = c->GetBlockAtLocal( CVector( x, y + 1, z ) );
-				if ( b == nullptr )
-					continue;
+	// 			BLOCKID b = c->GetBlockAtLocal( CVector( x, y + 1, z ) );
+	// 			if ( b == nullptr )
+	// 				continue;
 
-				CBiome *biome = GetBiomeAtPos( c->PosToWorld( CVector( x, y, z ) ) );
+	// 			CBiome *biome = GetBiomeAtPos( c->PosToWorld( CVector( x, y, z ) ) );
 
-				if ( b == BLCK_AIR )
-				{
-					if ( blk == BLCK_STONE )
-					{
-						c->SetBlockAtLocal( CVector( x, y + 1, z ), biome->m_iBlockDust );
-						c->SetBlockAtLocal( CVector( x, y, z ), biome->m_iBlockSurface );
-						grassDepth--;
-					}
-					else
-					{
-						c->SetBlockAtLocal( CVector( x, y, z ), biome->m_iBlockWaterSurf );
-					}
-				}
-				else if ( b == biome->m_iBlockSurface ||
-						  b == biome->m_iBlockSubSurface && grassDepth > 0 )
-				{
-						c->SetBlockAtLocal( CVector( x, y, z ), biome->m_iBlockSubSurface );
-					grassDepth--;
-				}
-				else if ( blk->m_iBlockType == BLCK_STONE )
-				{
-						c->SetBlockAtLocal( CVector( x, y, z ), biome->m_iBlockRock );
-				}
-			}
-		}
-	}
+	// 			if ( b == BLCK_AIR )
+	// 			{
+	// 				if ( blk == BLCK_STONE )
+	// 				{
+	// 					c->SetBlockAtLocal( CVector( x, y + 1, z ), biome->m_iBlockDust );
+	// 					c->SetBlockAtLocal( CVector( x, y, z ), biome->m_iBlockSurface );
+	// 					grassDepth--;
+	// 				}
+	// 				else
+	// 				{
+	// 					c->SetBlockAtLocal( CVector( x, y, z ), biome->m_iBlockWaterSurf );
+	// 				}
+	// 			}
+	// 			else if ( b == biome->m_iBlockSurface ||
+	// 					  b == biome->m_iBlockSubSurface && grassDepth > 0 )
+	// 			{
+	// 					c->SetBlockAtLocal( CVector( x, y, z ), biome->m_iBlockSubSurface );
+	// 				grassDepth--;
+	// 			}
+	// 			else if ( blk->m_iBlockType == BLCK_STONE )
+	// 			{
+	// 					c->SetBlockAtLocal( CVector( x, y, z ), biome->m_iBlockRock );
+	// 			}
+	// 		}
+	// 	}
+	// }
 }
 
 // Decorates with ores, plants, etc.
 void COverworldJeneration::Decorate( CChunk *c )
 {
-	for ( int i = 0; i < sizeof( c->m_blocks ) / sizeof( BLOCKID ); i++ )
-	{
-		int x, y, z;
-		CHUNK1D_TO_3D( i, x, y, z );
-		CVector WorldPosition = c->PosToWorld( CVector( x, y, z ) );
+	// TODO:
+	// for ( int i = 0; i < sizeof( c->m_blocks ) / sizeof( BLOCKID ); i++ )
+	// {
+	// 	int x, y, z;
+	// 	CHUNK1D_TO_3D( i, x, y, z );
+	// 	CVector WorldPosition = c->PosToWorld( CVector( x, y, z ) );
 
-		// Ore
-		if ( c->m_blocks[i].m_iBlockType == BLCK_STONE )
-		{
-			float noiseData = fnlGetNoise3D( &m_oreNoise, WorldPosition.x, WorldPosition.y, WorldPosition.z ) * 1.1;
+	// 	// Ore
+	// 	if ( c->m_blocks[i].m_iBlockType == BLCK_STONE )
+	// 	{
+	// 		float noiseData = fnlGetNoise3D( &m_oreNoise, WorldPosition.x, WorldPosition.y, WorldPosition.z ) * 1.1;
 
-			if ( noiseData > 0.9 )
-				c->m_blocks[i].m_iBlockType = BLCK_COALORE;
-		}
+	// 		if ( noiseData > 0.9 )
+	// 			c->m_blocks[i].m_iBlockType = BLCK_COALORE;
+	// 	}
 
-		// Caves
-		float caveVal = 0.0f;
-		for ( int j = 0; j < CAVE_NOISES; j++ )
-			caveVal +=
-				std::pow( fnlGetNoise3D( &m_caveNoises[j], WorldPosition.x, WorldPosition.y, WorldPosition.z ), 2.0f );
+	// 	// Caves
+	// 	float caveVal = 0.0f;
+	// 	for ( int j = 0; j < CAVE_NOISES; j++ )
+	// 		caveVal +=
+	// 			std::pow( fnlGetNoise3D( &m_caveNoises[j], WorldPosition.x, WorldPosition.y, WorldPosition.z ), 2.0f );
 
-		if ( caveVal < 0.04f )
-		{
-			if ( c->m_blocks[i].m_iBlockType == BLCK_STONE || c->m_blocks[i].m_iBlockType == BLCK_GRASS ||
-				 c->m_blocks[i].m_iBlockType == BLCK_DIRT || c->m_blocks[i].m_iBlockType == BLCK_COALORE ||
-				 c->m_blocks[i].m_iBlockType == BLCK_SAND || c->m_blocks[i].m_iBlockType == BLCK_SANDSTONE )
-			{
-				c->m_blocks[i].m_iBlockType = BLCK_AIR;
-			}
-		}
-	}
+	// 	if ( caveVal < 0.04f )
+	// 	{
+	// 		if ( c->m_blocks[i].m_iBlockType == BLCK_STONE || c->m_blocks[i].m_iBlockType == BLCK_GRASS ||
+	// 			 c->m_blocks[i].m_iBlockType == BLCK_DIRT || c->m_blocks[i].m_iBlockType == BLCK_COALORE ||
+	// 			 c->m_blocks[i].m_iBlockType == BLCK_SAND || c->m_blocks[i].m_iBlockType == BLCK_SANDSTONE )
+	// 		{
+	// 			c->m_blocks[i].m_iBlockType = BLCK_AIR;
+	// 		}
+	// 	}
+	// }
 }
 
 void COverworldJeneration::Generate( CChunk *c )

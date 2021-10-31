@@ -6,6 +6,8 @@
 #include "vector.hpp"
 #include "chunk.hpp"
 
+#include "jeneration/jeneration.hpp"
+
 #include "entities/entitybase.hpp"
 
 #ifdef CLIENTEXE
@@ -71,7 +73,12 @@ class CWorld
 #endif
 
 	// The time in the day
-	int m_iWorldTime = 0;
+	int m_iWorldTime = 6000;
+
+	// Last time we ticked
+	int64_t m_iLastTick = 0;
+
+	COverworldJeneration m_worldJenerator;
 
   protected:
 	std::map<CVector, std::unique_ptr<CChunk>> m_chunks;

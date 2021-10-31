@@ -4,6 +4,8 @@
 
 #include <algorithm>
 
+#include "logging.hpp"
+
 #ifdef CLIENTEXE
 CWorld::CWorld(CShader *blockShader, CShader *entityShader, CShader *waterShader, CTexture *worldTex) {
 	m_pWorldTex = worldTex;
@@ -43,6 +45,9 @@ CChunk *CWorld::ChunkAtPosCreate(CVector pos)
 	m_chunks[pos]->m_liquidModel.SetShader(m_pLiquidShader);
 	m_chunks[pos]->m_liquidModel.SetTexture(m_pWorldTex);
 #endif
+
+	m_worldJenerator.Generate(m_chunks[pos].get());
+	m_chunks[pos]->m_bDirty = true;
 
 	return m_chunks[pos].get();
 }
@@ -124,10 +129,11 @@ std::tuple<CVector, BLOCKID> CWorld::TestAABBCollision( CBoundingBox col )
 
 CEntityBase *CWorld::AddEntity(std::unique_ptr<CEntityBase> ent)
 {
-	m_entities.push_back( std::move(ent) );
+	ent->Spawn();
 #ifdef CLIENTEXE
-	m_entities.back()->m_pMdl->SetShader(m_pEntityShader);
+	ent->m_pMdl->SetShader(m_pEntityShader);
 #endif
+	m_entities.push_back( std::move(ent) );
 	return m_entities.back().get();
 }
 
@@ -148,10 +154,14 @@ void CWorld::LoadFromData(ChunkData data)
 {
 	CChunk *c = ChunkAtPosCreate({ (float)data.x, (float)data.y, (float)data.z });
 
+	// con_debug("Load %d,%d,%d", data.x, data.y, data.z);
+
 	for (int i = 0; i < CHUNKLENGTH; i++)
 	{
 		c->SetBlockAtIDX(i, (BLOCKID)data.m_iBlocks[i], data.m_iValue[i]);
 	}
+
+	c->m_bDirty = true;
 }
 
 void CWorld::WorldTick(int nTick, float fDelta)
@@ -161,7 +171,23 @@ void CWorld::WorldTick(int nTick, float fDelta)
 						[]( auto &&c ) { return c->m_bIsKilled;} ), m_entities.end() );
 
 	for (std::unique_ptr<CEntityBase> &ent : m_entities)
-		ent->Tick(nTick);
+	{
+		if (nTick != m_iLastTick) ent->Tick(nTick);
+		ent->PhysicsTick(fDelta, this);
+	}
+
+	if (nTick == m_iLastTick)
+		return;
+
+	std::map<CVector, std::unique_ptr<CChunk>>::iterator i = m_chunks.begin();
+	while ( i != m_chunks.end() )
+	{
+		i->second->Tick(nTick);
+		i ++;
+	}
+	
+	m_iLastTick = nTick;
+	m_iWorldTime ++;
 }
 
 #ifdef CLIENTEXE
