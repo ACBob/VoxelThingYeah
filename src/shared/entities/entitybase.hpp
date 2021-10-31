@@ -3,8 +3,6 @@
 #include "utility/assorted.hpp"
 #include "utility/vector.hpp"
 
-#include "world/world.hpp"
-
 #ifdef CLIENTEXE
 	#include "rendering/modelmanager.hpp"
 	#include "rendering/shadermanager.hpp"
@@ -13,8 +11,13 @@
 	#define SMACK_SPEED 30
 #endif
 
+#include "world/physics.hpp"
+#include "blockdef.hpp"
+
 #include <string>
 #include <vector>
+
+class CWorld; // Forward Decl
 
 class CEntityBase
 {

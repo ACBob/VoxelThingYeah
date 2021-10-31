@@ -1,17 +1,18 @@
 #include "utility/vector.hpp"
 
-#include "world/block.hpp"
-
 #ifdef CLIENTEXE
 	#include "rendering/chunkmodel.hpp"
 	#include "rendering/shadermanager.hpp"
 #endif
 
-#include "fastnoise.h"
+#include "blockdef.hpp"
+
+#include <tuple>
 
 #define CHUNKSIZE_X 16
 #define CHUNKSIZE_Y 16
 #define CHUNKSIZE_Z 16
+#define CHUNKLENGTH CHUNKSIZE_X*CHUNKSIZE_Y*CHUNKSIZE_Z
 
 // Why yes, I am a C++ Programmer, how could you tell?
 #define CHUNK3D_TO_1D( x, y, z ) x + y *CHUNKSIZE_X + z *CHUNKSIZE_X *CHUNKSIZE_Z
@@ -22,70 +23,42 @@
 
 #pragma once
 
-// A storage only type of chunk
-// that stores JUST essential information to rebuild a chunk
-// Used for saving/loading and network stuff
-struct PortableChunkRepresentation
+// A storage only type of chunk that stores JUST essential information to rebuild a chunk
+struct ChunkData
 {
 	// CVector can't be used in this context
 	int32_t x, y, z;
-	uint16_t m_iValue[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
-	uint64_t m_iBlocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
+	uint64_t m_iBlocks[CHUNKLENGTH];
+	uint16_t m_iValue[CHUNKLENGTH];
 };
 
 class CChunk
 {
   public:
-	CChunk();
+	CChunk(CVector pos);
 	~CChunk();
 
-	CChunk *Neighbour( Direction dir );
-	CChunk *Neighbour( CVector dir );
+	// Returns {BLOCKID, META}
+	// Coords local to chunk
+	std::tuple<BLOCKID, BLOCKVAL> GetBlockAtLocal( CVector pos );
+
+	// Sets the block at the local coordinates
+	void SetBlockAtLocal( CVector pos, BLOCKID block, BLOCKVAL val );
+
+	// Used for networking or saving
+	ChunkData m_data;
+
+  protected:
+	BLOCKID m_blockID[CHUNKLENGTH];
+	BLOCKVAL m_value[CHUNKLENGTH];
 
 	CVector m_vPosition;
-	CVector GetPosInWorld() { return m_vPosition * CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ); }
 
-	BLOCKID GetBlockAtLocal( CVector pos );
-
+  private:
 #ifdef CLIENTEXE
-	void RebuildMdl();
-
-	void Render();
-	void RenderTrans(); // Renders things that should be done last, like water
+	CModel m_blockModel;
+	CModel m_liquidModel;
 #endif
-	void Update( int64_t iTick );
-
-	CVector PosToWorld( int x, int y, int z );
-	CVector PosToWorld( CVector pos );
-
-	// Flat array of blocks IDs
-	BLOCKID m_blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
-	// Flat array of block meta
-	int16_t m_iValues[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
-
-#ifdef CLIENTEXE
-	CModel m_blocksMdl;
-	CModel m_waterMdl;
-	// 16 bits
-	// 4 red, 4 green, 4 blue and 4 extra for the sky/natural light
-	uint16_t m_iLightingValue[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
-
-	// Alpha (w) is the sun value
-	Colour GetLightingLocal( CVector pos );
-	void SetLightingLocal( CVector pos, Colour color );
-
-	void UpdateLighting();
-#endif
-
-	// World pointer (can't set type because circular include :lenny:)
-	void *m_pChunkMan = nullptr;
-
-	PortableChunkRepresentation m_portableDef;
-
-	bool m_bDirty		= false; // We need to update regardless of if we're near anyone
-	bool m_bReallyDirty = false; // We need to be completely resent
-
-	int64_t m_iLastTick = 0;
 };
 
 bool ValidChunkPosition( CVector pos );

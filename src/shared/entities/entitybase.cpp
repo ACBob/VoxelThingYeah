@@ -4,6 +4,8 @@
 	#include "sound/soundmanager.hpp"
 #endif
 
+#include "world/world.hpp"
+
 CEntityBase::CEntityBase() : m_collisionBox( { CVector( 0 ), CVector( 0.5, 0.5, 0.5 ), CVector( 0.5, 0.5, 0.5 ) } ) {}
 
 CEntityBase::~CEntityBase() {}

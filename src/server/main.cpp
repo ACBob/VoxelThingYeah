@@ -94,7 +94,7 @@ int main( int argc, char *args[] )
 			if ( i % 40 == 0 )
 			{
 				for ( CNetworkPlayer *c : server.m_players )
-					protocol::SendServerTimeOfDay( c->m_pPeer, server.m_world.m_iTimeOfDay );
+					protocol::SendServerTimeOfDay( c->m_pPeer, server.m_world.m_iWorldTime );
 			}
 		}
 	}

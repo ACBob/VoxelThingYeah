@@ -49,8 +49,7 @@ namespace protocol
 				SendServerPlayerID( pPeer, false );
 
 				// Create an entity for them
-				CEntityPlayer *p = new CEntityPlayer();
-				pServer->m_world.AddEntity( p );
+				CEntityPlayer *p = (CEntityPlayer*)pServer->m_world.AddEntity( std::make_unique<CEntityPlayer>() );
 				c->m_pEntity  = p;
 				c->m_username = username;
 				p->m_name	  = c->m_username;
@@ -84,19 +83,18 @@ namespace protocol
 			case ClientPacket::SET_BLOCK: {
 				float x, y, z;
 				uint blockType;
-				uint16_t valA;
+				uint16_t val;
 				bufAccess >> x;
 				bufAccess >> y;
 				bufAccess >> z;
 				bufAccess >> blockType;
 				bufAccess >> val;
 
-				BLOCKID b = pServer->m_world.BlockAtWorldPos( CVector( x, y, z ) );
-
-				BLOCKID oldBlockType = b;
+				std::tuple<BLOCKID, BLOCKVAL> b = pServer->m_world.GetBlockAtWorldPos( CVector( x, y, z ) );
+				BLOCKID oldBlockType = std::get<0>(b);
 				if ( true ) // If it's a valid block placement (for now no check)
 				{
-					pServer->m_world.SetBlockAtWorldPos( CVector( x, y, z ), val );
+					pServer->m_world.SetBlockAtWorldPos( CVector( x, y, z ), (BLOCKID)blockType, val );
 
 					for ( CNetworkPlayer *c : pServer->m_players )
 					{
@@ -112,7 +110,7 @@ namespace protocol
 				}
 				else
 				{
-					SendServerUpdateBlock( pPeer, CVector( x, y, z ), b->m_iBlockType, b->m_iValueA, b->m_iValueB );
+					SendServerUpdateBlock( pPeer, CVector( x, y, z ), std::get<0>(b), std::get<1>(b) );
 				}
 			}
 			break;

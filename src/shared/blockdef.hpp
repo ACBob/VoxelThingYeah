@@ -49,3 +49,5 @@ enum MATERIAL {
 	MAT_DUST	= 7, // Sand
 	MAT_FABRIC  = 8  // Wool
 };
+
+using BLOCKVAL = uint16_t;

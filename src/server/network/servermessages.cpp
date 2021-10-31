@@ -19,12 +19,12 @@ namespace protocol
 	}
 	void SendServerChunkData( ENetPeer *pPeer, CWorld *world, CVector pos )
 	{
-		PortableChunkRepresentation crep;
-		crep = world->GetWorldRepresentation( pos );
+		ChunkData crep;
+		crep = world->ChunkAtWorldPos( pos )->m_data;
 
 		SendServerChunkDataFromRep( pPeer, crep );
 	}
-	void SendServerChunkDataFromRep( ENetPeer *pPeer, PortableChunkRepresentation crep )
+	void SendServerChunkDataFromRep( ENetPeer *pPeer, ChunkData crep )
 	{
 		ServerPacket p;
 		p.type					   = ServerPacket::CHUNKDATA;
@@ -32,7 +32,7 @@ namespace protocol
 		bufAcc << crep.x;
 		bufAcc << crep.y;
 		bufAcc << crep.z;
-		bufAcc << CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z;
+		bufAcc << CHUNKLENGTH;
 		bufAcc << crep.m_iBlocks;
 		bufAcc << crep.m_iValue;
 
@@ -40,7 +40,7 @@ namespace protocol
 
 		SendPacket( pPeer, p, true );
 	}
-	void SendServerUpdateBlock( ENetPeer *pPeer, CVector pos, BLOCKID blockType, uint8_t valA, uint8_t valB )
+	void SendServerUpdateBlock( ENetPeer *pPeer, CVector pos, BLOCKID blockType, uint16_t val )
 	{
 		ServerPacket p;
 		p.type					   = ServerPacket::UPDATE_BLOCK;
@@ -49,8 +49,7 @@ namespace protocol
 		bufAcc << pos.y;
 		bufAcc << pos.z;
 		bufAcc << (uint)blockType;
-		bufAcc << valA;
-		bufAcc << valB;
+		bufAcc << val;
 
 		protocol::SendPacket( pPeer, p, true );
 	}

@@ -53,7 +53,7 @@ namespace protocol
 			break;
 
 			case ServerPacket::CHUNKDATA: {
-				PortableChunkRepresentation crep;
+				ChunkData crep;
 				int numBlocks;
 				bufAccess >> crep.x;
 				bufAccess >> crep.y;

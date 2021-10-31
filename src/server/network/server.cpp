@@ -120,15 +120,15 @@ void CNetworkServer::Update()
 		}
 	}
 
-	// Check for outdated chunks and queue them
-	for ( auto &&c : m_world.m_chunks )
-	{
-		for ( CNetworkPlayer *cl : m_players )
-		{
-			if ( c->m_bReallyDirty )
-				cl->m_pChunkQueue.push_back( c.get()->m_vPosition );
-		}
-	}
+	// // Check for outdated chunks and queue them
+	// for ( auto &&c : m_world.m_chunks )
+	// {
+	// 	for ( CNetworkPlayer *cl : m_players )
+	// 	{
+	// 		if ( c->m_bReallyDirty )
+	// 			cl->m_pChunkQueue.push_back( c.get()->m_vPosition );
+	// 	}
+	// }
 
 	for ( CNetworkPlayer *c : m_players )
 	{
@@ -181,9 +181,9 @@ void CNetworkServer::Update()
 
 		// con_debug("LOAD <%.0f,%.0f,%.0f>, %d", pos.x, pos.y, pos.z, p->m_iLoadedChunkIDX);
 
-		CChunk *c = m_world.GetChunkGenerateAtWorldPos( pos * CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) );
+		CChunk *c = m_world.ChunkAtWorldPos( pos * CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) );
 
-		protocol::SendServerChunkDataFromRep( p->m_pPeer, c->m_portableDef );
+		protocol::SendServerChunkDataFromRep( p->m_pPeer, c->m_data );
 	}
 }
 

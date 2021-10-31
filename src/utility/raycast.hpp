@@ -1,5 +1,5 @@
 #include "utility/vector.hpp"
-#include "world/block.hpp"
+#include "blockdef.hpp"
 #include "world/world.hpp"
 
 #pragma once
@@ -9,7 +9,7 @@ class CPointedThing
   public:
 	CPointedThing();
 
-	BLOCKID m_iBlock = BLCK_NONE; // The block at the end
+	BLOCKID m_block = BLCK_NONE; // The block ID
 	CVector m_vPosition;		// The position of the hit item
 	CVector m_vNormal;			// Facing towards where the ray came from
 	float m_fDistance;			// The distance travelled

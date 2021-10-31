@@ -1,97 +1,48 @@
-#include "world/block.hpp"
-#include "world/chunk.hpp"
-
-#include "utility/vector.hpp"
-
-#ifdef CLIENTEXE
-	#include "rendering/shadermanager.hpp"
-#endif
-
-#include "physics.hpp"
-#include "world/block.hpp"
-
-#include "jeneration/jeneration.hpp"
-
 #pragma once
 
-#include <vector>
-
-// #include "entities/entitybase.h"
-
+#include <map>
 #include <memory>
+
+#include "vector.hpp"
+#include "chunk.hpp"
+
+#include "entities/entitybase.hpp"
+
 
 class CWorld
 {
   public:
-#ifdef CLIENTEXE
-	CWorld( CShader *shader, CShader *entShader, CShader *waterShader, CTexture *worldTex );
-#elif SERVEREXE
 	CWorld();
-#endif
 	~CWorld();
 
-	CChunk *ChunkAtWorldPos( CVector pos );
-	CChunk *ChunkAtChunkPos( CVector chunkPos );
+	// Returns the chunk at the position in chunk coordinates
+	// Returns nullptr if it does not presently exist
+	CChunk *ChunkAtPosNoCreate(CVector pos);
 
-	// Tries to get a chunk and generates a new one if it can't find one
-	CChunk *GetChunkGenerateAtWorldPos( CVector pos );
+	// Returns the chunk if it exists, else creates and returns
+	CChunk *ChunkAtPosCreate(CVector pos);
 
-	// Deletes the chunk at the chunk position
-	void UnloadChunk( CVector pos );
+	// Same as ChunkAtWorldPosNoCreate but in world coordinates
+	CChunk *ChunkAtWorldPosNoCreate(CVector pos);
 
-	// Returns the block at the position in world coords
-	// The given position is rounded by floor() before being used
-	// If outside the world it returns a nullptr
-	BLOCKID BlockAtWorldPos( CVector pos );
+	// Same as ChunkAtPosCreate but in world coordinates
+	CChunk *ChunkAtWorldPos(CVector pos);
 
-	// Test against an infinitely small point centred on pos
-	// Tests in world coordinates
-	bool TestPointCollision( CVector pos );
+	// Gets the block at the world pos
+	// Block ID is BLCK_NONE if outside the world or invalid
+	std::tuple<BLOCKID, BLOCKVAL> GetBlockAtWorldPos( CVector pos );
 
-	// Tests in world coordinates
-	// Returning the first block that collides
-	CVector TestAABBCollision( CBoundingBox col );
+	void SetBlockAtWorldPos( CVector pos, BLOCKID id, BLOCKVAL val = 0 );
 
-	// Is the position within our place
-	bool ValidChunkPos( const CVector pos );
+	// Adds an entity to the world, taking ownership of it
+	CEntityBase *AddEntity(std::unique_ptr<CEntityBase> ent);
 
-	// Tick is the tick since the start of the game
-	// TODO: This will overflow maybe
-	void WorldTick( int64_t tick, float delta );
+	void WorldTick( int nTick, float delta );
 
-	int64_t m_iLastTick = 0;
+	// The time in the day
+	int m_iWorldTime = 0;
 
-	// Merges the PortableChunkRepresentation into us :)
-	void UsePortable( PortableChunkRepresentation rep );
-	// Returns the world rep at the chunk
-	PortableChunkRepresentation GetWorldRepresentation( CVector pos );
-
-	std::vector<void *> m_ents;
-	void AddEntity( void *e );
-
-	void *GetEntityByName( const char *name );
-
-#ifdef CLIENTEXE
-	void Render();
-
-	Colour GetLightingAtWorldPos( CVector pos );
-
-	void *m_pLocalPlayer = nullptr;
-
-	// Shader we render with
-	CShader *m_pWorldShader = nullptr;
-	// Shader entities render with
-	CShader *m_pEntityShader = nullptr;
-	// Shader we render specifically water with
-	CShader *m_pWaterShader = nullptr;
-
-	// Texture we use to render the world
-	CTexture *m_pWorldTex = nullptr;
-#endif
-
-	std::vector<std::unique_ptr<CChunk>> m_chunks;
-
-	int m_iTimeOfDay = 6890;
-
-	COverworldJeneration m_jenerator;
+  protected:
+	std::map<CVector, std::unique_ptr<CChunk>> m_chunks;
+	std::vector<std::unique_ptr<CEntityBase>> m_entities;
 };
