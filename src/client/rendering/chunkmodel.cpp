@@ -103,7 +103,7 @@ std::vector<CModel::Vertex> sampleCubeFace( Direction dir, BLOCKID block, int x,
 // We include the chunk manager here so we can test our neighbouring chunks
 // TODO: Rewrite entirely
 // (This may be one of the oldest pieces of unrewritten code)
-void BuildChunkModel( CModel &mdl, CModel &wmdl, BLOCKID blocks[], BLOCKVAL meta[], CVector pos, void *chunk )
+void BuildChunkModel( CModel &mdl, CModel &wmdl, BLOCKID blocks[], BLOCKVAL meta[], void *chunk )
 {
 	mdl.m_vertices.clear();
 	mdl.m_faces.clear();

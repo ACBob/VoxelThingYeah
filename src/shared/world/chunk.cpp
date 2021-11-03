@@ -20,6 +20,11 @@ CChunk::CChunk(CVector pos, CWorld *pWorld)
 
 	m_vPosition = pos;
 	m_pWorld = pWorld;
+
+#ifdef CLIENTEXE
+	m_blockModel.m_vPosition = GetPosInWorld();
+	m_liquidModel.m_vPosition = m_blockModel.m_vPosition;
+#endif
 }
 
 CChunk::~CChunk()
@@ -61,7 +66,7 @@ void CChunk::SetBlockAtIDX( int i, BLOCKID id, BLOCKVAL val )
 }
 
 CVector CChunk::GetPosInWorld( CVector pos ) {
-	CVector p = { m_vPosition.x / CHUNKSIZE_X, m_vPosition.y / CHUNKSIZE_Y, m_vPosition.z / CHUNKSIZE_Z };
+	CVector p = { m_vPosition.x * CHUNKSIZE_X, m_vPosition.y * CHUNKSIZE_Y, m_vPosition.z * CHUNKSIZE_Z };
 	return p + pos;
 }
 
@@ -108,7 +113,7 @@ void CChunk::Tick( int64_t tick )
 
 #ifdef CLIENTEXE
 void CChunk::RebuildModel() {
-	BuildChunkModel( m_blockModel, m_liquidModel, m_blockID, m_value, GetPosInWorld(), this );
+	BuildChunkModel( m_blockModel, m_liquidModel, m_blockID, m_value, this );
 }
 
 void CChunk::Render() {

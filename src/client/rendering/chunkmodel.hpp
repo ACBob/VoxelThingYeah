@@ -7,4 +7,4 @@
 
 #pragma once
 
-void BuildChunkModel( CModel &mdl, CModel &wmdl, BLOCKID blocks[], BLOCKVAL meta[], CVector pos, void *chunk );
+void BuildChunkModel( CModel &mdl, CModel &wmdl, BLOCKID blocks[], BLOCKVAL meta[], void *chunk );
