@@ -46,11 +46,15 @@ class CWorld
 
 	// Returns the ID and Value of the block we hit
 	// Position can therefore be inferred as the floor of p
-	std::tuple<BLOCKID, BLOCKVAL> TestPointCollision( CVector p );
+	std::tuple<BLOCKID, BLOCKVAL> PointCollision( CVector p );
+	// Returns if we actually collided with anything, rather than the outcome of it
+	bool TestPointCollision( CVector p );
 
 	// Returns the position and ID of the block we hit first
 	// On error, the W coordinate of the pos is 1 & the block id is BLCK_NONE
-	std::tuple<CVector, BLOCKID> TestAABBCollision( CBoundingBox col );
+	std::tuple<CVector, BLOCKID> AABBCollision( CBoundingBox col );
+	// Returns if we actually collided with anything, rather than the outcome of it
+	bool TestAABBCollision( CBoundingBox col );
 
 	// Adds an entity to the world, taking ownership of it
 	CEntityBase *AddEntity(std::unique_ptr<CEntityBase> ent);

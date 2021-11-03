@@ -74,20 +74,23 @@ std::tuple<BLOCKID, BLOCKVAL> CWorld::GetBlockAtWorldPos( CVector pos )
 	if (c == nullptr)
 		return { BLCK_NONE, 0 };
 
-	return c->GetBlockAtLocal( (pos - (pos.Floor() / 16) * 16).Floor() );
+	pos = pos.Floor() - c->GetPosInWorld();
+	return c->GetBlockAtLocal( pos );
 }
 
 void CWorld::SetBlockAtWorldPos( CVector pos, BLOCKID id, BLOCKVAL val )
 {
 	CChunk *c = ChunkAtWorldPosNoCreate(pos);
-	if (c == nullptr)
+	if (c == nullptr) {
+		con_warning("Can't find chunk that contains %f,%f,%f", pos.x, pos.y, pos.z);
 		return;
+	}
 
-	pos = pos.Floor();
-	c->SetBlockAtLocal( (pos - (pos.Floor() / 16) * 16).Floor(), id, val );
+	pos = pos.Floor() - c->GetPosInWorld();
+	c->SetBlockAtLocal( pos, id, val );
 }
 
-std::tuple<BLOCKID, BLOCKVAL> CWorld::TestPointCollision( CVector p )
+std::tuple<BLOCKID, BLOCKVAL> CWorld::PointCollision( CVector p )
 {
 	BLOCKID b = std::get<0>(GetBlockAtWorldPos( p ));
 	if ( b == BLCK_NONE )
@@ -102,7 +105,12 @@ std::tuple<BLOCKID, BLOCKVAL> CWorld::TestPointCollision( CVector p )
 		return {BLCK_NONE, 0};
 }
 
-std::tuple<CVector, BLOCKID> CWorld::TestAABBCollision( CBoundingBox col )
+bool CWorld::TestPointCollision( CVector p )
+{
+	return std::get<0>(PointCollision(p)) != BLCK_NONE;
+}
+
+std::tuple<CVector, BLOCKID> CWorld::AABBCollision( CBoundingBox col )
 {
 	CChunk *chunk = ChunkAtWorldPos( col.m_vPosition );
 	if ( chunk == nullptr )
@@ -125,6 +133,11 @@ std::tuple<CVector, BLOCKID> CWorld::TestAABBCollision( CBoundingBox col )
 	}
 
 	return { {0, 0, 0, 1}, BLCK_NONE };
+}
+
+bool CWorld::TestAABBCollision( CBoundingBox c )
+{
+	return std::get<1>(AABBCollision(c)) != BLCK_NONE;
 }
 
 CEntityBase *CWorld::AddEntity(std::unique_ptr<CEntityBase> ent)

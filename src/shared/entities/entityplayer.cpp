@@ -78,7 +78,7 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 				std::tuple<BLOCKID, BLOCKVAL> oldBlock = clientSideWorld->GetBlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal );
 				CBlockItem *blckItem = reinterpret_cast<CBlockItem *>( m_pSelectedItem );
 				clientSideWorld->SetBlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, blckItem->m_blockType, blckItem->m_val );
-				if ( std::get<0>(clientSideWorld->TestAABBCollision( m_collisionBox )) == BLCK_NONE )
+				if ( !clientSideWorld->TestAABBCollision( m_collisionBox ) )
 				{
 					m_pSelectedItem->SetCount( m_pSelectedItem->GetCount() - 1 );
 

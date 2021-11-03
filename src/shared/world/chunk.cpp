@@ -50,6 +50,7 @@ void CChunk::SetBlockAtLocal(CVector pos, BLOCKID blockId, BLOCKVAL val)
 	int i = CHUNK3D_TO_1D(pos.x, pos.y, pos.z);
 	m_blockID[i] = blockId;
 	m_value[i] = val;
+	m_bDirty = true;
 }
 
 std::tuple<BLOCKID, BLOCKVAL> CChunk::GetBlockAtIDX( int i )
@@ -63,6 +64,7 @@ void CChunk::SetBlockAtIDX( int i, BLOCKID id, BLOCKVAL val )
 {
 	m_blockID[i] = id;
 	m_value[i] = val;
+	m_bDirty = true;
 }
 
 CVector CChunk::GetPosInWorld( CVector pos ) {

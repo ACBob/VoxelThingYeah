@@ -30,7 +30,7 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 
 	m_vPosition.x += m_vVelocity.x * fDelta;
 	UpdateCollision();
-	if ( std::get<1>(pWorld->TestAABBCollision( this->m_collisionBox )) != BLCK_NONE )
+	if ( pWorld->TestAABBCollision( this->m_collisionBox ) )
 	{
 #ifdef CLIENTEXE
 		if (m_vVelocity.x >= SMACK_SPEED)
@@ -42,7 +42,7 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	}
 	m_vPosition.y += m_vVelocity.y * fDelta;
 	UpdateCollision();
-	m_lastBlockFloor = std::get<1>(pWorld->TestAABBCollision( this->m_collisionBox ));
+	m_lastBlockFloor = std::get<1>(pWorld->AABBCollision( this->m_collisionBox ));
 	if ( m_lastBlockFloor != BLCK_NONE )
 	{
 #ifdef CLIENTEXE
@@ -58,7 +58,7 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	}
 	m_vPosition.z += m_vVelocity.z * fDelta;
 	UpdateCollision();
-	if ( std::get<1>(pWorld->TestAABBCollision( this->m_collisionBox )) != BLCK_NONE )
+	if ( pWorld->TestAABBCollision( this->m_collisionBox ) )
 	{
 #ifdef CLIENTEXE
 		if (m_vVelocity.z >= SMACK_SPEED)

@@ -85,7 +85,7 @@ namespace protocol
 				BLOCKID b = std::get<0>(client->m_pLocalWorld->GetBlockAtWorldPos( CVector( x, y, z ) ));
 				if ( b != BLCK_NONE )
 				{
-					// con_info( "Update Block At <%f,%f,%f>", x, y, z );
+					con_info( "Update Block At <%f,%f,%f>", x, y, z );
 					client->m_pLocalWorld->SetBlockAtWorldPos( CVector( x, y, z), (BLOCKID)blockType, val );
 				}
 			}
