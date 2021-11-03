@@ -36,7 +36,7 @@ CPointedThing CVoxRaycast::Cast( CWorld *pChunkMan, bool bUseCollision )
 	}
 
 	CPointedThing pointedThing;
-	pointedThing.m_vPosition = vRay.Ceil();
+	pointedThing.m_vPosition = vRay.Floor();
 	pointedThing.m_block	 = block;
 	pointedThing.m_vNormal	 = vOtherRay.Floor() - vRay.Floor();
 	pointedThing.m_fDistance = i;

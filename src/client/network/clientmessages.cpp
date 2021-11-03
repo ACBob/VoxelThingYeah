@@ -18,6 +18,7 @@ namespace protocol
 		ClientPacket p;
 		p.type					   = ClientPacket::SET_BLOCK;
 		Archive<ArchiveBuf> bufAcc = p.GetAccess();
+		pos = pos.Floor();
 		bufAcc << pos.x;
 		bufAcc << pos.y;
 		bufAcc << pos.z;

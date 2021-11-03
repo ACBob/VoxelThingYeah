@@ -65,7 +65,7 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 			// {
 			clientSideWorld->SetBlockAtWorldPos(m_pointed.m_vPosition, BLCK_AIR);
 
-			protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5,
+			protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition,
 											BLOCKID::BLCK_AIR, 0 );
 			// }
 		}
@@ -77,16 +77,17 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 			{
 				std::tuple<BLOCKID, BLOCKVAL> oldBlock = clientSideWorld->GetBlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal );
 				CBlockItem *blckItem = reinterpret_cast<CBlockItem *>( m_pSelectedItem );
-				clientSideWorld->SetBlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, blckItem->m_blockType, blckItem->m_val );
+				CVector p = ( m_pointed.m_vPosition ) + m_pointed.m_vNormal;
+				clientSideWorld->SetBlockAtWorldPos( p, blckItem->m_blockType, blckItem->m_val );
 				if ( !clientSideWorld->TestAABBCollision( m_collisionBox ) )
 				{
 					m_pSelectedItem->SetCount( m_pSelectedItem->GetCount() - 1 );
 
 					protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer,
-												( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, blckItem->m_blockType, blckItem->m_val );
+												p, blckItem->m_blockType, blckItem->m_val );
 				}
 				else
-					clientSideWorld->SetBlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, std::get<0>(oldBlock), std::get<1>(oldBlock) );
+					clientSideWorld->SetBlockAtWorldPos( p, std::get<0>(oldBlock), std::get<1>(oldBlock) );
 			}
 		}
 
