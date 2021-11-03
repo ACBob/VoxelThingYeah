@@ -192,11 +192,9 @@ void CWorld::WorldTick(int nTick, float fDelta)
 	if (nTick == m_iLastTick)
 		return;
 
-	std::map<CVector, std::unique_ptr<CChunk>>::iterator i = m_chunks.begin();
-	while ( i != m_chunks.end() )
+	for ( auto const& [ _, chunk ] : m_chunks )
 	{
-		i->second->Tick(nTick);
-		i ++;
+		chunk->Tick( nTick );
 	}
 	
 	m_iLastTick = nTick;
@@ -208,21 +206,17 @@ void CWorld::WorldTick(int nTick, float fDelta)
 void CWorld::Render()
 {
 	// Render regular blocks
-	std::map<CVector, std::unique_ptr<CChunk>>::iterator i = m_chunks.begin();
-	while ( i != m_chunks.end() )
+	for ( auto const& [ _, chunk ] : m_chunks )
 	{
-		i->second->Render();
-		i ++;
+		chunk->Render();
 	}
 	// Render entities
 	for (std::unique_ptr<CEntityBase> &ent : m_entities)
 		ent->Render();
 	// Render stuff like water
-	i = m_chunks.begin();
-	while ( i != m_chunks.end() )
+	for ( auto const& [ _, chunk ] : m_chunks )
 	{
-		i->second->RenderLiquid();
-		i ++;
+		chunk->RenderLiquid();
 	}
 }
 
