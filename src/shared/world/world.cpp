@@ -25,7 +25,7 @@ CWorld::~CWorld()
 
 CChunk *CWorld::ChunkAtPosNoCreate(CVector pos)
 {
-	if (m_chunks.find(pos) == m_chunks.end())
+	if (m_chunks.count(pos) == 0)
 		return nullptr;
 	
 	return m_chunks.at(pos).get();
@@ -114,7 +114,7 @@ bool CWorld::TestPointCollision( CVector p )
 
 std::tuple<CVector, BLOCKID> CWorld::AABBCollision( CBoundingBox col )
 {
-	CChunk *chunk = ChunkAtWorldPos( col.m_vPosition );
+	CChunk *chunk = ChunkAtWorldPosNoCreate( col.m_vPosition );
 	if ( chunk == nullptr )
 		return { {0, 0, 0, 1}, BLCK_NONE };
 

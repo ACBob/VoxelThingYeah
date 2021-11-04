@@ -20,7 +20,7 @@ namespace protocol
 	void SendServerChunkData( ENetPeer *pPeer, CWorld *world, CVector pos )
 	{
 		ChunkData crep;
-		crep = world->ChunkAtWorldPos( pos )->m_data;
+		crep = world->ChunkAtPosCreate( pos )->m_data;
 
 		SendServerChunkDataFromRep( pPeer, crep );
 	}

@@ -269,8 +269,14 @@ void CStatePlay::Update()
 
 			snprintf(guiBuf, 100, "POS: <%.3f, %.3f, %.3f>", m_pLocalPlayer->m_vPosition.x, m_pLocalPlayer->m_vPosition.y, m_pLocalPlayer->m_vPosition.z);
 			pStateMan->m_pGui->Label( guiBuf, CVector( 0, -7 ));
+
+			CVector p = (m_pLocalPlayer->m_vPosition / CVector(CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z)).Floor();
+			CChunk *c = m_pLocalWorld->ChunkAtPosNoCreate(p);
+			snprintf(guiBuf, 100, "CPOS: <%.0f, %.0f, %.0f>  D: %s", p.x, p.y, p.z, c != nullptr ? c->m_bDirty ? "Y" : "N" : "N/A");
+			pStateMan->m_pGui->Label( guiBuf, CVector( 0, -8 ), c != nullptr ? Color(0,1,0) : Color(1,0,0));
+
 			snprintf(guiBuf, 100, "VEL: <%.3f, %.3f, %.3f>", m_pLocalPlayer->m_vVelocity.x, m_pLocalPlayer->m_vVelocity.y, m_pLocalPlayer->m_vVelocity.z);
-			pStateMan->m_pGui->Label( guiBuf, CVector( 0, -8 ));
+			pStateMan->m_pGui->Label( guiBuf, CVector( 0, -9 ));
 		}
 
 		for ( int i = 0; i < 8; i++ )
