@@ -72,9 +72,26 @@ namespace ConVar
 				continue;
 
 			out += c.first;
-			out += ' ';
-			out += c.second->GetString();
-			out += '\n';
+			out += " \"";
+
+			// We need to make sure quotes are escaped
+			// As well as semi-colons
+			std::string val(c.second->GetString());
+			for (size_t i = 0; i < val.length(); i++)
+			{
+				if (val[i] == '"') // Escape quotes
+					out += "\\\"";
+				else if (val[i] == '\'') // Escape single quotes
+					out += "\\\'";
+				else if (val[i] == ';') // Escape semi-colons
+					out += "\\;";
+				else if (val[i] == '\\') // Escape backslashes
+					out += "\\\\";
+				else
+					out += val[i]; // Just append the character otherwise
+			}
+
+			out += "\";\n";
 		}
 
 		bool bSuccess = false;
@@ -98,50 +115,110 @@ namespace ConVar
 		// Don't try parsing empty string
 		if ( strlen( str ) == 0 )
 			return;
+		
+		// Tokens can be separated by spaces, tabs, or newlines
+		// But tokens can be quoted with " or ' which will ignore whitespace.
+		// The whitespace can be escaped with \, and the quotes can be escaped with \
+		// We use two tokens to parse the string, one for the name and one for the value
+		// Basically it's a key value pair but for commands or variables
+		// Like quake!
 
+		// So we have a string like this:
+		// "name" "value"
+		// Quotes can be ignored for either
+		// But to set a value that *has* quotes;
+		// "cl_examplemsg" "\"HELLO\""
+		// would set cl_examplemsg to "HELLO"
+
+		// There's also a comment character; #
+		// This function handles files, so we ignore from # to newline and start over
+
+		// We take a copy of the string so we can modify it
 		char *in = new char[strlen( str ) + 1];
+		char *start = in;
 		strcpy( in, str );
 
-		char *token	 = new char[1];
-		token[0]	 = '\0';
-		char *oToken = new char[1];
-		oToken[0]	 = '\0';
-		char *saveptr;
-		const char sep[4] = "\n; ";
-		token			  = strtok_r( in, sep, &saveptr );
-
-		while ( token != NULL )
+		// This looks like unamanagable quake code
+		// It probably is, it was (mostly) given to me by GitHub Co-pilot, I just touched it up a bit (it didn't exactly conform to what I was expecting)
+		while ( in[0] != '\0' )
 		{
-			con_debug( "%s", token );
+			// Skip whitespace
+			while ( in[0] == ' ' || in[0] == '\t' || in[0] == '\n' )
+				in++;
 
-			if ( oToken != nullptr && strlen( token ) && strlen( oToken ) )
+			// Skip comments
+			if ( in[0] == '#' )
 			{
-				ParseConvarTokens( oToken, token );
-
-				if ( oToken != nullptr )
-				{
-					delete[] oToken;
-					oToken = nullptr;
-				}
-
-				token = strtok_r( NULL, sep, &saveptr );
+				while ( in[0] != '\n' )
+					in++;
 				continue;
 			}
 
-			if ( oToken != nullptr )
-			{
-				delete[] oToken;
-				oToken = nullptr;
-			}
-			oToken = new char[strlen( token ) + 1];
-			strcpy( oToken, token );
+			// Get the name
+			char *name = in;
+			// Skip until we hit a whitespace or a quote (or semi-colon)
+			while ( in[0] != ' ' && in[0] != '\t' && in[0] != '\n' && in[0] != ';' && in[0] != '\0' )
+				in++;
+			if ( in[0] == '\0' )
+				break; // We're done.
+			in[0] = '\0';
+			in++;
 
-			token = strtok_r( NULL, sep, &saveptr );
+			// Skip whitespace
+			while ( in[0] == ' ' || in[0] == '\t' || in[0] == '\n' )
+				in++;
+
+			// Get the value
+			char *val = in;
+			// If it's not a string, skip until we hit a whitespace or semi-colon
+			if (val[0] != '\"' && val[0] != '\'')
+			{
+				while ( in[0] != ' ' && in[0] != '\t' && in[0] != '\n' && in[0] != ';' && in[0] != '\0' )
+					in++;
+				if ( in[0] == '\0' )
+					break;
+				in[0] = '\0';
+				in++;
+			}
+			// It's a string!
+			else
+			{
+				in ++;
+
+				char quote = val[0];
+				val ++;
+
+				while ( in[0] != quote && in[0] != '\0' )
+				{
+					in++;
+					if ( in[0] == '\\' && in[1] == quote ) // skip escaped quotes (and the backslash)
+						in += 2; // TODO: the backslash is still technically part of the string, this causes the string to spiral out of control over successive restarts
+				}
+				if ( in[0] == '\0' )
+				{
+					con_error( "Unterminated String (%s)", val );
+					break;
+				}
+				in[0] = '\0';
+				in++;
+			}
+
+			ParseConvarTokens( name, val );
+
+			// Skip whitespace
+			while ( in[0] == ' ' || in[0] == '\t' || in[0] == '\n' || in[0] == ';' )
+				in++;
+
+			// Skip comments
+			if ( in[0] == '#' )
+			{
+				while ( in[0] != '\n' && in[0] != '\0' )
+					in++;
+				continue;
+			}
 		}
 
-		delete[] oToken;
-		delete[] token;
-		delete[] in;
+		delete[] start;
 	}
 
 	void CConVarHandler::ParseConvarTokens( const char *cmd, const char *args )
