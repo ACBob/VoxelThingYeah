@@ -60,8 +60,10 @@ class CChunk
 	// Functionally equivalent to m_blockID[i] =
 	void SetBlockAtIDX( int i, BLOCKID id, BLOCKVAL val = 0 );
 
+	// Returns the position in-world
+	CVector GetPosInWorld();
 	// Returns the position corrected to world coordinates relative to this chunk
-	CVector GetPosInWorld( CVector pos = {0,0,0} );
+	CVector GetPosInWorld( CVector pos );
 
 	// Returns the chunk that is next to us in direction (if it exists)
 	CChunk *Neighbour(Direction dir);

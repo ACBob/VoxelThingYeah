@@ -67,6 +67,10 @@ class CWorld
 
 	void WorldTick( int nTick, float delta );
 
+	size_t GetChunkCount() {
+		return m_chunks.size();
+	}
+
 #ifdef CLIENTEXE
 	void Render();
 

@@ -67,9 +67,12 @@ void CChunk::SetBlockAtIDX( int i, BLOCKID id, BLOCKVAL val )
 	m_bDirty = true;
 }
 
+CVector CChunk::GetPosInWorld() {
+	return { m_vPosition.x * CHUNKSIZE_X, m_vPosition.y * CHUNKSIZE_Y, m_vPosition.z * CHUNKSIZE_Z };
+}
+
 CVector CChunk::GetPosInWorld( CVector pos ) {
-	CVector p = { m_vPosition.x * CHUNKSIZE_X, m_vPosition.y * CHUNKSIZE_Y, m_vPosition.z * CHUNKSIZE_Z };
-	return p + pos;
+	return GetPosInWorld() + pos;
 }
 
 CChunk *CChunk::Neighbour(Direction dir)

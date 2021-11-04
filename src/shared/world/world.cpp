@@ -44,9 +44,11 @@ CChunk *CWorld::ChunkAtPosCreate(CVector pos)
 	m_chunks[pos]->m_blockModel.SetTexture(m_pWorldTex);
 	m_chunks[pos]->m_liquidModel.SetShader(m_pLiquidShader);
 	m_chunks[pos]->m_liquidModel.SetTexture(m_pWorldTex);
+#else
+	// World Jenerator is a server-side thing, clients don't generate
+	m_worldJenerator.Generate(m_chunks[pos].get());
 #endif
 
-	m_worldJenerator.Generate(m_chunks[pos].get());
 	m_chunks[pos]->m_bDirty = true;
 
 	return m_chunks[pos].get();

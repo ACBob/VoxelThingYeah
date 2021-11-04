@@ -63,6 +63,9 @@ class CStatePlay : public CState
 	bool m_bInPause = false;
 	bool m_bInChat	= false;
 
+	// F3 menu
+	bool m_bDebugOverlay = false;
+
 	int64_t m_iLastTick = 0;
 
 	float m_fSunAngle = 76.65f;

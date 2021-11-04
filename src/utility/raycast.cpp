@@ -14,13 +14,13 @@ CPointedThing CVoxRaycast::Cast( CWorld *pChunkMan, bool bUseCollision )
 	const float step = 0.01;
 	float i			 = 0;
 
-	BLOCKID block = BLCK_NONE;
+	std::tuple<BLOCKID, BLOCKVAL> block = { BLCK_NONE, 0 };
 	while ( i <= m_fLength )
 	{
 		vOtherRay = vRay;
 		vRay	  = m_vPosition + m_vDirection * i;
 		i += step;
-		block = std::get<0>(pChunkMan->GetBlockAtWorldPos( vRay ));
+		block = pChunkMan->GetBlockAtWorldPos( vRay );
 
 		// TODO:
 		// if ( bUseCollision )
@@ -30,14 +30,15 @@ CPointedThing CVoxRaycast::Cast( CWorld *pChunkMan, bool bUseCollision )
 		// }
 		// else
 		// {
-			if ( block != BLCK_NONE && block != BLCK_AIR )
+			if ( std::get<0>(block) != BLCK_NONE && std::get<0>(block) != BLCK_AIR )
 				break;
 		// }
 	}
 
 	CPointedThing pointedThing;
 	pointedThing.m_vPosition = vRay.Floor();
-	pointedThing.m_block	 = block;
+	pointedThing.m_block	 = std::get<0>(block);
+	pointedThing.m_val		 = std::get<1>(block);
 	pointedThing.m_vNormal	 = vOtherRay.Floor() - vRay.Floor();
 	pointedThing.m_fDistance = i;
 	return pointedThing;

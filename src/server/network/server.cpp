@@ -181,7 +181,7 @@ void CNetworkServer::Update()
 
 		// con_debug("LOAD <%.0f,%.0f,%.0f>, %d", pos.x, pos.y, pos.z, p->m_iLoadedChunkIDX);
 
-		CChunk *c = m_world.ChunkAtWorldPos( pos * CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) );
+		CChunk *c = m_world.ChunkAtPosCreate( pos );
 
 		protocol::SendServerChunkDataFromRep( p->m_pPeer, c->m_data );
 	}

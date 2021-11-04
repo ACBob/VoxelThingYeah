@@ -253,12 +253,25 @@ void CStatePlay::Update()
 								  CVector( 18.5, 2.5 ), CVector( 0.5, 0 ) );
 		float p;
 
-		// if (m_pLocalPlayer->m_pointed.m_pBlock != nullptr)
-		// {
-		// 	snprintf(guiBuf, 100, "A:%d B:%d", m_pLocalPlayer->m_pointed.m_pBlock->m_iValueA, m_pLocalPlayer->m_pointed.m_pBlock->m_iValueB);
-		// 	pStateMan->m_pGui->Label( guiBuf, CVector( pStateMan->m_pGui->m_vScreenCentre.x, -5 ), Color( 1, 1, 1 ),
-		// 							CGui::TEXTALIGN_CENTER );
-		// }
+		if (pStateMan->m_pInputMan->m_bKeyboardState[KBD_F3] && !pStateMan->m_pInputMan->m_bOldKeyboardState[KBD_F3])
+			m_bDebugOverlay = !m_bDebugOverlay;
+
+		if (m_bDebugOverlay)
+		{
+			if (m_pLocalPlayer->m_pointed.m_block != BLCK_NONE)
+			{
+				snprintf(guiBuf, 100, "ID: %d, VAL: " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN, m_pLocalPlayer->m_pointed.m_block, BYTE_TO_BINARY(m_pLocalPlayer->m_pointed.m_val >> 8), BYTE_TO_BINARY(m_pLocalPlayer->m_pointed.m_val) );
+			pStateMan->m_pGui->Label( guiBuf, CVector( 0, -5 ));
+			}
+
+			snprintf(guiBuf, 100, "CHUNKS: %d", m_pLocalWorld->GetChunkCount());
+			pStateMan->m_pGui->Label( guiBuf, CVector( 0, -6 ));
+
+			snprintf(guiBuf, 100, "POS: <%.3f, %.3f, %.3f>", m_pLocalPlayer->m_vPosition.x, m_pLocalPlayer->m_vPosition.y, m_pLocalPlayer->m_vPosition.z);
+			pStateMan->m_pGui->Label( guiBuf, CVector( 0, -7 ));
+			snprintf(guiBuf, 100, "VEL: <%.3f, %.3f, %.3f>", m_pLocalPlayer->m_vVelocity.x, m_pLocalPlayer->m_vVelocity.y, m_pLocalPlayer->m_vVelocity.z);
+			pStateMan->m_pGui->Label( guiBuf, CVector( 0, -8 ));
+		}
 
 		for ( int i = 0; i < 8; i++ )
 		{

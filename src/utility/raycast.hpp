@@ -10,6 +10,7 @@ class CPointedThing
 	CPointedThing();
 
 	BLOCKID m_block = BLCK_NONE; // The block ID
+	BLOCKVAL m_val = 0; 		// The value of the block
 	CVector m_vPosition;		// The position of the hit item
 	CVector m_vNormal;			// Facing towards where the ray came from
 	float m_fDistance;			// The distance travelled
