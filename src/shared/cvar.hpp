@@ -76,7 +76,7 @@ namespace ConVar
 
 		std::map<const char *, CConVar *, cmp_str> Cvars;
 
-		void ParseConvarTokens( const char *cmd, const char *arg );
+		void HandleConvarTokens( const char *cmd, const char *arg );
 
 	  public:
 		CConVarHandler();

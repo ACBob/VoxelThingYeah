@@ -203,7 +203,7 @@ namespace ConVar
 				in++;
 			}
 
-			ParseConvarTokens( name, val );
+			HandleConvarTokens( name, val );
 
 			// Skip whitespace
 			while ( in[0] == ' ' || in[0] == '\t' || in[0] == '\n' || in[0] == ';' )
@@ -221,7 +221,7 @@ namespace ConVar
 		delete[] start;
 	}
 
-	void CConVarHandler::ParseConvarTokens( const char *cmd, const char *args )
+	void CConVarHandler::HandleConvarTokens( const char *cmd, const char *args )
 	{
 		// It's empty, bum run, don't do anything
 		if ( strlen( cmd ) == 0 && strlen( args ) == 0 )
