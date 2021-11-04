@@ -66,6 +66,9 @@ class CChunk
 	// Returns the chunk that is next to us in direction (if it exists)
 	CChunk *Neighbour(Direction dir);
 
+	// Tests if the *local* position is blocking and therefore do no light or faces
+	bool IsObscuringBlockAt( CVector pos );
+
 	void Tick( int64_t tick );
 
 #ifdef CLIENTEXE

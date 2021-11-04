@@ -103,7 +103,7 @@ std::vector<CModel::Vertex> sampleCubeFace( Direction dir, BLOCKID block, int x,
 // We include the chunk manager here so we can test our neighbouring chunks
 // TODO: Rewrite entirely
 // (This may be one of the oldest pieces of unrewritten code)
-void BuildChunkModel( CModel &mdl, CModel &wmdl, BLOCKID blocks[], BLOCKVAL meta[], void *chunk )
+void BuildChunkModel( CModel &mdl, CModel &wmdl, BLOCKID blocks[], BLOCKVAL meta[], CChunk *chunk )
 {
 	mdl.m_vertices.clear();
 	mdl.m_faces.clear();
@@ -129,22 +129,19 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, BLOCKID blocks[], BLOCKVAL meta
 						CVector neighbour = CVector( x, y, z ) + DirectionVector[i];
 						if ( ValidChunkPosition( neighbour ) )
 						{
-							BLOCKID blockType = std::get<0>(reinterpret_cast<CChunk *>( chunk )->GetBlockAtLocal( neighbour ));
-							if ( blockType != BLCK_NONE && blockType != BLCK_AIR )
+							if ( chunk->IsObscuringBlockAt( neighbour ) )
 								continue;
 						}
 						else
 						{
 							// Test a neighbour
-							CChunk *chunkNeighbour =
-								reinterpret_cast<CChunk *>( chunk )->Neighbour( Direction( i ) );
+							CChunk *chunkNeighbour = chunk->Neighbour( Direction( i ) );
 							if ( chunkNeighbour != nullptr )
 							{
 								neighbour = neighbour + ( DirectionVector[i] *
 															CVector( -CHUNKSIZE_X, -CHUNKSIZE_Y, -CHUNKSIZE_Z ) );
 
-								BLOCKID b = std::get<0>(chunkNeighbour->GetBlockAtLocal( neighbour ));
-								if ( b != BLCK_NONE && b != BLCK_AIR )
+								if ( chunk->IsObscuringBlockAt( neighbour ) )
 									continue;
 							}
 						}

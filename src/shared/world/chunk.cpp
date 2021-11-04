@@ -77,6 +77,14 @@ CChunk *CChunk::Neighbour(Direction dir)
 	return m_pWorld->ChunkAtPosNoCreate(m_vPosition + DirectionVector[dir]);
 }
 
+bool CChunk::IsObscuringBlockAt( CVector pos ) {
+	if (!ValidChunkPosition(pos))
+		return false;
+	
+	BLOCKID b = std::get<0>(GetBlockAtLocal(pos));
+	return b != BLCK_NONE && b != BLCK_AIR;
+}
+
 bool ValidChunkPosition(CVector pos)
 {
 	return (pos.x >= 0 && pos.x < CHUNKSIZE_X) &&
