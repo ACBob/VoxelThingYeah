@@ -24,6 +24,8 @@ void CEntityBase::UpdateChildren()
 
 void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 {
+	m_fAge += fDelta;
+
 	m_bOnFloor = false;
 
 	m_vPosition.x += m_vVelocity.x * fDelta;

@@ -85,6 +85,8 @@ class CEntityBase
 	bool m_bFootstepSounds = true;
 	bool m_bInWater		   = false;
 
+	float m_fAge = 0.0f;
+
 	// TRUE if it's a player class
 	virtual bool IsPlayer() { return false; };
 
