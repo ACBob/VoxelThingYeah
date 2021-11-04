@@ -29,4 +29,6 @@ extern ConVar::CConVar *cl_dodaylightcycle;
 extern ConVar::CConVar *cl_sunroll;
 extern ConVar::CConVar *cl_sunyaw;
 
+extern ConVar::CConVar *cl_maxfps;
+
 void SetupClientSideConvars();

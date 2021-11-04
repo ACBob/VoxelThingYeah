@@ -25,6 +25,8 @@ ConVar::CConVar *cl_dodaylightcycle = nullptr;
 ConVar::CConVar *cl_sunroll = nullptr;
 ConVar::CConVar *cl_sunyaw = nullptr;
 
+ConVar::CConVar *cl_maxfps = nullptr;
+
 void SetupClientSideConvars()
 {
 	fov = conVarHandle.DeclareConvar( "fov", "70", ConVar::CVAR_ARCHIVE );
@@ -51,4 +53,6 @@ void SetupClientSideConvars()
 	cl_dodaylightcycle = conVarHandle.DeclareConvar( "cl_dodaylightcycle", "true" );
 	cl_sunroll = conVarHandle.DeclareConvar( "cl_sunroll", "0", ConVar::CVAR_SESSION );
 	cl_sunyaw = conVarHandle.DeclareConvar( "cl_sunyaw", "0", ConVar::CVAR_SESSION );
+
+	cl_maxfps = conVarHandle.DeclareConvar( "cl_maxfps", "0", ConVar::CVAR_ARCHIVE );
 }

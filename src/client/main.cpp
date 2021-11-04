@@ -37,6 +37,8 @@
 
 #include "packs.hpp"
 
+#include <thread>
+
 #include "devconsole.hpp"
 
 #ifdef _WIN32
@@ -299,6 +301,17 @@ int main( int argc, char *args[] )
 		}
 
 		gameStateMan.m_fDelta = delta / 1000.0f;
+
+		// use the cl_maxfps cvar to cap the framerate
+		if ( cl_maxfps->GetInt() > 0 )
+		{
+			int64_t maxFrameTime = 1000 / cl_maxfps->GetInt();
+			int64_t sleepTime	= maxFrameTime - delta;
+			if ( sleepTime > 0 )
+			{
+				std::this_thread::sleep_for( std::chrono::milliseconds( sleepTime ) );
+			}
+		}
 
 		if ( gameStateMan.IsEmpty() )
 			break;
