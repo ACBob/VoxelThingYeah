@@ -174,3 +174,15 @@ type = "entity"
 appendSounds = false
 sounds = [ "smack.ogg" ]
 pitch = [ 1.0, 1.2 ]
+
+["entity.swim"]
+type = "entity"
+appendSounds = false
+sounds = [ "swim1.ogg", "swim2.ogg" ]
+pitch = [ 0.7, 1.3 ]
+
+["entity.splash"]
+type = "entity"
+appendSounds = false
+sounds = [ "splash.ogg" ]
+pitch = [ 0.7, 1.3 ]

@@ -92,8 +92,18 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 
 	CBlock *blockInside = pWorld->BlockAtWorldPos( m_vPosition );
 	if ( blockInside != nullptr && ( blockInside->m_iBlockType == WATER || blockInside->m_iBlockType == WATERSRC ) )
-		m_bInWater = true;
+	{
+#ifdef CLIENTEXE
+		// if we're in water, and we're going fast enough, make a splash
+		if ( !m_bInWater && m_vVelocity.Magnitude() > SMACK_SPEED )
+		{
+			soundSystem::PlaySoundEvent( "entity.splash", m_vPosition );
+		}
+#endif
 
+		m_bInWater = true;
+	}
+	
 #ifdef CLIENTEXE
 	m_vLighting = pWorld->GetLightingAtWorldPos( m_vPosition ) / 16.0f;
 #endif
@@ -112,6 +122,14 @@ void CEntityBase::Tick( int64_t iTick )
 			{
 				soundSystem::PlayStepSound( m_pLastBlockFloor->m_iBlockType, m_vPosition );
 				m_iFootstepTick = iTick + 9;
+			}
+		}
+		else if (m_bFootstepSounds && m_bInWater)
+		{
+			if ( iTick >= m_iFootstepTick )
+			{
+				soundSystem::PlaySoundEvent( "entity.swim", m_vPosition );
+				m_iFootstepTick = iTick + 18;
 			}
 		}
 	}
