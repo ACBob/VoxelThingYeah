@@ -62,7 +62,9 @@ enum KBDKEY // Keys unrepresentable by a char, we have about 32 of these availab
   KBD_F9 = 21,
   KBD_F10 = 22,
   KBD_F11 = 23,
-  KBD_F12 = 24
+  KBD_F12 = 24,
+
+  KBD_TAB = 25,
 };
 
 class CInputManager

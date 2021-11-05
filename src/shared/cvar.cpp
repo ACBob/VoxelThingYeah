@@ -238,4 +238,15 @@ namespace ConVar
 			Cvars[cmd]->SetString( args );
 		}
 	}
+
+	std::vector<CConVar *> CConVarHandler::ListConVars()
+	{
+		std::vector<CConVar *> ret;
+		for ( auto it = Cvars.begin(); it != Cvars.end(); it++ )
+		{
+			ret.push_back( it->second );
+		}
+
+		return ret;
+	}
 } // namespace ConVar

@@ -3,6 +3,8 @@
 
 #include <cstring>
 
+#include <vector>
+
 #pragma once
 namespace ConVar
 {
@@ -49,6 +51,9 @@ namespace ConVar
 		bool IsModified() { return m_bModified; };
 		bool ShouldArchive() { return m_iFlags & CVAR_ARCHIVE; }
 
+		// Returns the name of the variable
+		const char *GetName() { return m_cName; };
+
 	  private:
 		int m_iFlags;
 
@@ -92,6 +97,9 @@ namespace ConVar
 		CConVar *operator[]( const char *name ) { return FindConVar( name ); }
 
 		void Parse( const char *str );
+
+		// List all cvars
+		std::vector<CConVar *> ListConVars();
 	};
 } // namespace ConVar
 

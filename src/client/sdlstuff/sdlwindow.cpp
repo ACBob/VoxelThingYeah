@@ -179,7 +179,9 @@ const int scancodeToStateIndex[] = {
 	SDL_SCANCODE_F9, KBD_F9,
 	SDL_SCANCODE_F10, KBD_F10,
 	SDL_SCANCODE_F11, KBD_F11,
-	SDL_SCANCODE_F12, KBD_F12, };
+	SDL_SCANCODE_F12, KBD_F12,
+	
+	SDL_SCANCODE_TAB, KBD_TAB, };
 
 void CGameWindow::PollEvents()
 {

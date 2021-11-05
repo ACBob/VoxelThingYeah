@@ -34,4 +34,19 @@ void CDevConsole::Update()
 		conVarHandle.Parse( inp );
 		m_pGui->SetTextBuffer(DEVCONSOLE_TEXTBUFFER, "");
 	}
+
+	// Auto-complete when hitting tab
+	// TODO: Have several auto-completes, cycle through them
+	if (m_pInputMan->m_bKeyboardState[KBD_TAB] && !m_pInputMan->m_bOldKeyboardState[KBD_TAB])
+	{
+		// test against all cvars
+		for ( ConVar::CConVar* cvar : conVarHandle.ListConVars())
+		{
+			if (strncmp(cvar->GetName(), m_pGui->GetTextBuffer(DEVCONSOLE_TEXTBUFFER), strlen(m_pGui->GetTextBuffer(DEVCONSOLE_TEXTBUFFER))) == 0)
+			{
+				m_pGui->SetTextBuffer(DEVCONSOLE_TEXTBUFFER, cvar->GetName());
+				break;
+			}
+		}
+	}
 }
