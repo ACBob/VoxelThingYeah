@@ -37,7 +37,8 @@ ALCdevice *openAlDevice;
 ALCcontext *openAlContext;
 ALuint soundEffects;
 ALuint soundEffectSlot;
-// ALuint soundFilter;
+ALuint soundMuffle;
+ALuint soundMuffleSlot;
 
 // TODO: Error sound
 CSound::CSound( const char *path )
@@ -79,7 +80,9 @@ void CSound::Play( CVector src, float pitch, float gain )
 	alSourcef( m_iId, AL_GAIN, gain );
 	alSource3f( m_iId, AL_POSITION, src.x, src.y, src.z );
 #ifdef __linux__
-	alSource3i( m_iId, AL_AUXILIARY_SEND_FILTER, soundEffectSlot, 0, AL_FILTER_NULL );
+	// Apply Reverb & Muffle
+	alSourcei( m_iId, AL_DIRECT_FILTER, soundEffects );
+	alSourcei( m_iId, AL_AUXILIARY_SEND_FILTER, soundMuffle );
 #endif
 
 	alSourcePlay( m_iId );
@@ -188,6 +191,15 @@ void soundSystem::Init()
 		alEffectf( soundEffects, AL_REVERB_DECAY_TIME, 0.1f );
 
 		alAuxiliaryEffectSloti( soundEffectSlot, AL_EFFECTSLOT_EFFECT, soundEffects );
+	}
+	
+	// For muffling sounds
+	if ( cl_mufflesounds->GetBool() )
+	{
+		alGenFilters( 1, &soundMuffle );
+		alFilteri( soundMuffle, AL_FILTER_TYPE, AL_FILTER_LOWPASS );
+		alFilterf( soundMuffle, AL_LOWPASS_GAIN, 1.0f );
+		alFilterf( soundMuffle, AL_LOWPASS_GAINHF, 1.0f );
 	}
 #endif
 
@@ -318,7 +330,44 @@ void soundSystem::SetListener( CWorld *world, CVector pos, CVector forward, CVec
 		alEffectf( soundEffects, AL_REVERB_DECAY_TIME, decayTime );
 		alAuxiliaryEffectSloti( soundEffectSlot, AL_EFFECTSLOT_EFFECT, soundEffects );
 	}
+	else if (world == nullptr)
+	{
+		alEffectf( soundEffects, AL_REVERB_DECAY_TIME, 0.0f );
+		alAuxiliaryEffectSloti( soundEffectSlot, AL_EFFECTSLOT_EFFECT, soundEffects );
+	}
 
+	if ( cl_mufflesounds->GetBool() && world != nullptr )
+	{
+		// If the listener is inside liquid, we need to muffle the sounds
+		// we can just get the position of the listener
+
+		CBlock *block = world->BlockAtWorldPos( pos );
+		if ( block != nullptr && (block->m_iBlockType == WATER || block->m_iBlockType == WATERSRC))
+		{
+			alFilterf( soundMuffle, AL_LOWPASS_GAIN, 0.2f );
+			alFilterf( soundMuffle, AL_LOWPASS_GAINHF, 0.2f );
+
+			// Also change the speed of sound
+			// (this is subtle, but it's neat)
+			alSpeedOfSound( 1493.0f );
+		}
+		else
+		{
+			alFilterf( soundMuffle, AL_LOWPASS_GAIN, 1.0f );
+			alFilterf( soundMuffle, AL_LOWPASS_GAINHF, 1.0f );
+
+			// Also change the speed of sound
+			alSpeedOfSound( 343.3f );
+		}
+	}
+	else if (world == nullptr)
+	{
+		alFilterf( soundMuffle, AL_LOWPASS_GAIN, 1.0f );
+		alFilterf( soundMuffle, AL_LOWPASS_GAINHF, 1.0f );
+
+		// Also change the speed of sound
+		alSpeedOfSound( 343.3f );
+	}
 #endif
 }
 

@@ -14,6 +14,7 @@ ConVar::CConVar *cl_servername = nullptr;
 
 ConVar::CConVar *cl_volume = nullptr;
 ConVar::CConVar *cl_reverb = nullptr;
+ConVar::CConVar *cl_mufflesounds = nullptr;
 
 ConVar::CConVar *playerskin = nullptr;
 
@@ -43,6 +44,7 @@ void SetupClientSideConvars()
 
 	cl_volume = conVarHandle.DeclareConvar( "cl_volume", "1.0", ConVar::CVAR_ARCHIVE );
 	cl_reverb = conVarHandle.DeclareConvar( "cl_reverb", "true", ConVar::CVAR_ARCHIVE );
+	cl_mufflesounds = conVarHandle.DeclareConvar( "cl_mufflesounds", "true", ConVar::CVAR_ARCHIVE );
 
 	playerskin = conVarHandle.DeclareConvar( "playerskin", "", ConVar::CVAR_ARCHIVE );
 

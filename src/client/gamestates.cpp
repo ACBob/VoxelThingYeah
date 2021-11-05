@@ -168,7 +168,7 @@ void CStatePlay::Update()
 			m_iLastTick = pStateMan->m_iTick;
 		}
 
-		soundSystem::SetListener( m_pLocalWorld, m_pLocalPlayer->m_vPosition, m_pLocalPlayer->GetForward(),
+		soundSystem::SetListener( m_pLocalWorld, m_pLocalPlayer->m_camera.m_vPosition, m_pLocalPlayer->m_camera.GetForward(),
 								  m_pLocalPlayer->m_vVelocity );
 
 		// -----------------------
