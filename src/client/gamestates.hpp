@@ -62,6 +62,7 @@ class CStatePlay : public CState
 
 	bool m_bInPause = false;
 	bool m_bInChat	= false;
+	bool m_bDebugScreen = false;
 
 	int64_t m_iLastTick = 0;
 

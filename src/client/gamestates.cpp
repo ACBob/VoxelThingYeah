@@ -258,12 +258,32 @@ void CStatePlay::Update()
 								  CVector( 18.5, 2.5 ), CVector( 0.5, 0 ) );
 		float p;
 
-		// if (m_pLocalPlayer->m_pointed.m_pBlock != nullptr)
-		// {
-		// 	snprintf(guiBuf, 100, "A:%d B:%d", m_pLocalPlayer->m_pointed.m_pBlock->m_iValueA, m_pLocalPlayer->m_pointed.m_pBlock->m_iValueB);
-		// 	pStateMan->m_pGui->Label( guiBuf, CVector( pStateMan->m_pGui->m_vScreenCentre.x, -5 ), Color( 1, 1, 1 ),
-		// 							CGui::TEXTALIGN_CENTER );
-		// }
+		// F3 screen
+		if (pStateMan->m_pInputMan->m_bKeyboardState[KBD_F3] && !pStateMan->m_pInputMan->m_bOldKeyboardState[KBD_F3])
+			m_bDebugScreen = !m_bDebugScreen;
+
+		if (m_bDebugScreen)
+		{
+			// position
+			snprintf( guiBuf, 100, "Position: <%.2f, %.2f, %.2f>", m_pLocalPlayer->m_vPosition.x, m_pLocalPlayer->m_vPosition.y, m_pLocalPlayer->m_vPosition.z );
+			pStateMan->m_pGui->Label( guiBuf, CVector( 0, -3 ) );
+
+			// velocity
+			snprintf( guiBuf, 100, "Velocity: <%.2f, %.2f, %.2f>", m_pLocalPlayer->m_vVelocity.x, m_pLocalPlayer->m_vVelocity.y, m_pLocalPlayer->m_vVelocity.z );
+			pStateMan->m_pGui->Label( guiBuf, CVector( 0, -4 ) );
+
+			// Pointed block id/data
+			// Data displayed in hex
+			if (m_pLocalPlayer->m_pointed.m_pBlock != nullptr)
+			{
+				snprintf( guiBuf, 100, "Pointed block: %i, %X %X", m_pLocalPlayer->m_pointed.m_pBlock->m_iBlockType, m_pLocalPlayer->m_pointed.m_pBlock->m_iValueA, m_pLocalPlayer->m_pointed.m_pBlock->m_iValueB );
+				pStateMan->m_pGui->Label( guiBuf, CVector( 0, -5 ) );
+			}
+			else
+			{
+				pStateMan->m_pGui->Label( "Pointed block: null", CVector( 0, -5 ) );
+			}
+		}
 
 		for ( int i = 0; i < 8; i++ )
 		{
