@@ -43,114 +43,85 @@ void BOBJLoadModel( CModel *m, const char *fp )
 
 	while ( token != NULL )
 	{
-		char *linesaveptr;
-		char *lineToken = strtok_r( token, " ", &linesaveptr );
-
 		// Skip Comments
-		if ( lineToken[0] == '#' )
+		if ( token[0] == '#' )
 			goto skip;
 
 		// Vertex
-		if ( strcmp( lineToken, "v" ) == 0 )
+		if ( token[0] == 'v')
 		{
-			// v x y z
-			// Let's try and absorb those next 3 numbers
+			if (token[1] == ' ')
+			{
+				CVector v;
+				sscanf( token, "v %f %f %f", &v.x , &v.y , &v.z );
 
-			// Bump it, removing the 'v'
-			lineToken = strtok_r( NULL, " ", &linesaveptr );
-			int i	  = 0;
 
-			CVector v;
-			v.x		  = strtof( lineToken, NULL );
-			lineToken = strtok_r( NULL, " ", &linesaveptr );
-			v.y		  = strtof( lineToken, NULL );
-			lineToken = strtok_r( NULL, " ", &linesaveptr );
-			v.z		  = strtof( lineToken, NULL );
-			lineToken = strtok_r( NULL, " ", &linesaveptr );
+				// printf("Vert: %f,%f,%f\n", v.x, v.y, v.z);
+				vertPositions.push_back( v );
+				m->m_vertices.push_back( {} );
+			}
+			else if ( token[1] == 't' )
+			{
+				CVector uv;
+				sscanf( token, "vt %f %f", &uv.x , &uv.y );
 
-			// printf("Vert: %f,%f,%f\n", v.x, v.y, v.z);
-			vertPositions.push_back( v );
-			m->m_vertices.push_back( {} );
-		}
-		// Vertex Tex(?), U/V Coordinate!!
-		else if ( strcmp( lineToken, "vt" ) == 0 )
-		{
-			// vt x y
-			// Let's try and absorb those next 2 numbers
+				uvCoords.push_back( uv );
+			}
+			else if ( token[1] == 'n' )
+			{
+				CVector n;
+				sscanf( token, "vn %f %f %f", &n.x , &n.y , &n.z );
 
-			// Bump it, removing the 'vt'
-			lineToken = strtok_r( NULL, " ", &linesaveptr );
-
-			CVector uv;
-			uv.x	  = strtof( lineToken, NULL );
-			lineToken = strtok_r( NULL, " ", &linesaveptr );
-			uv.y	  = strtof( lineToken, NULL );
-
-			uvCoords.push_back( uv );
-		}
-		// Vertex Normal
-		else if ( strcmp( lineToken, "vn" ) == 0 )
-		{
-			// vn x y z
-			// Let's try and absorb those next 3 numbers
-
-			// Bump it, removing the 'vn'
-			lineToken = strtok_r( NULL, " ", &linesaveptr );
-			int i	  = 0;
-
-			CVector v;
-			v.x		  = strtof( lineToken, NULL );
-			lineToken = strtok_r( NULL, " ", &linesaveptr );
-			v.y		  = strtof( lineToken, NULL );
-			lineToken = strtok_r( NULL, " ", &linesaveptr );
-			v.z		  = strtof( lineToken, NULL );
-			lineToken = strtok_r( NULL, " ", &linesaveptr );
-
-			normals.push_back( v );
+				normals.push_back( n );
+			}
 		}
 		// Face
-		else if ( strcmp( lineToken, "f" ) == 0 )
+		else if ( token[0] == 'f' )
 		{
 			// f vert/vertNormal/vertTexCoord vert/vertNormal/vertTexCoord vert/vertNormal/vertTexCoord
 
-			// Bump it, removing the 'f'
-			lineToken = strtok_r( NULL, " ", &linesaveptr );
+			// We actually duplicate vertices, so we can use the same index for multiple vertices
+			// This is because we can't have multiple normals per vertex, so we have to duplicate vertices
+			// to get the same vertex with multiple normals.
 
-			CModel::Face f;
-			int idxs[3] = { 0, 0, 0 };
-			int i		= 0;
+			int v[3];
+			int vn[3];
+			int vt[3];
 
-			while ( lineToken != NULL )
+			sscanf( token, "f %d/%d/%d %d/%d/%d %d/%d/%d",
+					&v[0], &vt[0], &vn[0],
+					&v[1], &vt[1], &vn[1],
+					&v[2], &vt[2], &vn[2] );
+
+			// if (v[0] > vertPositions.size() || v[1] > vertPositions.size() || v[2] > vertPositions.size())
+			// {
+			// 	con_error("Error: Vertex index out of bounds!");
+			// 	return;
+			// }
+
+			// con_info("Face: %d,%d,%d\n", v[0], v[1], v[2]);
+
+			// Add the vertices
+			for ( int i = 0; i < 3; i++ )
 			{
-				// con_info(lineToken);
-
-				char *segPtr;
-				char *seg = strtok_r( lineToken, "/", &segPtr );
-
-				int vertIndex		= atoi( seg ) - 1;
-				seg					= strtok_r( NULL, "/", &segPtr );
-				int vertNormalIndex = atoi( lineToken ) - 1;
-				seg					= strtok_r( NULL, "/", &segPtr );
-				int vertTexCoord	= atoi( lineToken ) - 1;
-
-				m->m_vertices.at( vertIndex ) = { vertPositions[vertIndex].x, vertPositions[vertIndex].y,
-												  vertPositions[vertIndex].z, normals[vertNormalIndex].x,
-												  normals[vertNormalIndex].y, normals[vertNormalIndex].z,
-												  uvCoords[vertTexCoord].x,	  uvCoords[vertTexCoord].y };
-				idxs[i]						  = vertIndex;
-
-				// printf("idx: %i\n", vertIndex);
-
-				lineToken = strtok_r( NULL, " ", &linesaveptr );
-
-				i++;
+				// Create a new vertex
+				m->m_vertices.push_back( {
+					vertPositions[v[i] - 1].x,
+					vertPositions[v[i] - 1].y,
+					vertPositions[v[i] - 1].z,
+					normals[vn[i] - 1].x,
+					normals[vn[i] - 1].y,
+					normals[vn[i] - 1].z,
+					uvCoords[vt[i] - 1].x,
+					uvCoords[vt[i] - 1].y
+				} );
 			}
 
-			f.v	  = idxs[2];
-			f.vv  = idxs[1];
-			f.vvv = idxs[0];
-
-			m->m_faces.push_back( f );
+			m->m_faces.push_back( {
+				(int)m->m_vertices.size() - 1,
+				(int)m->m_vertices.size() - 2,
+				(int)m->m_vertices.size() - 3
+			} );
 		}
 
 	skip:
