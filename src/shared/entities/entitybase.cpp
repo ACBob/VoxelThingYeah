@@ -95,7 +95,7 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	{
 #ifdef CLIENTEXE
 		// if we're in water, and we're going fast enough, make a splash
-		if ( !m_bInWater && m_vVelocity.Magnitude() > SMACK_SPEED )
+		if ( !m_bInWater && m_vVelocity.Magnitude() > SPLASH_SPEED )
 		{
 			soundSystem::PlaySoundEvent( "entity.splash", m_vPosition );
 		}

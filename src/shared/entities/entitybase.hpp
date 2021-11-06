@@ -11,6 +11,9 @@
 
 	// Move faster than this? Smack!
 	#define SMACK_SPEED 30
+
+	// Move fast enough into water? Splash!
+	#define SPLASH_SPEED 10
 #endif
 
 #include <string>
