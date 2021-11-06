@@ -85,6 +85,12 @@ appendSounds = false
 sounds = [ "breaksand.ogg" ]
 pitch = [ 0.6, 1.2 ]
 
+["block.break.fabric"]
+type = "block"
+appendSounds = false
+sounds = [ "breakfabric.ogg" ]
+pitch = [ 0.6, 1.2 ]
+
 ##########################################
 # Placing Sounds                         #
 ##########################################
@@ -125,6 +131,12 @@ appendSounds = false
 sounds = [ "placesand.ogg" ]
 pitch = [ 0.6, 1.2 ]
 
+["block.place.fabric"]
+type = "block"
+appendSounds = false
+sounds = [ "breakfabric.ogg" ]
+pitch = [ 0.6, 1.2 ]
+
 ##########################################
 # Footstep Sounds                        #
 ##########################################
@@ -163,6 +175,12 @@ pitch = [ 0.9, 1.1 ]
 type = "block"
 appendSounds = false
 sounds = [ "placesand.ogg", "breaksand.ogg" ]
+pitch = [ 0.9, 1.1 ]
+
+["block.step.fabric"]
+type = "block"
+appendSounds = false
+sounds = [ "breakfabric.ogg" ]
 pitch = [ 0.9, 1.1 ]
 
 ##########################################
