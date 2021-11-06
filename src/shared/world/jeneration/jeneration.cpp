@@ -184,23 +184,23 @@ void COverworldJeneration::Generate( CChunk *c )
 
 CBiome *COverworldJeneration::GetBiomeAtPos( CVector p )
 {
+	// temperature & humidity are 0 - 2
 	float fTemperature = ( fnlGetNoise2D( &m_biomesOvergroundTemperatureNoise, p.x, p.z ) + 1.0f );
-	// float fHumidity = fnlGetNoise2D( &m_biomesOvergroundHumidityNoise, p.x, p.z );
+	float fHumidity = (fnlGetNoise2D( &m_biomesOvergroundHumidityNoise, p.x, p.z ) + 1.0f);
 
-	CBiome *closestBiome = biomes::biomeList[0];
-
-	for ( CBiome *biome : biomes::biomeList )
+	// return the biome that is closest to the given temperature and humidity
+	float fClosestDistance = 99999.0f;
+	CBiome *pClosestBiome = nullptr;
+	for ( int i = 0; i < biomes::biomeList.size(); i++ )
 	{
-		if ( fTemperature >= biome->m_fMinTemperature && fTemperature <= biome->m_fMaxTemperature )
+		float fDistance =
+			std::abs( biomes::biomeList[i]->m_fTemperature - fTemperature ) + std::abs( biomes::biomeList[i]->m_fHumidity - fHumidity );
+		if ( fDistance < fClosestDistance )
 		{
-			return biome;
+			fClosestDistance = fDistance;
+			pClosestBiome = biomes::biomeList[i];
 		}
-
-		// Else try to find the closest to the max temperature
-		if ( fabsf( biome->m_fMaxTemperature - fTemperature ) <
-			 fabsf( closestBiome->m_fMaxTemperature - fTemperature ) )
-			closestBiome = biome;
 	}
 
-	return closestBiome;
+	return pClosestBiome;
 }
