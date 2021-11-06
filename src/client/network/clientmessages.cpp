@@ -67,4 +67,15 @@ namespace protocol
 
 		protocol::SendPacket( pPeer, p, true );
 	}
+	void SendClientUseBlock( ENetPeer *pPeer, CVector pos )
+	{
+		ClientPacket p;
+		p.type					   = ClientPacket::USE_BLOCK;
+		Archive<ArchiveBuf> bufAcc = p.GetAccess();
+		bufAcc << (int)pos.x;
+		bufAcc << (int)pos.y;
+		bufAcc << (int)pos.z;
+
+		SendPacket( pPeer, p );
+	}
 } // namespace protocol

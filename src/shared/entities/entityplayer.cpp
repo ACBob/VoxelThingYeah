@@ -77,7 +77,7 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 		{
 			if (BlockType(m_pointed.m_pBlock->m_iBlockType).CanBeUsed())
 			{
-				BlockType(m_pointed.m_pBlock->m_iBlockType).OnUse( (CChunk*)m_pointed.m_pBlock->m_pChunk, m_pointed.m_vPosition, this );
+				protocol::SendClientUseBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5 );
 			}
 			else
 			{

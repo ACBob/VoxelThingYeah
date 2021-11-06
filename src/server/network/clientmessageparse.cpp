@@ -7,6 +7,8 @@
 
 #include "specialeffectdef.hpp"
 
+#include "blocks/blockbase.hpp"
+
 namespace protocol
 {
 	void DealWithPacket( NetworkPacket &p, void *pSide, ENetPeer *pPeer )
@@ -195,9 +197,26 @@ namespace protocol
 				}
 			}
 			break;
+			case ClientPacket::USE_BLOCK: {
+				int x, y, z;
+				bufAccess >> x;
+				bufAccess >> y;
+				bufAccess >> z;
+
+				// test if the block is useable
+				CBlock *b = pServer->m_world.BlockAtWorldPos( CVector( x, y, z ) );
+				if ( b != nullptr && BlockType(b->m_iBlockType).CanBeUsed() )
+					BlockType(b->m_iBlockType).OnUse( (CChunk*)b->m_pChunk, CVector(x, y, z), pServer->ClientFromPeer(pPeer)->m_pEntity );
+			}
+			break;
 
 			default: {
-				con_error( "Unknown packet of type %#010x", p.type );
+				// Kick player for unknown packet
+				con_warning( "Kicking player for unknown packet %#X", p.type );
+				char *reason = new char[128];
+				sprintf( reason, "Unknown packet %#X", p.type );
+				pServer->KickPlayer( pPeer, reason );
+				delete[] reason;
 			}
 			break;
 		}

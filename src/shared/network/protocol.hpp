@@ -81,6 +81,13 @@ struct ClientPacket : public NetworkPacket
 			}
 		*/
 		SKIN = 0x06,
+		// Use the block
+		/*
+			{
+				X, Y, Z
+			}
+		*/
+		USE_BLOCK = 0x07,
 	};
 
 	template <typename S> void serialize( S &s ) { s &type &data & false; };
@@ -253,4 +260,5 @@ namespace protocol
 	void SendClientChatMessage( ENetPeer *pPeer, std::string message );
 	void SendClientLeave( ENetPeer *pPeer );
 	void SendClientSkin( ENetPeer *pPeer, std::vector<unsigned char> imageData, unsigned int resolution );
+	void SendClientUseBlock( ENetPeer *pPeer, CVector pos );
 } // namespace protocol
