@@ -83,6 +83,7 @@ void CSound::Play( CVector src, float pitch, float gain )
 	// Select the first available source
 	// A source is available if it is not playing
 	// or if it is playing but has stopped
+	// TODO: Should we have a global list of sources?
 	unsigned int iSource = -1;
 	for ( int i = 0; i < SOURCES_PER_SOUND; i++ )
 	{
