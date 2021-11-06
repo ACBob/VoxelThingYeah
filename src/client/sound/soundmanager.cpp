@@ -280,6 +280,8 @@ void soundSystem::Init()
 
 		soundEvents[key] = new CSoundEvent( *sounds->getStringVector().get(), type.c_str(), minPitch, maxPitch );
 	}
+
+	delete[] soundsToml;
 }
 void soundSystem::UnInit()
 {
