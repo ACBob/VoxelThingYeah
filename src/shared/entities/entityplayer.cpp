@@ -9,6 +9,8 @@
 
 #include "inventory/blockitem.hpp"
 
+#include "blocks/blockbase.hpp"
+
 CEntityPlayer::CEntityPlayer() : m_inventory( 36 )
 {
 	m_vPosition = CVector( 0, 0, 0 );
@@ -73,25 +75,32 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 		if ( m_pInputMan->m_iMouseState & IN_RIGHT_MOUSE && m_pInputMan->m_iOldMouseState == 0 &&
 			 m_pointed.m_pBlock != nullptr )
 		{
-			CBlock *b = clientSideWorld->BlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal );
-			if ( m_pSelectedItem != nullptr && m_pSelectedItem->GetCount() > 0 && b != nullptr )
+			if (BlockType(m_pointed.m_pBlock->m_iBlockType).CanBeUsed())
 			{
-				BLOCKID oldType = b->m_iBlockType; // TODO: We're assuming it's a block item
-				uint16_t oldData = b->m_iBlockData;
-				CBlockItem *blckItem = reinterpret_cast<CBlockItem *>( m_pSelectedItem );
-				b->m_iBlockType		= blckItem->m_iBlockType;
-				b->m_iBlockData = blckItem->m_iBlockData;
-				if ( !clientSideWorld->TestAABBCollision( m_collisionBox ) )
+				BlockType(m_pointed.m_pBlock->m_iBlockType).OnUse( (CChunk*)m_pointed.m_pBlock->m_pChunk, m_pointed.m_vPosition, this );
+			}
+			else
+			{
+				CBlock *b = clientSideWorld->BlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal );
+				if ( m_pSelectedItem != nullptr && m_pSelectedItem->GetCount() > 0 && b != nullptr )
 				{
-					b->Update();
-					m_pSelectedItem->SetCount( m_pSelectedItem->GetCount() - 1 );
+					BLOCKID oldType = b->m_iBlockType; // TODO: We're assuming it's a block item
+					uint16_t oldData = b->m_iBlockData;
+					CBlockItem *blckItem = reinterpret_cast<CBlockItem *>( m_pSelectedItem );
+					b->m_iBlockType		= blckItem->m_iBlockType;
+					b->m_iBlockData = blckItem->m_iBlockData;
+					if ( !clientSideWorld->TestAABBCollision( m_collisionBox ) )
+					{
+						b->Update();
+						m_pSelectedItem->SetCount( m_pSelectedItem->GetCount() - 1 );
 
-					protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, b->m_iBlockType, b->m_iBlockData );
-				}
-				else
-				{
-					b->m_iBlockType = oldType;
-					b->m_iBlockData = oldData;
+						protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, b->m_iBlockType, b->m_iBlockData );
+					}
+					else
+					{
+						b->m_iBlockType = oldType;
+						b->m_iBlockData = oldData;
+					}
 				}
 			}
 		}

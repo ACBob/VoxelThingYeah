@@ -13,9 +13,9 @@ class CBlockSoundMaker final : public CBlockBase
     
     using Super::Super;
 
-    virtual bool CanBeUsed() const {
-        return true;
-    }
+	virtual bool CanBeUsed() const {
+		return true;
+	};
 
 #ifdef CLIENTEXE
     virtual void OnUse( CChunk *pChunk, CVector vPosition, CEntityBase *pUser ) const
