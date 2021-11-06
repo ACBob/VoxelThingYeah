@@ -7,6 +7,8 @@
 
 #include "specialeffectdef.hpp"
 
+#include "sound/soundmanager.hpp"
+
 namespace protocol
 {
 	void DealWithPacket( NetworkPacket &p, void *side, ENetPeer *pPeer )
@@ -255,6 +257,18 @@ namespace protocol
 				bufAccess >> effectAttrib;
 
 				client->SpecialEffectHandle( CVector( x, y, z ), (SpecialEffect)effectId, effectAttrib );
+			}
+			break;
+			case ServerPacket::SOUNDEVENT: {
+				std::string eventName;
+				float x, y, z;
+
+				bufAccess >> x;
+				bufAccess >> y;
+				bufAccess >> z;
+				bufAccess >> eventName;
+				
+				soundSystem::PlaySoundEvent( eventName.c_str(), CVector( x, y, z ) );
 			}
 			break;
 

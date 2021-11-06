@@ -16,6 +16,8 @@
 
 #include "world/world.hpp"
 
+#include "sound/soundmanager.hpp"
+
 #ifdef _WIN32
 	#include <windows.h>
 #endif
@@ -58,6 +60,10 @@ int main( int argc, char *args[] )
 	}
 	atexit( network::Uninit );
 
+	con_info( "Init Sound System..." );
+	soundSystem::Init();
+	atexit( soundSystem::UnInit );
+
 	con_info( "Create Server..." );
 	CNetworkServer server( sv_port->GetInt() );
 	if ( !server.WorkingServer() )
@@ -65,6 +71,8 @@ int main( int argc, char *args[] )
 		con_critical( "Server became invalid" );
 		return EXIT_FAILURE;
 	}
+
+	soundSystem::server = &server;
 
 	con_info( "Begin server main loop..." );
 	int64_t then =

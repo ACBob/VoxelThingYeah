@@ -1,8 +1,6 @@
 #include "entitybase.hpp"
 
-#ifdef CLIENTEXE
-	#include "sound/soundmanager.hpp"
-#endif
+#include "sound/soundmanager.hpp"
 
 CEntityBase::CEntityBase() : m_collisionBox( { CVector( 0 ), CVector( 0.5, 0.5, 0.5 ), CVector( 0.5, 0.5, 0.5 ) } ) {}
 
@@ -32,10 +30,8 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	UpdateCollision();
 	if ( pWorld->TestAABBCollision( this->m_collisionBox ) )
 	{
-#ifdef CLIENTEXE
 		if (m_vVelocity.x >= SMACK_SPEED)
 			soundSystem::PlaySoundEvent( "entity.fastsmack", m_vPosition );
-#endif
 
 		m_vPosition.x -= m_vVelocity.x * fDelta;
 		m_vVelocity.x /= 2;
@@ -45,10 +41,8 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	m_pLastBlockFloor = pWorld->TestAABBCollision( this->m_collisionBox );
 	if ( m_pLastBlockFloor )
 	{
-#ifdef CLIENTEXE
 		if (m_vVelocity.y >= SMACK_SPEED)
 			soundSystem::PlaySoundEvent( "entity.fastsmack", m_vPosition );
-#endif
 
 		if (m_vVelocity.y < 0)
 			m_bOnFloor = true;
@@ -60,10 +54,8 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	UpdateCollision();
 	if ( pWorld->TestAABBCollision( this->m_collisionBox ) )
 	{
-#ifdef CLIENTEXE
 		if (m_vVelocity.z >= SMACK_SPEED)
 			soundSystem::PlaySoundEvent( "entity.fastsmack", m_vPosition );
-#endif
 
 		m_vPosition.z -= m_vVelocity.z * fDelta;
 		m_vVelocity.z /= 2;
@@ -93,13 +85,11 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	CBlock *blockInside = pWorld->BlockAtWorldPos( m_vPosition );
 	if ( blockInside != nullptr && ( blockInside->m_iBlockType == WATER || blockInside->m_iBlockType == WATERSRC ) )
 	{
-#ifdef CLIENTEXE
 		// if we're in water, and we're going fast enough, make a splash
 		if ( !m_bInWater && m_vVelocity.Magnitude() > SPLASH_SPEED )
 		{
 			soundSystem::PlaySoundEvent( "entity.splash", m_vPosition );
 		}
-#endif
 
 		m_bInWater = true;
 	}
@@ -111,7 +101,6 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 
 void CEntityBase::Tick( int64_t iTick )
 {
-#ifdef CLIENTEXE
 	CVector t = m_vVelocity;
 	t.y		  = 0;
 	if ( t.Magnitude() > 1 )
@@ -137,5 +126,4 @@ void CEntityBase::Tick( int64_t iTick )
 			}
 		}
 	}
-#endif
 }

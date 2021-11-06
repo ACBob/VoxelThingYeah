@@ -8,13 +8,13 @@
 #ifdef CLIENTEXE
 	#include "rendering/modelmanager.hpp"
 	#include "rendering/shadermanager.hpp"
-
-	// Move faster than this? Smack!
-	#define SMACK_SPEED 30
-
-	// Move fast enough into water? Splash!
-	#define SPLASH_SPEED 10
 #endif
+
+// Move faster than this? Smack!
+#define SMACK_SPEED 30
+
+// Move fast enough into water? Splash!
+#define SPLASH_SPEED 10
 
 #include <string>
 #include <vector>

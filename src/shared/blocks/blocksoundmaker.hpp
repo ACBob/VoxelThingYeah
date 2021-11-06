@@ -2,9 +2,7 @@
 
 #include "blockbase.hpp"
 
-#ifdef CLIENTEXE
 #include "sound/soundmanager.hpp"
-#endif
 
 class CBlockSoundMaker final : public CBlockBase
 {
@@ -17,12 +15,10 @@ class CBlockSoundMaker final : public CBlockBase
 		return true;
 	};
 
-#ifdef CLIENTEXE
     virtual void OnUse( CChunk *pChunk, CVector vPosition, CEntityBase *pUser ) const
     {
         soundSystem::PlaySoundEvent( "block.soundmaker.use", vPosition );
     };
-#endif
 
     virtual BLOCKMATERIAL GetMaterial( ) const {
 		return MAT_FABRIC;

@@ -151,4 +151,17 @@ namespace protocol
 
 		protocol::SendPacket( pPeer, p );
 	}
+	void SendServerSoundEvent( ENetPeer *pPeer, CVector pos, std::string eventName )
+	{
+		ServerPacket p;
+		Archive<ArchiveBuf> bufAccess = p.GetAccess();
+		p.type						  = ServerPacket::SOUNDEVENT;
+
+		bufAccess << pos.x;
+		bufAccess << pos.y;
+		bufAccess << pos.z;
+		bufAccess << eventName;
+
+		protocol::SendPacket( pPeer, p );
+	}
 } // namespace protocol

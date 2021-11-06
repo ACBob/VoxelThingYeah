@@ -200,7 +200,15 @@ struct ServerPacket : public NetworkPacket
 				effectAttrib
 			}
 		*/
-		SPECIALEFFECT = 0x0b
+		SPECIALEFFECT = 0x0b,
+		// Play Sound Event
+		/*
+			{
+				x,y,z,
+				soundName
+			}
+		*/
+		SOUNDEVENT = 0x0c,
 	};
 
 	template <typename S> void serialize( S &s ) { s &type &data & true; };
@@ -234,6 +242,7 @@ namespace protocol
 	void SendServerPlayerSkin( ENetPeer *pPeer, std::string username, std::vector<unsigned char> imageData,
 							   unsigned int resolution );
 	void SendServerSpecialEffect( ENetPeer *pPeer, CVector pos, int id, int attrib );
+	void SendServerSoundEvent( ENetPeer *pPeer, CVector pos, std::string soundName );
 
 	/****************************************************/
 	/******************* CLIENT *************************/

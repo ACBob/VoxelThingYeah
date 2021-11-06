@@ -2,6 +2,8 @@
 
 #include "logging.hpp"
 
+#include "sound/soundmanager.hpp"
+
 CNetworkServer::CNetworkServer( int port, int maxClients )
 {
 	m_addr.host = ENET_HOST_ANY;
@@ -188,3 +190,14 @@ void CNetworkServer::Update()
 }
 
 bool CNetworkServer::WorkingServer() { return m_pEnetHost != NULL; }
+
+void CNetworkServer::PlaySoundEvent(const char* name, CVector pos) {
+	for (CNetworkPlayer* p : m_players) {
+		if (p->m_pEntity == nullptr)
+			continue;
+		CVector dist = p->m_pEntity->m_vPosition - pos;
+		if (dist.Magnitude() < SOUND_MAX_DISTANCE) {
+			protocol::SendServerSoundEvent(p->m_pPeer, pos, name);
+		}
+	}
+}

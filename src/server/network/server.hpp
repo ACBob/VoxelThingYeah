@@ -1,3 +1,5 @@
+#pragma once
+
 #include "enet/enet.h"
 #include "entities/entityplayer.hpp"
 #include "network/protocol.hpp"
@@ -45,6 +47,8 @@ class CNetworkServer
 	void KickPlayer( CNetworkPlayer *c, const char *reason );
 	void KickPlayer( const char *str, const char *reason );
 	void KickPlayer( ENetPeer *p, const char *reason );
+
+	void PlaySoundEvent( const char *str, CVector pos );
 
 	unsigned int m_iCurrentTick;
 
