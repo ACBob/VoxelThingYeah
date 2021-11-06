@@ -30,6 +30,8 @@
 
 #include "stb_vorbis.c"
 
+#include "blocks/blockbase.hpp"
+
 std::map<std::string, CSound *> soundSystem::loadedSounds;
 std::map<std::string, CSoundEvent *> soundSystem::soundEvents;
 
@@ -330,7 +332,7 @@ void soundSystem::SetListener( CWorld *world, CVector pos, CVector forward, CVec
 			}
 
 			float reverb		= 0.0f;
-			blockmaterial_t mat = GetBlockMaterial( a.m_pBlock->m_iBlockType );
+			BLOCKMATERIAL mat = BlockType( a.m_pBlock->m_iBlockType ).GetMaterial();
 			switch ( mat )
 			{
 				default:
@@ -413,9 +415,9 @@ CSound *soundSystem::LoadSound( const char *path )
 	return snd;
 }
 
-void soundSystem::PlayBreakSound( blocktype_t blockType, CVector pos )
+void soundSystem::PlayBreakSound( BLOCKID blockType, CVector pos )
 {
-	blockmaterial_t mat = GetBlockMaterial( blockType );
+	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial();
 
 	char *buf = new char[512];
 	snprintf( buf, 512, "block.break.%s", BlockMaterialSTR( mat ) );
@@ -423,9 +425,9 @@ void soundSystem::PlayBreakSound( blocktype_t blockType, CVector pos )
 
 	delete buf;
 }
-void soundSystem::PlayPlaceSound( blocktype_t blockType, CVector pos )
+void soundSystem::PlayPlaceSound( BLOCKID blockType, CVector pos )
 {
-	blockmaterial_t mat = GetBlockMaterial( blockType );
+	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial();
 
 	char *buf = new char[512];
 	snprintf( buf, 512, "block.place.%s", BlockMaterialSTR( mat ) );
@@ -433,9 +435,9 @@ void soundSystem::PlayPlaceSound( blocktype_t blockType, CVector pos )
 
 	delete buf;
 }
-void soundSystem::PlayStepSound( blocktype_t blockType, CVector pos )
+void soundSystem::PlayStepSound( BLOCKID blockType, CVector pos )
 {
-	blockmaterial_t mat = GetBlockMaterial( blockType );
+	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial();
 
 	char *buf = new char[512];
 	snprintf( buf, 512, "block.step.%s", BlockMaterialSTR( mat ) );

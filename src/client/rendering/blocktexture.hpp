@@ -17,4 +17,4 @@ struct BlockTexture
 	int x, y, sizex, sizey;
 };
 
-BlockTexture GetDefaultBlockTextureSide( blocktype_t type, Direction side );
+BlockTexture GetDefaultBlockTextureSide( BLOCKID type, Direction side );

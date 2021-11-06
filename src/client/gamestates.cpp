@@ -298,16 +298,16 @@ void CStatePlay::Update()
 
 			Colour tint(1,1,1);
 
-			if (GetBlockFeatures(pBlockItem->m_iBlockType).colouration == BLOCKCOLOURATION_16BIT)
-			{
-				tint.x = (pBlockItem->m_iBlockData >> 12) & 0xF;
-				tint.y = (pBlockItem->m_iBlockData >> 8) & 0xF;
-				tint.z = (pBlockItem->m_iBlockData >> 4) & 0xF;
+			// if (GetBlockFeatures(pBlockItem->m_iBlockType).colouration == BLOCKCOLOURATION_16BIT)
+			// {
+			// 	tint.x = (pBlockItem->m_iBlockData >> 12) & 0xF;
+			// 	tint.y = (pBlockItem->m_iBlockData >> 8) & 0xF;
+			// 	tint.z = (pBlockItem->m_iBlockData >> 4) & 0xF;
 
-				tint.x /= 16;
-				tint.y /= 16;
-				tint.z /= 16;
-			}
+			// 	tint.x /= 16;
+			// 	tint.y /= 16;
+			// 	tint.z /= 16;
+			// }
 
 			pStateMan->m_pGui->ImageAtlas(
 				m_pTerrainPNG, { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey }, 16.0f,
@@ -339,16 +339,16 @@ void CStatePlay::Update()
 
 				Colour tint(1,1,1);
 
-				if (GetBlockFeatures(pBlockItem->m_iBlockType).colouration == BLOCKCOLOURATION_16BIT)
-				{
-					tint.x = (pBlockItem->m_iBlockData >> 12) & 0xF;
-					tint.y = (pBlockItem->m_iBlockData >> 8) & 0xF;
-					tint.z = (pBlockItem->m_iBlockData >> 4) & 0xF;
+				// if (GetBlockFeatures(pBlockItem->m_iBlockType).colouration == BLOCKCOLOURATION_16BIT)
+				// {
+				// 	tint.x = (pBlockItem->m_iBlockData >> 12) & 0xF;
+				// 	tint.y = (pBlockItem->m_iBlockData >> 8) & 0xF;
+				// 	tint.z = (pBlockItem->m_iBlockData >> 4) & 0xF;
 
-					tint.x /= 16;
-					tint.y /= 16;
-					tint.z /= 16;
-				}
+				// 	tint.x /= 16;
+				// 	tint.y /= 16;
+				// 	tint.z /= 16;
+				// }
 
 				pStateMan->m_pGui->ImageAtlas(m_pTerrainPNG, { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey }, 16.0f, p, CVector( 2, 2 ), CVector( 0.5, 0.5 ), tint );
 				if ( pStateMan->m_pGui->Button( 'b' + i, p, CVector(2,2), CVector(0.5, 0.5), nullptr, true ) )

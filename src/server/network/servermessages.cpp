@@ -40,7 +40,7 @@ namespace protocol
 
 		SendPacket( pPeer, p, true );
 	}
-	void SendServerUpdateBlock( ENetPeer *pPeer, CVector pos, blocktype_t blockType, uint16_t val )
+	void SendServerUpdateBlock( ENetPeer *pPeer, CVector pos, BLOCKID blockType, uint16_t val )
 	{
 		ServerPacket p;
 		p.type					   = ServerPacket::UPDATE_BLOCK;

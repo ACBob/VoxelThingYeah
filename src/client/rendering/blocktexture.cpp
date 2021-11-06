@@ -1,6 +1,6 @@
 #include "blocktexture.hpp"
 
-BlockTexture GetDefaultBlockTextureSide( blocktype_t type, Direction side )
+BlockTexture GetDefaultBlockTextureSide( BLOCKID type, Direction side )
 {
 	switch ( type )
 	{

@@ -86,7 +86,7 @@ namespace protocol
 				if ( b != nullptr )
 				{
 					// con_info( "Update Block At <%f,%f,%f>", x, y, z );
-					b->m_iBlockType = blocktype_t( blockType );
+					b->m_iBlockType = BLOCKID( blockType );
 					b->m_iBlockData	= val;
 					b->Update();
 				}

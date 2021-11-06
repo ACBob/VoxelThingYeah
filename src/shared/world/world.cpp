@@ -14,6 +14,8 @@
 
 #include <algorithm>
 
+#include "blocks/blockbase.hpp"
+
 #ifdef CLIENTEXE
 CWorld::CWorld( CShader *shader, CShader *entShader, CShader *waterShader, CTexture *worldTex )
 	: m_pWorldShader( shader ), m_pEntityShader( entShader ), m_pWaterShader( waterShader ), m_pWorldTex( worldTex )
@@ -157,12 +159,18 @@ bool CWorld::TestPointCollision( CVector pos )
 	CBlock *b = BlockAtWorldPos( pos );
 	if ( b == nullptr )
 		return false;
-	BlockFeatures bF = GetBlockFeatures( b->m_iBlockType );
-	if ( !bF.walkable )
+	// BlockFeatures bF = GetBlockFeatures( b->m_iBlockType );
+	// if ( !bF.walkable )
+	// 	return false;
+
+	if (!BlockType(b->m_iBlockType).IsSolid(b->m_iBlockData))
 		return false;
 
+	CBoundingBox blockBounds = BlockType(b->m_iBlockType).GetBounds();
+
 	pos = pos - pos.Floor();
-	return CBoundingBox( pos.Floor(), CVector( 1, 1, 1 ), CVector( 0 ) ).TestPointCollide( pos );
+	blockBounds.m_vPosition = pos.Floor();
+	return blockBounds.TestPointCollide( pos );
 }
 
 CBlock* CWorld::TestAABBCollision( CBoundingBox col )
@@ -178,13 +186,15 @@ CBlock* CWorld::TestAABBCollision( CBoundingBox col )
 		CHUNK1D_TO_3D( i, x, y, z );
 
 		// Don't collide with air
-		blocktype_t blockType = chunk->m_blocks[i].m_iBlockType;
-		BlockFeatures bF	  = GetBlockFeatures( blockType );
-		if ( !bF.walkable )
+		BLOCKID blockType = chunk->m_blocks[i].m_iBlockType;
+
+		if (!BlockType(blockType).IsSolid(chunk->m_blocks[i].m_iBlockData))
 			continue;
 
-		if ( col.TestCollide(
-				 CBoundingBox( chunk->GetPosInWorld() + CVector( x, y, z ), CVector( 1, 1, 1 ), CVector( 0 ) ) ) )
+		CBoundingBox blockBounds = BlockType(blockType).GetBounds();
+		blockBounds.m_vPosition = CVector( x, y, z );
+
+		if ( col.TestCollide( blockBounds ) )
 			return &chunk->m_blocks[i];
 	}
 
@@ -267,7 +277,7 @@ void CWorld::UsePortable( PortableChunkRepresentation rep )
 
 	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
 	{
-		c->m_blocks[j].m_iBlockType = (blocktype_t)rep.m_iBlocks[j];
+		c->m_blocks[j].m_iBlockType = (BLOCKID)rep.m_iBlocks[j];
 		c->m_blocks[j].m_iBlockData	= rep.m_iValue[j];
 	}
 

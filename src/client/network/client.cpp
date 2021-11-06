@@ -98,7 +98,7 @@ void CNetworkClient::SpecialEffectHandle( CVector pos, SpecialEffect specialEffe
 	{
 		case SPECIALEFFECT_BLOCKBREAK: {
 			// Attrib is taken to be the block id
-			blocktype_t b = (blocktype_t)attrib;
+			BLOCKID b = (BLOCKID)attrib;
 
 			// Air has no break effect
 			if ( b == AIR )
@@ -123,7 +123,7 @@ void CNetworkClient::SpecialEffectHandle( CVector pos, SpecialEffect specialEffe
 		break;
 		case SPECIALEFFECT_BLOCKPLACE: {
 			// Attrib is taken to be the block id
-			blocktype_t b = (blocktype_t)attrib;
+			BLOCKID b = (BLOCKID)attrib;
 
 			// Air has no place effect
 			if ( b == AIR )

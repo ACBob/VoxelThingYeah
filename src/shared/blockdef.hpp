@@ -1,5 +1,6 @@
 // Holds fancy block definition stuffy stuff
-// TODO: more OOP way?
+// Like ID
+// For what used to be BlockFeatures, see BlockBase.cpp
 
 #include <types.hpp>
 
@@ -8,7 +9,8 @@
 
 #pragma once
 
-enum blocktype_t {
+// TODO: Rename to BLOCK_*
+enum BLOCKID {
 	AIR			 = 0,
 	STONE		 = 1,
 	DIRT		 = 2,
@@ -42,7 +44,10 @@ enum blocktype_t {
 	WOOL		 = 30
 };
 
-enum blockmaterial_t {
+// May be changed one day, so use this always
+using BLOCKVAL = uint16_t;
+
+enum BLOCKMATERIAL {
 	MAT_NONE	= 0, // Invalid
 	MAT_STONE	= 1, // Stone, Rock
 	MAT_LOOSE	= 2, // Dirt, Gravel
@@ -54,62 +59,4 @@ enum blockmaterial_t {
 	MAT_FABRIC  = 8  // Wool
 };
 
-enum blockobscurerule_t {
-	OBSCURERULE_ALWAYS	= 0, // If we can, we do
-	OBSCURERULE_SIMILAR = 1, // Only do it if it's the same as us
-	OBSCURERULE_NEVER	= 2	 // Never obscure faces
-};
-
-enum blockmodel_t {
-	BLOCKMODEL_CUBE	 = 0, // Default cube
-	BLOCKMODEL_PLANT = 1, // X-Shape
-};
-
-enum blockcoloration_t {
-	BLOCKCOLOURATION_NONE = 0, // NEVER Treat the block data as colour
-	BLOCKCOLOURATION_16BIT = 1, // Treat all our 16 bits of value as colour (actually 15 bit :trollface:)
-};
-
-blockmaterial_t GetBlockMaterial( blocktype_t blockType );
-
-const char *BlockMaterialSTR( blockmaterial_t mat );
-
-struct BlockFeatures
-{
-	// Can Collide
-	bool walkable;
-	// Obscures faces
-	bool solid;
-	// Can select
-	bool selectable;
-	// Can break
-	bool breakable;
-	// Can replace with a liquid
-	bool floodable;
-	// IS a liquid
-	bool isLiquid;
-	// IS a source of a liquid (i.e act infinite and create flow)
-	bool isLiquidSource;
-	// Colourate?
-	// TODO: Specify a mask somehow??
-	blockcoloration_t colouration;
-	// is a light source
-	bool isLightSource;
-	// Opaqueness, similar to colour, set to 0xFFF to act fully opaque
-	uint16_t opaqueness;
-	// The colour of light
-	uint16_t lightColour;
-	// Flow/Source variants
-	blocktype_t liquidFlow;
-	blocktype_t liquidSource;
-	// How far the liquid should flow
-	uint8_t liquidRange;
-	// Every THIS tick, flow
-	int liquidSpeed;
-	// Model to use
-	blockmodel_t model;
-	// Obscure Rule
-	blockobscurerule_t rule;
-};
-
-BlockFeatures GetBlockFeatures( blocktype_t blockType );
+const char *BlockMaterialSTR( BLOCKMATERIAL mat );
