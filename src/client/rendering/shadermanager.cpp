@@ -20,7 +20,6 @@ std::vector<CShader *> shaderSystem::loadedShaders;
 
 #define SHADERSYS_MAX_INCLUDE_DEPTH 2048
 
-// TODO: not as verbose
 void ShaderPreprocess( std::string &source, int d = 0 )
 {
 	if ( d >= SHADERSYS_MAX_INCLUDE_DEPTH )
@@ -29,45 +28,50 @@ void ShaderPreprocess( std::string &source, int d = 0 )
 		return;
 	}
 
-	std::stringstream ss( source );
+	std::regex include( "#include \"([^\"]+)\"" );
 
-	std::string o;
+	std::smatch match;
 
-	std::regex include( "#.*include ((<[^>]+>)|(\"[^\"]+\"))" );
-	std::regex strng( "[\"<](.*?)[\">]" );
+	std::regex_search( source, match, include );
 
-	for ( std::string l; std::getline( ss, l ); )
+	// There aren't any includes
+	if ( match.size() == 0 ) return;
+
+	// Replace the include with the contents of the file
+	// Get the file name
+	std::string fileName = match[1].str();
+
+	// for ( int i = 0; i < match.size(); i++ )
+	// {
+	// 	con_debug( "Match %d: %s", i, match[i].str().c_str() );
+	// }
+
+	// con_debug("Search for %s", fileName.c_str());
+
+	bool bSuccess	= false;
+	int64_t iLength = 0;
+	char *pData = (char*)fileSystem::LoadFile( ("/assets/shaders/" + fileName).c_str(), iLength, bSuccess );
+
+	if (!bSuccess)
 	{
-		if ( std::regex_match( l, include ) )
-		{
-			std::smatch match;
-			std::regex_search( l, match, strng );
-			std::string fp = match.str();
-			fp			   = fp.substr( 1, fp.length() - 2 ); // Cut off first and last character
-			fp			   = "/assets/shaders/" + fp;
+		con_error( "No such shader file: %s", fileName.c_str() );
 
-			int64_t iLength = 0;
-			bool bSuccess	= false;
-			char *src		= (char *)fileSystem::LoadFile( fp.c_str(), iLength, bSuccess );
-			if ( !bSuccess )
-			{
-				con_error( "Cannot load Included Shader %s!", fp.c_str() );
-				delete[] src;
+		// Delete the include anyway
+		source.erase( match[0].first, match[0].second );
+	}
+	else
+	{
+		std::string includeSource = pData;
 
-				continue;
-			}
+		ShaderPreprocess( includeSource, d + 1 );
 
-			std::string ssrc( src );
-
-			ShaderPreprocess( ssrc, d + 1 );
-
-			o.append( ssrc + "\n" );
-		}
-		else
-			o.append( l + "\n" );
+		// Replace the include with the contents of the file
+		source.replace( match[0].first, match[0].second, includeSource );
 	}
 
-	source = o;
+	// HACK: to continue in this file, we need to call ShaderPreprocess again
+	if (match.size() > 1)
+		ShaderPreprocess( source, d );
 }
 
 void ShaderPreprocess( char *&cSource, int d = 0 )
