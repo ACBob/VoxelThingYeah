@@ -121,7 +121,9 @@ void CEntityBase::Tick( int64_t iTick )
 			if ( iTick >= m_iFootstepTick )
 			{
 				soundSystem::PlayStepSound( m_pLastBlockFloor->m_iBlockType, m_vPosition );
-				m_iFootstepTick = iTick + 9;
+				
+				// The time between footsteps is based on the speed of the player
+				m_iFootstepTick = iTick + ( 20 - (int)m_vVelocity.Magnitude() );
 			}
 		}
 		else if (m_bFootstepSounds && m_bInWater)
@@ -129,7 +131,9 @@ void CEntityBase::Tick( int64_t iTick )
 			if ( iTick >= m_iFootstepTick )
 			{
 				soundSystem::PlaySoundEvent( "entity.swim", m_vPosition );
-				m_iFootstepTick = iTick + 18;
+
+				// Time between swimming sounds is based on the speed of the player
+				m_iFootstepTick = iTick + ( 18 - (int)m_vVelocity.Magnitude() );
 			}
 		}
 	}
