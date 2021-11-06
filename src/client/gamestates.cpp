@@ -99,22 +99,22 @@ void CStatePlay::Enter()
 		new CBlockItem(64, LIGHT_GREEN),
 		new CBlockItem(64, LIGHT_BLUE),
 
-		new CBlockItem(64, WOOL, (DyePalette[0] >> 8) & 0xFF, DyePalette[0] & 0xFF),
-		new CBlockItem(64, WOOL, (DyePalette[1] >> 8) & 0xFF, DyePalette[1] & 0xFF),
-		new CBlockItem(64, WOOL, (DyePalette[2] >> 8) & 0xFF, DyePalette[2] & 0xFF),
-		new CBlockItem(64, WOOL, (DyePalette[3] >> 8) & 0xFF, DyePalette[3] & 0xFF),
-		new CBlockItem(64, WOOL, (DyePalette[4] >> 8) & 0xFF, DyePalette[4] & 0xFF),
-		new CBlockItem(64, WOOL, (DyePalette[5] >> 8) & 0xFF, DyePalette[5] & 0xFF),
-		new CBlockItem(64, WOOL, (DyePalette[6] >> 8) & 0xFF, DyePalette[6] & 0xFF),
-		new CBlockItem(64, WOOL, (DyePalette[7] >> 8) & 0xFF, DyePalette[7] & 0xFF),
-		new CBlockItem(64, WOOL, (DyePalette[8] >> 8) & 0xFF, DyePalette[8] & 0xFF),
-		new CBlockItem(64, WOOL, (DyePalette[9] >> 8) & 0xFF, DyePalette[9] & 0xFF),
-		new CBlockItem(64, WOOL, (DyePalette[10] >> 8) & 0xFF, DyePalette[10] & 0xFF),
-		new CBlockItem(64, WOOL, (DyePalette[11] >> 8) & 0xFF, DyePalette[11] & 0xFF),
-		new CBlockItem(64, WOOL, (DyePalette[12] >> 8) & 0xFF, DyePalette[12] & 0xFF),
-		new CBlockItem(64, WOOL, (DyePalette[13] >> 8) & 0xFF, DyePalette[13] & 0xFF),
-		new CBlockItem(64, WOOL, (DyePalette[14] >> 8) & 0xFF, DyePalette[14] & 0xFF),
-		new CBlockItem(64, WOOL, (DyePalette[15] >> 8) & 0xFF, DyePalette[15] & 0xFF),
+		new CBlockItem(64, WOOL, DyePalette[0]),
+		new CBlockItem(64, WOOL, DyePalette[1]),
+		new CBlockItem(64, WOOL, DyePalette[2]),
+		new CBlockItem(64, WOOL, DyePalette[3]),
+		new CBlockItem(64, WOOL, DyePalette[4]),
+		new CBlockItem(64, WOOL, DyePalette[5]),
+		new CBlockItem(64, WOOL, DyePalette[6]),
+		new CBlockItem(64, WOOL, DyePalette[7]),
+		new CBlockItem(64, WOOL, DyePalette[8]),
+		new CBlockItem(64, WOOL, DyePalette[9]),
+		new CBlockItem(64, WOOL, DyePalette[10]),
+		new CBlockItem(64, WOOL, DyePalette[11]),
+		new CBlockItem(64, WOOL, DyePalette[12]),
+		new CBlockItem(64, WOOL, DyePalette[13]),
+		new CBlockItem(64, WOOL, DyePalette[14]),
+		new CBlockItem(64, WOOL, DyePalette[15]),
 	});
 }
 void CStatePlay::ReturnedTo() {}
@@ -276,7 +276,7 @@ void CStatePlay::Update()
 			// Data displayed in hex
 			if (m_pLocalPlayer->m_pointed.m_pBlock != nullptr)
 			{
-				snprintf( guiBuf, 100, "Pointed block: %i, %X %X", m_pLocalPlayer->m_pointed.m_pBlock->m_iBlockType, m_pLocalPlayer->m_pointed.m_pBlock->m_iValueA, m_pLocalPlayer->m_pointed.m_pBlock->m_iValueB );
+				snprintf( guiBuf, 100, "Pointed block: %i, %04X", m_pLocalPlayer->m_pointed.m_pBlock->m_iBlockType, m_pLocalPlayer->m_pointed.m_pBlock->m_iBlockData );
 				pStateMan->m_pGui->Label( guiBuf, CVector( 0, -5 ) );
 			}
 			else
@@ -300,9 +300,9 @@ void CStatePlay::Update()
 
 			if (GetBlockFeatures(pBlockItem->m_iBlockType).colouration == BLOCKCOLOURATION_16BIT)
 			{
-				tint.x = (pBlockItem->m_iValA >> 4) & 0xF;
-				tint.y = (pBlockItem->m_iValA >> 0) & 0xF;
-				tint.z = (pBlockItem->m_iValB >> 4) & 0xF;
+				tint.x = (pBlockItem->m_iBlockData >> 12) & 0xF;
+				tint.y = (pBlockItem->m_iBlockData >> 8) & 0xF;
+				tint.z = (pBlockItem->m_iBlockData >> 4) & 0xF;
 
 				tint.x /= 16;
 				tint.y /= 16;
@@ -341,9 +341,9 @@ void CStatePlay::Update()
 
 				if (GetBlockFeatures(pBlockItem->m_iBlockType).colouration == BLOCKCOLOURATION_16BIT)
 				{
-					tint.x = (pBlockItem->m_iValA >> 4) & 0xF;
-					tint.y = (pBlockItem->m_iValA >> 0) & 0xF;
-					tint.z = (pBlockItem->m_iValB >> 4) & 0xF;
+					tint.x = (pBlockItem->m_iBlockData >> 12) & 0xF;
+					tint.y = (pBlockItem->m_iBlockData >> 8) & 0xF;
+					tint.z = (pBlockItem->m_iBlockData >> 4) & 0xF;
 
 					tint.x /= 16;
 					tint.y /= 16;
@@ -357,12 +357,8 @@ void CStatePlay::Update()
 					{
 						// TODO: assuming blockitem
 						m_pLocalPlayer->m_pSelectedItem->SetCount( ITEMSTACK_MAX );
-						reinterpret_cast<CBlockItem *>( m_pLocalPlayer->m_pSelectedItem )->m_iBlockType =
-							pBlockItem->m_iBlockType;
-						reinterpret_cast<CBlockItem *>( m_pLocalPlayer->m_pSelectedItem )->m_iValA =
-							pBlockItem->m_iValA;
-						reinterpret_cast<CBlockItem *>( m_pLocalPlayer->m_pSelectedItem )->m_iValB =
-							pBlockItem->m_iValB;
+						reinterpret_cast<CBlockItem *>( m_pLocalPlayer->m_pSelectedItem )->m_iBlockType = pBlockItem->m_iBlockType;
+						reinterpret_cast<CBlockItem *>( m_pLocalPlayer->m_pSelectedItem )->m_iBlockData = pBlockItem->m_iBlockData;
 					}
 				}
 

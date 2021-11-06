@@ -72,14 +72,13 @@ namespace protocol
 
 			case ServerPacket::UPDATE_BLOCK: {
 				float x, y, z;
-				uint8_t valA, valB;
+				uint16_t val;
 				uint blockType;
 				bufAccess >> x;
 				bufAccess >> y;
 				bufAccess >> z;
 				bufAccess >> blockType;
-				bufAccess >> valA;
-				bufAccess >> valB;
+				bufAccess >> val;
 
 				// Woot, data!
 				// TODO: make sure the server isn't being malicious.. Somehow
@@ -88,8 +87,7 @@ namespace protocol
 				{
 					// con_info( "Update Block At <%f,%f,%f>", x, y, z );
 					b->m_iBlockType = blocktype_t( blockType );
-					b->m_iValueA	= valA;
-					b->m_iValueB	= valB;
+					b->m_iBlockData	= val;
 					b->Update();
 				}
 			}

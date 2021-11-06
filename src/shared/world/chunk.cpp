@@ -41,12 +41,12 @@ CChunk::~CChunk() {}
 CChunk *CChunk::Neighbour( Direction dir )
 {
 	CVector neighbourPos = m_vPosition + DirectionVector[dir];
-	return ( reinterpret_cast<CWorld *>( m_pChunkMan ) )->ChunkAtChunkPos( neighbourPos );
+	return m_pChunkMan->ChunkAtChunkPos( neighbourPos );
 }
 CChunk *CChunk::Neighbour( CVector dir )
 {
 	CVector neighbourPos = m_vPosition + dir;
-	return ( reinterpret_cast<CWorld *>( m_pChunkMan ) )->ChunkAtChunkPos( neighbourPos );
+	return m_pChunkMan->ChunkAtChunkPos( neighbourPos );
 }
 
 #ifdef CLIENTEXE
@@ -106,13 +106,12 @@ void CChunk::Update( int64_t iTick )
 		BlockFeatures blockFeatures = GetBlockFeatures( blockType );
 
 		if ( blockFeatures.isLiquidSource )
-			blockHandling->m_iValueA = blockFeatures.liquidRange;
-		else if ( blockHandling->m_iValueA == 0 )
+			blockHandling->m_iBlockData = blockFeatures.liquidRange;
+		else if ( blockHandling->m_iBlockData == 0 )
 			continue;
 
 		// Test Bottom first
-		CBlock *pBlock = reinterpret_cast<CWorld *>( m_pChunkMan )
-							 ->BlockAtWorldPos( PosToWorld( CVector( pos.x, pos.y - 1, pos.z ) ) );
+		CBlock *pBlock =  m_pChunkMan->BlockAtWorldPos( PosToWorld( CVector( pos.x, pos.y - 1, pos.z ) ) );
 		if ( pBlock == nullptr )
 			continue;
 
@@ -120,7 +119,7 @@ void CChunk::Update( int64_t iTick )
 		if ( blockF.floodable && pBlock->m_iBlockType != blockType )
 		{
 			pBlock->m_iBlockType = blockFeatures.liquidFlow;
-			pBlock->m_iValueA	 = blockFeatures.liquidRange;
+			pBlock->m_iBlockData	 = blockFeatures.liquidRange;
 		}
 		else if ( pBlock->m_iBlockType == blockFeatures.liquidFlow ||
 				  pBlock->m_iBlockType == blockFeatures.liquidSource )
@@ -148,13 +147,13 @@ void CChunk::Update( int64_t iTick )
 				if ( bF.floodable )
 				{
 					b->m_iBlockType = blockFeatures.liquidFlow;
-					b->m_iValueA	= blockHandling->m_iValueA - 1;
+					b->m_iBlockData	= blockHandling->m_iBlockData - 1;
 					bDirtyAgain		= true; // Something within us changed, we should update next tick too
 				}
 				else if ( b->m_iBlockType == blockFeatures.liquidFlow )
 				{
-					if ( b->m_iValueA < ( blockHandling->m_iValueA - 1 ) )
-						b->m_iValueA = blockHandling->m_iValueA - 1;
+					if ( b->m_iBlockData < ( blockHandling->m_iBlockData - 1 ) )
+						b->m_iBlockData = blockHandling->m_iBlockData - 1;
 				}
 			}
 		}
@@ -169,7 +168,7 @@ void CChunk::Update( int64_t iTick )
 	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
 	{
 		m_portableDef.m_iBlocks[j] = m_blocks[j].m_iBlockType;
-		m_portableDef.m_iValue[j]  = (m_blocks[j].m_iValueA << 8) | m_blocks[j].m_iValueB;
+		m_portableDef.m_iValue[j]  = m_blocks[j].m_iBlockData;
 	}
 
 #ifdef CLIENTEXE
@@ -235,6 +234,7 @@ void CChunk::SetLightingLocal( CVector pos, Colour colour )
 	l		   = ( l & 0xFFF0 ) | ( (int)colour.w );
 }
 
+// TODO: Put in the world, not the chunk so it doesn't get weird
 void Zoop( CChunk *c, int r, int g, int b, int s, int x, int y, int z )
 {
 	if ( c == nullptr )

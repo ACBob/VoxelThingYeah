@@ -183,9 +183,9 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 								{
 									// All 16 bits of the values are used to colour
 									// So valueA contains R & G, valueB has B.
-									blockColouration.x = (block.m_iValueA >> 4) & 0xF;
-									blockColouration.y = (block.m_iValueA >> 0) & 0xF;
-									blockColouration.z = (block.m_iValueB >> 4) & 0xF;
+									blockColouration.x = (block.m_iBlockData >> 12) & 0xF;
+									blockColouration.y = (block.m_iBlockData >> 8) & 0xF;
+									blockColouration.z = (block.m_iBlockData >> 4) & 0xF;
 								}
 
 								CVector neighbour = CVector( x, y, z ) + DirectionVector[i];

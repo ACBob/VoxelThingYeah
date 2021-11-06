@@ -40,7 +40,7 @@ namespace protocol
 
 		SendPacket( pPeer, p, true );
 	}
-	void SendServerUpdateBlock( ENetPeer *pPeer, CVector pos, blocktype_t blockType, uint8_t valA, uint8_t valB )
+	void SendServerUpdateBlock( ENetPeer *pPeer, CVector pos, blocktype_t blockType, uint16_t val )
 	{
 		ServerPacket p;
 		p.type					   = ServerPacket::UPDATE_BLOCK;
@@ -48,9 +48,8 @@ namespace protocol
 		bufAcc << pos.x;
 		bufAcc << pos.y;
 		bufAcc << pos.z;
-		bufAcc << (uint)blockType;
-		bufAcc << valA;
-		bufAcc << valB;
+		bufAcc << (uint32_t)blockType;
+		bufAcc << val;
 
 		protocol::SendPacket( pPeer, p, true );
 	}

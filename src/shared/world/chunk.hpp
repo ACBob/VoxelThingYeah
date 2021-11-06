@@ -33,6 +33,9 @@ struct PortableChunkRepresentation
 	uint64_t m_iBlocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 };
 
+// Forward declaration
+class CWorld;
+
 class CChunk
 {
   public:
@@ -76,8 +79,7 @@ class CChunk
 	void UpdateLighting();
 #endif
 
-	// World pointer (can't set type because circular include :lenny:)
-	void *m_pChunkMan = nullptr;
+	CWorld *m_pChunkMan = nullptr;
 
 	PortableChunkRepresentation m_portableDef;
 
