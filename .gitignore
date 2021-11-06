@@ -6,4 +6,6 @@
 
 /.vscode/
 
+*svconfig.cfg*
+
 /files/usr/
