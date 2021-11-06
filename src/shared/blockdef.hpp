@@ -41,7 +41,8 @@ enum BLOCKID {
 	LIGHT_RED	 = 27,
 	LIGHT_GREEN	 = 28,
 	LIGHT_BLUE	 = 29,
-	WOOL		 = 30
+	WOOL		 = 30,
+	SOUNDMAKER	 = 31,
 };
 
 // May be changed one day, so use this always

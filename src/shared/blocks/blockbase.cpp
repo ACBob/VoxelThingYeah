@@ -4,6 +4,7 @@
 #include "blockstone.hpp"
 #include "blockerror.hpp"
 #include "blockliquid.hpp"
+#include "blocksoundmaker.hpp"
 
 #include "world/chunk.hpp"
 
@@ -56,6 +57,7 @@ namespace
     constexpr CBlockStone _BlockLightGreen(LIGHT_GREEN);
     constexpr CBlockStone _BlockLightBlue(LIGHT_BLUE);
     constexpr CBlockStone _BlockWool(WOOL);
+    constexpr CBlockSoundMaker _BlockSoundMaker(SOUNDMAKER);
 
     constexpr CBlockError _BlockInvalid(AIR);
 }
@@ -93,6 +95,7 @@ const CBlockBase &BlockType( BLOCKID type ) {
         case LIGHT_GREEN: return _BlockLightGreen;
         case LIGHT_BLUE: return _BlockLightBlue;
         case WOOL: return _BlockWool;
+        case SOUNDMAKER: return _BlockSoundMaker;
         default: return _BlockInvalid;
     }
 }

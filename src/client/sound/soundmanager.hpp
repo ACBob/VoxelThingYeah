@@ -66,6 +66,7 @@ namespace soundSystem
 	void PlayPlaceSound( BLOCKID blockType, CVector pos );
 	void PlayStepSound( BLOCKID blockType, CVector pos );
 
+	void PlaySoundEvent( CSoundEvent *event, CVector pos );
 	void PlaySoundEvent( const char *eventName, CVector pos );
 } // namespace soundSystem
 
@@ -116,6 +117,7 @@ namespace soundSystem
 	inline void PlayPlaceSound( BLOCKID blockType, CVector pos ){};
 	inline void PlayStepSound( BLOCKID blockType, CVector pos ){};
 	inline void PlaySoundEvent( const char *eventName, CVector pos ){};
+	inline void PlaySoundEvent( const CSoundEvent *event, CVector pos ){};
 } // namespace soundSystem
 
 #endif

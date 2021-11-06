@@ -204,3 +204,13 @@ type = "entity"
 appendSounds = false
 sounds = [ "splash.ogg" ]
 pitch = [ 0.7, 1.3 ]
+
+##########################################
+# Misc. Sounds                           #
+##########################################
+
+["block.soundmaker.use"]
+type = "block"
+appendSounds = false
+sounds = [ "red.ogg", "green.ogg", "blue.ogg", "swim1.ogg", "swim2.ogg", "splash.ogg", "smack.ogg", "place.ogg", "break.ogg", "placestone.ogg", "placeloose.ogg", "placewood.ogg", "placeorganic.ogg", "placesand.ogg", "breaksand.ogg", "breakstone.ogg", "breakloose.ogg", "breakwood.ogg", "breakfabric.ogg", "breakorganic.ogg", "uiclick.ogg", "uitick.ogg" ]
+pitch = [ 0.9, 1.1 ]

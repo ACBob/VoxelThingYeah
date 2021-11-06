@@ -115,6 +115,8 @@ void CStatePlay::Enter()
 		new CBlockItem(64, WOOL, DyePalette[13]),
 		new CBlockItem(64, WOOL, DyePalette[14]),
 		new CBlockItem(64, WOOL, DyePalette[15]),
+
+		new CBlockItem(64, SOUNDMAKER),
 	});
 }
 void CStatePlay::ReturnedTo() {}

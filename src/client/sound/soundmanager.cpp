@@ -444,6 +444,10 @@ void soundSystem::PlayStepSound( BLOCKID blockType, CVector pos )
 	PlaySoundEvent( buf, pos );
 	delete buf;
 }
+void soundSystem::PlaySoundEvent( CSoundEvent* event, CVector pos )
+{
+	event->Play( pos );
+}
 void soundSystem::PlaySoundEvent( const char *soundEvent, CVector pos )
 {
 	if ( !soundEvents.count( soundEvent ) )
@@ -452,5 +456,5 @@ void soundSystem::PlaySoundEvent( const char *soundEvent, CVector pos )
 		return;
 	}
 
-	soundEvents[soundEvent]->Play( pos );
+	PlaySoundEvent(soundEvents[soundEvent], pos);
 }
