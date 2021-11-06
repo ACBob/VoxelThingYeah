@@ -10,12 +10,14 @@ ConVar::CConVar *sv_desc = nullptr;
 
 ConVar::CConVar *sv_port = nullptr;
 
+ConVar::CConVar *sv_run = nullptr;
+
 ConVar::CConCmd *cmdclose = nullptr;
 
 void closeCmd(const char *args)
 {
-	// TODO: Implement
 	con_info("Closing server...");
+	sv_run->SetBool(false);
 }
 
 void SetupServerSideConvars()
@@ -33,6 +35,9 @@ void SetupServerSideConvars()
 
 	// Port to open
 	sv_port = conVarHandle.DeclareConvar( "sv_port", "58008", ConVar::F::CVAR_ARCHIVE );
+
+	// If the server should run
+	sv_run = conVarHandle.DeclareConvar( "sv_run", "true", ConVar::F::CVAR_SESSION );
 
 	// Close the server
 	cmdclose = conVarHandle.DeclareConCmd( "close", "", closeCmd);

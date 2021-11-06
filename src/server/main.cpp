@@ -48,11 +48,17 @@ int main( int argc, char *args[] )
 		return EXIT_FAILURE;
 	}
 	atexit( fileSystem::UnInit );
+	
+	// write in the current directory
+	if (!fileSystem::MountWrite("."))
+		con_warning("Couldn't mount current directory for writing!");
+	if (!fileSystem::Mount(".", "/"))
+		con_warning("Couldn't mount current directory for reading!");
 
 	con_info( "Parsing svconfig.cfg..." );
 	bool succeed;
 	int64_t l;
-	char *file = (char *)fileSystem::LoadFile( "usr/svconfig.cfg", l, succeed );
+	char *file = (char *)fileSystem::LoadFile( "svconfig.cfg", l, succeed );
 	if ( succeed )
 		conVarHandle.Parse( file );
 
@@ -80,7 +86,7 @@ int main( int argc, char *args[] )
 	// Thread for getting input from the console
 	std::thread consoleThread( []()
 	{
-		while ( true )
+		while ( sv_run->GetBool() )
 		{
 			// read from stdin
 			char *input = new char[1024];
@@ -101,7 +107,7 @@ int main( int argc, char *args[] )
 			.count();
 	int64_t now	   = then;
 	unsigned int i = 0;
-	while ( true )
+	while ( sv_run->GetBool() )
 	{
 		now =
 			std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() )
@@ -128,6 +134,7 @@ int main( int argc, char *args[] )
 		}
 	}
 
+	consoleThread.join();
 	conVarHandle.WriteCFG("svconfig.cfg");
 
 	return EXIT_SUCCESS;
