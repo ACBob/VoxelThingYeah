@@ -192,7 +192,7 @@ CBlock* CWorld::TestAABBCollision( CBoundingBox col )
 			continue;
 
 		CBoundingBox blockBounds = BlockType(blockType).GetBounds();
-		blockBounds.m_vPosition = CVector( x, y, z );
+		blockBounds.m_vPosition = chunk->GetPosInWorld() + CVector( x, y, z );
 
 		if ( col.TestCollide( blockBounds ) )
 			return &chunk->m_blocks[i];
