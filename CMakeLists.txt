@@ -26,6 +26,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
 if (MEEGREEF_ENABLE_OPENAL)
 	find_package(OpenAL)
 	if (${OPENAL_FOUND})
@@ -85,7 +88,7 @@ else()
 endif()
 
 add_executable(${SERVER_BIN} ${gameServer_SRCS})
-target_link_libraries(${SERVER_BIN} ${CMAKE_DL_LIBS} physfs-static enet)
+target_link_libraries(${SERVER_BIN} ${CMAKE_DL_LIBS} physfs-static enet Threads::Threads)
 target_compile_definitions(${SERVER_BIN} PUBLIC SERVEREXE)
 target_include_directories(${SERVER_BIN} PRIVATE "${CMAKE_CURRENT_LIST_DIR}/src/server")
 

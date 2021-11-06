@@ -18,6 +18,10 @@
 
 #include "sound/soundmanager.hpp"
 
+#include <thread>
+
+#include <iostream>
+
 #ifdef _WIN32
 	#include <windows.h>
 #endif
@@ -71,8 +75,25 @@ int main( int argc, char *args[] )
 		con_critical( "Server became invalid" );
 		return EXIT_FAILURE;
 	}
-
 	soundSystem::server = &server;
+
+	// Thread for getting input from the console
+	std::thread consoleThread( []()
+	{
+		while ( true )
+		{
+			// read from stdin
+			char *input = new char[1024];
+			std::cin.getline( input, 1024 );
+			if ( input )
+			{
+				con_info( "Console input: %s", input );
+				conVarHandle.Parse( input );
+			}
+			else
+				std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
+		}
+	} );
 
 	con_info( "Begin server main loop..." );
 	int64_t then =
