@@ -6,7 +6,7 @@ CEntityBase::CEntityBase() : m_collisionBox( { CVector( 0 ), CVector( 0.5, 0.5, 
 
 CEntityBase::~CEntityBase() {}
 
-void CEntityBase::Spawn() {}
+void CEntityBase::Spawn(CWorld *world) {m_pWorld = world;}
 
 void CEntityBase::Kill() { m_bIsKilled = true; }
 

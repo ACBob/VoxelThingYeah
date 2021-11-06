@@ -120,7 +120,7 @@ bool CWorld::ValidChunkPos( const CVector pos ) { return ChunkAtWorldPos( pos ) 
 void CWorld::AddEntity( void *e )
 {
 	m_ents.push_back( e );
-	( (CEntityBase *)e )->Spawn();
+	( (CEntityBase *)e )->Spawn(this);
 #ifdef CLIENTEXE
 	( (CEntityBase *)e )->SetShader( m_pEntityShader );
 #endif

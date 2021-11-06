@@ -10,12 +10,15 @@ class CEntityCamera : public CEntityBase
 	CEntityCamera();
 	~CEntityCamera();
 
-	void Spawn() { BaseClass::Spawn(); };
+	void Spawn(CWorld *world) { BaseClass::Spawn(world); };
 	void Kill() { BaseClass::Kill(); };
 
 #ifdef CLIENTEXE
 	void UpdateClient( CWorld *clientSideWorld ) { BaseClass::UpdateClient( clientSideWorld ); };
+
+	void Render() {};
+	void SetShader(CShader *shader) {};
 #endif
 
-	void PhysicsTick( float delta, CWorld *world ) { BaseClass::PhysicsTick( delta, world ); };
+	void PhysicsTick( float delta, CWorld *world );
 };

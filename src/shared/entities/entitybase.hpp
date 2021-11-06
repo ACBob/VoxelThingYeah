@@ -27,7 +27,7 @@ class CEntityBase
 
 	// Called right after the entity is added to the world
 	// Position and rotation are handled already
-	virtual void Spawn() = 0;
+	virtual void Spawn(CWorld *world) = 0;
 
 	// Called when told to remove from the world
 	virtual void Kill() = 0;
@@ -82,6 +82,8 @@ class CEntityBase
 	// Lighting
 	Colour m_vLighting = { 1, 1, 1, 1 };
 #endif
+
+	CWorld *m_pWorld;
 
 	bool m_bOnFloor		   = false;
 	bool m_bApplyGravity   = true;
