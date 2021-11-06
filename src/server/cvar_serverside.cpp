@@ -12,12 +12,18 @@ ConVar::CConVar *sv_port = nullptr;
 
 ConVar::CConVar *sv_run = nullptr;
 
-ConVar::CConCmd *cmdclose = nullptr;
-
 void closeCmd(const char *args)
 {
 	con_info("Closing server...");
 	sv_run->SetBool(false);
+}
+
+void addCmd(const char *args)
+{
+	// add two numbers (testing command)
+	float a, b;
+	sscanf(args, "%f %f", &a, &b);
+	con_info("%f %c %f = %f", a, b < 0 ? '-' : '+', b * (b < 0 ? -1 : 1), a + b);
 }
 
 void SetupServerSideConvars()
@@ -40,5 +46,7 @@ void SetupServerSideConvars()
 	sv_run = conVarHandle.DeclareConvar( "sv_run", "true", ConVar::F::CVAR_SESSION );
 
 	// Close the server
-	cmdclose = conVarHandle.DeclareConCmd( "close", "", closeCmd);
+	conVarHandle.DeclareConCmd( "close", "", closeCmd);
+	// Add two numbers
+	conVarHandle.DeclareConCmd( "add", "ff", addCmd);
 }

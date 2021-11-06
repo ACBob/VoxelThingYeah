@@ -14,6 +14,4 @@ extern ConVar::CConVar *sv_port;
 
 extern ConVar::CConVar *sv_run;
 
-extern ConVar::CConCmd *cmdclose;
-
 void SetupServerSideConvars();

@@ -71,8 +71,8 @@ namespace ConVar
 		// where i = int, f = float, c = char/string, b = bool
 
 		// First, test if the number of args is correct
-		int numArgs = 0;
 		const char *p = args;
+		int numArgs = p[0] != NULL ? 1 : 0;
 		while ( p[0] != NULL )
 		{
 			if ( p[0] == ' ' )
@@ -91,7 +91,7 @@ namespace ConVar
 		// Hop through the given args
 		p = args;
 		int argTest = 0;
-		while ( p[0] != NULL )
+		while ( p[0] != NULL && argTest < strlen(m_cExpectedArgs) )
 		{
 			if (p[0] == ' ')
 				argTest++;
