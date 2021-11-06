@@ -12,7 +12,9 @@
 
 #ifdef MEEGREEF_ENABLE_OPENAL
 
-	#define SOUNDBUFFERS 1
+	// Some extra buffers for OpenAL
+	// So we can play sounds without having to wait for the last one to finish
+	#define SOURCES_PER_SOUND 4
 
 namespace soundSystem
 {
@@ -24,7 +26,8 @@ namespace soundSystem
 		// Src = location of sound src
 		void Play( CVector src, float pitch, float gain );
 
-		unsigned int m_iId, m_iBuffer;
+		unsigned int m_iSources[SOURCES_PER_SOUND];
+		unsigned int m_iBuffer;
 	};
 
 	class CSoundEvent

@@ -58,34 +58,64 @@ CSound::CSound( const char *path )
 		con_error( "OGG File %s failed to load!", path );
 	}
 
-	alGenSources( 1, &m_iId );
-	alSourcef( m_iId, AL_PITCH, 1.0 );
-	alSourcef( m_iId, AL_GAIN, 1.0 );
-	alSource3f( m_iId, AL_POSITION, 0, 0, 0 );
-	alSource3f( m_iId, AL_VELOCITY, 0, 0, 0 );
-	alSourcei( m_iId, AL_SOURCE_TYPE, AL_STATIC );
-	alSourcei( m_iId, AL_LOOPING, 0 );
-
 	uint32_t l = decode_len * channels * ( sizeof( int16_t ) / sizeof( uint8_t ) );
 	alGenBuffers( 1, &m_iBuffer );
 	alBufferData( m_iBuffer, channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, data, l, rate );
 
-	alSourcei( m_iId, AL_BUFFER, m_iBuffer );
+	// Generate a few sources for the sound
+	for ( int i = 0; i < SOURCES_PER_SOUND; i++ )
+	{
+		alGenSources( 1, &m_iSources[i] );
+		alSourcef( m_iSources[i], AL_PITCH, 1.0 );
+		alSourcef( m_iSources[i], AL_GAIN, 1.0 );
+		alSource3f( m_iSources[i], AL_POSITION, 0, 0, 0 );
+		alSource3f( m_iSources[i], AL_VELOCITY, 0, 0, 0 );
+		alSourcei( m_iSources[i], AL_SOURCE_TYPE, AL_STATIC );
+		alSourcei( m_iSources[i], AL_LOOPING, 0 );
+		
+		alSourcei( m_iSources[i], AL_BUFFER, m_iBuffer );
+	}
 
 	delete[] soundData;
 }
 void CSound::Play( CVector src, float pitch, float gain )
 {
-	alSourcef( m_iId, AL_PITCH, pitch );
-	alSourcef( m_iId, AL_GAIN, gain );
-	alSource3f( m_iId, AL_POSITION, src.x, src.y, src.z );
+	// Select the first available source
+	// A source is available if it is not playing
+	// or if it is playing but has stopped
+	unsigned int iSource = -1;
+	for ( int i = 0; i < SOURCES_PER_SOUND; i++ )
+	{
+		ALint state;
+		alGetSourcei( m_iSources[i], AL_SOURCE_STATE, &state );
+
+		if ( state == AL_PLAYING )
+		{
+			continue;
+		}
+
+		iSource = m_iSources[i];
+		break;
+	}
+
+	if ( iSource == -1 )
+	{
+		// Forceably steal a source at random
+		unsigned int stealSource = rand() % SOURCES_PER_SOUND;
+		alSourceStop( m_iSources[stealSource] );
+		iSource = m_iSources[stealSource];
+	}
+
+	alSourcef( iSource, AL_PITCH, pitch );
+	alSourcef( iSource, AL_GAIN, gain );
+	alSource3f( iSource, AL_POSITION, src.x, src.y, src.z );
 #ifdef __linux__
 	// Apply Reverb & Muffle
-	alSourcei( m_iId, AL_DIRECT_FILTER, soundEffects );
-	alSourcei( m_iId, AL_AUXILIARY_SEND_FILTER, soundMuffle );
+	alSourcei( iSource, AL_DIRECT_FILTER, soundEffects );
+	alSourcei( iSource, AL_AUXILIARY_SEND_FILTER, soundMuffle );
 #endif
 
-	alSourcePlay( m_iId );
+	alSourcePlay( iSource );
 }
 
 CSoundEvent::CSoundEvent( std::vector<std::string> sounds, const char *type, float minpitch, float maxpitch )
