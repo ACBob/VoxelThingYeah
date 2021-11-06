@@ -1,5 +1,7 @@
 #include "cvar_serverside.hpp"
 
+#include "logging.hpp"
+
 ConVar::CConVar *sv_timescale = nullptr;
 ConVar::CConVar *sv_tickms	  = nullptr;
 
@@ -7,6 +9,14 @@ ConVar::CConVar *sv_name = nullptr;
 ConVar::CConVar *sv_desc = nullptr;
 
 ConVar::CConVar *sv_port = nullptr;
+
+ConVar::CConCmd *cmdclose = nullptr;
+
+void closeCmd(const char *args)
+{
+	// TODO: Implement
+	con_info("Closing server...");
+}
 
 void SetupServerSideConvars()
 {
@@ -23,4 +33,7 @@ void SetupServerSideConvars()
 
 	// Port to open
 	sv_port = conVarHandle.DeclareConvar( "sv_port", "58008", ConVar::F::CVAR_ARCHIVE );
+
+	// Close the server
+	cmdclose = conVarHandle.DeclareConCmd( "close", "", closeCmd);
 }

@@ -53,6 +53,119 @@ namespace ConVar
 	float CConVar::GetFloat() { return atof( m_cVal ); }
 	bool CConVar::GetBool() { return ( strcmp( m_cVal, "true" ) == 0 ); }
 
+	CConCmd::CConCmd( const char *name, const char *expectedArgs, ConsoleCommandFunc func )
+	{
+		m_cName			= name;
+		m_cExpectedArgs = expectedArgs;
+		m_pFunc			= func;
+	}
+
+	void CConCmd::Execute( const char *args )
+	{
+		if ( !m_pFunc )
+			return;
+
+		// Test if the arguments are correct
+		// expected args is a string of the form:
+		// "ifcb"
+		// where i = int, f = float, c = char/string, b = bool
+
+		// First, test if the number of args is correct
+		int numArgs = 0;
+		const char *p = args;
+		while ( p[0] != NULL )
+		{
+			if ( p[0] == ' ' )
+				numArgs++;
+			p++;
+		}
+
+		if ( numArgs != strlen(m_cExpectedArgs))
+		{
+			con_error( "Wrong number of arguments for command %s (Got %d, expected %d)", m_cName, numArgs, strlen(m_cExpectedArgs) );
+			return;
+		}
+
+		// Now, test if the args are correct
+		// Testing the type of each argument
+		// Hop through the given args
+		p = args;
+		int argTest = 0;
+		while ( p[0] != NULL )
+		{
+			if (p[0] == ' ')
+				argTest++;
+			
+			// Test if the current argument is of the correct type
+			switch ( m_cExpectedArgs[argTest] )
+			{
+				case 'i':
+					// The argument to test ends at a space, so test if the char up to the space is a number
+					// Minus sign
+					if (p[0] == '-')
+						p++;
+					while ( p[0] != ' ' && p[0] != NULL )
+					{
+						if ( !isdigit( p[0] ) )
+						{
+							con_error( "Argument %d of command %s is not an integer", argTest, m_cName );
+							return;
+						}
+						p++;
+					}
+					break;
+				break;
+
+				case 'f':
+					// The argument to test ends at a space, so test if the char up to the space is a number
+					// Minus sign
+					if (p[0] == '-')
+						p++;
+					while ( p[0] != ' ' && p[0] != NULL )
+					{
+						if ( !isdigit( p[0] ) && p[0] != '.' )
+						{
+							con_error( "Argument %d of command %s is not a float", argTest, m_cName );
+							return;
+						}
+						p++;
+					}
+				break;
+
+				case 'c':
+					// String
+					// TODO: Quote marks
+					while ( p[0] != ' ' && p[0] != NULL )
+					{
+						p++;
+					}					
+				break;
+
+				case 'b':
+					// Boolean
+					// accepted as 1 or 0, and also true or false
+					if ( strcmp( p, "true" ) == 0 || strcmp( p, "false" ) == 0 )
+					{
+						p += 4;
+					}
+					else
+					{
+						if ( strcmp( p, "1" ) != 0 && strcmp( p, "0" ) != 0 )
+						{
+							con_error( "Argument %d of command %s is not a boolean", argTest, m_cName );
+							return;
+						}
+						p++;
+					}
+				break;
+			}
+		}
+
+		// If we got here, the arguments are correct!
+		// Call the function (it will extract the arguments from the string itself)
+		m_pFunc( args );
+	}
+
 	CConVarHandler::CConVarHandler() { Cvars = {}; }
 	CConVarHandler::~CConVarHandler()
 	{
@@ -108,7 +221,16 @@ namespace ConVar
 		return c;
 	}
 
+	CConCmd *CConVarHandler::DeclareConCmd( const char *name, const char *expectedArgs, ConsoleCommandFunc func )
+	{
+		CConCmd *c	= new CConCmd( name, expectedArgs, func );
+		Cmds[name] = c;
+
+		return c;
+	}
+
 	CConVar *CConVarHandler::FindConVar( const char *name ) { return Cvars[name]; }
+	CConCmd *CConVarHandler::FindConCmd( const char *name ) { return Cmds[name]; }
 
 	void CConVarHandler::Parse( const char *str )
 	{
@@ -159,8 +281,12 @@ namespace ConVar
 			// Skip until we hit a whitespace or a quote (or semi-colon)
 			while ( in[0] != ' ' && in[0] != '\t' && in[0] != '\n' && in[0] != ';' && in[0] != '\0' )
 				in++;
-			if ( in[0] == '\0' )
-				break; // We're done.
+			if (in[0] == '\0')
+			{
+				// Maybe it's a command with no arguments?
+				HandleConvarTokens(name, "");
+				break;
+			}
 			in[0] = '\0';
 			in++;
 
@@ -175,8 +301,6 @@ namespace ConVar
 			{
 				while ( in[0] != ' ' && in[0] != '\t' && in[0] != '\n' && in[0] != ';' && in[0] != '\0' )
 					in++;
-				if ( in[0] == '\0' )
-					break;
 				in[0] = '\0';
 				in++;
 			}
@@ -224,17 +348,28 @@ namespace ConVar
 	void CConVarHandler::HandleConvarTokens( const char *cmd, const char *args )
 	{
 		// It's empty, bum run, don't do anything
-		if ( strlen( cmd ) == 0 && strlen( args ) == 0 )
+		if ( strlen( cmd ) == 0 )
 			return;
 
 		con_debug( "SET %s TO %s", cmd, args );
 
 		if ( Cvars.find(cmd) == Cvars.end() )
 		{
-			con_error( "Unknown ConVar %s", cmd );
+			if ( Cmds.find(cmd) == Cmds.end() )
+			{
+				con_error( "Unknown command or variable: %s", cmd );
+				return;
+			}
+			else
+			{
+				// It's a command!
+				Cmds[cmd]->Execute( args );
+				return;
+			}
 		}
 		else
 		{
+			// It's a variable!
 			Cvars[cmd]->SetString( args );
 		}
 	}
