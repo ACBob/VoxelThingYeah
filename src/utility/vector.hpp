@@ -50,9 +50,5 @@ CVector RandomVector( CVector min = { 0, 0, 0 }, CVector max = { 1, 1, 1 } );
 const CVector VEC_UP( 0.0f, 1.0f, 0.0f );
 const CVector VEC_RIGHT( 1.0f, 0.0f, 0.0f );
 
-// Trollface
-typedef CVector Color;
-typedef Color Colour;
-
 #define DEG2RAD ( M_PI / 180.0 )
 #define RAD2DEG ( 180.0 / M_PI )

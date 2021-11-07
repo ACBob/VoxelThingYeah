@@ -215,25 +215,16 @@ bool ValidChunkPosition( CVector pos )
 
 #ifdef CLIENTEXE
 
-Colour CChunk::GetLightingLocal( CVector pos )
+CColour CChunk::GetLightingLocal( CVector pos )
 {
-	Colour c;
-	uint16_t l = m_iLightingValue[int( CHUNK3D_TO_1D( pos.x, pos.y, pos.z ) )];
-	c.x		   = ( l >> 12 ) & 0xF;
-	c.y		   = ( l >> 8 ) & 0xF;
-	c.z		   = ( l >> 4 ) & 0xF;
-	c.w		   = l & 0xF;
+	CColour c = m_iLightingValue[int( CHUNK3D_TO_1D( pos.x, pos.y, pos.z ) )];
 
 	return c;
 }
 
-void CChunk::SetLightingLocal( CVector pos, Colour colour )
+void CChunk::SetLightingLocal( CVector pos, CColour colour )
 {
-	uint16_t l = m_iLightingValue[int( CHUNK3D_TO_1D( pos.x, pos.y, pos.z ) )];
-	l		   = ( l & 0x0FFF ) | ( (int)colour.x << 12 );
-	l		   = ( l & 0xF0FF ) | ( (int)colour.y << 8 );
-	l		   = ( l & 0xFF0F ) | ( (int)colour.z << 4 );
-	l		   = ( l & 0xFFF0 ) | ( (int)colour.w );
+	m_iLightingValue[int( CHUNK3D_TO_1D( pos.x, pos.y, pos.z ) )] = colour;
 }
 
 // TODO: Put in the world, not the chunk so it doesn't get weird

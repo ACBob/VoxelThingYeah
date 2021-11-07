@@ -30,7 +30,7 @@ CModelRenderer::CModelRenderer() : m_nFaces( 0 ), m_nVertices( 0 )
 	// texture coordinate
 	glVertexAttribPointer( 2, 2, GL_FLOAT, false, 15 * sizeof( float ), (void *)offsetof( CModel::Vertex, u ) );
 	glEnableVertexAttribArray( 2 );
-	// Vertex Colour
+	// Vertex CColour
 	glVertexAttribPointer( 3, 3, GL_FLOAT, false, 15 * sizeof( float ), (void *)offsetof( CModel::Vertex, cr ) );
 	glEnableVertexAttribArray( 3 );
 	// Vertex Lighting
@@ -64,7 +64,7 @@ CModelRenderer::~CModelRenderer()
 	glDeleteBuffers( 1, &m_iEbo );
 }
 
-void CModelRenderer::Render( CVector pos, CVector rot, CVector size, CVector uvOffset, Colour light, CShader *shader,
+void CModelRenderer::Render( CVector pos, CVector rot, CVector size, CVector uvOffset, CColour light, CShader *shader,
 							 CTexture *tex )
 {
 

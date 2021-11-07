@@ -24,7 +24,7 @@ void CDevConsole::Update()
 
 	// TODO: Redirect stdout
 
-	m_pGui->Image(m_pGui->m_pBGTex, CVector(0, -1), m_pGui->m_vScreenDimensions / m_pGui->m_iGuiUnit, CVector(0, 0.5), Colour(0.2,0.2,0.2));
+	m_pGui->Image(m_pGui->m_pBGTex, CVector(0, -1), m_pGui->m_vScreenDimensions / m_pGui->m_iGuiUnit, CVector(0, 0.5), CColour(0.2,0.2,0.2));
 
 	m_pGui->Label("]", CVector(0,-1));
 

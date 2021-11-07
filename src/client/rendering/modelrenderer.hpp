@@ -4,6 +4,8 @@
 
 #include "texturemanager.hpp"
 
+#include "colour.hpp"
+
 #pragma once
 
 class CModelRenderer
@@ -14,7 +16,7 @@ class CModelRenderer
 	// Updated the index buffer and vertex buffer
 	void Populate( void *mdl );
 
-	void Render( CVector pos, CVector rot, CVector size, CVector uvOffset, Colour light, CShader *shader,
+	void Render( CVector pos, CVector rot, CVector size, CVector uvOffset, CColour light, CShader *shader,
 				 CTexture *tex );
 
   protected:

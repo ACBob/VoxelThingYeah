@@ -210,19 +210,22 @@ void CGui::Update()
 	m_images.clear();
 }
 
-std::vector<CGui::Vertex> CGui::GetQuad( CVector pos, CVector size, Colour color, CVector uStart, CVector uEnd )
+std::vector<CGui::Vertex> CGui::GetQuad( CVector pos, CVector size, CColour color, CVector uStart, CVector uEnd )
 {
+	float r = color.r / 255.0f;
+	float g = color.g / 255.0f;
+	float b = color.b / 255.0f;
 	return {
-		{ pos.x + size.x, pos.y, 0, uEnd.x, uEnd.y, color.x, color.y, color.z },
-		{ pos.x, pos.y, 0, uStart.x, uEnd.y, color.x, color.y, color.z },
-		{ pos.x, pos.y + size.y, 0, uStart.x, uStart.y, color.x, color.y, color.z },
+		{ pos.x + size.x, pos.y, 0, uEnd.x, uEnd.y, r, g, b },
+		{ pos.x, pos.y, 0, uStart.x, uEnd.y, r, g, b },
+		{ pos.x, pos.y + size.y, 0, uStart.x, uStart.y, r, g, b },
 
-		{ pos.x + size.x, pos.y + size.y, 0, uEnd.x, uStart.y, color.x, color.y, color.z },
-		{ pos.x + size.x, pos.y, 0, uEnd.x, uEnd.y, color.x, color.y, color.z },
-		{ pos.x, pos.y + size.y, 0, uStart.x, uStart.y, color.x, color.y, color.z },
+		{ pos.x + size.x, pos.y + size.y, 0, uEnd.x, uStart.y, r, g, b },
+		{ pos.x + size.x, pos.y, 0, uEnd.x, uEnd.y, r, g, b },
+		{ pos.x, pos.y + size.y, 0, uStart.x, uStart.y, r, g, b },
 	};
 }
-std::vector<CGui::Vertex> CGui::GetCharQuad( const int c, CVector pos, CVector size, Colour color )
+std::vector<CGui::Vertex> CGui::GetCharQuad( const int c, CVector pos, CVector size, CColour color )
 {
 
 	float x, y;
@@ -283,13 +286,13 @@ int CGui::Button( int id, CVector pos, CVector size, CVector origin, CTexture *t
 
 	int returnCode = 0;
 
-	Colour color = Colour( 1, 1, 1 );
+	CColour color = CColour( 255, 255, 255 );
 
 	// Check & set State
 	if ( RegionHit( pos, size ) )
 	{
 		m_iHotItem = id;
-		color	   = Colour( 0.75, 0.75, 1 );
+		color	   = CColour( 191, 191, 255 );
 		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
 		{
 			m_iActiveItem = id;
@@ -302,7 +305,7 @@ int CGui::Button( int id, CVector pos, CVector size, CVector origin, CTexture *t
 	if ( m_iMouseState == IN_NO_MOUSE && m_iHotItem == id && m_iActiveItem == id )
 	{
 		returnCode = 1;
-		color	   = Colour( 0.25, 0.25, 0.25 );
+		color	   = CColour( 63, 63, 63 );
 	}
 
 	CVector p = pos / GUIUNIT;
@@ -338,11 +341,11 @@ int CGui::LabelButton( int id, const char *msg, CVector pos, CVector origin, CVe
 	pos = pos - ( size / GUIUNIT ) * origin;
 
 	// TODO: it's in the floor
-	Label( msg, ( pos + CVector( 0, -0.5 ) + ( size / GUIUNIT ) * origin ), CVector( 1, 1, 1 ), TEXTALIGN_CENTER );
+	Label( msg, ( pos + CVector( 0, -0.5 ) + ( size / GUIUNIT ) * origin ), CColour( 255, 255, 255 ), TEXTALIGN_CENTER );
 	return buttonOut;
 }
 
-void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment textAlign )
+void CGui::Label( const char *text, CVector pos, CColour color, TextAlignment textAlign )
 {
 	pos = GetInScreen( pos );
 
@@ -380,7 +383,7 @@ void CGui::Label( const char *text, CVector pos, Colour color, TextAlignment tex
 	}
 }
 
-void CGui::Image( CTexture *tex, CVector pos, CVector size, CVector origin, Colour tint )
+void CGui::Image( CTexture *tex, CVector pos, CVector size, CVector origin, CColour tint )
 {
 	pos	 = GetInScreen( pos );
 	size = size * GUIUNIT;
@@ -394,7 +397,7 @@ void CGui::Image( CTexture *tex, CVector pos, CVector size, CVector origin, Colo
 }
 
 void CGui::ImageAtlas( CTexture *tex, Atlas atlas, float atlasDivisions, CVector pos, CVector size, CVector origin,
-					   CVector tint )
+					   CColour tint )
 {
 	pos	 = GetInScreen( pos );
 	size = size * GUIUNIT;
@@ -409,7 +412,7 @@ void CGui::ImageAtlas( CTexture *tex, Atlas atlas, float atlasDivisions, CVector
 	}
 }
 
-void CGui::Image9Rect( CTexture *tex, CVector pos, CVector size, Colour color )
+void CGui::Image9Rect( CTexture *tex, CVector pos, CVector size, CColour color )
 {
 	// Corners of the 9rect
 	ImageAtlas( tex, { 0, 0, 1, 1 }, 3, pos + CVector( 0, size.y - 0.5 ), CVector( 0.5, 0.5 ), CVector( 0, 0 ), color );
@@ -487,14 +490,14 @@ const char *CGui::SelectableTextInput( int id, CVector pos, CVector size, CTextu
 	if ( pTex == nullptr )
 		pTex = m_pTextInpTex;
 
-	Colour color( 1, 1, 1 );
-	Colour textColor( 1, 1, 1 );
+	CColour color( 255, 255, 255 );
+	CColour textColour( 255, 255, 255 );
 
 	if ( RegionHit( pos, size ) )
 	{
 		m_iHotItem = id;
-		color	   = Colour( 0.75, 0.75, 1 );
-		textColor  = Colour( 1, 1, 0.75 );
+		color	   = CColour( 191, 191, 255);
+		textColour  = CColour( 255, 255, 191 );
 
 		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
 		{
@@ -504,13 +507,13 @@ const char *CGui::SelectableTextInput( int id, CVector pos, CVector size, CTextu
 	}
 
 	if ( m_iKeyboardItem != id )
-		Label( m_textBuffers[id].c_str(), ( pos / GUIUNIT ) + CVector( 0.5, 0.5 ), textColor );
+		Label( m_textBuffers[id].c_str(), ( pos / GUIUNIT ) + CVector( 0.5, 0.5 ), textColour );
 	else
 	{
 		TextInput( id, ( pos / GUIUNIT ) + CVector( 0.5, 0.5 ) );
 	}
 
-	Image9Rect( pTex, pos / GUIUNIT, size / GUIUNIT, Colour( 1, 1, 1 ) );
+	Image9Rect( pTex, pos / GUIUNIT, size / GUIUNIT, CColour( 255, 255, 255 ) );
 
 	return nullptr;
 }
@@ -520,11 +523,11 @@ bool CGui::Slider( int id, CVector pos, CVector size, int max, int &value )
 	pos	 = GetInScreen( pos );
 	size = size * GUIUNIT;
 
-	Image9Rect( m_pSliderTex, pos / GUIUNIT, size / GUIUNIT, Color( 1, 1, 1 ) );
+	Image9Rect( m_pSliderTex, pos / GUIUNIT, size / GUIUNIT, CColour( 255, 255, 255 ) );
 
 	float ypos = ( ( size.y - 2 * GUIUNIT ) * value ) / max;
 
-	Image( m_pThumbTex, ( pos + CVector( 0, ypos ) ) / GUIUNIT, CVector( 2, 2 ), CVector( 0, 0 ), Color( 1, 1, 1 ) );
+	Image( m_pThumbTex, ( pos + CVector( 0, ypos ) ) / GUIUNIT, CVector( 2, 2 ), CVector( 0, 0 ), CColour( 255, 255, 255 ) );
 
 	if ( RegionHit( pos, size ) )
 	{
@@ -562,11 +565,11 @@ bool CGui::HorzSlider( int id, CVector pos, CVector size, int max, int &value )
 	pos	 = GetInScreen( pos );
 	size = size * GUIUNIT;
 
-	Image9Rect( m_pSliderTex, pos / GUIUNIT, size / GUIUNIT, Color( 1, 1, 1 ) );
+	Image9Rect( m_pSliderTex, pos / GUIUNIT, size / GUIUNIT, CColour( 255, 255, 255 ) );
 
 	float xpos = ( ( size.x - 2 * GUIUNIT ) * value ) / max;
 
-	Image( m_pThumbTex, ( pos + CVector( xpos, 0 ) ) / GUIUNIT, CVector( 2, 2 ), CVector( 0, 0 ), Color( 1, 1, 1 ) );
+	Image( m_pThumbTex, ( pos + CVector( xpos, 0 ) ) / GUIUNIT, CVector( 2, 2 ), CVector( 0, 0 ), CColour( 255, 255, 255 ) );
 
 	if ( RegionHit( pos, size ) )
 	{

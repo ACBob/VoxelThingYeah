@@ -95,7 +95,7 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	}
 	
 #ifdef CLIENTEXE
-	m_vLighting = pWorld->GetLightingAtWorldPos( m_vPosition ) / 16.0f;
+	m_vLighting = pWorld->GetLightingAtWorldPos( m_vPosition );
 #endif
 }
 

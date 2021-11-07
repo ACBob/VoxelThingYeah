@@ -73,8 +73,8 @@ class CChunk
 	uint16_t m_iLightingValue[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 
 	// Alpha (w) is the sun value
-	Colour GetLightingLocal( CVector pos );
-	void SetLightingLocal( CVector pos, Colour color );
+	CColour GetLightingLocal( CVector pos );
+	void SetLightingLocal( CVector pos, CColour color );
 
 	void UpdateLighting();
 #endif

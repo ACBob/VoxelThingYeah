@@ -5,6 +5,7 @@
 #include "blockerror.hpp"
 #include "blockliquid.hpp"
 #include "blocksoundmaker.hpp"
+#include "blockwool.hpp"
 
 #include "world/chunk.hpp"
 
@@ -56,7 +57,7 @@ namespace
     constexpr CBlockGeneric _BlockLightRed(LIGHT_RED);
     constexpr CBlockGeneric _BlockLightGreen(LIGHT_GREEN);
     constexpr CBlockGeneric _BlockLightBlue(LIGHT_BLUE);
-    constexpr CBlockGeneric _BlockWool(WOOL);
+    constexpr CBlockWool _BlockWool(WOOL);
     constexpr CBlockSoundMaker _BlockSoundMaker(SOUNDMAKER);
 
     constexpr CBlockError _BlockInvalid(AIR);

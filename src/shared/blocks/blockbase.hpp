@@ -62,6 +62,10 @@ class CBlockBase
 		return GetDefaultBlockTextureSide( m_iBlockType, direction );
 	};
 	virtual bool FaceVisible( Direction direction, BLOCKID blockId ) const;
+
+	virtual uint16_t GetTint( CChunk *pChunk, CVector pos, BLOCKVAL metadata, Direction dir ) const {
+		return 0xFFFF;
+	};
 #endif
 
 

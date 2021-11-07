@@ -80,7 +80,7 @@ class CEntityBase
 	CVector m_vVelocity;
 #ifdef CLIENTEXE
 	// Lighting
-	Colour m_vLighting = { 1, 1, 1, 1 };
+	CColour m_vLighting = { 1, 1, 1, 1 };
 #endif
 
 	CWorld *m_pWorld;

@@ -82,5 +82,5 @@ void CParticle::PhysicsTick( CWorld *pWorld, float fDelta )
 	if ( m_vSize.x <= 0 || m_vSize.y <= 0 || m_vSize.z <= 0 )
 		m_fLifeTime = 0.0f;
 
-	m_mdl->m_vLighting = pWorld->GetLightingAtWorldPos( m_vPosition ) / 16.0f;
+	m_mdl->m_vLighting = pWorld->GetLightingAtWorldPos( m_vPosition );
 }

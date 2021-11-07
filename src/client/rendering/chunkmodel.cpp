@@ -12,6 +12,8 @@
 
 #include "blocks/blockbase.hpp"
 
+#include "colour.hpp"
+
 const CModel::Vertex cubeVertices[] = {
 	// NORTH +Z
 	{ BLOCKUNIT, BLOCKUNIT, BLOCKUNIT },
@@ -43,8 +45,7 @@ const std::vector<std::vector<int>> cubeTris = {
 
 const std::vector<int> plantTris = { 2, 1, 3, 0, 6, 5, 7, 4 };
 
-std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlock block, int x, int y, int z, int lr, int lg, int lb,
-											int ls, int cr, int cg, int cb )
+std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlock block, int x, int y, int z, CColour light, CColour tint )
 {
 	std::vector<CModel::Vertex> g;
 	for ( int i = 0; i < 4; i++ )
@@ -55,14 +56,14 @@ std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlock block, int x, 
 		g[i].y += y;
 		g[i].z += z;
 
-		g[i].lr = lr / 16.0f;
-		g[i].lg = lg / 16.0f;
-		g[i].lb = lb / 16.0f;
-		g[i].la = ls / 16.0f;
+		g[i].lr = light.r / 255.0f;
+		g[i].lg = light.g / 255.0f;
+		g[i].lb = light.b / 255.0f;
+		g[i].la = light.a / 255.0f;
 
-		g[i].cr = cr / 16.0f;
-		g[i].cg = cg / 16.0f;
-		g[i].cb = cb / 16.0f;
+		g[i].cr = tint.r / 255.0f;
+		g[i].cg = tint.g / 255.0f;
+		g[i].cb = tint.b / 255.0f;
 
 		CVector normal = DirectionVector[dir];
 
@@ -175,8 +176,8 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 					// TODO: Get Model from Block
 					for ( int i = 0; i < 6; i++ )
 					{
-						Colour lightColour;
-						Colour blockColouration(16,16,16);
+						CColour lightColour;
+						CColour blockColouration = BlockType( block.m_iBlockType ).GetTint( (CChunk*)chunk, pos, block.m_iBlockData, (Direction)i );
 
 						CVector neighbour = CVector( x, y, z ) + DirectionVector[i];
 						if ( ValidChunkPosition( neighbour ) )
@@ -210,8 +211,7 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 						}
 
 						std::vector<CModel::Vertex> g =
-							sampleCubeFace( Direction( i ), block, x, y, z, (int)lightColour.x, (int)lightColour.y,
-											(int)lightColour.z, (int)lightColour.w, (int)blockColouration.x, (int)blockColouration.y, (int)blockColouration.z );
+							sampleCubeFace( Direction( i ), block, x, y, z, lightColour, blockColouration );
 
 						if ( block.m_iBlockType == WATER || block.m_iBlockType == WATERSRC )
 						{

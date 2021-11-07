@@ -6,6 +6,8 @@
 #include "shared/statemanager.hpp"
 #include "utility/vector.hpp"
 
+#include "colour.hpp"
+
 #include <map>
 #include <vector>
 
@@ -28,7 +30,7 @@ class CGui
 	{
 		float x, y, z; //! Z always 0!!
 		float u, v;
-		// Color
+		// CColour
 		float r, g, b;
 	};
 
@@ -38,9 +40,9 @@ class CGui
 		std::vector<Vertex> m_vertices;
 	};
 
-	std::vector<Vertex> GetQuad( CVector vPosition, CVector vSize, Colour colour, CVector vStart = CVector( 0, 0 ),
+	std::vector<Vertex> GetQuad( CVector vPosition, CVector vSize, CColour colour, CVector vStart = CVector( 0, 0 ),
 								 CVector vEnd = CVector( 1, 1 ) );
-	std::vector<Vertex> GetCharQuad( const int c, CVector vPosition, CVector vSize, Colour colour );
+	std::vector<Vertex> GetCharQuad( const int c, CVector vPosition, CVector vSize, CColour colour );
 
 	unsigned int m_iVbo, m_iVao;
 	std::vector<Vertex> m_textVertiecs;
@@ -142,13 +144,13 @@ class CGui
 					 CVector vOrigin = CVector( 0, 0 ) );
 	int LabelButton( int id, const char *msg, CVector pos, CVector vOrigin = CVector( 0, 0 ),
 					 CVector padding = CVector( 2, 1, 0 ), CVector minsize = CVector( 0, 0 ) );
-	void Label( const char *cText, CVector vPosition, Colour colour = Color( 1, 1, 1 ),
+	void Label( const char *cText, CVector vPosition, CColour colour = CColour( 255, 255, 255 ),
 				TextAlignment textAlign = TEXTALIGN_LEFT );
 	void Image( CTexture *pTex, CVector vPosition, CVector vSize, CVector vOrigin = CVector( 0, 0 ),
-				Colour tint = Colour( 1, 1, 1 ) );
+				CColour tint = CColour( 255, 255, 255 ) );
 	void ImageAtlas( CTexture *pTex, Atlas atlas, float fAtlasDivisions, CVector vPosition, CVector vSize,
-					 CVector vOrigin = CVector( 0, 0 ), Color tint = Color( 1, 1, 1 ) );
-	void Image9Rect( CTexture *pTex, CVector pos, CVector size, Colour color );
+					 CVector vOrigin = CVector( 0, 0 ), CColour tint = CColour( 255, 255, 255 ) );
+	void Image9Rect( CTexture *pTex, CVector pos, CVector size, CColour color );
 	void Crosshair(); // A wrapper for Image
 	const char *TextInput( int iId, CVector vPosition );
 	const char *SelectableTextInput( int id, CVector pos, CVector size,

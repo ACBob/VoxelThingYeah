@@ -16,6 +16,8 @@
 
 #include "colours.hpp"
 
+#include "blocks/blockbase.hpp"
+
 const CModel::Vertex cloudPlane[4] = {
 	// POSITION            NORMAL            UV
 	{ -512.0f,  0.0f, -512.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },
@@ -253,7 +255,7 @@ void CStatePlay::Update()
 		int hours	= m_pLocalWorld->m_iTimeOfDay / 1000;
 		int minutes = ( m_pLocalWorld->m_iTimeOfDay - ( hours * 1000 ) ) / 16.6666;
 		snprintf( guiBuf, 100, "%02i:%02i", hours, minutes );
-		pStateMan->m_pGui->Label( guiBuf, CVector( pStateMan->m_pGui->m_vScreenCentre.x, -1 ), Color( 1, 1, 1 ),
+		pStateMan->m_pGui->Label( guiBuf, CVector( pStateMan->m_pGui->m_vScreenCentre.x, -1 ), CColour( 255, 255, 255 ),
 								  CGui::TEXTALIGN_CENTER );
 
 		pStateMan->m_pGui->Image( m_pHotbarTex, CVector( pStateMan->m_pGui->m_vScreenCentre.x, 0 ),
@@ -298,19 +300,8 @@ void CStatePlay::Update()
 			CBlockItem *pBlockItem = reinterpret_cast<CBlockItem *>( m_pLocalPlayer->m_inventory.Slot( i ) );
 			BlockTexture bTex = GetDefaultBlockTextureSide(pBlockItem->m_iBlockType, Direction::NORTH );
 
-			Colour tint(1,1,1);
-
-			// if (GetBlockFeatures(pBlockItem->m_iBlockType).colouration == BLOCKCOLOURATION_16BIT)
-			// {
-			// 	tint.x = (pBlockItem->m_iBlockData >> 12) & 0xF;
-			// 	tint.y = (pBlockItem->m_iBlockData >> 8) & 0xF;
-			// 	tint.z = (pBlockItem->m_iBlockData >> 4) & 0xF;
-
-			// 	tint.x /= 16;
-			// 	tint.y /= 16;
-			// 	tint.z /= 16;
-			// }
-
+			CColour tint = BlockType(pBlockItem->m_iBlockType).GetTint(nullptr, {0,0,0}, pBlockItem->m_iBlockData, NORTH);
+			
 			pStateMan->m_pGui->ImageAtlas(
 				m_pTerrainPNG, { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey }, 16.0f,
 				CVector( p + pStateMan->m_pGui->m_vScreenCentre.x, 1.25 ), CVector( 2, 2 ), CVector( 0.5, 0.5 ), tint );
@@ -339,18 +330,7 @@ void CStatePlay::Update()
 				CBlockItem *pBlockItem = reinterpret_cast<CBlockItem *>( m_invCreative->Slot( i ) );
 				BlockTexture bTex = GetDefaultBlockTextureSide(pBlockItem->m_iBlockType, Direction::NORTH );
 
-				Colour tint(1,1,1);
-
-				// if (GetBlockFeatures(pBlockItem->m_iBlockType).colouration == BLOCKCOLOURATION_16BIT)
-				// {
-				// 	tint.x = (pBlockItem->m_iBlockData >> 12) & 0xF;
-				// 	tint.y = (pBlockItem->m_iBlockData >> 8) & 0xF;
-				// 	tint.z = (pBlockItem->m_iBlockData >> 4) & 0xF;
-
-				// 	tint.x /= 16;
-				// 	tint.y /= 16;
-				// 	tint.z /= 16;
-				// }
+				CColour tint = BlockType(pBlockItem->m_iBlockType).GetTint(nullptr, {0,0,0}, pBlockItem->m_iBlockData, NORTH);
 
 				pStateMan->m_pGui->ImageAtlas(m_pTerrainPNG, { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey }, 16.0f, p, CVector( 2, 2 ), CVector( 0.5, 0.5 ), tint );
 				if ( pStateMan->m_pGui->Button( 'b' + i, p, CVector(2,2), CVector(0.5, 0.5), nullptr, true ) )
@@ -474,7 +454,7 @@ void CStateMenu::Update()
 
 	pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pBGTex, CVector( 0, 0 ),
 							  pStateMan->m_pGui->m_vScreenDimensions / pStateMan->m_pGui->m_iGuiUnit, CVector( 0, 0 ),
-							  CVector( 0.5, 0.5, 0.5 ) );
+							  CColour( 127, 127, 127 ) );
 
 	pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pLogoTex, CVector( pStateMan->m_pGui->m_vScreenCentre.x, -1 ),
 							  CVector( 10 * 5.25, 10 ), CVector( 0.5, 1 ) );
@@ -504,15 +484,15 @@ void CStateMenu::Update()
 		pStateMan->PopState();
 	}
 
-	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.title.ip"), pStateMan->m_pGui->m_vScreenCentre - CVector( 16, 4.5 ), Color( 1, 1, 1 ),
+	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.title.ip"), pStateMan->m_pGui->m_vScreenCentre - CVector( 16, 4.5 ), CColour( 255, 255, 255 ),
 							  CGui::TEXTALIGN_CENTER );
 	pStateMan->m_pGui->SelectableTextInput( 3, pStateMan->m_pGui->m_vScreenCentre - CVector( 24, 7 ),
 											CVector( 16, 2 ) );
-	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.title.port"), pStateMan->m_pGui->m_vScreenCentre - CVector( 16, 9.5 ), Color( 1, 1, 1 ),
+	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.title.port"), pStateMan->m_pGui->m_vScreenCentre - CVector( 16, 9.5 ), CColour( 255, 255, 255 ),
 							  CGui::TEXTALIGN_CENTER );
 	pStateMan->m_pGui->SelectableTextInput( 4, pStateMan->m_pGui->m_vScreenCentre - CVector( 24, 12 ),
 											CVector( 16, 2 ) );
-	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.title.username"), pStateMan->m_pGui->m_vScreenCentre - CVector( -16, 4.5 ), Color( 1, 1, 1 ),
+	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.title.username"), pStateMan->m_pGui->m_vScreenCentre - CVector( -16, 4.5 ), CColour( 255, 255, 255 ),
 							  CGui::TEXTALIGN_CENTER );
 	pStateMan->m_pGui->SelectableTextInput( 5, pStateMan->m_pGui->m_vScreenCentre - CVector( -8, 7 ),
 											CVector( 16, 2 ) );
@@ -542,9 +522,9 @@ void CStateOptionsMenu::Update()
 
 	pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pBGTex, CVector( 0, 0 ),
 							  pStateMan->m_pGui->m_vScreenDimensions / pStateMan->m_pGui->m_iGuiUnit, CVector( 0, 0 ),
-							  CVector( 0.5, 0.5, 0.5 ) );
+							  CColour( 127, 127, 127 ) );
 
-	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.options"), CVector( pStateMan->m_pGui->m_vScreenCentre.x, -2 ), Color( 1, 1, 1 ),
+	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.options"), CVector( pStateMan->m_pGui->m_vScreenCentre.x, -2 ), CColour( 255, 255, 255 ),
 							  CGui::TEXTALIGN_CENTER );
 
 	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.dismiss"), CVector( pStateMan->m_pGui->m_vScreenCentre.x, 2 ),
@@ -594,9 +574,9 @@ void CKickScreen::Update()
 
 	pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pBGTex, CVector( 0, 0 ),
 							  pStateMan->m_pGui->m_vScreenDimensions / pStateMan->m_pGui->m_iGuiUnit, CVector( 0, 0 ),
-							  CVector( 0.5, 0.5, 0.5 ) );
+							  CColour( 127, 127, 127 ) );
 
-	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.kicked"), CVector( pStateMan->m_pGui->m_vScreenCentre.x, -2 ), Color( 1, 1, 1 ),
+	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.kicked"), CVector( pStateMan->m_pGui->m_vScreenCentre.x, -2 ), CColour( 255, 255, 255 ),
 							  CGui::TEXTALIGN_CENTER );
 
 	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.dismiss"), CVector( pStateMan->m_pGui->m_vScreenCentre.x, 2 ),
@@ -605,7 +585,7 @@ void CKickScreen::Update()
 		m_pStateMan->PopState();
 	}
 
-	pStateMan->m_pGui->Label( cl_kickreason->GetString(), pStateMan->m_pGui->m_vScreenCentre, Color( 1, 0.5, 0.5 ),
+	pStateMan->m_pGui->Label( cl_kickreason->GetString(), pStateMan->m_pGui->m_vScreenCentre, CColour( 255, 127, 127 ),
 							  CGui::TEXTALIGN_CENTER );
 }
 
@@ -659,9 +639,9 @@ void CStatePackMenu::Update()
 
 	pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pBGTex, CVector( 0, 0 ),
 							  pStateMan->m_pGui->m_vScreenDimensions / pStateMan->m_pGui->m_iGuiUnit, CVector( 0, 0 ),
-							  CVector( 0.5, 0.5, 0.5 ) );
+							  CColour( 127, 127, 127 ) );
 
-	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.options.resourcepacks"), CVector( pStateMan->m_pGui->m_vScreenCentre.x, -2 ), Color( 1, 1, 1 ),
+	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.options.resourcepacks"), CVector( pStateMan->m_pGui->m_vScreenCentre.x, -2 ), CColour( 255, 255, 255 ),
 							  CGui::TEXTALIGN_CENTER );
 
 	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.dismiss"), CVector( pStateMan->m_pGui->m_vScreenCentre.x, 2 ),
@@ -689,6 +669,6 @@ void CStatePackMenu::Update()
 		if (pStateMan->m_pGui->CheckBox(GUIGEN_ID, CVector(-6, -5 - (i - m_iScroll) * 4), CVector(2, 2), enabled))
 			m_packEnabled[i] = enabled;
 
-		pStateMan->m_pGui->Label(m_packList[i].desc.c_str(), CVector(8, -5 - (i - m_iScroll) * 4), Color(0.5, 0.5, 0.5));
+		pStateMan->m_pGui->Label(m_packList[i].desc.c_str(), CVector(8, -5 - (i - m_iScroll) * 4), CColour(127, 127, 127));
 	}
 }

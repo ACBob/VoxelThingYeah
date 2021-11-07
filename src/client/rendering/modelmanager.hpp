@@ -7,6 +7,8 @@
 
 #include "modelrenderer.hpp"
 
+#include "colour.hpp"
+
 #pragma once
 
 namespace modelSystem
@@ -19,7 +21,7 @@ namespace modelSystem
 			float x, y, z;	  // Position
 			float nx, ny, nz; // Normal
 			float u, v;		  // Texture U/V
-			float cr, cg, cb; // Vertex Colour
+			float cr, cg, cb; // Vertex CColour
 			float lr, lg, lb, la; // Vertex Lighting
 							  // TODO: Texture, Lighting, Etc.
 		};
@@ -56,7 +58,7 @@ namespace modelSystem
 
 		CVector m_vUvOffset = { 1, 1, 0, 0 };
 
-		Color m_vLighting = { 1, 1, 1, 1 };
+		CColour m_vLighting = { 1, 1, 1, 1 };
 
 		bool m_bVisible = true;
 

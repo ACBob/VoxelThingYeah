@@ -1,4 +1,4 @@
-// Colours
+// CColours
 // Holds stuff like biome and dyes
 
 #include "types.hpp"

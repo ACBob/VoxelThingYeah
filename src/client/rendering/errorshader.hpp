@@ -17,7 +17,7 @@ void main() \n \
 }";
 
 const char *const ERRORFRAG = "#version 450 core \n \
-out vec4 FragColor; \n \
+out vec4 FragCColour; \n \
 in vec2 TexCoord; \n \
 uniform sampler2D diffuse; \n \
 uniform int time; \n \
@@ -25,6 +25,6 @@ void main() \n \
 { \n \
 	float fTime = time / 7.0; \n \
 	float f = max(min(sin(fTime) + 0.5, 1.0), 0.5); \n \
-	FragColor = texture(diffuse, vec2(TexCoord.x, 1 - TexCoord.y)); \n \
-	FragColor.rgb *= f; \n \
+	FragCColour = texture(diffuse, vec2(TexCoord.x, 1 - TexCoord.y)); \n \
+	FragCColour.rgb *= f; \n \
 }";
