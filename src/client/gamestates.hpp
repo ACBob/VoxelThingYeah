@@ -11,6 +11,7 @@
 #include "world/world.hpp"
 #include "packs.hpp"
 #include "inventory/inventory.hpp"
+#include "localization/localizer.hpp"
 
 #pragma once
 
@@ -22,6 +23,7 @@ class CGameStateMachine : public CStateMachine
 	CGui *m_pGui			   = nullptr;
 	CGameWindow *m_pWindow	   = nullptr;
 	CInputManager *m_pInputMan = nullptr;
+	CLocalizer *m_pLocalizer   = nullptr;
 
 	int64_t m_iTick = 0; // Client Tick
 	float m_fDelta	= 0.0f;

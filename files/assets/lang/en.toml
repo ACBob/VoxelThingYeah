@@ -1,0 +1,18 @@
+["gui"]
+disconnect = "Disconnect"
+dismiss = "Return"
+dismiss_far = "Return to Game" # badly named
+kicked = "Kicked!"
+
+["gui.options"]
+enablereverb = "Enable Reverb"
+mastervolume = "Master Volume"
+resourcepacks = "Resource Packs"
+
+["gui.title"]
+startgame = "Start Game"
+options = "Options"
+quit = "Quit Game"
+ip = "IP Address"
+port = "Port"
+username = "Username"

@@ -479,7 +479,7 @@ void CStateMenu::Update()
 	pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pLogoTex, CVector( pStateMan->m_pGui->m_vScreenCentre.x, -1 ),
 							  CVector( 10 * 5.25, 10 ), CVector( 0.5, 1 ) );
 
-	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Play", pStateMan->m_pGui->m_vScreenCentre, CVector( 0.5, 0.5 ),
+	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.startgame"), pStateMan->m_pGui->m_vScreenCentre, CVector( 0.5, 0.5 ),
 										 CVector( 2, 1 ), CVector( 14, 2 ) ) )
 	{
 		cl_ip->SetString( pStateMan->m_pGui->GetTextBuffer( 3 ) );
@@ -490,7 +490,7 @@ void CStateMenu::Update()
 		m_pStateMan->PushState( std::make_unique<CStatePlay>() );
 	}
 
-	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Options", pStateMan->m_pGui->m_vScreenCentre - CVector( 0, 2 ),
+	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.options"), pStateMan->m_pGui->m_vScreenCentre - CVector( 0, 2 ),
 										 CVector( 0.5, 0.5 ), CVector( 2, 1 ), CVector( 14, 2 ) ) )
 	{
 		cl_ip->SetString( pStateMan->m_pGui->GetTextBuffer( 3 ) );
@@ -498,21 +498,21 @@ void CStateMenu::Update()
 		username->SetString( pStateMan->m_pGui->GetTextBuffer( 5 ) );
 		m_pStateMan->PushState( std::make_unique<CStateOptionsMenu>() );
 	}
-	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Quit", pStateMan->m_pGui->m_vScreenCentre - CVector( 0, 4 ),
+	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.quit"), pStateMan->m_pGui->m_vScreenCentre - CVector( 0, 4 ),
 										 CVector( 0.5, 0.5 ), CVector( 2, 1 ), CVector( 14, 2 ) ) )
 	{
 		pStateMan->PopState();
 	}
 
-	pStateMan->m_pGui->Label( "IP:", pStateMan->m_pGui->m_vScreenCentre - CVector( 16, 4.5 ), Color( 1, 1, 1 ),
+	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.title.ip"), pStateMan->m_pGui->m_vScreenCentre - CVector( 16, 4.5 ), Color( 1, 1, 1 ),
 							  CGui::TEXTALIGN_CENTER );
 	pStateMan->m_pGui->SelectableTextInput( 3, pStateMan->m_pGui->m_vScreenCentre - CVector( 24, 7 ),
 											CVector( 16, 2 ) );
-	pStateMan->m_pGui->Label( "Port:", pStateMan->m_pGui->m_vScreenCentre - CVector( 16, 9.5 ), Color( 1, 1, 1 ),
+	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.title.port"), pStateMan->m_pGui->m_vScreenCentre - CVector( 16, 9.5 ), Color( 1, 1, 1 ),
 							  CGui::TEXTALIGN_CENTER );
 	pStateMan->m_pGui->SelectableTextInput( 4, pStateMan->m_pGui->m_vScreenCentre - CVector( 24, 12 ),
 											CVector( 16, 2 ) );
-	pStateMan->m_pGui->Label( "Username:", pStateMan->m_pGui->m_vScreenCentre - CVector( -16, 4.5 ), Color( 1, 1, 1 ),
+	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.title.username"), pStateMan->m_pGui->m_vScreenCentre - CVector( -16, 4.5 ), Color( 1, 1, 1 ),
 							  CGui::TEXTALIGN_CENTER );
 	pStateMan->m_pGui->SelectableTextInput( 5, pStateMan->m_pGui->m_vScreenCentre - CVector( -8, 7 ),
 											CVector( 16, 2 ) );
@@ -544,28 +544,28 @@ void CStateOptionsMenu::Update()
 							  pStateMan->m_pGui->m_vScreenDimensions / pStateMan->m_pGui->m_iGuiUnit, CVector( 0, 0 ),
 							  CVector( 0.5, 0.5, 0.5 ) );
 
-	pStateMan->m_pGui->Label( "Options...", CVector( pStateMan->m_pGui->m_vScreenCentre.x, -2 ), Color( 1, 1, 1 ),
+	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.options"), CVector( pStateMan->m_pGui->m_vScreenCentre.x, -2 ), Color( 1, 1, 1 ),
 							  CGui::TEXTALIGN_CENTER );
 
-	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Return", CVector( pStateMan->m_pGui->m_vScreenCentre.x, 2 ),
+	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.dismiss"), CVector( pStateMan->m_pGui->m_vScreenCentre.x, 2 ),
 										 CVector( 0.5, 0.5 ), CVector( 2, 1 ), CVector( 14, 2 ) ) )
 	{
 		m_pStateMan->PopState();
 	}
 
-	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Resource Packs", CVector( pStateMan->m_pGui->m_vScreenCentre.x, 8 ),
+	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.options.resourcepacks"), CVector( pStateMan->m_pGui->m_vScreenCentre.x, 8 ),
 										 CVector( 0.5, 0.5 ), CVector( 2, 1 ), CVector( 14, 2 ) ) )
 	{
 		m_pStateMan->PushState(std::make_unique<CStatePackMenu>());
 	}
 
-	pStateMan->m_pGui->Label( "Master Volume Slider", pStateMan->m_pGui->m_vScreenCentre + CVector( -16, 6 ) );
+	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.options.mastervolume"), pStateMan->m_pGui->m_vScreenCentre + CVector( -16, 6 ) );
 	if ( pStateMan->m_pGui->HorzSlider( GUIGEN_ID, pStateMan->m_pGui->m_vScreenCentre + CVector( -16, 4 ),
 										CVector( 32, 2 ), 100, m_iVolumeSlider ) )
 	{
 		cl_volume->SetFloat( m_iVolumeSlider / 100.0f );
 	}
-	pStateMan->m_pGui->Label( "Enable Reverb", pStateMan->m_pGui->m_vScreenCentre + CVector( -16, 2 ) );
+	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.options.enablereverb"), pStateMan->m_pGui->m_vScreenCentre + CVector( -16, 2 ) );
 	if ( pStateMan->m_pGui->CheckBox( GUIGEN_ID, pStateMan->m_pGui->m_vScreenCentre + CVector( -16, 0 ),
 									  CVector( 2, 2 ), m_bEnableReverb ) )
 	{
@@ -596,10 +596,10 @@ void CKickScreen::Update()
 							  pStateMan->m_pGui->m_vScreenDimensions / pStateMan->m_pGui->m_iGuiUnit, CVector( 0, 0 ),
 							  CVector( 0.5, 0.5, 0.5 ) );
 
-	pStateMan->m_pGui->Label( "Kicked!", CVector( pStateMan->m_pGui->m_vScreenCentre.x, -2 ), Color( 1, 1, 1 ),
+	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.kicked"), CVector( pStateMan->m_pGui->m_vScreenCentre.x, -2 ), Color( 1, 1, 1 ),
 							  CGui::TEXTALIGN_CENTER );
 
-	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Back", CVector( pStateMan->m_pGui->m_vScreenCentre.x, 2 ),
+	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.dismiss"), CVector( pStateMan->m_pGui->m_vScreenCentre.x, 2 ),
 										 CVector( 0.5, 0.5 ) ) )
 	{
 		m_pStateMan->PopState();
@@ -661,10 +661,10 @@ void CStatePackMenu::Update()
 							  pStateMan->m_pGui->m_vScreenDimensions / pStateMan->m_pGui->m_iGuiUnit, CVector( 0, 0 ),
 							  CVector( 0.5, 0.5, 0.5 ) );
 
-	pStateMan->m_pGui->Label( "Resource Packs...", CVector( pStateMan->m_pGui->m_vScreenCentre.x, -2 ), Color( 1, 1, 1 ),
+	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.options.resourcepacks"), CVector( pStateMan->m_pGui->m_vScreenCentre.x, -2 ), Color( 1, 1, 1 ),
 							  CGui::TEXTALIGN_CENTER );
 
-	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Back", CVector( pStateMan->m_pGui->m_vScreenCentre.x, 2 ),
+	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.dismiss"), CVector( pStateMan->m_pGui->m_vScreenCentre.x, 2 ),
 										 CVector( 0.5, 0.5 ) ) )
 	{
 		m_pStateMan->PopState();

@@ -12,6 +12,7 @@
 #include <stdlib.h>
 
 #include "cvar_clientside.hpp"
+#include "shared/cvar_shared.hpp"
 #include "utility/assorted.hpp"
 
 #include "sdlstuff/sdlwindow.hpp"
@@ -41,6 +42,8 @@
 
 #include "devconsole.hpp"
 
+#include "localization/localizer.hpp"
+
 #ifdef _WIN32
 	#include <stdio.h>
 	#include <windows.h>
@@ -55,8 +58,9 @@ int main( int argc, char *args[] )
 	freopen( "CON", "w", stderr );
 #endif
 	con_info( "Hello from Meegreef!" );
-	con_info( "Setting up client-side convars..." );
+	con_info( "Setting up convars..." );
 	SetupClientSideConvars();
+	SetupSharedConvars();
 
 	char *argstring = FlattenCharArray( args, 1, argc - 1 );
 	con_debug( "Args: %s", argstring );
@@ -208,6 +212,13 @@ int main( int argc, char *args[] )
 		window.Panic( "Client ended up in invalid state!" );
 	}
 
+	con_info( "Init Translator..." );
+	CLocalizer translator;
+	for (std::string &l : translator.ListLanguages() )
+	{
+		con_debug( "Found Language: %s", l.c_str() );
+	}
+
 	con_info( "Init GUI..." );
 
 	CGui gui( scr_width->GetInt(), scr_height->GetInt() );
@@ -227,6 +238,7 @@ int main( int argc, char *args[] )
 	gameStateMan.m_pGui		 = &gui;
 	gameStateMan.m_pWindow	 = &window;
 	gameStateMan.m_pInputMan = &inputMan;
+	gameStateMan.m_pLocalizer = &translator;
 	gameStateMan.PushState( std::make_unique<CStateMenu>() );
 
 	inputMan.m_bInGui = true;

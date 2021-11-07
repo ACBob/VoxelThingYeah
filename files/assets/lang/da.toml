@@ -1,0 +1,18 @@
+["gui"]
+disconnect = "Afbryd"
+dismiss = "Tilbage"
+dismiss_far = "Tilbage til Spillet" # badly named
+kicked = "Sparket ud!"
+
+["gui.options"]
+enablereverb = "Aktiver Ekko"
+mastervolume = "Master Volume"
+resourcepacks = "Ressource Pakker"
+
+["gui.title"]
+startgame = "Begyn Spil"
+options = "Indstillinger"
+quit = "Afslut"
+ip = "IP"
+port = "Port"
+username = "Brugernavn"

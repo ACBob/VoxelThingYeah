@@ -1,0 +1,7 @@
+[en]
+friendly_name = "English (EN)"
+lang_file = "en.toml"
+
+[da]
+friendly_name = "Danish (DA)"
+lang_file = "da.toml"
