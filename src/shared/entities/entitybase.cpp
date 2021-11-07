@@ -62,14 +62,14 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	}
 
 	if ( m_bApplyGravity )
-		m_vVelocity.y -= ( m_bInWater ? 8.0f : 32.0f ) * fDelta;
+		m_vVelocity.y -= ( m_bInWater ? 3.2f : 32.0f ) * fDelta;
 
 	// Terminal Velocity
-	m_vVelocity.y = fmaxf( m_vVelocity.y, m_bInWater ? -1.0f : -32.0f );
+	m_vVelocity.y = fmaxf( m_vVelocity.y, m_bInWater ? -2.0f : -32.0f );
 
 	CVector vFriction;
 	if ( m_bInWater ) // It is hard to move in water
-		vFriction = m_vVelocity * 0.5f * fDelta * -1.0f;
+		vFriction = m_vVelocity * 0.7f * fDelta * -1.0f;
 	else if ( !m_bOnFloor )
 		vFriction = m_vVelocity * 0.11f * fDelta * -1.0f;
 	else
