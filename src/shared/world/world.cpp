@@ -23,14 +23,6 @@ CWorld::CWorld( CShader *shader, CShader *entShader, CShader *waterShader, CText
 CWorld::CWorld()
 #endif
 {
-	// Now that all the chunks exist, generate and rebuild their models
-	for ( auto &&c : m_chunks )
-	{
-		m_jenerator.Generate( c.get() );
-#ifdef CLIENTEXE
-		c->RebuildMdl();
-#endif
-	}
 }
 CWorld::~CWorld()
 {
