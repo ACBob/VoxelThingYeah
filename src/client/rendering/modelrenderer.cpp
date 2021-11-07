@@ -78,7 +78,9 @@ void CModelRenderer::Render( CVector pos, CVector rot, CVector size, CVector uvO
 	shader->SetMat4( "model", model );
 	shader->SetMat3( "normalMat", glm::mat3( glm::transpose( glm::inverse( model ) ) ) );
 	shader->SetVec4( "texCoordOffset", uvOffset );
-	shader->SetVec4( "lighting", light );
+	CVector vLight = light;
+	vLight = vLight / 255.0f;
+	shader->SetVec4( "lighting", vLight );
 
 	if ( tex != nullptr )
 		glBindTexture( GL_TEXTURE_2D, tex->m_iId );
