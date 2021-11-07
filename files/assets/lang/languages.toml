@@ -5,3 +5,7 @@ lang_file = "en.toml"
 [da]
 friendly_name = "Danish (DA)"
 lang_file = "da.toml"
+
+[yarr]
+friendly_name = "Yarr! (Pirate Speak)"
+lang_file = "yarr.toml"

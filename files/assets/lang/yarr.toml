@@ -1,0 +1,18 @@
+["gui"]
+disconnect = "Return to Port"
+dismiss = "Go Back!"
+dismiss_far = "Continue Sailin'"
+kicked = "Thrown Overboard!"
+
+["gui.options"]
+enablereverb = "Listen more"
+mastervolume = "Deafness"
+resourcepacks = "Paint for th' ship"
+
+["gui.title"]
+startgame = "Weigh anchor"
+options = "Options!"
+quit = "Leave th' seas"
+ip = "Th' Destination"
+port = "Pirate's Password"
+username = "Captain Name!"
