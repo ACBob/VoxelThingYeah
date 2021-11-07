@@ -169,19 +169,21 @@ void CEntityPlayer::Tick( int64_t iTick )
 				vMoveDir.y = 19.8f;
 			}
 		}
-		if ( m_bFly )
-			vMoveDir = vMoveDir * 6.0f * 0.99f;
-		else if ( m_bInWater )
-			vMoveDir = vMoveDir * 2.3f * 1.01f;
-		else
-			vMoveDir = vMoveDir * 4.3f * 0.98f;
+
+		m_bCrouching = m_pInputMan->m_bInputState[INKEY_DOWN] && m_bOnFloor;
+
+		float fSpeed = m_bFly ? 6.5f : m_bInWater ? 2.3f : m_bCrouching ? 1.43f : 4.3f;
+		vMoveDir = vMoveDir * fSpeed * 0.98f;
+
 		if ( !m_bFly )
 			vMoveDir.y += m_vVelocity.y;
 	}
 
-	float f = m_bInWater ? 0.09f : m_bOnFloor ? 0.125f : m_bFly ? 0.1f : 0.076f;
+	float acceleration = m_bInWater ? 0.09f : m_bOnFloor ? 0.125f : m_bFly ? 0.1f : 0.076f;
 
-	m_vVelocity = m_vVelocity.Lerp( vMoveDir, f );
+	m_vVelocity = m_vVelocity.Lerp( vMoveDir, acceleration );
+
+	m_camera.m_fEyeHeight = m_bCrouching ? 1.595f : 1.72f;
 
 	m_bApplyGravity = !m_bFly;
 #endif

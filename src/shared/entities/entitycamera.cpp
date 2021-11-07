@@ -7,6 +7,7 @@ void CEntityCamera::PhysicsTick( float delta, CWorld *world )
 {
     BaseClass::PhysicsTick( delta, world );
 
+#ifdef CLIENTEXE
     // if we have a parent, offset the camera to bob side to side and up and down
     if (m_pParent)
     {
@@ -18,12 +19,13 @@ void CEntityCamera::PhysicsTick( float delta, CWorld *world )
         if (speed > 0.0f)
         {
             m_vParentPosition.x = (sin(m_fAge * 2 + m_fAge * 0.5) - 0.5) * 0.007 * speed;
-            m_vParentPosition.y = 1.72 + (fabs(sin(m_fAge * 2 + m_fAge * 0.25)) - 0.5) * 0.01 * speed;
+            m_vParentPosition.y = m_fEyeHeight + (fabs(sin(m_fAge * 2 + m_fAge * 0.25)) - 0.5) * 0.01 * speed;
         }
         else
         {
             m_vParentPosition.x = lerp(m_vParentPosition.x, 0.0f, 0.9f * delta);
-            m_vParentPosition.y = lerp(m_vParentPosition.y, 1.72f, 0.9f * delta);
+            m_vParentPosition.y = lerp(m_vParentPosition.y, m_fEyeHeight, 0.9f * delta);
         }
     }
+#endif
 }

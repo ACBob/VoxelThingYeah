@@ -29,6 +29,7 @@ class CEntityPlayer : public CEntityBase
 		m_pMdl->SetTexture( materialSystem::LoadTexture( "player.png" ) );
 
 		world->AddEntity(&m_camera);
+		m_camera.m_fEyeHeight = 1.72f;
 #endif
 	};
 	void Kill() { BaseClass::Kill(); }
@@ -57,6 +58,7 @@ class CEntityPlayer : public CEntityBase
 
 	bool m_bFly			= true;
 	bool m_bInInventory = false;
+	bool m_bCrouching	= false;
 
 	CInventory m_inventory;
 };

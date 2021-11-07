@@ -18,6 +18,8 @@ class CEntityCamera : public CEntityBase
 
 	void Render() {};
 	void SetShader(CShader *shader) {};
+
+	float m_fEyeHeight = 0.0f;
 #endif
 
 	void PhysicsTick( float delta, CWorld *world );
