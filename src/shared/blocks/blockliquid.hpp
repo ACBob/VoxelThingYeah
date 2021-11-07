@@ -16,7 +16,7 @@ class CBlockLiquid final : public CBlockBase
 #ifdef CLIENTEXE
     virtual bool FaceVisible( Direction direction, BLOCKID blockId ) const
     {
-        return blockId != m_iBlockType;
+        return blockId != m_iBlockType && !BlockType( blockId ).IsSolid(0);
     }
 #endif
 
