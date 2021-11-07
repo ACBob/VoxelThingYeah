@@ -1,7 +1,7 @@
 #include "blockbase.hpp"
 
 #include "blockair.hpp"
-#include "blockstone.hpp"
+#include "blockgeneric.hpp"
 #include "blockerror.hpp"
 #include "blockliquid.hpp"
 #include "blocksoundmaker.hpp"
@@ -25,38 +25,38 @@ bool CBlockBase::FaceVisible( Direction direction, BLOCKID blockId ) const
 namespace
 {
     constexpr CBlockAir _BlockAir(AIR);
-    constexpr CBlockStone _BlockStone(STONE);
+    constexpr CBlockGeneric _BlockStone(STONE);
 
     // TODO: Seperate CBlock variants for each block type
-    constexpr CBlockStone _BlockDirt(DIRT);
-    constexpr CBlockStone _BlockGrass(GRASS);
-    constexpr CBlockStone _BlockCobble(COBBLE);
-    constexpr CBlockStone _BlockPlanks(PLANKS);
-    constexpr CBlockStone _BlockBedrock(BEDROCK);
-    constexpr CBlockStone _BlockGlass(GLASS);
-    constexpr CBlockStone _BlockLog(LOG);
-    constexpr CBlockStone _BlockLeaves(LEAVES);
+    constexpr CBlockGeneric _BlockDirt(DIRT);
+    constexpr CBlockGeneric _BlockGrass(GRASS);
+    constexpr CBlockGeneric _BlockCobble(COBBLE);
+    constexpr CBlockGeneric _BlockPlanks(PLANKS);
+    constexpr CBlockGeneric _BlockBedrock(BEDROCK);
+    constexpr CBlockGeneric _BlockGlass(GLASS);
+    constexpr CBlockGeneric _BlockLog(LOG);
+    constexpr CBlockGeneric _BlockLeaves(LEAVES);
     constexpr CBlockLiquid _BlockWater(WATER);
     constexpr CBlockLiquid _BlockWaterSRC(WATERSRC);
     constexpr CBlockLiquid _BlockLava(LAVA);
     constexpr CBlockLiquid _BlockLavaSrc(LAVASRC);
-    constexpr CBlockStone _BlockOreCoal(ORE_COAL); // These should probably have a generic CBlockOre, with some kind of "alloy" or "metal" to drop
-    constexpr CBlockStone _BlockOreIron(ORE_IRON);
-    constexpr CBlockStone _BlockFlower(FLOWER); // CBlockFlower should be generic, use the data value to determine which type of flower
-    constexpr CBlockStone _BlockSand(SAND);
-    constexpr CBlockStone _BlockSandStone(SANDSTONE);
-    constexpr CBlockStone _BlockBricks(BRICKS);
-    constexpr CBlockStone _BlockLongGrass(LGRASS);
-    constexpr CBlockStone _BlockMossyCobble(MOSSCBBLE);
-    constexpr CBlockStone _BlockSnow(SNOW); // TODO: Do layers of snow like minecraft?
-    constexpr CBlockStone _BlockSnowyGrass(SNOWGRASS); // TODO: Data value of BlockGrass, instead of a separate block
-    constexpr CBlockStone _BlockIce(ICE);
-    constexpr CBlockStone _BlockLightYellow(LIGHT_YELLOW); // TODO: Should be a generic CBlockLight, with a data value of the color
-    constexpr CBlockStone _BlockLightWhite(LIGHT_WHITE);
-    constexpr CBlockStone _BlockLightRed(LIGHT_RED);
-    constexpr CBlockStone _BlockLightGreen(LIGHT_GREEN);
-    constexpr CBlockStone _BlockLightBlue(LIGHT_BLUE);
-    constexpr CBlockStone _BlockWool(WOOL);
+    constexpr CBlockGeneric _BlockOreCoal(ORE_COAL); // These should probably have a generic CBlockOre, with some kind of "alloy" or "metal" to drop
+    constexpr CBlockGeneric _BlockOreIron(ORE_IRON);
+    constexpr CBlockGeneric _BlockFlower(FLOWER); // CBlockFlower should be generic, use the data value to determine which type of flower
+    constexpr CBlockGeneric _BlockSand(SAND);
+    constexpr CBlockGeneric _BlockSandStone(SANDSTONE);
+    constexpr CBlockGeneric _BlockBricks(BRICKS);
+    constexpr CBlockGeneric _BlockLongGrass(LGRASS);
+    constexpr CBlockGeneric _BlockMossyCobble(MOSSCBBLE);
+    constexpr CBlockGeneric _BlockSnow(SNOW); // TODO: Do layers of snow like minecraft?
+    constexpr CBlockGeneric _BlockSnowyGrass(SNOWGRASS); // TODO: Data value of BlockGrass, instead of a separate block
+    constexpr CBlockGeneric _BlockIce(ICE);
+    constexpr CBlockGeneric _BlockLightYellow(LIGHT_YELLOW); // TODO: Should be a generic CBlockLight, with a data value of the color
+    constexpr CBlockGeneric _BlockLightWhite(LIGHT_WHITE);
+    constexpr CBlockGeneric _BlockLightRed(LIGHT_RED);
+    constexpr CBlockGeneric _BlockLightGreen(LIGHT_GREEN);
+    constexpr CBlockGeneric _BlockLightBlue(LIGHT_BLUE);
+    constexpr CBlockGeneric _BlockWool(WOOL);
     constexpr CBlockSoundMaker _BlockSoundMaker(SOUNDMAKER);
 
     constexpr CBlockError _BlockInvalid(AIR);

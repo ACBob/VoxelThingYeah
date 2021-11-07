@@ -54,7 +54,7 @@ class CBlockBase
 	}
 
 	virtual BLOCKMATERIAL GetMaterial( ) const {
-		return MAT_NONE;
+		return GetBlockMaterial( m_iBlockType );
 	};
 
 #ifdef CLIENTEXE

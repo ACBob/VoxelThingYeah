@@ -61,3 +61,5 @@ enum BLOCKMATERIAL {
 };
 
 const char *BlockMaterialSTR( BLOCKMATERIAL mat );
+
+BLOCKMATERIAL GetBlockMaterial( BLOCKID id );
