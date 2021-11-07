@@ -3,6 +3,7 @@ disconnect = "Disconnect"
 dismiss = "Return"
 dismiss_far = "Return to Game" # badly named
 kicked = "Kicked!"
+inventory = "Inventory..."
 
 ["gui.options"]
 enablereverb = "Enable Reverb"

@@ -3,6 +3,7 @@ disconnect = "Afbryd"
 dismiss = "Tilbage"
 dismiss_far = "Tilbage til Spillet" # badly named
 kicked = "Sparket ud!"
+inventory = "Inventar..."
 
 ["gui.options"]
 enablereverb = "Aktiver Ekko"

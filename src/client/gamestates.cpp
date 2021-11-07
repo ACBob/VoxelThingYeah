@@ -326,7 +326,7 @@ void CStatePlay::Update()
 		{
 			pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pInventoryTex, pStateMan->m_pGui->m_vScreenCentre,
 									  CVector( 22, 22 ), CVector( 0.5, 0.5 ) );
-			pStateMan->m_pGui->Label( "Inventory...", pStateMan->m_pGui->m_vScreenCentre + CVector( -9.625, 9.625 ) );
+			pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.inventory"), pStateMan->m_pGui->m_vScreenCentre + CVector( -9.625, 9.25 ) );
 
 			CVector p  = pStateMan->m_pGui->m_vScreenCentre + CVector( -8, 8 );
 			CVector op = p;

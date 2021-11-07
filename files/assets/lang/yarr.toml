@@ -3,6 +3,7 @@ disconnect = "Return to Port"
 dismiss = "Go Back!"
 dismiss_far = "Continue Sailin'"
 kicked = "Thrown Overboard!"
+inventory = "Booty..."
 
 ["gui.options"]
 enablereverb = "Listen more"
