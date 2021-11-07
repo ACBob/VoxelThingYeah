@@ -671,18 +671,24 @@ void CStatePackMenu::Update()
 	}
 
 
-	// TODO: fix this to be scrollable
-	int y = 0;
-	for (resourcePacks::packInfo &pack : m_packList)
+	// Scroll-able list of resource packs
+	pStateMan->m_pGui->Slider( GUIGEN_ID, CVector( -3, pStateMan->m_pGui->m_vScreenCentre.y - 8 ), CVector( 2, 16 ), m_packList.size(), m_iScroll );
+	
+	// TODO: the scrollbar is backwards!	
+	// Display the resource packs
+	for (int i = m_iScroll; i < m_packList.size() && i < m_iScroll + 5; i++)
 	{
-		pStateMan->m_pGui->Image(pStateMan->m_pGui->m_pPackPNG, CVector(1, 24 - y * 4), CVector(4,4), CVector(0, 0.5));
-		pStateMan->m_pGui->Label(pack.name.c_str(), CVector(5,  24 - y * 4));
-		bool enable = m_packEnabled[y];
-		if (pStateMan->m_pGui->CheckBox(GUIGEN_ID + y, CVector(5, 22 - y * 4), CVector(2,2), enable))
-		{
-			m_packEnabled[y] = enable;
-		} 
+		// Display the pack name, and if it's enabled (with a checkbox)
+		// Also display the pack description
 
-		y = y + 1;
+		// Pack name
+		pStateMan->m_pGui->Image(pStateMan->m_pGui->m_pPackPNG, CVector(3, -4 - (i - m_iScroll) * 4), CVector(4, 4), CVector(0, 0.5));
+		pStateMan->m_pGui->Label(m_packList[i].name.c_str(), CVector(8, -4 - (i - m_iScroll) * 4));
+
+		bool enabled = m_packEnabled[i];
+		if (pStateMan->m_pGui->CheckBox(GUIGEN_ID, CVector(-6, -5 - (i - m_iScroll) * 4), CVector(2, 2), enabled))
+			m_packEnabled[i] = enabled;
+
+		pStateMan->m_pGui->Label(m_packList[i].desc.c_str(), CVector(8, -5 - (i - m_iScroll) * 4), Color(0.5, 0.5, 0.5));
 	}
 }

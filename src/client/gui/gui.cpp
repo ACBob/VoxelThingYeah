@@ -538,12 +538,12 @@ bool CGui::Slider( int id, CVector pos, CVector size, int max, int &value )
 
 	if ( m_iActiveItem == id )
 	{
-		float p = ( m_vMousePos.y * -1 ) + pos.y;
+		float p = m_vMousePos.y - pos.y;
 		if ( p < 0 )
 			p = 0;
 		if ( p > size.y )
 			p = size.y;
-		int val = ( p * max ) / size.y;
+		int val = max - (( p * max ) / size.y);
 
 		if ( val != value )
 		{

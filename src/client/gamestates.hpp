@@ -106,4 +106,5 @@ class CStatePackMenu : public CState
 
 	std::vector<resourcePacks::packInfo> m_packList;
 	std::vector<bool> m_packEnabled;
+	int m_iScroll = 0;
 };
