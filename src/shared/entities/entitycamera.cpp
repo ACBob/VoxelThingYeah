@@ -16,10 +16,10 @@ void CEntityCamera::PhysicsTick( float delta, CWorld *world )
         vel.y = 0.0f;
         float speed = vel.Magnitude();
         
-        if (speed > 0.0f)
+        if (speed > 0.0f && m_pParent->m_bOnFloor)
         {
-            m_vParentPosition.x = (sin(m_fAge * 2 + m_fAge * 0.5) - 0.5) * 0.007 * speed;
-            m_vParentPosition.y = m_fEyeHeight + (fabs(sin(m_fAge * 2 + m_fAge * 0.25)) - 0.5) * 0.01 * speed;
+            m_vParentPosition.y = lerp(m_vParentPosition.y, m_fEyeHeight + fabsf(sin(m_fAge * 3)) * 0.1f, delta * speed);
+            m_vParentPosition.x = lerp(m_vParentPosition.x, sin(-m_fAge * 3) * 0.1f, delta * speed);
         }
         else
         {
