@@ -374,18 +374,18 @@ void CStatePlay::Update()
 		}
 		else if ( m_bInPause )
 		{
-			if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Back to Game",
+			if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.dismiss_far"),
 												 pStateMan->m_pGui->m_vScreenCentre + CVector( 0, 4 ),
 												 CVector( 0.5, 0.5 ), CVector( 2, 1 ), CVector( 14, 2 ) ) )
 			{
 				m_bInPause = false;
 			}
-			if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Options", pStateMan->m_pGui->m_vScreenCentre,
+			if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.options"), pStateMan->m_pGui->m_vScreenCentre,
 												 CVector( 0.5, 0.5 ), CVector( 2, 1 ), CVector( 14, 2 ) ) )
 			{
 				m_pStateMan->PushState( std::make_unique<CStateOptionsMenu>() );
 			}
-			if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "Disconnect",
+			if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.disconnect"),
 												 pStateMan->m_pGui->m_vScreenCentre - CVector( 0, 4 ),
 												 CVector( 0.5, 0.5 ), CVector( 2, 1 ), CVector( 14, 2 ) ) )
 			{
