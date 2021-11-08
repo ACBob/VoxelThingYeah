@@ -2,18 +2,11 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"type": "shell",
-			"problemMatcher": [
-				"$gcc"
-			],
-			"command": "ninja",
-			"args": [
-			],
-			"options": {
-				"cwd": "build"
-			},
-			"group": "build",
-			"label": "Build"
+			"type":"process",
+			"command": "{cmake.build}",
+			"label": "Build",
+			"isBackground": true,
+			"problemMatcher": []
 		}
 	]
 }
