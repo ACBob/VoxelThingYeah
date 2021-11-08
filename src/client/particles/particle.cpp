@@ -19,7 +19,8 @@ CParticle::~CParticle() {}
 void CParticle::Render( Vector3f camRot )
 {
 	m_mdl->m_vPosition = m_vPosition;
-	m_mdl->m_vRotation = camRot;
+	// HACK: set the rotation to the inverted camera rotation, but not on the x axis
+	m_mdl->m_vRotation = Vector3f( camRot.x, -camRot.y, -camRot.z );
 	m_mdl->m_vSize	   = m_vSize;
 	m_mdl->SetTexture( m_particleDef.pTexture );
 	m_mdl->m_vUvOffset = m_vUvOffset;

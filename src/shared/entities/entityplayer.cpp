@@ -41,7 +41,7 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 		float yaw	= m_camera.m_vRotation.y;
 
 		pitch -= m_pInputMan->m_vMouseMovement.y * 0.1;
-		yaw += m_pInputMan->m_vMouseMovement.x * 0.1;
+		yaw -= m_pInputMan->m_vMouseMovement.x * 0.1;
 
 		while ( yaw > 360 )
 			yaw -= 360;
@@ -134,9 +134,9 @@ void CEntityPlayer::Tick( int64_t iTick )
 	}
 
 	Vector3f forward = GetForward();
-	Vector3f right	= forward.Rotate( 2, 90 );
-	right.y			= 0;
-	right			= right.Normal();
+	Vector3f left	= forward.RotateAxis( 1, 90 * DEG2RAD );
+	left.y			= 0;
+	left			= left.Normal();
 
 	Vector3f vMoveDir( 0 );
 
@@ -151,9 +151,9 @@ void CEntityPlayer::Tick( int64_t iTick )
 		else if ( m_pInputMan->m_bInputState[INKEY_BACK] )
 			vMoveDir = vMoveDir - ( forward );
 		if ( m_pInputMan->m_bInputState[INKEY_LEFT] )
-			vMoveDir = vMoveDir - ( right );
+			vMoveDir = vMoveDir + ( left );
 		else if ( m_pInputMan->m_bInputState[INKEY_RIGHT] )
-			vMoveDir = vMoveDir + ( right );
+			vMoveDir = vMoveDir - ( left );
 
 		if ( m_bFly || m_bInWater )
 		{

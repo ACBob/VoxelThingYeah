@@ -149,7 +149,7 @@ void CStatePlay::Update()
 	bool leave = false;
 
 	m_fSunAngle	= lerp(m_fSunAngle, 180 * ( 1 - ( m_pLocalWorld->m_iTimeOfDay / 12000.0f ) ), 1/60.0f);
-	Vector3f vSunForward = Vector3f( 0, 1, 0 ).Rotate(1, cl_sunroll->GetFloat()).Rotate(2, cl_sunyaw->GetFloat()).Rotate( 3, m_fSunAngle );
+	Vector3f vSunForward = Vector3f( 0, 1, 0 ).RotateAxis(0, cl_sunroll->GetFloat() * DEG2RAD).RotateAxis(1, cl_sunyaw->GetFloat() * DEG2RAD).RotateAxis( 2, m_fSunAngle  * DEG2RAD);
 
 	if ( !pStateMan->m_pClient->m_bConnected )
 		leave = true;
