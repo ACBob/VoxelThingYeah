@@ -87,7 +87,7 @@ class CInputManager
 	// Mousepos is the current position of the mouse
 	// Mousemovement is the movement of the mouse since last frame
 	// Z is ignored
-	CVector m_vMousePos, m_vMouseMovement;
+	Vector3f m_vMousePos, m_vMouseMovement;
 
 	int m_iMouseState	 = 0;
 	int m_iOldMouseState = 0; // stores mouseState from the last frame

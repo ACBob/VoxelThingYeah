@@ -84,7 +84,7 @@ namespace protocol
 
 				// Woot, data!
 				// TODO: make sure the server isn't being malicious.. Somehow
-				CBlock *b = client->m_pLocalWorld->BlockAtWorldPos( CVector( x, y, z ) );
+				CBlock *b = client->m_pLocalWorld->BlockAtWorldPos( Vector3f( x, y, z ) );
 				if ( b != nullptr )
 				{
 					// con_info( "Update Block At <%f,%f,%f>", x, y, z );
@@ -113,8 +113,8 @@ namespace protocol
 				{
 					// Then it's us
 					con_info( "Spawning at <%f,%f,%f> <%f,%f>", x, y, z, pitch, yaw );
-					client->m_pLocalPlayer->m_vPosition = CVector( x, y, z );
-					client->m_pLocalPlayer->m_vRotation = CVector( pitch, yaw, 0 );
+					client->m_pLocalPlayer->m_vPosition = Vector3f( x, y, z );
+					client->m_pLocalPlayer->m_vRotation = Vector3f( pitch, yaw, 0 );
 				}
 				else
 				{
@@ -127,15 +127,15 @@ namespace protocol
 					{
 						CEntityPlayer *plyr =
 							(CEntityPlayer *)client->m_pLocalWorld->GetEntityByName( username.c_str() );
-						plyr->m_vPosition = CVector( x, y, z );
-						plyr->m_vRotation = CVector( pitch, yaw, 0 );
+						plyr->m_vPosition = Vector3f( x, y, z );
+						plyr->m_vRotation = Vector3f( pitch, yaw, 0 );
 					}
 					else
 					{
 						// New player
 						CEntityPlayer *plyr = new CEntityPlayer();
-						plyr->m_vPosition	= CVector( x, y, z );
-						plyr->m_vRotation	= CVector( pitch, yaw, 0 );
+						plyr->m_vPosition	= Vector3f( x, y, z );
+						plyr->m_vRotation	= Vector3f( pitch, yaw, 0 );
 						plyr->m_name		= username;
 
 						client->m_pLocalWorld->AddEntity( plyr );
@@ -158,7 +158,7 @@ namespace protocol
 				// Empty username is taken to mean us
 				if ( username == "" )
 				{
-					client->m_pLocalPlayer->m_vPosition = CVector( x, y, z );
+					client->m_pLocalPlayer->m_vPosition = Vector3f( x, y, z );
 				}
 				else
 				{
@@ -166,8 +166,8 @@ namespace protocol
 					{
 						CEntityPlayer *plyr =
 							(CEntityPlayer *)client->m_pLocalWorld->GetEntityByName( username.c_str() );
-						plyr->m_vPosition = CVector( x, y, z );
-						plyr->m_vRotation = CVector( pitch, yaw, 0 );
+						plyr->m_vPosition = Vector3f( x, y, z );
+						plyr->m_vRotation = Vector3f( pitch, yaw, 0 );
 					}
 				}
 			}
@@ -256,7 +256,7 @@ namespace protocol
 				bufAccess >> effectId;
 				bufAccess >> effectAttrib;
 
-				client->SpecialEffectHandle( CVector( x, y, z ), (SpecialEffect)effectId, effectAttrib );
+				client->SpecialEffectHandle( Vector3f( x, y, z ), (SpecialEffect)effectId, effectAttrib );
 			}
 			break;
 			case ServerPacket::SOUNDEVENT: {
@@ -268,7 +268,7 @@ namespace protocol
 				bufAccess >> z;
 				bufAccess >> eventName;
 				
-				soundSystem::PlaySoundEvent( eventName.c_str(), CVector( x, y, z ) );
+				soundSystem::PlaySoundEvent( eventName.c_str(), Vector3f( x, y, z ) );
 			}
 			break;
 

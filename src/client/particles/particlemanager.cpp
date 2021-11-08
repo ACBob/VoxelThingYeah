@@ -10,7 +10,7 @@ CParticleManager::~CParticleManager()
 	m_emitters.clear();
 }
 
-CParticle *CParticleManager::CreateParticle( CVector pos, ParticleDef pdef )
+CParticle *CParticleManager::CreateParticle( Vector3f pos, ParticleDef pdef )
 {
 	CParticle *p  = &m_particles.emplace_back( pdef );
 	p->m_vPosition = pos;
@@ -18,7 +18,7 @@ CParticle *CParticleManager::CreateParticle( CVector pos, ParticleDef pdef )
 	return p;
 }
 
-CParticleEmitter *CParticleManager::CreateEmitter( CVector pos, ParticleDef pdef )
+CParticleEmitter *CParticleManager::CreateEmitter( Vector3f pos, ParticleDef pdef )
 {
 	CParticleEmitter *p = &m_emitters.emplace_back( pdef );
 	p->m_vPosition		= pos;
@@ -40,7 +40,7 @@ void CParticleManager::PhysicsTick( CWorld *pWorld, int64_t iTick, float fDelta 
 		p.PhysicsTick( pWorld, fDelta );
 }
 
-void CParticleManager::Render( CVector camRot )
+void CParticleManager::Render( Vector3f camRot )
 {
 	for ( CParticleEmitter &pe : m_emitters )
 		pe.Render( camRot );

@@ -21,7 +21,7 @@ void soundSystem::UnInit()
 {
 }
 
-void soundSystem::PlayBreakSound( BLOCKID blockType, CVector pos )
+void soundSystem::PlayBreakSound( BLOCKID blockType, Vector3f pos )
 {
 	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial();
 
@@ -31,7 +31,7 @@ void soundSystem::PlayBreakSound( BLOCKID blockType, CVector pos )
 
 	delete buf;
 }
-void soundSystem::PlayPlaceSound( BLOCKID blockType, CVector pos )
+void soundSystem::PlayPlaceSound( BLOCKID blockType, Vector3f pos )
 {
 	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial();
 
@@ -41,7 +41,7 @@ void soundSystem::PlayPlaceSound( BLOCKID blockType, CVector pos )
 
 	delete buf;
 }
-void soundSystem::PlayStepSound( BLOCKID blockType, CVector pos )
+void soundSystem::PlayStepSound( BLOCKID blockType, Vector3f pos )
 {
 	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial();
 
@@ -50,7 +50,7 @@ void soundSystem::PlayStepSound( BLOCKID blockType, CVector pos )
 	PlaySoundEvent( buf, pos );
 	delete buf;
 }
-void soundSystem::PlaySoundEvent( const char *soundEvent, CVector pos )
+void soundSystem::PlaySoundEvent( const char *soundEvent, Vector3f pos )
 {
 	server->PlaySoundEvent( soundEvent, pos );
 }

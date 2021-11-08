@@ -2,7 +2,7 @@
 
 #include "sound/soundmanager.hpp"
 
-CEntityBase::CEntityBase() : m_collisionBox( { CVector( 0 ), CVector( 0.5, 0.5, 0.5 ), CVector( 0.5, 0.5, 0.5 ) } ) {}
+CEntityBase::CEntityBase() : m_collisionBox( { Vector3f( 0 ), Vector3f( 0.5, 0.5, 0.5 ), Vector3f( 0.5, 0.5, 0.5 ) } ) {}
 
 CEntityBase::~CEntityBase() {}
 
@@ -16,7 +16,7 @@ void CEntityBase::UpdateChildren()
 	{
 		ent->m_pParent	 = this;
 		ent->m_vPosition = m_vPosition + ent->m_vParentPosition.Rotate( m_vRotation );
-		ent->m_vVelocity = CVector();
+		ent->m_vVelocity = Vector3f();
 	}
 }
 
@@ -67,7 +67,7 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	// Terminal Velocity
 	m_vVelocity.y = fmaxf( m_vVelocity.y, m_bInWater ? -2.0f : -32.0f );
 
-	CVector vFriction;
+	Vector3f vFriction;
 	if ( m_bInWater ) // It is hard to move in water
 		vFriction = m_vVelocity * 0.7f * fDelta * -1.0f;
 	else if ( !m_bOnFloor )
@@ -101,7 +101,7 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 
 void CEntityBase::Tick( int64_t iTick )
 {
-	CVector t = m_vVelocity;
+	Vector3f t = m_vVelocity;
 	t.y		  = 0;
 	if ( t.Magnitude() > 1 )
 	{

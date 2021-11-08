@@ -183,11 +183,11 @@ void CShader::SetMat3( const char *name, glm::mat3 value )
 	glUniformMatrix3fv( glGetUniformLocation( m_iId, name ), 1, false, glm::value_ptr( value ) );
 }
 void CShader::SetInt( const char *name, int value ) { glUniform1i( glGetUniformLocation( m_iId, name ), value ); }
-void CShader::SetVec( const char *name, CVector value )
+void CShader::SetVec( const char *name, Vector3f value )
 {
 	glUniform3f( glGetUniformLocation( m_iId, name ), value.x, value.y, value.z );
 }
-void CShader::SetVec4( const char *name, CVector value )
+void CShader::SetVec4( const char *name, Vector4f value )
 {
 	glUniform4f( glGetUniformLocation( m_iId, name ), value.x, value.y, value.z, value.w );
 }
@@ -202,7 +202,7 @@ void shaderSystem::Init() {}
 
 // TODO: Uniform Buffer
 void shaderSystem::SetUniforms( glm::mat4 &view, glm::mat4 &projection, unsigned int ticks, int timeOfDay,
-								CVector sunAngle )
+								Vector3f sunAngle )
 {
 	for ( CShader *s : loadedShaders )
 	{

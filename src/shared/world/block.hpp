@@ -21,9 +21,9 @@ class CBlock
 #endif
 
 	// Pos is in local coords
-	bool TestPointCollision( CVector pos );
+	bool TestPointCollision( Vector3f pos );
 	// Pos is in local coords
-	bool TestAABBCollision( CVector pos, CVector size );
+	bool TestAABBCollision( Vector3f pos, Vector3f size );
 
 	// block update
 	// causes a mesh rebuild

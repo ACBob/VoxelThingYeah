@@ -40,12 +40,12 @@ CChunk::~CChunk() {}
 
 CChunk *CChunk::Neighbour( Direction dir )
 {
-	CVector neighbourPos = m_vPosition + DirectionVector[dir];
+	Vector3f neighbourPos = m_vPosition + DirectionVector[dir];
 	return m_pChunkMan->ChunkAtChunkPos( neighbourPos );
 }
-CChunk *CChunk::Neighbour( CVector dir )
+CChunk *CChunk::Neighbour( Vector3f dir )
 {
-	CVector neighbourPos = m_vPosition + dir;
+	Vector3f neighbourPos = m_vPosition + dir;
 	return m_pChunkMan->ChunkAtChunkPos( neighbourPos );
 }
 
@@ -58,7 +58,7 @@ void CChunk::RebuildMdl() { BuildChunkModel( m_blocksMdl, m_waterMdl, m_blocks, 
 
 // Takes a coordinate and returns a vector in world coordinates relative to this chunk
 // Intended to be used by in-chunk coords but doesn't throw a hissyfit if it's not
-CVector CChunk::PosToWorld( CVector pos ) { return GetPosInWorld() + pos; }
+Vector3f CChunk::PosToWorld( Vector3f pos ) { return GetPosInWorld() + pos; }
 
 void CChunk::Update( int64_t iTick )
 {
@@ -85,7 +85,7 @@ void CChunk::Update( int64_t iTick )
 
 	// TODO: Re-implement this, but more minecraft-y, and in the new block system
 
-	// std::vector<CVector> liquidBlocks = {};
+	// std::vector<Vector3f> liquidBlocks = {};
 	// for ( int i = 0; i < ( CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z ); i++ )
 	// {
 	// 	int x, y, z;
@@ -97,11 +97,11 @@ void CChunk::Update( int64_t iTick )
 	// 	BlockFeatures bF = GetBlockFeatures( blockType );
 	// 	if ( bF.isLiquid && iTick % bF.liquidSpeed == 0 )
 	// 	{
-	// 		liquidBlocks.push_back( CVector( x, y, z ) );
+	// 		liquidBlocks.push_back( Vector3f( x, y, z ) );
 	// 	}
 	// }
 
-	// for ( CVector pos : liquidBlocks )
+	// for ( Vector3f pos : liquidBlocks )
 	// {
 	// 	CBlock *blockHandling		= GetBlockAtLocal( pos );
 	// 	BLOCKID blockType		= blockHandling->m_iBlockType;
@@ -113,7 +113,7 @@ void CChunk::Update( int64_t iTick )
 	// 		continue;
 
 	// 	// Test Bottom first
-	// 	CBlock *pBlock =  m_pChunkMan->BlockAtWorldPos( PosToWorld( CVector( pos.x, pos.y - 1, pos.z ) ) );
+	// 	CBlock *pBlock =  m_pChunkMan->BlockAtWorldPos( PosToWorld( Vector3f( pos.x, pos.y - 1, pos.z ) ) );
 	// 	if ( pBlock == nullptr )
 	// 		continue;
 
@@ -130,16 +130,16 @@ void CChunk::Update( int64_t iTick )
 	// 	{
 	// 		for ( int i = 0; i < 4; i++ )
 	// 		{
-	// 			CVector dir = DirectionVector[i];
-	// 			CBlock *b	= GetBlockAtLocal( CVector( pos.x, pos.y, pos.z ) + dir );
+	// 			Vector3f dir = DirectionVector[i];
+	// 			CBlock *b	= GetBlockAtLocal( Vector3f( pos.x, pos.y, pos.z ) + dir );
 	// 			if ( b == nullptr )
 	// 			{
 	// 				// It's not in *this* chunk
 	// 				CChunk *oChunk = Neighbour( (Direction)i );
 	// 				if ( oChunk == nullptr )
 	// 					continue; // Ok yeah it's outside reality
-	// 				CVector p = CVector( pos.x + dir.x, pos.y + dir.y, pos.z + dir.z ) +
-	// 							( dir * CVector( -CHUNKSIZE_X, -CHUNKSIZE_Y, -CHUNKSIZE_Z ) );
+	// 				Vector3f p = Vector3f( pos.x + dir.x, pos.y + dir.y, pos.z + dir.z ) +
+	// 							( dir * Vector3f( -CHUNKSIZE_X, -CHUNKSIZE_Y, -CHUNKSIZE_Z ) );
 	// 				;
 	// 				b = oChunk->GetBlockAtLocal( p );
 	// 				if ( b == nullptr )
@@ -195,7 +195,7 @@ void CChunk::Update( int64_t iTick )
 	m_bReallyDirty = bDirtyAgain;
 }
 
-CBlock *CChunk::GetBlockAtLocal( CVector pos )
+CBlock *CChunk::GetBlockAtLocal( Vector3f pos )
 {
 	if ( !ValidChunkPosition( pos ) )
 		return nullptr;
@@ -207,7 +207,7 @@ bool ValidChunkPosition( int x, int y, int z )
 	// If the position is valid
 	return !( x < 0 || y < 0 || z < 0 || x >= CHUNKSIZE_X || y >= CHUNKSIZE_Y || z >= CHUNKSIZE_Z );
 }
-bool ValidChunkPosition( CVector pos )
+bool ValidChunkPosition( Vector3f pos )
 {
 	// If the position is valid
 	return ValidChunkPosition( pos.x, pos.y, pos.z );
@@ -215,14 +215,14 @@ bool ValidChunkPosition( CVector pos )
 
 #ifdef CLIENTEXE
 
-CColour CChunk::GetLightingLocal( CVector pos )
+CColour CChunk::GetLightingLocal( Vector3f pos )
 {
 	CColour c = m_iLightingValue[int( CHUNK3D_TO_1D( pos.x, pos.y, pos.z ) )];
 
 	return c;
 }
 
-void CChunk::SetLightingLocal( CVector pos, CColour colour )
+void CChunk::SetLightingLocal( Vector3f pos, CColour colour )
 {
 	m_iLightingValue[int( CHUNK3D_TO_1D( pos.x, pos.y, pos.z ) )] = colour;
 }
@@ -254,7 +254,7 @@ void CChunk::SetLightingLocal( CVector pos, CColour colour )
 // 		y -= CHUNKSIZE_Y * ny;
 // 		z -= CHUNKSIZE_Z * nz;
 
-// 		Zoop( c->Neighbour( CVector( nx, ny, nz ) ), r, g, b, s, x, y, z );
+// 		Zoop( c->Neighbour( Vector3f( nx, ny, nz ) ), r, g, b, s, x, y, z );
 
 // 		return;
 // 	}

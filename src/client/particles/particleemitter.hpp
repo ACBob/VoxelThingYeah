@@ -11,14 +11,14 @@ class CParticleEmitter
 	CParticleEmitter();
 	~CParticleEmitter();
 
-	void Render( CVector camRot );
+	void Render( Vector3f camRot );
 
 	void PhysicsTick( CWorld *pWorld, int64_t iTick, float fDelta );
 
-	CVector m_vPosition;
+	Vector3f m_vPosition;
 
-	CVector m_vExplosion = { 1, 1, 1 };
-	CVector m_vLinear	 = { 0, -.98, 0 };
+	Vector3f m_vExplosion = { 1, 1, 1 };
+	Vector3f m_vLinear	 = { 0, -.98, 0 };
 
 	int64_t m_iLastTick = 0;
 

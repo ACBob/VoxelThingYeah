@@ -12,7 +12,7 @@
 #include "entities/entitybase.hpp"
 
 CBoundingBox CBlockBase::GetBounds() const {
-    return CBoundingBox( CVector(0), CVector( BLOCKUNIT, BLOCKUNIT, BLOCKUNIT ), CVector( 0 ) );
+    return CBoundingBox( Vector3f(0), Vector3f( BLOCKUNIT, BLOCKUNIT, BLOCKUNIT ), Vector3f( 0 ) );
 }
 
 #ifdef CLIENTEXE

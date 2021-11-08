@@ -24,11 +24,11 @@ void CDevConsole::Update()
 
 	// TODO: Redirect stdout
 
-	m_pGui->Image(m_pGui->m_pBGTex, CVector(0, -1), m_pGui->m_vScreenDimensions / m_pGui->m_iGuiUnit, CVector(0, 0.5), CColour(0.2,0.2,0.2));
+	m_pGui->Image(m_pGui->m_pBGTex, Vector3f(0, -1), m_pGui->m_vScreenDimensions / m_pGui->m_iGuiUnit, Vector3f(0, 0.5), CColour(0.2,0.2,0.2));
 
-	m_pGui->Label("]", CVector(0,-1));
+	m_pGui->Label("]", Vector3f(0,-1));
 
-	const char* inp = m_pGui->TextInput(DEVCONSOLE_TEXTBUFFER, CVector(1,-1));
+	const char* inp = m_pGui->TextInput(DEVCONSOLE_TEXTBUFFER, Vector3f(1,-1));
 	if (inp != nullptr)
 	{
 		conVarHandle.Parse( inp );

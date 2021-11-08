@@ -10,7 +10,7 @@ class CBlockAir final : public CBlockBase
     using Super::Super;
 
 	virtual CBoundingBox GetBounds() const {
-        return CBoundingBox(CVector(0, 0, 0), CVector(0, 0, 0));
+        return CBoundingBox(Vector3f(0, 0, 0), Vector3f(0, 0, 0));
     };
 
     virtual bool IsSolid(BLOCKVAL metadata) const {

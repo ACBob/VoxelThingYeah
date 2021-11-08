@@ -61,8 +61,8 @@ namespace protocol
 				int x = 8 + rand() % 8;
 				int z = 8 + rand() % 8;
 
-				p->m_vPosition = CVector( x, 20, z );
-				p->m_vRotation = CVector( 0, 0, 0 );
+				p->m_vPosition = Vector3f( x, 20, z );
+				p->m_vRotation = Vector3f( 0, 0, 0 );
 
 				SendServerPlayerSpawn( pPeer, "", p->m_vPosition, p->m_vRotation, false );
 
@@ -79,7 +79,7 @@ namespace protocol
 				}
 
 				// Now send them 0,0
-				SendServerChunkData( pPeer, &pServer->m_world, CVector( 0, 0, 0 ) );
+				SendServerChunkData( pPeer, &pServer->m_world, Vector3f( 0, 0, 0 ) );
 			}
 			break;
 
@@ -93,7 +93,7 @@ namespace protocol
 				bufAccess >> blockType;
 				bufAccess >> val;
 
-				CBlock *b = pServer->m_world.BlockAtWorldPos( CVector( x, y, z ) );
+				CBlock *b = pServer->m_world.BlockAtWorldPos( Vector3f( x, y, z ) );
 
 				BLOCKID oldBlockType = b->m_iBlockType;
 				if ( true ) // If it's a valid block placement (for now no check)
@@ -104,19 +104,19 @@ namespace protocol
 
 					for ( CNetworkPlayer *c : pServer->m_players )
 					{
-						SendServerUpdateBlock( c->m_pPeer, CVector( x, y, z ), BLOCKID( blockType ), val );
+						SendServerUpdateBlock( c->m_pPeer, Vector3f( x, y, z ), BLOCKID( blockType ), val );
 
 						if ( blockType == AIR )
-							SendServerSpecialEffect( c->m_pPeer, CVector( x, y, z ).Floor(), SPECIALEFFECT_BLOCKBREAK,
+							SendServerSpecialEffect( c->m_pPeer, Vector3f( x, y, z ).Floor(), SPECIALEFFECT_BLOCKBREAK,
 													 oldBlockType );
 						else
-							SendServerSpecialEffect( c->m_pPeer, CVector( x, y, z ).Floor(), SPECIALEFFECT_BLOCKPLACE,
+							SendServerSpecialEffect( c->m_pPeer, Vector3f( x, y, z ).Floor(), SPECIALEFFECT_BLOCKPLACE,
 													 blockType );
 					}
 				}
 				else
 				{
-					SendServerUpdateBlock( pPeer, CVector( x, y, z ), b->m_iBlockType, b->m_iBlockData );
+					SendServerUpdateBlock( pPeer, Vector3f( x, y, z ), b->m_iBlockType, b->m_iBlockData );
 				}
 			}
 			break;
@@ -131,8 +131,8 @@ namespace protocol
 				bufAccess >> yaw;
 
 				CEntityPlayer *p = pServer->ClientFromPeer( pPeer )->m_pEntity;
-				p->m_vPosition	 = CVector( x, y, z );
-				p->m_vRotation	 = CVector( pitch, yaw, 0 );
+				p->m_vPosition	 = Vector3f( x, y, z );
+				p->m_vRotation	 = Vector3f( pitch, yaw, 0 );
 
 				for ( CNetworkPlayer *c : pServer->m_players )
 				{
@@ -204,9 +204,9 @@ namespace protocol
 				bufAccess >> z;
 
 				// test if the block is useable
-				CBlock *b = pServer->m_world.BlockAtWorldPos( CVector( x, y, z ) );
+				CBlock *b = pServer->m_world.BlockAtWorldPos( Vector3f( x, y, z ) );
 				if ( b != nullptr && BlockType(b->m_iBlockType).CanBeUsed() )
-					BlockType(b->m_iBlockType).OnUse( (CChunk*)b->m_pChunk, CVector(x, y, z), pServer->ClientFromPeer(pPeer)->m_pEntity );
+					BlockType(b->m_iBlockType).OnUse( (CChunk*)b->m_pChunk, Vector3f(x, y, z), pServer->ClientFromPeer(pPeer)->m_pEntity );
 			}
 			break;
 

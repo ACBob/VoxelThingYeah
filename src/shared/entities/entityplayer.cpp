@@ -13,18 +13,18 @@
 
 CEntityPlayer::CEntityPlayer() : m_inventory( 36 )
 {
-	m_vPosition = CVector( 0, 0, 0 );
+	m_vPosition = Vector3f( 0, 0, 0 );
 #ifdef CLIENTEXE
 	m_hand.m_fLength	= 4;
 	m_hand.m_vDirection = GetForward();
 	m_hand.m_vPosition	= m_vPosition;
 
 	m_children.push_back( &m_camera );
-	m_camera.m_vParentPosition = CVector( 0, 1.72, 0 );
+	m_camera.m_vParentPosition = Vector3f( 0, 1.72, 0 );
 #endif
 
-	m_collisionBox.m_vBounds = CVector( 0.5, 1.9, 0.5 );
-	m_collisionBox.m_vOrigin = CVector( 0.5, 0, 0.5 );
+	m_collisionBox.m_vBounds = Vector3f( 0.5, 1.9, 0.5 );
+	m_collisionBox.m_vOrigin = Vector3f( 0.5, 0, 0.5 );
 }
 CEntityPlayer::~CEntityPlayer() {}
 
@@ -133,12 +133,12 @@ void CEntityPlayer::Tick( int64_t iTick )
 		return; // This isn't owned by us, don't do anything
 	}
 
-	CVector forward = GetForward();
-	CVector right	= forward.Rotate( 2, 90 );
+	Vector3f forward = GetForward();
+	Vector3f right	= forward.Rotate( 2, 90 );
 	right.y			= 0;
 	right			= right.Normal();
 
-	CVector vMoveDir( 0 );
+	Vector3f vMoveDir( 0 );
 
 	if ( !m_bInInventory && !m_pInputMan->m_bInGui )
 	{

@@ -140,7 +140,7 @@ void CNetworkServer::Update()
 
 		// Update chunk pos
 		// Unfortunate name
-		CVector cP = ( c->m_pEntity->m_vPosition / CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
+		Vector3f cP = ( c->m_pEntity->m_vPosition / Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
 		if ( cP != c->m_vChunkPos )
 		{
 			c->m_iLoadedChunkIDX	= 0;
@@ -156,7 +156,7 @@ void CNetworkServer::Update()
 		int y = 0;
 		int z = 0;
 		i1Dto3D( c->m_iLoadedChunkIDX, 4, 4, x, y, z );
-		CVector p( x - 2, y - 2, z - 2 );
+		Vector3f p( x - 2, y - 2, z - 2 );
 		c->m_iLoadedChunkIDX++;
 
 		p = c->m_vChunkPos + p;
@@ -178,12 +178,12 @@ void CNetworkServer::Update()
 		if ( p->m_pChunkQueue.empty() )
 			continue;
 
-		CVector pos = p->m_pChunkQueue.back();
+		Vector3f pos = p->m_pChunkQueue.back();
 		p->m_pChunkQueue.pop_back();
 
 		// con_debug("LOAD <%.0f,%.0f,%.0f>, %d", pos.x, pos.y, pos.z, p->m_iLoadedChunkIDX);
 
-		CChunk *c = m_world.GetChunkGenerateAtWorldPos( pos * CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) );
+		CChunk *c = m_world.GetChunkGenerateAtWorldPos( pos * Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) );
 
 		protocol::SendServerChunkDataFromRep( p->m_pPeer, c->m_portableDef );
 	}
@@ -191,11 +191,11 @@ void CNetworkServer::Update()
 
 bool CNetworkServer::WorkingServer() { return m_pEnetHost != NULL; }
 
-void CNetworkServer::PlaySoundEvent(const char* name, CVector pos) {
+void CNetworkServer::PlaySoundEvent(const char* name, Vector3f pos) {
 	for (CNetworkPlayer* p : m_players) {
 		if (p->m_pEntity == nullptr)
 			continue;
-		CVector dist = p->m_pEntity->m_vPosition - pos;
+		Vector3f dist = p->m_pEntity->m_vPosition - pos;
 		if (dist.Magnitude() < SOUND_MAX_DISTANCE) {
 			protocol::SendServerSoundEvent(p->m_pPeer, pos, name);
 		}

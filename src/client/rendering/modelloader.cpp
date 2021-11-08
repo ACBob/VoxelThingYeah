@@ -37,9 +37,9 @@ void BOBJLoadModel( CModel *m, const char *fp )
 	const char sep[2] = "\n";
 	token			  = strtok_r( file, sep, &saveptr );
 
-	std::vector<CVector> vertPositions;
-	std::vector<CVector> uvCoords;
-	std::vector<CVector> normals;
+	std::vector<Vector3f> vertPositions;
+	std::vector<Vector3f> uvCoords;
+	std::vector<Vector3f> normals;
 
 	while ( token != NULL )
 	{
@@ -52,7 +52,7 @@ void BOBJLoadModel( CModel *m, const char *fp )
 		{
 			if (token[1] == ' ')
 			{
-				CVector v;
+				Vector3f v;
 				sscanf( token, "v %f %f %f", &v.x , &v.y , &v.z );
 
 
@@ -62,14 +62,14 @@ void BOBJLoadModel( CModel *m, const char *fp )
 			}
 			else if ( token[1] == 't' )
 			{
-				CVector uv;
+				Vector3f uv;
 				sscanf( token, "vt %f %f", &uv.x , &uv.y );
 
 				uvCoords.push_back( uv );
 			}
 			else if ( token[1] == 'n' )
 			{
-				CVector n;
+				Vector3f n;
 				sscanf( token, "vn %f %f %f", &n.x , &n.y , &n.z );
 
 				normals.push_back( n );

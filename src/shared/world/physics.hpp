@@ -5,11 +5,11 @@
 class CBoundingBox
 {
   public:
-	CBoundingBox( CVector pos, CVector size, CVector origin = CVector( 0.5, 0.5, 0.5 ) );
+	CBoundingBox( Vector3f pos, Vector3f size, Vector3f origin = Vector3f( 0.5, 0.5, 0.5 ) );
 	bool TestCollide( CBoundingBox other );
-	bool TestPointCollide( CVector other );
+	bool TestPointCollide( Vector3f other );
 
-	CVector m_vPosition;
-	CVector m_vBounds;
-	CVector m_vOrigin;
+	Vector3f m_vPosition;
+	Vector3f m_vBounds;
+	Vector3f m_vOrigin;
 };

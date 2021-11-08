@@ -26,15 +26,15 @@ class CBlockBase
 
 	// Called when something around this block, or this block itself updates
 	// NOTE: vPosition is relative to the chunk!
-	virtual void BlockUpdate( CChunk *pChunk, CVector vPosition ) const {};
+	virtual void BlockUpdate( CChunk *pChunk, Vector3f vPosition ) const {};
 
 	// Called when the block is placed.
 	// NOTE: vPosition is relative to the chunk!
-	virtual void OnPlace( CChunk *pChunk, CVector vPosition, BLOCKVAL metadata ) const {};
+	virtual void OnPlace( CChunk *pChunk, Vector3f vPosition, BLOCKVAL metadata ) const {};
 
 	// Called when the block is broken.
 	// NOTE: vPosition is relative to the chunk!
-	virtual void OnBreak( CChunk *pChunk, CVector vPosition, BLOCKVAL metadata, CEntityBase *pBreaker ) const {};
+	virtual void OnBreak( CChunk *pChunk, Vector3f vPosition, BLOCKVAL metadata, CEntityBase *pBreaker ) const {};
 
 	// Returns if the block has an action when right-clicked.
 	// Future-proofing.
@@ -44,7 +44,7 @@ class CBlockBase
 
 	// Called if CanBeUsed() and right-clicked.
 	// NOTE: vPosition is relative to the chunk!
-	virtual void OnUse( CChunk *pChunk, CVector vPosition, CEntityBase *pUser ) const {};
+	virtual void OnUse( CChunk *pChunk, Vector3f vPosition, CEntityBase *pUser ) const {};
 
 	// The bounds for the block
 	virtual CBoundingBox GetBounds() const;
@@ -63,7 +63,7 @@ class CBlockBase
 	};
 	virtual bool FaceVisible( Direction direction, BLOCKID blockId ) const;
 
-	virtual uint16_t GetTint( CChunk *pChunk, CVector pos, BLOCKVAL metadata, Direction dir ) const {
+	virtual uint16_t GetTint( CChunk *pChunk, Vector3f pos, BLOCKVAL metadata, Direction dir ) const {
 		return 0xFFFF;
 	};
 #endif

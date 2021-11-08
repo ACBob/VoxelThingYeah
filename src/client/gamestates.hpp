@@ -52,7 +52,7 @@ class CStatePlay : public CState
 	CModel m_cloudModel;
 	CModel *m_pStellarModel;
 
-	CVector m_cloudOffset;
+	Vector4f m_cloudOffset;
 
 	CParticleManager m_particleMan;
 

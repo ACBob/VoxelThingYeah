@@ -16,7 +16,7 @@ class CModelRenderer
 	// Updated the index buffer and vertex buffer
 	void Populate( void *mdl );
 
-	void Render( CVector pos, CVector rot, CVector size, CVector uvOffset, CColour light, CShader *shader,
+	void Render( Vector3f pos, Vector3f rot, Vector3f size, Vector4f uvOffset, CColour light, CShader *shader,
 				 CTexture *tex );
 
   protected:

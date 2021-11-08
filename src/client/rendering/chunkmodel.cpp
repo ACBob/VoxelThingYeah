@@ -65,7 +65,7 @@ std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlock block, int x, 
 		g[i].cg = tint.g / 255.0f;
 		g[i].cb = tint.b / 255.0f;
 
-		CVector normal = DirectionVector[dir];
+		Vector3f normal = DirectionVector[dir];
 
 		g[i].nx = normal.x;
 		g[i].ny = normal.y;
@@ -117,7 +117,7 @@ std::vector<CModel::Vertex> samplePlant( CBlock block, int x, int y, int z, int 
 		g[i].cg = 1.0f;
 		g[i].cb = 1.0f;
 
-		CVector normal = DirectionVector[i > 4 ? SOUTH : NORTH];
+		Vector3f normal = DirectionVector[i > 4 ? SOUTH : NORTH];
 
 		// TODO:
 		g[i].nx = normal.x;
@@ -155,7 +155,7 @@ std::vector<CModel::Vertex> samplePlant( CBlock block, int x, int y, int z, int 
 }
 
 // We include the chunk manager here so we can test our neighbouring chunks
-void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, void *chunk )
+void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], Vector3f pos, void *chunk )
 {
 	mdl.m_vertices.clear();
 	mdl.m_faces.clear();
@@ -179,7 +179,7 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 						CColour lightColour;
 						CColour blockColouration = BlockType( block.m_iBlockType ).GetTint( (CChunk*)chunk, pos, block.m_iBlockData, (Direction)i );
 
-						CVector neighbour = CVector( x, y, z ) + DirectionVector[i];
+						Vector3f neighbour = Vector3f( x, y, z ) + DirectionVector[i];
 						if ( ValidChunkPosition( neighbour ) )
 						{
 							BLOCKID blockType =
@@ -198,7 +198,7 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], CVector pos, v
 							if ( chunkNeighbour != nullptr )
 							{
 								neighbour = neighbour + ( DirectionVector[i] *
-															CVector( -CHUNKSIZE_X, -CHUNKSIZE_Y, -CHUNKSIZE_Z ) );
+															Vector3f( -CHUNKSIZE_X, -CHUNKSIZE_Y, -CHUNKSIZE_Z ) );
 
 								CBlock *b = chunkNeighbour->GetBlockAtLocal( neighbour );
 								if ( b == nullptr )

@@ -65,19 +65,19 @@ class CEntityBase
 	std::string m_name;
 
 	// Gets a forward vector based on the rotation
-	CVector GetForward() { return CVector( 0, 0, -1 ).Rotate( m_vRotation ).Normal(); }
+	Vector3f GetForward() { return Vector3f( 0, 0, -1 ).Rotate( m_vRotation ).Normal(); }
 
 	// Updates the collision box to the new position
 	void UpdateCollision() { m_collisionBox.m_vPosition = m_vPosition; }
 
 	// Position in world
-	CVector m_vPosition;
+	Vector3f m_vPosition;
 	// Position relative to parent
-	CVector m_vParentPosition;
+	Vector3f m_vParentPosition;
 	// Rotation
-	CVector m_vRotation;
+	Vector3f m_vRotation;
 	// Velocity
-	CVector m_vVelocity;
+	Vector3f m_vVelocity;
 #ifdef CLIENTEXE
 	// Lighting
 	CColour m_vLighting = { 1, 1, 1, 1 };

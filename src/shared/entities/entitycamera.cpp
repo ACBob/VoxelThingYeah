@@ -12,7 +12,7 @@ void CEntityCamera::PhysicsTick( float delta, CWorld *world )
     if (m_pParent)
     {
         // Minecraft-like camera bobbing
-        CVector vel = m_pParent->m_vVelocity;
+        Vector3f vel = m_pParent->m_vVelocity;
         vel.y = 0.0f;
         float speed = vel.Magnitude();
         

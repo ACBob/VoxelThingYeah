@@ -31,7 +31,7 @@ CWorld::~CWorld()
 }
 
 // Return in good faith that it's a valid position
-CChunk *CWorld::ChunkAtChunkPos( CVector pos )
+CChunk *CWorld::ChunkAtChunkPos( Vector3f pos )
 {
 	// TODO: std::map
 	for ( auto &&c : m_chunks )
@@ -42,7 +42,7 @@ CChunk *CWorld::ChunkAtChunkPos( CVector pos )
 }
 
 // Tries to get a chunk and generates a new one if it can't find one
-CChunk *CWorld::GetChunkGenerateAtWorldPos( CVector pos )
+CChunk *CWorld::GetChunkGenerateAtWorldPos( Vector3f pos )
 {
 	CChunk *c = ChunkAtWorldPos( pos );
 	if ( c != nullptr )
@@ -50,7 +50,7 @@ CChunk *CWorld::GetChunkGenerateAtWorldPos( CVector pos )
 
 	m_chunks.push_back( std::make_unique<CChunk>() );
 	c				   = m_chunks.back().get();
-	c->m_vPosition	   = ( pos / CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
+	c->m_vPosition	   = ( pos / Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
 	c->m_portableDef.x = c->m_vPosition.x;
 	c->m_portableDef.y = c->m_vPosition.y;
 	c->m_portableDef.z = c->m_vPosition.z;
@@ -68,7 +68,7 @@ CChunk *CWorld::GetChunkGenerateAtWorldPos( CVector pos )
 	return c;
 }
 
-void CWorld::UnloadChunk( CVector pos )
+void CWorld::UnloadChunk( Vector3f pos )
 {
 	m_chunks.erase(
 		std::remove_if( m_chunks.begin(), m_chunks.end(), [pos]( auto &&c ) { return c.get()->m_vPosition == pos; } ),
@@ -76,38 +76,38 @@ void CWorld::UnloadChunk( CVector pos )
 }
 
 // Return in good faith that it's a valid position
-CChunk *CWorld::ChunkAtWorldPos( CVector pos )
+CChunk *CWorld::ChunkAtWorldPos( Vector3f pos )
 {
-	pos = pos / CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z );
+	pos = pos / Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z );
 
 	return ChunkAtChunkPos( pos.Floor() );
 }
 
-CBlock *CWorld::BlockAtWorldPos( CVector pos )
+CBlock *CWorld::BlockAtWorldPos( Vector3f pos )
 {
 	pos			  = pos.Floor();
 	CChunk *chunk = ChunkAtWorldPos( pos );
 	if ( chunk == nullptr )
 		return nullptr;
-	CVector localPos = ( pos - chunk->GetPosInWorld() );
+	Vector3f localPos = ( pos - chunk->GetPosInWorld() );
 
 	return chunk->GetBlockAtLocal( localPos );
 }
 
 #ifdef CLIENTEXE
-CColour CWorld::GetLightingAtWorldPos( CVector pos )
+CColour CWorld::GetLightingAtWorldPos( Vector3f pos )
 {
 	pos			  = pos.Floor();
 	CChunk *chunk = ChunkAtWorldPos( pos );
 	if ( chunk == nullptr )
 		return CColour( 0, 0, 0 );
-	CVector localPos = ( pos - chunk->GetPosInWorld() );
+	Vector3f localPos = ( pos - chunk->GetPosInWorld() );
 
 	return chunk->GetLightingLocal( localPos );
 }
 #endif
 
-bool CWorld::ValidChunkPos( const CVector pos ) { return ChunkAtWorldPos( pos ) != nullptr; }
+bool CWorld::ValidChunkPos( const Vector3f pos ) { return ChunkAtWorldPos( pos ) != nullptr; }
 
 void CWorld::AddEntity( void *e )
 {
@@ -146,7 +146,7 @@ void CWorld::Render()
 }
 #endif
 
-bool CWorld::TestPointCollision( CVector pos )
+bool CWorld::TestPointCollision( Vector3f pos )
 {
 	CBlock *b = BlockAtWorldPos( pos );
 	if ( b == nullptr )
@@ -184,7 +184,7 @@ CBlock* CWorld::TestAABBCollision( CBoundingBox col )
 			continue;
 
 		CBoundingBox blockBounds = BlockType(blockType).GetBounds();
-		blockBounds.m_vPosition = chunk->GetPosInWorld() + CVector( x, y, z );
+		blockBounds.m_vPosition = chunk->GetPosInWorld() + Vector3f( x, y, z );
 
 		if ( col.TestCollide( blockBounds ) )
 			return &chunk->m_blocks[i];
@@ -195,7 +195,7 @@ CBlock* CWorld::TestAABBCollision( CBoundingBox col )
 
 void CWorld::WorldTick( int64_t iTick, float delta )
 {
-	std::vector<CVector> playerPositions;
+	std::vector<Vector3f> playerPositions;
 
 	for ( int i = 0; i < m_ents.size(); i++ )
 	{
@@ -214,7 +214,7 @@ void CWorld::WorldTick( int64_t iTick, float delta )
 
 		if ( reinterpret_cast<CEntityBase *>( ent )->IsPlayer() )
 			playerPositions.push_back( ( reinterpret_cast<CEntityBase *>( ent )->m_vPosition /
-										 CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) )
+										 Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) )
 										   .Floor() );
 	}
 
@@ -231,7 +231,7 @@ void CWorld::WorldTick( int64_t iTick, float delta )
 			continue;
 		}
 
-		for ( CVector plyrPos : playerPositions )
+		for ( Vector3f plyrPos : playerPositions )
 		{
 			if ( ( plyrPos - chunk->m_vPosition ).Magnitude() < 7 )
 			{
@@ -253,14 +253,14 @@ void CWorld::WorldTick( int64_t iTick, float delta )
 	}
 }
 
-PortableChunkRepresentation CWorld::GetWorldRepresentation( CVector pos )
+PortableChunkRepresentation CWorld::GetWorldRepresentation( Vector3f pos )
 {
 	return GetChunkGenerateAtWorldPos( pos )->m_portableDef;
 }
 
 void CWorld::UsePortable( PortableChunkRepresentation rep )
 {
-	CChunk *c = GetChunkGenerateAtWorldPos( CVector( rep.x * CHUNKSIZE_X, rep.y * CHUNKSIZE_Y, rep.z * CHUNKSIZE_Z ) );
+	CChunk *c = GetChunkGenerateAtWorldPos( Vector3f( rep.x * CHUNKSIZE_X, rep.y * CHUNKSIZE_Y, rep.z * CHUNKSIZE_Z ) );
 	if ( c == nullptr )
 	{
 		con_error( "WEE WOO WEE WOO" );

@@ -138,8 +138,8 @@ CGui::CGui( int screenW, int screenH )
 void CGui::Resize( int x, int y )
 {
 	m_iGuiUnit			= x / 53;
-	m_vScreenCentre		= CVector( ( x * 0.5 ) / GUIUNIT, ( y * 0.5 ) / GUIUNIT );
-	m_vScreenDimensions = CVector( x, y );
+	m_vScreenCentre		= Vector3f( ( x * 0.5 ) / GUIUNIT, ( y * 0.5 ) / GUIUNIT );
+	m_vScreenDimensions = Vector3f( x, y );
 }
 
 CGui::~CGui()
@@ -210,7 +210,7 @@ void CGui::Update()
 	m_images.clear();
 }
 
-std::vector<CGui::Vertex> CGui::GetQuad( CVector pos, CVector size, CColour color, CVector uStart, CVector uEnd )
+std::vector<CGui::Vertex> CGui::GetQuad( Vector3f pos, Vector3f size, CColour color, Vector3f uStart, Vector3f uEnd )
 {
 	float r = color.r / 255.0f;
 	float g = color.g / 255.0f;
@@ -225,18 +225,18 @@ std::vector<CGui::Vertex> CGui::GetQuad( CVector pos, CVector size, CColour colo
 		{ pos.x, pos.y + size.y, 0, uStart.x, uStart.y, r, g, b },
 	};
 }
-std::vector<CGui::Vertex> CGui::GetCharQuad( const int c, CVector pos, CVector size, CColour color )
+std::vector<CGui::Vertex> CGui::GetCharQuad( const int c, Vector3f pos, Vector3f size, CColour color )
 {
 
 	float x, y;
 	x = ( c % TEXTTILES ) * TEXTINTEXWIDTH;
 	y = ( c / TEXTTILES ) * TEXTINTEXHEIGHT;
 
-	CVector uStart = {
+	Vector3f uStart = {
 		x / ( 16.0f * TEXTINTEXWIDTH ),
 		y / ( 16.0f * TEXTINTEXHEIGHT ),
 	};
-	CVector uEnd = {
+	Vector3f uEnd = {
 		( x + TEXTINTEXWIDTH ) / ( 16.0f * TEXTINTEXWIDTH ),
 		( y + TEXTINTEXHEIGHT ) / ( 16.0f * TEXTINTEXHEIGHT ),
 	};
@@ -254,7 +254,7 @@ void CGui::SetTextBuffer( int id, const char *text ) { m_textBuffers[id] = text;
 
 const char *CGui::GetTextBuffer( int id ) { return m_textBuffers[id].c_str(); }
 
-bool CGui::RegionHit( CVector pos, CVector size )
+bool CGui::RegionHit( Vector3f pos, Vector3f size )
 {
 	pos.y = m_vScreenDimensions.y - pos.y;
 
@@ -264,7 +264,7 @@ bool CGui::RegionHit( CVector pos, CVector size )
 	return true;
 }
 
-CVector CGui::GetInScreen( CVector pos )
+Vector3f CGui::GetInScreen( Vector3f pos )
 {
 	pos = pos * GUIUNIT;
 
@@ -276,7 +276,7 @@ CVector CGui::GetInScreen( CVector pos )
 	return pos;
 }
 
-int CGui::Button( int id, CVector pos, CVector size, CVector origin, CTexture *tex, bool hide )
+int CGui::Button( int id, Vector3f pos, Vector3f size, Vector3f origin, CTexture *tex, bool hide )
 {
 	pos	 = GetInScreen( pos );
 	size = size * GUIUNIT;
@@ -298,7 +298,7 @@ int CGui::Button( int id, CVector pos, CVector size, CVector origin, CTexture *t
 			m_iActiveItem = id;
 
 			if ( !hide )
-				soundSystem::PlaySoundEvent( "ui.click", CVector( 0, 0, 0 ) );
+				soundSystem::PlaySoundEvent( "ui.click", Vector3f( 0, 0, 0 ) );
 		}
 	}
 
@@ -308,8 +308,8 @@ int CGui::Button( int id, CVector pos, CVector size, CVector origin, CTexture *t
 		color	   = CColour( 63, 63, 63 );
 	}
 
-	CVector p = pos / GUIUNIT;
-	CVector s = size / GUIUNIT;
+	Vector3f p = pos / GUIUNIT;
+	Vector3f s = size / GUIUNIT;
 
 	if ( !hide )
 	{
@@ -319,18 +319,18 @@ int CGui::Button( int id, CVector pos, CVector size, CVector origin, CTexture *t
 	return returnCode;
 }
 
-int CGui::AtlasButton( int id, CTexture *tex, Atlas atlas, float atlasDivisions, CVector pos, CVector size,
-					   CVector origin )
+int CGui::AtlasButton( int id, CTexture *tex, Atlas atlas, float atlasDivisions, Vector3f pos, Vector3f size,
+					   Vector3f origin )
 {
 	int b = Button( id, pos, size, origin, nullptr, true );
 	ImageAtlas( tex, atlas, atlasDivisions, pos, size, origin );
 	return b;
 }
 
-int CGui::LabelButton( int id, const char *msg, CVector pos, CVector origin, CVector padding, CVector minsize )
+int CGui::LabelButton( int id, const char *msg, Vector3f pos, Vector3f origin, Vector3f padding, Vector3f minsize )
 {
 	// Get size, fixed position
-	CVector size = ( CVector( GetTextLength( msg ), TEXTHEIGHT ) + padding * GUIUNIT );
+	Vector3f size = ( Vector3f( GetTextLength( msg ), TEXTHEIGHT ) + padding * GUIUNIT );
 
 	size.x = fmaxf( size.x, minsize.x * GUIUNIT );
 	size.y = fmaxf( size.y, minsize.y * GUIUNIT );
@@ -341,18 +341,18 @@ int CGui::LabelButton( int id, const char *msg, CVector pos, CVector origin, CVe
 	pos = pos - ( size / GUIUNIT ) * origin;
 
 	// TODO: it's in the floor
-	Label( msg, ( pos + CVector( 0, -0.5 ) + ( size / GUIUNIT ) * origin ), CColour( 255, 255, 255 ), TEXTALIGN_CENTER );
+	Label( msg, ( pos + Vector3f( 0, -0.5 ) + ( size / GUIUNIT ) * origin ), CColour( 255, 255, 255 ), TEXTALIGN_CENTER );
 	return buttonOut;
 }
 
-void CGui::Label( const char *text, CVector pos, CColour color, TextAlignment textAlign )
+void CGui::Label( const char *text, Vector3f pos, CColour color, TextAlignment textAlign )
 {
 	pos = GetInScreen( pos );
 
 	if ( textAlign == TEXTALIGN_CENTER )
-		pos = pos - CVector( GetTextLength( text ) / 2, 0 );
+		pos = pos - Vector3f( GetTextLength( text ) / 2, 0 );
 	else if ( textAlign == TEXTALIGN_RIGHT )
-		pos = pos - CVector( GetTextLength( text ), 0 );
+		pos = pos - Vector3f( GetTextLength( text ), 0 );
 
 	// Render
 	// OpenGl
@@ -371,10 +371,10 @@ void CGui::Label( const char *text, CVector pos, CColour color, TextAlignment te
 				j = 255;
 
 			std::vector<CGui::Vertex> g =
-				GetCharQuad( j, pos - ( CVector(-GUIUNIT, GUIUNIT ) * 2.0f / 16.0f ), CVector( TEXTWIDTH, TEXTHEIGHT ), color / 2 );
+				GetCharQuad( j, pos - ( Vector3f(-GUIUNIT, GUIUNIT ) * 2.0f / 16.0f ), Vector3f( TEXTWIDTH, TEXTHEIGHT ), color / 2 );
 			std::copy( g.begin(), g.end(), std::back_inserter( m_textVertiecs ) );
 
-			g = GetCharQuad( j, pos, CVector( TEXTWIDTH, TEXTHEIGHT ), color );
+			g = GetCharQuad( j, pos, Vector3f( TEXTWIDTH, TEXTHEIGHT ), color );
 			std::copy( g.begin(), g.end(), std::back_inserter( m_textVertiecs ) );
 
 			pos.x += fontWidths[j] * TEXTWIDTH;
@@ -383,7 +383,7 @@ void CGui::Label( const char *text, CVector pos, CColour color, TextAlignment te
 	}
 }
 
-void CGui::Image( CTexture *tex, CVector pos, CVector size, CVector origin, CColour tint )
+void CGui::Image( CTexture *tex, Vector3f pos, Vector3f size, Vector3f origin, CColour tint )
 {
 	pos	 = GetInScreen( pos );
 	size = size * GUIUNIT;
@@ -396,7 +396,7 @@ void CGui::Image( CTexture *tex, CVector pos, CVector size, CVector origin, CCol
 	}
 }
 
-void CGui::ImageAtlas( CTexture *tex, Atlas atlas, float atlasDivisions, CVector pos, CVector size, CVector origin,
+void CGui::ImageAtlas( CTexture *tex, Atlas atlas, float atlasDivisions, Vector3f pos, Vector3f size, Vector3f origin,
 					   CColour tint )
 {
 	pos	 = GetInScreen( pos );
@@ -412,35 +412,35 @@ void CGui::ImageAtlas( CTexture *tex, Atlas atlas, float atlasDivisions, CVector
 	}
 }
 
-void CGui::Image9Rect( CTexture *tex, CVector pos, CVector size, CColour color )
+void CGui::Image9Rect( CTexture *tex, Vector3f pos, Vector3f size, CColour color )
 {
 	// Corners of the 9rect
-	ImageAtlas( tex, { 0, 0, 1, 1 }, 3, pos + CVector( 0, size.y - 0.5 ), CVector( 0.5, 0.5 ), CVector( 0, 0 ), color );
-	ImageAtlas( tex, { 2, 0, 1, 1 }, 3, pos + CVector( size.x, size.y - 0.5 ), CVector( 0.5, 0.5 ), CVector( 0, 0 ),
+	ImageAtlas( tex, { 0, 0, 1, 1 }, 3, pos + Vector3f( 0, size.y - 0.5 ), Vector3f( 0.5, 0.5 ), Vector3f( 0, 0 ), color );
+	ImageAtlas( tex, { 2, 0, 1, 1 }, 3, pos + Vector3f( size.x, size.y - 0.5 ), Vector3f( 0.5, 0.5 ), Vector3f( 0, 0 ),
 				color );
-	ImageAtlas( tex, { 0, 2, 1, 1 }, 3, pos, CVector( 0.5, 0.5 ), CVector( 0, 0 ), color );
-	ImageAtlas( tex, { 2, 2, 1, 1 }, 3, pos + CVector( size.x, 0 ), CVector( 0.5, 0.5 ), CVector( 0, 0 ), color );
+	ImageAtlas( tex, { 0, 2, 1, 1 }, 3, pos, Vector3f( 0.5, 0.5 ), Vector3f( 0, 0 ), color );
+	ImageAtlas( tex, { 2, 2, 1, 1 }, 3, pos + Vector3f( size.x, 0 ), Vector3f( 0.5, 0.5 ), Vector3f( 0, 0 ), color );
 
 	// Edges
-	ImageAtlas( tex, { 1, 0, 1, 1 }, 3, pos + CVector( 0.5, size.y - 0.5 ), CVector( size.x - 0.5, 0.5 ),
-				CVector( 0, 0 ), color );
-	ImageAtlas( tex, { 1, 2, 1, 1 }, 3, pos + CVector( 0.5, 0 ), CVector( size.x - 0.5, 0.5 ), CVector( 0, 0 ), color );
+	ImageAtlas( tex, { 1, 0, 1, 1 }, 3, pos + Vector3f( 0.5, size.y - 0.5 ), Vector3f( size.x - 0.5, 0.5 ),
+				Vector3f( 0, 0 ), color );
+	ImageAtlas( tex, { 1, 2, 1, 1 }, 3, pos + Vector3f( 0.5, 0 ), Vector3f( size.x - 0.5, 0.5 ), Vector3f( 0, 0 ), color );
 
-	ImageAtlas( tex, { 0, 1, 1, 1 }, 3, pos + CVector( 0, 0.5 ), CVector( 0.5, size.y - 1 ), CVector( 0, 0 ), color );
-	ImageAtlas( tex, { 2, 1, 1, 1 }, 3, pos + CVector( size.x, 0.5 ), CVector( 0.5, size.y - 1 ), CVector( 0, 0 ),
+	ImageAtlas( tex, { 0, 1, 1, 1 }, 3, pos + Vector3f( 0, 0.5 ), Vector3f( 0.5, size.y - 1 ), Vector3f( 0, 0 ), color );
+	ImageAtlas( tex, { 2, 1, 1, 1 }, 3, pos + Vector3f( size.x, 0.5 ), Vector3f( 0.5, size.y - 1 ), Vector3f( 0, 0 ),
 				color );
 
 	// Middle
-	ImageAtlas( tex, { 1, 1, 1, 1 }, 3, pos + CVector( 0.5, 0.5 ), CVector( size.x - 0.5, size.y - 1 ), CVector( 0, 0 ),
+	ImageAtlas( tex, { 1, 1, 1, 1 }, 3, pos + Vector3f( 0.5, 0.5 ), Vector3f( size.x - 0.5, size.y - 1 ), Vector3f( 0, 0 ),
 				color );
 }
 
-void CGui::Crosshair() { Image( m_pCrosshairTex, m_vScreenCentre, CVector( 3, 3 ), CVector( 0.5, 0.5 ) ); }
+void CGui::Crosshair() { Image( m_pCrosshairTex, m_vScreenCentre, Vector3f( 3, 3 ), Vector3f( 0.5, 0.5 ) ); }
 
 // Returns the string in the event that 'RETURN' is pressed.
 // Outputs nullptr if nothing.
 // id can be shared between multiple text inputs if they're for the same data.
-const char *CGui::TextInput( int id, CVector pos )
+const char *CGui::TextInput( int id, Vector3f pos )
 {
 	std::string text = m_textBuffers[id];
 
@@ -482,7 +482,7 @@ const char *CGui::TextInput( int id, CVector pos )
 		return nullptr;
 }
 
-const char *CGui::SelectableTextInput( int id, CVector pos, CVector size, CTexture *pTex )
+const char *CGui::SelectableTextInput( int id, Vector3f pos, Vector3f size, CTexture *pTex )
 {
 	pos	 = GetInScreen( pos );
 	size = size * GUIUNIT;
@@ -507,10 +507,10 @@ const char *CGui::SelectableTextInput( int id, CVector pos, CVector size, CTextu
 	}
 
 	if ( m_iKeyboardItem != id )
-		Label( m_textBuffers[id].c_str(), ( pos / GUIUNIT ) + CVector( 0.5, 0.5 ), textColour );
+		Label( m_textBuffers[id].c_str(), ( pos / GUIUNIT ) + Vector3f( 0.5, 0.5 ), textColour );
 	else
 	{
-		TextInput( id, ( pos / GUIUNIT ) + CVector( 0.5, 0.5 ) );
+		TextInput( id, ( pos / GUIUNIT ) + Vector3f( 0.5, 0.5 ) );
 	}
 
 	Image9Rect( pTex, pos / GUIUNIT, size / GUIUNIT, CColour( 255, 255, 255 ) );
@@ -518,7 +518,7 @@ const char *CGui::SelectableTextInput( int id, CVector pos, CVector size, CTextu
 	return nullptr;
 }
 
-bool CGui::Slider( int id, CVector pos, CVector size, int max, int &value )
+bool CGui::Slider( int id, Vector3f pos, Vector3f size, int max, int &value )
 {
 	pos	 = GetInScreen( pos );
 	size = size * GUIUNIT;
@@ -527,7 +527,7 @@ bool CGui::Slider( int id, CVector pos, CVector size, int max, int &value )
 
 	float ypos = ( ( size.y - 2 * GUIUNIT ) * value ) / max;
 
-	Image( m_pThumbTex, ( pos + CVector( 0, ypos ) ) / GUIUNIT, CVector( 2, 2 ), CVector( 0, 0 ), CColour( 255, 255, 255 ) );
+	Image( m_pThumbTex, ( pos + Vector3f( 0, ypos ) ) / GUIUNIT, Vector3f( 2, 2 ), Vector3f( 0, 0 ), CColour( 255, 255, 255 ) );
 
 	if ( RegionHit( pos, size ) )
 	{
@@ -551,7 +551,7 @@ bool CGui::Slider( int id, CVector pos, CVector size, int max, int &value )
 		if ( val != value )
 		{
 			if ( m_iTick % 2 == 0 )
-				soundSystem::PlaySoundEvent( "ui.tick", CVector( 0, 0, 0 ) );
+				soundSystem::PlaySoundEvent( "ui.tick", Vector3f( 0, 0, 0 ) );
 
 			value = val;
 			return true;
@@ -560,7 +560,7 @@ bool CGui::Slider( int id, CVector pos, CVector size, int max, int &value )
 
 	return false;
 }
-bool CGui::HorzSlider( int id, CVector pos, CVector size, int max, int &value )
+bool CGui::HorzSlider( int id, Vector3f pos, Vector3f size, int max, int &value )
 {
 	pos	 = GetInScreen( pos );
 	size = size * GUIUNIT;
@@ -569,7 +569,7 @@ bool CGui::HorzSlider( int id, CVector pos, CVector size, int max, int &value )
 
 	float xpos = ( ( size.x - 2 * GUIUNIT ) * value ) / max;
 
-	Image( m_pThumbTex, ( pos + CVector( xpos, 0 ) ) / GUIUNIT, CVector( 2, 2 ), CVector( 0, 0 ), CColour( 255, 255, 255 ) );
+	Image( m_pThumbTex, ( pos + Vector3f( xpos, 0 ) ) / GUIUNIT, Vector3f( 2, 2 ), Vector3f( 0, 0 ), CColour( 255, 255, 255 ) );
 
 	if ( RegionHit( pos, size ) )
 	{
@@ -593,7 +593,7 @@ bool CGui::HorzSlider( int id, CVector pos, CVector size, int max, int &value )
 		if ( val != value )
 		{
 			if ( m_iTick % 2 == 0 )
-				soundSystem::PlaySoundEvent( "ui.tick", CVector( 0, 0, 0 ) );
+				soundSystem::PlaySoundEvent( "ui.tick", Vector3f( 0, 0, 0 ) );
 
 			value = val;
 			return true;
@@ -603,7 +603,7 @@ bool CGui::HorzSlider( int id, CVector pos, CVector size, int max, int &value )
 	return false;
 }
 
-bool CGui::CheckBox( int id, CVector pos, CVector size, bool &value )
+bool CGui::CheckBox( int id, Vector3f pos, Vector3f size, bool &value )
 {
 	pos	 = GetInScreen( pos );
 	size = size * GUIUNIT;
@@ -623,7 +623,7 @@ bool CGui::CheckBox( int id, CVector pos, CVector size, bool &value )
 			m_iActiveItem = id;
 
 			value = !value;
-			soundSystem::PlaySoundEvent( value ? "ui.check" : "ui.uncheck", CVector( 0, 0, 0 ) );
+			soundSystem::PlaySoundEvent( value ? "ui.check" : "ui.uncheck", Vector3f( 0, 0, 0 ) );
 			return true;
 		}
 	}

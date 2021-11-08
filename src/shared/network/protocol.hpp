@@ -237,28 +237,28 @@ namespace protocol
 	/******************* SERVER *************************/
 	/****************************************************/
 	void SendServerPlayerID( ENetPeer *pPeer, bool isOp );
-	void SendServerChunkData( ENetPeer *pPeer, CWorld *world, CVector pos );
+	void SendServerChunkData( ENetPeer *pPeer, CWorld *world, Vector3f pos );
 	void SendServerChunkDataFromRep( ENetPeer *pPeer, PortableChunkRepresentation crep );
-	void SendServerUpdateBlock( ENetPeer *pPeer, CVector pos, BLOCKID blockType, uint16_t blockData );
-	void SendServerPlayerSpawn( ENetPeer *pPeer, std::string username, CVector pos, CVector rot, bool join );
-	void SendServerPlayerPos( ENetPeer *pPeer, std::string username, CVector pos, CVector rot );
+	void SendServerUpdateBlock( ENetPeer *pPeer, Vector3f pos, BLOCKID blockType, uint16_t blockData );
+	void SendServerPlayerSpawn( ENetPeer *pPeer, std::string username, Vector3f pos, Vector3f rot, bool join );
+	void SendServerPlayerPos( ENetPeer *pPeer, std::string username, Vector3f pos, Vector3f rot );
 	void SendServerPlayerMessage( ENetPeer *pPeer, std::string username, std::string message );
 	void SendServerPlayerDisconnect( ENetPeer *pPeer, bool isKick, std::string reason = "" );
 	void SendServerTimeOfDay( ENetPeer *pPeer, int ticks );
 	void SendServerPlayerLeave( ENetPeer *pPeer, std::string username );
 	void SendServerPlayerSkin( ENetPeer *pPeer, std::string username, std::vector<unsigned char> imageData,
 							   unsigned int resolution );
-	void SendServerSpecialEffect( ENetPeer *pPeer, CVector pos, int id, int attrib );
-	void SendServerSoundEvent( ENetPeer *pPeer, CVector pos, std::string soundName );
+	void SendServerSpecialEffect( ENetPeer *pPeer, Vector3f pos, int id, int attrib );
+	void SendServerSoundEvent( ENetPeer *pPeer, Vector3f pos, std::string soundName );
 
 	/****************************************************/
 	/******************* CLIENT *************************/
 	/****************************************************/
 	void SendClientPlayerID( ENetPeer *pPeer );
-	void SendClientSetBlock( ENetPeer *pPeer, CVector pos, BLOCKID blockType, uint16_t blockData );
-	void SendClientPlayerPos( ENetPeer *pPeer, CVector pos, CVector rot );
+	void SendClientSetBlock( ENetPeer *pPeer, Vector3f pos, BLOCKID blockType, uint16_t blockData );
+	void SendClientPlayerPos( ENetPeer *pPeer, Vector3f pos, Vector3f rot );
 	void SendClientChatMessage( ENetPeer *pPeer, std::string message );
 	void SendClientLeave( ENetPeer *pPeer );
 	void SendClientSkin( ENetPeer *pPeer, std::vector<unsigned char> imageData, unsigned int resolution );
-	void SendClientUseBlock( ENetPeer *pPeer, CVector pos );
+	void SendClientUseBlock( ENetPeer *pPeer, Vector3f pos );
 } // namespace protocol

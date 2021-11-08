@@ -1,6 +1,6 @@
 #include "physics.hpp"
 
-CBoundingBox::CBoundingBox( CVector vPosition, CVector size, CVector vOrigin )
+CBoundingBox::CBoundingBox( Vector3f vPosition, Vector3f size, Vector3f vOrigin )
 {
 	this->m_vPosition = vPosition;
 	this->m_vBounds	  = size;
@@ -25,7 +25,7 @@ bool CBoundingBox::TestCollide( CBoundingBox other )
 				 ( m_vPosition.z - ( m_vBounds.z * m_vOrigin.z ) + m_vBounds.z ) );
 }
 
-bool CBoundingBox::TestPointCollide( CVector pos )
+bool CBoundingBox::TestPointCollide( Vector3f pos )
 {
 	if ( pos < this->m_vPosition || pos > ( this->m_vPosition + this->m_vBounds ) )
 		return false; // Out of m_vBounds

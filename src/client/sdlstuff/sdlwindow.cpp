@@ -9,7 +9,7 @@
 
 #include "shared/logging.hpp"
 
-CGameWindow::CGameWindow( const char *title, CVector size, bool resizeable, CVector minSize )
+CGameWindow::CGameWindow( const char *title, Vector3f size, bool resizeable, Vector3f minSize )
 	: m_pInternalWindow( nullptr, &SDL_DestroyWindow ), m_iTick( 0 ), m_iFrameTicks( 0 ), m_dDelta( 0 ),
 	  m_iFramesInTheLastSecond( 0 ), m_fSecondsPerFrame( 0.0f ), m_pInputMan( nullptr ), m_bShouldClose( false )
 {
@@ -87,21 +87,21 @@ bool CGameWindow::IsFocused()
 const char *CGameWindow::GetTitle() { return SDL_GetWindowTitle( m_pInternalWindow.get() ); }
 void CGameWindow::SetTitle( const char *title ) { SDL_SetWindowTitle( m_pInternalWindow.get(), title ); }
 
-CVector CGameWindow::GetSize()
+Vector3f CGameWindow::GetSize()
 {
 	int x, y;
 	SDL_GetWindowSize( m_pInternalWindow.get(), &x, &y );
-	return CVector( x, y );
+	return Vector3f( x, y );
 }
-void CGameWindow::SetSize( CVector size ) { SDL_SetWindowSize( m_pInternalWindow.get(), size.x, size.y ); }
+void CGameWindow::SetSize( Vector3f size ) { SDL_SetWindowSize( m_pInternalWindow.get(), size.x, size.y ); }
 
-CVector CGameWindow::GetPos()
+Vector3f CGameWindow::GetPos()
 {
 	int x, y;
 	SDL_GetWindowPosition( m_pInternalWindow.get(), &x, &y );
-	return CVector( x, y );
+	return Vector3f( x, y );
 }
-void CGameWindow::SetPos( CVector pos ) { SDL_SetWindowPosition( m_pInternalWindow.get(), pos.x, pos.y ); }
+void CGameWindow::SetPos( Vector3f pos ) { SDL_SetWindowPosition( m_pInternalWindow.get(), pos.x, pos.y ); }
 
 bool CGameWindow::GetMouseVisibility()
 {
@@ -191,7 +191,7 @@ void CGameWindow::PollEvents()
 	else
 		SDL_StopTextInput();
 
-	m_pInputMan->m_vMouseMovement = CVector( 0, 0 );
+	m_pInputMan->m_vMouseMovement = Vector3f( 0, 0 );
 
 	m_pInputMan->m_iOldMouseState = m_pInputMan->m_iMouseState;
 	m_pInputMan->m_iMouseState	  = 0;
@@ -216,8 +216,8 @@ void CGameWindow::PollEvents()
 				if ( !IsFocused() )
 					continue;
 				m_pInputMan->m_vMouseMovement =
-					m_pInputMan->m_vMouseMovement + CVector( currentEvent.motion.xrel, currentEvent.motion.yrel );
-				m_pInputMan->m_vMousePos = CVector( currentEvent.motion.x, currentEvent.motion.y );
+					m_pInputMan->m_vMouseMovement + Vector3f( currentEvent.motion.xrel, currentEvent.motion.yrel );
+				m_pInputMan->m_vMousePos = Vector3f( currentEvent.motion.x, currentEvent.motion.y );
 				break;
 
 			case SDL_WINDOWEVENT:
@@ -269,7 +269,7 @@ void CGameWindow::PollEvents()
 
 void CGameWindow::CaptureMouse()
 {
-	CVector size = GetSize();
+	Vector3f size = GetSize();
 	SDL_WarpMouseInWindow( m_pInternalWindow.get(), size.x / 2, size.y / 2 );
 }
 

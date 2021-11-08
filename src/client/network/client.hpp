@@ -26,7 +26,7 @@ class CNetworkClient
 
 	void DecodeChunkData( ArchiveIntermediary data );
 
-	void SpecialEffectHandle( CVector pos, SpecialEffect specialEffect, int attrib );
+	void SpecialEffectHandle( Vector3f pos, SpecialEffect specialEffect, int attrib );
 
 	// Pointer to the local world
 	CWorld *m_pLocalWorld = nullptr;

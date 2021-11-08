@@ -1,9 +1,7 @@
 #include "types.hpp"
+#include "vector.hpp"
 
 #pragma once
-
-// Forward decl.
-class CVector;
 
 class CColour {
 	public:
@@ -25,6 +23,14 @@ class CColour {
 		// CColour in 0xRRGGBBAA format
 		// i.e 0xb180e2ff
 		CColour( uint32_t CColour );
+
+		CColour( const CColour& other );
+
+		CColour( const Vector3c &colour );
+		CColour( const Vector4c &colour );
+
+		CColour( const Vector3f &colour );
+		CColour( const Vector4f &colour );
 
 		// Returns the CColour in 0xRRGGBBAA format
 		uint32_t GetColour32b() const;
@@ -56,7 +62,8 @@ class CColour {
 
 		operator uint16_t() const;
 		operator uint32_t() const;
-		operator CVector() const;
+		operator Vector3f() const;
+		operator Vector4f() const;
 };
 
 CColour RandomCColour(uchar_t rmax, uchar_t rmin, uchar_t gmax, uchar_t gmin, uchar_t bmax, uchar_t bmin, uchar_t amax = 255, uchar_t amin = 255);

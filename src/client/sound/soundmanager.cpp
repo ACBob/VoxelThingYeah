@@ -80,7 +80,7 @@ CSound::CSound( const char *path )
 
 	delete[] soundData;
 }
-void CSound::Play( CVector src, float pitch, float gain )
+void CSound::Play( Vector3f src, float pitch, float gain )
 {
 	// Select the first available source
 	// A source is available if it is not playing
@@ -152,7 +152,7 @@ CSoundEvent::CSoundEvent( std::vector<std::string> sounds, const char *type, flo
 	m_fMaxPitch = maxpitch;
 }
 
-void CSoundEvent::Play( CVector pos )
+void CSoundEvent::Play( Vector3f pos )
 {
 	if (m_sounds.size() <= 0)
 		return;
@@ -300,7 +300,7 @@ void soundSystem::UnInit()
 	alcCloseDevice( openAlDevice );
 }
 
-void soundSystem::SetListener( CWorld *world, CVector pos, CVector forward, CVector vel )
+void soundSystem::SetListener( CWorld *world, Vector3f pos, Vector3f forward, Vector3f vel )
 {
 	alListener3f( AL_POSITION, pos.x, pos.y, pos.z );
 	float orient[] = { forward.x, forward.y, forward.z,
@@ -417,7 +417,7 @@ CSound *soundSystem::LoadSound( const char *path )
 	return snd;
 }
 
-void soundSystem::PlayBreakSound( BLOCKID blockType, CVector pos )
+void soundSystem::PlayBreakSound( BLOCKID blockType, Vector3f pos )
 {
 	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial();
 
@@ -427,7 +427,7 @@ void soundSystem::PlayBreakSound( BLOCKID blockType, CVector pos )
 
 	delete buf;
 }
-void soundSystem::PlayPlaceSound( BLOCKID blockType, CVector pos )
+void soundSystem::PlayPlaceSound( BLOCKID blockType, Vector3f pos )
 {
 	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial();
 
@@ -437,7 +437,7 @@ void soundSystem::PlayPlaceSound( BLOCKID blockType, CVector pos )
 
 	delete buf;
 }
-void soundSystem::PlayStepSound( BLOCKID blockType, CVector pos )
+void soundSystem::PlayStepSound( BLOCKID blockType, Vector3f pos )
 {
 	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial();
 
@@ -446,11 +446,11 @@ void soundSystem::PlayStepSound( BLOCKID blockType, CVector pos )
 	PlaySoundEvent( buf, pos );
 	delete buf;
 }
-void soundSystem::PlaySoundEvent( CSoundEvent* event, CVector pos )
+void soundSystem::PlaySoundEvent( CSoundEvent* event, Vector3f pos )
 {
 	event->Play( pos );
 }
-void soundSystem::PlaySoundEvent( const char *soundEvent, CVector pos )
+void soundSystem::PlaySoundEvent( const char *soundEvent, Vector3f pos )
 {
 	if ( !soundEvents.count( soundEvent ) )
 	{

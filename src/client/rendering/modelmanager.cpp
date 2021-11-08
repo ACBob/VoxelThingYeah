@@ -72,14 +72,14 @@ const CModel::Vertex cubeVertices[] = {
 };
 
 // Basically a hobbled together clone of ChunkModel's face supplying stuff
-void GetCubeModel( CModel &m, CVector size, CVector uv )
+void GetCubeModel( CModel &m, Vector3f size, Vector4f uv )
 {
 	std::vector<CModel::Vertex> vertices = {};
 	std::vector<CModel::Face> faces		 = {};
 
 	for ( int j = 0; j < 6; j++ )
 	{
-		CVector normal = DirectionVector[j];
+		Vector3f normal = DirectionVector[j];
 
 		for ( int i = 0; i < 4; i++ )
 		{

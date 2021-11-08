@@ -15,7 +15,7 @@ class CBlockSoundMaker final : public CBlockBase
 		return true;
 	};
 
-    virtual void OnUse( CChunk *pChunk, CVector vPosition, CEntityBase *pUser ) const
+    virtual void OnUse( CChunk *pChunk, Vector3f vPosition, CEntityBase *pUser ) const
     {
         soundSystem::PlaySoundEvent( "block.soundmaker.use", vPosition );
     };

@@ -17,7 +17,7 @@ namespace protocol
 
 		protocol::SendPacket( pPeer, p, true );
 	}
-	void SendServerChunkData( ENetPeer *pPeer, CWorld *world, CVector pos )
+	void SendServerChunkData( ENetPeer *pPeer, CWorld *world, Vector3f pos )
 	{
 		PortableChunkRepresentation crep;
 		crep = world->GetWorldRepresentation( pos );
@@ -40,7 +40,7 @@ namespace protocol
 
 		SendPacket( pPeer, p, true );
 	}
-	void SendServerUpdateBlock( ENetPeer *pPeer, CVector pos, BLOCKID blockType, uint16_t val )
+	void SendServerUpdateBlock( ENetPeer *pPeer, Vector3f pos, BLOCKID blockType, uint16_t val )
 	{
 		ServerPacket p;
 		p.type					   = ServerPacket::UPDATE_BLOCK;
@@ -53,7 +53,7 @@ namespace protocol
 
 		protocol::SendPacket( pPeer, p, true );
 	}
-	void SendServerPlayerSpawn( ENetPeer *pPeer, std::string username, CVector pos, CVector rot, bool join )
+	void SendServerPlayerSpawn( ENetPeer *pPeer, std::string username, Vector3f pos, Vector3f rot, bool join )
 	{
 		ServerPacket p;
 		p.type					   = ServerPacket::PLAYER_SPAWN;
@@ -68,7 +68,7 @@ namespace protocol
 
 		SendPacket( pPeer, p, true );
 	}
-	void SendServerPlayerPos( ENetPeer *pPeer, std::string username, CVector pos, CVector rot )
+	void SendServerPlayerPos( ENetPeer *pPeer, std::string username, Vector3f pos, Vector3f rot )
 	{
 		ServerPacket p;
 		p.type					   = ServerPacket::PLAYERPOSORT;
@@ -137,7 +137,7 @@ namespace protocol
 
 		protocol::SendPacket( pPeer, p, true );
 	}
-	void SendServerSpecialEffect( ENetPeer *pPeer, CVector pos, int id, int attrib )
+	void SendServerSpecialEffect( ENetPeer *pPeer, Vector3f pos, int id, int attrib )
 	{
 		ServerPacket p;
 		Archive<ArchiveBuf> bufAccess = p.GetAccess();
@@ -151,7 +151,7 @@ namespace protocol
 
 		protocol::SendPacket( pPeer, p );
 	}
-	void SendServerSoundEvent( ENetPeer *pPeer, CVector pos, std::string eventName )
+	void SendServerSoundEvent( ENetPeer *pPeer, Vector3f pos, std::string eventName )
 	{
 		ServerPacket p;
 		Archive<ArchiveBuf> bufAccess = p.GetAccess();

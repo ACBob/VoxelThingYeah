@@ -84,7 +84,7 @@ int main( int argc, char *args[] )
 		delete errBuf;
 		return EXIT_FAILURE;
 	}
-	CGameWindow window( "VoxelThingYeah", CVector( scr_width->GetFloat(), scr_height->GetFloat() ), true );
+	CGameWindow window( "VoxelThingYeah", Vector3f( scr_width->GetFloat(), scr_height->GetFloat() ), true );
 
 	con_info( "Init Filesystem..." );
 	if ( !fileSystem::Init( args[0] ) )
@@ -266,7 +266,7 @@ int main( int argc, char *args[] )
 
 		if ( window.m_bSizeChanged )
 		{
-			CVector s = window.GetSize();
+			Vector3f s = window.GetSize();
 			scr_width->SetInt( s.x );
 			scr_height->SetInt( s.y );
 			glViewport( 0, 0, s.x, s.y );
@@ -287,7 +287,7 @@ int main( int argc, char *args[] )
 			musicTick = gameStateMan.m_iTick + 20000;
 
 			if ( rand() % 100 > 50 )
-				soundSystem::PlaySoundEvent( "game.music", CVector( 0, 0, 0 ) );
+				soundSystem::PlaySoundEvent( "game.music", Vector3f( 0, 0, 0 ) );
 		}
 
 		gameStateMan.Update();

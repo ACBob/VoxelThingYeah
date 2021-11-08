@@ -64,7 +64,7 @@ CModelRenderer::~CModelRenderer()
 	glDeleteBuffers( 1, &m_iEbo );
 }
 
-void CModelRenderer::Render( CVector pos, CVector rot, CVector size, CVector uvOffset, CColour light, CShader *shader,
+void CModelRenderer::Render( Vector3f pos, Vector3f rot, Vector3f size, Vector4f uvOffset, CColour light, CShader *shader,
 							 CTexture *tex )
 {
 
@@ -78,7 +78,7 @@ void CModelRenderer::Render( CVector pos, CVector rot, CVector size, CVector uvO
 	shader->SetMat4( "model", model );
 	shader->SetMat3( "normalMat", glm::mat3( glm::transpose( glm::inverse( model ) ) ) );
 	shader->SetVec4( "texCoordOffset", uvOffset );
-	CVector vLight = light;
+	Vector3f vLight = light;
 	vLight = vLight / 255.0f;
 	shader->SetVec4( "lighting", vLight );
 

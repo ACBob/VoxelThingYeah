@@ -89,7 +89,7 @@ void CNetworkClient::Disconnect()
 	m_bConnected = false;
 }
 
-void CNetworkClient::SpecialEffectHandle( CVector pos, SpecialEffect specialEffect, int attrib )
+void CNetworkClient::SpecialEffectHandle( Vector3f pos, SpecialEffect specialEffect, int attrib )
 {
 	if ( m_pParticleMan == nullptr )
 		return;
@@ -107,18 +107,18 @@ void CNetworkClient::SpecialEffectHandle( CVector pos, SpecialEffect specialEffe
 			BlockTexture tex = GetDefaultBlockTextureSide( b, NORTH );
 
 			ParticleDef blockBreak	= PARTICLE_BREAKBLOCK;
-			blockBreak.vUVOffsetMin = CVector( tex.sizex / 64.0f, tex.sizey / 64.0f, tex.x / 16.0f, tex.y / 16.0f );
+			blockBreak.vUVOffsetMin = Vector4f( tex.sizex / 64.0f, tex.sizey / 64.0f, tex.x / 16.0f, tex.y / 16.0f );
 			blockBreak.vUVOffsetMax =
-				CVector( tex.sizex / 64.0f, tex.sizey / 64.0f, ( tex.x + tex.sizex / 2.0f ) / 16.0f,
+				Vector4f( tex.sizex / 64.0f, tex.sizey / 64.0f, ( tex.x + tex.sizex / 2.0f ) / 16.0f,
 						 ( tex.y + tex.sizey / 2.0f ) / 16.0f );
 			blockBreak.pTexture = materialSystem::LoadTexture( "terrain.png" );
 
-			soundSystem::PlayBreakSound( b, pos + CVector( 0.5, 0.5, 0.5 ) );
+			soundSystem::PlayBreakSound( b, pos + Vector3f( 0.5, 0.5, 0.5 ) );
 
 			for ( int x = 0; x < 4; x++ )
 				for ( int y = 0; y < 4; y++ )
 					for ( int z = 0; z < 4; z++ )
-						m_pParticleMan->CreateParticle( pos + CVector( x / 4.0f, y / 4.0f, z / 4.0f ), blockBreak );
+						m_pParticleMan->CreateParticle( pos + Vector3f( x / 4.0f, y / 4.0f, z / 4.0f ), blockBreak );
 		}
 		break;
 		case SPECIALEFFECT_BLOCKPLACE: {
@@ -128,7 +128,7 @@ void CNetworkClient::SpecialEffectHandle( CVector pos, SpecialEffect specialEffe
 			// Air has no place effect
 			if ( b == AIR )
 				return;
-			soundSystem::PlayPlaceSound( b, pos + CVector( 0.5, 0.5, 0.5 ) );
+			soundSystem::PlayPlaceSound( b, pos + Vector3f( 0.5, 0.5, 0.5 ) );
 		}
 		break;
 		default:
@@ -164,7 +164,7 @@ void CNetworkClient::Update()
 		}
 	}
 
-	CVector cP = ( m_pLocalPlayer->m_vPosition / CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
+	Vector3f cP = ( m_pLocalPlayer->m_vPosition / Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
 	// MAGIC NUMBER: 4 == render distance
 	// TODO: tie to cvar
 	m_pLocalWorld->m_chunks.erase(

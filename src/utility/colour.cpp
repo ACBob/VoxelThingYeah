@@ -31,6 +31,46 @@ CColour::CColour( uint32_t colour )
     this->a = colour & 0xFF;
 }
 
+CColour::CColour( const CColour& colour )
+{
+    this->r = colour.r;
+    this->g = colour.g;
+    this->b = colour.b;
+    this->a = colour.a;
+}
+
+CColour::CColour( const Vector3c& colour )
+{
+    this->r = ( uchar_t )( colour.x );
+    this->g = ( uchar_t )( colour.y );
+    this->b = ( uchar_t )( colour.z );
+    this->a = 255;
+}
+
+CColour::CColour( const Vector4c& colour )
+{
+    this->r = colour.x;
+    this->g = colour.y;
+    this->b = colour.z;
+    this->a = colour.w;
+}
+
+CColour::CColour( const Vector3f& colour )
+{
+    this->r = ( uchar_t )( colour.x * 255 );
+    this->g = ( uchar_t )( colour.y * 255 );
+    this->b = ( uchar_t )( colour.z * 255 );
+    this->a = 255;
+}
+
+CColour::CColour( const Vector4f& colour )
+{
+    this->r = ( uchar_t )( colour.x * 255 );
+    this->g = ( uchar_t )( colour.y * 255 );
+    this->b = ( uchar_t )( colour.z * 255 );
+    this->a = ( uchar_t )( colour.w * 255 );
+}
+
 // Returns the colour in 0xRRGGBBAA format
 uint32_t CColour::GetColour32b() const
 {
@@ -159,7 +199,11 @@ CColour::operator uint32_t() const
 {
     return this->GetColour32b();
 }
-CColour::operator CVector() const
+CColour::operator Vector3f() const
 {
-    return CVector( this->r, this->g, this->b, this->a );
+    return Vector3f( this->r / 255.0f, this->g / 255.0f, this->b / 255.0f );
+}
+CColour::operator Vector4f() const
+{
+    return Vector4f( this->r / 255.0f, this->g / 255.0f, this->b / 255.0f, this->a / 255.0f );
 }

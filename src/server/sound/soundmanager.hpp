@@ -21,11 +21,11 @@ namespace soundSystem
 	void Init();
 	void UnInit();
 
-	void PlayBreakSound( BLOCKID blockType, CVector pos );
-	void PlayPlaceSound( BLOCKID blockType, CVector pos );
-	void PlayStepSound( BLOCKID blockType, CVector pos );
+	void PlayBreakSound( BLOCKID blockType, Vector3f pos );
+	void PlayPlaceSound( BLOCKID blockType, Vector3f pos );
+	void PlayStepSound( BLOCKID blockType, Vector3f pos );
 
-	void PlaySoundEvent( const char *eventName, CVector pos );
+	void PlaySoundEvent( const char *eventName, Vector3f pos );
 
 	extern CNetworkServer *server;
 } // namespace soundSystem

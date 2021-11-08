@@ -7,7 +7,7 @@ CParticleEmitter::CParticleEmitter( ) { }
 
 CParticleEmitter::~CParticleEmitter() { m_particles.clear(); }
 
-void CParticleEmitter::Render( CVector camRot )
+void CParticleEmitter::Render( Vector3f camRot )
 {
 	for ( CParticle &p : m_particles )
 		p.Render( camRot );

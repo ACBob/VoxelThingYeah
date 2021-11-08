@@ -30,30 +30,30 @@ class CWorld
 #endif
 	~CWorld();
 
-	CChunk *ChunkAtWorldPos( CVector pos );
-	CChunk *ChunkAtChunkPos( CVector chunkPos );
+	CChunk *ChunkAtWorldPos( Vector3f pos );
+	CChunk *ChunkAtChunkPos( Vector3f chunkPos );
 
 	// Tries to get a chunk and generates a new one if it can't find one
-	CChunk *GetChunkGenerateAtWorldPos( CVector pos );
+	CChunk *GetChunkGenerateAtWorldPos( Vector3f pos );
 
 	// Deletes the chunk at the chunk position
-	void UnloadChunk( CVector pos );
+	void UnloadChunk( Vector3f pos );
 
 	// Returns the block at the position in world coords
 	// The given position is rounded by floor() before being used
 	// If outside the world it returns a nullptr
-	CBlock *BlockAtWorldPos( CVector pos );
+	CBlock *BlockAtWorldPos( Vector3f pos );
 
 	// Test against an infinitely small point centred on pos
 	// Tests in world coordinates
-	bool TestPointCollision( CVector pos );
+	bool TestPointCollision( Vector3f pos );
 
 	// Tests in world coordinates
 	// Returning the first block that collides
 	CBlock* TestAABBCollision( CBoundingBox col );
 
 	// Is the position within our place
-	bool ValidChunkPos( const CVector pos );
+	bool ValidChunkPos( const Vector3f pos );
 
 	// Tick is the tick since the start of the game
 	// TODO: This will overflow maybe
@@ -64,7 +64,7 @@ class CWorld
 	// Merges the PortableChunkRepresentation into us :)
 	void UsePortable( PortableChunkRepresentation rep );
 	// Returns the world rep at the chunk
-	PortableChunkRepresentation GetWorldRepresentation( CVector pos );
+	PortableChunkRepresentation GetWorldRepresentation( Vector3f pos );
 
 	std::vector<void *> m_ents;
 	void AddEntity( void *e );
@@ -74,7 +74,7 @@ class CWorld
 #ifdef CLIENTEXE
 	void Render();
 
-	CColour GetLightingAtWorldPos( CVector pos );
+	CColour GetLightingAtWorldPos( Vector3f pos );
 
 	void *m_pLocalPlayer = nullptr;
 
