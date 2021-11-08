@@ -129,10 +129,8 @@ class Vector3 {
 			return Vector3<T>(x * ca + y * sa, -x * sa + y * ca, z);
 		}
 		// It's assumed here that the vector is in degrees
-		// So rotate our X by v.x degrees
-		// Our Y by v.y degrees
 		Vector3<T> Rotate(const Vector3<T>& v) const {
-			return Vector3<T>(x * cos(v.x) - y * sin(v.x), x * sin(v.x) + y * cos(v.x), z);
+			return RotateAxis(0, v.x * DEG2RAD).RotateAxis(1, v.y * DEG2RAD).RotateAxis(2, v.z * DEG2RAD);
 		}
 		
 		Vector3<T> RotateAxis(int axis, T angle) const {
