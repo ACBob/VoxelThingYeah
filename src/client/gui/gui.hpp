@@ -44,10 +44,19 @@ class CGui
 			float r, g, b, a;
 		};
 
+		struct GuiImage {
+			CTexture *pTex;
+			std::vector<GuiVert> verts;
+		};
+
 		// NOTE: Z is ignored for size, but it might be interesting to see for a 3D GUI?
 		std::vector<GuiVert> GetRect( Vector3f pos, Vector3f size, Vector4f uv, CColour colour );
 
 		std::vector<GuiVert> m_vertices;
+		std::vector<GuiImage> m_images;
+
+		// Renders a generic quad here, but under image
+		void _Image( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint );
 	public:
 		CGui(Vector3f size);
 		~CGui();
@@ -89,6 +98,8 @@ class CGui
 		Vector3f m_vScreenCentre;
 
 		// Elements
+		void Image( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint );
+
 		bool Button( GuiID id, Vector3f position, Vector3f size = {4, 2}, CTexture *pTexture = nullptr );
 
 		void Label( const char* text, Vector3f position, float scale = 1.0f, CColour colour = {255, 255, 255} );

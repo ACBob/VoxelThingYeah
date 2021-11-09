@@ -164,9 +164,7 @@ void CGui::Update()
 
 		m_pShader->Use();
 
-		glBindVertexArray( 0 );
 		// Text
-		// TODO: images
 		glBindVertexArray( m_iVao );
 		{
 			glBindTexture( GL_TEXTURE_2D, m_pFontTex->m_iId );
@@ -178,7 +176,21 @@ void CGui::Update()
 			glDrawArrays( GL_TRIANGLES, 0, m_vertices.size() );
 
 			glBindTexture( GL_TEXTURE_2D, 0 );
+			
+			// Images
+			// TODO: bad bad bad die!
+			for ( CGui::GuiImage img : m_images )
+			{
+				glBindTexture( GL_TEXTURE_2D, img.pTex->m_iId );
+				glBindBuffer( GL_ARRAY_BUFFER, m_iVbo );
+				glBufferData( GL_ARRAY_BUFFER, img.verts.size() * sizeof( CGui::GuiVert ), img.verts.data(),
+							  GL_DYNAMIC_DRAW );
+				glBindBuffer( GL_ARRAY_BUFFER, 0 );
+				glDrawArrays( GL_TRIANGLES, 0, img.verts.size() );
+				glBindTexture( GL_TEXTURE_2D, 0 );
+			}
 		}
+
 		glBindVertexArray( 0 );
 
 		glDepthFunc( depthFunc );
@@ -186,6 +198,7 @@ void CGui::Update()
 
 	// Clear our vertices
 	m_vertices.clear();
+	m_images.clear();
 }
 
 bool CGui::RegionHit( Vector3f pos, Vector3f size )
@@ -225,9 +238,25 @@ Vector3f CGui::GetInScreen( Vector3f pos )
 	return pos;
 }
 
+void CGui::_Image( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint )
+{
+	GuiImage img;
+	img.pTex = pTex;
+	img.verts = GetRect( pos, size, Vector4f( 0, 0, 1, 1 ), tint );
+	m_images.push_back( img );
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Elements
 //////////////////////////////////////////////////////////////////////////
+
+void CGui::Image( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint )
+{
+	pos = GetInScreen( pos );
+	size = size * m_iGUIUnitSize;
+
+	_Image( pos, size, pTex, tint );
+}
 
 bool CGui::Button( GuiID id, Vector3f position, Vector3f size, CTexture *pTexture )
 {
@@ -262,8 +291,7 @@ bool CGui::Button( GuiID id, Vector3f position, Vector3f size, CTexture *pTextur
 
 	// Draw
 	{
-		std::vector<GuiVert> vertices = GetRect( position, size, { 0, 0, 1, 1 }, color );
-		m_vertices.insert( m_vertices.end(), vertices.begin(), vertices.end() );
+		_Image( position, size, pTexture, color );
 	}
 
 	return returnCode;

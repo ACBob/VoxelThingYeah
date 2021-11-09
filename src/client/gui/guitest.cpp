@@ -170,6 +170,11 @@ int main( int argc, char *args[] )
 
 		gui.Label(translator.GetString("gui.inventory"), {0, 10});
 
+		if (gui.Button(1, {0, 13}))
+		{
+			con_info( "Button 1 pressed!" );
+		}
+
 		// End GUI testing code
 
 		gui.Update();
