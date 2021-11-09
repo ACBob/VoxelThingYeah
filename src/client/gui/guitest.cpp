@@ -20,6 +20,9 @@
 
 #include "gui.hpp"
 
+#include "cvar_clientside.hpp"
+#include "cvar_shared.hpp"
+
 #include "sdlstuff/sdlwindow.hpp"
 #include <SDL.h>
 #include <SDL_keyboard.h>
@@ -38,6 +41,9 @@ int main( int argc, char *args[] )
 	freopen( "CON", "w", stderr );
 #endif
 	con_info( "Hello from GUI Test!" );
+
+	SetupClientSideConvars();
+	SetupSharedConvars();
 
 	con_info( "Creating Display..." );
 	// Initialize SDL systems
@@ -121,11 +127,11 @@ int main( int argc, char *args[] )
 	window.SetIcon( "logo1664.png" );
 
 	con_info( "Init Translator..." );
-	// CLocalizer translator;
-	// for (std::string &l : translator.ListLanguages() )
-	// {
-	// 	con_debug( "Found Language: %s", l.c_str() );
-	// }
+	CLocalizer translator;
+	for (std::string &l : translator.ListLanguages() )
+	{
+		con_debug( "Found Language: %s", l.c_str() );
+	}
 
 	con_info( "Init GUI..." );
 
@@ -161,6 +167,8 @@ int main( int argc, char *args[] )
 		gui.Label("Hello, Baig!", {0, 0});
 		gui.Label("Text, but Bigger!", {0, 3}, 2.0f);
 		gui.Label("Text, but Smaller!", {0, 7}, 0.5f);
+
+		gui.Label(translator.GetString("gui.inventory"), {0, 10});
 
 		// End GUI testing code
 

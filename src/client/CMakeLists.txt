@@ -34,5 +34,6 @@ set(guiTest_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/rendering/shadermanager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/rendering/glad.c
 	${CMAKE_CURRENT_SOURCE_DIR}/gui/guitest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/cvar_clientside.cpp
 	PARENT_SCOPE
 )

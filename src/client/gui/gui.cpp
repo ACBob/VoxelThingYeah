@@ -276,6 +276,8 @@ void CGui::Label( const char* text, Vector3f position, float scale, CColour colo
 
 	bool bRandomise = false;
 
+	float onePixel = scale * (2.0f / 16.0f) * (float)m_iGUIUnitSize;
+
 	// Render
 	// OpenGl
 	{
@@ -303,13 +305,19 @@ void CGui::Label( const char* text, Vector3f position, float scale, CColour colo
 			uv.w = ( y + EXPECTED_FONT_SIZE ) / ( 16.0f * EXPECTED_FONT_SIZE );
 
 			// Render the character
-			std::vector<GuiVert> vertices = GetRect( position + Vector3f( i, 0, 0 ),
+			// Shadow first
+			std::vector<GuiVert> vertices = GetRect( position + Vector3f( i, 0, 0 ) + Vector3f{ onePixel, -onePixel },
+													 Vector3f( m_iGUIUnitSize * scale, m_iGUIUnitSize * scale ),
+													 uv, colour / CColour(2, 2, 2, 1) );
+			m_vertices.insert( m_vertices.end(), vertices.begin(), vertices.end() );
+			// Text character
+			vertices = GetRect( position + Vector3f( i, 0, 0 ),
 													 Vector3f( m_iGUIUnitSize * scale, m_iGUIUnitSize * scale ),
 													 uv, colour );
 			m_vertices.insert( m_vertices.end(), vertices.begin(), vertices.end() );
 
 			i += m_charWidths[j] * m_iGUIUnitSize * scale;
-			i += (2.0f / 16.0f) * (float)m_iGUIUnitSize * scale;
+			i += onePixel;
 		}
 	}
 }
