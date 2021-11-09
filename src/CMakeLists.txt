@@ -11,6 +11,13 @@ set(gameClient_SRCS
 	PARENT_SCOPE
 )
 
+set(guiTest_SRCS
+	${guiTest_SRCS}
+	${utility_minimal_SRCS}
+	${shared_minimal_SRCS}
+	PARENT_SCOPE
+)
+
 set(gameServer_SRCS
 	${utility_SRCS}
 	${server_SRCS}

@@ -1,60 +1,37 @@
-// An ImGui
-// TODO: Abstract OpenGL away from this, making it renderer agnostic
-//       (Store like a mesh, have some kind of renderer)
+// Baob's Awful Immediate-mode GUI
+// Baig for short.
+//
+// The whole GUI is grid-based.
+// Sizes are represented in grid units, positions are too.
+// 0, 0 is the top-left corner.
+//
+// 
+
+// TODO: Abstract the OpenGL calls away from the GUI.
+#include <glad/glad.h>
 
 #include "gui.hpp"
 
-#include <glad/glad.h>
+#include "utility/tomlcpp.hpp"
 
-#include "437.hpp"
-
-#include "utfz.h"
-
-#include <algorithm>
+#include "shared/logging.hpp"
+#include "shared/filesystem.hpp"
 
 #include "sound/soundmanager.hpp"
 
-// The whole coordinate system is based on these GUIUUNITs.
-// When we start to dynamically rescale the GUI based on resolution this will come in handy. for now, 16px.
-#define GUIUNIT m_iGuiUnit
+#include "utility/utfz.h"
+#include "437.hpp"
 
-#define TEXTINTEXWIDTH 8
-#define TEXTINTEXHEIGHT 8
+#include <algorithm>
 
-#define TEXTWIDTH GUIUNIT
-#define TEXTHEIGHT GUIUNIT
+// How many grid units are there in the screen at all times
+#define GUI_GRID_X 54
+// Size in pixels of the font we expect
+#define EXPECTED_FONT_SIZE 8
 
-#define LETTERSPACING 8 / GUIUNIT
-
-// I am not supporting weird configurations
-#define TEXTTILES 16
-
-#include "shared/logging.hpp"
-
-// TODO: global?
-float fontWidths[256];
-
-int CGui::GetTextLength( const char *msg )
+CGui::CGui(Vector3f screenDimensions)
 {
-	int l = 0;
-
-	int i = 0;
-	while ( msg[i] != NULL )
-	{
-		l += fontWidths[std::distance( CP437UNICODE, std::find( CP437UNICODE, CP437UNICODE + 256, msg[i] ) )] *
-			 TEXTWIDTH;
-		l += 2.0f / 16.0f * (float)GUIUNIT;
-
-		i++;
-	}
-
-	return l;
-}
-
-CGui::CGui( int screenW, int screenH )
-	: m_iMouseState( IN_NO_MOUSE ), m_iActiveItem( 0 ), m_iHotItem( 0 ), m_iKeyboardItem( 0 )
-{
-	// OpenGl
+	// The OpenGL stuff
 	{
 		glGenVertexArrays( 1, &m_iVao );
 		glGenBuffers( 1, &m_iVbo );
@@ -64,48 +41,51 @@ CGui::CGui( int screenW, int screenH )
 		glBindBuffer( GL_ARRAY_BUFFER, m_iVbo );
 		glBufferData( GL_ARRAY_BUFFER, sizeof( float ) * 6 * 8, NULL, GL_DYNAMIC_DRAW );
 
-		// + sizeof(Texture*) so we skip the little internal thing at the end
-
 		// Position
-		glVertexAttribPointer( 0, 3, GL_FLOAT, false, 8 * sizeof( float ), (void *)0 );
+		glVertexAttribPointer( 0, 3, GL_FLOAT, false, 9 * sizeof( float ), (void *)0 );
 		glEnableVertexAttribArray( 0 );
 		// texture coordinate
-		glVertexAttribPointer( 1, 2, GL_FLOAT, false, 8 * sizeof( float ), (void *)offsetof( CGui::Vertex, u ) );
+		glVertexAttribPointer( 1, 2, GL_FLOAT, false, 9 * sizeof( float ), (void *)offsetof( CGui::GuiVert, u ) );
 		glEnableVertexAttribArray( 1 );
 		// colour
-		glVertexAttribPointer( 2, 3, GL_FLOAT, false, 8 * sizeof( float ), (void *)offsetof( CGui::Vertex, r ) );
+		glVertexAttribPointer( 2, 4, GL_FLOAT, false, 9 * sizeof( float ), (void *)offsetof( CGui::GuiVert, r ) );
 		glEnableVertexAttribArray( 2 );
 
 		glBindVertexArray( 0 );
 	}
 
-	// Setup some stff that'll be used by most things using the GUI
-	m_pTextTex		= materialSystem::LoadTexture( "font.png" );
-	m_pTextShader	= shaderSystem::LoadShader( "text.vert", "text.frag" );
-	m_pButtonTex	= materialSystem::LoadTexture( "button.png" );
-	m_pTextInpTex	= materialSystem::LoadTexture( "textinput.png" );
-	m_pBGTex		= materialSystem::LoadTexture( "guibg.png" );
-	m_pCrosshairTex = materialSystem::LoadTexture( "crosshair.png" );
-	m_pInventoryTex = materialSystem::LoadTexture( "inventory.png" );
-	m_pLogoTex		= materialSystem::LoadTexture( "title.png" );
-	m_pSliderTex	= materialSystem::LoadTexture( "slider.png" );
-	m_pThumbTex		= materialSystem::LoadTexture( "thumb.png" );
-	m_pCheckedTex	= materialSystem::LoadTexture( "checkbox-checked.png" );
-	m_pUncheckedTex = materialSystem::LoadTexture( "checkbox-unchecked.png" );
-	m_pPackPNG = materialSystem::LoadTexture( "pack.png" );
 
-	m_textBuffers = {};
+	// Setup font atlas
+	// Load font definition TOML
 
-	Resize( screenW, screenH );
+	bool bSuccess = false;
+	int64_t iFileSize = 0;
+	const char* file = (char*)fileSystem::LoadFile("lang/font.toml", iFileSize, bSuccess);
+
+	toml::Result l = toml::parse(bSuccess ? file : "\0");
+
+	// Font definition is as such:
+	// [font]
+	// textures = ["font.png", "font_b.png"]
+	// [font.chars]
+	// [tex] = [list of chars]
+
+	// Each font texture is 16x16 tiles, which may be of different sizes.
+	// Sizes of characters are inferred by the resolution of each texture.
+	// The height of each character is the texture height / 16
+	// Width is the furthest pixel with a non-zero alpha value + 1
+
+	// TODO: any of the above!
 
 	con_info( "Processing font widths" );
-	int resX = m_pTextTex->m_iWidth / 16;
-	int resY = m_pTextTex->m_iHeight / 16;
-	for ( uchar_t c = 0; c < 255; c++ )
+	m_pFontTex = materialSystem::LoadTexture("font.png");
+	int resX = m_pFontTex->m_iWidth / 16;
+	int resY = m_pFontTex->m_iHeight / 16;
+	for ( uchar_t c = 0; c < 254; c++ )
 	{
 		if ( c == ' ' )
 		{
-			fontWidths[' '] = 1.0;
+			m_charWidths[' '] = 1.0;
 			continue;
 		}
 
@@ -119,27 +99,29 @@ CGui::CGui( int screenW, int screenH )
 			for ( int x = 0; x < resX; x++ )
 			{
 				// https://github.com/lvandeve/lodepng/blob/master/examples/example_sdl.cpp#L67, amusingly.
-				int idx = 4 * ( py + y ) * m_pTextTex->m_iWidth + 4 * ( px + x ) + 3;
-				if ( m_pTextTex->m_imageData[idx] && x + 1 >= width )
+				int idx = 4 * ( py + y ) * m_pFontTex->m_iWidth + 4 * ( px + x ) + 3;
+				if ( m_pFontTex->m_imageData[idx] && x + 1 >= width )
 				{
 					width = x + 1;
 				}
 			}
 		}
 
-		fontWidths[c] = (float)width / (float)resX;
+		m_charWidths[c] = (float)width / (float)resX;
 	}
 
-	fontWidths[255] = 1.0f;
+	m_charWidths[255] = 1.0f;
 
-	m_iGuiUnit = 16;
-}
+	// Load textures
+	m_pButtonTex = materialSystem::LoadTexture("button.png");
 
-void CGui::Resize( int x, int y )
-{
-	m_iGuiUnit			= x / 53;
-	m_vScreenCentre		= Vector3f( ( x * 0.5 ) / GUIUNIT, ( y * 0.5 ) / GUIUNIT );
-	m_vScreenDimensions = Vector3f( x, y );
+	// Load Shader
+	m_pShader = shaderSystem::LoadShader("text.vert", "text.frag");
+
+	m_vScreenDimensions.x = screenDimensions.x;
+	m_vScreenDimensions.y = screenDimensions.y;
+	m_vScreenCentre = m_vScreenDimensions / 2.0f;
+	m_iGUIUnitSize = screenDimensions.x / GUI_GRID_X;
 }
 
 CGui::~CGui()
@@ -151,13 +133,23 @@ CGui::~CGui()
 	}
 }
 
+void CGui::Resize( Vector3f screenDimensions )
+{
+	m_vScreenDimensions.x = screenDimensions.x;
+	m_vScreenDimensions.y = screenDimensions.y;
+	m_vScreenCentre = m_vScreenDimensions / 2.0f;
+	m_iGUIUnitSize = screenDimensions.x / GUI_GRID_X;
+}
+
 void CGui::Update()
 {
 	if ( m_iMouseState == IN_NO_MOUSE )
 		m_iActiveItem = 0;
 
-	m_vMousePos	  = m_pInputMan->m_vMousePos;
-	m_iMouseState = m_pInputMan->m_iMouseState;
+	m_vMousePos.x = m_pInputManager->m_vMousePos.x;
+	m_vMousePos.y = m_pInputManager->m_vMousePos.y;
+	
+	m_iMouseState = m_pInputManager->m_iMouseState;
 	// else if (m_iActiveItem == 0)
 	// 	m_iActiveItem = -1;
 
@@ -169,33 +161,20 @@ void CGui::Update()
 		glGetIntegerv( GL_DEPTH_FUNC, &depthFunc );
 		glDepthFunc( GL_ALWAYS );
 
-		m_pTextShader->Use();
+		m_pShader->Use();
 
-		// Images
-		glBindVertexArray( m_iVao );
-		{
-			for ( CGui::_Image img : m_images )
-			{
-				glBindTexture( GL_TEXTURE_2D, img.m_pTex->m_iId );
-				glBindBuffer( GL_ARRAY_BUFFER, m_iVbo );
-				glBufferData( GL_ARRAY_BUFFER, img.m_vertices.size() * sizeof( CGui::Vertex ), img.m_vertices.data(),
-							  GL_DYNAMIC_DRAW );
-				glBindBuffer( GL_ARRAY_BUFFER, 0 );
-				glDrawArrays( GL_TRIANGLES, 0, img.m_vertices.size() );
-				glBindTexture( GL_TEXTURE_2D, 0 );
-			}
-		}
 		glBindVertexArray( 0 );
 		// Text
+		// TODO: images
 		glBindVertexArray( m_iVao );
 		{
-			glBindTexture( GL_TEXTURE_2D, m_pTextTex->m_iId );
+			glBindTexture( GL_TEXTURE_2D, m_pFontTex->m_iId );
 
 			glBindBuffer( GL_ARRAY_BUFFER, m_iVbo );
-			glBufferData( GL_ARRAY_BUFFER, m_textVertiecs.size() * sizeof( CGui::Vertex ), m_textVertiecs.data(),
+			glBufferData( GL_ARRAY_BUFFER, m_vertices.size() * sizeof( CGui::GuiVert ), m_vertices.data(),
 						  GL_DYNAMIC_DRAW );
 			glBindBuffer( GL_ARRAY_BUFFER, 0 );
-			glDrawArrays( GL_TRIANGLES, 0, m_textVertiecs.size() );
+			glDrawArrays( GL_TRIANGLES, 0, m_vertices.size() );
 
 			glBindTexture( GL_TEXTURE_2D, 0 );
 		}
@@ -205,54 +184,8 @@ void CGui::Update()
 	}
 
 	// Clear our vertices
-	m_textVertiecs.clear();
-	// Clear our images
-	m_images.clear();
+	m_vertices.clear();
 }
-
-std::vector<CGui::Vertex> CGui::GetQuad( Vector3f pos, Vector3f size, CColour color, Vector3f uStart, Vector3f uEnd )
-{
-	float r = color.r / 255.0f;
-	float g = color.g / 255.0f;
-	float b = color.b / 255.0f;
-	return {
-		{ pos.x + size.x, pos.y, 0, uEnd.x, uEnd.y, r, g, b },
-		{ pos.x, pos.y, 0, uStart.x, uEnd.y, r, g, b },
-		{ pos.x, pos.y + size.y, 0, uStart.x, uStart.y, r, g, b },
-
-		{ pos.x + size.x, pos.y + size.y, 0, uEnd.x, uStart.y, r, g, b },
-		{ pos.x + size.x, pos.y, 0, uEnd.x, uEnd.y, r, g, b },
-		{ pos.x, pos.y + size.y, 0, uStart.x, uStart.y, r, g, b },
-	};
-}
-std::vector<CGui::Vertex> CGui::GetCharQuad( const int c, Vector3f pos, Vector3f size, CColour color )
-{
-
-	float x, y;
-	x = ( c % TEXTTILES ) * TEXTINTEXWIDTH;
-	y = ( c / TEXTTILES ) * TEXTINTEXHEIGHT;
-
-	Vector3f uStart = {
-		x / ( 16.0f * TEXTINTEXWIDTH ),
-		y / ( 16.0f * TEXTINTEXHEIGHT ),
-	};
-	Vector3f uEnd = {
-		( x + TEXTINTEXWIDTH ) / ( 16.0f * TEXTINTEXWIDTH ),
-		( y + TEXTINTEXHEIGHT ) / ( 16.0f * TEXTINTEXHEIGHT ),
-	};
-
-	return GetQuad( pos, size, color, uStart, uEnd );
-}
-
-void CGui::ClearBuffers()
-{
-	m_textBuffers.clear();
-	m_iActiveItem = m_iHotItem = m_iKeyboardItem = m_iMouseState = 0;
-}
-
-void CGui::SetTextBuffer( int id, const char *text ) { m_textBuffers[id] = text; }
-
-const char *CGui::GetTextBuffer( int id ) { return m_textBuffers[id].c_str(); }
 
 bool CGui::RegionHit( Vector3f pos, Vector3f size )
 {
@@ -264,32 +197,51 @@ bool CGui::RegionHit( Vector3f pos, Vector3f size )
 	return true;
 }
 
+std::vector<CGui::GuiVert> CGui::GetRect( Vector3f pos, Vector3f size, Vector4f uv, CColour colour )
+{
+	Vector4f c = colour;
+	return {
+		{ pos.x + size.x, pos.y, pos.z, uv.z, uv.w, c.x, c.y, c.z, c.w },
+		{ pos.x, pos.y, pos.z, uv.x, uv.w, c.x, c.y, c.z, c.w },
+		{ pos.x, pos.y + size.y, pos.z, uv.x, uv.y, c.x, c.y, c.z, c.w },
+
+		{ pos.x + size.x, pos.y, pos.z, uv.z, uv.w, c.x, c.y, c.z, c.w },
+		{ pos.x + size.x, pos.y + size.y, pos.z, uv.z, uv.y, c.x, c.y, c.z, c.w },
+		{ pos.x, pos.y + size.y, pos.z, uv.x, uv.y, c.x, c.y, c.z, c.w }
+	};
+}
+
 Vector3f CGui::GetInScreen( Vector3f pos )
 {
-	pos = pos * GUIUNIT;
+	pos = pos * m_iGUIUnitSize;
 
+	// Negative values mean start from the opposite side
 	if ( pos.x < 0 )
-		pos.x += m_vScreenDimensions.x;
+		pos.x = m_vScreenDimensions.x + pos.x;
 	if ( pos.y < 0 )
-		pos.y += m_vScreenDimensions.y;
+		pos.y = m_vScreenDimensions.y + pos.y;
 
 	return pos;
 }
 
-int CGui::Button( int id, Vector3f pos, Vector3f size, Vector3f origin, CTexture *tex, bool hide )
+//////////////////////////////////////////////////////////////////////////
+// Elements
+//////////////////////////////////////////////////////////////////////////
+
+bool CGui::Button( GuiID id, Vector3f position, Vector3f size, CTexture *pTexture )
 {
-	pos	 = GetInScreen( pos );
-	size = size * GUIUNIT;
-	pos	 = pos - ( size * origin );
-	if ( tex == nullptr )
-		tex = m_pButtonTex;
+	position = GetInScreen( position );
+	size *= m_iGUIUnitSize;
+	
+	if ( pTexture == nullptr )
+		pTexture = m_pButtonTex;
 
 	int returnCode = 0;
 
 	CColour color = CColour( 255, 255, 255 );
 
 	// Check & set State
-	if ( RegionHit( pos, size ) )
+	if ( RegionHit( position, size ) )
 	{
 		m_iHotItem = id;
 		color	   = CColour( 191, 191, 255 );
@@ -297,8 +249,7 @@ int CGui::Button( int id, Vector3f pos, Vector3f size, Vector3f origin, CTexture
 		{
 			m_iActiveItem = id;
 
-			if ( !hide )
-				soundSystem::PlaySoundEvent( "ui.click", Vector3f( 0, 0, 0 ) );
+			soundSystem::PlaySoundEvent( "ui.click", Vector3f( 0, 0, 0 ) );
 		}
 	}
 
@@ -308,51 +259,19 @@ int CGui::Button( int id, Vector3f pos, Vector3f size, Vector3f origin, CTexture
 		color	   = CColour( 63, 63, 63 );
 	}
 
-	Vector3f p = pos / GUIUNIT;
-	Vector3f s = size / GUIUNIT;
-
-	if ( !hide )
+	// Draw
 	{
-		Image9Rect( tex, p, s, color );
+		std::vector<GuiVert> vertices = GetRect( position, size, { 0, 0, 1, 1 }, color );
+		m_vertices.insert( m_vertices.end(), vertices.begin(), vertices.end() );
 	}
 
 	return returnCode;
 }
 
-int CGui::AtlasButton( int id, CTexture *tex, Atlas atlas, float atlasDivisions, Vector3f pos, Vector3f size,
-					   Vector3f origin )
+void CGui::Label( const char* text, Vector3f position, float scale, CColour colour )
 {
-	int b = Button( id, pos, size, origin, nullptr, true );
-	ImageAtlas( tex, atlas, atlasDivisions, pos, size, origin );
-	return b;
-}
+	position = GetInScreen( position );
 
-int CGui::LabelButton( int id, const char *msg, Vector3f pos, Vector3f origin, Vector3f padding, Vector3f minsize )
-{
-	// Get size, fixed position
-	Vector3f size = ( Vector3f( GetTextLength( msg ), TEXTHEIGHT ) + padding * GUIUNIT );
-
-	size.x = fmaxf( size.x, minsize.x * GUIUNIT );
-	size.y = fmaxf( size.y, minsize.y * GUIUNIT );
-
-	// Render and get output of button
-	int buttonOut = Button( id, pos, size / GUIUNIT, origin );
-
-	pos = pos - ( size / GUIUNIT ) * origin;
-
-	// TODO: it's in the floor
-	Label( msg, ( pos + Vector3f( 0, -0.5 ) + ( size / GUIUNIT ) * origin ), CColour( 255, 255, 255 ), TEXTALIGN_CENTER );
-	return buttonOut;
-}
-
-void CGui::Label( const char *text, Vector3f pos, CColour color, TextAlignment textAlign )
-{
-	pos = GetInScreen( pos );
-
-	if ( textAlign == TEXTALIGN_CENTER )
-		pos = pos - Vector3f( GetTextLength( text ) / 2, 0 );
-	else if ( textAlign == TEXTALIGN_RIGHT )
-		pos = pos - Vector3f( GetTextLength( text ), 0 );
 
 	// Render
 	// OpenGl
@@ -363,270 +282,30 @@ void CGui::Label( const char *text, Vector3f pos, CColour color, TextAlignment t
 
 		while ( utfz::next( text, c ) )
 		{
-			// Get vertices
-			// Shadow
+			// Find the index of the character in the font
 			int j = std::distance( CP437UNICODE, std::find( CP437UNICODE, CP437UNICODE + 256, c ) );
 
 			if ( j == 0 || j >= 256 )
 				j = 255;
+			
+			// Get the character's UV coordinates
+			Vector4f uv;
+			float x, y;
+			x = ( c % 16 ) * EXPECTED_FONT_SIZE;
+			y = ( c / 16 ) * EXPECTED_FONT_SIZE;
 
-			std::vector<CGui::Vertex> g =
-				GetCharQuad( j, pos - ( Vector3f(-GUIUNIT, GUIUNIT ) * 2.0f / 16.0f ), Vector3f( TEXTWIDTH, TEXTHEIGHT ), color / 2 );
-			std::copy( g.begin(), g.end(), std::back_inserter( m_textVertiecs ) );
+			uv.x = x / ( 16.0f * EXPECTED_FONT_SIZE );
+			uv.y = y / ( 16.0f * EXPECTED_FONT_SIZE );
+			uv.z = ( x + EXPECTED_FONT_SIZE ) / ( 16.0f * EXPECTED_FONT_SIZE );
+			uv.w = ( y + EXPECTED_FONT_SIZE ) / ( 16.0f * EXPECTED_FONT_SIZE );
 
-			g = GetCharQuad( j, pos, Vector3f( TEXTWIDTH, TEXTHEIGHT ), color );
-			std::copy( g.begin(), g.end(), std::back_inserter( m_textVertiecs ) );
+			// Render the character
+			std::vector<GuiVert> vertices = GetRect( position + Vector3f( i * EXPECTED_FONT_SIZE * scale, 0, 0 ),
+													 Vector3f( EXPECTED_FONT_SIZE * scale, EXPECTED_FONT_SIZE * scale ),
+													 uv, colour );
+			m_vertices.insert( m_vertices.end(), vertices.begin(), vertices.end() );
 
-			pos.x += fontWidths[j] * TEXTWIDTH;
-			pos.x += 2.0f / 16.0f * (float)GUIUNIT;
+			i += m_charWidths[j];
 		}
 	}
-}
-
-void CGui::Image( CTexture *tex, Vector3f pos, Vector3f size, Vector3f origin, CColour tint )
-{
-	pos	 = GetInScreen( pos );
-	size = size * GUIUNIT;
-
-	{
-		CGui::_Image img;
-		img.m_vertices = GetQuad( pos - ( size * origin ), size, tint );
-		img.m_pTex	   = tex;
-		m_images.push_back( img );
-	}
-}
-
-void CGui::ImageAtlas( CTexture *tex, Atlas atlas, float atlasDivisions, Vector3f pos, Vector3f size, Vector3f origin,
-					   CColour tint )
-{
-	pos	 = GetInScreen( pos );
-	size = size * GUIUNIT;
-
-	{
-		CGui::_Image img;
-		img.m_vertices =
-			GetQuad( pos - ( size * origin ), size, tint, { atlas.x / atlasDivisions, atlas.y / atlasDivisions },
-					 { ( atlas.x + atlas.sizex ) / atlasDivisions, ( atlas.y + atlas.sizey ) / atlasDivisions } );
-		img.m_pTex = tex;
-		m_images.push_back( img );
-	}
-}
-
-void CGui::Image9Rect( CTexture *tex, Vector3f pos, Vector3f size, CColour color )
-{
-	// Corners of the 9rect
-	ImageAtlas( tex, { 0, 0, 1, 1 }, 3, pos + Vector3f( 0, size.y - 0.5 ), Vector3f( 0.5, 0.5 ), Vector3f( 0, 0 ), color );
-	ImageAtlas( tex, { 2, 0, 1, 1 }, 3, pos + Vector3f( size.x, size.y - 0.5 ), Vector3f( 0.5, 0.5 ), Vector3f( 0, 0 ),
-				color );
-	ImageAtlas( tex, { 0, 2, 1, 1 }, 3, pos, Vector3f( 0.5, 0.5 ), Vector3f( 0, 0 ), color );
-	ImageAtlas( tex, { 2, 2, 1, 1 }, 3, pos + Vector3f( size.x, 0 ), Vector3f( 0.5, 0.5 ), Vector3f( 0, 0 ), color );
-
-	// Edges
-	ImageAtlas( tex, { 1, 0, 1, 1 }, 3, pos + Vector3f( 0.5, size.y - 0.5 ), Vector3f( size.x - 0.5, 0.5 ),
-				Vector3f( 0, 0 ), color );
-	ImageAtlas( tex, { 1, 2, 1, 1 }, 3, pos + Vector3f( 0.5, 0 ), Vector3f( size.x - 0.5, 0.5 ), Vector3f( 0, 0 ), color );
-
-	ImageAtlas( tex, { 0, 1, 1, 1 }, 3, pos + Vector3f( 0, 0.5 ), Vector3f( 0.5, size.y - 1 ), Vector3f( 0, 0 ), color );
-	ImageAtlas( tex, { 2, 1, 1, 1 }, 3, pos + Vector3f( size.x, 0.5 ), Vector3f( 0.5, size.y - 1 ), Vector3f( 0, 0 ),
-				color );
-
-	// Middle
-	ImageAtlas( tex, { 1, 1, 1, 1 }, 3, pos + Vector3f( 0.5, 0.5 ), Vector3f( size.x - 0.5, size.y - 1 ), Vector3f( 0, 0 ),
-				color );
-}
-
-void CGui::Crosshair() { Image( m_pCrosshairTex, m_vScreenCentre, Vector3f( 3, 3 ), Vector3f( 0.5, 0.5 ) ); }
-
-// Returns the string in the event that 'RETURN' is pressed.
-// Outputs nullptr if nothing.
-// id can be shared between multiple text inputs if they're for the same data.
-const char *CGui::TextInput( int id, Vector3f pos )
-{
-	std::string text = m_textBuffers[id];
-
-	Label( ( text + ( ( ( m_iTick / 8 ) % 2 == 0 ) ? "_" : "" ) ).c_str(), pos );
-
-	if ( m_pInputMan->m_cTypeKey != nullptr )
-	{
-		text += m_pInputMan->m_cTypeKey;
-	}
-
-	if ( m_pInputMan->m_clipboard.size() )
-		text += m_pInputMan->m_clipboard;
-
-	if ( m_pInputMan->m_bKeyboardState[KBD_BACKSPACE] && !m_pInputMan->m_bOldKeyboardState[KBD_BACKSPACE] )
-	{
-		if ( text.length() )
-		{
-			if ( text.length() >= 2 )
-			{
-				std::string g = text.substr( text.length() - 2 );
-
-				int a = utfz::decode( g.c_str() );
-				if ( a > 127 && a != utfz::replace )
-				{
-					// HACK: Remove two :trollface:
-					text.pop_back();
-				}
-			}
-
-			text.pop_back();
-		}
-	}
-
-	m_textBuffers[id] = text;
-
-	if ( m_pInputMan->m_bKeyboardState[KBD_RETURN] && !m_pInputMan->m_bOldKeyboardState[KBD_RETURN] )
-		return m_textBuffers[id].c_str();
-	else
-		return nullptr;
-}
-
-const char *CGui::SelectableTextInput( int id, Vector3f pos, Vector3f size, CTexture *pTex )
-{
-	pos	 = GetInScreen( pos );
-	size = size * GUIUNIT;
-
-	if ( pTex == nullptr )
-		pTex = m_pTextInpTex;
-
-	CColour color( 255, 255, 255 );
-	CColour textColour( 255, 255, 255 );
-
-	if ( RegionHit( pos, size ) )
-	{
-		m_iHotItem = id;
-		color	   = CColour( 191, 191, 255);
-		textColour  = CColour( 255, 255, 191 );
-
-		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
-		{
-			m_iActiveItem	= id;
-			m_iKeyboardItem = id;
-		}
-	}
-
-	if ( m_iKeyboardItem != id )
-		Label( m_textBuffers[id].c_str(), ( pos / GUIUNIT ) + Vector3f( 0.5, 0.5 ), textColour );
-	else
-	{
-		TextInput( id, ( pos / GUIUNIT ) + Vector3f( 0.5, 0.5 ) );
-	}
-
-	Image9Rect( pTex, pos / GUIUNIT, size / GUIUNIT, CColour( 255, 255, 255 ) );
-
-	return nullptr;
-}
-
-bool CGui::Slider( int id, Vector3f pos, Vector3f size, int max, int &value )
-{
-	pos	 = GetInScreen( pos );
-	size = size * GUIUNIT;
-
-	Image9Rect( m_pSliderTex, pos / GUIUNIT, size / GUIUNIT, CColour( 255, 255, 255 ) );
-
-	float ypos = ( ( size.y - 2 * GUIUNIT ) * value ) / max;
-
-	Image( m_pThumbTex, ( pos + Vector3f( 0, ypos ) ) / GUIUNIT, Vector3f( 2, 2 ), Vector3f( 0, 0 ), CColour( 255, 255, 255 ) );
-
-	if ( RegionHit( pos, size ) )
-	{
-		m_iHotItem = id;
-
-		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
-		{
-			m_iActiveItem = id;
-		}
-	}
-
-	if ( m_iActiveItem == id )
-	{
-		float p = m_vMousePos.y - pos.y;
-		if ( p < 0 )
-			p = 0;
-		if ( p > size.y )
-			p = size.y;
-		int val = max - (( p * max ) / size.y);
-
-		if ( val != value )
-		{
-			if ( m_iTick % 2 == 0 )
-				soundSystem::PlaySoundEvent( "ui.tick", Vector3f( 0, 0, 0 ) );
-
-			value = val;
-			return true;
-		}
-	}
-
-	return false;
-}
-bool CGui::HorzSlider( int id, Vector3f pos, Vector3f size, int max, int &value )
-{
-	pos	 = GetInScreen( pos );
-	size = size * GUIUNIT;
-
-	Image9Rect( m_pSliderTex, pos / GUIUNIT, size / GUIUNIT, CColour( 255, 255, 255 ) );
-
-	float xpos = ( ( size.x - 2 * GUIUNIT ) * value ) / max;
-
-	Image( m_pThumbTex, ( pos + Vector3f( xpos, 0 ) ) / GUIUNIT, Vector3f( 2, 2 ), Vector3f( 0, 0 ), CColour( 255, 255, 255 ) );
-
-	if ( RegionHit( pos, size ) )
-	{
-		m_iHotItem = id;
-
-		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
-		{
-			m_iActiveItem = id;
-		}
-	}
-
-	if ( m_iActiveItem == id )
-	{
-		float p = m_vMousePos.x - pos.x;
-		if ( p < 0 )
-			p = 0;
-		if ( p > size.x )
-			p = size.x;
-		int val = ( p * max ) / size.x;
-
-		if ( val != value )
-		{
-			if ( m_iTick % 2 == 0 )
-				soundSystem::PlaySoundEvent( "ui.tick", Vector3f( 0, 0, 0 ) );
-
-			value = val;
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool CGui::CheckBox( int id, Vector3f pos, Vector3f size, bool &value )
-{
-	pos	 = GetInScreen( pos );
-	size = size * GUIUNIT;
-
-	CTexture *tex = m_pUncheckedTex;
-	if ( value )
-		tex = m_pCheckedTex;
-
-	Image( tex, pos / GUIUNIT, size / GUIUNIT );
-
-	if ( RegionHit( pos, size ) )
-	{
-		m_iHotItem = id;
-
-		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
-		{
-			m_iActiveItem = id;
-
-			value = !value;
-			soundSystem::PlaySoundEvent( value ? "ui.check" : "ui.uncheck", Vector3f( 0, 0, 0 ) );
-			return true;
-		}
-	}
-
-	return false;
 }

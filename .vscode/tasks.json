@@ -5,7 +5,14 @@
 			"type":"process",
 			"command": "{cmake.build}",
 			"label": "Build",
-			"isBackground": true,
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"type":"process",
+			"command": "{cmake.clean}",
+			"label": "Clean",
+			"isBackground": false,
 			"problemMatcher": []
 		}
 	]

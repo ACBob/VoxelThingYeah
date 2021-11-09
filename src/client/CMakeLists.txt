@@ -25,3 +25,14 @@ set(client_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/devconsole.cpp
 	PARENT_SCOPE
 )
+
+set(guiTest_SRCS
+	${sdlstuff_SRCS}
+	${gui_SRCS}
+
+	${CMAKE_CURRENT_SOURCE_DIR}/rendering/texturemanager.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/rendering/shadermanager.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/rendering/glad.c
+	${CMAKE_CURRENT_SOURCE_DIR}/gui/guitest.cpp
+	PARENT_SCOPE
+)

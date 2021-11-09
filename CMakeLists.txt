@@ -96,3 +96,8 @@ if (${CMAKE_BUILD_TYPE} MATCHES "Debug" OR "RelWithDebInfo")
 else()
 	target_compile_definitions(${SERVER_BIN} PUBLIC LOG_LEVEL=1)
 endif()
+
+add_executable("guiTest" ${guiTest_SRCS})
+target_link_libraries("guiTest" ${SDL2_LIBRARIES} ${OPENAL_LIBRARY} ${CMAKE_DL_LIBS} lodepng ${OPENGL_LIBRARIES} glm::glm physfs-static enet)
+target_compile_definitions("guiTest" PUBLIC CLIENTEXE)
+target_include_directories("guiTest" PRIVATE "${CMAKE_CURRENT_LIST_DIR}/src/client")

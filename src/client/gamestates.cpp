@@ -62,7 +62,7 @@ void CStatePlay::Enter()
 	m_pLocalPlayer = new CEntityPlayer();
 	m_pLocalWorld  = new CWorld( m_pChunkShader, m_pDiffuseShader, m_pWaterShader, m_pTerrainPNG );
 
-	m_pLocalPlayer->m_pInputMan = pStateMan->m_pGui->m_pInputMan;
+	m_pLocalPlayer->m_pInputMan = pStateMan->m_pInputMan;
 	m_pLocalPlayer->m_pClient	= pStateMan->m_pClient;
 
 	m_pLocalWorld->AddEntity( m_pLocalPlayer );
