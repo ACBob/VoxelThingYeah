@@ -76,7 +76,7 @@ class CGui
 		int m_iGUIUnitSize = 16;
 
 		CTexture *m_pFontTex = nullptr;
-		int m_charWidths[256];
+		float m_charWidths[256];
 
 		CShader *m_pShader = nullptr;
 

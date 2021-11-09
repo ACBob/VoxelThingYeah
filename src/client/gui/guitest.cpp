@@ -158,8 +158,9 @@ int main( int argc, char *args[] )
 
 		// GUI testing code
 
-		gui.Label("Hello, World!", {0, 0});
-		gui.Label("Hello, World!", {0, 1}, 4.0f);
+		gui.Label("Hello, Baig!", {0, 0});
+		gui.Label("Text, but Bigger!", {0, 3}, 2.0f);
+		gui.Label("Text, but Smaller!", {0, 7}, 0.5f);
 
 		// End GUI testing code
 

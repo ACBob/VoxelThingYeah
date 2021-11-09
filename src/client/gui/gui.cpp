@@ -16,6 +16,7 @@
 
 #include "shared/logging.hpp"
 #include "shared/filesystem.hpp"
+#include "shared/colours.hpp"
 
 #include "sound/soundmanager.hpp"
 
@@ -205,8 +206,8 @@ std::vector<CGui::GuiVert> CGui::GetRect( Vector3f pos, Vector3f size, Vector4f 
 		{ pos.x, pos.y, pos.z, uv.x, uv.w, c.x, c.y, c.z, c.w },
 		{ pos.x, pos.y + size.y, pos.z, uv.x, uv.y, c.x, c.y, c.z, c.w },
 
-		{ pos.x + size.x, pos.y, pos.z, uv.z, uv.w, c.x, c.y, c.z, c.w },
 		{ pos.x + size.x, pos.y + size.y, pos.z, uv.z, uv.y, c.x, c.y, c.z, c.w },
+		{ pos.x + size.x, pos.y, pos.z, uv.z, uv.w, c.x, c.y, c.z, c.w },
 		{ pos.x, pos.y + size.y, pos.z, uv.x, uv.y, c.x, c.y, c.z, c.w }
 	};
 }
@@ -270,8 +271,10 @@ bool CGui::Button( GuiID id, Vector3f position, Vector3f size, CTexture *pTextur
 
 void CGui::Label( const char* text, Vector3f position, float scale, CColour colour )
 {
+	scale *= 2.0f;
 	position = GetInScreen( position );
 
+	bool bRandomise = false;
 
 	// Render
 	// OpenGl
@@ -291,8 +294,8 @@ void CGui::Label( const char* text, Vector3f position, float scale, CColour colo
 			// Get the character's UV coordinates
 			Vector4f uv;
 			float x, y;
-			x = ( c % 16 ) * EXPECTED_FONT_SIZE;
-			y = ( c / 16 ) * EXPECTED_FONT_SIZE;
+			x = ( j % 16 ) * EXPECTED_FONT_SIZE;
+			y = ( j / 16 ) * EXPECTED_FONT_SIZE;
 
 			uv.x = x / ( 16.0f * EXPECTED_FONT_SIZE );
 			uv.y = y / ( 16.0f * EXPECTED_FONT_SIZE );
@@ -300,12 +303,13 @@ void CGui::Label( const char* text, Vector3f position, float scale, CColour colo
 			uv.w = ( y + EXPECTED_FONT_SIZE ) / ( 16.0f * EXPECTED_FONT_SIZE );
 
 			// Render the character
-			std::vector<GuiVert> vertices = GetRect( position + Vector3f( i * EXPECTED_FONT_SIZE * scale, 0, 0 ),
-													 Vector3f( EXPECTED_FONT_SIZE * scale, EXPECTED_FONT_SIZE * scale ),
+			std::vector<GuiVert> vertices = GetRect( position + Vector3f( i, 0, 0 ),
+													 Vector3f( m_iGUIUnitSize * scale, m_iGUIUnitSize * scale ),
 													 uv, colour );
 			m_vertices.insert( m_vertices.end(), vertices.begin(), vertices.end() );
 
-			i += m_charWidths[j];
+			i += m_charWidths[j] * m_iGUIUnitSize * scale;
+			i += (2.0f / 16.0f) * (float)m_iGUIUnitSize * scale;
 		}
 	}
 }
