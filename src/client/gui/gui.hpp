@@ -99,6 +99,8 @@ class CGui
 		CTexture *m_pTextEditTex = nullptr;
 		CTexture *m_pSliderTex = nullptr;
 		CTexture *m_pSliderThumbTex = nullptr;
+		CTexture *m_pCheckedBoxTex = nullptr;
+		CTexture *m_pUnCheckedBoxTex = nullptr;
 
 		CInputManager *m_pInputManager;
 

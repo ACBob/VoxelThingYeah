@@ -121,6 +121,8 @@ CGui::CGui(Vector3f screenDimensions)
 	m_pTextEditTex = materialSystem::LoadTexture("textinput.png");
 	m_pSliderTex = materialSystem::LoadTexture("slider.png");
 	m_pSliderThumbTex = materialSystem::LoadTexture("thumb.png");
+	m_pCheckedBoxTex = materialSystem::LoadTexture("checkbox-checked.png");
+	m_pUnCheckedBoxTex = materialSystem::LoadTexture("checkbox-unchecked.png");
 
 	// Load Shader
 	m_pShader = shaderSystem::LoadShader("text.vert", "text.frag");
@@ -554,6 +556,34 @@ bool CGui::HorzSlider( int id, Vector3f pos, Vector3f size, int max, int &value 
 			// 	soundSystem::PlaySoundEvent( "ui.tick", Vector3f( 0, 0, 0 ) );
 
 			value = val;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool CGui::CheckBox( int id, Vector3f pos, bool &value )
+{
+	pos	 = GetInScreen( pos );
+	Vector3f size = Vector3f{2,2} * m_iGUIUnitSize;
+
+	CTexture *tex = m_pUnCheckedBoxTex;
+	if ( value )
+		tex = m_pCheckedBoxTex;
+
+	_Image( pos, size, tex, {255, 255, 255} );
+
+	if ( RegionHit( pos, size ) )
+	{
+		m_iHotItem = id;
+
+		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
+		{
+			m_iActiveItem = id;
+
+			value = !value;
+			soundSystem::PlaySoundEvent( value ? "ui.check" : "ui.uncheck", Vector3f( 0, 0, 0 ) );
 			return true;
 		}
 	}

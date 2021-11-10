@@ -145,6 +145,7 @@ int main( int argc, char *args[] )
 	glm::mat4 screen = glm::ortho( 0.0f, 800.0f, 0.0f, 600.0f );
 
 	int sliderVal1 = 0;
+	bool checkboxTest = false;
 
 	char *guiBuf = new char[512]();
 
@@ -196,6 +197,8 @@ int main( int argc, char *args[] )
 		gui.HorzSlider(7, {18, 26}, {10, 2}, 69, sliderVal1);
 		snprintf(guiBuf, 512, "%d", sliderVal1);
 		gui.Label(guiBuf, {18, 26});
+
+		gui.CheckBox(8, {18, 34}, checkboxTest);
 
 		// End GUI testing code
 
