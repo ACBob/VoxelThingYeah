@@ -59,6 +59,9 @@ class CGui
 		void _Image( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint, Vector4f uv = {0, 0, 1, 1} );
 		void _9PatchRect( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint, float borderSize );
 		float _TextLength( const char *text, float scale = 1.0f );
+
+		// Buffers
+		std::map<int, std::string> m_textBuffers;
 	public:
 		CGui(Vector3f size);
 		~CGui();
@@ -93,6 +96,7 @@ class CGui
 
 		// Some textures we just hold because they're related to the GUI
 		CTexture *m_pButtonTex = nullptr;
+		CTexture *m_pTextEditTex = nullptr;
 
 		CInputManager *m_pInputManager;
 
@@ -109,32 +113,16 @@ class CGui
 		// Base Elements
 		void Image( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint = {255, 255, 255} );
 		bool Button( GuiID id, Vector3f position, Vector3f minSize = {4, 2}, CTexture *pTexture = nullptr );
+
+		// NOTE: Also generic text rendering
 		void Label( const char* text, Vector3f position, float scale = 1.0f, CColour colour = {255, 255, 255}, TextAlignment alignment = TEXTALIGN_LEFT );
+
+		const char *TextInput( int iId, Vector3f vPosition );
+		bool Slider( int id, Vector3f pos, Vector3f size, int max, int &value ); // Adjustable slider
+		bool HorzSlider( int id, Vector3f pos, Vector3f size, int max, int &value ); // Same as Slider but slides horizontally
+		bool CheckBox( int id, Vector3f pos, bool &value ); // Top-left aligned
 
 		// Composite Elements
 		bool LabelButton( GuiID id, const char* text, Vector3f position, Vector3f size, TextAlignment alignment = TEXTALIGN_LEFT );
-
-		// Function Graveyard
-		// (I am about to remove these, they are just stubbed so I can test others)
-		using Atlas = Vector4f;
-		CTexture *m_pBGTex = nullptr;
-		int m_iGuiUnit = 0;
-		void SetTextBuffer(...) {};
-		const char* GetTextBuffer(...) { return ""; };
-		void ClearBuffers() {};
-		int AtlasButton( int id, CTexture *tex, Atlas atlas, float atlasDivisions, Vector3f pos, Vector3f size,
-					 Vector3f vOrigin = Vector3f( 0, 0 ) ) {};
-		void Image( CTexture *pTex, Vector3f vPosition, Vector3f vSize, Vector3f vOrigin = Vector3f( 0, 0 ),
-					CColour tint = CColour( 255, 255, 255 ) ) {};
-		void ImageAtlas( CTexture *pTex, Atlas atlas, float fAtlasDivisions, Vector3f vPosition, Vector3f vSize,
-						Vector3f vOrigin = Vector3f( 0, 0 ), CColour tint = CColour( 255, 255, 255 ) );
-		void Image9Rect( CTexture *pTex, Vector3f pos, Vector3f size, CColour color ) {};
-		void Crosshair() {}; // A wrapper for Image
-		const char *TextInput( int iId, Vector3f vPosition ) {};
-		const char *SelectableTextInput( int id, Vector3f pos, Vector3f size,
-										CTexture *pTex = nullptr ) {}; // Variant of TextInput that has support for selection,
-																	// also rendering with a background
-		bool Slider( int id, Vector3f pos, Vector3f size, int max, int &value ) {};
-		bool HorzSlider( int id, Vector3f pos, Vector3f size, int max, int &value ) {}; // Same as Slider but horizontal
-		bool CheckBox( int id, Vector3f pos, Vector3f size, bool &value ) {};
+		const char *SelectableTextInput( int id, Vector3f pos, Vector3f size );
 };

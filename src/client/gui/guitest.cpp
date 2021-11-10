@@ -183,6 +183,8 @@ int main( int argc, char *args[] )
 			con_info( "Label Button pressed!" );
 		}
 
+		gui.SelectableTextInput(5, {0, 25}, {32, 2});
+
 		gui.Image({-16, -16}, {16, 16}, pTestTexture);
 		gui.Label("Text on-top of image", {-19, -16, 0.5});
 

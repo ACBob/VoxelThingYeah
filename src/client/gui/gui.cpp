@@ -118,6 +118,7 @@ CGui::CGui(Vector3f screenDimensions)
 
 	// Load textures
 	m_pButtonTex = materialSystem::LoadTexture("button.png");
+	m_pTextEditTex = materialSystem::LoadTexture("textinput.png");
 
 	// Load Shader
 	m_pShader = shaderSystem::LoadShader("text.vert", "text.frag");
@@ -406,6 +407,51 @@ void CGui::Label( const char* text, Vector3f position, float scale, CColour colo
 	}
 }
 
+const char *CGui::TextInput( int id, Vector3f vPosition )
+{
+
+	std::string text = m_textBuffers[id];
+
+	// TODO: text cursor
+	Label( text.c_str(), vPosition, 1.0f, CColour( 255, 255, 255 ) );
+
+	if ( m_pInputManager->m_cTypeKey != nullptr )
+	{
+		text += m_pInputManager->m_cTypeKey;
+	}
+
+	if ( m_pInputManager->m_clipboard.size() )
+		text += m_pInputManager->m_clipboard;
+
+	if ( m_pInputManager->m_bKeyboardState[KBD_BACKSPACE] && !m_pInputManager->m_bOldKeyboardState[KBD_BACKSPACE] )
+	{
+		// TODO: Figure out the length in bytes of the last character, and then remove exactly that many bytes from the end
+		if ( text.length() )
+		{
+			if ( text.length() >= 2 )
+			{
+				std::string g = text.substr( text.length() - 2 );
+
+				int a = utfz::decode( g.c_str() );
+				if ( a > 127 && a != utfz::replace )
+				{
+					// HACK: Remove two :trollface:
+					text.pop_back();
+				}
+			}
+
+			text.pop_back();
+		}
+	}
+
+	m_textBuffers[id] = text;
+
+	if ( m_pInputManager->m_bKeyboardState[KBD_RETURN] && !m_pInputManager->m_bOldKeyboardState[KBD_RETURN] )
+		return m_textBuffers[id].c_str();
+	else
+		return nullptr;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Composite Elements
 //////////////////////////////////////////////////////////////////////////
@@ -446,4 +492,39 @@ bool CGui::LabelButton( GuiID id, const char* text, Vector3f position, Vector3f 
 	}
 
 	return returnValue;
+}
+
+// Selectable == not always typeable
+const char *CGui::SelectableTextInput( int id, Vector3f pos, Vector3f size )
+{
+	pos	 = GetInScreen( pos );
+	size = size * m_iGUIUnitSize;
+
+	CColour color( 255, 255, 255 );
+	CColour textColour( 255, 255, 255 );
+
+	if ( RegionHit( pos, size ) )
+	{
+		m_iHotItem = id;
+		color	   = CColour( 191, 191, 255);
+		textColour  = CColour( 255, 255, 191 );
+
+		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
+		{
+			m_iActiveItem	= id;
+			m_iKeyboardItem = id;
+		}
+	}
+
+	if ( m_iKeyboardItem != id )
+		Label( m_textBuffers[id].c_str(), ( pos / (float)m_iGUIUnitSize ) + Vector3f( 0.5, 0.5 ), 1.0f, textColour );
+	else
+	{
+		TextInput( id, ( pos / (float)m_iGUIUnitSize )  + Vector3f( 0.5, 0.5 ) );
+	}
+
+	// Draw the box
+	_9PatchRect( pos, size, m_pTextEditTex, color, BUTTON_EDGE_RADIUS );
+
+	return nullptr;
 }
