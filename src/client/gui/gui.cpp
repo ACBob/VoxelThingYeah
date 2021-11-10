@@ -416,8 +416,8 @@ const char *CGui::TextInput( int id, Vector3f vPosition )
 
 	std::string text = m_textBuffers[id];
 
-	// TODO: text cursor
-	Label( text.c_str(), vPosition, 1.0f, CColour( 255, 255, 255 ) );
+	std::string dispText = (m_iTick / 8) % 2 == 0 ? text + "_" : text;
+	Label( dispText.c_str(), vPosition - Vector3f(0, 1), 1.0f, CColour( 255, 255, 255 ) );
 
 	if ( m_pInputManager->m_cTypeKey != nullptr )
 	{

@@ -86,6 +86,8 @@ class CGui
 		// Position of the mouse
 		Vector3i m_vMousePos;
 
+		int m_iTick = 0;
+
 		// Size in pixels of one grid unit
 		int m_iGUIUnitSize = 16;
 

@@ -32,6 +32,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <chrono>
+
 int main( int argc, char *args[] )
 {
 	// Because Windows is from the stoneage
@@ -149,8 +151,25 @@ int main( int argc, char *args[] )
 
 	char *guiBuf = new char[512]();
 
+	int64_t now =
+		std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() )
+			.count();
+	int64_t then	 = now;
+	int64_t nextTick = now;
+
     while ( !window.m_bShouldClose )
 	{
+		// tick
+		now =
+			std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() )
+				.count();
+		then  = now;
+		if ( now >= nextTick )
+		{
+			nextTick = now + 50;
+			gui.m_iTick ++;
+		}
+
 		window.PollEvents();
 		if ( window.IsFocused() && !inputMan.m_bInGui )
 			window.CaptureMouse();
