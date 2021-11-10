@@ -31,6 +31,12 @@ CGameWindow::CGameWindow( const char *title, Vector3f size, bool resizeable, Vec
 
 	// For any SDL stuff we render
 	SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "0" );
+
+	// Load cursors
+	m_cursors = new SDL_Cursor *[2];
+
+	m_cursors[CURSOR_ARROW] = SDL_CreateSystemCursor( SDL_SYSTEM_CURSOR_ARROW );
+	m_cursors[CURSOR_HAND] = SDL_CreateSystemCursor( SDL_SYSTEM_CURSOR_HAND );
 }
 CGameWindow::~CGameWindow() {}
 
@@ -183,6 +189,11 @@ const int scancodeToStateIndex[] = {
 	
 	SDL_SCANCODE_TAB, KBD_TAB, };
 
+const int cursorMap[2] = {
+	SDL_SYSTEM_CURSOR_ARROW,
+	SDL_SYSTEM_CURSOR_HAND,
+};
+
 void CGameWindow::PollEvents()
 {
 	SDL_SetRelativeMouseMode( !m_pInputMan->m_bInGui ? SDL_TRUE : SDL_FALSE );
@@ -265,6 +276,9 @@ void CGameWindow::PollEvents()
 		m_pInputMan->m_clipboard = clipboard;
 		SDL_free( clipboard );
 	}
+
+	// Update the cursor
+	SDL_SetCursor( m_cursors[m_pInputMan->m_iCursor] );
 }
 
 void CGameWindow::CaptureMouse()

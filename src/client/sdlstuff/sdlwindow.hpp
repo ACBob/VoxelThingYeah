@@ -19,6 +19,8 @@ class CGameWindow
   private:
 	CTexture *m_pIcon;
 
+	SDL_Cursor** m_cursors;
+
   public:
 	CGameWindow( const char *title = "GameWindow", Vector3f size = Vector3f( 800, 600 ),
 				 bool resizeable = false, Vector3f minSize = Vector3f( 0, 0 ) ); // SDL_CreateWindow

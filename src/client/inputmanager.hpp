@@ -67,6 +67,12 @@ enum KBDKEY // Keys unrepresentable by a char, we have about 32 of these availab
   KBD_TAB = 25,
 };
 
+// The cursor to present to the user
+enum CURSORS {
+	CURSOR_ARROW = 0, // SDL_SYSTEM_CURSOR_ARROW
+	CURSOR_HAND = 1, // SDL_SYSTEM_CURSOR_HAND
+};
+
 class CInputManager
 {
   public:
@@ -90,6 +96,9 @@ class CInputManager
 
 	int m_iMouseState	 = 0;
 	int m_iOldMouseState = 0; // stores mouseState from the last frame
+
+	// Sets the cursor to the given cursor
+	CURSORS m_iCursor = CURSOR_ARROW;
 
 	bool m_bInGui = false; // If we're in a GUI menu (i.e pause, chat)
 

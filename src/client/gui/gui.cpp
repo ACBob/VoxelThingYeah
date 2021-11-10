@@ -160,6 +160,8 @@ void CGui::Update()
 	// else if (m_iActiveItem == 0)
 	// 	m_iActiveItem = -1;
 
+	m_pInputManager->m_iCursor = m_iHotItem != 0 ? CURSOR_HAND : CURSOR_ARROW;
+
 	m_iHotItem = 0;
 
 	// Render
