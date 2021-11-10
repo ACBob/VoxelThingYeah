@@ -97,6 +97,8 @@ class CGui
 		// Some textures we just hold because they're related to the GUI
 		CTexture *m_pButtonTex = nullptr;
 		CTexture *m_pTextEditTex = nullptr;
+		CTexture *m_pSliderTex = nullptr;
+		CTexture *m_pSliderThumbTex = nullptr;
 
 		CInputManager *m_pInputManager;
 

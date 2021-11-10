@@ -144,6 +144,10 @@ int main( int argc, char *args[] )
 
 	glm::mat4 screen = glm::ortho( 0.0f, 800.0f, 0.0f, 600.0f );
 
+	int sliderVal1 = 0;
+
+	char *guiBuf = new char[512]();
+
     while ( !window.m_bShouldClose )
 	{
 		window.PollEvents();
@@ -176,17 +180,22 @@ int main( int argc, char *args[] )
 		{
 			con_info( "Button 1 pressed!" );
 		}
-		if (gui.LabelButton(2, "Label Button LEFT", {0, 17}, {32, 2}, CGui::TEXTALIGN_LEFT) ||
-			gui.LabelButton(3, "Label Button CENTRE", {0, 19}, {32, 2}, CGui::TEXTALIGN_CENTER) ||
-			gui.LabelButton(4, "Label Button RIGHT", {0, 21}, {32, 2}, CGui::TEXTALIGN_RIGHT))
+		if (gui.LabelButton(2, "Label Button LEFT", {0, 17}, {17, 2}, CGui::TEXTALIGN_LEFT) ||
+			gui.LabelButton(3, "Label Button CENTRE", {0, 19}, {17, 2}, CGui::TEXTALIGN_CENTER) ||
+			gui.LabelButton(4, "Label Button RIGHT", {0, 21}, {17, 2}, CGui::TEXTALIGN_RIGHT))
 		{
 			con_info( "Label Button pressed!" );
 		}
 
-		gui.SelectableTextInput(5, {0, 25}, {32, 2});
+		gui.SelectableTextInput(5, {0, 25}, {17, 2});
 
 		gui.Image({-16, -16}, {16, 16}, pTestTexture);
 		gui.Label("Text on-top of image", {-19, -16, 0.5});
+
+		gui.Slider(6, {18, 16}, {2, 10}, 69, sliderVal1);
+		gui.HorzSlider(7, {18, 26}, {10, 2}, 69, sliderVal1);
+		snprintf(guiBuf, 512, "%d", sliderVal1);
+		gui.Label(guiBuf, {18, 26});
 
 		// End GUI testing code
 

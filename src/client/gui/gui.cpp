@@ -119,6 +119,8 @@ CGui::CGui(Vector3f screenDimensions)
 	// Load textures
 	m_pButtonTex = materialSystem::LoadTexture("button.png");
 	m_pTextEditTex = materialSystem::LoadTexture("textinput.png");
+	m_pSliderTex = materialSystem::LoadTexture("slider.png");
+	m_pSliderThumbTex = materialSystem::LoadTexture("thumb.png");
 
 	// Load Shader
 	m_pShader = shaderSystem::LoadShader("text.vert", "text.frag");
@@ -450,6 +452,111 @@ const char *CGui::TextInput( int id, Vector3f vPosition )
 		return m_textBuffers[id].c_str();
 	else
 		return nullptr;
+}
+
+bool CGui::Slider( int id, Vector3f pos, Vector3f size, int max, int &value )
+{
+	pos	 = GetInScreen( pos );
+	float sY = size.y;
+	size = size * m_iGUIUnitSize;
+
+	_9PatchRect( pos, size, m_pSliderTex, {255, 255, 255}, BUTTON_EDGE_RADIUS );
+
+	// The ypos is the percentage of the slider that the value is at
+	float ypos = (float)value / (float)max;
+	ypos *= (sY - 2.0f); // The thumb is 2 units thick, so we need to subtract that from the slider height
+
+	_Image({pos.x, pos.y + ypos * m_iGUIUnitSize}, {2 * (float)m_iGUIUnitSize, 2 * (float)m_iGUIUnitSize}, m_pSliderThumbTex, {255, 255, 255});
+
+	if ( RegionHit( pos, size ) )
+	{
+		m_iHotItem = id;
+
+		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
+		{
+			m_iActiveItem = id;
+		}
+	}
+
+	if ( m_iActiveItem == id )
+	{
+		// find the relative y position of the mouse
+		// And the percentage of our y size that is
+		// TODO: this is flipped, fix it
+		float y = (float)m_pInputManager->m_vMousePos.y - pos.y;
+		float p = y / (size.y - (2.0f * m_iGUIUnitSize));
+
+		// Clamp it to the slider
+		if ( p < 0 )
+			p = 0;
+		else if ( p > 1 )
+			p = 1;
+		
+		int val = floor(p * max);
+
+		if ( val != value )
+		{
+			// if ( m_iTick % 2 == 0 )
+			// 	soundSystem::PlaySoundEvent( "ui.tick", Vector3f( 0, 0, 0 ) );
+
+			value = val;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool CGui::HorzSlider( int id, Vector3f pos, Vector3f size, int max, int &value )
+{
+	pos	 = GetInScreen( pos );
+	float sX = size.x;
+	size = size * m_iGUIUnitSize;
+
+	_9PatchRect( pos, size, m_pSliderTex, {255, 255, 255}, BUTTON_EDGE_RADIUS );
+
+	// The ypos is the percentage of the slider that the value is at
+	float xpos = (float)value / (float)max;
+	xpos *= (sX - 2.0f); // The thumb is 2 units thick, so we need to subtract that from the slider height
+
+	_Image({pos.x + xpos * m_iGUIUnitSize, pos.y}, {2 * (float)m_iGUIUnitSize, 2 * (float)m_iGUIUnitSize}, m_pSliderThumbTex, {255, 255, 255});
+
+	if ( RegionHit( pos, size ) )
+	{
+		m_iHotItem = id;
+
+		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
+		{
+			m_iActiveItem = id;
+		}
+	}
+
+	if ( m_iActiveItem == id )
+	{
+		// find the relative x position of the mouse
+		// And the percentage of our x size that is
+		float x = (float)m_pInputManager->m_vMousePos.x - pos.x;
+		float p = x / (size.x - (2.0f * m_iGUIUnitSize));
+
+		// Clamp it to the slider
+		if ( p < 0 )
+			p = 0;
+		else if ( p > 1 )
+			p = 1;
+		
+		int val = floor(p * max);
+
+		if ( val != value )
+		{
+			// if ( m_iTick % 2 == 0 )
+			// 	soundSystem::PlaySoundEvent( "ui.tick", Vector3f( 0, 0, 0 ) );
+
+			value = val;
+			return true;
+		}
+	}
+
+	return false;
 }
 
 //////////////////////////////////////////////////////////////////////////
