@@ -167,17 +167,8 @@ void CGui::Update()
 		// Text
 		glBindVertexArray( m_iVao );
 		{
-			glBindTexture( GL_TEXTURE_2D, m_pFontTex->m_iId );
-
-			glBindBuffer( GL_ARRAY_BUFFER, m_iVbo );
-			glBufferData( GL_ARRAY_BUFFER, m_vertices.size() * sizeof( CGui::GuiVert ), m_vertices.data(),
-						  GL_DYNAMIC_DRAW );
-			glBindBuffer( GL_ARRAY_BUFFER, 0 );
-			glDrawArrays( GL_TRIANGLES, 0, m_vertices.size() );
-
-			glBindTexture( GL_TEXTURE_2D, 0 );
-			
-			// Images
+			// We draw Images first, then Text
+			// TODO: ideally we'd not care, but I can't figure out how to make the Z coordinate work in ortho mode.
 			// TODO: bad bad bad die!
 			for ( CGui::GuiImage img : m_images )
 			{
@@ -189,6 +180,15 @@ void CGui::Update()
 				glDrawArrays( GL_TRIANGLES, 0, img.verts.size() );
 				glBindTexture( GL_TEXTURE_2D, 0 );
 			}
+			glBindTexture( GL_TEXTURE_2D, m_pFontTex->m_iId );
+
+			glBindBuffer( GL_ARRAY_BUFFER, m_iVbo );
+			glBufferData( GL_ARRAY_BUFFER, m_vertices.size() * sizeof( CGui::GuiVert ), m_vertices.data(),
+						  GL_DYNAMIC_DRAW );
+			glBindBuffer( GL_ARRAY_BUFFER, 0 );
+			glDrawArrays( GL_TRIANGLES, 0, m_vertices.size() );
+
+			glBindTexture( GL_TEXTURE_2D, 0 );
 		}
 
 		glBindVertexArray( 0 );
@@ -238,12 +238,33 @@ Vector3f CGui::GetInScreen( Vector3f pos )
 	return pos;
 }
 
-void CGui::_Image( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint )
+void CGui::_Image( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint, Vector4f uv )
 {
 	GuiImage img;
 	img.pTex = pTex;
-	img.verts = GetRect( pos, size, Vector4f( 0, 0, 1, 1 ), tint );
+	img.verts = GetRect( pos, size, uv, tint );
 	m_images.push_back( img );
+}
+
+void CGui::_9PatchRect( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint, float borderSize )
+{
+	// Creats image with 9-patch
+	float v = m_iGUIUnitSize * 0.5f;
+
+	// Corners first
+	_Image( { pos.x, pos.y + size.y - v }, { v, v }, pTex, tint, { 0, 0, 1/borderSize, 1/borderSize } );
+	_Image( { pos.x + size.x - v, pos.y + size.y - v }, { v, v }, pTex, tint, { 1 - 1/borderSize, 0, 1, 1/borderSize } );
+	_Image( { pos.x, pos.y }, { v, v }, pTex, tint, { 0, 1 - 1/borderSize, 1/borderSize, 1 } );
+	_Image( { pos.x + size.x - v, pos.y }, { v, v }, pTex, tint, { 1 - 1/borderSize, 1 - 1/borderSize, 1, 1 } );
+
+	// Edges
+	_Image( { pos.x + v, pos.y }, { size.x - v * 2, v }, pTex, tint, { 1/borderSize, 1 - 1/borderSize, 1 - 1/borderSize, 1 } );
+	_Image( { pos.x + v, pos.y + size.y - v }, { size.x - v * 2, v }, pTex, tint, { 1/borderSize, 0, 1 - 1/borderSize, 1/borderSize } );
+	_Image( { pos.x, pos.y + v }, { v, size.y - v * 2 }, pTex, tint, { 0, 1/borderSize, 1/borderSize, 1 - 1/borderSize } );
+	_Image( { pos.x + size.x - v, pos.y + v }, { v, size.y - v * 2 }, pTex, tint, { 1 - 1/borderSize, 1/borderSize, 1, 1 - 1/borderSize } );
+
+	// Center
+	_Image( { pos.x + v, pos.y + v }, { size.x - v * 2, size.y - v * 2 }, pTex, tint, { 1/borderSize, 1/borderSize, 1 - 1/borderSize, 1 - 1/borderSize } );
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -291,7 +312,7 @@ bool CGui::Button( GuiID id, Vector3f position, Vector3f size, CTexture *pTextur
 
 	// Draw
 	{
-		_Image( position, size, pTexture, color );
+		_9PatchRect( position, size, pTexture, color, 3 );
 	}
 
 	return returnCode;

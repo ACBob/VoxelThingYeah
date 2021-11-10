@@ -140,6 +140,8 @@ int main( int argc, char *args[] )
 
 	inputMan.m_bInGui = true;
 
+	CTexture *pTestTexture = materialSystem::LoadTexture( "test.png" );
+
 	glm::mat4 screen = glm::ortho( 0.0f, 800.0f, 0.0f, 600.0f );
 
     while ( !window.m_bShouldClose )
@@ -174,6 +176,9 @@ int main( int argc, char *args[] )
 		{
 			con_info( "Button 1 pressed!" );
 		}
+
+		gui.Image({-16, -16}, {16, 16}, pTestTexture);
+		gui.Label("Text on-top of image", {-19, -16, 0.5});
 
 		// End GUI testing code
 

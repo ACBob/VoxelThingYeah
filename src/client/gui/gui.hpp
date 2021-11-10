@@ -56,7 +56,8 @@ class CGui
 		std::vector<GuiImage> m_images;
 
 		// Renders a generic quad here, but under image
-		void _Image( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint );
+		void _Image( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint, Vector4f uv = {0, 0, 1, 1} );
+		void _9PatchRect( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint, float borderSize );
 	public:
 		CGui(Vector3f size);
 		~CGui();
@@ -98,7 +99,7 @@ class CGui
 		Vector3f m_vScreenCentre;
 
 		// Elements
-		void Image( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint );
+		void Image( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint = {255, 255, 255} );
 
 		bool Button( GuiID id, Vector3f position, Vector3f size = {4, 2}, CTexture *pTexture = nullptr );
 
