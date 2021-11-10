@@ -58,6 +58,7 @@ class CGui
 		// Renders a generic quad here, but under image
 		void _Image( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint, Vector4f uv = {0, 0, 1, 1} );
 		void _9PatchRect( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint, float borderSize );
+		float _TextLength( const char *text, float scale = 1.0f );
 	public:
 		CGui(Vector3f size);
 		~CGui();
@@ -98,21 +99,24 @@ class CGui
 		Vector3f m_vScreenDimensions;
 		Vector3f m_vScreenCentre;
 
-		// Elements
+		// Chooses the alignment of text
+		enum TextAlignment {
+			TEXTALIGN_LEFT,   // |TEXT  |
+			TEXTALIGN_CENTER, // | TEXT |
+			TEXTALIGN_RIGHT   // |  TEXT|
+		};
+
+		// Base Elements
 		void Image( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint = {255, 255, 255} );
+		bool Button( GuiID id, Vector3f position, Vector3f minSize = {4, 2}, CTexture *pTexture = nullptr );
+		void Label( const char* text, Vector3f position, float scale = 1.0f, CColour colour = {255, 255, 255}, TextAlignment alignment = TEXTALIGN_LEFT );
 
-		bool Button( GuiID id, Vector3f position, Vector3f size = {4, 2}, CTexture *pTexture = nullptr );
-
-		void Label( const char* text, Vector3f position, float scale = 1.0f, CColour colour = {255, 255, 255} );
+		// Composite Elements
+		bool LabelButton( GuiID id, const char* text, Vector3f position, Vector3f size, TextAlignment alignment = TEXTALIGN_LEFT );
 
 		// Function Graveyard
 		// (I am about to remove these, they are just stubbed so I can test others)
 		using Atlas = Vector4f;
-		enum TextAlignment {
-			TEXTALIGN_LEFT,
-			TEXTALIGN_CENTER,
-			TEXTALIGN_RIGHT
-		};
 		CTexture *m_pBGTex = nullptr;
 		int m_iGuiUnit = 0;
 		void SetTextBuffer(...) {};
@@ -120,8 +124,6 @@ class CGui
 		void ClearBuffers() {};
 		int AtlasButton( int id, CTexture *tex, Atlas atlas, float atlasDivisions, Vector3f pos, Vector3f size,
 					 Vector3f vOrigin = Vector3f( 0, 0 ) ) {};
-		int LabelButton( int id, const char *msg, Vector3f pos, Vector3f vOrigin = Vector3f( 0, 0 ),
-						Vector3f padding = Vector3f( 2, 1, 0 ), Vector3f minsize = Vector3f( 0, 0 ) ) {};
 		void Image( CTexture *pTex, Vector3f vPosition, Vector3f vSize, Vector3f vOrigin = Vector3f( 0, 0 ),
 					CColour tint = CColour( 255, 255, 255 ) ) {};
 		void ImageAtlas( CTexture *pTex, Atlas atlas, float fAtlasDivisions, Vector3f vPosition, Vector3f vSize,

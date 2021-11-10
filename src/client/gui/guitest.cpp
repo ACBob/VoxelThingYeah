@@ -176,6 +176,12 @@ int main( int argc, char *args[] )
 		{
 			con_info( "Button 1 pressed!" );
 		}
+		if (gui.LabelButton(2, "Label Button LEFT", {0, 17}, {32, 2}, CGui::TEXTALIGN_LEFT) ||
+			gui.LabelButton(3, "Label Button CENTRE", {0, 19}, {32, 2}, CGui::TEXTALIGN_CENTER) ||
+			gui.LabelButton(4, "Label Button RIGHT", {0, 21}, {32, 2}, CGui::TEXTALIGN_RIGHT))
+		{
+			con_info( "Label Button pressed!" );
+		}
 
 		gui.Image({-16, -16}, {16, 16}, pTestTexture);
 		gui.Label("Text on-top of image", {-19, -16, 0.5});

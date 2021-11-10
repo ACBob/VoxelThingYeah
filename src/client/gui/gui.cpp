@@ -26,9 +26,12 @@
 #include <algorithm>
 
 // How many grid units are there in the screen at all times
-#define GUI_GRID_X 54
+#define GUI_GRID_X 53
 // Size in pixels of the font we expect
 #define EXPECTED_FONT_SIZE 8
+
+
+#define BUTTON_EDGE_RADIUS 3
 
 CGui::CGui(Vector3f screenDimensions)
 {
@@ -267,8 +270,31 @@ void CGui::_9PatchRect( Vector3f pos, Vector3f size, CTexture* pTex, CColour tin
 	_Image( { pos.x + v, pos.y + v }, { size.x - v * 2, size.y - v * 2 }, pTex, tint, { 1/borderSize, 1/borderSize, 1 - 1/borderSize, 1 - 1/borderSize } );
 }
 
+float CGui::_TextLength(const char *text, float scale)
+{
+	float total = 0.0f;
+	float onePixel = scale * (2.0f / 16.0f) * (float)m_iGUIUnitSize;
+
+	int c;
+
+	while ( utfz::next( text, c ) )
+	{
+		// Find the index of the character in the font
+		int j = std::distance( CP437UNICODE, std::find( CP437UNICODE, CP437UNICODE + 256, c ) );
+
+		if ( j == 0 || j >= 256 )
+			j = 255;
+		
+		// Add the width of the character to the total
+		total += m_charWidths[j] * m_iGUIUnitSize * scale;
+		total += onePixel;
+	}
+
+	return total;
+}
+
 //////////////////////////////////////////////////////////////////////////
-// Elements
+// Base Elements
 //////////////////////////////////////////////////////////////////////////
 
 void CGui::Image( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint )
@@ -312,18 +338,27 @@ bool CGui::Button( GuiID id, Vector3f position, Vector3f size, CTexture *pTextur
 
 	// Draw
 	{
-		_9PatchRect( position, size, pTexture, color, 3 );
+		_9PatchRect( position, size, pTexture, color, BUTTON_EDGE_RADIUS );
 	}
 
 	return returnCode;
 }
 
-void CGui::Label( const char* text, Vector3f position, float scale, CColour colour )
+void CGui::Label( const char* text, Vector3f position, float scale, CColour colour, TextAlignment alignment )
 {
-	scale *= 2.0f;
 	position = GetInScreen( position );
 
-	bool bRandomise = false;
+	switch ( alignment)
+	{
+		case TEXTALIGN_LEFT:
+			break;
+		case TEXTALIGN_CENTER:
+			position.x -= (_TextLength( text, scale ) * 0.5f) / (float)m_iGUIUnitSize;
+			break;
+		case TEXTALIGN_RIGHT:
+			position.x -= (_TextLength( text, scale )) / (float)m_iGUIUnitSize;
+			break;
+	}
 
 	float onePixel = scale * (2.0f / 16.0f) * (float)m_iGUIUnitSize;
 
@@ -369,4 +404,46 @@ void CGui::Label( const char* text, Vector3f position, float scale, CColour colo
 			i += onePixel;
 		}
 	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Composite Elements
+//////////////////////////////////////////////////////////////////////////
+
+bool CGui::LabelButton( GuiID id, const char* text, Vector3f position, Vector3f minSize, TextAlignment alignment )
+{
+	bool returnValue = false;
+
+	// Get the size of the text
+	float textLength = _TextLength( text, 1.0f ) / (float)m_iGUIUnitSize;
+
+	float textOffset = 0.5f;
+
+	// Get the size of the button
+	Vector3f size = minSize;
+	size.x = std::max( size.x, textLength );
+
+	// Now draw the button
+	returnValue = Button( id, position, size, m_pButtonTex );
+
+	// Now draw the text
+	// (taking into account the alignment and BUTTON_EDGE_RADIUS)
+	// TODO: These are buggy, but they look fine on 1920x1080 so I don't care lol
+	switch ( alignment )
+	{
+		case TEXTALIGN_LEFT:
+			// Draw it glued to the left border of the button
+			Label( text, position + Vector3f( textOffset, textOffset ), 1.0f, CColour( 255, 255, 255 ), alignment );
+		break;
+		case TEXTALIGN_CENTER:
+			// Draw it in the middle of the button
+			Label( text, position + Vector3f( ( size.x / 2.0f ) + textOffset - ( textLength / 2.0f ), textOffset ), 1.0f, CColour( 255, 255, 255 ), alignment );
+		break;
+		case TEXTALIGN_RIGHT:
+			// Draw it glued to the right border of the button
+			Label( text, position + Vector3f( size.x - textLength, textOffset ), 1.0f, CColour( 255, 255, 255 ), alignment );
+		break;
+	}
+
+	return returnValue;
 }
