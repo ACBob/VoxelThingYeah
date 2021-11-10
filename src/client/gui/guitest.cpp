@@ -142,7 +142,7 @@ int main( int argc, char *args[] )
 
 	CTexture *pTestTexture = materialSystem::LoadTexture( "test.png" );
 
-	glm::mat4 screen = glm::ortho( 0.0f, 800.0f, 0.0f, 600.0f );
+	glm::mat4 screen = glm::ortho( 0.0f, 800.0f, 600.0f, 0.0f );
 
 	int sliderVal1 = 0;
 	bool checkboxTest = false;
@@ -160,7 +160,7 @@ int main( int argc, char *args[] )
 		{
 			Vector3f s = window.GetSize();
 			glViewport( 0, 0, s.x, s.y );
-			screen = glm::ortho( 0.0f, s.x, 0.0f, s.y );
+			screen = glm::ortho( 0.0f, s.x, s.y, 0.0f );
 			gui.Resize( s );
 			window.m_bSizeChanged = false;
 		}

@@ -213,8 +213,6 @@ void CGui::Update()
 
 bool CGui::RegionHit( Vector3f pos, Vector3f size )
 {
-	pos.y = m_vScreenDimensions.y - pos.y;
-
 	if ( m_vMousePos.x <= pos.x || m_vMousePos.y >= pos.y || m_vMousePos.x >= pos.x + size.x ||
 		 m_vMousePos.y <= pos.y - size.y )
 		return false;
@@ -227,11 +225,11 @@ std::vector<CGui::GuiVert> CGui::GetRect( Vector3f pos, Vector3f size, Vector4f 
 	return {
 		{ pos.x + size.x, pos.y, pos.z, uv.z, uv.w, c.x, c.y, c.z, c.w },
 		{ pos.x, pos.y, pos.z, uv.x, uv.w, c.x, c.y, c.z, c.w },
-		{ pos.x, pos.y + size.y, pos.z, uv.x, uv.y, c.x, c.y, c.z, c.w },
+		{ pos.x, pos.y - size.y, pos.z, uv.x, uv.y, c.x, c.y, c.z, c.w },
 
-		{ pos.x + size.x, pos.y + size.y, pos.z, uv.z, uv.y, c.x, c.y, c.z, c.w },
+		{ pos.x + size.x, pos.y - size.y, pos.z, uv.z, uv.y, c.x, c.y, c.z, c.w },
 		{ pos.x + size.x, pos.y, pos.z, uv.z, uv.w, c.x, c.y, c.z, c.w },
-		{ pos.x, pos.y + size.y, pos.z, uv.x, uv.y, c.x, c.y, c.z, c.w }
+		{ pos.x, pos.y - size.y, pos.z, uv.x, uv.y, c.x, c.y, c.z, c.w }
 	};
 }
 
@@ -262,19 +260,19 @@ void CGui::_9PatchRect( Vector3f pos, Vector3f size, CTexture* pTex, CColour tin
 	float v = m_iGUIUnitSize * 0.5f;
 
 	// Corners first
-	_Image( { pos.x, pos.y + size.y - v }, { v, v }, pTex, tint, { 0, 0, 1/borderSize, 1/borderSize } );
-	_Image( { pos.x + size.x - v, pos.y + size.y - v }, { v, v }, pTex, tint, { 1 - 1/borderSize, 0, 1, 1/borderSize } );
+	_Image( { pos.x, pos.y - size.y + v }, { v, v }, pTex, tint, { 0, 0, 1/borderSize, 1/borderSize } );
+	_Image( { pos.x + size.x - v, pos.y - size.y + v }, { v, v }, pTex, tint, { 1 - 1/borderSize, 0, 1, 1/borderSize } );
 	_Image( { pos.x, pos.y }, { v, v }, pTex, tint, { 0, 1 - 1/borderSize, 1/borderSize, 1 } );
 	_Image( { pos.x + size.x - v, pos.y }, { v, v }, pTex, tint, { 1 - 1/borderSize, 1 - 1/borderSize, 1, 1 } );
 
 	// Edges
 	_Image( { pos.x + v, pos.y }, { size.x - v * 2, v }, pTex, tint, { 1/borderSize, 1 - 1/borderSize, 1 - 1/borderSize, 1 } );
-	_Image( { pos.x + v, pos.y + size.y - v }, { size.x - v * 2, v }, pTex, tint, { 1/borderSize, 0, 1 - 1/borderSize, 1/borderSize } );
-	_Image( { pos.x, pos.y + v }, { v, size.y - v * 2 }, pTex, tint, { 0, 1/borderSize, 1/borderSize, 1 - 1/borderSize } );
-	_Image( { pos.x + size.x - v, pos.y + v }, { v, size.y - v * 2 }, pTex, tint, { 1 - 1/borderSize, 1/borderSize, 1, 1 - 1/borderSize } );
+	_Image( { pos.x + v, pos.y - size.y + v }, { size.x - v * 2, v }, pTex, tint, { 1/borderSize, 0, 1 - 1/borderSize, 1/borderSize } );
+	_Image( { pos.x, pos.y - v }, { v, size.y - v * 2 }, pTex, tint, { 0, 1/borderSize, 1/borderSize, 1 - 1/borderSize } );
+	_Image( { pos.x + size.x - v, pos.y - v }, { v, size.y - v * 2 }, pTex, tint, { 1 - 1/borderSize, 1/borderSize, 1, 1 - 1/borderSize } );
 
 	// Center
-	_Image( { pos.x + v, pos.y + v }, { size.x - v * 2, size.y - v * 2 }, pTex, tint, { 1/borderSize, 1/borderSize, 1 - 1/borderSize, 1 - 1/borderSize } );
+	_Image( { pos.x + v, pos.y - v }, { size.x - v * 2, size.y - v * 2 }, pTex, tint, { 1/borderSize, 1/borderSize, 1 - 1/borderSize, 1 - 1/borderSize } );
 }
 
 float CGui::_TextLength(const char *text, float scale)
@@ -397,7 +395,7 @@ void CGui::Label( const char* text, Vector3f position, float scale, CColour colo
 
 			// Render the character
 			// Shadow first
-			std::vector<GuiVert> vertices = GetRect( position + Vector3f( i, 0, 0 ) + Vector3f{ onePixel, -onePixel },
+			std::vector<GuiVert> vertices = GetRect( position + Vector3f( i, 0, 0 ) + Vector3f{ onePixel, onePixel },
 													 Vector3f( m_iGUIUnitSize * scale, m_iGUIUnitSize * scale ),
 													 uv, colour / CColour(2, 2, 2, 1) );
 			m_vertices.insert( m_vertices.end(), vertices.begin(), vertices.end() );
@@ -470,7 +468,7 @@ bool CGui::Slider( int id, Vector3f pos, Vector3f size, int max, int &value )
 	float ypos = (float)value / (float)max;
 	ypos *= (sY - 2.0f); // The thumb is 2 units thick, so we need to subtract that from the slider height
 
-	_Image({pos.x, pos.y + ypos * m_iGUIUnitSize}, {2 * (float)m_iGUIUnitSize, 2 * (float)m_iGUIUnitSize}, m_pSliderThumbTex, {255, 255, 255});
+	_Image({pos.x, pos.y - ypos * m_iGUIUnitSize}, {2 * (float)m_iGUIUnitSize, 2 * (float)m_iGUIUnitSize}, m_pSliderThumbTex, {255, 255, 255});
 
 	if ( RegionHit( pos, size ) )
 	{
@@ -486,9 +484,10 @@ bool CGui::Slider( int id, Vector3f pos, Vector3f size, int max, int &value )
 	{
 		// find the relative y position of the mouse
 		// And the percentage of our y size that is
-		// TODO: this is flipped, fix it
-		float y = (float)m_pInputManager->m_vMousePos.y - pos.y;
+		float y = (float)m_pInputManager->m_vMousePos.y - (pos.y - size.y);
 		float p = y / (size.y - (2.0f * m_iGUIUnitSize));
+
+		p = 1.0f - p;
 
 		// Clamp it to the slider
 		if ( p < 0 )
@@ -618,15 +617,15 @@ bool CGui::LabelButton( GuiID id, const char* text, Vector3f position, Vector3f 
 	{
 		case TEXTALIGN_LEFT:
 			// Draw it glued to the left border of the button
-			Label( text, position + Vector3f( textOffset, textOffset ), 1.0f, CColour( 255, 255, 255 ), alignment );
+			Label( text, position + Vector3f( textOffset, -textOffset ), 1.0f, CColour( 255, 255, 255 ), alignment );
 		break;
 		case TEXTALIGN_CENTER:
 			// Draw it in the middle of the button
-			Label( text, position + Vector3f( ( size.x / 2.0f ) + textOffset - ( textLength / 2.0f ), textOffset ), 1.0f, CColour( 255, 255, 255 ), alignment );
+			Label( text, position + Vector3f( ( size.x / 2.0f ) + textOffset - ( textLength / 2.0f ), -textOffset ), 1.0f, CColour( 255, 255, 255 ), alignment );
 		break;
 		case TEXTALIGN_RIGHT:
 			// Draw it glued to the right border of the button
-			Label( text, position + Vector3f( size.x - textLength, textOffset ), 1.0f, CColour( 255, 255, 255 ), alignment );
+			Label( text, position + Vector3f( size.x - textLength, -textOffset ), 1.0f, CColour( 255, 255, 255 ), alignment );
 		break;
 	}
 
