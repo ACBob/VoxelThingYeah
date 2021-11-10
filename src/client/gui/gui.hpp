@@ -109,6 +109,16 @@ class CGui
 		Vector3f m_vScreenDimensions;
 		Vector3f m_vScreenCentre;
 
+		const char* GetTextBuffer(int id) {
+			return m_textBuffers[id].c_str();
+		}
+		void SetTextBuffer(int id, const char* text) {
+			m_textBuffers[id] = text;
+		}
+		void ClearBuffers() {
+			m_textBuffers.clear();
+		}
+
 		// Chooses the alignment of text
 		enum TextAlignment {
 			TEXTALIGN_LEFT,   // |TEXT  |
