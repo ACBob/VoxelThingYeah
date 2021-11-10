@@ -1,6 +1,5 @@
 #include "entitybase.hpp"
 #include "entitycamera.hpp"
-#include "shared/inputmanager.hpp"
 #include "utility/raycast.hpp"
 #include "utility/types.hpp"
 
@@ -8,6 +7,7 @@
 
 #ifdef CLIENTEXE
 	#include "particles/particlemanager.hpp"
+	#include "shared/inputmanager.hpp"
 #endif
 
 #pragma once

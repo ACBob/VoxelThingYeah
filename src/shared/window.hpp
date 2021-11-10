@@ -1,4 +1,4 @@
-#include "shared/inputmanager.hpp"
+#include "inputmanager.hpp"
 #include "utility/vector.hpp"
 
 class CBobWindow

@@ -12,7 +12,7 @@
 #include "rendering/texturemanager.hpp"
 
 #include "utility/vector.hpp"
-#include "shared/inputmanager.hpp"
+#include "inputmanager.hpp"
 
 class CGameWindow
 {

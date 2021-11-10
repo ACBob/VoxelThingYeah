@@ -73,7 +73,6 @@ class CInputManager
 	CInputManager();
 	~CInputManager();
 
-#ifdef CLIENTEXE
 	// A -> Z (char) Is mapped directly to the keycode (so 65 = A on the keyboard)
 	// For other keys (Shift, Escape, etc.) use KBD_*
 	bool m_bKeyboardState[255];
@@ -95,7 +94,6 @@ class CInputManager
 	bool m_bInGui = false; // If we're in a GUI menu (i.e pause, chat)
 
 	void Update();
-#endif
 
 	bool m_bInputState[INKEY_LAST];
 	bool m_bOldInputState[INKEY_LAST];

@@ -5,17 +5,14 @@
 
 CInputManager::CInputManager()
 {
-#ifdef CLIENTEXE
 	// Fill the array
 	for ( int i = 0; i < sizeof( m_bKeyboardState ) / sizeof( bool ); i++ )
 		m_bKeyboardState[i] = false;
 	for ( int i = 0; i < sizeof( m_bInputState ) / sizeof( bool ); i++ )
 		m_bInputState[i] = false;
-#endif
 }
 CInputManager::~CInputManager() {}
 
-#ifdef CLIENTEXE
 void CInputManager::Update()
 {
 	for ( int i = 0; i < INKEY_LAST; i++ )
@@ -41,4 +38,3 @@ void CInputManager::Update()
 
 	m_bInputState[INKEY_INV] = m_bOldKeyboardState['E'];
 }
-#endif

@@ -1,7 +1,7 @@
 
 #include "rendering/shadermanager.hpp"
 #include "rendering/texturemanager.hpp"
-#include "shared/inputmanager.hpp"
+#include "inputmanager.hpp"
 #include "shared/statemanager.hpp"
 #include "utility/vector.hpp"
 
