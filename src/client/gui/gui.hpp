@@ -60,6 +60,17 @@ class CGui
 		void _9PatchRect( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint, float borderSize );
 		float _TextLength( const char *text, float scale = 1.0f );
 
+		void _DrawText( const char *text, Vector3f pos, float scale, CColour colour );
+
+		enum ButtonState {
+			BUTTON_STATE_NORMAL,
+			BUTTON_STATE_HOVER,
+			BUTTON_STATE_PRESSED,
+			BUTTON_STATE_DISABLED
+		};
+
+		ButtonState _Button( int id, Vector3f pos, Vector3f size );
+
 		// Buffers
 		std::map<int, std::string> m_textBuffers;
 	public:

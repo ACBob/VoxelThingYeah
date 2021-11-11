@@ -206,9 +206,7 @@ int main( int argc, char *args[] )
 		{
 			con_info( "Button 1 pressed!" );
 		}
-		if (gui.LabelButton(2, "Label Button LEFT", {0, 17}, {17, 2}, CGui::TEXTALIGN_LEFT) ||
-			gui.LabelButton(3, "Label Button CENTRE", {0, 19}, {17, 2}, CGui::TEXTALIGN_CENTER) ||
-			gui.LabelButton(4, "Label Button RIGHT", {0, 21}, {17, 2}, CGui::TEXTALIGN_RIGHT))
+		if (gui.LabelButton(2, "Label Button", {0, 17}, {17, 2} ) )
 		{
 			con_info( "Label Button pressed!" );
 		}

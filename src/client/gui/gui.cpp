@@ -306,6 +306,77 @@ float CGui::_TextLength(const char *text, float scale)
 	return total;
 }
 
+void CGui::_DrawText( const char *text, Vector3f pos, float scale, CColour colour ) {
+
+	float onePixel = scale * (2.0f / 16.0f) * (float)m_iGUIUnitSize;
+
+	// Render
+	// OpenGl
+	{
+		int i = 0;
+
+		int c;
+
+		while ( utfz::next( text, c ) )
+		{
+			// Find the index of the character in the font
+			int j = std::distance( CP437UNICODE, std::find( CP437UNICODE, CP437UNICODE + 256, c ) );
+
+			if ( j == 0 || j >= 256 )
+				j = 255;
+			
+			// Get the character's UV coordinates
+			Vector4f uv;
+			float x, y;
+			x = ( j % 16 ) * EXPECTED_FONT_SIZE;
+			y = ( j / 16 ) * EXPECTED_FONT_SIZE;
+
+			uv.x = x / ( 16.0f * EXPECTED_FONT_SIZE );
+			uv.y = y / ( 16.0f * EXPECTED_FONT_SIZE );
+			uv.z = ( x + EXPECTED_FONT_SIZE ) / ( 16.0f * EXPECTED_FONT_SIZE );
+			uv.w = ( y + EXPECTED_FONT_SIZE ) / ( 16.0f * EXPECTED_FONT_SIZE );
+
+			// Render the character
+			// Shadow first
+			std::vector<GuiVert> vertices = GetRect( pos + Vector3f( i, 0, 0 ) + Vector3f{ onePixel, onePixel },
+													 Vector3f( m_iGUIUnitSize * scale, m_iGUIUnitSize * scale ),
+													 uv, colour / CColour(2, 2, 2, 1) );
+			m_vertices.insert( m_vertices.end(), vertices.begin(), vertices.end() );
+			// Text character
+			vertices = GetRect( pos + Vector3f( i, 0, 0 ),
+													 Vector3f( m_iGUIUnitSize * scale, m_iGUIUnitSize * scale ),
+													 uv, colour );
+			m_vertices.insert( m_vertices.end(), vertices.begin(), vertices.end() );
+
+			i += m_charWidths[j] * m_iGUIUnitSize * scale;
+			i += onePixel;
+		}
+	}
+}
+
+CGui::ButtonState CGui::_Button( int id, Vector3f pos, Vector3f size )
+{
+	if ( RegionHit( pos, size ) )
+	{
+		m_iHotItem = id;
+		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
+		{
+			m_iActiveItem = id;
+
+			soundSystem::PlaySoundEvent( "ui.click", Vector3f( 0, 0, 0 ) );
+
+			return BUTTON_STATE_PRESSED;
+		}
+	}
+
+	if ( m_iMouseState == IN_NO_MOUSE && m_iHotItem == id && m_iActiveItem == id )
+	{
+		return BUTTON_STATE_HOVER;
+	}
+
+	return BUTTON_STATE_NORMAL;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Base Elements
 //////////////////////////////////////////////////////////////////////////
@@ -363,24 +434,18 @@ bool CGui::Button( GuiID id, Vector3f position, Vector3f size, CTexture *pTextur
 
 	CColour color = CColour( 255, 255, 255 );
 
-	// Check & set State
-	if ( RegionHit( position, size ) )
-	{
-		m_iHotItem = id;
-		color	   = CColour( 191, 191, 255 );
-		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
-		{
-			m_iActiveItem = id;
+	ButtonState state = _Button( id, position, size );
 
-			soundSystem::PlaySoundEvent( "ui.click", Vector3f( 0, 0, 0 ) );
-		}
+	if ( state == BUTTON_STATE_PRESSED || state == BUTTON_STATE_DISABLED )
+	{
+		color = { 127, 127, 127 };
+	}
+	else if ( state == BUTTON_STATE_HOVER )
+	{
+		color = { 127, 127, 255 };
 	}
 
-	if ( m_iMouseState == IN_NO_MOUSE && m_iHotItem == id && m_iActiveItem == id )
-	{
-		returnCode = 1;
-		color	   = CColour( 63, 63, 63 );
-	}
+	returnCode = state == BUTTON_STATE_PRESSED ? 1 : 0;
 
 	// Draw
 	{
@@ -402,67 +467,23 @@ void CGui::Label( const char* text, Vector3f position, float scale, CColour colo
 {
 	position = GetInScreen( position );
 
-	switch ( alignment)
+	switch ( alignment )
 	{
 		case TEXTALIGN_LEFT:
 			break;
 		case TEXTALIGN_CENTER:
-			position.x -= (_TextLength( text, scale ) * 0.5f) / (float)m_iGUIUnitSize;
+			position.x -= m_iGUIUnitSize * scale * (_TextLength(text, scale) / (float)m_iGUIUnitSize) * 0.5f;
 			break;
 		case TEXTALIGN_RIGHT:
-			position.x -= (_TextLength( text, scale )) / (float)m_iGUIUnitSize;
+			position.x -= m_iGUIUnitSize * scale * (_TextLength(text, scale) / (float)m_iGUIUnitSize);
 			break;
 	}
 
-	float onePixel = scale * (2.0f / 16.0f) * (float)m_iGUIUnitSize;
-
-	// Render
-	// OpenGl
-	{
-		int i = 0;
-
-		int c;
-
-		while ( utfz::next( text, c ) )
-		{
-			// Find the index of the character in the font
-			int j = std::distance( CP437UNICODE, std::find( CP437UNICODE, CP437UNICODE + 256, c ) );
-
-			if ( j == 0 || j >= 256 )
-				j = 255;
-			
-			// Get the character's UV coordinates
-			Vector4f uv;
-			float x, y;
-			x = ( j % 16 ) * EXPECTED_FONT_SIZE;
-			y = ( j / 16 ) * EXPECTED_FONT_SIZE;
-
-			uv.x = x / ( 16.0f * EXPECTED_FONT_SIZE );
-			uv.y = y / ( 16.0f * EXPECTED_FONT_SIZE );
-			uv.z = ( x + EXPECTED_FONT_SIZE ) / ( 16.0f * EXPECTED_FONT_SIZE );
-			uv.w = ( y + EXPECTED_FONT_SIZE ) / ( 16.0f * EXPECTED_FONT_SIZE );
-
-			// Render the character
-			// Shadow first
-			std::vector<GuiVert> vertices = GetRect( position + Vector3f( i, 0, 0 ) + Vector3f{ onePixel, onePixel },
-													 Vector3f( m_iGUIUnitSize * scale, m_iGUIUnitSize * scale ),
-													 uv, colour / CColour(2, 2, 2, 1) );
-			m_vertices.insert( m_vertices.end(), vertices.begin(), vertices.end() );
-			// Text character
-			vertices = GetRect( position + Vector3f( i, 0, 0 ),
-													 Vector3f( m_iGUIUnitSize * scale, m_iGUIUnitSize * scale ),
-													 uv, colour );
-			m_vertices.insert( m_vertices.end(), vertices.begin(), vertices.end() );
-
-			i += m_charWidths[j] * m_iGUIUnitSize * scale;
-			i += onePixel;
-		}
-	}
+	_DrawText( text, position, scale, colour );
 }
 
 const char *CGui::TextInput( int id, Vector3f vPosition )
 {
-
 	std::string text = m_textBuffers[id];
 
 	std::string dispText = (m_iTick / 8) % 2 == 0 ? text + "_" : text;
@@ -622,18 +643,15 @@ bool CGui::CheckBox( int id, Vector3f pos, bool &value )
 
 	_Image( pos, size, tex, {255, 255, 255} );
 
-	if ( RegionHit( pos, size ) )
+	ButtonState state = _Button( id, pos, size );
+
+	if (state == BUTTON_STATE_PRESSED)
 	{
-		m_iHotItem = id;
+		m_iActiveItem = id;
 
-		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
-		{
-			m_iActiveItem = id;
-
-			value = !value;
-			soundSystem::PlaySoundEvent( value ? "ui.check" : "ui.uncheck", Vector3f( 0, 0, 0 ) );
-			return true;
-		}
+		value = !value;
+		soundSystem::PlaySoundEvent( value ? "ui.check" : "ui.uncheck", Vector3f( 0, 0, 0 ) );
+		return true;
 	}
 
 	return false;
@@ -662,31 +680,24 @@ bool CGui::LabelButton( GuiID id, const char* text, Vector3f position, Vector3f 
 	CColour color = CColour( 255, 255, 255 );
 	CColour textColor = CColour( 255, 255, 255 );
 
-	// Check & set State
-	if ( RegionHit( position, size ) )
-	{
-		m_iHotItem = id;
-		color	   = CColour( 191, 191, 255 );
-		textColor  = CColour( 255, 255, 127 );
-		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
-		{
-			m_iActiveItem = id;
+	ButtonState state = _Button( id, position, size );
 
-			soundSystem::PlaySoundEvent( "ui.click", Vector3f( 0, 0, 0 ) );
-		}
+	if ( state == BUTTON_STATE_PRESSED || state == BUTTON_STATE_DISABLED )
+	{
+		returnCode = state == BUTTON_STATE_PRESSED ? 1 : 0;
+		color = { 127, 127, 127 };
+		textColor = { 127, 127, 127 };
 	}
-
-	if ( m_iMouseState == IN_NO_MOUSE && m_iHotItem == id && m_iActiveItem == id )
+	else if ( state == BUTTON_STATE_HOVER )
 	{
-		returnCode = 1;
-		color	   = CColour( 63, 63, 63 );
-		textColor = CColour( 63, 63, 127 );
+		color = { 127, 127, 255 };
+		textColor = { 255, 255, 127 };
 	}
 
 	// Draw
 	{
 		_9PatchRect( position, size, m_pButtonTex, color, BUTTON_EDGE_RADIUS );
-		Label( text, (position + textPos) / (float)m_iGUIUnitSize, 1.0f, textColor, TEXTALIGN_CENTER );
+		Label( text, (position + Vector3f(textPos.x, -textPos.y / 2.0f)) / (float)m_iGUIUnitSize, 1.0f, textColor, TEXTALIGN_CENTER );
 	}
 
 	return returnCode;
@@ -701,45 +712,35 @@ bool CGui::LabelButtonCentered( GuiID id, const char* text, Vector3f position, V
 	size.x = std::max( size.x, _TextLength(text) / (float)m_iGUIUnitSize );
 	size *= m_iGUIUnitSize;
 
-	position.x -= size.x * 0.5f;
-	position.y += size.y * 0.5f;
+	position.x -= size.x / 2.0f;
 
 	// Centre the text
-	Vector3f textPos = position;
-	textPos.x += size.x * 0.5f;
-	textPos.y += size.y * 0.5f;
-
+	Vector3f textPos = size;
+	textPos /= 2.0f;
 
 	int returnCode = 0;
 
 	CColour color = CColour( 255, 255, 255 );
 	CColour textColor = CColour( 255, 255, 255 );
 
-	// Check & set State
-	if ( RegionHit( position, size ) )
-	{
-		m_iHotItem = id;
-		color	   = CColour( 191, 191, 255 );
-		textColor  = CColour( 255, 255, 127 );
-		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
-		{
-			m_iActiveItem = id;
+	ButtonState state = _Button( id, position, size );
 
-			soundSystem::PlaySoundEvent( "ui.click", Vector3f( 0, 0, 0 ) );
-		}
+	if ( state == BUTTON_STATE_PRESSED || state == BUTTON_STATE_DISABLED )
+	{
+		returnCode = state == BUTTON_STATE_PRESSED ? 1 : 0;
+		color = { 127, 127, 127 };
+		textColor = { 127, 127, 127 };
 	}
-
-	if ( m_iMouseState == IN_NO_MOUSE && m_iHotItem == id && m_iActiveItem == id )
+	else if ( state == BUTTON_STATE_HOVER )
 	{
-		returnCode = 1;
-		color	   = CColour( 63, 63, 63 );
-		textColor = CColour( 63, 63, 127 );
+		color = { 127, 127, 255 };
+		textColor = { 255, 255, 127 };
 	}
 
 	// Draw
 	{
 		_9PatchRect( position, size, m_pButtonTex, color, BUTTON_EDGE_RADIUS );
-		Label( text, textPos / (float)m_iGUIUnitSize, 1.0f, textColor, TEXTALIGN_CENTER );
+		Label( text, (position + Vector3f(textPos.x, -textPos.y / 2.0f)) / (float)m_iGUIUnitSize, 1.0f, textColor, TEXTALIGN_CENTER );
 	}
 
 	return returnCode;
