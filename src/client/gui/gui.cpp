@@ -329,7 +329,12 @@ void CGui::ImageRepeating( Vector3f pos, Vector3f size, CTexture* pTex, CColour 
 	// So that a 16x16 texture will be two gui units
 
 
-	Vector4f uv = { 0, 0, size.x / (float)m_iGUIUnitSize / 2.0f, size.y / (float)m_iGUIUnitSize / 2.0f };
+	// we need to take into account the size of the texture, the size of the area we want to fill, and the size of the gui unit
+	// to get the correct UV coordinates
+	Vector4f uv = {
+		0, 0,
+		size.x / (float)m_iGUIUnitSize / (float)pTex->m_iWidth * 8.0f, size.y / (float)m_iGUIUnitSize / (float)pTex->m_iHeight * 8.0f
+	};
 
 
 	_Image( pos, size, pTex, tint, uv );

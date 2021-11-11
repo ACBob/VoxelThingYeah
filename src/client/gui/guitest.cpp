@@ -143,6 +143,7 @@ int main( int argc, char *args[] )
 	inputMan.m_bInGui = true;
 
 	CTexture *pTestTexture = materialSystem::LoadTexture( "test.png" );
+	CTexture *pTestTexture2 = materialSystem::LoadTexture( "logo16.png" );
 
 	glm::mat4 screen = glm::ortho( 0.0f, 800.0f, 600.0f, 0.0f );
 
@@ -189,6 +190,11 @@ int main( int argc, char *args[] )
 		gui.m_pShader->SetMat4( "screen", screen );
 
 		// GUI testing code
+		gui.ImageRepeating( {0,-1}, gui.m_vScreenDimensions / gui.m_iGUIUnitSize, gui.m_pGuiBGTex );
+
+		// Image repeating test
+		gui.ImageRepeating( {10,10}, {10,10}, pTestTexture );
+		gui.ImageRepeating( {0,10}, {10,10}, pTestTexture2 );
 
 		gui.Label("Hello, Baig!", {0, 0});
 		gui.Label("Text, but Bigger!", {0, 3}, 2.0f);
