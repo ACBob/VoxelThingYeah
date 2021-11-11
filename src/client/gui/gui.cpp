@@ -124,6 +124,10 @@ CGui::CGui(Vector3f screenDimensions)
 	m_pCheckedBoxTex = materialSystem::LoadTexture("checkbox-checked.png");
 	m_pUnCheckedBoxTex = materialSystem::LoadTexture("checkbox-unchecked.png");
 
+	// Load the useful textures
+	m_pGuiBGTex = materialSystem::LoadTexture("guibg.png");
+	m_pGuiTitleTex = materialSystem::LoadTexture("title.png");
+
 	// Load Shader
 	m_pShader = shaderSystem::LoadShader("text.vert", "text.frag");
 
@@ -235,13 +239,17 @@ std::vector<CGui::GuiVert> CGui::GetRect( Vector3f pos, Vector3f size, Vector4f 
 
 Vector3f CGui::GetInScreen( Vector3f pos )
 {
-	pos = pos * m_iGUIUnitSize;
+	pos *= m_iGUIUnitSize;
 
-	// Negative values mean start from the opposite side
-	if ( pos.x < 0 )
+	// Negative values get flipped to the other side of the screen
+	if ( pos.x < 0 ) {
+		pos.x += m_iGUIUnitSize; // if it's -1 then it's 0
 		pos.x = m_vScreenDimensions.x + pos.x;
-	if ( pos.y < 0 )
+	}
+	if ( pos.y < 0 ) {
+		pos.y += m_iGUIUnitSize; // if it's -1 then it's 0
 		pos.y = m_vScreenDimensions.y + pos.y;
+	}
 
 	return pos;
 }
@@ -308,6 +316,23 @@ void CGui::Image( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint )
 	size = size * m_iGUIUnitSize;
 
 	_Image( pos, size, pTex, tint );
+}
+
+// Creates an image that repeats its' texture to fill the entire area
+// Without stretching the texture
+void CGui::ImageRepeating( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint )
+{
+	pos = GetInScreen( pos );
+	size = size * m_iGUIUnitSize;
+
+	// UV coordinates, one pixel of the texture is a 16th of the gui unit
+	// So that a 16x16 texture will be two gui units
+
+
+	Vector4f uv = { 0, 0, size.x / (float)m_iGUIUnitSize / 2.0f, size.y / (float)m_iGUIUnitSize / 2.0f };
+
+
+	_Image( pos, size, pTex, tint, uv );
 }
 
 bool CGui::Button( GuiID id, Vector3f position, Vector3f size, CTexture *pTexture )

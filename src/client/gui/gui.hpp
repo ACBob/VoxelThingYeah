@@ -104,6 +104,11 @@ class CGui
 		CTexture *m_pCheckedBoxTex = nullptr;
 		CTexture *m_pUnCheckedBoxTex = nullptr;
 
+		// *We* don't use these textures, but it makes sense for us to hold them
+		CTexture *m_pGuiBGTex = nullptr;
+		CTexture *m_pGuiTitleTex = nullptr;
+		
+
 		CInputManager *m_pInputManager;
 
 		Vector3f m_vScreenDimensions;
@@ -128,6 +133,7 @@ class CGui
 
 		// Base Elements
 		void Image( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint = {255, 255, 255} );
+		void ImageRepeating( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint = {255, 255, 255} );
 		bool Button( GuiID id, Vector3f position, Vector3f minSize = {4, 2}, CTexture *pTexture = nullptr );
 
 		// NOTE: Also generic text rendering
