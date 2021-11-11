@@ -340,6 +340,17 @@ void CGui::ImageRepeating( Vector3f pos, Vector3f size, CTexture* pTex, CColour 
 	_Image( pos, size, pTex, tint, uv );
 }
 
+void CGui::ImageCentered( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint )
+{
+	pos = GetInScreen( pos );
+	size = size * m_iGUIUnitSize;
+
+	pos.x -= size.x * 0.5f;
+	pos.y += size.y * 0.5f;
+
+	_Image( pos, size, pTex, tint );
+}
+
 bool CGui::Button( GuiID id, Vector3f position, Vector3f size, CTexture *pTexture )
 {
 	position = GetInScreen( position );

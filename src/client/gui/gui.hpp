@@ -132,8 +132,12 @@ class CGui
 		};
 
 		// Base Elements
+		// Basic image, bottom-left centered
 		void Image( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint = {255, 255, 255} );
+		// Repeating image, repeats the texture where 8 pixels is a gui unit,
 		void ImageRepeating( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint = {255, 255, 255} );
+		// Image where the origin is the middle of the size
+		void ImageCentered( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint = {255, 255, 255} );
 		bool Button( GuiID id, Vector3f position, Vector3f minSize = {4, 2}, CTexture *pTexture = nullptr );
 
 		// NOTE: Also generic text rendering
