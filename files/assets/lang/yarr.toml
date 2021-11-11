@@ -7,7 +7,7 @@ inventory = "Booty..."
 
 ["gui.options"]
 enablereverb = "Listen more"
-mastervolume = "Deafness"
+mastervolume = "Deafness: %d%%"
 resourcepacks = "Paint for th' ship"
 
 ["gui.title"]

@@ -18,6 +18,8 @@
 
 #include "blocks/blockbase.hpp"
 
+#include "config.h"
+
 const CModel::Vertex cloudPlane[4] = {
 	// POSITION            NORMAL            UV
 	{ -512.0f,  0.0f, -512.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },
@@ -328,6 +330,8 @@ void CStateMenu::Enter()
 	pStateMan->m_pGui->SetTextBuffer( 3, cl_ip->GetString() );
 	pStateMan->m_pGui->SetTextBuffer( 4, cl_port->GetString() );
 	pStateMan->m_pGui->SetTextBuffer( 5, username->GetString() );
+
+	soundSystem::SetListener( nullptr, Vector3f( 0, 0, 0 ), Vector3f( 0, 0, 1 ), Vector3f( 0, 0, 0 ) );
 }
 
 void CStateMenu::ReturnedTo()
@@ -357,18 +361,31 @@ void CStateMenu::Exit()
 void CStateMenu::Update()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
-
 	pStateMan->m_pInputMan->m_bInGui = true;
-
 	pStateMan->m_pGui->ImageRepeating( {0,-1}, pStateMan->m_pGui->m_vGUISize, pStateMan->m_pGui->m_pGuiBGTex );
 
 	pStateMan->m_pGui->ImageCentered( pStateMan->m_pGui->m_vGUICentre - Vector3f(0, 8), {45, 8.57}, pStateMan->m_pGui->m_pGuiTitleTex );
 
 	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.startgame"),
-										pStateMan->m_pGui->m_vGUICentre - Vector3f( 0, 4 ), {32, 2} ) )
+										pStateMan->m_pGui->m_vGUICentre, {32, 2} ) )
 	{
 		pStateMan->m_pClient->Connect( cl_ip->GetString(), cl_port->GetInt() );
 	}
+
+	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.options"),
+										pStateMan->m_pGui->m_vGUICentre + Vector3f( 0, 2.5 ), {32, 2} ) )
+	{
+		pStateMan->PushState( std::make_unique<CStateOptionsMenu>() );
+	}
+
+	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.quit"),
+										pStateMan->m_pGui->m_vGUICentre + Vector3f( 0, 10 ), {32, 2} ) )
+	{
+		pStateMan->PopState();
+	}
+
+	pStateMan->m_pGui->Label( "Meegreef " MEEGREEF_VERSION, {0, -1} );
+	pStateMan->m_pGui->Label( "Copyright Baob Koiss.", {-1, -1}, 1.0f, {255, 255, 255}, CGui::TEXTALIGN_RIGHT );
 }
 
 void CStateOptionsMenu::Enter()
@@ -378,6 +395,8 @@ void CStateOptionsMenu::Enter()
 
 	m_iVolumeSlider = cl_volume->GetFloat() * 100;
 	m_bEnableReverb = cl_reverb->GetBool();
+
+	soundSystem::SetListener( nullptr, Vector3f( 0, 0, 0 ), Vector3f( 0, 0, 1 ), Vector3f( 0, 0, 0 ) );
 }
 void CStateOptionsMenu::ReturnedTo() {}
 void CStateOptionsMenu::Exit()
@@ -388,10 +407,28 @@ void CStateOptionsMenu::Exit()
 void CStateOptionsMenu::Update()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
-
-	soundSystem::SetListener( nullptr, Vector3f( 0, 0, 0 ), Vector3f( 0, 0, 1 ), Vector3f( 0, 0, 0 ) );
-
 	pStateMan->m_pInputMan->m_bInGui = true;
+	pStateMan->m_pGui->ImageRepeating( {0,-1}, pStateMan->m_pGui->m_vGUISize, pStateMan->m_pGui->m_pGuiBGTex );
+
+	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.title.options"), { pStateMan->m_pGui->m_vGUICentre.x, 3 }, 1.0f, {255, 255, 255}, CGui::TEXTALIGN_CENTER );
+
+	if (pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.dismiss"),
+										pStateMan->m_pGui->m_vGUICentre + Vector3f( 0, 10 ), {16, 2} ) )
+	{
+		pStateMan->PopState();
+	}
+
+	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetStringFMT("gui.options.mastervolume", m_iVolumeSlider), { pStateMan->m_pGui->m_vGUICentre.x, 6 }, 1.0f, {255, 255, 255}, CGui::TEXTALIGN_CENTER );
+	if (pStateMan->m_pGui->HorzSlider( GUIGEN_ID, { pStateMan->m_pGui->m_vGUICentre.x - 8, 8 }, {16, 2}, 100, m_iVolumeSlider ))
+	{
+		cl_volume->SetFloat( m_iVolumeSlider / 100.0f );
+	}
+
+	if (pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.options.resourcepacks"),
+										pStateMan->m_pGui->m_vGUICentre + Vector3f( 0, 7 ), {16, 2} ) )
+	{
+		pStateMan->PushState( std::make_unique<CStatePackMenu>() );
+	}
 }
 
 void CKickScreen::Enter()
@@ -462,4 +499,10 @@ void CStatePackMenu::Update()
 
 	pStateMan->m_pInputMan->m_bInGui = true;
 
+	pStateMan->m_pGui->ImageRepeating( {0,-1}, pStateMan->m_pGui->m_vGUISize, pStateMan->m_pGui->m_pGuiBGTex );
+
+	if (pStateMan->m_pGui->LabelButtonCentered(GUIGEN_ID, "Nobody here but us chickens!", pStateMan->m_pGui->m_vGUICentre, {24, 2}))
+	{
+		pStateMan->PopState();
+	}
 }

@@ -7,7 +7,7 @@ inventory = "Inventory..."
 
 ["gui.options"]
 enablereverb = "Enable Reverb"
-mastervolume = "Master Volume"
+mastervolume = "Master Volume: %d%%"
 resourcepacks = "Resource Packs"
 
 ["gui.title"]

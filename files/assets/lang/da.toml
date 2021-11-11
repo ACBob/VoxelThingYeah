@@ -7,7 +7,7 @@ inventory = "Inventar..."
 
 ["gui.options"]
 enablereverb = "Aktiver Ekko"
-mastervolume = "Master Volume"
+mastervolume = "Master Volume: %d%%"
 resourcepacks = "Ressource Pakker"
 
 ["gui.title"]
