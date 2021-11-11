@@ -248,20 +248,7 @@ void CStatePlay::Update()
 		// -----------------------
 		// GUI
 		// -----------------------
-		pStateMan->m_pGui->Label( "Meegreef ALPHA", Vector3f( 0, -1 ) );
-
-		pStateMan->m_pGui->Label( "\u263A Smiley!!!", Vector3f( 0, -2 ) );
-
-		int hours	= m_pLocalWorld->m_iTimeOfDay / 1000;
-		int minutes = ( m_pLocalWorld->m_iTimeOfDay - ( hours * 1000 ) ) / 16.6666;
-		snprintf( guiBuf, 100, "%02i:%02i", hours, minutes );
-		pStateMan->m_pGui->Label( guiBuf, Vector3f( pStateMan->m_pGui->m_vScreenCentre.x, -1 ), CColour( 255, 255, 255 ),
-								  CGui::TEXTALIGN_CENTER );
-
-		pStateMan->m_pGui->Image( m_pHotbarTex, Vector3f( pStateMan->m_pGui->m_vScreenCentre.x, 0 ),
-								  Vector3f( 18.5, 2.5 ), Vector3f( 0.5, 0 ) );
-		float p;
-
+		
 		// F3 screen
 		if (pStateMan->m_pInputMan->m_bKeyboardState[KBD_F3] && !pStateMan->m_pInputMan->m_bOldKeyboardState[KBD_F3])
 			m_bDebugScreen = !m_bDebugScreen;
@@ -289,93 +276,14 @@ void CStatePlay::Update()
 			}
 		}
 
-		for ( int i = 0; i < 8; i++ )
+		if ( m_bInPause )
 		{
-			p = 8.0f * ( i / 4.0f - 1.0f );
-
-			if ( m_pLocalPlayer->m_inventory.Slot( i ) == nullptr ||
-				 m_pLocalPlayer->m_inventory.Slot( i )->GetCount() == 0 )
-				continue;
-
-			CBlockItem *pBlockItem = reinterpret_cast<CBlockItem *>( m_pLocalPlayer->m_inventory.Slot( i ) );
-			BlockTexture bTex = GetDefaultBlockTextureSide(pBlockItem->m_iBlockType, Direction::NORTH );
-
-			CColour tint = BlockType(pBlockItem->m_iBlockType).GetTint(nullptr, {0,0,0}, pBlockItem->m_iBlockData, NORTH);
-			
-			pStateMan->m_pGui->ImageAtlas(
-				m_pTerrainPNG, { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey }, 16.0f,
-				Vector3f( p + pStateMan->m_pGui->m_vScreenCentre.x, 1.25 ), Vector3f( 2, 2 ), Vector3f( 0.5, 0.5 ), tint );
-
-			snprintf( guiBuf, 100, "%d", m_pLocalPlayer->m_inventory.Slot( i )->GetCount() );
-			pStateMan->m_pGui->Label( guiBuf, Vector3f( p + pStateMan->m_pGui->m_vScreenCentre.x, 0 ) );
-		}
-		p = 8.0f * ( m_pLocalPlayer->m_iSelectedItemIDX / 4.0f - 1.0f );
-		pStateMan->m_pGui->Image( m_pHotbarSelectTex, Vector3f( p + pStateMan->m_pGui->m_vScreenCentre.x, 1.25 ),
-								  Vector3f( 3, 3 ), Vector3f( 0.5, 0.5 ) );
-
-		if ( m_pLocalPlayer->m_bInInventory )
-		{
-			pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pInventoryTex, pStateMan->m_pGui->m_vScreenCentre,
-									  Vector3f( 22, 22 ), Vector3f( 0.5, 0.5 ) );
-			pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.inventory"), pStateMan->m_pGui->m_vScreenCentre + Vector3f( -9.625, 9.25 ) );
-
-			Vector3f p  = pStateMan->m_pGui->m_vScreenCentre + Vector3f( -8, 8 );
-			Vector3f op = p;
-			int j	   = 0;
-			for ( int i = 0; i <= m_invCreative->m_iItemSlots - 1; i++ )
-			{
-				j++;
-
-
-				CBlockItem *pBlockItem = reinterpret_cast<CBlockItem *>( m_invCreative->Slot( i ) );
-				BlockTexture bTex = GetDefaultBlockTextureSide(pBlockItem->m_iBlockType, Direction::NORTH );
-
-				CColour tint = BlockType(pBlockItem->m_iBlockType).GetTint(nullptr, {0,0,0}, pBlockItem->m_iBlockData, NORTH);
-
-				pStateMan->m_pGui->ImageAtlas(m_pTerrainPNG, { (float)bTex.x, 15.0f - (float)bTex.y, (float)bTex.sizex, (float)bTex.sizey }, 16.0f, p, Vector3f( 2, 2 ), Vector3f( 0.5, 0.5 ), tint );
-				if ( pStateMan->m_pGui->Button( 'b' + i, p, Vector3f(2,2), Vector3f(0.5, 0.5), nullptr, true ) )
-				{
-					if ( m_pLocalPlayer->m_pSelectedItem != nullptr )
-					{
-						// TODO: assuming blockitem
-						m_pLocalPlayer->m_pSelectedItem->SetCount( ITEMSTACK_MAX );
-						reinterpret_cast<CBlockItem *>( m_pLocalPlayer->m_pSelectedItem )->m_iBlockType = pBlockItem->m_iBlockType;
-						reinterpret_cast<CBlockItem *>( m_pLocalPlayer->m_pSelectedItem )->m_iBlockData = pBlockItem->m_iBlockData;
-					}
-				}
-
-				p.x += 2;
-				if ( j % 9 == 0 )
-				{
-					p.y -= 2;
-					p.x = op.x;
-				}
-			}
-		}
-		else if ( m_bInPause )
-		{
-			if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.dismiss_far"),
-												 pStateMan->m_pGui->m_vScreenCentre + Vector3f( 0, 4 ),
-												 Vector3f( 0.5, 0.5 ), Vector3f( 2, 1 ), Vector3f( 14, 2 ) ) )
-			{
-				m_bInPause = false;
-			}
-			if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.options"), pStateMan->m_pGui->m_vScreenCentre,
-												 Vector3f( 0.5, 0.5 ), Vector3f( 2, 1 ), Vector3f( 14, 2 ) ) )
-			{
-				m_pStateMan->PushState( std::make_unique<CStateOptionsMenu>() );
-			}
 			if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.disconnect"),
-												 pStateMan->m_pGui->m_vScreenCentre - Vector3f( 0, 4 ),
-												 Vector3f( 0.5, 0.5 ), Vector3f( 2, 1 ), Vector3f( 14, 2 ) ) )
+												 pStateMan->m_pGui->m_vScreenCentre - Vector3f( 0, 4 ), {4, 2} ) )
 			{
 				pStateMan->m_pClient->Disconnect();
 				pStateMan->PopState();
 			}
-		}
-		else
-		{
-			pStateMan->m_pGui->Crosshair();
 		}
 
 		// Chat Rendering
@@ -452,50 +360,6 @@ void CStateMenu::Update()
 
 	pStateMan->m_pInputMan->m_bInGui = true;
 
-	pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pBGTex, Vector3f( 0, 0 ),
-							  pStateMan->m_pGui->m_vScreenDimensions / pStateMan->m_pGui->m_iGuiUnit, Vector3f( 0, 0 ),
-							  CColour( 127, 127, 127 ) );
-
-	pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pLogoTex, Vector3f( pStateMan->m_pGui->m_vScreenCentre.x, -1 ),
-							  Vector3f( 10 * 5.25, 10 ), Vector3f( 0.5, 1 ) );
-
-	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.startgame"), pStateMan->m_pGui->m_vScreenCentre, Vector3f( 0.5, 0.5 ),
-										 Vector3f( 2, 1 ), Vector3f( 14, 2 ) ) )
-	{
-		cl_ip->SetString( pStateMan->m_pGui->GetTextBuffer( 3 ) );
-		cl_port->SetString( pStateMan->m_pGui->GetTextBuffer( 4 ) );
-		username->SetString( pStateMan->m_pGui->GetTextBuffer( 5 ) );
-
-		pStateMan->m_pClient->Connect( cl_ip->GetString(), cl_port->GetInt() );
-		m_pStateMan->PushState( std::make_unique<CStatePlay>() );
-	}
-
-	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.options"), pStateMan->m_pGui->m_vScreenCentre - Vector3f( 0, 2 ),
-										 Vector3f( 0.5, 0.5 ), Vector3f( 2, 1 ), Vector3f( 14, 2 ) ) )
-	{
-		cl_ip->SetString( pStateMan->m_pGui->GetTextBuffer( 3 ) );
-		cl_port->SetString( pStateMan->m_pGui->GetTextBuffer( 4 ) );
-		username->SetString( pStateMan->m_pGui->GetTextBuffer( 5 ) );
-		m_pStateMan->PushState( std::make_unique<CStateOptionsMenu>() );
-	}
-	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.quit"), pStateMan->m_pGui->m_vScreenCentre - Vector3f( 0, 4 ),
-										 Vector3f( 0.5, 0.5 ), Vector3f( 2, 1 ), Vector3f( 14, 2 ) ) )
-	{
-		pStateMan->PopState();
-	}
-
-	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.title.ip"), pStateMan->m_pGui->m_vScreenCentre - Vector3f( 16, 4.5 ), CColour( 255, 255, 255 ),
-							  CGui::TEXTALIGN_CENTER );
-	pStateMan->m_pGui->SelectableTextInput( 3, pStateMan->m_pGui->m_vScreenCentre - Vector3f( 24, 7 ),
-											Vector3f( 16, 2 ) );
-	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.title.port"), pStateMan->m_pGui->m_vScreenCentre - Vector3f( 16, 9.5 ), CColour( 255, 255, 255 ),
-							  CGui::TEXTALIGN_CENTER );
-	pStateMan->m_pGui->SelectableTextInput( 4, pStateMan->m_pGui->m_vScreenCentre - Vector3f( 24, 12 ),
-											Vector3f( 16, 2 ) );
-	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.title.username"), pStateMan->m_pGui->m_vScreenCentre - Vector3f( -16, 4.5 ), CColour( 255, 255, 255 ),
-							  CGui::TEXTALIGN_CENTER );
-	pStateMan->m_pGui->SelectableTextInput( 5, pStateMan->m_pGui->m_vScreenCentre - Vector3f( -8, 7 ),
-											Vector3f( 16, 2 ) );
 }
 
 void CStateOptionsMenu::Enter()
@@ -519,38 +383,6 @@ void CStateOptionsMenu::Update()
 	soundSystem::SetListener( nullptr, Vector3f( 0, 0, 0 ), Vector3f( 0, 0, 1 ), Vector3f( 0, 0, 0 ) );
 
 	pStateMan->m_pInputMan->m_bInGui = true;
-
-	pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pBGTex, Vector3f( 0, 0 ),
-							  pStateMan->m_pGui->m_vScreenDimensions / pStateMan->m_pGui->m_iGuiUnit, Vector3f( 0, 0 ),
-							  CColour( 127, 127, 127 ) );
-
-	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.options"), Vector3f( pStateMan->m_pGui->m_vScreenCentre.x, -2 ), CColour( 255, 255, 255 ),
-							  CGui::TEXTALIGN_CENTER );
-
-	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.dismiss"), Vector3f( pStateMan->m_pGui->m_vScreenCentre.x, 2 ),
-										 Vector3f( 0.5, 0.5 ), Vector3f( 2, 1 ), Vector3f( 14, 2 ) ) )
-	{
-		m_pStateMan->PopState();
-	}
-
-	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.options.resourcepacks"), Vector3f( pStateMan->m_pGui->m_vScreenCentre.x, 8 ),
-										 Vector3f( 0.5, 0.5 ), Vector3f( 2, 1 ), Vector3f( 14, 2 ) ) )
-	{
-		m_pStateMan->PushState(std::make_unique<CStatePackMenu>());
-	}
-
-	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.options.mastervolume"), pStateMan->m_pGui->m_vScreenCentre + Vector3f( -16, 6 ) );
-	if ( pStateMan->m_pGui->HorzSlider( GUIGEN_ID, pStateMan->m_pGui->m_vScreenCentre + Vector3f( -16, 4 ),
-										Vector3f( 32, 2 ), 100, m_iVolumeSlider ) )
-	{
-		cl_volume->SetFloat( m_iVolumeSlider / 100.0f );
-	}
-	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.options.enablereverb"), pStateMan->m_pGui->m_vScreenCentre + Vector3f( -16, 2 ) );
-	if ( pStateMan->m_pGui->CheckBox( GUIGEN_ID, pStateMan->m_pGui->m_vScreenCentre + Vector3f( -16, 0 ),
-									  Vector3f( 2, 2 ), m_bEnableReverb ) )
-	{
-		cl_reverb->SetBool( m_bEnableReverb );
-	}
 }
 
 void CKickScreen::Enter()
@@ -571,22 +403,6 @@ void CKickScreen::Update()
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
 
 	pStateMan->m_pInputMan->m_bInGui = true;
-
-	pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pBGTex, Vector3f( 0, 0 ),
-							  pStateMan->m_pGui->m_vScreenDimensions / pStateMan->m_pGui->m_iGuiUnit, Vector3f( 0, 0 ),
-							  CColour( 127, 127, 127 ) );
-
-	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.kicked"), Vector3f( pStateMan->m_pGui->m_vScreenCentre.x, -2 ), CColour( 255, 255, 255 ),
-							  CGui::TEXTALIGN_CENTER );
-
-	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.dismiss"), Vector3f( pStateMan->m_pGui->m_vScreenCentre.x, 2 ),
-										 Vector3f( 0.5, 0.5 ) ) )
-	{
-		m_pStateMan->PopState();
-	}
-
-	pStateMan->m_pGui->Label( cl_kickreason->GetString(), pStateMan->m_pGui->m_vScreenCentre, CColour( 255, 127, 127 ),
-							  CGui::TEXTALIGN_CENTER );
 }
 
 
@@ -637,38 +453,4 @@ void CStatePackMenu::Update()
 
 	pStateMan->m_pInputMan->m_bInGui = true;
 
-	pStateMan->m_pGui->Image( pStateMan->m_pGui->m_pBGTex, Vector3f( 0, 0 ),
-							  pStateMan->m_pGui->m_vScreenDimensions / pStateMan->m_pGui->m_iGuiUnit, Vector3f( 0, 0 ),
-							  CColour( 127, 127, 127 ) );
-
-	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.options.resourcepacks"), Vector3f( pStateMan->m_pGui->m_vScreenCentre.x, -2 ), CColour( 255, 255, 255 ),
-							  CGui::TEXTALIGN_CENTER );
-
-	if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.dismiss"), Vector3f( pStateMan->m_pGui->m_vScreenCentre.x, 2 ),
-										 Vector3f( 0.5, 0.5 ) ) )
-	{
-		m_pStateMan->PopState();
-	}
-
-
-	// Scroll-able list of resource packs
-	pStateMan->m_pGui->Slider( GUIGEN_ID, Vector3f( -3, pStateMan->m_pGui->m_vScreenCentre.y - 8 ), Vector3f( 2, 16 ), m_packList.size(), m_iScroll );
-	
-	// TODO: the scrollbar is backwards!	
-	// Display the resource packs
-	for (int i = m_iScroll; i < m_packList.size() && i < m_iScroll + 5; i++)
-	{
-		// Display the pack name, and if it's enabled (with a checkbox)
-		// Also display the pack description
-
-		// Pack name
-		pStateMan->m_pGui->Image(pStateMan->m_pGui->m_pPackPNG, Vector3f(3, -4 - (i - m_iScroll) * 4), Vector3f(4, 4), Vector3f(0, 0.5));
-		pStateMan->m_pGui->Label(m_packList[i].name.c_str(), Vector3f(8, -4 - (i - m_iScroll) * 4));
-
-		bool enabled = m_packEnabled[i];
-		if (pStateMan->m_pGui->CheckBox(GUIGEN_ID, Vector3f(-6, -5 - (i - m_iScroll) * 4), Vector3f(2, 2), enabled))
-			m_packEnabled[i] = enabled;
-
-		pStateMan->m_pGui->Label(m_packList[i].desc.c_str(), Vector3f(8, -5 - (i - m_iScroll) * 4), CColour(127, 127, 127));
-	}
 }

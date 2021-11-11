@@ -221,11 +221,8 @@ int main( int argc, char *args[] )
 
 	con_info( "Init GUI..." );
 
-	CGui gui( scr_width->GetInt(), scr_height->GetInt() );
-	gui.m_pInputMan = &inputMan;
-	gui.m_pClient	= &client;
-	gui.m_iGuiUnit	= floor( window.GetSize().x / 53 );
-	gui.Resize( scr_width->GetInt(), scr_height->GetInt() );
+	CGui gui( window.GetSize() );
+	gui.m_pInputManager = &inputMan;
 
 	con_info( "Init Dev-Console..." );
 	CDevConsole console;
@@ -243,7 +240,7 @@ int main( int argc, char *args[] )
 
 	inputMan.m_bInGui = true;
 
-	glm::mat4 screen = glm::ortho( 0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat() );
+	glm::mat4 screen = glm::ortho( 0.0f, scr_width->GetFloat(), scr_height->GetFloat(), 0.0f );
 	glm::mat4 a		 = glm::ortho( 0.0f, 0.0f, 0.0f, 0.0f );
 	glm::mat4 b		 = glm::ortho( 0.0f, 0.0f, 0.0f, 0.0f );
 
@@ -270,8 +267,8 @@ int main( int argc, char *args[] )
 			scr_width->SetInt( s.x );
 			scr_height->SetInt( s.y );
 			glViewport( 0, 0, s.x, s.y );
-			screen = glm::ortho( 0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat() );
-			gui.Resize( s.x, s.y );
+			screen = glm::ortho( 0.0f, s.x, s.y, 0.0f );
+			gui.Resize( s );
 			window.m_bSizeChanged = false;
 		}
 

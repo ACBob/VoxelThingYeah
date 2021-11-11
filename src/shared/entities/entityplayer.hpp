@@ -7,7 +7,7 @@
 
 #ifdef CLIENTEXE
 	#include "particles/particlemanager.hpp"
-	#include "shared/inputmanager.hpp"
+	#include "inputmanager.hpp"
 #endif
 
 #pragma once
