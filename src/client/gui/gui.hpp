@@ -111,8 +111,13 @@ class CGui
 
 		CInputManager *m_pInputManager;
 
+		// In pixels
 		Vector3f m_vScreenDimensions;
 		Vector3f m_vScreenCentre;
+
+		// In units
+		Vector3f m_vGUISize;
+		Vector3f m_vGUICentre;
 
 		const char* GetTextBuffer(int id) {
 			return m_textBuffers[id].c_str();
@@ -139,6 +144,7 @@ class CGui
 		// Image where the origin is the middle of the size
 		void ImageCentered( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint = {255, 255, 255} );
 		bool Button( GuiID id, Vector3f position, Vector3f minSize = {4, 2}, CTexture *pTexture = nullptr );
+		bool ButtonCentered( GuiID id, Vector3f position, Vector3f minSize = {4, 2}, CTexture *pTexture = nullptr );
 
 		// NOTE: Also generic text rendering
 		void Label( const char* text, Vector3f position, float scale = 1.0f, CColour colour = {255, 255, 255}, TextAlignment alignment = TEXTALIGN_LEFT );
@@ -149,6 +155,7 @@ class CGui
 		bool CheckBox( int id, Vector3f pos, bool &value ); // Top-left aligned
 
 		// Composite Elements
-		bool LabelButton( GuiID id, const char* text, Vector3f position, Vector3f size, TextAlignment alignment = TEXTALIGN_LEFT );
+		bool LabelButton( GuiID id, const char* text, Vector3f position, Vector3f size );
+		bool LabelButtonCentered( GuiID id, const char* text, Vector3f position, Vector3f size );
 		const char *SelectableTextInput( int id, Vector3f pos, Vector3f size );
 };

@@ -131,10 +131,7 @@ CGui::CGui(Vector3f screenDimensions)
 	// Load Shader
 	m_pShader = shaderSystem::LoadShader("text.vert", "text.frag");
 
-	m_vScreenDimensions.x = screenDimensions.x;
-	m_vScreenDimensions.y = screenDimensions.y;
-	m_vScreenCentre = m_vScreenDimensions / 2.0f;
-	m_iGUIUnitSize = screenDimensions.x / GUI_GRID_X;
+	Resize(screenDimensions);
 }
 
 CGui::~CGui()
@@ -152,6 +149,9 @@ void CGui::Resize( Vector3f screenDimensions )
 	m_vScreenDimensions.y = screenDimensions.y;
 	m_vScreenCentre = m_vScreenDimensions / 2.0f;
 	m_iGUIUnitSize = screenDimensions.x / GUI_GRID_X;
+
+	m_vGUISize = m_vScreenDimensions / m_iGUIUnitSize;
+	m_vGUICentre = m_vScreenCentre / m_iGUIUnitSize;
 }
 
 void CGui::Update()
@@ -388,6 +388,14 @@ bool CGui::Button( GuiID id, Vector3f position, Vector3f size, CTexture *pTextur
 	}
 
 	return returnCode;
+}
+
+bool CGui::ButtonCentered( GuiID id, Vector3f position, Vector3f size, CTexture *pTexture )
+{
+	position.x -= size.x * 0.5f;
+	position.y += size.y * 0.5f;
+
+	return Button( id, position, size, pTexture );
 }
 
 void CGui::Label( const char* text, Vector3f position, float scale, CColour colour, TextAlignment alignment )
@@ -635,42 +643,106 @@ bool CGui::CheckBox( int id, Vector3f pos, bool &value )
 // Composite Elements
 //////////////////////////////////////////////////////////////////////////
 
-bool CGui::LabelButton( GuiID id, const char* text, Vector3f position, Vector3f minSize, TextAlignment alignment )
+bool CGui::LabelButton( GuiID id, const char* text, Vector3f position, Vector3f minSize )
 {
-	bool returnValue = false;
-
-	// Get the size of the text
-	float textLength = _TextLength( text, 1.0f ) / (float)m_iGUIUnitSize;
-
-	float textOffset = 0.5f;
-
-	// Get the size of the button
+	position = GetInScreen( position );
+	
+	// Make sure the button can fit the text
 	Vector3f size = minSize;
-	size.x = std::max( size.x, textLength );
+	size.x = std::max( size.x, _TextLength(text) / (float)m_iGUIUnitSize );
+	size *= m_iGUIUnitSize;
 
-	// Now draw the button
-	returnValue = Button( id, position, size, m_pButtonTex );
+	// Centre the text
+	Vector3f textPos = size;
+	textPos /= 2.0f;
 
-	// Now draw the text
-	// (taking into account the alignment and BUTTON_EDGE_RADIUS)
-	// TODO: These are buggy, but they look fine on 1920x1080 so I don't care lol
-	switch ( alignment )
+
+	int returnCode = 0;
+
+	CColour color = CColour( 255, 255, 255 );
+	CColour textColor = CColour( 255, 255, 255 );
+
+	// Check & set State
+	if ( RegionHit( position, size ) )
 	{
-		case TEXTALIGN_LEFT:
-			// Draw it glued to the left border of the button
-			Label( text, position + Vector3f( textOffset, -textOffset ), 1.0f, CColour( 255, 255, 255 ), alignment );
-		break;
-		case TEXTALIGN_CENTER:
-			// Draw it in the middle of the button
-			Label( text, position + Vector3f( ( size.x / 2.0f ) + textOffset - ( textLength / 2.0f ), -textOffset ), 1.0f, CColour( 255, 255, 255 ), alignment );
-		break;
-		case TEXTALIGN_RIGHT:
-			// Draw it glued to the right border of the button
-			Label( text, position + Vector3f( size.x - textLength, -textOffset ), 1.0f, CColour( 255, 255, 255 ), alignment );
-		break;
+		m_iHotItem = id;
+		color	   = CColour( 191, 191, 255 );
+		textColor  = CColour( 255, 255, 127 );
+		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
+		{
+			m_iActiveItem = id;
+
+			soundSystem::PlaySoundEvent( "ui.click", Vector3f( 0, 0, 0 ) );
+		}
 	}
 
-	return returnValue;
+	if ( m_iMouseState == IN_NO_MOUSE && m_iHotItem == id && m_iActiveItem == id )
+	{
+		returnCode = 1;
+		color	   = CColour( 63, 63, 63 );
+		textColor = CColour( 63, 63, 127 );
+	}
+
+	// Draw
+	{
+		_9PatchRect( position, size, m_pButtonTex, color, BUTTON_EDGE_RADIUS );
+		Label( text, (position + textPos) / (float)m_iGUIUnitSize, 1.0f, textColor, TEXTALIGN_CENTER );
+	}
+
+	return returnCode;
+}
+
+bool CGui::LabelButtonCentered( GuiID id, const char* text, Vector3f position, Vector3f minSize )
+{
+	position = GetInScreen( position );
+	
+	// Make sure the button can fit the text
+	Vector3f size = minSize;
+	size.x = std::max( size.x, _TextLength(text) / (float)m_iGUIUnitSize );
+	size *= m_iGUIUnitSize;
+
+	position.x -= size.x * 0.5f;
+	position.y += size.y * 0.5f;
+
+	// Centre the text
+	Vector3f textPos = position;
+	textPos.x += size.x * 0.5f;
+	textPos.y += size.y * 0.5f;
+
+
+	int returnCode = 0;
+
+	CColour color = CColour( 255, 255, 255 );
+	CColour textColor = CColour( 255, 255, 255 );
+
+	// Check & set State
+	if ( RegionHit( position, size ) )
+	{
+		m_iHotItem = id;
+		color	   = CColour( 191, 191, 255 );
+		textColor  = CColour( 255, 255, 127 );
+		if ( m_iActiveItem == 0 && ( m_iMouseState == IN_LEFT_MOUSE ) )
+		{
+			m_iActiveItem = id;
+
+			soundSystem::PlaySoundEvent( "ui.click", Vector3f( 0, 0, 0 ) );
+		}
+	}
+
+	if ( m_iMouseState == IN_NO_MOUSE && m_iHotItem == id && m_iActiveItem == id )
+	{
+		returnCode = 1;
+		color	   = CColour( 63, 63, 63 );
+		textColor = CColour( 63, 63, 127 );
+	}
+
+	// Draw
+	{
+		_9PatchRect( position, size, m_pButtonTex, color, BUTTON_EDGE_RADIUS );
+		Label( text, textPos / (float)m_iGUIUnitSize, 1.0f, textColor, TEXTALIGN_CENTER );
+	}
+
+	return returnCode;
 }
 
 // Selectable == not always typeable

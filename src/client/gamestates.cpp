@@ -360,10 +360,15 @@ void CStateMenu::Update()
 
 	pStateMan->m_pInputMan->m_bInGui = true;
 
-	pStateMan->m_pGui->ImageRepeating( {0,-1}, pStateMan->m_pGui->m_vScreenDimensions / pStateMan->m_pGui->m_iGUIUnitSize, pStateMan->m_pGui->m_pGuiBGTex );
+	pStateMan->m_pGui->ImageRepeating( {0,-1}, pStateMan->m_pGui->m_vGUISize, pStateMan->m_pGui->m_pGuiBGTex );
 
-	pStateMan->m_pGui->ImageCentered( pStateMan->m_pGui->m_vScreenCentre / pStateMan->m_pGui->m_iGUIUnitSize, {45, 8.57}, pStateMan->m_pGui->m_pGuiTitleTex );
+	pStateMan->m_pGui->ImageCentered( pStateMan->m_pGui->m_vGUICentre - Vector3f(0, 8), {45, 8.57}, pStateMan->m_pGui->m_pGuiTitleTex );
 
+	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.startgame"),
+										pStateMan->m_pGui->m_vGUICentre - Vector3f( 0, 4 ), {32, 2} ) )
+	{
+		pStateMan->m_pClient->Connect( cl_ip->GetString(), cl_port->GetInt() );
+	}
 }
 
 void CStateOptionsMenu::Enter()
