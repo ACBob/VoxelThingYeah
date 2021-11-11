@@ -367,10 +367,6 @@ CGui::ButtonState CGui::_Button( int id, Vector3f pos, Vector3f size )
 
 			return BUTTON_STATE_PRESSED;
 		}
-	}
-
-	if ( m_iMouseState == IN_NO_MOUSE && m_iHotItem == id && m_iActiveItem == id )
-	{
 		return BUTTON_STATE_HOVER;
 	}
 
