@@ -9,3 +9,5 @@
 *svconfig.cfg*
 
 /files/usr/
+
+/include/config.h

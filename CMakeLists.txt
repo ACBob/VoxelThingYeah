@@ -73,6 +73,7 @@ include_directories(${includes}
 	"${CMAKE_CURRENT_LIST_DIR}/src/utility"
 )
 
+configure_file( "${CMAKE_CURRENT_LIST_DIR}/include/config.h.in" "${CMAKE_CURRENT_LIST_DIR}/include/config.h" )
 
 set(CLIENT_BIN "${PROJECT_NAME}_client")
 set(SERVER_BIN "${PROJECT_NAME}_server")
