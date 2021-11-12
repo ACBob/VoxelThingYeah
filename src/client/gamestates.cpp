@@ -499,8 +499,17 @@ void CKickScreen::Update()
 
 	pStateMan->m_pInputMan->m_bInGui = true;
 
-	// TODO:
-	pStateMan->PopState();
+	pStateMan->m_pGui->ImageRepeating( {0,-1}, pStateMan->m_pGui->m_vGUISize, pStateMan->m_pGui->m_pGuiBGTex );
+
+	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.kicked"), { pStateMan->m_pGui->m_vGUICentre.x, 3 }, 1.0f, {255, 127, 127}, CGui::TEXTALIGN_CENTER );
+
+	pStateMan->m_pGui->Label( cl_kickreason->GetString(), pStateMan->m_pGui->m_vGUICentre, 1.0f, {255, 255, 255}, CGui::TEXTALIGN_CENTER );
+
+	if (pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.dismiss"),
+										pStateMan->m_pGui->m_vGUICentre + Vector3f( 0, 10 ), {16, 2} ) )
+	{
+		pStateMan->PopState();
+	}
 }
 
 
