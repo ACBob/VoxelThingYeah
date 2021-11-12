@@ -1,0 +1,26 @@
+["gui"]
+disconnect = "disconect"
+dismiss = "reutnr"
+dismiss_far = "reutnr togmae" # badly named
+kicked = "kiceide!!"
+inventory = "Iinvetonr..."
+
+["gui.options"]
+enablereverb = "enablerevber"
+mastervolume = "mawste volume: %d%%"
+resourcepacks = "resoruce packs"
+
+["gui.title"]
+startgame = "stargame"
+options = "opstimjs"
+quit = "quitrgame"
+ip = "i padres"
+port = "port"
+username = "uername"
+
+["kick"]
+generic = "noreason givne."
+existingusername = "soemogn already ahs ypor usxerena!! CHNGE IT"
+wrongprotocol = "rpotcyl versio nicinmatc"
+invalidusername = "the username procided is invaled change it!"
+banned = "you are banend from the searv"

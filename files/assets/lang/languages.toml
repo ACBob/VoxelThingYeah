@@ -36,6 +36,17 @@ lang_file = "joke/yarr.toml"
 friendly_name = "Swag (Bacon)"
 lang_file = "joke/swag.toml"
 
+[furry]
+friendly_name = "Furry (OwO)"
+lang_file = "joke/furry.toml"
+
+[anger]
+friendly_name = "FUCK YOu, ASSHOLE!"
+lang_file = "joke/anger.toml"
+
+[stroke]
+friendly_name = "storke (sgytokr)"
+lang_file = "joke/stroke.toml"
 
 # I *Want* to pursue this, but I'm not sure how to do it.
 # [puns]
