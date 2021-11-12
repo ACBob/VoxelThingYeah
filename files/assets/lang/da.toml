@@ -17,3 +17,10 @@ quit = "Afslut"
 ip = "IP"
 port = "Port"
 username = "Brugernavn"
+
+["kick"]
+generic = "Ingen årsag givet."
+existingusername = "Nogen har allerede dit brugernavn! Find et andet!"
+wrongprotocol = "Forkert protokol version."
+invalidusername = "Ugyldigt brugernavn."
+banned = "Du er blevet udelukket fra serveren."

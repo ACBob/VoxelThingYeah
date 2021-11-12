@@ -17,3 +17,10 @@ quit = "Leave th' seas"
 ip = "Th' Destination"
 port = "Pirate's Password"
 username = "Captain Name!"
+
+["kick"]
+generic = "Filthy Landlubber!"
+existingusername = "Yarr captain's name is already taken!"
+protocolmismatch = "Yer' speakin' jibberish, lad."
+invalidusername = "The captain name given is not valid."
+banned = "Yer' banned from this ship!"

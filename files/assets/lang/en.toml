@@ -17,3 +17,10 @@ quit = "Quit Game"
 ip = "IP Address"
 port = "Port"
 username = "Username"
+
+["kick"]
+generic = "No reason given."
+existingusername = "Somebody already has your username! Change it!"
+wrongprotocol = "Protocol version mismatch!"
+invalidusername = "The username provided is invalid. Change it!"
+banned = "You are banned from this server."

@@ -37,13 +37,13 @@ namespace protocol
 				{
 					con_error( "User %s attempted to join unsupported protocol version (%#010x) (Expected %#010x)",
 							   username.c_str(), protocolVersion, PROTOCOL_VERSION );
-					pServer->KickPlayer( pPeer, "Protocol version Mismatch!" );
+					pServer->KickPlayer( pPeer, "kick.wrongprotocol" );
 					return;
 				}
 				if ( pServer->ClientFromUsername( username.c_str() ) != nullptr )
 				{
 					con_error( "Duplicate username %s!", username.c_str() );
-					pServer->KickPlayer( pPeer, "Someone already has your username. Change it!" );
+					pServer->KickPlayer( pPeer, "kick.existingusername" );
 					return;
 				}
 
