@@ -250,6 +250,13 @@ void CStatePlay::Update()
 		// -----------------------
 		// GUI
 		// -----------------------
+
+		pStateMan->m_pGui->Label("Meegreef " MEEGREEF_VERSION, {0,1});
+
+		int hours	= m_pLocalWorld->m_iTimeOfDay / 1000;
+		int minutes = ( m_pLocalWorld->m_iTimeOfDay - ( hours * 1000 ) ) / 16.6666;
+		snprintf( guiBuf, 100, "%02i:%02i", hours, minutes );
+		pStateMan->m_pGui->Label( guiBuf, {pStateMan->m_pGui->m_vGUICentre.x, 1}, 1.0f, {255, 255, 255}, CGui::TEXTALIGN_CENTER);
 		
 		// F3 screen
 		if (pStateMan->m_pInputMan->m_bKeyboardState[KBD_F3] && !pStateMan->m_pInputMan->m_bOldKeyboardState[KBD_F3])
@@ -259,33 +266,61 @@ void CStatePlay::Update()
 		{
 			// position
 			snprintf( guiBuf, 100, "Position: <%.2f, %.2f, %.2f>", m_pLocalPlayer->m_vPosition.x, m_pLocalPlayer->m_vPosition.y, m_pLocalPlayer->m_vPosition.z );
-			pStateMan->m_pGui->Label( guiBuf, Vector3f( 0, -3 ) );
+			pStateMan->m_pGui->Label( guiBuf, Vector3f( 0, 3 ) );
 
 			// velocity
 			snprintf( guiBuf, 100, "Velocity: <%.2f, %.2f, %.2f>", m_pLocalPlayer->m_vVelocity.x, m_pLocalPlayer->m_vVelocity.y, m_pLocalPlayer->m_vVelocity.z );
-			pStateMan->m_pGui->Label( guiBuf, Vector3f( 0, -4 ) );
+			pStateMan->m_pGui->Label( guiBuf, Vector3f( 0, 4 ) );
 
 			// Pointed block id/data
 			// Data displayed in hex
 			if (m_pLocalPlayer->m_pointed.m_pBlock != nullptr)
 			{
 				snprintf( guiBuf, 100, "Pointed block: %i, %04X", m_pLocalPlayer->m_pointed.m_pBlock->m_iBlockType, m_pLocalPlayer->m_pointed.m_pBlock->m_iBlockData );
-				pStateMan->m_pGui->Label( guiBuf, Vector3f( 0, -5 ) );
+				pStateMan->m_pGui->Label( guiBuf, Vector3f( 0, 5 ) );
 			}
 			else
 			{
-				pStateMan->m_pGui->Label( "Pointed block: null", Vector3f( 0, -5 ) );
+				pStateMan->m_pGui->Label( "Pointed block: null", Vector3f( 0, 5 ) );
 			}
 		}
 
+		// Hot-bar
+		pStateMan->m_pGui->ImageCentered( {pStateMan->m_pGui->m_vGUICentre.x, -2.125f}, {18.5, 2.5}, pStateMan->m_pGui->m_pHotbarTex );
+
+		float p;
+		for ( int i = 0; i < 8; i++ )
+		{
+			p = 8.0f * ( i / 4.0f - 1.0f );
+
+			if ( m_pLocalPlayer->m_inventory.Slot( i ) == nullptr ||
+				 m_pLocalPlayer->m_inventory.Slot( i )->GetCount() == 0 )
+				continue;
+			
+			pStateMan->m_pGui->ItemCentered( { pStateMan->m_pGui->m_vGUICentre.x + p, -2.125f }, {2,2}, m_pLocalPlayer->m_inventory.Slot( i ) );
+		}
+		p = 8.0f * ( m_pLocalPlayer->m_iSelectedItemIDX / 4.0f - 1.0f );
+		pStateMan->m_pGui->ImageCentered( { pStateMan->m_pGui->m_vGUICentre.x + p, -2.125f }, {3,3}, pStateMan->m_pGui->m_pHotbarSelectTex );
+
 		if ( m_bInPause )
 		{
-			if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.disconnect"),
-												 pStateMan->m_pGui->m_vScreenCentre - Vector3f( 0, 4 ), {4, 2} ) )
+			if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.dismiss_far"), pStateMan->m_pGui->m_vGUICentre, {24, 2} ) )
+			{
+				m_bInPause = false;
+			}
+			if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.options"), { pStateMan->m_pGui->m_vGUICentre.x, -12 }, {24, 2} ) )
+			{
+				pStateMan->PushState( std::make_unique<CStateOptionsMenu>() );
+			}
+			if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.disconnect"), { pStateMan->m_pGui->m_vGUICentre.x, -6 }, {24, 2} ) )
 			{
 				pStateMan->m_pClient->Disconnect();
 				pStateMan->PopState();
 			}
+		}
+		else
+		{
+			pStateMan->m_pGui->ImageCentered( pStateMan->m_pGui->m_vGUICentre, {2, 2}, pStateMan->m_pGui->m_pCrosshairTex );
 		}
 
 		// Chat Rendering
@@ -370,16 +405,15 @@ void CStateMenu::Update()
 										pStateMan->m_pGui->m_vGUICentre, {32, 2} ) )
 	{
 		pStateMan->m_pClient->Connect( cl_ip->GetString(), cl_port->GetInt() );
+		pStateMan->PushState( std::make_unique<CStatePlay>() );
 	}
 
-	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.options"),
-										pStateMan->m_pGui->m_vGUICentre + Vector3f( 0, 2.5 ), {32, 2} ) )
+	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.options"), { pStateMan->m_pGui->m_vGUICentre.x, -13 }, {32, 2} ) )
 	{
 		pStateMan->PushState( std::make_unique<CStateOptionsMenu>() );
 	}
 
-	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.quit"),
-										pStateMan->m_pGui->m_vGUICentre + Vector3f( 0, 10 ), {32, 2} ) )
+	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.quit"), { pStateMan->m_pGui->m_vGUICentre.x, -6 }, {32, 2} ) )
 	{
 		pStateMan->PopState();
 	}

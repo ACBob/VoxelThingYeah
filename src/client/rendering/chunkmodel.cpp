@@ -80,16 +80,16 @@ std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlock block, int x, 
 				g[i].v = (float)tex.y / 16.0f;
 				break;
 			case 1:
-				g[i].u = (float)( tex.x + tex.sizex ) / 16.0f;
+				g[i].u = (float)( tex.x + tex.z ) / 16.0f;
 				g[i].v = (float)tex.y / 16.0f;
 				break;
 			case 2:
-				g[i].u = (float)( tex.x + tex.sizex ) / 16.0f;
-				g[i].v = (float)( tex.y + tex.sizey ) / 16.0f;
+				g[i].u = (float)( tex.x + tex.z ) / 16.0f;
+				g[i].v = (float)( tex.y + tex.w ) / 16.0f;
 				break;
 			case 3:
 				g[i].u = (float)tex.x / 16.0f;
-				g[i].v = (float)( tex.y + tex.sizey ) / 16.0f;
+				g[i].v = (float)( tex.y + tex.w ) / 16.0f;
 				break;
 		}
 	}
@@ -135,18 +135,18 @@ std::vector<CModel::Vertex> samplePlant( CBlock block, int x, int y, int z, int 
 				break;
 			case 1:
 			case 5:
-				g[i].u = (float)( tex.x + tex.sizex ) / 16.0f;
+				g[i].u = (float)( tex.x + tex.z ) / 16.0f;
 				g[i].v = (float)tex.y / 16.0f;
 				break;
 			case 2:
 			case 6:
-				g[i].u = (float)( tex.x + tex.sizex ) / 16.0f;
-				g[i].v = (float)( tex.y + tex.sizey ) / 16.0f;
+				g[i].u = (float)( tex.x + tex.z ) / 16.0f;
+				g[i].v = (float)( tex.y + tex.w ) / 16.0f;
 				break;
 			case 3:
 			case 7:
 				g[i].u = (float)tex.x / 16.0f;
-				g[i].v = (float)( tex.y + tex.sizey ) / 16.0f;
+				g[i].v = (float)( tex.y + tex.w ) / 16.0f;
 				break;
 		}
 	}

@@ -25,6 +25,12 @@ CEntityPlayer::CEntityPlayer() : m_inventory( 36 )
 
 	m_collisionBox.m_vBounds = Vector3f( 0.5, 1.9, 0.5 );
 	m_collisionBox.m_vOrigin = Vector3f( 0.5, 0, 0.5 );
+
+	((CBlockItem*)m_inventory.Slot(0))->m_iBlockType = STONE;
+	((CBlockItem*)m_inventory.Slot(0))->SetCount( 64 );
+
+	((CBlockItem*)m_inventory.Slot(1))->m_iBlockType = BRICKS;
+	((CBlockItem*)m_inventory.Slot(1))->SetCount( 64 );
 }
 CEntityPlayer::~CEntityPlayer() {}
 

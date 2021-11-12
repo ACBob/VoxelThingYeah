@@ -13,6 +13,11 @@ class CBlockItem : public CItem
 	CBlockItem(int count = 1, BLOCKID blockType = AIR, uint16_t blockData = 0);
 	~CBlockItem();
 
+#ifdef CLIENTEXE
+	CTexture *GetTexture();
+	Vector4f GetUV();
+#endif
+
 	// AIR is functionally the same as 0.
 	BLOCKID m_iBlockType;
 

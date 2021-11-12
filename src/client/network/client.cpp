@@ -107,10 +107,10 @@ void CNetworkClient::SpecialEffectHandle( Vector3f pos, SpecialEffect specialEff
 			BlockTexture tex = GetDefaultBlockTextureSide( b, NORTH );
 
 			ParticleDef blockBreak	= PARTICLE_BREAKBLOCK;
-			blockBreak.vUVOffsetMin = Vector4f( tex.sizex / 64.0f, tex.sizey / 64.0f, tex.x / 16.0f, tex.y / 16.0f );
+			blockBreak.vUVOffsetMin = Vector4f( tex.z / 64.0f, tex.w / 64.0f, tex.x / 16.0f, tex.y / 16.0f );
 			blockBreak.vUVOffsetMax =
-				Vector4f( tex.sizex / 64.0f, tex.sizey / 64.0f, ( tex.x + tex.sizex / 2.0f ) / 16.0f,
-						 ( tex.y + tex.sizey / 2.0f ) / 16.0f );
+				Vector4f( tex.z / 64.0f, tex.w / 64.0f, ( tex.x + tex.z / 2.0f ) / 16.0f,
+						 ( tex.y + tex.w / 2.0f ) / 16.0f );
 			blockBreak.pTexture = materialSystem::LoadTexture( "terrain.png" );
 
 			soundSystem::PlayBreakSound( b, pos + Vector3f( 0.5, 0.5, 0.5 ) );
@@ -164,11 +164,15 @@ void CNetworkClient::Update()
 		}
 	}
 
-	Vector3f cP = ( m_pLocalPlayer->m_vPosition / Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
-	// MAGIC NUMBER: 4 == render distance
-	// TODO: tie to cvar
-	m_pLocalWorld->m_chunks.erase(
-		std::remove_if( m_pLocalWorld->m_chunks.begin(), m_pLocalWorld->m_chunks.end(),
-						[cP]( auto &&c ) { return ( ( cP - c.get()->m_vPosition ).Magnitude() > 6 ); } ),
-		m_pLocalWorld->m_chunks.end() );
+	// We may not have a local world and yet still be connected.
+	if (m_pLocalPlayer != nullptr)
+	{
+		Vector3f cP = ( m_pLocalPlayer->m_vPosition / Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
+		// MAGIC NUMBER: 4 == render distance
+		// TODO: tie to cvar
+		m_pLocalWorld->m_chunks.erase(
+			std::remove_if( m_pLocalWorld->m_chunks.begin(), m_pLocalWorld->m_chunks.end(),
+							[cP]( auto &&c ) { return ( ( cP - c.get()->m_vPosition ).Magnitude() > 6 ); } ),
+			m_pLocalWorld->m_chunks.end() );
+	}
 }

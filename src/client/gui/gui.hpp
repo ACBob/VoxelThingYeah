@@ -10,6 +10,8 @@
 #include <map>
 #include <vector>
 
+#include "shared/inventory/item.hpp"
+
 #pragma once
 
 // Reference taken / tutorial followed
@@ -118,6 +120,9 @@ class CGui
 		// *We* don't use these textures, but it makes sense for us to hold them
 		CTexture *m_pGuiBGTex = nullptr;
 		CTexture *m_pGuiTitleTex = nullptr;
+		CTexture *m_pCrosshairTex = nullptr;
+		CTexture *m_pHotbarTex = nullptr;
+		CTexture *m_pHotbarSelectTex = nullptr;
 		
 
 		CInputManager *m_pInputManager;
@@ -156,6 +161,9 @@ class CGui
 		void ImageCentered( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint = {255, 255, 255} );
 		bool Button( GuiID id, Vector3f position, Vector3f minSize = {4, 2}, CTexture *pTexture = nullptr );
 		bool ButtonCentered( GuiID id, Vector3f position, Vector3f minSize = {4, 2}, CTexture *pTexture = nullptr );
+
+		void Item( Vector3f position, Vector3f size, CItem *pItem );
+		void ItemCentered( Vector3f position, Vector3f size, CItem *pItem );
 
 		// NOTE: Also generic text rendering
 		void Label( const char* text, Vector3f position, float scale = 1.0f, CColour colour = {255, 255, 255}, TextAlignment alignment = TEXTALIGN_LEFT );

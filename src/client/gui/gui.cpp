@@ -127,6 +127,9 @@ CGui::CGui(Vector3f screenDimensions)
 	// Load the useful textures
 	m_pGuiBGTex = materialSystem::LoadTexture("guibg.png");
 	m_pGuiTitleTex = materialSystem::LoadTexture("title.png");
+	m_pCrosshairTex = materialSystem::LoadTexture("crosshair.png");
+	m_pHotbarTex = materialSystem::LoadTexture("hotbar.png");
+	m_pHotbarSelectTex = materialSystem::LoadTexture("hotbar-selected.png");
 
 	// Load Shader
 	m_pShader = shaderSystem::LoadShader("text.vert", "text.frag");
@@ -172,10 +175,6 @@ void CGui::Update()
 
 	// Render
 	{
-		int depthFunc;
-		glGetIntegerv( GL_DEPTH_FUNC, &depthFunc );
-		glDepthFunc( GL_ALWAYS );
-
 		m_pShader->Use();
 
 		// Text
@@ -206,8 +205,6 @@ void CGui::Update()
 		}
 
 		glBindVertexArray( 0 );
-
-		glDepthFunc( depthFunc );
 	}
 
 	// Clear our vertices
@@ -458,6 +455,39 @@ bool CGui::ButtonCentered( GuiID id, Vector3f position, Vector3f size, CTexture 
 
 	return Button( id, position, size, pTexture );
 }
+
+void CGui::Item( Vector3f position, Vector3f size, CItem *pItem ) {
+	position = GetInScreen( position );
+
+	CColour textColor = {255, 255, 255};
+
+	if (pItem->GetCount() == 0)
+	{
+		textColor = {255,127,127};
+	}
+
+	// Get the item texture
+	CTexture *pTex = pItem->GetTexture();
+
+	// Get the UV coordinates
+	Vector4f uv = pItem->GetUV();
+
+	_Image( position, size * m_iGUIUnitSize, pTex, {255,255,255}, uv );
+
+	// At most we can have 2 digits in the count (up to 64)
+	char *buffer = new char[3];
+	sprintf( buffer, "%d", pItem->GetCount() );
+	_DrawText( buffer, position + Vector3f( size.x * 0.5f, size.y * 0.5f, 0 ), 1.0f, textColor );
+	delete[] buffer;
+}
+
+void CGui::ItemCentered( Vector3f position, Vector3f size, CItem *pItem ) {
+	position.x -= size.x * 0.5f;
+	position.y += size.y * 0.5f;
+
+	Item( position, size, pItem );
+}
+
 
 void CGui::Label( const char* text, Vector3f position, float scale, CColour colour, TextAlignment alignment )
 {
