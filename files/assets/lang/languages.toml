@@ -6,6 +6,38 @@ lang_file = "en.toml"
 friendly_name = "Danish (DA)"
 lang_file = "da.toml"
 
+[de]
+friendly_name = "German (DE)"
+lang_file = "de.toml"
+
+[es]
+friendly_name = "Spanish (ES)"
+lang_file = "es.toml"
+
+[fr]
+friendly_name = "French (FR)"
+lang_file = "fr.toml"
+
+# Joke languages
+
+[lol]
+friendly_name = "LOLCAT (LOL)"
+lang_file = "joke/lol.toml"
+
+[cat]
+friendly_name = "Cat (Meow!)"
+lang_file = "joke/cat.toml"
+
 [yarr]
 friendly_name = "Yarr! (Pirate Speak)"
-lang_file = "yarr.toml"
+lang_file = "joke/yarr.toml"
+
+[swag]
+friendly_name = "Swag (Bacon)"
+lang_file = "joke/swag.toml"
+
+
+# I *Want* to pursue this, but I'm not sure how to do it.
+# [puns]
+# friendly_name = "Puns (Puns)"
+# lang_file = "joke/puns.toml"

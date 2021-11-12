@@ -1,0 +1,28 @@
+# French
+
+["gui"]
+disconnect = "Déconnexion"
+dismiss = "Rejeter"
+dismiss_far = "Rejeter"
+kicked = "Kické"
+inventory = "Inventaire"
+
+["gui.options"]
+enablereverb = "Activer le réverbération"
+mastervolume = "Volume principal (%d%%)"
+resourcepacks = "Packages de ressources"
+
+["gui.title"]
+startgame = "Démarrer le jeu"
+options = "Options"
+quit = "Quitter"
+ip = "IP du serveur"
+port = "Port"
+username = "Nom d'utilisateur"
+
+["kick"]
+generic = "Aucune raison donnée"
+existingusername = "Nom d'utilisateur déjà utilisé"
+wrongprotocol = "Mauvais protocole"
+invalidusername = "Nom d'utilisateur invalide"
+banned = "Vous êtes banni de ce serveur"

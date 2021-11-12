@@ -1,0 +1,26 @@
+["gui"]
+disconnect = "Trennen"
+dismiss = "Ablehnen"
+dismiss_far = "Ablehnen"
+kicked = "Gekickt"
+inventory = "Inventar..."
+
+["gui.options"]
+enablereverb = "Reverb aktivieren"
+mastervolume = "Masterlautstärke (%d%%)"
+resourcepacks = "Resourcepacks"
+
+["gui.title"]
+startgame = "Spiel starten"
+options = "Optionen"
+quit = "Beenden"
+ip = "IP Adresse"
+port = "Port"
+username = "Benutzername"
+
+["kick"]
+generic = "Du wurdest gekickt."
+existingusername = "Der Benutzername existiert bereits."
+wrongprotocol = "Falsches Protokoll."
+invalidusername = "Der Benutzername ist ungültig."
+banned = "Du wurdest gebannt."

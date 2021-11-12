@@ -1,0 +1,28 @@
+# Cat language!
+
+["gui"]
+disconnect = "Meow!"
+dismiss = "Meow."
+dismiss_far = "Mrow meow!"
+kicked = "HISSS"
+inventory = "Meow mroww!"
+
+["gui.options"]
+enablereverb = "Meow meow meo me m..."
+mastervolume = "Purrr? (%d%%)"
+resourcepacks = "Purreow!"
+
+["gui.title"]
+startgame = "Mew!"
+options = "Meow meow meow!"
+quit = "Meow mew."
+ip = "Meow?"
+port = "Meow...?"
+username = "Mew meow!"
+
+["kick"]
+generic = "HISSS!"
+existingusername = "HISSS!"
+wrongprotocol = "HISSS!"
+invalidusername = "HISSS!"
+banned = "HISSS!"

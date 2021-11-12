@@ -1,0 +1,28 @@
+# Spanish
+
+["gui"]
+disconnect = "Desconectar"
+dismiss = "Descartar"
+dismiss_far = "Descartar"
+kicked = "Expulsado"
+inventory = "Inventario..."
+
+["gui.options"]
+enablereverb = "Activar reverberación"
+mastervolume = "Volumen de sonido (%d%%)"
+resourcepacks = "Paquetes de recursos"
+
+["gui.title"]
+startgame = "Iniciar partida"
+options = "Opciones"
+quit = "Salir"
+ip = "IP"
+port = "Puerto"
+username = "Nombre de usuario"
+
+["kick"]
+generic = "No se ha especificado una razón"
+existingusername = "Nombre de usuario ya existente"
+wrongprotocol = "Protocolo incorrecto"
+invalidusername = "Nombre de usuario inválido"
+banned = "Usuario baneado"

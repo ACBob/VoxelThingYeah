@@ -1,0 +1,28 @@
+#Lolcat!
+
+["gui"]
+disconnect = "I LEAVE!"
+dismiss = "OKI"
+dismiss_far = "OK" # badly named
+kicked = "KICKE!"
+inventory = "YUOR STUFFS...."
+
+["gui.options"]
+enablereverb = "ECHO! ECHO! ECHO!"
+mastervolume = "I CAN HEAR %d%% WELL."
+resourcepacks = "CHANGE MY LOOKZ!"
+
+["gui.title"]
+startgame = "OKI I PLAY NOW"
+options = "WAIT ME CHANGE!"
+quit = "GOODBYE!!! WAS FUN!!!"
+ip = "IP?"
+port = "Port"
+username = "MY NAMEZ"
+
+["kick"]
+generic = "U GO BYE NOW!"
+existingusername = "SOMEONE HAZ THAT NAME!"
+wrongprotocol = "PROTOCOL IZ WRONG!"
+invalidusername = "NAME IZ WRONG!"
+banned = "YOU WERE BAD! NO MORE!"

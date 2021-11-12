@@ -1,0 +1,28 @@
+# Swag language, fo shizzle
+
+["gui"]
+disconnect = "I'm outta here!"
+dismiss = "Aight"
+dismiss_far = "Aight, okay"
+kicked = "Fo shame"
+inventory = "Yo Swag!"
+
+["gui.options"]
+enablereverb = "Reverb, yo"
+mastervolume = "Master Volume: %d%%"
+resourcepacks = "The lookz, yo"
+
+["gui.title"]
+startgame = "Aight, let's play"
+options = "Gotta change"
+quit = "Aight I'm out"
+ip = "IP"
+port = "Port"
+username = "Yo name, dawg"
+
+["kick"]
+generic = "Fo shame, Fo shame."
+existingusername = "Ayo dawg, don't try-ta use someone else's name! Fo shame!"
+wrongprotocol = "Protocol's all outta whack, yo."
+invalidusername = "Your name just ain't right!"
+banned = "You know you ain't welcome here, dawg."
