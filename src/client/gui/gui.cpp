@@ -30,6 +30,7 @@
 // Size in pixels of the font we expect
 #define EXPECTED_FONT_SIZE 8
 
+#define SPACE_WIDTH 0.5f
 
 #define BUTTON_EDGE_RADIUS 3
 #define WINDOW_EDGE_RADIUS 5
@@ -91,7 +92,7 @@ CGui::CGui(Vector3f screenDimensions)
 	{
 		if ( c == ' ' )
 		{
-			m_charWidths[' '] = 1.0;
+			m_charWidths[' '] = SPACE_WIDTH;
 			continue;
 		}
 
