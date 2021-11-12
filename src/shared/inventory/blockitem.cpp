@@ -18,6 +18,25 @@ int CBlockItem::GetCount()
 	return 0;
 }
 
+int CBlockItem::GetID()
+{
+	return m_iBlockType;
+}
+void CBlockItem::SetID(int id)
+{
+	m_iBlockType = (BLOCKID)id;
+	m_iID = id;
+}
+
+BLOCKVAL CBlockItem::GetData()
+{
+	return m_iBlockData;
+}
+void CBlockItem::SetData(BLOCKVAL data)
+{
+	m_iBlockData = data;
+}
+
 #ifdef CLIENTEXE
 CTexture* CBlockItem::GetTexture()
 {

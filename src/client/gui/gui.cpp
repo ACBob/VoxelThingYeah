@@ -32,6 +32,8 @@
 
 
 #define BUTTON_EDGE_RADIUS 3
+#define WINDOW_EDGE_RADIUS 5
+#define WINDOW_PADDING 16
 
 CGui::CGui(Vector3f screenDimensions)
 {
@@ -130,6 +132,7 @@ CGui::CGui(Vector3f screenDimensions)
 	m_pCrosshairTex = materialSystem::LoadTexture("crosshair.png");
 	m_pHotbarTex = materialSystem::LoadTexture("hotbar.png");
 	m_pHotbarSelectTex = materialSystem::LoadTexture("hotbar-selected.png");
+	m_pWindowTex = materialSystem::LoadTexture("window.png");
 
 	// Load Shader
 	m_pShader = shaderSystem::LoadShader("text.vert", "text.frag");
@@ -353,6 +356,9 @@ void CGui::_DrawText( const char *text, Vector3f pos, float scale, CColour colou
 
 CGui::ButtonState CGui::_Button( int id, Vector3f pos, Vector3f size )
 {
+	if (id == 0)
+		return BUTTON_STATE_DISABLED;
+
 	if ( RegionHit( pos, size ) )
 	{
 		m_iHotItem = id;
@@ -415,6 +421,25 @@ void CGui::ImageCentered( Vector3f pos, Vector3f size, CTexture* pTex, CColour t
 	_Image( pos, size, pTex, tint );
 }
 
+void CGui::Image9Patch( Vector3f pos, Vector3f size, float borderRadius, CTexture* pTex, CColour tint )
+{
+	pos = GetInScreen( pos );
+	size = size * m_iGUIUnitSize;
+
+	_9PatchRect( pos, size, pTex, tint, borderRadius );
+}
+
+void CGui::Image9PatchCentered( Vector3f pos, Vector3f size, float borderRadius, CTexture* pTex, CColour tint )
+{
+	pos = GetInScreen( pos );
+	size = size * m_iGUIUnitSize;
+
+	pos.x -= size.x * 0.5f;
+	pos.y += size.y * 0.5f;
+
+	_9PatchRect( pos, size, pTex, tint, borderRadius );
+}
+
 bool CGui::Button( GuiID id, Vector3f position, Vector3f size, CTexture *pTexture )
 {
 	position = GetInScreen( position );
@@ -456,7 +481,7 @@ bool CGui::ButtonCentered( GuiID id, Vector3f position, Vector3f size, CTexture 
 	return Button( id, position, size, pTexture );
 }
 
-void CGui::Item( Vector3f position, Vector3f size, CItem *pItem ) {
+bool CGui::Item( GuiID id, Vector3f position, Vector3f size, CItem *pItem ) {
 	position = GetInScreen( position );
 
 	CColour textColor = {255, 255, 255};
@@ -465,6 +490,8 @@ void CGui::Item( Vector3f position, Vector3f size, CItem *pItem ) {
 	{
 		textColor = {255,127,127};
 	}
+
+	ButtonState state = _Button( id, position, size * m_iGUIUnitSize );
 
 	// Get the item texture
 	CTexture *pTex = pItem->GetTexture();
@@ -479,15 +506,51 @@ void CGui::Item( Vector3f position, Vector3f size, CItem *pItem ) {
 	sprintf( buffer, "%d", pItem->GetCount() );
 	_DrawText( buffer, position + Vector3f( size.x * 0.5f, size.y * 0.5f, 0 ), 1.0f, textColor );
 	delete[] buffer;
+
+	return state == BUTTON_STATE_PRESSED;
 }
 
-void CGui::ItemCentered( Vector3f position, Vector3f size, CItem *pItem ) {
+bool CGui::ItemCentered( GuiID id, Vector3f position, Vector3f size, CItem *pItem ) {
 	position.x -= size.x * 0.5f;
 	position.y += size.y * 0.5f;
 
-	Item( position, size, pItem );
+	return Item( id, position, size, pItem );
 }
 
+int CGui::Inventory( Vector3f position, int itemsAccross, CInventory *pInventory ) {
+	position = GetInScreen( position );
+
+	int itemsPerRow = itemsAccross;
+	int itemsPerColumn = pInventory->m_iItemSlots / itemsPerRow;
+
+	// Vector3f size = Vector3f( itemsPerRow * m_iGUIUnitSize * 2, itemsPerColumn * m_iGUIUnitSize * 2 );
+	// size.x += WINDOW_EDGE_RADIUS * 2;
+	// size.y += WINDOW_EDGE_RADIUS * 2;
+
+	// // Background of the inventory
+	// _9PatchRect( position, size, m_pWindowTex, {255,255,255}, WINDOW_EDGE_RADIUS );
+
+	int slot = -1;
+	// Draw the items
+	for ( int i = 0; i < pInventory->m_iItemSlots; i++ ) {
+		Vector3f itemPos = position + Vector3f(
+			( i % itemsPerRow ) * m_iGUIUnitSize * 2,
+			( i / itemsPerRow ) * m_iGUIUnitSize * 2,
+			0
+		);
+		if (Item( 'i'+i, itemPos / (float)m_iGUIUnitSize, {2,2}, pInventory->Slot(i) ))
+			slot = i;
+	}
+
+	return slot;
+}
+
+int CGui::InventoryCentered(  Vector3f position, int itemsAccross, CInventory *pInventory ) {
+	position.x -= itemsAccross * 0.5f;
+	position.y += (pInventory->m_iItemSlots / itemsAccross) * 0.5f;
+
+	return Inventory( position, itemsAccross, pInventory );
+}
 
 void CGui::Label( const char* text, Vector3f position, float scale, CColour colour, TextAlignment alignment )
 {

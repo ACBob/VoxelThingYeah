@@ -10,7 +10,7 @@
 #include <map>
 #include <vector>
 
-#include "shared/inventory/item.hpp"
+#include "shared/inventory/inventory.hpp"
 
 #pragma once
 
@@ -123,6 +123,7 @@ class CGui
 		CTexture *m_pCrosshairTex = nullptr;
 		CTexture *m_pHotbarTex = nullptr;
 		CTexture *m_pHotbarSelectTex = nullptr;
+		CTexture *m_pWindowTex = nullptr;
 		
 
 		CInputManager *m_pInputManager;
@@ -159,11 +160,18 @@ class CGui
 		void ImageRepeating( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint = {255, 255, 255} );
 		// Image where the origin is the middle of the size
 		void ImageCentered( Vector3f pos, Vector3f size, CTexture* pTex, CColour tint = {255, 255, 255} );
+
+		void Image9Patch( Vector3f pos, Vector3f size, float borderRadius, CTexture* pTex, CColour tint = {255, 255, 255} );
+		void Image9PatchCentered( Vector3f pos, Vector3f size, float borderRadius, CTexture* pTex, CColour tint = {255, 255, 255} );
+
 		bool Button( GuiID id, Vector3f position, Vector3f minSize = {4, 2}, CTexture *pTexture = nullptr );
 		bool ButtonCentered( GuiID id, Vector3f position, Vector3f minSize = {4, 2}, CTexture *pTexture = nullptr );
 
-		void Item( Vector3f position, Vector3f size, CItem *pItem );
-		void ItemCentered( Vector3f position, Vector3f size, CItem *pItem );
+		bool Item( GuiID id, Vector3f position, Vector3f size, CItem *pItem );
+		bool ItemCentered( GuiID id, Vector3f position, Vector3f size, CItem *pItem );
+
+		int Inventory( Vector3f position, int itemsAccross, CInventory *pInventory );
+		int InventoryCentered( Vector3f position, int itemsAccross, CInventory *pInventory );
 
 		// NOTE: Also generic text rendering
 		void Label( const char* text, Vector3f position, float scale = 1.0f, CColour colour = {255, 255, 255}, TextAlignment alignment = TEXTALIGN_LEFT );

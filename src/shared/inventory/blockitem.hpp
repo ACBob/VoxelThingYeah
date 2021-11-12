@@ -18,6 +18,12 @@ class CBlockItem : public CItem
 	Vector4f GetUV();
 #endif
 
+	int GetID();
+	void SetID(int id);
+
+	BLOCKVAL GetData();
+	void SetData(BLOCKVAL data);
+
 	// AIR is functionally the same as 0.
 	BLOCKID m_iBlockType;
 

@@ -20,6 +20,7 @@ class CItem
 	virtual void SetCount( int c );
 
 	virtual int GetID();
+	virtual void SetID( int id );
 
 #ifdef CLIENTEXE
 	virtual CTexture* GetTexture();

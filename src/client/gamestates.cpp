@@ -121,7 +121,7 @@ void CStatePlay::Enter()
 		new CBlockItem(64, WOOL, DyePalette[15]),
 
 		new CBlockItem(64, SOUNDMAKER),
-	});
+	}, true);
 }
 void CStatePlay::ReturnedTo() {}
 
@@ -297,7 +297,7 @@ void CStatePlay::Update()
 				 m_pLocalPlayer->m_inventory.Slot( i )->GetCount() == 0 )
 				continue;
 			
-			pStateMan->m_pGui->ItemCentered( { pStateMan->m_pGui->m_vGUICentre.x + p, -2.125f }, {2,2}, m_pLocalPlayer->m_inventory.Slot( i ) );
+			pStateMan->m_pGui->ItemCentered( 0, { pStateMan->m_pGui->m_vGUICentre.x + p, -2.125f }, {2,2}, m_pLocalPlayer->m_inventory.Slot( i ) );
 		}
 		p = 8.0f * ( m_pLocalPlayer->m_iSelectedItemIDX / 4.0f - 1.0f );
 		pStateMan->m_pGui->ImageCentered( { pStateMan->m_pGui->m_vGUICentre.x + p, -2.125f }, {3,3}, pStateMan->m_pGui->m_pHotbarSelectTex );
@@ -316,6 +316,21 @@ void CStatePlay::Update()
 			{
 				pStateMan->m_pClient->Disconnect();
 				pStateMan->PopState();
+			}
+		}
+		else if (m_pLocalPlayer->m_bInInventory)
+		{
+			pStateMan->m_pGui->Image9PatchCentered( pStateMan->m_pGui->m_vGUICentre, {18, 19}, 5, pStateMan->m_pGui->m_pWindowTex );
+			pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.inventory"), pStateMan->m_pGui->m_vGUICentre - Vector3f(8, 8), 1.0f, {255, 255, 255});
+
+			int s = pStateMan->m_pGui->Inventory( pStateMan->m_pGui->m_vGUICentre - Vector3f(8, 6.5), 8, m_invCreative );
+			if (s != -1)
+			{
+				CItem *pHeldItem = m_pLocalPlayer->m_inventory.Slot( m_pLocalPlayer->m_iSelectedItemIDX );
+				pHeldItem->SetCount( m_invCreative->Take( s, 64 ) );
+				pHeldItem->SetID( m_invCreative->Slot( s )->GetID() );
+				// TODO: Assuming block item, this is a hack
+				((CBlockItem*)pHeldItem)->SetData( ((CBlockItem*)m_invCreative->Slot( s ))->GetData() );
 			}
 		}
 		else
@@ -483,6 +498,9 @@ void CKickScreen::Update()
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
 
 	pStateMan->m_pInputMan->m_bInGui = true;
+
+	// TODO:
+	pStateMan->PopState();
 }
 
 
