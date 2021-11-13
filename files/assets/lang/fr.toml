@@ -6,6 +6,7 @@ dismiss = "Rejeter"
 dismiss_far = "Rejeter"
 kicked = "Kické"
 inventory = "Inventaire"
+cancel = "Annuler"
 
 ["gui.options"]
 enablereverb = "Activer le réverbération"

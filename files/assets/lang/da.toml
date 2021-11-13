@@ -4,6 +4,7 @@ dismiss = "Tilbage"
 dismiss_far = "Tilbage til Spillet" # badly named
 kicked = "Sparket ud!"
 inventory = "Inventar..."
+cancel = "Annuller"
 
 ["gui.options"]
 enablereverb = "Aktiver Ekko"

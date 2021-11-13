@@ -4,6 +4,7 @@ dismiss = "Go Back!"
 dismiss_far = "Continue Sailin'"
 kicked = "Thrown Overboard!"
 inventory = "Booty..."
+cancel = "Cancel"
 
 ["gui.options"]
 enablereverb = "Listen more"

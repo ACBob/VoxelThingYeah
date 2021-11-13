@@ -4,6 +4,7 @@ dismiss = "reutnr"
 dismiss_far = "reutnr togmae" # badly named
 kicked = "kiceide!!"
 inventory = "Iinvetonr..."
+cancel = "cancele"
 
 ["gui.options"]
 enablereverb = "enablerevber"

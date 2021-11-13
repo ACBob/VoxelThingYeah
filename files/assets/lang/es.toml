@@ -6,6 +6,7 @@ dismiss = "Descartar"
 dismiss_far = "Descartar"
 kicked = "Expulsado"
 inventory = "Inventario..."
+cancel = "Cancelar"
 
 ["gui.options"]
 enablereverb = "Activar reverberación"

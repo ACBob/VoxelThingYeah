@@ -6,6 +6,7 @@ dismiss = "OKI"
 dismiss_far = "OK" # badly named
 kicked = "KICKE!"
 inventory = "YUOR STUFFS...."
+cancel = "WAIT NO DOn'T CHANGE"
 
 ["gui.options"]
 enablereverb = "ECHO! ECHO! ECHO!"

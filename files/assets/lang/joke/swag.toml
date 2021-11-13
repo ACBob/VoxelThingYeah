@@ -6,6 +6,7 @@ dismiss = "Aight"
 dismiss_far = "Aight, okay"
 kicked = "Fo shame"
 inventory = "Yo Swag!"
+cancel = "Naw"
 
 ["gui.options"]
 enablereverb = "Reverb, yo"

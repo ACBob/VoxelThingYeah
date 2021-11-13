@@ -6,6 +6,7 @@ dismiss = "Meow."
 dismiss_far = "Mrow meow!"
 kicked = "HISSS"
 inventory = "Meow mroww!"
+cancel = "Meow."
 
 ["gui.options"]
 enablereverb = "Meow meow meo me m..."

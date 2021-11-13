@@ -4,6 +4,7 @@ dismiss = "FUCK"
 dismiss_far = "GET THE FUCK BACK HERE" # badly named
 kicked = "STAY THE FUCK AWAY"
 inventory = "YOUR FIELD OF FUCKS"
+cancel = "FUCK OFF"
 
 ["gui.options"]
 enablereverb = "aaaaAAAAAAAAA"

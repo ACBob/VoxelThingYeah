@@ -4,6 +4,7 @@ dismiss = "OwO"
 dismiss_far = "T_T" # badly named
 kicked = "Nowo way"
 inventory = "What youw have"
+cancel = "Cancwel"
 
 ["gui.options"]
 enablereverb = "uwu UwU UWU"
