@@ -81,3 +81,14 @@ lang_file = "joke/goose.toml"
 # [puns]
 # friendly_name = "Puns (Puns)"
 # lang_file = "joke/puns.toml"
+
+# Conlangs
+
+[beg]
+friendly_name = "Beg (Goisree)"
+lang_file = "conlang/beg.toml"
+
+# I say conlang, it's just old english
+[me]
+friendly_name = "Middel Englisch (ME)"
+lang_file = "conlang/me.toml"

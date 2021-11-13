@@ -1,0 +1,27 @@
+["gui"]
+disconnect = "Breke away"
+dismiss = "Returnen"
+dismiss_far = "Returne to the gamen" 
+kicked = "Thou hath been removen!"
+inventory = "Inventorie.."
+cancel = "Cancellen"
+
+["gui.options"]
+enablereverb = "Enablen eccho"
+mastervolume = "All louden: %d%%"
+resourcepacks = "Sours pakken"
+
+["gui.title"]
+startgame = "Begynne the gamen"
+options = "Choisen"
+quit = "Ende the Gamen"
+ip = "IP Place"
+port = "Port"
+username = "Name"
+
+["kick"]
+generic = "No resoun given."
+existingusername = "A personne haveth alredy this namen! Finde an other!"
+wrongprotocol = "Wrong protocole type!"
+invalidusername = "This namen is wrong. Finde an other!"
+banned = "Thou hath been banysshed from this place."
