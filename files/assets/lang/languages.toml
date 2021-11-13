@@ -3,20 +3,41 @@ friendly_name = "English (EN)"
 lang_file = "en.toml"
 
 [da]
-friendly_name = "Danish (DA)"
+friendly_name = "Dansk (DA)"
 lang_file = "da.toml"
 
 [de]
-friendly_name = "German (DE)"
+friendly_name = "Deutsch (DE)"
 lang_file = "de.toml"
 
 [es]
-friendly_name = "Spanish (ES)"
+friendly_name = "Español (ES)"
 lang_file = "es.toml"
 
 [fr]
-friendly_name = "French (FR)"
+friendly_name = "Français (FR)"
 lang_file = "fr.toml"
+
+[it]
+friendly_name = "Italiano (IT)"
+lang_file = "it.toml"
+
+[nl]
+friendly_name = "Nederlands (NL)"
+lang_file = "nl.toml"
+
+[no]
+friendly_name = "Norsk (NO)"
+lang_file = "no.toml"
+
+# Can't be done at the moment, need to have arbitrary font support
+# [pl]
+# friendly_name = "Polski (PL)"
+# lang_file = "pl.toml"
+
+[pt]
+friendly_name = "Português (PT)"
+lang_file = "pt.toml"
 
 # Joke languages
 

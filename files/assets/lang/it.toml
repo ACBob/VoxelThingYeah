@@ -1,0 +1,29 @@
+# Italiano
+
+["gui"]
+disconnect = "Disconnetti"
+dismiss = "Rimuovi"
+dismiss_far = "Rimuovi"
+kicked = "Kickato"
+inventory = "Inventario"
+cancel = "Annulla"
+
+["gui.options"]
+enablereverb = "Abilita Reverb"
+mastervolume = "Volume Principale (%d%%)"
+resourcepacks = "Resource Packs"
+
+["gui.title"]
+startgame = "Avvia"
+options = "Opzioni"
+quit = "Esci"
+ip = "IP del Server"
+port = "Port"
+username = "Nome Utente"
+
+["kick"]
+generic = "Nessun motivo specificato"
+existingusername = "Nome utente già in uso"
+wrongprotocol = "Protocollo errato"
+invalidusername = "Nome utente non valido"
+banned = "Tu sei bannato da questo server"

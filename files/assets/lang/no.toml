@@ -1,0 +1,29 @@
+# Norsk
+
+["gui"]
+disconnect = "Koble fra"
+dismiss = "Avslutt"
+dismiss_far = "Avslutt"
+kicked = "Kastet ut"
+inventory = "Inventar..."
+cancel = "Avbryt"
+
+["gui.options"]
+enablereverb = "Aktiver høyttalerev"
+mastervolume = "Mastervolum (%d%%)"
+resourcepacks = "Ressurspakker"
+
+["gui.title"]
+startgame = "Start spill"
+options = "Innstillinger"
+quit = "Avslutt"
+ip = "IP adresse"
+port = "Port"
+username = "Brukernavn"
+
+["kick"]
+generic = "Ingen årsak gitt"
+existingusername = "Brukernavnet finnes allerede"
+wrongprotocol = "Feil protokoll"
+invalidusername = "Ugyldig brukernavn"
+banned = "Du er bannet!"
