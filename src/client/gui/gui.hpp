@@ -124,6 +124,7 @@ class CGui
 		CTexture *m_pHotbarTex = nullptr;
 		CTexture *m_pHotbarSelectTex = nullptr;
 		CTexture *m_pWindowTex = nullptr;
+		CTexture *m_pLanguageButtonTex = nullptr;
 		
 
 		CInputManager *m_pInputManager;

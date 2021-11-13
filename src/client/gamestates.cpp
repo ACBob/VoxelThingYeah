@@ -428,6 +428,12 @@ void CStateMenu::Update()
 		pStateMan->PushState( std::make_unique<CStateOptionsMenu>() );
 	}
 
+	// Language button goes right next to the options button
+	if ( pStateMan->m_pGui->ButtonCentered( GUIGEN_ID, { pStateMan->m_pGui->m_vGUICentre.x + 17, -14 }, {2, 2}, pStateMan->m_pGui->m_pLanguageButtonTex ) )
+	{
+		pStateMan->PushState( std::make_unique<CStateLanguageMenu>() );
+	}
+
 	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.quit"), { pStateMan->m_pGui->m_vGUICentre.x, -6 }, {32, 2} ) )
 	{
 		pStateMan->PopState();
@@ -563,6 +569,59 @@ void CStatePackMenu::Update()
 	pStateMan->m_pGui->ImageRepeating( {0,-1}, pStateMan->m_pGui->m_vGUISize, pStateMan->m_pGui->m_pGuiBGTex );
 
 	if (pStateMan->m_pGui->LabelButtonCentered(GUIGEN_ID, "Nobody here but us chickens!", pStateMan->m_pGui->m_vGUICentre, {24, 2}))
+	{
+		pStateMan->PopState();
+	}
+}
+
+void CStateLanguageMenu::Enter()
+{
+	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+
+	m_languageList = pStateMan->m_pLocalizer->ListLanguages();
+	m_iScroll = m_languageList.size() - 1;
+}
+
+void CStateLanguageMenu::ReturnedTo() {}
+
+void CStateLanguageMenu::Exit()
+{
+	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+	pStateMan->m_pGui->ClearBuffers();
+}
+
+void CStateLanguageMenu::Update()
+{
+	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+
+	pStateMan->m_pInputMan->m_bInGui = true;
+
+	pStateMan->m_pGui->ImageRepeating( {0,-1}, pStateMan->m_pGui->m_vGUISize, pStateMan->m_pGui->m_pGuiBGTex );
+
+	// Scrollbar
+	pStateMan->m_pGui->Slider(GUIGEN_ID, { -6, -2 }, {2, 25}, m_languageList.size() - 1, m_iScroll);
+
+	// List languages
+	// Language list is a vector of pairs, first is the language code, second is the language name
+	// We can display like 12 languages at a time
+	// The slider acts as a scrollbar, so when it's at the top (max) we should display the first 15 languages
+	for (int i = 11; i > 0; i--)
+	{
+		int index = m_iScroll - i;
+		if (index < 0 || index >= m_languageList.size())
+			continue;
+
+
+		if (pStateMan->m_pGui->LabelButtonCentered(GUIGEN_ID, m_languageList[index].second.c_str(),
+													{ pStateMan->m_pGui->m_vGUICentre.x, 2.0f + i * 2.0f }, {16, 2}))
+		{
+			pStateMan->m_pLocalizer->SetLanguage(m_languageList[index].first.c_str());
+			pStateMan->PopState();
+		}
+	}
+
+	if (pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.cancel"),
+										{pStateMan->m_pGui->m_vGUICentre.x, -3}, {16, 2} ) )
 	{
 		pStateMan->PopState();
 	}

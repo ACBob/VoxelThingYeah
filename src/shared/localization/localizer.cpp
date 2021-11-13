@@ -9,6 +9,8 @@
 
 #include "logging.hpp"
 
+#include <algorithm>
+
 CLocalizer::CLocalizer()
 {
     m_currentLanguage = cvarLanguage->GetString();
@@ -107,18 +109,41 @@ void CLocalizer::LoadLanguages()
     }
 }
 
+bool CLocalizer::SetLanguage( const char* lang )
+{
+    if ( m_languages.find( lang ) == m_languages.end() )
+    {
+        con_error( "Couldn't find language %s", lang );
+        return false;
+    }
+    m_currentLanguage = lang;
+
+    // Update convar
+    cvarLanguage->SetString( lang );
+
+    // Reload the language file
+    LoadLanguages();
+
+    return true;
+}
+
 CLocalizer::~CLocalizer()
 {
 }
 
-std::vector<std::string> CLocalizer::ListLanguages()
+std::vector<std::pair<std::string, std::string>> CLocalizer::ListLanguages()
 {
-    std::vector<std::string> languages;
+   std::vector<std::pair<std::string, std::string>> languages;
 
-    for ( auto &language : m_languages )
+    for ( auto lang : m_languages )
     {
-        languages.push_back( language.first );
+        languages.push_back( std::make_pair( lang.first, lang.second.friendlyName ) );
     }
+
+    // Sort the languages by friendly name
+    std::sort( languages.begin(), languages.end(), []( const std::pair<std::string, std::string>& a, const std::pair<std::string, std::string>& b ) {
+        return a.second < b.second;
+    } );
 
     return languages;
 }

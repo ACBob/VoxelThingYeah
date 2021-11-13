@@ -134,6 +134,7 @@ CGui::CGui(Vector3f screenDimensions)
 	m_pHotbarTex = materialSystem::LoadTexture("hotbar.png");
 	m_pHotbarSelectTex = materialSystem::LoadTexture("hotbar-selected.png");
 	m_pWindowTex = materialSystem::LoadTexture("window.png");
+	m_pLanguageButtonTex = materialSystem::LoadTexture("langbutton.png");
 
 	// Load Shader
 	m_pShader = shaderSystem::LoadShader("text.vert", "text.frag");

@@ -108,3 +108,14 @@ class CStatePackMenu : public CState
 	std::vector<bool> m_packEnabled;
 	int m_iScroll = 0;
 };
+
+class CStateLanguageMenu : public CState
+{
+	void Enter();
+	void ReturnedTo();
+	void Exit();
+	void Update();
+
+	std::vector<std::pair<std::string, std::string>> m_languageList;
+	int m_iScroll = 0;
+};

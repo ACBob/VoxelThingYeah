@@ -20,7 +20,7 @@ class CLocalizer
         CLocalizer();
         ~CLocalizer();
 
-        std::vector<std::string> ListLanguages();
+        std::vector<std::pair<std::string, std::string>> ListLanguages();
 
         // (Re)loads the language files
         void LoadLanguages();

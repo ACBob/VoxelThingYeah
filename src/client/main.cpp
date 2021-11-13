@@ -214,10 +214,6 @@ int main( int argc, char *args[] )
 
 	con_info( "Init Translator..." );
 	CLocalizer translator;
-	for (std::string &l : translator.ListLanguages() )
-	{
-		con_debug( "Found Language: %s", l.c_str() );
-	}
 
 	con_info( "Init GUI..." );
 
