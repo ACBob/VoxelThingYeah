@@ -46,7 +46,6 @@ Vector4f CBlockItem::GetUV() // TODO: This doesn't quite work (yet)
 {
 	Vector4f blockTex = BlockType( m_iBlockType ).GetTexture(NORTH, m_iBlockData );
 	blockTex /= 16.0f;
-	blockTex.y = 1.0f - blockTex.y;
 	return {
 		blockTex.x,
 		blockTex.y,

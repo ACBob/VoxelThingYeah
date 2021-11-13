@@ -229,13 +229,13 @@ std::vector<CGui::GuiVert> CGui::GetRect( Vector3f pos, Vector3f size, Vector4f 
 {
 	Vector4f c = colour;
 	return {
-		{ pos.x + size.x, pos.y, pos.z, uv.z, uv.w, c.x, c.y, c.z, c.w },
-		{ pos.x, pos.y, pos.z, uv.x, uv.w, c.x, c.y, c.z, c.w },
 		{ pos.x, pos.y - size.y, pos.z, uv.x, uv.y, c.x, c.y, c.z, c.w },
-
-		{ pos.x + size.x, pos.y - size.y, pos.z, uv.z, uv.y, c.x, c.y, c.z, c.w },
+		{ pos.x, pos.y, pos.z, uv.x, uv.w, c.x, c.y, c.z, c.w },
 		{ pos.x + size.x, pos.y, pos.z, uv.z, uv.w, c.x, c.y, c.z, c.w },
-		{ pos.x, pos.y - size.y, pos.z, uv.x, uv.y, c.x, c.y, c.z, c.w }
+
+		{ pos.x, pos.y - size.y, pos.z, uv.x, uv.y, c.x, c.y, c.z, c.w },
+		{ pos.x + size.x, pos.y, pos.z, uv.z, uv.w, c.x, c.y, c.z, c.w },
+		{ pos.x + size.x, pos.y - size.y, pos.z, uv.z, uv.y, c.x, c.y, c.z, c.w },
 	};
 }
 

@@ -34,13 +34,13 @@ const CModel::Vertex plantVertices[] = {
 
 // D-d-d-d-double vector
 const std::vector<std::vector<int>> cubeTris = {
-	{ 3, 2, 1, 0 }, // N
-	{ 6, 3, 0, 5 }, // E
-	{ 7, 6, 5, 4 }, // S
-	{ 2, 7, 4, 1 }, // W
+	{ 0, 1, 2, 3 }, // N
+	{ 5, 0, 3, 6 }, // E
+	{ 4, 5, 6, 7 }, // S
+	{ 1, 4, 7, 2 }, // W
 
-	{ 0, 1, 4, 5 }, // UP
-	{ 6, 7, 2, 3 }	// DN
+	{ 5, 4, 1, 0 }, // UP
+	{ 3, 2, 7, 6 }	// DN
 };
 
 const std::vector<int> plantTris = { 2, 1, 3, 0, 6, 5, 7, 4 };

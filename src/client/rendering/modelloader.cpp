@@ -118,9 +118,9 @@ void BOBJLoadModel( CModel *m, const char *fp )
 			}
 
 			m->m_faces.push_back( {
-				(int)m->m_vertices.size() - 1,
+				(int)m->m_vertices.size() - 3,
 				(int)m->m_vertices.size() - 2,
-				(int)m->m_vertices.size() - 3
+				(int)m->m_vertices.size() - 1
 			} );
 		}
 

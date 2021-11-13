@@ -15,8 +15,7 @@ uniform sampler2D diffuse;
 
 void main()
 {
-	vec2 texCoord = vec2(TexCoord.x, TexCoord.y) * texCoordOffset.xy + texCoordOffset.zw;
-	texCoord.y = 1 - texCoord.y;
+	vec2 texCoord = vec2(TexCoord.x, 1 - TexCoord.y) * texCoordOffset.xy + texCoordOffset.zw;
 	FragColor = texture(diffuse, texCoord);
 	if (FragColor.a == 0.0) discard;
 
