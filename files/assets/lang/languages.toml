@@ -48,6 +48,10 @@ lang_file = "joke/anger.toml"
 friendly_name = "storke (sgytokr)"
 lang_file = "joke/stroke.toml"
 
+[polite]
+friendly_name = "Polite (England)"
+lang_file = "joke/polite.toml"
+
 # I *Want* to pursue this, but I'm not sure how to do it.
 # [puns]
 # friendly_name = "Puns (Puns)"

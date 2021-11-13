@@ -1,0 +1,27 @@
+["gui"]
+disconnect = "press this button to disconnect, sire."
+dismiss = "this button allows you to dismiss this menu."
+dismiss_far = "this button allows you to return to the game." # badly named
+kicked = "my lord, I fear you've been, how do I say, kicked."
+inventory = "Your coffers, sire:"
+cancel = "Cancel the previous request?"
+
+["gui.options"]
+enablereverb = "Shall I enable the reverb?"
+mastervolume = "Here is the master volume: %d%%"
+resourcepacks = "Attempting a new look, are we?"
+
+["gui.title"]
+startgame = "This button initiates the game."
+options = "customize the game to your likings."
+quit = "Quit this game, and return to your manor."
+ip = "the IP Address you ordered, sire."
+port = "Port (sadly, without Starboard.)"
+username = "Your noble title, madame."
+
+["kick"]
+generic = "It seems we've been kicked."
+existingusername = "Somebody by your name is already on the guest list, it seems."
+wrongprotocol = "Things seem to have gone pearshaped, madame."
+invalidusername = "Apparently, the name we are under is invalid."
+banned = "You, sire, are banned from this server."
