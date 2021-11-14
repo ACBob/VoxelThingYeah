@@ -25,3 +25,11 @@ existingusername = "Der Benutzername existiert bereits."
 wrongprotocol = "Falsches Protokoll."
 invalidusername = "Der Benutzername ist ungültig."
 banned = "Du wurdest gebannt."
+
+
+["msg"]
+joined = "%s ist dem Spiel beigetreten."
+left = "%s hat das Spiel verlassen."
+opped = "%s wurde opped."
+deopped = "%s wurde deopped."
+youhaveop = "Du hast Operatorrechte auf diesem Server."

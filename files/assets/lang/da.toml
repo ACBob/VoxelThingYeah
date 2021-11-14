@@ -25,3 +25,11 @@ existingusername = "Nogen har allerede dit brugernavn! Find et andet!"
 wrongprotocol = "Forkert protokol version."
 invalidusername = "Ugyldigt brugernavn."
 banned = "Du er blevet udelukket fra serveren."
+
+
+["msg"]
+joined = "%s har koblet til spillet."
+left = "%s har forladt spillet."
+opped = "%s er blevet oppet."
+deopped = "%s er blevet deoppet."
+youhaveop = "Du har nu operator rettigheder på denne serveren."

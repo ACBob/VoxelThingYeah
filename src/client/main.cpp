@@ -215,6 +215,8 @@ int main( int argc, char *args[] )
 	con_info( "Init Translator..." );
 	CLocalizer translator;
 
+	client.m_pTranslator = &translator;
+
 	con_info( "Init GUI..." );
 
 	CGui gui( window.GetSize() );

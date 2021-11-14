@@ -27,3 +27,10 @@ existingusername = "Ayo dawg, don't try-ta use someone else's name! Fo shame!"
 wrongprotocol = "Protocol's all outta whack, yo."
 invalidusername = "Your name just ain't right!"
 banned = "You know you ain't welcome here, dawg."
+
+["msg"]
+joined = "Ayo, welcome %s!"
+left = "Ayo, %s is outta here!"
+opped = "Ayo, %s is opped!"
+deopped = "Ayo, %s is no longer opped."
+youhaveop = "Ey, you're opped"

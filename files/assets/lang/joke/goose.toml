@@ -27,3 +27,10 @@ existingusername = "HONK HONK QUACK"
 wrongprotocol = "HONK HONK QUACK"
 invalidusername = "HONK HONK QUACK"
 banned = "HONK HONK QUACK"
+
+["msg"]
+joined = "%s HONK HONK QUACK"
+left = "HONK %s HONK QUACK"
+opped = "HONK HONK %s QUACK"
+deopped = "HONK %s HONK QUACK"
+youhaveop = "HONK HONK QUACK"

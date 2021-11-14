@@ -25,3 +25,10 @@ existingusername = "THAT'S MY NAME, DICK"
 wrongprotocol = "WRONG WAY, ASSHOLE"
 invalidusername = "STUPID FUCKING NAME"
 banned = "DON'T YOU FUCKING SHOW YOUR FACE HERE EVER AGAIN"
+
+["msg"]
+joined = "%s JOINED"
+left = "%s LEFT, FUCK THEM"
+opped = "%s IS A MOD NOW, FUCK THEM"
+deopped = "%s IS NO MORE A MOD, FUCK THEM"
+youhaveop = "YOU HAVE OP, FUCK YOU"

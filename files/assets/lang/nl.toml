@@ -27,3 +27,11 @@ existingusername = "Deze gebruikersnaam bestaat al."
 wrongprotocol = "Verkeerde protocol versie."
 invalidusername = "Deze gebruikersnaam is ongeldig."
 banned = "Je bent verbannen van deze server."
+
+
+["msg"]
+joined = "%s is aan het spelen."
+left = "%s is niet meer aan het spelen."
+opped = "%s is opgedeckt."
+deopped = "%s is niet meer opgedeckt."
+youhaveop = "Je hebt operator rechten op deze server."

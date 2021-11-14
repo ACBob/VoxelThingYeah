@@ -27,3 +27,10 @@ existingusername = "SOMEONE HAZ THAT NAME!"
 wrongprotocol = "PROTOCOL IZ WRONG!"
 invalidusername = "NAME IZ WRONG!"
 banned = "YOU WERE BAD! NO MORE!"
+
+["msg"]
+joined = "%s HAZ JOINED!!! HI!!"
+left = "%s HAS LETF, GOOBYE!!"
+opped = "%s HAS OPED!"
+deopped = "%s HAS DEOPED!"
+youhaveop = "YOU HAVE UNLIMITED POWER! >:3"

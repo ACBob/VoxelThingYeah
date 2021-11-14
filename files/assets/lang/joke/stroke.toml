@@ -25,3 +25,10 @@ existingusername = "soemogn already ahs ypor usxerena!! CHNGE IT"
 wrongprotocol = "rpotcyl versio nicinmatc"
 invalidusername = "the username procided is invaled change it!"
 banned = "you are banend from the searv"
+
+["msg"]
+joined = "%s hds jjouieed the game."
+left = "%s letf the game.."
+opped = "%s has neben oped."
+deopped = "%s has ebene dee oped."
+youhaveop = "You hve opretaro privvililiges on thiss erver."

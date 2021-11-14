@@ -25,3 +25,10 @@ existingusername = "SOMEONE HAZ THAT NAME!"
 wrongprotocol = "Prowocol wrongowo"
 invalidusername = "UwU Namey Wamey Invalidy"
 banned = "UwU admin wadmin got angyyyy"
+
+["msg"]
+joined = "%s joiwned the furcon!"
+left = "%s lewft the furcon!"
+opped = "%s is now an admin uwu."
+deopped = "%s is no longer an admin uwu."
+youhaveop = "Youw awe an admin, uwu"

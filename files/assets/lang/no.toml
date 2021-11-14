@@ -27,3 +27,11 @@ existingusername = "Brukernavnet finnes allerede"
 wrongprotocol = "Feil protokoll"
 invalidusername = "Ugyldig brukernavn"
 banned = "Du er bannet!"
+
+
+["msg"]
+joined = "%s har koblet til."
+left = "%s har forlatt spillet."
+opped = "%s har blitt oppet."
+deopped = "%s har blitt deoppet."
+youhaveop = "Du har operator rettigheter på denne tjeneren."

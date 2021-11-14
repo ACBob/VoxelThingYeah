@@ -2,7 +2,7 @@
 disconnect = "Lyz"
 dismiss = "Aof"
 dismiss_far = "Aof" # badly named
-kicked = "Nao shaoth geedhia!" # TODO: no translation yet
+kicked = "Nao shaoth geedhia!"
 inventory = "Jaz aof"
 cancel = "Nao"
 
@@ -25,3 +25,11 @@ existingusername = "Naa jufeeg!"
 wrongprotocol = "Protocol naotrui."
 invalidusername = "Naa naotrui."
 banned = "Ja naokoi."
+
+
+["msg"]
+joined = "%s shtoirthia sheleeg."
+left = "%s lyz."
+opped = "%s mueeg shtoig."
+deopped = "%s muia shtoig."
+youhaveop = "Ja mueeg shtoig oig zeef xeef."

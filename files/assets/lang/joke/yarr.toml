@@ -25,3 +25,10 @@ existingusername = "Yarr captain's name is already taken!"
 protocolmismatch = "Yer' speakin' jibberish, lad."
 invalidusername = "The captain name given is not valid."
 banned = "Yer' banned from this ship!"
+
+["msg"]
+joined = "%s has come aboard!"
+left = "%s has left the ship!"
+opped = "%s is a matey now!"
+deopped = "%s is no longer a matey."
+youhaveop = "You are a matey of the ship!"

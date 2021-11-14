@@ -25,3 +25,10 @@ existingusername = "Somebody by your name is already on the guest list, it seems
 wrongprotocol = "Things seem to have gone pearshaped, madame."
 invalidusername = "Apparently, the name we are under is invalid."
 banned = "You, sire, are banned from this server."
+
+["msg"]
+joined = "%s has joined the game."
+left = "%s has left the game."
+opped = "%s has been opped."
+deopped = "%s has been deopped."
+youhaveop = "You have operator priviliges on this server, sir."
