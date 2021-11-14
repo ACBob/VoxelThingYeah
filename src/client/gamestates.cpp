@@ -11,6 +11,7 @@
 #include "rendering/modelloader.hpp"
 
 #include "cvar_clientside.hpp"
+#include "cvar_shared.hpp"
 
 #include <cstring>
 
@@ -382,6 +383,11 @@ void CStateMenu::Enter()
 	pStateMan->m_pGui->SetTextBuffer( 5, username->GetString() );
 
 	soundSystem::SetListener( nullptr, Vector3f( 0, 0, 0 ), Vector3f( 0, 0, 1 ), Vector3f( 0, 0, 0 ) );
+
+	// HACK: For now, if there's no language set, we display the language selection screen.
+	// Ideally we'd automagically detect it, but I can't figure out how to do that.
+	if (!cvarLanguage->IsModified())
+		pStateMan->PushState(std::make_unique<CStateLanguageMenu>());
 }
 
 void CStateMenu::ReturnedTo()
