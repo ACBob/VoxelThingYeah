@@ -26,10 +26,9 @@ wrongprotocol = "Wrong protocole type!"
 invalidusername = "This namen is wrong. Finde an other!"
 banned = "Thou hath been banysshed from this place."
 
-# TODO: These just use english
 ["msg"]
-joined = "%s joined the game."
-left = "%s left the game."
-opped = "%s has been opped."
-deopped = "%s has been deopped."
-youhaveop = "You have operator priviliges on this server."
+joined = "%s hath comen."
+left = "%s hath lefte"
+opped = "%s hath becomen king."
+deopped = "%s hath becomen paissaunt."
+youhaveop = "Thou art king here."
