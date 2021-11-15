@@ -21,6 +21,8 @@
 
 #include "config.h"
 
+#include "splash.hpp"
+
 const CModel::Vertex cloudPlane[4] = {
 	// POSITION            NORMAL            UV
 	{ -512.0f,  0.0f, -512.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },
@@ -406,21 +408,19 @@ void CStateMenu::Enter()
 			m_splashes.push_back( pLine );
 			pLine = pNextLine + 1;
 		}
-
-		// Pick a random line
-		m_splash = m_splashes[rand() % m_splashes.size()];
 	}
 	else
 	{
-		static const std::vector<std::string> errorSplashes = {
+		m_splashes = {
 			"You fucked with the code didn't you.",
 			"If you're reading this, I'm considering it your fault.",
 			"I know what you did.",
 			"I'm sure you didn't mean it?"
 		};
-
-		m_splash = errorSplashes[rand() % errorSplashes.size()];
 	}
+
+	// Pick a random line
+	m_splash = GetSplashText(m_splashes);
 }
 
 void CStateMenu::ReturnedTo()
@@ -438,8 +438,7 @@ void CStateMenu::ReturnedTo()
 		pStateMan->PushState( std::make_unique<CKickScreen>() );
 	}
 
-	if (m_splashes.size())
-		m_splash = m_splashes[rand() % m_splashes.size()];
+	m_splash = GetSplashText(m_splashes);
 }
 
 void CStateMenu::Exit()

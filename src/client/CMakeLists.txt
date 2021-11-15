@@ -24,6 +24,7 @@ set(client_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/packs.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/devconsole.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/inputmanager.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/splash.cpp
 	PARENT_SCOPE
 )
 
