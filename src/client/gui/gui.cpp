@@ -578,7 +578,7 @@ const char *CGui::TextInput( int id, Vector3f vPosition )
 	std::string text = m_textBuffers[id];
 
 	std::string dispText = (m_iTick / 8) % 2 == 0 ? text + "_" : text;
-	Label( dispText.c_str(), vPosition - Vector3f(0, 1), 1.0f, CColour( 255, 255, 255 ) );
+	_DrawText( dispText.c_str(), GetInScreen(vPosition), 1.0f, {255,255,255} );
 
 	if ( m_pInputManager->m_cTypeKey != nullptr )
 	{
@@ -860,10 +860,10 @@ const char *CGui::SelectableTextInput( int id, Vector3f pos, Vector3f size )
 	}
 
 	if ( m_iKeyboardItem != id )
-		Label( m_textBuffers[id].c_str(), ( pos / (float)m_iGUIUnitSize ) + Vector3f( 0.5, 0.5 ), 1.0f, textColour );
+		_DrawText( m_textBuffers[id].c_str(), {pos.x + m_iGUIUnitSize * 0.5f, pos.y - m_iGUIUnitSize * 0.5f}, 1.0f, textColour );
 	else
 	{
-		TextInput( id, ( pos / (float)m_iGUIUnitSize )  + Vector3f( 0.5, 0.5 ) );
+		TextInput( id, ( pos / (float)m_iGUIUnitSize )  + Vector3f( 0.5, -0.5 ) );
 	}
 
 	// Draw the box
