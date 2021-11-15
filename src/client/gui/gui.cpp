@@ -871,3 +871,10 @@ const char *CGui::SelectableTextInput( int id, Vector3f pos, Vector3f size )
 
 	return nullptr;
 }
+
+const char *CGui::SelectableTextInputCentered( int id, Vector3f pos, Vector3f size )
+{
+	pos.x -= size.x * 0.5f;
+
+	return SelectableTextInput( id, pos, size );
+}

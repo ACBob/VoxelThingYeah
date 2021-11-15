@@ -186,4 +186,5 @@ class CGui
 		bool LabelButton( GuiID id, const char* text, Vector3f position, Vector3f size );
 		bool LabelButtonCentered( GuiID id, const char* text, Vector3f position, Vector3f size );
 		const char *SelectableTextInput( int id, Vector3f pos, Vector3f size );
+		const char *SelectableTextInputCentered( int id, Vector3f pos, Vector3f size );
 };
