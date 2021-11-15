@@ -23,6 +23,8 @@
 
 #include "splash.hpp"
 
+#include "sound/soundmanager.hpp"
+
 const CModel::Vertex cloudPlane[4] = {
 	// POSITION            NORMAL            UV
 	{ -512.0f, 0.0f, -512.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },

@@ -10,6 +10,8 @@
 
 #include "shared/logging.hpp"
 
+#warning INCLUDED_HERE
+
 #ifdef MEEGREEF_ENABLE_OPENAL
 
 	// Some extra buffers for OpenAL
@@ -113,12 +115,12 @@ namespace soundSystem
 	extern std::vector<CSound *> loadedSounds;
 	extern std::map<std::string, CSoundEvent *> soundEvents;
 
-	void PlayBreakSound( BLOCKID blockType, Vector3f pos ){};
-	void PlayPlaceSound( BLOCKID blockType, Vector3f pos ){};
-	void PlayStepSound( BLOCKID blockType, Vector3f pos ){};
+	inline void PlayBreakSound( BLOCKID blockType, Vector3f pos ){};
+	inline void PlayPlaceSound( BLOCKID blockType, Vector3f pos ){};
+	inline void PlayStepSound( BLOCKID blockType, Vector3f pos ){};
 
-	void PlaySoundEvent( CSoundEvent *event, Vector3f pos ){};
-	void PlaySoundEvent( const char *eventName, Vector3f pos ){};
+	inline void PlaySoundEvent( CSoundEvent *event, Vector3f pos ){};
+	inline void PlaySoundEvent( const char *eventName, Vector3f pos ){};
 } // namespace soundSystem
 
 #endif

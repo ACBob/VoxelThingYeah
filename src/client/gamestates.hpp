@@ -10,7 +10,6 @@
 #include "rendering/texturemanager.hpp"
 #include "sdlstuff/sdlwindow.hpp"
 #include "shared/statemanager.hpp"
-#include "sound/soundmanager.hpp"
 #include "world/world.hpp"
 
 #pragma once
