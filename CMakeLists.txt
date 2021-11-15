@@ -29,7 +29,7 @@ find_package(OpenGL REQUIRED)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-if (MEEGREEF_ENABLE_OPENAL)
+if (MEEGREEF_ENABLE_OPENAL AND NOT DEFINED OPENAL_INCLUDE_DIRS)
 	find_package(OpenAL)
 	if (${OPENAL_FOUND})
 		add_compile_definitions(MEEGREEF_ENABLE_OPENAL)
@@ -37,6 +37,8 @@ if (MEEGREEF_ENABLE_OPENAL)
 		set(MEEGREEF_ENABLE_OPENAL OFF)
 		message(WARNING "Couldn't find OpenAL, Disabling audio support.")
 	endif()
+elseif(DEFINED OPENAL_INCLUDE_DIRS AND MEEGREEF_ENABLE_OPENAL)
+	add_compile_definitions(MEEGREEF_ENABLE_OPENAL)
 endif()
 
 # LodePNG
