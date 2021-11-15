@@ -412,7 +412,14 @@ void CStateMenu::Enter()
 	}
 	else
 	{
-		m_splash = "ERROR!";
+		static const std::vector<std::string> errorSplashes = {
+			"You fucked with the code didn't you.",
+			"If you're reading this, I'm considering it your fault.",
+			"I know what you did.",
+			"I'm sure you didn't mean it?"
+		};
+
+		m_splash = errorSplashes[rand() % errorSplashes.size()];
 	}
 }
 
@@ -431,7 +438,8 @@ void CStateMenu::ReturnedTo()
 		pStateMan->PushState( std::make_unique<CKickScreen>() );
 	}
 
-	m_splash = m_splashes[rand() % m_splashes.size()];
+	if (m_splashes.size())
+		m_splash = m_splashes[rand() % m_splashes.size()];
 }
 
 void CStateMenu::Exit()
@@ -473,7 +481,7 @@ void CStateMenu::Update()
 		pStateMan->PushState( std::make_unique<CStateLanguageMenu>() );
 	}
 
-	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.quit"), { pStateMan->m_pGui->m_vGUICentre.x, pStateMan->m_pGui->m_vGUICentre.y + 6 }, {32, 2} ) )
+	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.quit"), { pStateMan->m_pGui->m_vGUICentre.x, pStateMan->m_pGui->m_vGUICentre.y + 9 }, {32, 2} ) )
 	{
 		pStateMan->PopState();
 	}
@@ -490,12 +498,17 @@ void CStateOptionsMenu::Enter()
 	m_iVolumeSlider = cl_volume->GetFloat() * 100;
 	m_bEnableReverb = cl_reverb->GetBool();
 
+	pStateMan->m_pGui->SetTextBuffer(5, username->GetString());
+
 	soundSystem::SetListener( nullptr, Vector3f( 0, 0, 0 ), Vector3f( 0, 0, 1 ), Vector3f( 0, 0, 0 ) );
 }
 void CStateOptionsMenu::ReturnedTo() {}
 void CStateOptionsMenu::Exit()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+
+	username->SetString(pStateMan->m_pGui->GetTextBuffer(5));
+
 	pStateMan->m_pGui->ClearBuffers();
 }
 void CStateOptionsMenu::Update()
@@ -523,6 +536,9 @@ void CStateOptionsMenu::Update()
 	{
 		pStateMan->PushState( std::make_unique<CStatePackMenu>() );
 	}
+
+	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.title.username"), { pStateMan->m_pGui->m_vGUICentre.x, 11 }, 1.0f, {255, 255, 255}, CGui::TEXTALIGN_CENTER );
+	pStateMan->m_pGui->SelectableTextInputCentered( 5, { pStateMan->m_pGui->m_vGUICentre.x, 13 }, {16, 2} );
 }
 
 void CKickScreen::Enter()
