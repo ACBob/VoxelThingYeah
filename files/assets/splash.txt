@@ -38,3 +38,63 @@ i0.1134
 Sex!
 Doctor Who, exactly?
 Hahahaha, got you!
+Reality can be whatever you want.
+[as]
+Pining for the fjords!
+Just like my sweet mama.
+Pray that there's intelligent life somewhere up in space.
+Splash Text!
+EXAMPLE!
+Click here to add text.
+King Arthur!
+Sell me some milk!
+I have no idea what I'm doing!
+THIS SENTENCE IS FALSE!
+This sentence is true.
+Hang on, you're telling me a shrimp fried this rice?
+I'm a fish!
+Meow!
+I find it unlikely that EVERYONE was kung fu fighting.
+Hard-coded!
+Still alive!
+Burn life's house down!
+More than meets the eye.
+It's a trap!
+CONGRATULATIONS! YOU ARE OUR 1,000,000TH USER!
+Mmm, I like it!
+The font does not have: “ß” or ”§”.
+std::cout << "Hello World!" << std::endl;
+Sometimes, This game makes mee greef.
+It's not a bug, it's an undocumented feature.
+Nice.
+Free, Open-Source!
+Months in the making!
+This splash had a 1/100 chance of being seen.
+Son of a █████!
+I'm here, your honor. I'm not a cat.
+It's dangerous to go alone. Take this!
+Slide to the left! Slide to the right! Criss-cross!
+This was the 77th splash to be written.
+Get to the choppa!
+It's not a tumor.
+Tis' but a flesh wound!
+That's the way to do it.
+I'm sorry, I'm afraid I can't do that.
+My name is Inigo Montoya. You killed my father. Prepare to die!
+You can't do that, you're a wizard.
+I am the very model of a modern major general.
+I've had a horrible vision. I see a bunch of people...
+Eat my shorts!
+Good morning, Good afternoon, Good evening and Good night!
+This is a splash that I made in my sleep.
+I hereby proclaim this planet, Trumania of the Burbank galaxy!
+Somebody help me! I'm being spontaneous!
+How are you holding up? I'm a potato.
+I still owe you a beer.
+It is hard to write splashes.
+You're a wizard, Harry.
+The quick brown fox jumps over the lazy dog.
+Sphynx of black quartz, judge my vow!
+Playing jazz vibe chords quickly excites my wife.
+I'm a little teapot, short and stout.
+Jenifar Shifaketro, my beloved!

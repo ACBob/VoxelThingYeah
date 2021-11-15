@@ -448,11 +448,11 @@ void CStateMenu::Update()
 	pStateMan->m_pInputMan->m_bInGui = true;
 	pStateMan->m_pGui->ImageRepeating( {0,-1}, pStateMan->m_pGui->m_vGUISize, pStateMan->m_pGui->m_pGuiBGTex );
 
-	pStateMan->m_pGui->ImageCentered( pStateMan->m_pGui->m_vGUICentre - Vector3f(0, 8), {45, 8.57}, pStateMan->m_pGui->m_pGuiTitleTex );
+	pStateMan->m_pGui->ImageCentered( {pStateMan->m_pGui->m_vGUICentre.x, 5}, {45, 8.57}, pStateMan->m_pGui->m_pGuiTitleTex );
 
 	// Splash text infront of the logo
 	// TODO: I want it to pulse slightly, but the centering is a bit weird so not right now
-	pStateMan->m_pGui->Label( m_splash.c_str(), pStateMan->m_pGui->m_vGUICentre - Vector3f(0, 3.5), 1.0f, {127,127,255}, CGui::TEXTALIGN_CENTER );
+	pStateMan->m_pGui->Label( m_splash.c_str(), { pStateMan->m_pGui->m_vGUICentre.x, 10 }, 1.0f, {127,127,255}, CGui::TEXTALIGN_CENTER );
 
 
 	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.startgame"),
@@ -462,18 +462,18 @@ void CStateMenu::Update()
 		pStateMan->PushState( std::make_unique<CStatePlay>() );
 	}
 
-	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.options"), { pStateMan->m_pGui->m_vGUICentre.x, -13 }, {32, 2} ) )
+	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.options"), { pStateMan->m_pGui->m_vGUICentre.x, pStateMan->m_pGui->m_vGUICentre.y + 3 }, {32, 2} ) )
 	{
 		pStateMan->PushState( std::make_unique<CStateOptionsMenu>() );
 	}
 
 	// Language button goes right next to the options button
-	if ( pStateMan->m_pGui->ButtonCentered( GUIGEN_ID, { pStateMan->m_pGui->m_vGUICentre.x + 17, -14 }, {2, 2}, pStateMan->m_pGui->m_pLanguageButtonTex ) )
+	if ( pStateMan->m_pGui->ButtonCentered( GUIGEN_ID, { pStateMan->m_pGui->m_vGUICentre.x + 18, pStateMan->m_pGui->m_vGUICentre.y + 2 }, {2, 2}, pStateMan->m_pGui->m_pLanguageButtonTex ) )
 	{
 		pStateMan->PushState( std::make_unique<CStateLanguageMenu>() );
 	}
 
-	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.quit"), { pStateMan->m_pGui->m_vGUICentre.x, -6 }, {32, 2} ) )
+	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.quit"), { pStateMan->m_pGui->m_vGUICentre.x, pStateMan->m_pGui->m_vGUICentre.y + 6 }, {32, 2} ) )
 	{
 		pStateMan->PopState();
 	}
