@@ -675,7 +675,8 @@ void CStateLanguageMenu::Update()
 		}
 	}
 
-	if (pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.cancel"),
+	// test if the language is modified to display back button because we're also used at first run
+	if (cvarLanguage->IsModified() && pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.cancel"),
 										{pStateMan->m_pGui->m_vGUICentre.x, -3}, {16, 2} ) )
 	{
 		pStateMan->PopState();
