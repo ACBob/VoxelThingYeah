@@ -201,7 +201,7 @@ pair<bool, Timestamp> Array::getTimestamp( int idx ) const
 		ret.z				 = ts.z ? string( ts.z ) : "";
 		toml_myfree( p.u.ts );
 	}
-	return std::make_pair( p.ok, ret);
+	return std::make_pair( p.ok, ret );
 }
 
 std::unique_ptr<Array> Array::getArray( int idx ) const

@@ -14,9 +14,9 @@ CNetworkClient::CNetworkClient()
 		return;
 	}
 
-	if ( enet_host_compress_with_range_coder(m_pEnetHost) != 0 )
+	if ( enet_host_compress_with_range_coder( m_pEnetHost ) != 0 )
 	{
-		con_error("Couldn't enable compression!");
+		con_error( "Couldn't enable compression!" );
 		return;
 	}
 }
@@ -106,9 +106,10 @@ void CNetworkClient::SpecialEffectHandle( Vector3f pos, SpecialEffect specialEff
 
 			BlockTexture tex = GetDefaultBlockTextureSide( b, NORTH );
 
-			ParticleDef blockBreak	= PARTICLE_BREAKBLOCK;
+			ParticleDef blockBreak = PARTICLE_BREAKBLOCK;
 			// TODO: these aren't small pieces of the block anymore, they are the block
-			blockBreak.vUVOffsetMax = blockBreak.vUVOffsetMin = Vector4f( tex.z / 16.0f, tex.w / 16.0f, tex.x / 16.0f, tex.y / 16.0f );
+			blockBreak.vUVOffsetMax = blockBreak.vUVOffsetMin =
+				Vector4f( tex.z / 16.0f, tex.w / 16.0f, tex.x / 16.0f, tex.y / 16.0f );
 			blockBreak.pTexture = materialSystem::LoadTexture( "terrain.png" );
 
 			soundSystem::PlayBreakSound( b, pos + Vector3f( 0.5, 0.5, 0.5 ) );
@@ -163,7 +164,7 @@ void CNetworkClient::Update()
 	}
 
 	// We may not have a local world and yet still be connected.
-	if (m_pLocalPlayer != nullptr)
+	if ( m_pLocalPlayer != nullptr )
 	{
 		Vector3f cP = ( m_pLocalPlayer->m_vPosition / Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
 		// MAGIC NUMBER: 4 == render distance

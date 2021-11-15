@@ -45,7 +45,8 @@ const std::vector<std::vector<int>> cubeTris = {
 
 const std::vector<int> plantTris = { 2, 1, 3, 0, 6, 5, 7, 4 };
 
-std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlock block, int x, int y, int z, CColour light, CColour tint )
+std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlock block, int x, int y, int z, CColour light,
+											CColour tint )
 {
 	std::vector<CModel::Vertex> g;
 	for ( int i = 0; i < 4; i++ )
@@ -177,15 +178,17 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], Vector3f pos, 
 					for ( int i = 0; i < 6; i++ )
 					{
 						CColour lightColour;
-						CColour blockColouration = BlockType( block.m_iBlockType ).GetTint( (CChunk*)chunk, pos, block.m_iBlockData, (Direction)i );
+						CColour blockColouration =
+							BlockType( block.m_iBlockType )
+								.GetTint( (CChunk *)chunk, pos, block.m_iBlockData, (Direction)i );
 
 						Vector3f neighbour = Vector3f( x, y, z ) + DirectionVector[i];
 						if ( ValidChunkPosition( neighbour ) )
 						{
 							BLOCKID blockType =
 								reinterpret_cast<CChunk *>( chunk )->GetBlockAtLocal( neighbour )->m_iBlockType;
-							
-							if (!BlockType(block.m_iBlockType).FaceVisible((Direction)i, blockType))
+
+							if ( !BlockType( block.m_iBlockType ).FaceVisible( (Direction)i, blockType ) )
 								continue;
 
 							lightColour = reinterpret_cast<CChunk *>( chunk )->GetLightingLocal( neighbour );
@@ -193,17 +196,16 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], Vector3f pos, 
 						else
 						{
 							// Test a neighbour
-							CChunk *chunkNeighbour =
-								reinterpret_cast<CChunk *>( chunk )->Neighbour( Direction( i ) );
+							CChunk *chunkNeighbour = reinterpret_cast<CChunk *>( chunk )->Neighbour( Direction( i ) );
 							if ( chunkNeighbour != nullptr )
 							{
 								neighbour = neighbour + ( DirectionVector[i] *
-															Vector3f( -CHUNKSIZE_X, -CHUNKSIZE_Y, -CHUNKSIZE_Z ) );
+														  Vector3f( -CHUNKSIZE_X, -CHUNKSIZE_Y, -CHUNKSIZE_Z ) );
 
 								CBlock *b = chunkNeighbour->GetBlockAtLocal( neighbour );
 								if ( b == nullptr )
 									continue;
-								if (!BlockType(block.m_iBlockType).FaceVisible((Direction)i, b->m_iBlockType))
+								if ( !BlockType( block.m_iBlockType ).FaceVisible( (Direction)i, b->m_iBlockType ) )
 									continue;
 
 								lightColour = chunkNeighbour->GetLightingLocal( neighbour );

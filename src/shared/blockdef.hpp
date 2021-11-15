@@ -57,7 +57,7 @@ enum BLOCKMATERIAL {
 	MAT_ORGANIC = 5, // Grass, Leaves, Plants
 	MAT_LIQUID	= 6, // Water, Lava
 	MAT_DUST	= 7, // Sand
-	MAT_FABRIC  = 8  // Wool
+	MAT_FABRIC	= 8	 // Wool
 };
 
 const char *BlockMaterialSTR( BLOCKMATERIAL mat );

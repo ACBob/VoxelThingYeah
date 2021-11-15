@@ -21,11 +21,11 @@ class CBobWindow
 
 	// Z Ignored
 	// SDL_SetWindowSize / SDL_GetWindowSize
-	virtual Vector3f GetSize()		  = 0;
+	virtual Vector3f GetSize()		   = 0;
 	virtual void SetSize( Vector3f s ) = 0;
 	// Z Ignored
 	// SDL_SetWindowPos / SDL_GetWindowPos
-	virtual Vector3f GetPos()		 = 0;
+	virtual Vector3f GetPos()		  = 0;
 	virtual void SetPos( Vector3f p ) = 0;
 
 	// Returns the (milli)seconds per frame

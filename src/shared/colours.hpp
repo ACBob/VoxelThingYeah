@@ -6,8 +6,7 @@
 #pragma once
 
 // 16 colours for base dyes
-static const uint16_t DyePalette[]
-{
+static const uint16_t DyePalette[]{
 	0x000F, // Black
 	0x555F, // Dark Grey
 	0xAAAF, // Grey
@@ -23,5 +22,5 @@ static const uint16_t DyePalette[]
 	0xA0AF, // Purple
 	0xF5FF, // Magenta
 	0xA50F, // Brown
-	0xFF5F  // Yellow
+	0xFF5F	// Yellow
 };

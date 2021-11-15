@@ -6,21 +6,17 @@
 
 class CBlockSoundMaker final : public CBlockBase
 {
-    using Super = CBlockBase;
-    public:
-    
-    using Super::Super;
+	using Super = CBlockBase;
 
-	virtual bool CanBeUsed() const {
-		return true;
+  public:
+	using Super::Super;
+
+	virtual bool CanBeUsed() const { return true; };
+
+	virtual void OnUse( CChunk *pChunk, Vector3f vPosition, CEntityBase *pUser ) const
+	{
+		soundSystem::PlaySoundEvent( "block.soundmaker.use", vPosition );
 	};
 
-    virtual void OnUse( CChunk *pChunk, Vector3f vPosition, CEntityBase *pUser ) const
-    {
-        soundSystem::PlaySoundEvent( "block.soundmaker.use", vPosition );
-    };
-
-    virtual BLOCKMATERIAL GetMaterial( ) const {
-		return MAT_FABRIC;
-	};
+	virtual BLOCKMATERIAL GetMaterial() const { return MAT_FABRIC; };
 };

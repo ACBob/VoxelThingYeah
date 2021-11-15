@@ -18,12 +18,12 @@ namespace modelSystem
 	  public:
 		struct Vertex
 		{
-			float x, y, z;	  // Position
-			float nx, ny, nz; // Normal
-			float u, v;		  // Texture U/V
-			float cr, cg, cb; // Vertex CColour
+			float x, y, z;		  // Position
+			float nx, ny, nz;	  // Normal
+			float u, v;			  // Texture U/V
+			float cr, cg, cb;	  // Vertex CColour
 			float lr, lg, lb, la; // Vertex Lighting
-							  // TODO: Texture, Lighting, Etc.
+								  // TODO: Texture, Lighting, Etc.
 		};
 
 		struct Face
@@ -54,7 +54,7 @@ namespace modelSystem
 
 		Vector3f m_vPosition = { 0, 0, 0 };
 		Vector3f m_vRotation = { 0, 0, 0 };
-		Vector3f m_vSize		= { 1, 1, 1 };
+		Vector3f m_vSize	 = { 1, 1, 1 };
 
 		Vector4f m_vUvOffset = { 1, 1, 0, 0 };
 
@@ -83,4 +83,4 @@ namespace modelSystem
 // Laziness and Convenience
 using CModel = modelSystem::CModel;
 
-void GetCubeModel( CModel &m, Vector3f size = Vector3f( 1, 1, 1 ), Vector4f uv = {0.0f,0.0f, 1.0f, 1.0f} );
+void GetCubeModel( CModel &m, Vector3f size = Vector3f( 1, 1, 1 ), Vector4f uv = { 0.0f, 0.0f, 1.0f, 1.0f } );

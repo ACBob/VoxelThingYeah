@@ -4,17 +4,12 @@
 
 class CBlockAir final : public CBlockBase
 {
-    using Super = CBlockBase;
-    public:
-    
-    using Super::Super;
+	using Super = CBlockBase;
 
-	virtual CBoundingBox GetBounds() const {
-        return CBoundingBox(Vector3f(0, 0, 0), Vector3f(0, 0, 0));
-    };
+  public:
+	using Super::Super;
 
-    virtual bool IsSolid(BLOCKVAL metadata) const {
-        return false;
-    };
+	virtual CBoundingBox GetBounds() const { return CBoundingBox( Vector3f( 0, 0, 0 ), Vector3f( 0, 0, 0 ) ); };
 
+	virtual bool IsSolid( BLOCKVAL metadata ) const { return false; };
 };

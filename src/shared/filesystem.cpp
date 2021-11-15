@@ -12,7 +12,7 @@
 
 namespace fileSystem
 {
-	std::vector<const char*> mountedPaths;
+	std::vector<const char *> mountedPaths;
 
 	bool Init( const char *exePath )
 	{
@@ -41,9 +41,9 @@ namespace fileSystem
 			return nullptr;
 		}
 
-		int64_t fileLen = PHYSFS_fileLength( f );
-		unsigned char *buf	= new unsigned char[fileLen + 1];
-		success			= true;
+		int64_t fileLen	   = PHYSFS_fileLength( f );
+		unsigned char *buf = new unsigned char[fileLen + 1];
+		success			   = true;
 
 		if ( PHYSFS_readBytes( f, buf, fileLen ) < fileLen )
 		{
@@ -58,7 +58,7 @@ namespace fileSystem
 		len			 = fileLen;
 
 		//! FIXME
-		int32_t l	 = fileLen;
+		int32_t l		   = fileLen;
 		unsigned char *out = new unsigned char[l + 1];
 		std::copy( buf, buf + l, out );
 		out[l] = '\0';
@@ -101,30 +101,29 @@ namespace fileSystem
 			return false;
 		}
 
-		char* cachepath = new char[strlen(realPath) + 1];
-		strcpy(cachepath, realPath);
-		mountedPaths.push_back(cachepath);
+		char *cachepath = new char[strlen( realPath ) + 1];
+		strcpy( cachepath, realPath );
+		mountedPaths.push_back( cachepath );
 
 		return true;
 	}
 
-	void UnMount( const char* realPath )
+	void UnMount( const char *realPath )
 	{
-		if ( PHYSFS_unmount(realPath) == 0 )
+		if ( PHYSFS_unmount( realPath ) == 0 )
 		{
-			con_error("unmount %s: %s", realPath, PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ));
+			con_error( "unmount %s: %s", realPath, PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ) );
 		}
 
-		mountedPaths.erase(
-			std::remove_if( mountedPaths.begin(), mountedPaths.end(),
-							[realPath]( auto &c ) { return strcmp(realPath, c) == 0; } ),
-			mountedPaths.end() );
+		mountedPaths.erase( std::remove_if( mountedPaths.begin(), mountedPaths.end(),
+											[realPath]( auto &c ) { return strcmp( realPath, c ) == 0; } ),
+							mountedPaths.end() );
 	}
 
 	void UnMountAll()
 	{
-		while (mountedPaths.size() > 0)
-			UnMount(mountedPaths.front());
+		while ( mountedPaths.size() > 0 )
+			UnMount( mountedPaths.front() );
 	}
 
 	bool MountWrite( const char *realPath )
@@ -138,28 +137,25 @@ namespace fileSystem
 		return true;
 	}
 
-	bool Exists( const char *virtualPath )
-	{
-		return PHYSFS_exists(virtualPath);
-	}
+	bool Exists( const char *virtualPath ) { return PHYSFS_exists( virtualPath ); }
 
-	std::vector<const char*> List(const char* path)
+	std::vector<const char *> List( const char *path )
 	{
-		char **p = PHYSFS_enumerateFiles(path);
-		std::vector<const char*> l;
+		char **p = PHYSFS_enumerateFiles( path );
+		std::vector<const char *> l;
 
 		int i = 0;
-		while (p[i] != NULL)
+		while ( p[i] != NULL )
 		{
-			char *c = new char[strlen(p[i]) + 1]();
-			strcpy(c, p[i]);
+			char *c = new char[strlen( p[i] ) + 1]();
+			strcpy( c, p[i] );
 
-			l.push_back(c);
+			l.push_back( c );
 
 			i++;
 		}
-		
-		PHYSFS_freeList(p);
+
+		PHYSFS_freeList( p );
 
 		return l;
 	}

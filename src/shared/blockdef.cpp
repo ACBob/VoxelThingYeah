@@ -26,7 +26,7 @@ const char *BlockMaterialSTR( BLOCKMATERIAL mat )
 	}
 }
 
-BLOCKMATERIAL GetBlockMaterial(BLOCKID id)
+BLOCKMATERIAL GetBlockMaterial( BLOCKID id )
 {
 	switch ( id )
 	{
@@ -79,7 +79,7 @@ BLOCKMATERIAL GetBlockMaterial(BLOCKID id)
 		case SNOW:
 			return MAT_DUST;
 			break;
-		
+
 		case SOUNDMAKER:
 		case WOOL:
 			return MAT_FABRIC;

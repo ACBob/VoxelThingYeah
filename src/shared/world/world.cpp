@@ -112,7 +112,7 @@ bool CWorld::ValidChunkPos( const Vector3f pos ) { return ChunkAtWorldPos( pos )
 void CWorld::AddEntity( void *e )
 {
 	m_ents.push_back( e );
-	( (CEntityBase *)e )->Spawn(this);
+	( (CEntityBase *)e )->Spawn( this );
 #ifdef CLIENTEXE
 	( (CEntityBase *)e )->SetShader( m_pEntityShader );
 #endif
@@ -155,17 +155,17 @@ bool CWorld::TestPointCollision( Vector3f pos )
 	// if ( !bF.walkable )
 	// 	return false;
 
-	if (!BlockType(b->m_iBlockType).IsSolid(b->m_iBlockData))
+	if ( !BlockType( b->m_iBlockType ).IsSolid( b->m_iBlockData ) )
 		return false;
 
-	CBoundingBox blockBounds = BlockType(b->m_iBlockType).GetBounds();
+	CBoundingBox blockBounds = BlockType( b->m_iBlockType ).GetBounds();
 
-	pos = pos - pos.Floor();
+	pos						= pos - pos.Floor();
 	blockBounds.m_vPosition = pos.Floor();
 	return blockBounds.TestPointCollide( pos );
 }
 
-CBlock* CWorld::TestAABBCollision( CBoundingBox col )
+CBlock *CWorld::TestAABBCollision( CBoundingBox col )
 {
 	CChunk *chunk = ChunkAtWorldPos( col.m_vPosition );
 	if ( chunk == nullptr )
@@ -180,11 +180,11 @@ CBlock* CWorld::TestAABBCollision( CBoundingBox col )
 		// Don't collide with air
 		BLOCKID blockType = chunk->m_blocks[i].m_iBlockType;
 
-		if (!BlockType(blockType).IsSolid(chunk->m_blocks[i].m_iBlockData))
+		if ( !BlockType( blockType ).IsSolid( chunk->m_blocks[i].m_iBlockData ) )
 			continue;
 
-		CBoundingBox blockBounds = BlockType(blockType).GetBounds();
-		blockBounds.m_vPosition = chunk->GetPosInWorld() + Vector3f( x, y, z );
+		CBoundingBox blockBounds = BlockType( blockType ).GetBounds();
+		blockBounds.m_vPosition	 = chunk->GetPosInWorld() + Vector3f( x, y, z );
 
 		if ( col.TestCollide( blockBounds ) )
 			return &chunk->m_blocks[i];
@@ -243,7 +243,7 @@ void CWorld::WorldTick( int64_t iTick, float delta )
 
 	// Progress time
 #ifdef CLIENTEXE
-	if (cl_dodaylightcycle->GetBool())
+	if ( cl_dodaylightcycle->GetBool() )
 #endif
 		m_iTimeOfDay++;
 
@@ -270,7 +270,7 @@ void CWorld::UsePortable( PortableChunkRepresentation rep )
 	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
 	{
 		c->m_blocks[j].m_iBlockType = (BLOCKID)rep.m_iBlocks[j];
-		c->m_blocks[j].m_iBlockData	= rep.m_iValue[j];
+		c->m_blocks[j].m_iBlockData = rep.m_iValue[j];
 	}
 
 	c->m_bDirty = true;

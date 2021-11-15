@@ -12,8 +12,8 @@ ConVar::CConVar *cl_port = nullptr;
 
 ConVar::CConVar *cl_servername = nullptr;
 
-ConVar::CConVar *cl_volume = nullptr;
-ConVar::CConVar *cl_reverb = nullptr;
+ConVar::CConVar *cl_volume		 = nullptr;
+ConVar::CConVar *cl_reverb		 = nullptr;
 ConVar::CConVar *cl_mufflesounds = nullptr;
 
 ConVar::CConVar *playerskin = nullptr;
@@ -23,8 +23,8 @@ ConVar::CConVar *cl_kickreason = nullptr;
 ConVar::CConVar *cl_resourcepacks = nullptr;
 
 ConVar::CConVar *cl_dodaylightcycle = nullptr;
-ConVar::CConVar *cl_sunroll = nullptr;
-ConVar::CConVar *cl_sunyaw = nullptr;
+ConVar::CConVar *cl_sunroll			= nullptr;
+ConVar::CConVar *cl_sunyaw			= nullptr;
 
 ConVar::CConVar *cl_maxfps = nullptr;
 
@@ -42,8 +42,8 @@ void SetupClientSideConvars()
 
 	cl_servername = conVarHandle.DeclareConvar( "cl_servername", "", ConVar::CVAR_READONLY );
 
-	cl_volume = conVarHandle.DeclareConvar( "cl_volume", "1.0", ConVar::CVAR_ARCHIVE );
-	cl_reverb = conVarHandle.DeclareConvar( "cl_reverb", "true", ConVar::CVAR_ARCHIVE );
+	cl_volume		= conVarHandle.DeclareConvar( "cl_volume", "1.0", ConVar::CVAR_ARCHIVE );
+	cl_reverb		= conVarHandle.DeclareConvar( "cl_reverb", "true", ConVar::CVAR_ARCHIVE );
 	cl_mufflesounds = conVarHandle.DeclareConvar( "cl_mufflesounds", "true", ConVar::CVAR_ARCHIVE );
 
 	playerskin = conVarHandle.DeclareConvar( "playerskin", "", ConVar::CVAR_ARCHIVE );
@@ -53,8 +53,8 @@ void SetupClientSideConvars()
 	cl_resourcepacks = conVarHandle.DeclareConvar( "cl_resourcepacks", "", ConVar::CVAR_ARCHIVE );
 
 	cl_dodaylightcycle = conVarHandle.DeclareConvar( "cl_dodaylightcycle", "true" );
-	cl_sunroll = conVarHandle.DeclareConvar( "cl_sunroll", "0", ConVar::CVAR_SESSION );
-	cl_sunyaw = conVarHandle.DeclareConvar( "cl_sunyaw", "0", ConVar::CVAR_SESSION );
+	cl_sunroll		   = conVarHandle.DeclareConvar( "cl_sunroll", "0", ConVar::CVAR_SESSION );
+	cl_sunyaw		   = conVarHandle.DeclareConvar( "cl_sunyaw", "0", ConVar::CVAR_SESSION );
 
 	cl_maxfps = conVarHandle.DeclareConvar( "cl_maxfps", "0", ConVar::CVAR_ARCHIVE );
 }

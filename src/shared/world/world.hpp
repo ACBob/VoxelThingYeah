@@ -50,7 +50,7 @@ class CWorld
 
 	// Tests in world coordinates
 	// Returning the first block that collides
-	CBlock* TestAABBCollision( CBoundingBox col );
+	CBlock *TestAABBCollision( CBoundingBox col );
 
 	// Is the position within our place
 	bool ValidChunkPos( const Vector3f pos );

@@ -15,9 +15,8 @@ std::vector<CTexture *> materialSystem::loadedTextures;
 
 CTexture::CTexture( const char *path )
 {
-	m_cFilePath = new char[strlen(path) + 1];
-	strcpy(m_cFilePath, path);
-
+	m_cFilePath = new char[strlen( path ) + 1];
+	strcpy( m_cFilePath, path );
 
 	// The image data is RGBA
 	// So the data can be written like this for a classic source-style checkerboard
@@ -90,13 +89,13 @@ void materialSystem::Init() {}
 
 CTexture *materialSystem::LoadTexture( const char *path )
 {
-	char *fp = new char[strlen(path) + 1 + 18];
-	fp = strcpy(fp, "/assets/textures/");
-	fp = strcat(fp, path);
+	char *fp = new char[strlen( path ) + 1 + 18];
+	fp		 = strcpy( fp, "/assets/textures/" );
+	fp		 = strcat( fp, path );
 
 	for ( CTexture *t : loadedTextures )
 	{
-		if ( strcmp(t->m_cFilePath, fp) == 0 )
+		if ( strcmp( t->m_cFilePath, fp ) == 0 )
 		{
 			delete[] fp;
 			return t;

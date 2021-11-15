@@ -19,9 +19,9 @@ CNetworkServer::CNetworkServer( int port, int maxClients )
 		return;
 	}
 
-	if ( enet_host_compress_with_range_coder(m_pEnetHost) != 0 )
+	if ( enet_host_compress_with_range_coder( m_pEnetHost ) != 0 )
 	{
-		con_error("Couldn't enable compression!");
+		con_error( "Couldn't enable compression!" );
 		return;
 	}
 }
@@ -191,13 +191,16 @@ void CNetworkServer::Update()
 
 bool CNetworkServer::WorkingServer() { return m_pEnetHost != NULL; }
 
-void CNetworkServer::PlaySoundEvent(const char* name, Vector3f pos) {
-	for (CNetworkPlayer* p : m_players) {
-		if (p->m_pEntity == nullptr)
+void CNetworkServer::PlaySoundEvent( const char *name, Vector3f pos )
+{
+	for ( CNetworkPlayer *p : m_players )
+	{
+		if ( p->m_pEntity == nullptr )
 			continue;
 		Vector3f dist = p->m_pEntity->m_vPosition - pos;
-		if (dist.Magnitude() < SOUND_MAX_DISTANCE) {
-			protocol::SendServerSoundEvent(p->m_pPeer, pos, name);
+		if ( dist.Magnitude() < SOUND_MAX_DISTANCE )
+		{
+			protocol::SendServerSoundEvent( p->m_pPeer, pos, name );
 		}
 	}
 }

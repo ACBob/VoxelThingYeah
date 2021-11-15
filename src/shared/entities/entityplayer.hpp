@@ -21,14 +21,14 @@ class CEntityPlayer : public CEntityBase
 	~CEntityPlayer();
 
 	void Tick( int64_t iTick );
-	void Spawn(CWorld *world)
+	void Spawn( CWorld *world )
 	{
-		BaseClass::Spawn(world);
+		BaseClass::Spawn( world );
 #ifdef CLIENTEXE
 		m_pMdl = modelSystem::LoadModel( "player.obj" );
 		m_pMdl->SetTexture( materialSystem::LoadTexture( "player.png" ) );
 
-		world->AddEntity(&m_camera);
+		world->AddEntity( &m_camera );
 		m_camera.m_fEyeHeight = 1.72f;
 #endif
 	};

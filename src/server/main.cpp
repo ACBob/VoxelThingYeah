@@ -48,12 +48,12 @@ int main( int argc, char *args[] )
 		return EXIT_FAILURE;
 	}
 	atexit( fileSystem::UnInit );
-	
+
 	// write in the current directory
-	if (!fileSystem::MountWrite("."))
-		con_warning("Couldn't mount current directory for writing!");
-	if (!fileSystem::Mount(".", "/"))
-		con_warning("Couldn't mount current directory for reading!");
+	if ( !fileSystem::MountWrite( "." ) )
+		con_warning( "Couldn't mount current directory for writing!" );
+	if ( !fileSystem::Mount( ".", "/" ) )
+		con_warning( "Couldn't mount current directory for reading!" );
 
 	con_info( "Parsing svconfig.cfg..." );
 	bool succeed;
@@ -84,8 +84,7 @@ int main( int argc, char *args[] )
 	soundSystem::server = &server;
 
 	// Thread for getting input from the console
-	std::thread consoleThread( []()
-	{
+	std::thread consoleThread( []() {
 		while ( sv_run->GetBool() )
 		{
 			// read from stdin
@@ -135,7 +134,7 @@ int main( int argc, char *args[] )
 	}
 
 	consoleThread.join();
-	conVarHandle.WriteCFG("svconfig.cfg");
+	conVarHandle.WriteCFG( "svconfig.cfg" );
 
 	return EXIT_SUCCESS;
 }

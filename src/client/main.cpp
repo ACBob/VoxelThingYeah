@@ -105,14 +105,13 @@ int main( int argc, char *args[] )
 	char *file = (char *)fileSystem::LoadFile( "usr/config.cfg", l, succeed );
 	if ( succeed )
 		conVarHandle.Parse( file );
-	
-	con_info("Scan for resource pack...");
-	if (cl_resourcepacks->IsModified())
-	{
-		size_t n = strlen(cl_resourcepacks->GetString());
-		char *l = new char[n + 1]();
-		strcpy(l, cl_resourcepacks->GetString());
 
+	con_info( "Scan for resource pack..." );
+	if ( cl_resourcepacks->IsModified() )
+	{
+		size_t n = strlen( cl_resourcepacks->GetString() );
+		char *l	 = new char[n + 1]();
+		strcpy( l, cl_resourcepacks->GetString() );
 
 		// test each pack
 		char *t;
@@ -121,17 +120,17 @@ int main( int argc, char *args[] )
 
 		while ( t != NULL )
 		{
-			resourcePacks::packInfo inf = resourcePacks::GetPackInfo(t);
+			resourcePacks::packInfo inf = resourcePacks::GetPackInfo( t );
 
-			if (inf.format == 0x00)
+			if ( inf.format == 0x00 )
 			{
-				con_warning("Unknown Pack %s", t);
+				con_warning( "Unknown Pack %s", t );
 			}
 			else
 			{
-				con_info("%s (%s)", inf.name.c_str(), inf.path.c_str());
+				con_info( "%s (%s)", inf.name.c_str(), inf.path.c_str() );
 
-				resourcePacks::MountPack(inf);
+				resourcePacks::MountPack( inf );
 			}
 
 			t = strtok_r( NULL, ",", &saveptr );
@@ -185,8 +184,8 @@ int main( int argc, char *args[] )
 	glBlendEquation( GL_FUNC_ADD );
 
 	// TODO: Proper loading screen
-	glClearColor(0.19f, 0.2f, 0.13f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClearColor( 0.19f, 0.2f, 0.13f, 1.0f );
+	glClear( GL_COLOR_BUFFER_BIT );
 
 	window.SwapBuffers();
 
@@ -224,15 +223,15 @@ int main( int argc, char *args[] )
 
 	con_info( "Init Dev-Console..." );
 	CDevConsole console;
-	console.m_pGui = &gui;
+	console.m_pGui		= &gui;
 	console.m_pInputMan = &inputMan;
 
 	con_info( "Init Game State..." );
 	CGameStateMachine gameStateMan;
-	gameStateMan.m_pClient	 = &client;
-	gameStateMan.m_pGui		 = &gui;
-	gameStateMan.m_pWindow	 = &window;
-	gameStateMan.m_pInputMan = &inputMan;
+	gameStateMan.m_pClient	  = &client;
+	gameStateMan.m_pGui		  = &gui;
+	gameStateMan.m_pWindow	  = &window;
+	gameStateMan.m_pInputMan  = &inputMan;
 	gameStateMan.m_pLocalizer = &translator;
 	gameStateMan.PushState( std::make_unique<CStateMenu>() );
 
@@ -286,7 +285,7 @@ int main( int argc, char *args[] )
 		}
 
 		gameStateMan.Update();
-		
+
 		// Update dev console after this to remain on-top
 		console.Update();
 
@@ -313,7 +312,7 @@ int main( int argc, char *args[] )
 		if ( cl_maxfps->GetInt() > 0 )
 		{
 			int64_t maxFrameTime = 1000 / cl_maxfps->GetInt();
-			int64_t sleepTime	= maxFrameTime - delta;
+			int64_t sleepTime	 = maxFrameTime - delta;
 			if ( sleepTime > 0 )
 			{
 				std::this_thread::sleep_for( std::chrono::milliseconds( sleepTime ) );
@@ -325,7 +324,7 @@ int main( int argc, char *args[] )
 	}
 	gameStateMan.Flush();
 
-	conVarHandle.WriteCFG("config.cfg");
+	conVarHandle.WriteCFG( "config.cfg" );
 
 	return EXIT_SUCCESS;
 }

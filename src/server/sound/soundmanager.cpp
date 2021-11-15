@@ -14,12 +14,8 @@
 
 CNetworkServer *soundSystem::server;
 
-void soundSystem::Init()
-{
-}
-void soundSystem::UnInit()
-{
-}
+void soundSystem::Init() {}
+void soundSystem::UnInit() {}
 
 void soundSystem::PlayBreakSound( BLOCKID blockType, Vector3f pos )
 {
@@ -50,7 +46,4 @@ void soundSystem::PlayStepSound( BLOCKID blockType, Vector3f pos )
 	PlaySoundEvent( buf, pos );
 	delete buf;
 }
-void soundSystem::PlaySoundEvent( const char *soundEvent, Vector3f pos )
-{
-	server->PlaySoundEvent( soundEvent, pos );
-}
+void soundSystem::PlaySoundEvent( const char *soundEvent, Vector3f pos ) { server->PlaySoundEvent( soundEvent, pos ); }

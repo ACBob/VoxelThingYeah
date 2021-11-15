@@ -35,7 +35,8 @@ void ShaderPreprocess( std::string &source, int d = 0 )
 	std::regex_search( source, match, include );
 
 	// There aren't any includes
-	if ( match.size() == 0 ) return;
+	if ( match.size() == 0 )
+		return;
 
 	// Replace the include with the contents of the file
 	// Get the file name
@@ -50,9 +51,9 @@ void ShaderPreprocess( std::string &source, int d = 0 )
 
 	bool bSuccess	= false;
 	int64_t iLength = 0;
-	char *pData = (char*)fileSystem::LoadFile( ("/assets/shaders/" + fileName).c_str(), iLength, bSuccess );
+	char *pData		= (char *)fileSystem::LoadFile( ( "/assets/shaders/" + fileName ).c_str(), iLength, bSuccess );
 
-	if (!bSuccess)
+	if ( !bSuccess )
 	{
 		con_error( "No such shader file: %s", fileName.c_str() );
 
@@ -70,7 +71,7 @@ void ShaderPreprocess( std::string &source, int d = 0 )
 	}
 
 	// HACK: to continue in this file, we need to call ShaderPreprocess again
-	if (match.size() > 1)
+	if ( match.size() > 1 )
 		ShaderPreprocess( source, d );
 }
 
@@ -111,7 +112,7 @@ CShader::CShader( const char *vs, const char *fs )
 	}
 	else
 	{
-		ShaderPreprocess(cVertexShaderSource);
+		ShaderPreprocess( cVertexShaderSource );
 	}
 
 	unsigned int iVertexShader = glCreateShader( GL_VERTEX_SHADER );
@@ -130,7 +131,7 @@ CShader::CShader( const char *vs, const char *fs )
 	}
 	else
 	{
-		ShaderPreprocess(cFragmentShaderSource);
+		ShaderPreprocess( cFragmentShaderSource );
 	}
 
 	unsigned int iFragmentShader = glCreateShader( GL_FRAGMENT_SHADER );
@@ -218,12 +219,12 @@ void shaderSystem::SetUniforms( glm::mat4 &view, glm::mat4 &projection, unsigned
 
 CShader *shaderSystem::LoadShader( const char *vs, const char *fs )
 {
-	char *vsfp = new char[strlen(vs) + 17];
-	char *fsfp = new char[strlen(fs) + 17];
-	strcpy(vsfp, "/assets/shaders/");
-	strcpy(fsfp, "/assets/shaders/");
-	strcat(vsfp, vs);
-	strcat(fsfp, fs);
+	char *vsfp = new char[strlen( vs ) + 17];
+	char *fsfp = new char[strlen( fs ) + 17];
+	strcpy( vsfp, "/assets/shaders/" );
+	strcpy( fsfp, "/assets/shaders/" );
+	strcat( vsfp, vs );
+	strcat( fsfp, fs );
 
 	CShader *shader = new CShader( vsfp, fsfp );
 	loadedShaders.push_back( shader );

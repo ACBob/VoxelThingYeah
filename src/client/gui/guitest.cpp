@@ -5,16 +5,16 @@
 // So gets a screen, does the required systems, and then the gui itself.
 // Stripped down client main.
 
-#include "shared/logging.hpp"
 #include "shared/filesystem.hpp"
 #include "shared/localization/localizer.hpp"
+#include "shared/logging.hpp"
 
-#include "rendering/texturemanager.hpp"
 #include "rendering/shadermanager.hpp"
+#include "rendering/texturemanager.hpp"
 
 // Just use the stubbed out version of the sounds
 #ifdef MEEGREEF_ENABLE_OPENAL
-#undef MEEGREEF_ENABLE_OPENAL
+	#undef MEEGREEF_ENABLE_OPENAL
 #endif
 #include "sound/soundmanager.hpp"
 
@@ -114,8 +114,8 @@ int main( int argc, char *args[] )
 	glBlendEquation( GL_FUNC_ADD );
 
 	// TODO: Proper loading screen
-	glClearColor(0.19f, 0.2f, 0.13f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClearColor( 0.19f, 0.2f, 0.13f, 1.0f );
+	glClear( GL_COLOR_BUFFER_BIT );
 
 	window.SwapBuffers();
 
@@ -130,24 +130,24 @@ int main( int argc, char *args[] )
 
 	con_info( "Init Translator..." );
 	CLocalizer translator;
-	for (std::string &l : translator.ListLanguages() )
+	for ( std::string &l : translator.ListLanguages() )
 	{
 		con_debug( "Found Language: %s", l.c_str() );
 	}
 
 	con_info( "Init GUI..." );
 
-	CGui gui(window.GetSize());
+	CGui gui( window.GetSize() );
 	gui.m_pInputManager = &inputMan;
 
 	inputMan.m_bInGui = true;
 
-	CTexture *pTestTexture = materialSystem::LoadTexture( "test.png" );
+	CTexture *pTestTexture	= materialSystem::LoadTexture( "test.png" );
 	CTexture *pTestTexture2 = materialSystem::LoadTexture( "logo16.png" );
 
 	glm::mat4 screen = glm::ortho( 0.0f, 800.0f, 600.0f, 0.0f );
 
-	int sliderVal1 = 0;
+	int sliderVal1	  = 0;
 	bool checkboxTest = false;
 
 	char *guiBuf = new char[512]();
@@ -158,17 +158,17 @@ int main( int argc, char *args[] )
 	int64_t then	 = now;
 	int64_t nextTick = now;
 
-    while ( !window.m_bShouldClose )
+	while ( !window.m_bShouldClose )
 	{
 		// tick
 		now =
 			std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() )
 				.count();
-		then  = now;
+		then = now;
 		if ( now >= nextTick )
 		{
 			nextTick = now + 50;
-			gui.m_iTick ++;
+			gui.m_iTick++;
 		}
 
 		window.PollEvents();
@@ -190,38 +190,38 @@ int main( int argc, char *args[] )
 		gui.m_pShader->SetMat4( "screen", screen );
 
 		// GUI testing code
-		gui.ImageRepeating( {0,-1}, gui.m_vScreenDimensions / gui.m_iGUIUnitSize, gui.m_pGuiBGTex );
+		gui.ImageRepeating( { 0, -1 }, gui.m_vScreenDimensions / gui.m_iGUIUnitSize, gui.m_pGuiBGTex );
 
 		// Image repeating test
-		gui.ImageRepeating( {10,10}, {10,10}, pTestTexture );
-		gui.ImageRepeating( {0,10}, {10,10}, pTestTexture2 );
+		gui.ImageRepeating( { 10, 10 }, { 10, 10 }, pTestTexture );
+		gui.ImageRepeating( { 0, 10 }, { 10, 10 }, pTestTexture2 );
 
-		gui.Label("Hello, Baig!", {0, 0});
-		gui.Label("Text, but Bigger!", {0, 3}, 2.0f);
-		gui.Label("Text, but Smaller!", {0, 7}, 0.5f);
+		gui.Label( "Hello, Baig!", { 0, 0 } );
+		gui.Label( "Text, but Bigger!", { 0, 3 }, 2.0f );
+		gui.Label( "Text, but Smaller!", { 0, 7 }, 0.5f );
 
-		gui.Label(translator.GetString("gui.inventory"), {0, 10});
+		gui.Label( translator.GetString( "gui.inventory" ), { 0, 10 } );
 
-		if (gui.Button(1, {0, 13}))
+		if ( gui.Button( 1, { 0, 13 } ) )
 		{
 			con_info( "Button 1 pressed!" );
 		}
-		if (gui.LabelButton(2, "Label Button", {0, 17}, {17, 2} ) )
+		if ( gui.LabelButton( 2, "Label Button", { 0, 17 }, { 17, 2 } ) )
 		{
 			con_info( "Label Button pressed!" );
 		}
 
-		gui.SelectableTextInput(5, {0, 25}, {17, 2});
+		gui.SelectableTextInput( 5, { 0, 25 }, { 17, 2 } );
 
-		gui.Image({-16, -16}, {16, 16}, pTestTexture);
-		gui.Label("Text on-top of image", {-19, -16, 0.5});
+		gui.Image( { -16, -16 }, { 16, 16 }, pTestTexture );
+		gui.Label( "Text on-top of image", { -19, -16, 0.5 } );
 
-		gui.Slider(6, {18, 16}, {2, 10}, 69, sliderVal1);
-		gui.HorzSlider(7, {18, 26}, {10, 2}, 69, sliderVal1);
-		snprintf(guiBuf, 512, "%d", sliderVal1);
-		gui.Label(guiBuf, {18, 26});
+		gui.Slider( 6, { 18, 16 }, { 2, 10 }, 69, sliderVal1 );
+		gui.HorzSlider( 7, { 18, 26 }, { 10, 2 }, 69, sliderVal1 );
+		snprintf( guiBuf, 512, "%d", sliderVal1 );
+		gui.Label( guiBuf, { 18, 26 } );
 
-		gui.CheckBox(8, {18, 34}, checkboxTest);
+		gui.CheckBox( 8, { 18, 34 }, checkboxTest );
 
 		// End GUI testing code
 

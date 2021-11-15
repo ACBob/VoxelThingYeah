@@ -16,8 +16,8 @@ class CBiome
 	BLOCKID m_iBlockWaterSurf  = WATERSRC; // E.G ICE
 
 	// 0 To 2, controls generation
-	float m_fTemperature	= 0.0f;
-	float m_fHumidity		= 0.0f;
+	float m_fTemperature = 0.0f;
+	float m_fHumidity	 = 0.0f;
 };
 
 void InitBiomes(); // Initialises the biomes

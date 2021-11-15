@@ -26,7 +26,7 @@ void InitBiomes()
 	biomePlains.m_iBlockSurface	   = GRASS;
 	biomePlains.m_iBlockSubSurface = DIRT;
 	biomePlains.m_iBlockRock	   = STONE;
-	biomePlains.m_fTemperature  = 1.1f;
+	biomePlains.m_fTemperature	   = 1.1f;
 	biomePlains.m_fHumidity		   = 0.4f;
 	biomeList.push_back( &biomePlains );
 

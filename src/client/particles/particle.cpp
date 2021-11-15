@@ -36,7 +36,7 @@ void CParticle::PhysicsTick( CWorld *pWorld, float fDelta )
 
 	m_fLifeTime -= fDelta;
 
-	if (m_particleDef.bCollision)
+	if ( m_particleDef.bCollision )
 	{
 		m_vPosition.x += m_vVelocity.x * fDelta;
 		if ( pWorld->TestPointCollision( m_vPosition ) )

@@ -2,7 +2,4 @@
 
 ConVar::CConVar *cvarLanguage = nullptr;
 
-void SetupSharedConvars()
-{
-	cvarLanguage = conVarHandle.DeclareConvar( "language", "", ConVar::CVAR_ARCHIVE );
-}
+void SetupSharedConvars() { cvarLanguage = conVarHandle.DeclareConvar( "language", "", ConVar::CVAR_ARCHIVE ); }

@@ -4,8 +4,8 @@
 
 class CBlockGeneric final : public CBlockBase
 {
-    using Super = CBlockBase;
-    public:
-    
-    using Super::Super;
+	using Super = CBlockBase;
+
+  public:
+	using Super::Super;
 };

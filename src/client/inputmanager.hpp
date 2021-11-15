@@ -40,26 +40,26 @@ enum KBDKEY // Keys unrepresentable by a char, we have about 32 of these availab
   KBD_CNTRL		= 4,
 
   // arrow keys
-  KBD_UP = 5,
-  KBD_DOWN = 6,
-  KBD_LEFT = 7,
+  KBD_UP	= 5,
+  KBD_DOWN	= 6,
+  KBD_LEFT	= 7,
   KBD_RIGHT = 8,
 
   // Other keys
-  KBD_PGUP = 9,
-  KBD_PGDN = 10,
+  KBD_PGUP	 = 9,
+  KBD_PGDN	 = 10,
   KBD_DELETE = 11,
-  KBD_ALT = 12,
+  KBD_ALT	 = 12,
 
-  KBD_F1 = 13,
-  KBD_F2 = 14,
-  KBD_F3 = 15,
-  KBD_F4 = 16,
-  KBD_F5 = 17,
-  KBD_F6 = 18,
-  KBD_F7 = 19,
-  KBD_F8 = 20,
-  KBD_F9 = 21,
+  KBD_F1  = 13,
+  KBD_F2  = 14,
+  KBD_F3  = 15,
+  KBD_F4  = 16,
+  KBD_F5  = 17,
+  KBD_F6  = 18,
+  KBD_F7  = 19,
+  KBD_F8  = 20,
+  KBD_F9  = 21,
   KBD_F10 = 22,
   KBD_F11 = 23,
   KBD_F12 = 24,
@@ -70,7 +70,7 @@ enum KBDKEY // Keys unrepresentable by a char, we have about 32 of these availab
 // The cursor to present to the user
 enum CURSORS {
 	CURSOR_ARROW = 0, // SDL_SYSTEM_CURSOR_ARROW
-	CURSOR_HAND = 1, // SDL_SYSTEM_CURSOR_HAND
+	CURSOR_HAND	 = 1, // SDL_SYSTEM_CURSOR_HAND
 };
 
 class CInputManager

@@ -1,9 +1,9 @@
 #include "blockitem.hpp"
 #include "blocks/blockbase.hpp"
 
-CBlockItem::CBlockItem(int count, BLOCKID blockType, uint16_t blockData )
-{ 
-	m_iCount = count;
+CBlockItem::CBlockItem( int count, BLOCKID blockType, uint16_t blockData )
+{
+	m_iCount	 = count;
 	m_iBlockType = blockType;
 	m_iBlockData = blockData;
 
@@ -18,39 +18,22 @@ int CBlockItem::GetCount()
 	return 0;
 }
 
-int CBlockItem::GetID()
-{
-	return m_iBlockType;
-}
-void CBlockItem::SetID(int id)
+int CBlockItem::GetID() { return m_iBlockType; }
+void CBlockItem::SetID( int id )
 {
 	m_iBlockType = (BLOCKID)id;
-	m_iID = id;
+	m_iID		 = id;
 }
 
-BLOCKVAL CBlockItem::GetData()
-{
-	return m_iBlockData;
-}
-void CBlockItem::SetData(BLOCKVAL data)
-{
-	m_iBlockData = data;
-}
+BLOCKVAL CBlockItem::GetData() { return m_iBlockData; }
+void CBlockItem::SetData( BLOCKVAL data ) { m_iBlockData = data; }
 
 #ifdef CLIENTEXE
-CTexture* CBlockItem::GetTexture()
-{
-	return materialSystem::LoadTexture( "terrain.png" );
-}
+CTexture *CBlockItem::GetTexture() { return materialSystem::LoadTexture( "terrain.png" ); }
 Vector4f CBlockItem::GetUV() // TODO: This doesn't quite work (yet)
 {
-	Vector4f blockTex = BlockType( m_iBlockType ).GetTexture(NORTH, m_iBlockData );
+	Vector4f blockTex = BlockType( m_iBlockType ).GetTexture( NORTH, m_iBlockData );
 	blockTex /= 16.0f;
-	return {
-		blockTex.x,
-		blockTex.y,
-		blockTex.x + blockTex.z,
-		blockTex.y + blockTex.w
-	};
+	return { blockTex.x, blockTex.y, blockTex.x + blockTex.z, blockTex.y + blockTex.w };
 }
 #endif

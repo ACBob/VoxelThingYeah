@@ -1,6 +1,9 @@
 #include "entities/entityplayer.hpp"
 #include "gui/gui.hpp"
+#include "inventory/inventory.hpp"
+#include "localization/localizer.hpp"
 #include "network/client.hpp"
+#include "packs.hpp"
 #include "particles/particlesystem.hpp"
 #include "rendering/modelmanager.hpp"
 #include "rendering/shadermanager.hpp"
@@ -9,9 +12,6 @@
 #include "shared/statemanager.hpp"
 #include "sound/soundmanager.hpp"
 #include "world/world.hpp"
-#include "packs.hpp"
-#include "inventory/inventory.hpp"
-#include "localization/localizer.hpp"
 
 #pragma once
 
@@ -62,8 +62,8 @@ class CStatePlay : public CState
 
 	CInventory *m_invCreative;
 
-	bool m_bInPause = false;
-	bool m_bInChat	= false;
+	bool m_bInPause		= false;
+	bool m_bInChat		= false;
 	bool m_bDebugScreen = false;
 
 	int64_t m_iLastTick = 0;

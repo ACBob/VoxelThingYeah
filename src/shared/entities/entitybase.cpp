@@ -2,11 +2,13 @@
 
 #include "sound/soundmanager.hpp"
 
-CEntityBase::CEntityBase() : m_collisionBox( { Vector3f( 0 ), Vector3f( 0.5, 0.5, 0.5 ), Vector3f( 0.5, 0.5, 0.5 ) } ) {}
+CEntityBase::CEntityBase() : m_collisionBox( { Vector3f( 0 ), Vector3f( 0.5, 0.5, 0.5 ), Vector3f( 0.5, 0.5, 0.5 ) } )
+{
+}
 
 CEntityBase::~CEntityBase() {}
 
-void CEntityBase::Spawn(CWorld *world) {m_pWorld = world;}
+void CEntityBase::Spawn( CWorld *world ) { m_pWorld = world; }
 
 void CEntityBase::Kill() { m_bIsKilled = true; }
 
@@ -30,7 +32,7 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	UpdateCollision();
 	if ( pWorld->TestAABBCollision( this->m_collisionBox ) )
 	{
-		if (m_vVelocity.x >= SMACK_SPEED)
+		if ( m_vVelocity.x >= SMACK_SPEED )
 			soundSystem::PlaySoundEvent( "entity.fastsmack", m_vPosition );
 
 		m_vPosition.x -= m_vVelocity.x * fDelta;
@@ -41,10 +43,10 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	m_pLastBlockFloor = pWorld->TestAABBCollision( this->m_collisionBox );
 	if ( m_pLastBlockFloor )
 	{
-		if (m_vVelocity.y >= SMACK_SPEED)
+		if ( m_vVelocity.y >= SMACK_SPEED )
 			soundSystem::PlaySoundEvent( "entity.fastsmack", m_vPosition );
 
-		if (m_vVelocity.y < 0)
+		if ( m_vVelocity.y < 0 )
 			m_bOnFloor = true;
 
 		m_vPosition.y -= m_vVelocity.y * fDelta;
@@ -54,7 +56,7 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	UpdateCollision();
 	if ( pWorld->TestAABBCollision( this->m_collisionBox ) )
 	{
-		if (m_vVelocity.z >= SMACK_SPEED)
+		if ( m_vVelocity.z >= SMACK_SPEED )
 			soundSystem::PlaySoundEvent( "entity.fastsmack", m_vPosition );
 
 		m_vPosition.z -= m_vVelocity.z * fDelta;
@@ -93,7 +95,7 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 
 		m_bInWater = true;
 	}
-	
+
 #ifdef CLIENTEXE
 	m_vLighting = pWorld->GetLightingAtWorldPos( m_vPosition );
 #endif
@@ -102,7 +104,7 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 void CEntityBase::Tick( int64_t iTick )
 {
 	Vector3f t = m_vVelocity;
-	t.y		  = 0;
+	t.y		   = 0;
 	if ( t.Magnitude() > 1 )
 	{
 		if ( m_bFootstepSounds && m_bOnFloor && m_pLastBlockFloor != nullptr )
@@ -110,12 +112,12 @@ void CEntityBase::Tick( int64_t iTick )
 			if ( iTick >= m_iFootstepTick )
 			{
 				soundSystem::PlayStepSound( m_pLastBlockFloor->m_iBlockType, m_vPosition );
-				
+
 				// The time between footsteps is based on the speed of the player
 				m_iFootstepTick = iTick + ( 20 - (int)m_vVelocity.Magnitude() );
 			}
 		}
-		else if (m_bFootstepSounds && m_bInWater)
+		else if ( m_bFootstepSounds && m_bInWater )
 		{
 			if ( iTick >= m_iFootstepTick )
 			{

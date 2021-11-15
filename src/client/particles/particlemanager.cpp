@@ -12,7 +12,7 @@ CParticleManager::~CParticleManager()
 
 CParticle *CParticleManager::CreateParticle( Vector3f pos, ParticleDef pdef )
 {
-	CParticle *p  = &m_particles.emplace_back( pdef );
+	CParticle *p   = &m_particles.emplace_back( pdef );
 	p->m_vPosition = pos;
 
 	return p;

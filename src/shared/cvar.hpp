@@ -8,8 +8,7 @@
 #pragma once
 namespace ConVar
 {
-	enum ConVarFlag
-	{
+	enum ConVarFlag {
 		// 0
 		CVAR_NOFLAGS = 0,
 		// Save the value of the variable between runs
@@ -68,7 +67,6 @@ namespace ConVar
 		// Name
 		const char *m_cName;
 	};
-
 
 	// Function pointer for the console command
 	typedef void ( *ConsoleCommandFunc )( const char *args );

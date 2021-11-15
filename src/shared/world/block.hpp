@@ -13,7 +13,7 @@ class CBlock
   public:
 	CBlock();
 
-	BLOCKID m_iBlockType = BLOCKID::AIR;
+	BLOCKID m_iBlockType  = BLOCKID::AIR;
 	uint16_t m_iBlockData = 0;
 
 #ifdef CLIENTEXE

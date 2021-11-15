@@ -31,7 +31,7 @@ namespace fileSystem
 	// Unmounts every directory already mounted
 	void UnMountAll();
 
-	extern std::vector<const char*> mountedPaths;
+	extern std::vector<const char *> mountedPaths;
 
 	// Sets the path for writing.
 	bool MountWrite( const char *realPath );
@@ -40,7 +40,7 @@ namespace fileSystem
 	bool Exists( const char *virtualPath );
 
 	// Lists the directory
-	std::vector<const char*> List(const char* path);
+	std::vector<const char *> List( const char *path );
 
 	void UnInit();
 } // namespace fileSystem

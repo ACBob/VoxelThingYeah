@@ -5,10 +5,9 @@
 #pragma once
 
 #ifdef CLIENTEXE
-#include "rendering/texturemanager.hpp"
-#include "vector.hpp"
+	#include "rendering/texturemanager.hpp"
+	#include "vector.hpp"
 #endif
-
 
 class CItem
 {
@@ -23,7 +22,7 @@ class CItem
 	virtual void SetID( int id );
 
 #ifdef CLIENTEXE
-	virtual CTexture* GetTexture();
+	virtual CTexture *GetTexture();
 	virtual Vector4f GetUV();
 #endif
 

@@ -26,11 +26,11 @@ CEntityPlayer::CEntityPlayer() : m_inventory( 36 )
 	m_collisionBox.m_vBounds = Vector3f( 0.5, 1.9, 0.5 );
 	m_collisionBox.m_vOrigin = Vector3f( 0.5, 0, 0.5 );
 
-	((CBlockItem*)m_inventory.Slot(0))->m_iBlockType = STONE;
-	((CBlockItem*)m_inventory.Slot(0))->SetCount( 64 );
+	( (CBlockItem *)m_inventory.Slot( 0 ) )->m_iBlockType = STONE;
+	( (CBlockItem *)m_inventory.Slot( 0 ) )->SetCount( 64 );
 
-	((CBlockItem*)m_inventory.Slot(1))->m_iBlockType = BRICKS;
-	((CBlockItem*)m_inventory.Slot(1))->SetCount( 64 );
+	( (CBlockItem *)m_inventory.Slot( 1 ) )->m_iBlockType = BRICKS;
+	( (CBlockItem *)m_inventory.Slot( 1 ) )->SetCount( 64 );
 }
 CEntityPlayer::~CEntityPlayer() {}
 
@@ -75,13 +75,13 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 			m_pointed.m_pBlock->Update();
 
 			protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5,
-											BLOCKID::AIR, 0 );
+										  BLOCKID::AIR, 0 );
 			// }
 		}
 		if ( m_pInputMan->m_iMouseState & IN_RIGHT_MOUSE && m_pInputMan->m_iOldMouseState == 0 &&
 			 m_pointed.m_pBlock != nullptr )
 		{
-			if (BlockType(m_pointed.m_pBlock->m_iBlockType).CanBeUsed())
+			if ( BlockType( m_pointed.m_pBlock->m_iBlockType ).CanBeUsed() )
 			{
 				protocol::SendClientUseBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5 );
 			}
@@ -90,17 +90,19 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 				CBlock *b = clientSideWorld->BlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal );
 				if ( m_pSelectedItem != nullptr && m_pSelectedItem->GetCount() > 0 && b != nullptr )
 				{
-					BLOCKID oldType = b->m_iBlockType; // TODO: We're assuming it's a block item
-					uint16_t oldData = b->m_iBlockData;
+					BLOCKID oldType		 = b->m_iBlockType; // TODO: We're assuming it's a block item
+					uint16_t oldData	 = b->m_iBlockData;
 					CBlockItem *blckItem = reinterpret_cast<CBlockItem *>( m_pSelectedItem );
-					b->m_iBlockType		= blckItem->m_iBlockType;
-					b->m_iBlockData = blckItem->m_iBlockData;
+					b->m_iBlockType		 = blckItem->m_iBlockType;
+					b->m_iBlockData		 = blckItem->m_iBlockData;
 					if ( !clientSideWorld->TestAABBCollision( m_collisionBox ) )
 					{
 						b->Update();
 						m_pSelectedItem->SetCount( m_pSelectedItem->GetCount() - 1 );
 
-						protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, b->m_iBlockType, b->m_iBlockData );
+						protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer,
+													  ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal,
+													  b->m_iBlockType, b->m_iBlockData );
 					}
 					else
 					{
@@ -140,9 +142,9 @@ void CEntityPlayer::Tick( int64_t iTick )
 	}
 
 	Vector3f forward = GetForward();
-	Vector3f left	= forward.RotateAxis( 1, 90 * DEG2RAD );
-	left.y			= 0;
-	left			= left.Normal();
+	Vector3f left	 = forward.RotateAxis( 1, 90 * DEG2RAD );
+	left.y			 = 0;
+	left			 = left.Normal();
 
 	Vector3f vMoveDir( 0 );
 
@@ -179,7 +181,7 @@ void CEntityPlayer::Tick( int64_t iTick )
 		m_bCrouching = m_pInputMan->m_bInputState[INKEY_DOWN] && m_bOnFloor;
 
 		float fSpeed = m_bFly ? 6.5f : m_bInWater ? 2.3f : m_bCrouching ? 1.43f : 4.3f;
-		vMoveDir = vMoveDir * fSpeed * 0.98f;
+		vMoveDir	 = vMoveDir * fSpeed * 0.98f;
 
 		if ( !m_bFly )
 			vMoveDir.y += m_vVelocity.y;

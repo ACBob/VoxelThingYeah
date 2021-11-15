@@ -27,7 +27,7 @@ class CEntityBase
 
 	// Called right after the entity is added to the world
 	// Position and rotation are handled already
-	virtual void Spawn(CWorld *world) = 0;
+	virtual void Spawn( CWorld *world ) = 0;
 
 	// Called when told to remove from the world
 	virtual void Kill() = 0;

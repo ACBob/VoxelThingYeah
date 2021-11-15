@@ -18,7 +18,7 @@ class CParticleEmitter
 	Vector3f m_vPosition;
 
 	Vector3f m_vExplosion = { 1, 1, 1 };
-	Vector3f m_vLinear	 = { 0, -.98, 0 };
+	Vector3f m_vLinear	  = { 0, -.98, 0 };
 
 	int64_t m_iLastTick = 0;
 
@@ -29,8 +29,7 @@ class CParticleEmitter
 
 	int GetCount();
 
-
-	float m_fTime = 0.0f;
+	float m_fTime		  = 0.0f;
 	float m_fNextEmission = 0.0f;
 
   private:

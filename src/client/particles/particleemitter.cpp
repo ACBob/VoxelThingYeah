@@ -3,7 +3,7 @@
 #include <algorithm>
 
 CParticleEmitter::CParticleEmitter( ParticleDef pdef ) { m_particleDef = pdef; }
-CParticleEmitter::CParticleEmitter( ) { }
+CParticleEmitter::CParticleEmitter() {}
 
 CParticleEmitter::~CParticleEmitter() { m_particles.clear(); }
 
@@ -13,9 +13,7 @@ void CParticleEmitter::Render( Vector3f camRot )
 		p.Render( camRot );
 }
 
-int CParticleEmitter::GetCount() {
-	return m_particles.size();
-}
+int CParticleEmitter::GetCount() { return m_particles.size(); }
 
 void CParticleEmitter::PhysicsTick( CWorld *pWorld, int64_t iTick, float fDelta )
 {
@@ -30,7 +28,7 @@ void CParticleEmitter::PhysicsTick( CWorld *pWorld, int64_t iTick, float fDelta 
 	{
 		if ( m_particles.size() < m_particleDef.iMaxParticles )
 		{
-			for (int i = 0; i < m_particleDef.iEmissionSize; i++)
+			for ( int i = 0; i < m_particleDef.iEmissionSize; i++ )
 			{
 				CParticle &p  = m_particles.emplace_back( m_particleDef );
 				p.m_vPosition = m_vPosition;
@@ -44,7 +42,6 @@ void CParticleEmitter::PhysicsTick( CWorld *pWorld, int64_t iTick, float fDelta 
 
 	if ( m_particleDef.bOneShot && m_particles.size() == m_particleDef.iMaxParticles )
 		m_bDone = true;
-	
 
 	m_fTime += fDelta;
 }

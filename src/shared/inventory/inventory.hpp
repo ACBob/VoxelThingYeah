@@ -12,7 +12,7 @@ class CInventory
 {
   public:
 	CInventory( int slots, bool infinite = false );
-	CInventory( std::vector<CItem*> items, bool infinite = false );
+	CInventory( std::vector<CItem *> items, bool infinite = false );
 	~CInventory();
 
 	// Returns the item at slot

@@ -2,9 +2,9 @@
 
 #include "logging.hpp"
 
+#include <cstdlib>
 #include <cstring>
 #include <memory>
-#include <cstdlib>
 
 #include <string>
 
@@ -19,10 +19,10 @@ namespace ConVar
 {
 	CConVar::CConVar( const char *name, const char *defval, int flags )
 	{
-		m_cName	  = name;
-		m_cVal	  = defval;
-		m_cDefVal = defval;
-		m_iFlags  = flags;
+		m_cName		= name;
+		m_cVal		= defval;
+		m_cDefVal	= defval;
+		m_iFlags	= flags;
 		m_bModified = false;
 	}
 
@@ -72,7 +72,7 @@ namespace ConVar
 
 		// First, test if the number of args is correct
 		const char *p = args;
-		int numArgs = p[0] != NULL ? 1 : 0;
+		int numArgs	  = p[0] != NULL ? 1 : 0;
 		while ( p[0] != NULL )
 		{
 			if ( p[0] == ' ' )
@@ -80,29 +80,30 @@ namespace ConVar
 			p++;
 		}
 
-		if ( numArgs != strlen(m_cExpectedArgs))
+		if ( numArgs != strlen( m_cExpectedArgs ) )
 		{
-			con_error( "Wrong number of arguments for command %s (Got %d, expected %d)", m_cName, numArgs, strlen(m_cExpectedArgs) );
+			con_error( "Wrong number of arguments for command %s (Got %d, expected %d)", m_cName, numArgs,
+					   strlen( m_cExpectedArgs ) );
 			return;
 		}
 
 		// Now, test if the args are correct
 		// Testing the type of each argument
 		// Hop through the given args
-		p = args;
+		p			= args;
 		int argTest = 0;
-		while ( p[0] != NULL && argTest < strlen(m_cExpectedArgs) )
+		while ( p[0] != NULL && argTest < strlen( m_cExpectedArgs ) )
 		{
-			if (p[0] == ' ')
+			if ( p[0] == ' ' )
 				argTest++;
-			
+
 			// Test if the current argument is of the correct type
 			switch ( m_cExpectedArgs[argTest] )
 			{
 				case 'i':
 					// The argument to test ends at a space, so test if the char up to the space is a number
 					// Minus sign
-					if (p[0] == '-')
+					if ( p[0] == '-' )
 						p++;
 					while ( p[0] != ' ' && p[0] != NULL )
 					{
@@ -114,12 +115,12 @@ namespace ConVar
 						p++;
 					}
 					break;
-				break;
+					break;
 
 				case 'f':
 					// The argument to test ends at a space, so test if the char up to the space is a number
 					// Minus sign
-					if (p[0] == '-')
+					if ( p[0] == '-' )
 						p++;
 					while ( p[0] != ' ' && p[0] != NULL )
 					{
@@ -130,7 +131,7 @@ namespace ConVar
 						}
 						p++;
 					}
-				break;
+					break;
 
 				case 'c':
 					// String
@@ -138,8 +139,8 @@ namespace ConVar
 					while ( p[0] != ' ' && p[0] != NULL )
 					{
 						p++;
-					}					
-				break;
+					}
+					break;
 
 				case 'b':
 					// Boolean
@@ -157,7 +158,7 @@ namespace ConVar
 						}
 						p++;
 					}
-				break;
+					break;
 			}
 		}
 
@@ -173,7 +174,7 @@ namespace ConVar
 			delete c.second;
 	}
 
-	void CConVarHandler::WriteCFG(const char* cfgName)
+	void CConVarHandler::WriteCFG( const char *cfgName )
 	{
 		std::string out;
 
@@ -189,16 +190,16 @@ namespace ConVar
 
 			// We need to make sure quotes are escaped
 			// As well as semi-colons
-			std::string val(c.second->GetString());
-			for (size_t i = 0; i < val.length(); i++)
+			std::string val( c.second->GetString() );
+			for ( size_t i = 0; i < val.length(); i++ )
 			{
-				if (val[i] == '"') // Escape quotes
+				if ( val[i] == '"' ) // Escape quotes
 					out += "\\\"";
-				else if (val[i] == '\'') // Escape single quotes
+				else if ( val[i] == '\'' ) // Escape single quotes
 					out += "\\\'";
-				else if (val[i] == ';') // Escape semi-colons
+				else if ( val[i] == ';' ) // Escape semi-colons
 					out += "\\;";
-				else if (val[i] == '\\') // Escape backslashes
+				else if ( val[i] == '\\' ) // Escape backslashes
 					out += "\\\\";
 				else
 					out += val[i]; // Just append the character otherwise
@@ -223,7 +224,7 @@ namespace ConVar
 
 	CConCmd *CConVarHandler::DeclareConCmd( const char *name, const char *expectedArgs, ConsoleCommandFunc func )
 	{
-		CConCmd *c	= new CConCmd( name, expectedArgs, func );
+		CConCmd *c = new CConCmd( name, expectedArgs, func );
 		Cmds[name] = c;
 
 		return c;
@@ -237,7 +238,7 @@ namespace ConVar
 		// Don't try parsing empty string
 		if ( strlen( str ) == 0 )
 			return;
-		
+
 		// Tokens can be separated by spaces, tabs, or newlines
 		// But tokens can be quoted with " or ' which will ignore whitespace.
 		// The whitespace can be escaped with \, and the quotes can be escaped with \
@@ -256,12 +257,13 @@ namespace ConVar
 		// This function handles files, so we ignore from # to newline and start over
 
 		// We take a copy of the string so we can modify it
-		char *in = new char[strlen( str ) + 1];
+		char *in	= new char[strlen( str ) + 1];
 		char *start = in;
 		strcpy( in, str );
 
 		// This looks like unamanagable quake code
-		// It probably is, it was (mostly) given to me by GitHub Co-pilot, I just touched it up a bit (it didn't exactly conform to what I was expecting)
+		// It probably is, it was (mostly) given to me by GitHub Co-pilot, I just touched it up a bit (it didn't exactly
+		// conform to what I was expecting)
 		while ( in[0] != '\0' )
 		{
 			// Skip whitespace
@@ -281,10 +283,10 @@ namespace ConVar
 			// Skip until we hit a whitespace or a quote (or semi-colon)
 			while ( in[0] != ' ' && in[0] != '\t' && in[0] != '\n' && in[0] != ';' && in[0] != '\0' )
 				in++;
-			if (in[0] == '\0')
+			if ( in[0] == '\0' )
 			{
 				// Maybe it's a command with no arguments?
-				HandleConvarTokens(name, "");
+				HandleConvarTokens( name, "" );
 				break;
 			}
 			in[0] = '\0';
@@ -297,7 +299,7 @@ namespace ConVar
 			// Get the value
 			char *val = in;
 			// If it's not a string, skip until we hit a whitespace or semi-colon
-			if (val[0] != '\"' && val[0] != '\'')
+			if ( val[0] != '\"' && val[0] != '\'' )
 			{
 				while ( in[0] != ' ' && in[0] != '\t' && in[0] != '\n' && in[0] != ';' && in[0] != '\0' )
 					in++;
@@ -307,16 +309,17 @@ namespace ConVar
 			// It's a string!
 			else
 			{
-				in ++;
+				in++;
 
 				char quote = val[0];
-				val ++;
+				val++;
 
 				while ( in[0] != quote && in[0] != '\0' )
 				{
 					in++;
 					if ( in[0] == '\\' && in[1] == quote ) // skip escaped quotes (and the backslash)
-						in += 2; // TODO: the backslash is still technically part of the string, this causes the string to spiral out of control over successive restarts
+						in += 2; // TODO: the backslash is still technically part of the string, this causes the string
+								 // to spiral out of control over successive restarts
 				}
 				if ( in[0] == '\0' )
 				{
@@ -353,9 +356,9 @@ namespace ConVar
 
 		con_debug( "SET %s TO %s", cmd, args );
 
-		if ( Cvars.find(cmd) == Cvars.end() )
+		if ( Cvars.find( cmd ) == Cvars.end() )
 		{
-			if ( Cmds.find(cmd) == Cmds.end() )
+			if ( Cmds.find( cmd ) == Cmds.end() )
 			{
 				con_error( "Unknown command or variable: %s", cmd );
 				return;

@@ -33,9 +33,9 @@ namespace soundSystem
 	class CSoundEvent
 	{
 		enum SOUNDTYPE {
-			SOUNDTYPE_BLOCK = 0x0,
-			SOUNDTYPE_MUSIC = 0x1,
-			SOUNDTYPE_GUI	= 0x2,
+			SOUNDTYPE_BLOCK	 = 0x0,
+			SOUNDTYPE_MUSIC	 = 0x1,
+			SOUNDTYPE_GUI	 = 0x2,
 			SOUNDTYPE_ENTITY = 0x3,
 		};
 
@@ -113,12 +113,12 @@ namespace soundSystem
 	extern std::vector<CSound *> loadedSounds;
 	extern std::map<std::string, CSoundEvent *> soundEvents;
 
-	void PlayBreakSound( BLOCKID blockType, Vector3f pos ) {};
-	void PlayPlaceSound( BLOCKID blockType, Vector3f pos ) {};
-	void PlayStepSound( BLOCKID blockType, Vector3f pos ) {};
+	void PlayBreakSound( BLOCKID blockType, Vector3f pos ){};
+	void PlayPlaceSound( BLOCKID blockType, Vector3f pos ){};
+	void PlayStepSound( BLOCKID blockType, Vector3f pos ){};
 
-	void PlaySoundEvent( CSoundEvent *event, Vector3f pos ) {};
-	void PlaySoundEvent( const char *eventName, Vector3f pos ) {};
+	void PlaySoundEvent( CSoundEvent *event, Vector3f pos ){};
+	void PlaySoundEvent( const char *eventName, Vector3f pos ){};
 } // namespace soundSystem
 
 #endif

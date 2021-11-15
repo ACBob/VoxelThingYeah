@@ -127,10 +127,10 @@ BlockTexture GetDefaultBlockTextureSide( BLOCKID type, Direction side )
 			return { 15, 1, 1, 1 };
 			break;
 		case WOOL:
-			return { 0, 2, 1, 1};
+			return { 0, 2, 1, 1 };
 			break;
 		case SOUNDMAKER:
-			return { 1, 2, 1, 1};
+			return { 1, 2, 1, 1 };
 			break;
 	}
 }

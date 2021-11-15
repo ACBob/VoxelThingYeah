@@ -10,7 +10,7 @@ class CBlockItem : public CItem
 	DeclBaseClass( CItem );
 
   public:
-	CBlockItem(int count = 1, BLOCKID blockType = AIR, uint16_t blockData = 0);
+	CBlockItem( int count = 1, BLOCKID blockType = AIR, uint16_t blockData = 0 );
 	~CBlockItem();
 
 #ifdef CLIENTEXE
@@ -19,10 +19,10 @@ class CBlockItem : public CItem
 #endif
 
 	int GetID();
-	void SetID(int id);
+	void SetID( int id );
 
 	BLOCKVAL GetData();
-	void SetData(BLOCKVAL data);
+	void SetData( BLOCKVAL data );
 
 	// AIR is functionally the same as 0.
 	BLOCKID m_iBlockType;

@@ -17,7 +17,7 @@ CGameWindow::CGameWindow( const char *title, Vector3f size, bool resizeable, Vec
 		SDL_CreateWindow( title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, size.x, size.y,
 						  SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | ( resizeable ? SDL_WINDOW_RESIZABLE : 0 ) ) );
 
-	SDL_SetWindowMinimumSize(m_pInternalWindow.get(), minSize.x, minSize.y);
+	SDL_SetWindowMinimumSize( m_pInternalWindow.get(), minSize.x, minSize.y );
 
 	// if (resizeable);
 	// 	flags |= SDL_WINDOW_RESIZABLE;
@@ -36,7 +36,7 @@ CGameWindow::CGameWindow( const char *title, Vector3f size, bool resizeable, Vec
 	m_cursors = new SDL_Cursor *[2];
 
 	m_cursors[CURSOR_ARROW] = SDL_CreateSystemCursor( SDL_SYSTEM_CURSOR_ARROW );
-	m_cursors[CURSOR_HAND] = SDL_CreateSystemCursor( SDL_SYSTEM_CURSOR_HAND );
+	m_cursors[CURSOR_HAND]	= SDL_CreateSystemCursor( SDL_SYSTEM_CURSOR_HAND );
 }
 CGameWindow::~CGameWindow() {}
 
@@ -109,14 +109,8 @@ Vector3f CGameWindow::GetPos()
 }
 void CGameWindow::SetPos( Vector3f pos ) { SDL_SetWindowPosition( m_pInternalWindow.get(), pos.x, pos.y ); }
 
-bool CGameWindow::GetMouseVisibility()
-{
-	return SDL_ShowCursor(SDL_QUERY);
-}
-void CGameWindow::SetMouseVisibility(bool bVisible)
-{
-	SDL_ShowCursor(bVisible ? SDL_ENABLE : SDL_DISABLE);
-}
+bool CGameWindow::GetMouseVisibility() { return SDL_ShowCursor( SDL_QUERY ); }
+void CGameWindow::SetMouseVisibility( bool bVisible ) { SDL_ShowCursor( bVisible ? SDL_ENABLE : SDL_DISABLE ); }
 
 float CGameWindow::GetSPF()
 {
@@ -144,50 +138,39 @@ double CGameWindow::GetTime()
 const int scancodeToStateIndex[] = {
 	SDL_SCANCODE_SPACE,		' ',
 
-	SDL_SCANCODE_0,			'0',		SDL_SCANCODE_1,		 '1',		SDL_SCANCODE_2,			'2',
-	SDL_SCANCODE_3,			'3',		SDL_SCANCODE_4,		 '4',		SDL_SCANCODE_5,			'5',
-	SDL_SCANCODE_6,			'6',		SDL_SCANCODE_7,		 '7',		SDL_SCANCODE_8,			'8',
+	SDL_SCANCODE_0,			'0',		SDL_SCANCODE_1,		   '1',		  SDL_SCANCODE_2,		  '2',
+	SDL_SCANCODE_3,			'3',		SDL_SCANCODE_4,		   '4',		  SDL_SCANCODE_5,		  '5',
+	SDL_SCANCODE_6,			'6',		SDL_SCANCODE_7,		   '7',		  SDL_SCANCODE_8,		  '8',
 	SDL_SCANCODE_9,			'9',
 
 	SDL_SCANCODE_SEMICOLON, ';',
 
-	SDL_SCANCODE_A,			'A',		SDL_SCANCODE_B,		 'B',		SDL_SCANCODE_C,			'C',
-	SDL_SCANCODE_D,			'D',		SDL_SCANCODE_E,		 'E',		SDL_SCANCODE_F,			'F',
-	SDL_SCANCODE_G,			'G',		SDL_SCANCODE_H,		 'H',		SDL_SCANCODE_I,			'I',
-	SDL_SCANCODE_J,			'J',		SDL_SCANCODE_K,		 'K',		SDL_SCANCODE_L,			'L',
-	SDL_SCANCODE_M,			'M',		SDL_SCANCODE_N,		 'N',		SDL_SCANCODE_O,			'O',
-	SDL_SCANCODE_P,			'P',		SDL_SCANCODE_Q,		 'Q',		SDL_SCANCODE_R,			'R',
-	SDL_SCANCODE_S,			'S',		SDL_SCANCODE_T,		 'T',		SDL_SCANCODE_U,			'U',
-	SDL_SCANCODE_V,			'V',		SDL_SCANCODE_W,		 'W',		SDL_SCANCODE_X,			'X',
-	SDL_SCANCODE_Y,			'Y',		SDL_SCANCODE_Z,		 'Z',
+	SDL_SCANCODE_A,			'A',		SDL_SCANCODE_B,		   'B',		  SDL_SCANCODE_C,		  'C',
+	SDL_SCANCODE_D,			'D',		SDL_SCANCODE_E,		   'E',		  SDL_SCANCODE_F,		  'F',
+	SDL_SCANCODE_G,			'G',		SDL_SCANCODE_H,		   'H',		  SDL_SCANCODE_I,		  'I',
+	SDL_SCANCODE_J,			'J',		SDL_SCANCODE_K,		   'K',		  SDL_SCANCODE_L,		  'L',
+	SDL_SCANCODE_M,			'M',		SDL_SCANCODE_N,		   'N',		  SDL_SCANCODE_O,		  'O',
+	SDL_SCANCODE_P,			'P',		SDL_SCANCODE_Q,		   'Q',		  SDL_SCANCODE_R,		  'R',
+	SDL_SCANCODE_S,			'S',		SDL_SCANCODE_T,		   'T',		  SDL_SCANCODE_U,		  'U',
+	SDL_SCANCODE_V,			'V',		SDL_SCANCODE_W,		   'W',		  SDL_SCANCODE_X,		  'X',
+	SDL_SCANCODE_Y,			'Y',		SDL_SCANCODE_Z,		   'Z',
 
-	SDL_SCANCODE_ESCAPE,	KBD_ESCAPE, SDL_SCANCODE_LSHIFT, KBD_SHIFT, SDL_SCANCODE_BACKSPACE, KBD_BACKSPACE,
-	SDL_SCANCODE_RETURN,	KBD_RETURN, SDL_SCANCODE_LCTRL,	 KBD_CNTRL,
-	
-	SDL_SCANCODE_UP, KBD_UP,
-	SDL_SCANCODE_DOWN, KBD_DOWN,
-	SDL_SCANCODE_LEFT, KBD_LEFT,
-	SDL_SCANCODE_RIGHT, KBD_RIGHT,
-	
-	SDL_SCANCODE_PAGEUP, KBD_PGUP,
-	SDL_SCANCODE_PAGEDOWN, KBD_PGDN,
-	SDL_SCANCODE_DELETE, KBD_DELETE,
-	SDL_SCANCODE_LALT, KBD_ALT,
-	
-	SDL_SCANCODE_F1, KBD_F1,
-	SDL_SCANCODE_F2, KBD_F2,
-	SDL_SCANCODE_F3, KBD_F3,
-	SDL_SCANCODE_F4, KBD_F4,
-	SDL_SCANCODE_F5, KBD_F5,
-	SDL_SCANCODE_F6, KBD_F6,
-	SDL_SCANCODE_F7, KBD_F7,
-	SDL_SCANCODE_F8, KBD_F8,
-	SDL_SCANCODE_F9, KBD_F9,
-	SDL_SCANCODE_F10, KBD_F10,
-	SDL_SCANCODE_F11, KBD_F11,
-	SDL_SCANCODE_F12, KBD_F12,
-	
-	SDL_SCANCODE_TAB, KBD_TAB, };
+	SDL_SCANCODE_ESCAPE,	KBD_ESCAPE, SDL_SCANCODE_LSHIFT,   KBD_SHIFT, SDL_SCANCODE_BACKSPACE, KBD_BACKSPACE,
+	SDL_SCANCODE_RETURN,	KBD_RETURN, SDL_SCANCODE_LCTRL,	   KBD_CNTRL,
+
+	SDL_SCANCODE_UP,		KBD_UP,		SDL_SCANCODE_DOWN,	   KBD_DOWN,  SDL_SCANCODE_LEFT,	  KBD_LEFT,
+	SDL_SCANCODE_RIGHT,		KBD_RIGHT,
+
+	SDL_SCANCODE_PAGEUP,	KBD_PGUP,	SDL_SCANCODE_PAGEDOWN, KBD_PGDN,  SDL_SCANCODE_DELETE,	  KBD_DELETE,
+	SDL_SCANCODE_LALT,		KBD_ALT,
+
+	SDL_SCANCODE_F1,		KBD_F1,		SDL_SCANCODE_F2,	   KBD_F2,	  SDL_SCANCODE_F3,		  KBD_F3,
+	SDL_SCANCODE_F4,		KBD_F4,		SDL_SCANCODE_F5,	   KBD_F5,	  SDL_SCANCODE_F6,		  KBD_F6,
+	SDL_SCANCODE_F7,		KBD_F7,		SDL_SCANCODE_F8,	   KBD_F8,	  SDL_SCANCODE_F9,		  KBD_F9,
+	SDL_SCANCODE_F10,		KBD_F10,	SDL_SCANCODE_F11,	   KBD_F11,	  SDL_SCANCODE_F12,		  KBD_F12,
+
+	SDL_SCANCODE_TAB,		KBD_TAB,
+};
 
 const int cursorMap[2] = {
 	SDL_SYSTEM_CURSOR_ARROW,

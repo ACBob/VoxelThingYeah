@@ -186,19 +186,19 @@ CBiome *COverworldJeneration::GetBiomeAtPos( Vector3f p )
 {
 	// temperature & humidity are 0 - 2
 	float fTemperature = ( fnlGetNoise2D( &m_biomesOvergroundTemperatureNoise, p.x, p.z ) + 1.0f );
-	float fHumidity = (fnlGetNoise2D( &m_biomesOvergroundHumidityNoise, p.x, p.z ) + 1.0f);
+	float fHumidity	   = ( fnlGetNoise2D( &m_biomesOvergroundHumidityNoise, p.x, p.z ) + 1.0f );
 
 	// return the biome that is closest to the given temperature and humidity
 	float fClosestDistance = 99999.0f;
-	CBiome *pClosestBiome = nullptr;
+	CBiome *pClosestBiome  = nullptr;
 	for ( int i = 0; i < biomes::biomeList.size(); i++ )
 	{
-		float fDistance =
-			std::abs( biomes::biomeList[i]->m_fTemperature - fTemperature ) + std::abs( biomes::biomeList[i]->m_fHumidity - fHumidity );
+		float fDistance = std::abs( biomes::biomeList[i]->m_fTemperature - fTemperature ) +
+						  std::abs( biomes::biomeList[i]->m_fHumidity - fHumidity );
 		if ( fDistance < fClosestDistance )
 		{
 			fClosestDistance = fDistance;
-			pClosestBiome = biomes::biomeList[i];
+			pClosestBiome	 = biomes::biomeList[i];
 		}
 	}
 

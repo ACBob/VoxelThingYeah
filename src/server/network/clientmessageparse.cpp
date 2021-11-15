@@ -99,7 +99,7 @@ namespace protocol
 				if ( true ) // If it's a valid block placement (for now no check)
 				{
 					b->m_iBlockType = (BLOCKID)blockType;
-					b->m_iBlockData	= val;
+					b->m_iBlockData = val;
 					b->Update();
 
 					for ( CNetworkPlayer *c : pServer->m_players )
@@ -205,8 +205,10 @@ namespace protocol
 
 				// test if the block is useable
 				CBlock *b = pServer->m_world.BlockAtWorldPos( Vector3f( x, y, z ) );
-				if ( b != nullptr && BlockType(b->m_iBlockType).CanBeUsed() )
-					BlockType(b->m_iBlockType).OnUse( (CChunk*)b->m_pChunk, Vector3f(x, y, z), pServer->ClientFromPeer(pPeer)->m_pEntity );
+				if ( b != nullptr && BlockType( b->m_iBlockType ).CanBeUsed() )
+					BlockType( b->m_iBlockType )
+						.OnUse( (CChunk *)b->m_pChunk, Vector3f( x, y, z ),
+								pServer->ClientFromPeer( pPeer )->m_pEntity );
 			}
 			break;
 
