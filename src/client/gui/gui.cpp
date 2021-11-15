@@ -563,10 +563,10 @@ void CGui::Label( const char* text, Vector3f position, float scale, CColour colo
 		case TEXTALIGN_LEFT:
 			break;
 		case TEXTALIGN_CENTER:
-			position.x -= m_iGUIUnitSize * scale * (_TextLength(text, scale) / (float)m_iGUIUnitSize) * 0.5f;
+			position.x -= scale * _TextLength(text, scale) * 0.5f;
 			break;
 		case TEXTALIGN_RIGHT:
-			position.x -= m_iGUIUnitSize * scale * (_TextLength(text, scale) / (float)m_iGUIUnitSize);
+			position.x -= scale * _TextLength(text, scale);
 			break;
 	}
 

@@ -388,6 +388,32 @@ void CStateMenu::Enter()
 	// Ideally we'd automagically detect it, but I can't figure out how to do that.
 	if (!cvarLanguage->IsModified())
 		pStateMan->PushState(std::make_unique<CStateLanguageMenu>());
+	
+
+	// Load the splash texts
+	bool bSuccess = false;
+	int64_t fileSize = 0;
+	char *pFileData = (char*)fileSystem::LoadFile("/assets/splash.txt", fileSize, bSuccess);
+
+	if (bSuccess)
+	{
+		// Split the file into lines
+		char *pLine = pFileData;
+		char *pNextLine = nullptr;
+		while ( (pNextLine = strchr( pLine, '\n' )) != nullptr )
+		{
+			*pNextLine = '\0';
+			m_splashes.push_back( pLine );
+			pLine = pNextLine + 1;
+		}
+
+		// Pick a random line
+		m_splash = m_splashes[rand() % m_splashes.size()];
+	}
+	else
+	{
+		m_splash = "ERROR!";
+	}
 }
 
 void CStateMenu::ReturnedTo()
@@ -404,6 +430,8 @@ void CStateMenu::ReturnedTo()
 	{
 		pStateMan->PushState( std::make_unique<CKickScreen>() );
 	}
+
+	m_splash = m_splashes[rand() % m_splashes.size()];
 }
 
 void CStateMenu::Exit()
@@ -421,6 +449,11 @@ void CStateMenu::Update()
 	pStateMan->m_pGui->ImageRepeating( {0,-1}, pStateMan->m_pGui->m_vGUISize, pStateMan->m_pGui->m_pGuiBGTex );
 
 	pStateMan->m_pGui->ImageCentered( pStateMan->m_pGui->m_vGUICentre - Vector3f(0, 8), {45, 8.57}, pStateMan->m_pGui->m_pGuiTitleTex );
+
+	// Splash text infront of the logo
+	// TODO: I want it to pulse slightly, but the centering is a bit weird so not right now
+	pStateMan->m_pGui->Label( m_splash.c_str(), pStateMan->m_pGui->m_vGUICentre - Vector3f(0, 3.5), 1.0f, {127,127,255}, CGui::TEXTALIGN_CENTER );
+
 
 	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.startgame"),
 										pStateMan->m_pGui->m_vGUICentre, {32, 2} ) )

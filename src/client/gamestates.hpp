@@ -77,6 +77,9 @@ class CStateMenu : public CState
 	void ReturnedTo();
 	void Exit();
 	void Update();
+
+	std::vector<std::string> m_splashes;
+	std::string m_splash;
 };
 
 class CStateOptionsMenu : public CState
