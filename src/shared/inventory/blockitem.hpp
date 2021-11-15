@@ -16,6 +16,7 @@ class CBlockItem : public CItem
 #ifdef CLIENTEXE
 	CTexture *GetTexture();
 	Vector4f GetUV();
+	CColour GetTint();
 #endif
 
 	int GetID();

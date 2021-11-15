@@ -7,6 +7,7 @@
 #ifdef CLIENTEXE
 	#include "rendering/texturemanager.hpp"
 	#include "vector.hpp"
+	#include "colour.hpp"
 #endif
 
 class CItem
@@ -24,6 +25,7 @@ class CItem
 #ifdef CLIENTEXE
 	virtual CTexture *GetTexture();
 	virtual Vector4f GetUV();
+	virtual CColour GetTint();
 #endif
 
   protected:

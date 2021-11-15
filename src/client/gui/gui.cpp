@@ -505,7 +505,7 @@ bool CGui::Item( GuiID id, Vector3f position, Vector3f size, CItem *pItem )
 	// Get the UV coordinates
 	Vector4f uv = pItem->GetUV();
 
-	_Image( position, size * m_iGUIUnitSize, pTex, { 255, 255, 255 }, uv );
+	_Image( position, size * m_iGUIUnitSize, pTex, pItem->GetTint(), uv );
 
 	// At most we can have 2 digits in the count (up to 64)
 	char *buffer = new char[3];

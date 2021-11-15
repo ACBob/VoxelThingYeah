@@ -30,10 +30,14 @@ void CBlockItem::SetData( BLOCKVAL data ) { m_iBlockData = data; }
 
 #ifdef CLIENTEXE
 CTexture *CBlockItem::GetTexture() { return materialSystem::LoadTexture( "terrain.png" ); }
-Vector4f CBlockItem::GetUV() // TODO: This doesn't quite work (yet)
+Vector4f CBlockItem::GetUV()
 {
 	Vector4f blockTex = BlockType( m_iBlockType ).GetTexture( NORTH, m_iBlockData );
 	blockTex /= 16.0f;
 	return { blockTex.x, blockTex.y, blockTex.x + blockTex.z, blockTex.y + blockTex.w };
+}
+CColour CBlockItem::GetTint()
+{
+	return BlockType( m_iBlockType ).GetTint( nullptr, {}, m_iBlockData, NORTH );
 }
 #endif
