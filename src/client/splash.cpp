@@ -9,10 +9,6 @@
 // TODO: this is a bit if else()-y, and a bit of a mess.
 // But it works!
 std::string GetSplashText(std::vector<std::string> const& texts) {
-    if (texts.empty()) {
-        return "I'm not mad, just disappointed.";        
-    }
-    
     // Get the current date
     time_t raw_time = time( NULL );
     struct tm * timeinfo = localtime ( &raw_time );
@@ -68,6 +64,8 @@ std::string GetSplashText(std::vector<std::string> const& texts) {
         return "";
     
     
-
+    if (texts.empty()) {
+        return "I'm not mad, just disappointed.";        
+    }
     return texts[rand() % texts.size()];
 }
