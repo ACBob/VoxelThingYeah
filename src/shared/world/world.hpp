@@ -35,6 +35,7 @@ class CWorld
 
 	// Tries to get a chunk and generates a new one if it can't find one
 	CChunk *GetChunkGenerateAtWorldPos( Vector3f pos );
+	CChunk *GetChunkGenerateAtPos( Vector3f pos );
 
 	// Deletes the chunk at the chunk position
 	void UnloadChunk( Vector3f pos );

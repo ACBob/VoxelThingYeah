@@ -149,6 +149,8 @@ template <typename T> class Vector3
 		return Vector3<T>( y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x );
 	}
 
+	T Distance( const Vector3<T> &v ) const { return ( *this - v ).Magnitude(); }
+
 	// Comparison
 
 	bool operator==( const Vector3<T> &v ) const { return x == v.x && y == v.y && z == v.z; }

@@ -44,16 +44,22 @@ CChunk *CWorld::ChunkAtChunkPos( Vector3f pos )
 // Tries to get a chunk and generates a new one if it can't find one
 CChunk *CWorld::GetChunkGenerateAtWorldPos( Vector3f pos )
 {
-	CChunk *c = ChunkAtWorldPos( pos );
+	return GetChunkGenerateAtPos( (pos / Vector3f(CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z)).Floor() );
+}
+
+CChunk *CWorld::GetChunkGenerateAtPos( Vector3f pos )
+{
+	// pos is in chunk space
+	CChunk *c = ChunkAtChunkPos( pos );
 	if ( c != nullptr )
 		return c;
 
 	m_chunks.push_back( std::make_unique<CChunk>() );
 	c				   = m_chunks.back().get();
-	c->m_vPosition	   = ( pos / Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
-	c->m_portableDef.x = c->m_vPosition.x;
-	c->m_portableDef.y = c->m_vPosition.y;
-	c->m_portableDef.z = c->m_vPosition.z;
+	c->m_vPosition	   = pos;
+	c->m_portableDef.x = pos.x;
+	c->m_portableDef.y = pos.y;
+	c->m_portableDef.z = pos.z;
 	c->m_pChunkMan	   = this;
 #ifdef CLIENTEXE
 	c->m_blocksMdl.m_vPosition = c->GetPosInWorld();
@@ -62,8 +68,12 @@ CChunk *CWorld::GetChunkGenerateAtWorldPos( Vector3f pos )
 	c->m_waterMdl.m_vPosition = c->GetPosInWorld();
 	c->m_waterMdl.SetShader( m_pWaterShader );
 	c->m_waterMdl.SetTexture( m_pWorldTex );
-#endif
+#elif SERVEREXE
+	// Generate only on the server
 	m_jenerator.Generate( c );
+#endif
+
+	c->m_bReallyDirty = c->m_bDirty = true;
 
 	return c;
 }
@@ -224,18 +234,17 @@ void CWorld::WorldTick( int64_t iTick, float delta )
 
 	for ( auto &&c : m_chunks )
 	{
-		CChunk *chunk = c.get();
-		if ( chunk->m_bDirty )
+		if ( c->m_bDirty || c->m_bReallyDirty )
 		{
-			chunk->Update( iTick );
+			c->Update( iTick );
 			continue;
 		}
 
 		for ( Vector3f plyrPos : playerPositions )
 		{
-			if ( ( plyrPos - chunk->m_vPosition ).Magnitude() < 7 )
+			if ( c->m_vPosition.Distance(plyrPos) < 7 )
 			{
-				chunk->Update( iTick );
+				c->Update( iTick );
 				break;
 			}
 		}
@@ -260,18 +269,11 @@ PortableChunkRepresentation CWorld::GetWorldRepresentation( Vector3f pos )
 
 void CWorld::UsePortable( PortableChunkRepresentation rep )
 {
-	CChunk *c = GetChunkGenerateAtWorldPos( Vector3f( rep.x * CHUNKSIZE_X, rep.y * CHUNKSIZE_Y, rep.z * CHUNKSIZE_Z ) );
-	if ( c == nullptr )
-	{
-		con_error( "WEE WOO WEE WOO" );
-		return;
-	}
+	CChunk *c = GetChunkGenerateAtPos( Vector3f( rep.x, rep.y, rep.z ) );
 
 	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
 	{
 		c->m_blocks[j].m_iBlockType = (BLOCKID)rep.m_iBlocks[j];
 		c->m_blocks[j].m_iBlockData = rep.m_iValue[j];
 	}
-
-	c->m_bDirty = true;
 }

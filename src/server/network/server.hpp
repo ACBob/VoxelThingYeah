@@ -19,6 +19,8 @@ class CNetworkPlayer
 
 	// A queue of chunks to be sent
 	std::vector<Vector3f> m_pChunkQueue;
+	// The chunks that have been sent
+	std::vector<Vector3f> m_pChunkSent;
 
 	int m_iLoadedChunkIDX		  = 0;
 	uint64_t m_iNextChunkLoadTick = 0;
