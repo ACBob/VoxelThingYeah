@@ -25,6 +25,7 @@ existingusername = "Yarr captain's name is already taken!"
 protocolmismatch = "Yer' speakin' jibberish, lad."
 invalidusername = "The captain name given is not valid."
 banned = "Yer' banned from this ship!"
+closing = "Th' ship's closing!"
 
 ["msg"]
 joined = "%s has come aboard!"

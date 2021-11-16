@@ -25,6 +25,7 @@ existingusername = "Nogen har allerede dit brugernavn! Find et andet!"
 wrongprotocol = "Forkert protokol version."
 invalidusername = "Ugyldigt brugernavn."
 banned = "Du er blevet udelukket fra serveren."
+closing = "Lukker..."
 
 
 ["msg"]

@@ -27,6 +27,7 @@ existingusername = "HONK HONK QUACK"
 wrongprotocol = "HONK HONK QUACK"
 invalidusername = "HONK HONK QUACK"
 banned = "HONK HONK QUACK"
+closing = "HONK HONK QUACK"
 
 ["msg"]
 joined = "%s HONK HONK QUACK"

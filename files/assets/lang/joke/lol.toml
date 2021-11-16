@@ -27,6 +27,7 @@ existingusername = "SOMEONE HAZ THAT NAME!"
 wrongprotocol = "PROTOCOL IZ WRONG!"
 invalidusername = "NAME IZ WRONG!"
 banned = "YOU WERE BAD! NO MORE!"
+closing = "GOODBYE!"
 
 ["msg"]
 joined = "%s HAZ JOINED!!! HI!!"

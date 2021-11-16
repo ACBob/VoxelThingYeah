@@ -25,6 +25,7 @@ existingusername = "Somebody already has your username! Change it!"
 wrongprotocol = "Protocol version mismatch!"
 invalidusername = "The username provided is invalid. Change it!"
 banned = "You are banned from this server."
+closing = "The server is closing."
 
 ["msg"]
 joined = "%s joined the game."

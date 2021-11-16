@@ -25,6 +25,7 @@ existingusername = "THAT'S MY NAME, DICK"
 wrongprotocol = "WRONG WAY, ASSHOLE"
 invalidusername = "STUPID FUCKING NAME"
 banned = "DON'T YOU FUCKING SHOW YOUR FACE HERE EVER AGAIN"
+closing = "THE SERVER'S CLOSED, FUCK OFF"
 
 ["msg"]
 joined = "%s JOINED"

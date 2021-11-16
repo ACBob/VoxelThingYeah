@@ -49,6 +49,8 @@ wrongprotocol = ""
 invalidusername = ""
 # "You are banned from this server"
 banned = ""
+# "The server is closing"
+closing = ""
 
 ["msg"]
 # "%s has joined the game."

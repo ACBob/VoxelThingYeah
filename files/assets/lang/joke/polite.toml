@@ -25,6 +25,7 @@ existingusername = "Somebody by your name is already on the guest list, it seems
 wrongprotocol = "Things seem to have gone pearshaped, madame."
 invalidusername = "Apparently, the name we are under is invalid."
 banned = "You, sire, are banned from this server."
+closing = "The server is closed, sire."
 
 ["msg"]
 joined = "%s has joined the game."

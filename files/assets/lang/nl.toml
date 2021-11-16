@@ -27,6 +27,7 @@ existingusername = "Deze gebruikersnaam bestaat al."
 wrongprotocol = "Verkeerde protocol versie."
 invalidusername = "Deze gebruikersnaam is ongeldig."
 banned = "Je bent verbannen van deze server."
+closing = "Verbinding wordt verbroken..."
 
 
 ["msg"]

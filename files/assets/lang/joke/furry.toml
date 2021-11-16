@@ -25,6 +25,7 @@ existingusername = "SOMEONE HAZ THAT NAME!"
 wrongprotocol = "Prowocol wrongowo"
 invalidusername = "UwU Namey Wamey Invalidy"
 banned = "UwU admin wadmin got angyyyy"
+closing = "The sever is clowsing"
 
 ["msg"]
 joined = "%s joiwned the furcon!"

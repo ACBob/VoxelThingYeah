@@ -27,6 +27,7 @@ existingusername = "Nome utente già in uso"
 wrongprotocol = "Protocollo errato"
 invalidusername = "Nome utente non valido"
 banned = "Tu sei bannato da questo server"
+closing = "Chiusura..."
 
 
 ["msg"]

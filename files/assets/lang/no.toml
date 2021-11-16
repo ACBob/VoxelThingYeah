@@ -27,6 +27,7 @@ existingusername = "Brukernavnet finnes allerede"
 wrongprotocol = "Feil protokoll"
 invalidusername = "Ugyldig brukernavn"
 banned = "Du er bannet!"
+closing = "Lukker..."
 
 
 ["msg"]

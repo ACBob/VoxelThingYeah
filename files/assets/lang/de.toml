@@ -25,6 +25,7 @@ existingusername = "Der Benutzername existiert bereits."
 wrongprotocol = "Falsches Protokoll."
 invalidusername = "Der Benutzername ist ungültig."
 banned = "Du wurdest gebannt."
+closing = "Beende..."
 
 
 ["msg"]

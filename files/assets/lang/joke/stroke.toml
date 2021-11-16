@@ -25,6 +25,7 @@ existingusername = "soemogn already ahs ypor usxerena!! CHNGE IT"
 wrongprotocol = "rpotcyl versio nicinmatc"
 invalidusername = "the username procided is invaled change it!"
 banned = "you are banend from the searv"
+closing = "Server clsoin..."
 
 ["msg"]
 joined = "%s hds jjouieed the game."

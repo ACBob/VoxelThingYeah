@@ -27,6 +27,7 @@ existingusername = "Ayo dawg, don't try-ta use someone else's name! Fo shame!"
 wrongprotocol = "Protocol's all outta whack, yo."
 invalidusername = "Your name just ain't right!"
 banned = "You know you ain't welcome here, dawg."
+closing = "Server's closing, dawg."
 
 ["msg"]
 joined = "Ayo, welcome %s!"

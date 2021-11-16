@@ -133,6 +133,11 @@ int main( int argc, char *args[] )
 		}
 	}
 
+	for ( CNetworkPlayer *c : server.m_players ) {
+		server.KickPlayer( c, "kick.closing" );
+		server.Update();
+	}
+
 	consoleThread.join();
 	conVarHandle.WriteCFG( "svconfig.cfg" );
 
