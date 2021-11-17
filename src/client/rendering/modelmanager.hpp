@@ -20,10 +20,6 @@ namespace modelSystem
 		unsigned int m_iVao;
 		// Element buffer
 		unsigned int m_iEbo;
-
-		// Holds the amount of faces/vertices we have
-		std::size_t m_nFaces;
-		std::size_t m_nVertices;
 	  public:
 		struct Vertex
 		{

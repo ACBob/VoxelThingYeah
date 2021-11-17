@@ -40,6 +40,8 @@ CModel::CModel( std::vector<Vertex> verts, std::vector<Face> faces ) : m_vertice
 	glEnableVertexAttribArray( 4 );
 
 	glBindVertexArray( 0 );
+
+	Update();
 }
 
 CModel::~CModel() { 
@@ -50,14 +52,12 @@ CModel::~CModel() {
 
 void CModel::Update()
 {
-	m_nVertices = m_vertices.size();
-	m_nFaces	= m_faces.size();
 
 	glBindBuffer( GL_ARRAY_BUFFER, m_iVbo );
-	glBufferData( GL_ARRAY_BUFFER, m_nVertices * sizeof( CModel::Vertex ), m_vertices.data(), GL_DYNAMIC_DRAW );
+	glBufferData( GL_ARRAY_BUFFER, m_vertices.size() * sizeof( CModel::Vertex ), m_vertices.data(), GL_DYNAMIC_DRAW );
 
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_iEbo );
-	glBufferData( GL_ELEMENT_ARRAY_BUFFER, m_nFaces * sizeof( CModel::Face ), m_faces.data(), GL_DYNAMIC_DRAW );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, m_faces.size() * sizeof( CModel::Face ), m_faces.data(), GL_DYNAMIC_DRAW );
 
 	glBindBuffer( GL_ARRAY_BUFFER, 0 );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
@@ -72,6 +72,8 @@ void CModel::Render()
 	if ( !m_bVisible )
 		return;
 
+	m_pShader->Use();
+
 	glm::mat4 model = glm::mat4( 1.0f );
 	model			= glm::translate( model, { m_vPosition.x, m_vPosition.y, m_vPosition.z } );
 	model			= glm::scale( model, { m_vSize.x, m_vSize.y, m_vSize.z } );
@@ -82,7 +84,7 @@ void CModel::Render()
 	m_pShader->SetMat4( "model", model );
 	m_pShader->SetMat3( "normalMat", glm::mat3( glm::transpose( glm::inverse( model ) ) ) );
 	m_pShader->SetVec4( "texCoordOffset", m_vUvOffset );
-	m_pShader->SetVec4( "lighting", m_vLighting / 255 );
+	m_pShader->SetVec4( "lighting", (Vector4f)m_vLighting );
 
 	if ( m_pTex != nullptr )
 		glBindTexture( GL_TEXTURE_2D, m_pTex->m_iId );
@@ -92,7 +94,7 @@ void CModel::Render()
 	glBindBuffer( GL_ARRAY_BUFFER, m_iVbo );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_iEbo );
 
-	glDrawElements( GL_TRIANGLES, m_nFaces * sizeof( CModel::Face ), GL_UNSIGNED_INT, 0 );
+	glDrawElements( GL_TRIANGLES, m_faces.size() * sizeof( CModel::Face ), GL_UNSIGNED_INT, 0 );
 
 	glBindBuffer( GL_ARRAY_BUFFER, 0 );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
