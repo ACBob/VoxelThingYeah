@@ -15,6 +15,8 @@ CChunk::CChunk()
 		m_iLightingValue[i]		   = 0;
 		m_portableDef.m_iBlocks[i] = m_blocks[i].m_iBlockType;
 		m_portableDef.m_iValue[i]  = 0;
+
+		m_blocks[i].m_pChunk = this;
 	}
 
 	m_bDirty = true;
@@ -31,6 +33,8 @@ CChunk::CChunk()
 		m_blocks[i].m_iBlockType   = BLOCKID::AIR;
 		m_portableDef.m_iBlocks[i] = m_blocks[i].m_iBlockType;
 		m_portableDef.m_iValue[i]  = 0;
+		
+		m_blocks[i].m_pChunk = this;
 	}
 
 	m_bDirty = true;
