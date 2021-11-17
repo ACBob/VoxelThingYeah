@@ -3,7 +3,6 @@ set(rendering_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/texturemanager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/chunkmodel.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/modelmanager.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/modelrenderer.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/blocktexture.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/modelloader.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/glad.c
