@@ -156,7 +156,7 @@ std::vector<CModel::Vertex> samplePlant( CBlock block, int x, int y, int z, int 
 }
 
 // We include the chunk manager here so we can test our neighbouring chunks
-void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], Vector3f pos, void *chunk )
+void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], Vector3f pos, CChunk *chunk )
 {
 	mdl.m_vertices.clear();
 	mdl.m_faces.clear();
@@ -180,23 +180,22 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], Vector3f pos, 
 						CColour lightColour;
 						CColour blockColouration =
 							BlockType( block.m_iBlockType )
-								.GetTint( (CChunk *)chunk, pos, block.m_iBlockData, (Direction)i );
+								.GetTint( chunk, pos, block.m_iBlockData, (Direction)i );
 
 						Vector3f neighbour = Vector3f( x, y, z ) + DirectionVector[i];
 						if ( ValidChunkPosition( neighbour ) )
 						{
-							BLOCKID blockType =
-								reinterpret_cast<CChunk *>( chunk )->GetBlockAtLocal( neighbour )->m_iBlockType;
+							BLOCKID blockType = chunk->GetBlockAtLocal( neighbour )->m_iBlockType;
 
 							if ( !BlockType( block.m_iBlockType ).FaceVisible( (Direction)i, blockType ) )
 								continue;
 
-							lightColour = reinterpret_cast<CChunk *>( chunk )->GetLightingLocal( neighbour );
+							lightColour = chunk->GetLightingLocal( neighbour );
 						}
 						else
 						{
 							// Test a neighbour
-							CChunk *chunkNeighbour = reinterpret_cast<CChunk *>( chunk )->Neighbour( Direction( i ) );
+							CChunk *chunkNeighbour = chunk->Neighbour( Direction( i ) );
 							if ( chunkNeighbour != nullptr )
 							{
 								neighbour = neighbour + ( DirectionVector[i] *

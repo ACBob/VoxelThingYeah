@@ -16,7 +16,8 @@
 
 #include <vector>
 
-// #include "entities/entitybase.h"
+// Forward Decl.
+class CEntityBase;
 
 #include <memory>
 
@@ -67,17 +68,17 @@ class CWorld
 	// Returns the world rep at the chunk
 	PortableChunkRepresentation GetWorldRepresentation( Vector3f pos );
 
-	std::vector<void *> m_ents;
-	void AddEntity( void *e );
+	std::vector<CEntityBase*> m_ents;
+	void AddEntity( CEntityBase *e );
 
-	void *GetEntityByName( const char *name );
+	CEntityBase *GetEntityByName( const char *name );
 
 #ifdef CLIENTEXE
 	void Render();
 
 	CColour GetLightingAtWorldPos( Vector3f pos );
 
-	void *m_pLocalPlayer = nullptr;
+	CEntityBase *m_pLocalPlayer = nullptr;
 
 	// Shader we render with
 	CShader *m_pWorldShader = nullptr;

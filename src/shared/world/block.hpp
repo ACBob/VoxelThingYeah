@@ -1,3 +1,5 @@
+// TODO: is this class neccesary? Seems bloaty!
+
 #include "blockdef.hpp"
 #include "utility/direction.hpp"
 #include "utility/vector.hpp"
@@ -7,6 +9,9 @@
 #endif
 
 #pragma once
+
+// Forward Decl.
+class CChunk;
 
 class CBlock
 {
@@ -30,5 +35,5 @@ class CBlock
 	void Update();
 
 	// Pointer to chunk that holds us
-	void *m_pChunk;
+	CChunk *m_pChunk;
 };

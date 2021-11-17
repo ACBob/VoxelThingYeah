@@ -119,21 +119,20 @@ CColour CWorld::GetLightingAtWorldPos( Vector3f pos )
 
 bool CWorld::ValidChunkPos( const Vector3f pos ) { return ChunkAtWorldPos( pos ) != nullptr; }
 
-void CWorld::AddEntity( void *e )
+void CWorld::AddEntity( CEntityBase *e )
 {
 	m_ents.push_back( e );
-	( (CEntityBase *)e )->Spawn( this );
+	e->Spawn( this );
 #ifdef CLIENTEXE
-	( (CEntityBase *)e )->SetShader( m_pEntityShader );
+	e->SetShader( m_pEntityShader );
 #endif
 }
 
-void *CWorld::GetEntityByName( const char *name )
+CEntityBase *CWorld::GetEntityByName( const char *name )
 {
-	for ( void *e : m_ents )
+	for ( CEntityBase *e : m_ents )
 	{
-		CEntityBase *ent = reinterpret_cast<CEntityBase *>( e );
-		if ( ent->m_name == name )
+		if ( e->m_name == name )
 			return e;
 	}
 	return nullptr;
@@ -146,9 +145,9 @@ void CWorld::Render()
 	for ( auto &&c : m_chunks )
 		c.get()->Render();
 	// Render entities
-	for ( void *ent : m_ents )
+	for ( CEntityBase *ent : m_ents )
 	{
-		( (CEntityBase *)ent )->Render();
+		ent->Render();
 	}
 	// Render stuff like water
 	for ( auto &&c : m_chunks )
@@ -207,23 +206,17 @@ void CWorld::WorldTick( int64_t iTick, float delta )
 {
 	std::vector<Vector3f> playerPositions;
 
-	for ( int i = 0; i < m_ents.size(); i++ )
+	m_ents.erase(
+		std::remove_if( m_ents.begin(), m_ents.end(), []( CEntityBase *e ) { return e->m_bIsKilled; } ),
+		m_ents.end() );
+
+	for ( CEntityBase *ent : m_ents )
 	{
-		void *ent = m_ents[i];
+		ent->Tick( iTick );
+		ent->PhysicsTick( delta, this );
 
-		if ( reinterpret_cast<CEntityBase *>( ent )->m_bIsKilled )
-		{
-			// Clear from world
-			con_debug( "removing entity" );
-			m_ents.erase( m_ents.begin() + i );
-
-			continue;
-		}
-		reinterpret_cast<CEntityBase *>( ent )->Tick( iTick );
-		reinterpret_cast<CEntityBase *>( ent )->PhysicsTick( delta, this );
-
-		if ( reinterpret_cast<CEntityBase *>( ent )->IsPlayer() )
-			playerPositions.push_back( ( reinterpret_cast<CEntityBase *>( ent )->m_vPosition /
+		if ( ent->IsPlayer() )
+			playerPositions.push_back( ( ent->m_vPosition /
 										 Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) )
 										   .Floor() );
 	}

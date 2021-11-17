@@ -7,4 +7,7 @@
 
 #pragma once
 
-void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], Vector3f pos, void *chunk );
+// Forward Decl.
+class CChunk;
+
+void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], Vector3f pos, CChunk *chunk );
