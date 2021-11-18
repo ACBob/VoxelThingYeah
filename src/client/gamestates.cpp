@@ -474,7 +474,7 @@ void CStateMenu::Update()
 	pStateMan->m_pGui->Label( m_splash.c_str(), { pStateMan->m_pGui->m_vGUICentre.x, 10 }, 1.0f, { 127, 127, 255 },
 							  CGui::TEXTALIGN_CENTER );
 
-	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString( "gui.title.startgame" ),
+	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString( "gui.title.startmultiplayer" ),
 												 pStateMan->m_pGui->m_vGUICentre, { 32, 2 } ) )
 	{
 		pStateMan->PushState( std::make_unique<CStateJoinMenu>() );
@@ -744,7 +744,7 @@ void CStateJoinMenu::Update()
 	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.title.port"), { pStateMan->m_pGui->m_vGUICentre.x, pStateMan->m_pGui->m_vGUICentre.y - 5 }, 1.0f, {255,255,255}, CGui::TEXTALIGN_CENTER );
 	pStateMan->m_pGui->SelectableTextInputCentered( 6, { pStateMan->m_pGui->m_vGUICentre.x, pStateMan->m_pGui->m_vGUICentre.y - 3 }, { 16, 2 } );
 
-	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.join"),
+	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.join"),
 												 { pStateMan->m_pGui->m_vGUICentre.x, pStateMan->m_pGui->m_vGUICentre.y + 3 }, { 16, 2 } ) )
 	{
 		cl_ip->SetString( pStateMan->m_pGui->GetTextBuffer(5) );

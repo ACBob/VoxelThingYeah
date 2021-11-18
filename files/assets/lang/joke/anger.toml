@@ -12,7 +12,9 @@ mastervolume = "I AM SCREAMING IN YOUR EAR"
 resourcepacks = "CHANGE YOUR FUCKING CLOTHES ASSHOLE"
 
 ["gui.title"]
-startgame = "WAKE THE FUCK UP"
+startsingleplayer = "WAKE THE FUCK UP"
+startmultiplayer = "WAKE THEM THE FUCK UP"
+join = "PLAY NOW"
 options = "SOMETHING'S GOTTA FUCKING CHANGE"
 quit = "GET THE FUCK OUT"
 ip = "I PEE"

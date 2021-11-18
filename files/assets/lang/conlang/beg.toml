@@ -12,7 +12,9 @@ mastervolume = "Shtoig voijee: %d%%"
 resourcepacks = "Shu reef"
 
 ["gui.title"]
-startgame = "Shtoirth"
+startsingleplayer = "Shtoirth vogpseen"
+startmultiplayer = "Shtoirth meenupseenf"
+join = "Shtoirth"
 options = "Oisrr geexogf"
 quit = "Lyz"
 ip = "IP"

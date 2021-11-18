@@ -12,7 +12,9 @@ mastervolume = "All louden: %d%%"
 resourcepacks = "Sours pakken"
 
 ["gui.title"]
-startgame = "Begynne the gamen"
+startsingleplayer = "Pleye allone"
+startmultiplayer = "Pleye with peple"
+join = "Joine the Gamen"
 options = "Choisen"
 quit = "Ende the Gamen"
 ip = "IP Place"

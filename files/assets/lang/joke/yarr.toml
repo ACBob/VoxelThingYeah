@@ -12,7 +12,9 @@ mastervolume = "Deafness: %d%%"
 resourcepacks = "Paint for th' ship"
 
 ["gui.title"]
-startgame = "Weigh anchor"
+startsingleplayer = "Go alone"
+startmultiplayer = "Board another's ship"
+join = "Weigh Anchor!"
 options = "Options!"
 quit = "Leave th' seas"
 ip = "Th' Destination"

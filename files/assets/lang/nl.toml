@@ -14,7 +14,9 @@ mastervolume = "Hoofdvolume (%d%%)"
 resourcepacks = "Resource Packs"
 
 ["gui.title"]
-startgame = "Start Spel"
+startsingleplayer = "Start een enkele speler"
+startmultiplayer = "Start een multiplayer spel"
+join = "Deelnemen"
 options = "Opties"
 quit = "Afsluiten"
 ip = "IP adres"

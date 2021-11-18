@@ -14,7 +14,9 @@ mastervolume = "Volume principal (%d%%)"
 resourcepacks = "Packages de ressources"
 
 ["gui.title"]
-startgame = "Démarrer le jeu"
+startsingleplayer = "Lancer une partie en solo"
+startmultiplayer = "Lancer une partie en multijoueur"
+join = "Rejoindre"
 options = "Options"
 quit = "Quitter"
 ip = "IP du serveur"

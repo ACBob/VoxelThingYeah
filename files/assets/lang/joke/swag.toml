@@ -14,7 +14,9 @@ mastervolume = "Master Volume: %d%%"
 resourcepacks = "The lookz, yo"
 
 ["gui.title"]
-startgame = "Aight, let's play"
+startsingleplayer = "Go solo, yo"
+startmultiplayer = "Whit th' homies"
+join = "Aight, let's play"
 options = "Gotta change"
 quit = "Aight I'm out"
 ip = "IP"

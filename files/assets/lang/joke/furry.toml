@@ -12,7 +12,9 @@ mastervolume = "owo OwO OWO"
 resourcepacks = "Fuw pattewn"
 
 ["gui.title"]
-startgame = "Stawt Game!!"
+startsingleplayer = "Stawt Snglplr!!!"
+startmultiplayer = "Stawt Multiplr!!!"
+join = "Join"
 options = "Lowoudness and stuwuf"
 quit = "Teeheee I'm done playing owo"
 ip = "ip"

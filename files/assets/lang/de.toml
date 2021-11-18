@@ -12,7 +12,9 @@ mastervolume = "Masterlautstärke (%d%%)"
 resourcepacks = "Resourcepacks"
 
 ["gui.title"]
-startgame = "Spiel starten"
+startsingleplayer = "Einzelspieler starten"
+startmultiplayer = "Mehrspieler starten"
+join = "Beitreten"
 options = "Optionen"
 quit = "Beenden"
 ip = "IP Adresse"

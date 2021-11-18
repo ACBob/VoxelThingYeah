@@ -14,7 +14,9 @@ mastervolume = "HONK QUACK HONK"
 resourcepacks = "HONK"
 
 ["gui.title"]
-startgame = "HONK QUACK QUACK"
+startsingleplayer = "HONK"
+startmultiplayer = "HONK HONK"
+join = "HONK"
 options = "QUACK QUACK HONK"
 quit = "HONK HONK QUACK"
 ip = "IP QUACK"

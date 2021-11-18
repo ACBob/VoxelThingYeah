@@ -14,7 +14,9 @@ mastervolume = "Volume Mestre (%d%%)"
 resourcepacks = "Pacotes de Recursos"
 
 ["gui.title"]
-startgame = "Iniciar Jogo"
+startsingleplayer = "Iniciar Singleplayer"
+startmultiplayer = "Iniciar Multiplayer"
+join = "Entrar"
 options = "Opçoes" # TODO: Typo, we don't have the õ symbol
 quit = "Sair"
 ip = "IP do Servidor"

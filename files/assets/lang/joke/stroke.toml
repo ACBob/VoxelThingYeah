@@ -12,7 +12,9 @@ mastervolume = "mawste volume: %d%%"
 resourcepacks = "resoruce packs"
 
 ["gui.title"]
-startgame = "stargame"
+startsingleplayer = "starsingleplayer"
+startmultiplayer = "starmuliplr"
+join = "jin"
 options = "opstimjs"
 quit = "quitrgame"
 ip = "i padres"

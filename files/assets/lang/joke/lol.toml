@@ -14,7 +14,9 @@ mastervolume = "I CAN HEAR %d%% WELL."
 resourcepacks = "CHANGE MY LOOKZ!"
 
 ["gui.title"]
-startgame = "OKI I PLAY NOW"
+startsingleplayer = "PLAY SINGLEPLYR!!!"
+startmultiplayer = "PLAY MULTIPLAYR!!!"
+join = "OKI I PLAY NOW"
 options = "WAIT ME CHANGE!"
 quit = "GOODBYE!!! WAS FUN!!!"
 ip = "IP?"

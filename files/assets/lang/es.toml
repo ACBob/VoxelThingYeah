@@ -14,7 +14,9 @@ mastervolume = "Volumen de sonido (%d%%)"
 resourcepacks = "Paquetes de recursos"
 
 ["gui.title"]
-startgame = "Iniciar partida"
+startsingleplayer = "Jugar en modo solo"
+startmultiplayer = "Jugar en modo multijugador"
+join = "Unirse"
 options = "Opciones"
 quit = "Salir"
 ip = "IP"

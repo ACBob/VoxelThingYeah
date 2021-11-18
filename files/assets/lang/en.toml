@@ -12,7 +12,9 @@ mastervolume = "Master Volume: %d%%"
 resourcepacks = "Resource Packs"
 
 ["gui.title"]
-startgame = "Start Game"
+startsingleplayer = "Play Singleplayer"
+startmultiplayer = "Play Multiplayer"
+join = "Join"
 options = "Options"
 quit = "Quit Game"
 ip = "IP Address"

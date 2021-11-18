@@ -12,7 +12,9 @@ mastervolume = "Here is the master volume: %d%%"
 resourcepacks = "Attempting a new look, are we?"
 
 ["gui.title"]
-startgame = "This button initiates the game."
+startsingleplayer = "This button will engage the singleplayer mode."
+startmultiplayer = "This button will engage the multiplayer mode."
+join = "This button initiates the game."
 options = "customize the game to your likings."
 quit = "Quit this game, and return to your manor."
 ip = "the IP Address you ordered, sire."

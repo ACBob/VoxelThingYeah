@@ -14,7 +14,9 @@ mastervolume = "Purrr? (%d%%)"
 resourcepacks = "Purreow!"
 
 ["gui.title"]
-startgame = "Mew!"
+startsingleplayer = "Mew!"
+startmultiplayer = "Mew Mew!"
+join = "Mew."
 options = "Meow meow meow!"
 quit = "Meow mew."
 ip = "Meow?"

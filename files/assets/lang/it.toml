@@ -14,7 +14,9 @@ mastervolume = "Volume Principale (%d%%)"
 resourcepacks = "Resource Packs"
 
 ["gui.title"]
-startgame = "Avvia"
+startsingleplayer = "Avvia Singleplayer"
+startmultiplayer = "Avvia Multiplayer"
+join = "Entra"
 options = "Opzioni"
 quit = "Esci"
 ip = "IP del Server"

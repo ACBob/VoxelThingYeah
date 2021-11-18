@@ -12,7 +12,9 @@ mastervolume = "Master Volume: %d%%"
 resourcepacks = "Ressource Pakker"
 
 ["gui.title"]
-startgame = "Begyn Spil"
+startsingleplayer = "Spil Singleplayer"
+startmultiplayer = "Spil Multiplayer"
+join = "Deltag"
 options = "Indstillinger"
 quit = "Afslut"
 ip = "IP"
