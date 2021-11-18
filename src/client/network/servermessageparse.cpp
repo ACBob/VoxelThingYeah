@@ -229,24 +229,24 @@ namespace protocol
 				}
 			}
 			break;
-			case ServerPacket::PLAYERSKIN: {
-				std::string username;
-				std::vector<unsigned char> imageData;
-				unsigned int resolution = 0;
+			// case ServerPacket::PLAYERSKIN: {
+			// 	std::string username;
+			// 	std::vector<unsigned char> imageData;
+			// 	unsigned int resolution = 0;
 
-				bufAccess >> username;
-				bufAccess >> imageData;
-				bufAccess >> resolution;
+			// 	bufAccess >> username;
+			// 	bufAccess >> imageData;
+			// 	bufAccess >> resolution;
 
-				con_info( "Handling %s' skin", username.c_str() );
+			// 	con_info( "Handling %s' skin", username.c_str() );
 
-				CEntityPlayer *e = (CEntityPlayer *)client->m_pLocalWorld->GetEntityByName( username.c_str() );
-				if ( e != nullptr )
-				{
-					e->m_pMdl->SetTexture( materialSystem::LoadTexture( imageData, resolution * 8, resolution * 8 ) );
-				}
-			}
-			break;
+			// 	CEntityPlayer *e = (CEntityPlayer *)client->m_pLocalWorld->GetEntityByName( username.c_str() );
+			// 	if ( e != nullptr )
+			// 	{
+			// 		e->m_pMdl->SetTexture( materialSystem::LoadTexture( imageData, resolution * 8, resolution * 8 ) );
+			// 	}
+			// }
+			// break;
 			case ServerPacket::SPECIALEFFECT: {
 				float x, y, z;
 				int effectId;

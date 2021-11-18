@@ -124,19 +124,19 @@ namespace protocol
 
 		protocol::SendPacket( pPeer, p, true );
 	}
-	void SendServerPlayerSkin( ENetPeer *pPeer, std::string username, std::vector<unsigned char> imageData,
-							   unsigned int resolution )
-	{
-		ServerPacket p;
-		Archive<ArchiveBuf> bufAccess = p.GetAccess();
-		p.type						  = ServerPacket::PLAYERSKIN;
+	// void SendServerPlayerSkin( ENetPeer *pPeer, std::string username, std::vector<unsigned char> imageData,
+	// 						   unsigned int resolution )
+	// {
+	// 	ServerPacket p;
+	// 	Archive<ArchiveBuf> bufAccess = p.GetAccess();
+	// 	p.type						  = ServerPacket::PLAYERSKIN;
 
-		bufAccess << username;
-		bufAccess << imageData;
-		bufAccess << resolution;
+	// 	bufAccess << username;
+	// 	bufAccess << imageData;
+	// 	bufAccess << resolution;
 
-		protocol::SendPacket( pPeer, p, true );
-	}
+	// 	protocol::SendPacket( pPeer, p, true );
+	// }
 	void SendServerSpecialEffect( ENetPeer *pPeer, Vector3f pos, int id, int attrib )
 	{
 		ServerPacket p;

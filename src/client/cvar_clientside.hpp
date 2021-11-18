@@ -20,7 +20,7 @@ extern ConVar::CConVar *cl_volume;
 extern ConVar::CConVar *cl_reverb;
 extern ConVar::CConVar *cl_mufflesounds;
 
-extern ConVar::CConVar *playerskin;
+// extern ConVar::CConVar *playerskin;
 
 extern ConVar::CConVar *cl_kickreason;
 

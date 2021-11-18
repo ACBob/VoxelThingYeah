@@ -14,8 +14,8 @@ class CNetworkPlayer
 	CEntityPlayer *m_pEntity = nullptr;
 	std::string m_username;
 
-	std::vector<unsigned char> m_skinData;
-	unsigned int m_skinRes;
+	// std::vector<unsigned char> m_skinData;
+	// unsigned int m_skinRes;
 
 	// A queue of chunks to be sent
 	std::vector<Vector3f> m_pChunkQueue;

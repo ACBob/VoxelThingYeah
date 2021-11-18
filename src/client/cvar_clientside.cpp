@@ -16,7 +16,7 @@ ConVar::CConVar *cl_volume		 = nullptr;
 ConVar::CConVar *cl_reverb		 = nullptr;
 ConVar::CConVar *cl_mufflesounds = nullptr;
 
-ConVar::CConVar *playerskin = nullptr;
+// ConVar::CConVar *playerskin = nullptr;
 
 ConVar::CConVar *cl_kickreason = nullptr;
 
@@ -46,7 +46,7 @@ void SetupClientSideConvars()
 	cl_reverb		= conVarHandle.DeclareConvar( "cl_reverb", "true", ConVar::CVAR_ARCHIVE );
 	cl_mufflesounds = conVarHandle.DeclareConvar( "cl_mufflesounds", "true", ConVar::CVAR_ARCHIVE );
 
-	playerskin = conVarHandle.DeclareConvar( "playerskin", "", ConVar::CVAR_ARCHIVE );
+	// playerskin = conVarHandle.DeclareConvar( "playerskin", "", ConVar::CVAR_ARCHIVE );
 
 	cl_kickreason = conVarHandle.DeclareConvar( "cl_kickreason", "", ConVar::CVAR_READONLY );
 

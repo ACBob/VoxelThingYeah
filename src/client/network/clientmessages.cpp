@@ -56,17 +56,17 @@ namespace protocol
 		protocol::SendPacket( pPeer, p, true );
 		enet_peer_disconnect( pPeer, 0 );
 	}
-	void SendClientSkin( ENetPeer *pPeer, std::vector<unsigned char> imageData, unsigned int resolution )
-	{
-		ClientPacket p;
-		Archive<ArchiveBuf> bufAccess = p.GetAccess();
-		p.type						  = ClientPacket::SKIN;
+	// void SendClientSkin( ENetPeer *pPeer, std::vector<unsigned char> imageData, unsigned int resolution )
+	// {
+	// 	ClientPacket p;
+	// 	Archive<ArchiveBuf> bufAccess = p.GetAccess();
+	// 	p.type						  = ClientPacket::SKIN;
 
-		bufAccess << imageData;
-		bufAccess << resolution;
+	// 	bufAccess << imageData;
+	// 	bufAccess << resolution;
 
-		protocol::SendPacket( pPeer, p, true );
-	}
+	// 	protocol::SendPacket( pPeer, p, true );
+	// }
 	void SendClientUseBlock( ENetPeer *pPeer, Vector3f pos )
 	{
 		ClientPacket p;

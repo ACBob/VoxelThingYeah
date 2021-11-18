@@ -75,6 +75,7 @@ struct ClientPacket : public NetworkPacket
 		LEAVE = 0x05,
 		// Sent to the server in the case of a custom skin
 		// Assumed that if not sent just the default skin
+		// Reserved for later
 		/*
 			{
 				textureData
@@ -192,6 +193,7 @@ struct ServerPacket : public NetworkPacket
 		*/
 		PLAYERLEAVE = 0x09,
 		// Sets the skin of player with username
+		// Reserved for later
 		/*
 			{
 				username,
@@ -246,8 +248,8 @@ namespace protocol
 	void SendServerPlayerDisconnect( ENetPeer *pPeer, bool isKick, std::string reason = "" );
 	void SendServerTimeOfDay( ENetPeer *pPeer, int ticks );
 	void SendServerPlayerLeave( ENetPeer *pPeer, std::string username );
-	void SendServerPlayerSkin( ENetPeer *pPeer, std::string username, std::vector<unsigned char> imageData,
-							   unsigned int resolution );
+	// void SendServerPlayerSkin( ENetPeer *pPeer, std::string username, std::vector<unsigned char> imageData,
+	// 						   unsigned int resolution );
 	void SendServerSpecialEffect( ENetPeer *pPeer, Vector3f pos, int id, int attrib );
 	void SendServerSoundEvent( ENetPeer *pPeer, Vector3f pos, std::string soundName );
 
@@ -259,6 +261,6 @@ namespace protocol
 	void SendClientPlayerPos( ENetPeer *pPeer, Vector3f pos, Vector3f rot );
 	void SendClientChatMessage( ENetPeer *pPeer, std::string message );
 	void SendClientLeave( ENetPeer *pPeer );
-	void SendClientSkin( ENetPeer *pPeer, std::vector<unsigned char> imageData, unsigned int resolution );
+	// void SendClientSkin( ENetPeer *pPeer, std::vector<unsigned char> imageData, unsigned int resolution );
 	void SendClientUseBlock( ENetPeer *pPeer, Vector3f pos );
 } // namespace protocol
