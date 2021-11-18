@@ -6,7 +6,8 @@
 #pragma once
 
 // 16 colours for base dyes
-static const uint16_t DyePalette[]{
+#define DYE_COUNT 16
+static const uint16_t DyePalette[DYE_COUNT]{
 	0x000F, // 0 Black
 	0x555F, // 1 Dark Grey
 	0xAAAF, // 2 Grey

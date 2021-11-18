@@ -375,7 +375,7 @@ void CGui::_DrawText( const char *text, Vector3f pos, float scale, CColour colou
 						// Convert the ID to a colour
 						int id = atoi( code + 1 );
 
-						if ( id >= 0 && id < sizeof(DyePalette) / sizeof(uint32_t) )
+						if ( id >= 0 && id < DYE_COUNT )
 							colour = DyePalette[id];
 						
 
@@ -601,7 +601,6 @@ int CGui::Inventory( Vector3f position, int itemsAccross, CInventory *pInventory
 	position = GetInScreen( position );
 
 	int itemsPerRow	   = itemsAccross;
-	int itemsPerColumn = pInventory->m_iItemSlots / itemsPerRow;
 
 	// Vector3f size = Vector3f( itemsPerRow * m_iGUIUnitSize * 2, itemsPerColumn * m_iGUIUnitSize * 2 );
 	// size.x += WINDOW_EDGE_RADIUS * 2;
