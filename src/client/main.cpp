@@ -81,7 +81,7 @@ int main( int argc, char *args[] )
 		con_critical( "ENGINE PANIC: %s", errBuf );
 		SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR, "Engine Panic!", errBuf, NULL );
 
-		delete errBuf;
+		delete[] errBuf;
 		return EXIT_FAILURE;
 	}
 	CGameWindow window( "VoxelThingYeah", Vector3f( scr_width->GetFloat(), scr_height->GetFloat() ), true );
@@ -238,8 +238,6 @@ int main( int argc, char *args[] )
 	inputMan.m_bInGui = true;
 
 	glm::mat4 screen = glm::ortho( 0.0f, scr_width->GetFloat(), scr_height->GetFloat(), 0.0f );
-	glm::mat4 a		 = glm::ortho( 0.0f, 0.0f, 0.0f, 0.0f );
-	glm::mat4 b		 = glm::ortho( 0.0f, 0.0f, 0.0f, 0.0f );
 
 	int64_t now =
 		std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() )
