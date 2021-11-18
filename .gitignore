@@ -1,15 +1,13 @@
 # CMake builddir
-build/
-winbuild/
+/build/
+/winbuild/
 # Runtime output dir
-bin/
+/bin/
 
-# Compiled shaders
-shaders/*.bin
-shaders/*.spv
+/.vscode/
 
-.vscode/
+*svconfig.cfg*
 
-# Custom Skin
-assets/skin.png
-assets/usr/
+/files/usr/
+
+/include/config.h

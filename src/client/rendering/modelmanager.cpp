@@ -1,18 +1,67 @@
 #include "modelmanager.hpp"
 #include "utility/direction.hpp"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <glad/glad.h>
+#include <memory>
+
 #include "modelloader.hpp"
 
 std::vector<CModel *> modelSystem::loadedModels;
 
 CModel::CModel( std::vector<Vertex> verts, std::vector<Face> faces ) : m_vertices( verts ), m_faces( faces )
 {
-	m_pRenderer = new CModelRenderer();
+	glGenVertexArrays( 1, &m_iVao );
+	glGenBuffers( 1, &m_iVbo );
+	glGenBuffers( 1, &m_iEbo );
+
+	glBindBuffer( GL_ARRAY_BUFFER, m_iVbo );
+
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_iEbo );
+
+	glBindVertexArray( m_iVao );
+
+	// Position
+	glVertexAttribPointer( 0, 3, GL_FLOAT, false, 15 * sizeof( float ), (void *)offsetof( CModel::Vertex, x ) );
+	glEnableVertexAttribArray( 0 );
+	// Normal
+	glVertexAttribPointer( 1, 3, GL_FLOAT, false, 15 * sizeof( float ), (void *)offsetof( CModel::Vertex, nx ) );
+	glEnableVertexAttribArray( 1 );
+	// texture coordinate
+	glVertexAttribPointer( 2, 2, GL_FLOAT, false, 15 * sizeof( float ), (void *)offsetof( CModel::Vertex, u ) );
+	glEnableVertexAttribArray( 2 );
+	// Vertex CColour
+	glVertexAttribPointer( 3, 3, GL_FLOAT, false, 15 * sizeof( float ), (void *)offsetof( CModel::Vertex, cr ) );
+	glEnableVertexAttribArray( 3 );
+	// Vertex Lighting
+	glVertexAttribPointer( 4, 3, GL_FLOAT, false, 15 * sizeof( float ), (void *)offsetof( CModel::Vertex, lr ) );
+	glEnableVertexAttribArray( 4 );
+
+	glBindVertexArray( 0 );
+
+	Update();
 }
 
-CModel::~CModel() { delete m_pRenderer; }
+CModel::~CModel() { 
+	glDeleteVertexArrays( 1, &m_iVao );
+	glDeleteBuffers( 1, &m_iVbo );
+	glDeleteBuffers( 1, &m_iEbo );
+ }
 
-void CModel::Update() { m_pRenderer->Populate( this ); }
+void CModel::Update()
+{
+
+	glBindBuffer( GL_ARRAY_BUFFER, m_iVbo );
+	glBufferData( GL_ARRAY_BUFFER, m_vertices.size() * sizeof( CModel::Vertex ), m_vertices.data(), GL_DYNAMIC_DRAW );
+
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_iEbo );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, m_faces.size() * sizeof( CModel::Face ), m_faces.data(), GL_DYNAMIC_DRAW );
+
+	glBindBuffer( GL_ARRAY_BUFFER, 0 );
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
+}
 
 void CModel::Render()
 {
@@ -24,7 +73,36 @@ void CModel::Render()
 		return;
 
 	m_pShader->Use();
-	m_pRenderer->Render( m_vPosition, m_vRotation, m_vSize, m_vUvOffset, m_vLighting, m_pShader, m_pTex );
+
+	glm::mat4 model = glm::mat4( 1.0f );
+	model			= glm::translate( model, { m_vPosition.x, m_vPosition.y, m_vPosition.z } );
+	model			= glm::scale( model, { m_vSize.x, m_vSize.y, m_vSize.z } );
+	model			= glm::rotate( glm::rotate( glm::rotate( model, (float)( m_vRotation.z * DEG2RAD ), { 0, 0, -1 } ),
+										(float)( m_vRotation.y * DEG2RAD ), { 0, -1, 0 } ),
+						   (float)( m_vRotation.x * DEG2RAD ), { 1, 0, 0 } );
+
+	m_pShader->SetMat4( "model", model );
+	m_pShader->SetMat3( "normalMat", glm::mat3( glm::transpose( glm::inverse( model ) ) ) );
+	m_pShader->SetVec4( "texCoordOffset", m_vUvOffset );
+	m_pShader->SetVec4( "lighting", (Vector4f)m_vLighting );
+
+	if ( m_pTex != nullptr )
+		glBindTexture( GL_TEXTURE_2D, m_pTex->m_iId );
+
+	glBindVertexArray( m_iVao );
+
+	glBindBuffer( GL_ARRAY_BUFFER, m_iVbo );
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_iEbo );
+
+	glDrawElements( GL_TRIANGLES, m_faces.size() * sizeof( CModel::Face ), GL_UNSIGNED_INT, 0 );
+
+	glBindBuffer( GL_ARRAY_BUFFER, 0 );
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
+
+	glBindVertexArray( 0 );
+
+	if ( m_pTex != nullptr )
+		glBindTexture( GL_TEXTURE_2D, 0 );
 }
 
 void CModel::SetShader( CShader *shader ) { this->m_pShader = shader; }
@@ -50,13 +128,13 @@ void modelSystem::UnInit()
 }
 
 const std::vector<std::vector<int>> cubeTris = {
-	{ 3, 2, 1, 0 }, // N
-	{ 6, 3, 0, 5 }, // E
-	{ 7, 6, 5, 4 }, // S
-	{ 2, 7, 4, 1 }, // W
+	{ 0, 1, 2, 3 }, // N
+	{ 5, 0, 3, 6 }, // E
+	{ 4, 5, 6, 7 }, // S
+	{ 1, 4, 7, 2 }, // W
 
-	{ 0, 1, 4, 5 }, // UP
-	{ 6, 7, 2, 3 }	// DN
+	{ 5, 4, 1, 0 }, // UP
+	{ 3, 2, 7, 6 }	// DN
 };
 const CModel::Vertex cubeVertices[] = {
 	// NORTH +Z
@@ -72,14 +150,14 @@ const CModel::Vertex cubeVertices[] = {
 };
 
 // Basically a hobbled together clone of ChunkModel's face supplying stuff
-void GetCubeModel( CModel &m, CVector size, CVector uv )
+void GetCubeModel( CModel &m, Vector3f size, Vector4f uv )
 {
 	std::vector<CModel::Vertex> vertices = {};
 	std::vector<CModel::Face> faces		 = {};
 
 	for ( int j = 0; j < 6; j++ )
 	{
-		CVector normal = DirectionVector[j];
+		Vector3f normal = DirectionVector[j];
 
 		for ( int i = 0; i < 4; i++ )
 		{

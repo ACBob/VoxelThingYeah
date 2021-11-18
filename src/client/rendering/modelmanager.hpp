@@ -5,7 +5,7 @@
 #include "shadermanager.hpp"
 #include "texturemanager.hpp"
 
-#include "modelrenderer.hpp"
+#include "colour.hpp"
 
 #pragma once
 
@@ -13,14 +13,22 @@ namespace modelSystem
 {
 	class CModel
 	{
+	  private:
+		// Vertex Buffer
+		unsigned int m_iVbo;
+		// Array buffer
+		unsigned int m_iVao;
+		// Element buffer
+		unsigned int m_iEbo;
 	  public:
 		struct Vertex
 		{
-			float x, y, z;	  // Position
-			float nx, ny, nz; // Normal
-			float u, v;		  // Texture U/V
-			float r, g, b, a; // Vertex Colours
-							  // TODO: Texture, Lighting, Etc.
+			float x, y, z;		  // Position
+			float nx, ny, nz;	  // Normal
+			float u, v;			  // Texture U/V
+			float cr, cg, cb;	  // Vertex CColour
+			float lr, lg, lb, la; // Vertex Lighting
+								  // TODO: Texture, Lighting, Etc.
 		};
 
 		struct Face
@@ -49,21 +57,19 @@ namespace modelSystem
 		std::vector<Vertex> m_vertices;
 		std::vector<Face> m_faces;
 
-		CVector m_vPosition = { 0, 0, 0 };
-		CVector m_vRotation = { 0, 0, 0 };
-		CVector m_vSize		= { 1, 1, 1 };
+		Vector3f m_vPosition = { 0, 0, 0 };
+		Vector3f m_vRotation = { 0, 0, 0 };
+		Vector3f m_vSize	 = { 1, 1, 1 };
 
-		CVector m_vUvOffset = { 1, 1, 0, 0 };
+		Vector4f m_vUvOffset = { 1, 1, 0, 0 };
 
-		Color m_vLighting = { 1, 1, 1, 1 };
+		CColour m_vLighting = { 1, 1, 1, 1 };
 
 		bool m_bVisible = true;
 
 	  protected:
 		CShader *m_pShader = nullptr;
 		CTexture *m_pTex   = nullptr;
-
-		CModelRenderer *m_pRenderer = nullptr;
 
 		const char *m_cFilepath = nullptr;
 	};
@@ -80,4 +86,4 @@ namespace modelSystem
 // Laziness and Convenience
 using CModel = modelSystem::CModel;
 
-void GetCubeModel( CModel &m, CVector size = CVector( 1, 1, 1 ), CVector uv = CVector( 0.0f, 0.0f, 1.0f, 1.0f ) );
+void GetCubeModel( CModel &m, Vector3f size = Vector3f( 1, 1, 1 ), Vector4f uv = { 0.0f, 0.0f, 1.0f, 1.0f } );

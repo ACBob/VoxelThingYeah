@@ -1,0 +1,40 @@
+# Nederlands
+
+["gui"]
+disconnect = "Verbinding verbreken"
+dismiss = "Verwijderen"
+dismiss_far = "Verwijderen"
+kicked = "uitgeschakeld"
+inventory = "Inventaris"
+cancel = "Annuleren"
+
+["gui.options"]
+enablereverb = "Reverb aanzetten"
+mastervolume = "Hoofdvolume (%d%%)"
+resourcepacks = "Resource Packs"
+
+["gui.title"]
+startsingleplayer = "Start een enkele speler"
+startmultiplayer = "Start een multiplayer spel"
+join = "Deelnemen"
+options = "Opties"
+quit = "Afsluiten"
+ip = "IP adres"
+port = "Port"
+username = "Gebruikersnaam"
+
+["kick"]
+generic = "Geen reden opgegeven."
+existingusername = "Deze gebruikersnaam bestaat al."
+wrongprotocol = "Verkeerde protocol versie."
+invalidusername = "Deze gebruikersnaam is ongeldig."
+banned = "Je bent verbannen van deze server."
+closing = "Verbinding wordt verbroken..."
+
+
+["msg"]
+joined = "%s is aan het spelen."
+left = "%s is niet meer aan het spelen."
+opped = "%s is opgedeckt."
+deopped = "%s is niet meer opgedeckt."
+youhaveop = "Je hebt operator rechten op deze server."

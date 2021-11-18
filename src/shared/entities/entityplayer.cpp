@@ -9,20 +9,28 @@
 
 #include "inventory/blockitem.hpp"
 
+#include "blocks/blockbase.hpp"
+
 CEntityPlayer::CEntityPlayer() : m_inventory( 36 )
 {
-	m_vPosition = CVector( 0, 0, 0 );
+	m_vPosition = Vector3f( 0, 0, 0 );
 #ifdef CLIENTEXE
 	m_hand.m_fLength	= 4;
 	m_hand.m_vDirection = GetForward();
 	m_hand.m_vPosition	= m_vPosition;
 
 	m_children.push_back( &m_camera );
-	m_camera.m_vParentPosition = CVector( 0, 1.72, 0 );
+	m_camera.m_vParentPosition = Vector3f( 0, 1.72, 0 );
 #endif
 
-	m_collisionBox.m_vBounds = CVector( 0.5, 1.9, 0.5 );
-	m_collisionBox.m_vOrigin = CVector( 0.5, 0, 0.5 );
+	m_collisionBox.m_vBounds = Vector3f( 0.5, 1.9, 0.5 );
+	m_collisionBox.m_vOrigin = Vector3f( 0.5, 0, 0.5 );
+
+	( (CBlockItem *)m_inventory.Slot( 0 ) )->m_iBlockType = STONE;
+	( (CBlockItem *)m_inventory.Slot( 0 ) )->SetCount( 64 );
+
+	( (CBlockItem *)m_inventory.Slot( 1 ) )->m_iBlockType = BRICKS;
+	( (CBlockItem *)m_inventory.Slot( 1 ) )->SetCount( 64 );
 }
 CEntityPlayer::~CEntityPlayer() {}
 
@@ -39,7 +47,7 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 		float yaw	= m_camera.m_vRotation.y;
 
 		pitch -= m_pInputMan->m_vMouseMovement.y * 0.1;
-		yaw += m_pInputMan->m_vMouseMovement.x * 0.1;
+		yaw -= m_pInputMan->m_vMouseMovement.x * 0.1;
 
 		while ( yaw > 360 )
 			yaw -= 360;
@@ -60,36 +68,48 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 		if ( m_pInputMan->m_iMouseState & IN_LEFT_MOUSE && m_pInputMan->m_iOldMouseState == 0 &&
 			 m_pointed.m_pBlock != nullptr )
 		{
-			BlockFeatures bF = GetBlockFeatures( m_pointed.m_pBlock->m_iBlockType );
-			if ( bF.breakable )
-			{
-				m_pointed.m_pBlock->m_iBlockType = blocktype_t::AIR;
-				m_pointed.m_pBlock->Update();
+			// BlockFeatures bF = GetBlockFeatures( m_pointed.m_pBlock->m_iBlockType );
+			// if ( bF.breakable )
+			// {
+			m_pointed.m_pBlock->m_iBlockType = BLOCKID::AIR;
+			m_pointed.m_pBlock->Update();
 
-				protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5,
-											  blocktype_t::AIR, 0, 0 );
-			}
+			protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5,
+										  BLOCKID::AIR, 0 );
+			// }
 		}
 		if ( m_pInputMan->m_iMouseState & IN_RIGHT_MOUSE && m_pInputMan->m_iOldMouseState == 0 &&
 			 m_pointed.m_pBlock != nullptr )
 		{
-			CBlock *b = clientSideWorld->BlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal );
-			BlockFeatures bF = GetBlockFeatures( m_pointed.m_pBlock->m_iBlockType );
-			if ( m_pSelectedItem != nullptr && m_pSelectedItem->GetCount() > 0 && b != nullptr && bF.selectable )
+			if ( BlockType( m_pointed.m_pBlock->m_iBlockType ).CanBeUsed() )
 			{
-				blocktype_t oldType = b->m_iBlockType; // TODO: We're assuming it's a block item
-				b->m_iBlockType		= reinterpret_cast<CBlockItem *>( m_pSelectedItem )->m_iBlockType;
-				if ( !clientSideWorld->TestAABBCollision( m_collisionBox ) )
+				protocol::SendClientUseBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5 );
+			}
+			else
+			{
+				CBlock *b = clientSideWorld->BlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal );
+				if ( m_pSelectedItem != nullptr && m_pSelectedItem->GetCount() > 0 && b != nullptr )
 				{
-					b->Update();
-					m_pSelectedItem->SetCount( m_pSelectedItem->GetCount() - 1 );
-				}
-				else
-					b->m_iBlockType = oldType;
+					BLOCKID oldType		 = b->m_iBlockType; // TODO: We're assuming it's a block item
+					uint16_t oldData	 = b->m_iBlockData;
+					CBlockItem *blckItem = reinterpret_cast<CBlockItem *>( m_pSelectedItem );
+					b->m_iBlockType		 = blckItem->m_iBlockType;
+					b->m_iBlockData		 = blckItem->m_iBlockData;
+					if ( !clientSideWorld->TestAABBCollision( m_collisionBox ) )
+					{
+						b->Update();
+						m_pSelectedItem->SetCount( m_pSelectedItem->GetCount() - 1 );
 
-				protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer,
-											  ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal, b->m_iBlockType, 0,
-											  0 );
+						protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer,
+													  ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal,
+													  b->m_iBlockType, b->m_iBlockData );
+					}
+					else
+					{
+						b->m_iBlockType = oldType;
+						b->m_iBlockData = oldData;
+					}
+				}
 			}
 		}
 
@@ -115,14 +135,18 @@ void CEntityPlayer::Tick( int64_t iTick )
 
 #ifdef CLIENTEXE
 	if ( m_pInputMan == nullptr )
+	{
+		// Don't apply gravity to players not owned by us (we'll get their pos from the server)
+		m_bApplyGravity = false;
 		return; // This isn't owned by us, don't do anything
+	}
 
-	CVector forward = GetForward();
-	CVector right	= forward.Rotate( 2, 90 );
-	right.y			= 0;
-	right			= right.Normal();
+	Vector3f forward = GetForward();
+	Vector3f left	 = forward.RotateAxis( 1, 90 * DEG2RAD );
+	left.y			 = 0;
+	left			 = left.Normal();
 
-	CVector vMoveDir( 0 );
+	Vector3f vMoveDir( 0 );
 
 	if ( !m_bInInventory && !m_pInputMan->m_bInGui )
 	{
@@ -135,9 +159,9 @@ void CEntityPlayer::Tick( int64_t iTick )
 		else if ( m_pInputMan->m_bInputState[INKEY_BACK] )
 			vMoveDir = vMoveDir - ( forward );
 		if ( m_pInputMan->m_bInputState[INKEY_LEFT] )
-			vMoveDir = vMoveDir - ( right );
+			vMoveDir = vMoveDir + ( left );
 		else if ( m_pInputMan->m_bInputState[INKEY_RIGHT] )
-			vMoveDir = vMoveDir + ( right );
+			vMoveDir = vMoveDir - ( left );
 
 		if ( m_bFly || m_bInWater )
 		{
@@ -153,19 +177,21 @@ void CEntityPlayer::Tick( int64_t iTick )
 				vMoveDir.y = 19.8f;
 			}
 		}
-		if ( m_bFly )
-			vMoveDir = vMoveDir * 6.0f * 0.99f;
-		else if ( m_bInWater )
-			vMoveDir = vMoveDir * 2.3f * 1.01f;
-		else
-			vMoveDir = vMoveDir * 4.3f * 0.98f;
+
+		m_bCrouching = m_pInputMan->m_bInputState[INKEY_DOWN] && m_bOnFloor;
+
+		float fSpeed = m_bFly ? 6.5f : m_bInWater ? 2.3f : m_bCrouching ? 1.43f : 4.3f;
+		vMoveDir	 = vMoveDir * fSpeed * 0.98f;
+
 		if ( !m_bFly )
 			vMoveDir.y += m_vVelocity.y;
 	}
 
-	float f = m_bInWater ? 0.09f : m_bOnFloor ? 0.125f : m_bFly ? 0.1f : 0.076f;
+	float acceleration = m_bInWater ? 0.09f : m_bOnFloor ? 0.125f : m_bFly ? 0.1f : 0.076f;
 
-	m_vVelocity = m_vVelocity.Lerp( vMoveDir, f );
+	m_vVelocity = m_vVelocity.Lerp( vMoveDir, acceleration );
+
+	m_camera.m_fEyeHeight = m_bCrouching ? 1.595f : 1.72f;
 
 	m_bApplyGravity = !m_bFly;
 #endif

@@ -17,7 +17,7 @@ namespace protocol
 
 		protocol::SendPacket( pPeer, p, true );
 	}
-	void SendServerChunkData( ENetPeer *pPeer, CWorld *world, CVector pos )
+	void SendServerChunkData( ENetPeer *pPeer, CWorld *world, Vector3f pos )
 	{
 		PortableChunkRepresentation crep;
 		crep = world->GetWorldRepresentation( pos );
@@ -34,12 +34,13 @@ namespace protocol
 		bufAcc << crep.z;
 		bufAcc << CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z;
 		bufAcc << crep.m_iBlocks;
+		bufAcc << crep.m_iValue;
 
 		// con_debug("SEND <%d,%d,%d>", crep.x, crep.y, crep.z);
 
 		SendPacket( pPeer, p, true );
 	}
-	void SendServerUpdateBlock( ENetPeer *pPeer, CVector pos, blocktype_t blockType, uint8_t valA, uint8_t valB )
+	void SendServerUpdateBlock( ENetPeer *pPeer, Vector3f pos, BLOCKID blockType, uint16_t val )
 	{
 		ServerPacket p;
 		p.type					   = ServerPacket::UPDATE_BLOCK;
@@ -47,13 +48,12 @@ namespace protocol
 		bufAcc << pos.x;
 		bufAcc << pos.y;
 		bufAcc << pos.z;
-		bufAcc << (uint)blockType;
-		bufAcc << valA;
-		bufAcc << valB;
+		bufAcc << (uint32_t)blockType;
+		bufAcc << val;
 
 		protocol::SendPacket( pPeer, p, true );
 	}
-	void SendServerPlayerSpawn( ENetPeer *pPeer, std::string username, CVector pos, CVector rot, bool join )
+	void SendServerPlayerSpawn( ENetPeer *pPeer, std::string username, Vector3f pos, Vector3f rot, bool join )
 	{
 		ServerPacket p;
 		p.type					   = ServerPacket::PLAYER_SPAWN;
@@ -68,7 +68,7 @@ namespace protocol
 
 		SendPacket( pPeer, p, true );
 	}
-	void SendServerPlayerPos( ENetPeer *pPeer, std::string username, CVector pos, CVector rot )
+	void SendServerPlayerPos( ENetPeer *pPeer, std::string username, Vector3f pos, Vector3f rot )
 	{
 		ServerPacket p;
 		p.type					   = ServerPacket::PLAYERPOSORT;
@@ -137,7 +137,7 @@ namespace protocol
 
 		protocol::SendPacket( pPeer, p, true );
 	}
-	void SendServerSpecialEffect( ENetPeer *pPeer, CVector pos, int id, int attrib )
+	void SendServerSpecialEffect( ENetPeer *pPeer, Vector3f pos, int id, int attrib )
 	{
 		ServerPacket p;
 		Archive<ArchiveBuf> bufAccess = p.GetAccess();
@@ -148,6 +148,19 @@ namespace protocol
 		bufAccess << pos.z;
 		bufAccess << id;
 		bufAccess << attrib;
+
+		protocol::SendPacket( pPeer, p );
+	}
+	void SendServerSoundEvent( ENetPeer *pPeer, Vector3f pos, std::string eventName )
+	{
+		ServerPacket p;
+		Archive<ArchiveBuf> bufAccess = p.GetAccess();
+		p.type						  = ServerPacket::SOUNDEVENT;
+
+		bufAccess << pos.x;
+		bufAccess << pos.y;
+		bufAccess << pos.z;
+		bufAccess << eventName;
 
 		protocol::SendPacket( pPeer, p );
 	}

@@ -12,7 +12,7 @@
 	#define LOG_LEVEL DEBUG
 #endif
 
-/* Colour customization */
+/* CColour customization */
 // Because windows is from the stone age and doesn't understand the modern day...
 #ifndef _WIN32
 	#define DEBUG_COLOUR ""

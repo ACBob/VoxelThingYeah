@@ -10,6 +10,12 @@
 	#include "rendering/shadermanager.hpp"
 #endif
 
+// Move faster than this? Smack!
+#define SMACK_SPEED 30
+
+// Move fast enough into water? Splash!
+#define SPLASH_SPEED 10
+
 #include <string>
 #include <vector>
 
@@ -21,7 +27,7 @@ class CEntityBase
 
 	// Called right after the entity is added to the world
 	// Position and rotation are handled already
-	virtual void Spawn() = 0;
+	virtual void Spawn( CWorld *world ) = 0;
 
 	// Called when told to remove from the world
 	virtual void Kill() = 0;
@@ -59,28 +65,32 @@ class CEntityBase
 	std::string m_name;
 
 	// Gets a forward vector based on the rotation
-	CVector GetForward() { return CVector( 0, 0, -1 ).Rotate( m_vRotation ).Normal(); }
+	Vector3f GetForward() { return Vector3f( 0, 0, -1 ).Rotate( m_vRotation ).Normal(); }
 
 	// Updates the collision box to the new position
 	void UpdateCollision() { m_collisionBox.m_vPosition = m_vPosition; }
 
 	// Position in world
-	CVector m_vPosition;
+	Vector3f m_vPosition;
 	// Position relative to parent
-	CVector m_vParentPosition;
+	Vector3f m_vParentPosition;
 	// Rotation
-	CVector m_vRotation;
+	Vector3f m_vRotation;
 	// Velocity
-	CVector m_vVelocity;
+	Vector3f m_vVelocity;
 #ifdef CLIENTEXE
 	// Lighting
-	Colour m_vLighting = { 1, 1, 1, 1 };
+	CColour m_vLighting = { 1, 1, 1, 1 };
 #endif
+
+	CWorld *m_pWorld;
 
 	bool m_bOnFloor		   = false;
 	bool m_bApplyGravity   = true;
 	bool m_bFootstepSounds = true;
 	bool m_bInWater		   = false;
+
+	float m_fAge = 0.0f;
 
 	// TRUE if it's a player class
 	virtual bool IsPlayer() { return false; };

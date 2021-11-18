@@ -1,3 +1,5 @@
+#pragma once
+
 #include "enet/enet.h"
 #include "entities/entityplayer.hpp"
 #include "network/protocol.hpp"
@@ -16,11 +18,13 @@ class CNetworkPlayer
 	unsigned int m_skinRes;
 
 	// A queue of chunks to be sent
-	std::vector<CVector> m_pChunkQueue;
+	std::vector<Vector3f> m_pChunkQueue;
+	// The chunks that have been sent
+	std::vector<Vector3f> m_pChunkSent;
 
 	int m_iLoadedChunkIDX		  = 0;
 	uint64_t m_iNextChunkLoadTick = 0;
-	CVector m_vChunkPos; // the chunk we're in
+	Vector3f m_vChunkPos; // the chunk we're in
 };
 
 class CNetworkServer
@@ -45,6 +49,8 @@ class CNetworkServer
 	void KickPlayer( CNetworkPlayer *c, const char *reason );
 	void KickPlayer( const char *str, const char *reason );
 	void KickPlayer( ENetPeer *p, const char *reason );
+
+	void PlaySoundEvent( const char *str, Vector3f pos );
 
 	unsigned int m_iCurrentTick;
 

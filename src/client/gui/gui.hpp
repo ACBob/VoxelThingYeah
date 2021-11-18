@@ -1,13 +1,16 @@
 
-#include "network/client.hpp"
+#include "inputmanager.hpp"
 #include "rendering/shadermanager.hpp"
 #include "rendering/texturemanager.hpp"
-#include "shared/inputmanager.hpp"
 #include "shared/statemanager.hpp"
 #include "utility/vector.hpp"
 
+#include "colour.hpp"
+
 #include <map>
 #include <vector>
+
+#include "shared/inventory/inventory.hpp"
 
 #pragma once
 
@@ -20,84 +23,68 @@
 	#define GUIGEN_ID ( __LINE__ )
 #endif
 
+using GuiID = unsigned int;
+
+// TODO: Font from TOML
+
 // OOP POO
 class CGui
 {
   private:
-	struct Vertex
+	// struct FontDef {
+	// 	std::vector<CTexture*> m_pTextures;
+	// 	std::vector<wchar_t> characters;
+	// 	int m_iFontWidths[256];
+	// };
+
+	unsigned int m_iVao;
+	unsigned int m_iVbo;
+
+	struct GuiVert
 	{
-		float x, y, z; //! Z always 0!!
+		float x, y, z;
 		float u, v;
-		// Color
-		float r, g, b;
+		float r, g, b, a;
 	};
 
-	struct _Image
+	struct GuiImage
 	{
-		CTexture *m_pTex = nullptr;
-		std::vector<Vertex> m_vertices;
+		CTexture *pTex;
+		std::vector<GuiVert> verts;
 	};
 
-	std::vector<Vertex> GetQuad( CVector vPosition, CVector vSize, Colour colour, CVector vStart = CVector( 0, 0 ),
-								 CVector vEnd = CVector( 1, 1 ) );
-	std::vector<Vertex> GetCharQuad( const int c, CVector vPosition, CVector vSize, Colour colour );
+	// NOTE: Z is ignored for size, but it might be interesting to see for a 3D GUI?
+	std::vector<GuiVert> GetRect( Vector3f pos, Vector3f size, Vector4f uv, CColour colour );
 
-	unsigned int m_iVbo, m_iVao;
-	std::vector<Vertex> m_textVertiecs;
-	std::vector<_Image> m_images;
+	std::vector<GuiVert> m_vertices;
+	std::vector<GuiImage> m_images;
 
-	// Teh epic textTex
-	CTexture *m_pTextTex   = nullptr;
-	CShader *m_pTextShader = nullptr;
+	// Renders a generic quad here, but under image
+	void _Image( Vector3f pos, Vector3f size, CTexture *pTex, CColour tint, Vector4f uv = { 0, 0, 1, 1 } );
+	void _9PatchRect( Vector3f pos, Vector3f size, CTexture *pTex, CColour tint, float borderSize );
+	float _TextLength( const char *text, float scale = 1.0f );
 
-	CTexture *m_pButtonTex	  = nullptr;
-	CTexture *m_pTextInpTex	  = nullptr;
-	CTexture *m_pSliderTex	  = nullptr;
-	CTexture *m_pThumbTex	  = nullptr;
-	CTexture *m_pCheckedTex	  = nullptr;
-	CTexture *m_pUncheckedTex = nullptr;
+	void _DrawText( const char *text, Vector3f pos, float scale, CColour colour );
 
+	enum ButtonState { BUTTON_STATE_NORMAL, BUTTON_STATE_HOVER, BUTTON_STATE_PRESSED, BUTTON_STATE_DISABLED };
+
+	ButtonState _Button( int id, Vector3f pos, Vector3f size );
+
+	// Buffers
 	std::map<int, std::string> m_textBuffers;
 
   public:
-	CGui( int screenW, int screenH );
+	CGui( Vector3f size );
 	~CGui();
 
-	// TODO: Put this in a generic utility class and then make all atlas-based things (i.e text, blocks) inherit it
-	struct Atlas
-	{
-		Atlas( float x, float y, float sizex, float sizey )
-		{
-			this->x		= x;
-			this->y		= y;
-			this->sizex = sizex;
-			this->sizey = sizey;
-		};
-		float x, y, sizex, sizey;
-	};
-
-	// Z Ignored
-	CVector m_vMousePos;
-
-	// Used to get the input
-	CInputManager *m_pInputMan = nullptr;
-
-	CNetworkClient *m_pClient = nullptr;
-
-	// Update
+	void Resize( Vector3f screenDimensions );
 	void Update();
 
-	void Resize( int x, int y );
+	// true if the mouse is in this position
+	// TODO: how to handle overlapping elements? (maybe test the z values?)
+	bool RegionHit( Vector3f vPosition, Vector3f vSize );
 
-	CVector m_vScreenCentre;
-	CVector m_vScreenDimensions;
-
-	// Shared Resources
-	// Ideally stuff that would be used in multiple places
-	CTexture *m_pBGTex		  = nullptr;
-	CTexture *m_pCrosshairTex = nullptr;
-	CTexture *m_pInventoryTex = nullptr;
-	CTexture *m_pLogoTex	  = nullptr;
+	Vector3f GetInScreen( Vector3f pos );
 
 	// Current button pressed down
 	int m_iMouseState;
@@ -107,53 +94,92 @@ class CGui
 	int m_iActiveItem;
 	// Current element with keyboard element
 	int m_iKeyboardItem;
+	// Position of the mouse
+	Vector3i m_vMousePos;
 
-	int64_t m_iTick = 0;
+	int m_iTick = 0;
 
-	// Gui Size
-	int m_iGuiUnit;
+	// Size in pixels of one grid unit
+	int m_iGUIUnitSize = 16;
 
-	// Clears all the stored buffer stuff
-	void ClearBuffers();
+	CTexture *m_pFontTex = nullptr;
+	float m_charWidths[256];
 
-	void SetTextBuffer( int id, const char *text );
-	const char *GetTextBuffer( int id );
+	CShader *m_pShader = nullptr;
 
-	// Z Ignored!
-	bool RegionHit( CVector vPosition, CVector vSize );
+	// Some textures we just hold because they're related to the GUI
+	CTexture *m_pButtonTex		 = nullptr;
+	CTexture *m_pTextEditTex	 = nullptr;
+	CTexture *m_pSliderTex		 = nullptr;
+	CTexture *m_pSliderThumbTex	 = nullptr;
+	CTexture *m_pCheckedBoxTex	 = nullptr;
+	CTexture *m_pUnCheckedBoxTex = nullptr;
 
-	// Converts positions to screen ones, including negatives being from the opposite side and stuff
-	CVector GetInScreen( CVector vPosition );
+	// *We* don't use these textures, but it makes sense for us to hold them
+	CTexture *m_pGuiBGTex		   = nullptr;
+	CTexture *m_pGuiTitleTex	   = nullptr;
+	CTexture *m_pCrosshairTex	   = nullptr;
+	CTexture *m_pHotbarTex		   = nullptr;
+	CTexture *m_pHotbarSelectTex   = nullptr;
+	CTexture *m_pWindowTex		   = nullptr;
+	CTexture *m_pLanguageButtonTex = nullptr;
 
+	CInputManager *m_pInputManager;
+
+	// In pixels
+	Vector3f m_vScreenDimensions;
+	Vector3f m_vScreenCentre;
+
+	// In units
+	Vector3f m_vGUISize;
+	Vector3f m_vGUICentre;
+
+	const char *GetTextBuffer( int id ) { return m_textBuffers[id].c_str(); }
+	void SetTextBuffer( int id, const char *text ) { m_textBuffers[id] = text; }
+	void ClearBuffers() { m_textBuffers.clear(); }
+
+	// Chooses the alignment of text
 	enum TextAlignment {
-		TEXTALIGN_LEFT	 = 0x0,	 // |LEFT    |
-		TEXTALIGN_CENTER = 0x01, // | CENTER |
-		TEXTALIGN_RIGHT	 = 0x02	 // |   RIGHT|
+		TEXTALIGN_LEFT,	  // |TEXT  |
+		TEXTALIGN_CENTER, // | TEXT |
+		TEXTALIGN_RIGHT	  // |  TEXT|
 	};
 
-	// Utility
-	int GetTextLength( const char *text );
+	// Base Elements
+	// Basic image, bottom-left centered
+	void Image( Vector3f pos, Vector3f size, CTexture *pTex, CColour tint = { 255, 255, 255 } );
+	// Repeating image, repeats the texture where 8 pixels is a gui unit,
+	void ImageRepeating( Vector3f pos, Vector3f size, CTexture *pTex, CColour tint = { 255, 255, 255 } );
+	// Image where the origin is the middle of the size
+	void ImageCentered( Vector3f pos, Vector3f size, CTexture *pTex, CColour tint = { 255, 255, 255 } );
 
-	// Elements
-	int Button( int iId, CVector vPosition, CVector vSize, CVector vOrigin = CVector( 0, 0 ), CTexture *tex = nullptr,
-				bool hide = false );
-	int AtlasButton( int id, CTexture *tex, Atlas atlas, float atlasDivisions, CVector pos, CVector size,
-					 CVector vOrigin = CVector( 0, 0 ) );
-	int LabelButton( int id, const char *msg, CVector pos, CVector vOrigin = CVector( 0, 0 ),
-					 CVector padding = CVector( 2, 1, 0 ), CVector minsize = CVector( 0, 0 ) );
-	void Label( const char *cText, CVector vPosition, Colour colour = Color( 1, 1, 1 ),
-				TextAlignment textAlign = TEXTALIGN_LEFT );
-	void Image( CTexture *pTex, CVector vPosition, CVector vSize, CVector vOrigin = CVector( 0, 0 ),
-				Colour tint = Colour( 1, 1, 1 ) );
-	void ImageAtlas( CTexture *pTex, Atlas atlas, float fAtlasDivisions, CVector vPosition, CVector vSize,
-					 CVector vOrigin = CVector( 0, 0 ), Color tint = Color( 1, 1, 1 ) );
-	void Image9Rect( CTexture *pTex, CVector pos, CVector size, Colour color );
-	void Crosshair(); // A wrapper for Image
-	const char *TextInput( int iId, CVector vPosition );
-	const char *SelectableTextInput( int id, CVector pos, CVector size,
-									 CTexture *pTex = nullptr ); // Variant of TextInput that has support for selection,
-																 // also rendering with a background
-	bool Slider( int id, CVector pos, CVector size, int max, int &value );
-	bool HorzSlider( int id, CVector pos, CVector size, int max, int &value ); // Same as Slider but horizontal
-	bool CheckBox( int id, CVector pos, CVector size, bool &value );
+	void Image9Patch( Vector3f pos, Vector3f size, float borderRadius, CTexture *pTex,
+					  CColour tint = { 255, 255, 255 } );
+	void Image9PatchCentered( Vector3f pos, Vector3f size, float borderRadius, CTexture *pTex,
+							  CColour tint = { 255, 255, 255 } );
+
+	bool Button( GuiID id, Vector3f position, Vector3f minSize = { 4, 2 }, CTexture *pTexture = nullptr );
+	bool ButtonCentered( GuiID id, Vector3f position, Vector3f minSize = { 4, 2 }, CTexture *pTexture = nullptr );
+
+	bool Item( GuiID id, Vector3f position, Vector3f size, CItem *pItem );
+	bool ItemCentered( GuiID id, Vector3f position, Vector3f size, CItem *pItem );
+
+	int Inventory( Vector3f position, int itemsAccross, CInventory *pInventory );
+	int InventoryCentered( Vector3f position, int itemsAccross, CInventory *pInventory );
+
+	// NOTE: Also generic text rendering
+	void Label( const char *text, Vector3f position, float scale = 1.0f, CColour colour = { 255, 255, 255 },
+				TextAlignment alignment = TEXTALIGN_LEFT );
+
+	const char *TextInput( int iId, Vector3f vPosition );
+	bool Slider( int id, Vector3f pos, Vector3f size, int max, int &value ); // Adjustable slider
+	bool HorzSlider( int id, Vector3f pos, Vector3f size, int max,
+					 int &value );						// Same as Slider but slides horizontally
+	bool CheckBox( int id, Vector3f pos, bool &value ); // Top-left aligned
+
+	// Composite Elements
+	bool LabelButton( GuiID id, const char *text, Vector3f position, Vector3f size );
+	bool LabelButtonCentered( GuiID id, const char *text, Vector3f position, Vector3f size );
+	const char *SelectableTextInput( int id, Vector3f pos, Vector3f size );
+	const char *SelectableTextInputCentered( int id, Vector3f pos, Vector3f size );
 };

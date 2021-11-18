@@ -8,8 +8,8 @@ CVoxRaycast::CVoxRaycast() : m_vPosition( 0 ), m_vDirection( 0 ), m_fLength( 0 )
 
 CPointedThing CVoxRaycast::Cast( CWorld *pChunkMan, bool bUseCollision )
 {
-	CVector vRay = m_vPosition;
-	CVector vOtherRay; // for figuring out normal
+	Vector3f vRay = m_vPosition;
+	Vector3f vOtherRay; // for figuring out normal
 
 	const float step = 0.01;
 	float i			 = 0;
@@ -35,7 +35,7 @@ CPointedThing CVoxRaycast::Cast( CWorld *pChunkMan, bool bUseCollision )
 	}
 
 	CPointedThing pointedThing;
-	pointedThing.m_vPosition = CVector( ceil( vRay.x ), ceil( vRay.y ), ceil( vRay.z ) );
+	pointedThing.m_vPosition = Vector3f( ceil( vRay.x ), ceil( vRay.y ), ceil( vRay.z ) );
 	pointedThing.m_pBlock	 = pBlock;
 	pointedThing.m_vNormal	 = vOtherRay.Floor() - vRay.Floor();
 	pointedThing.m_fDistance = i;

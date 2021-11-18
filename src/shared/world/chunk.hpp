@@ -27,11 +27,14 @@
 // Used for saving/loading and network stuff
 struct PortableChunkRepresentation
 {
-	// CVector can't be used in this context
+	// Vector3f can't be used in this context
 	int32_t x, y, z;
 	uint16_t m_iValue[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
-	uint32_t m_iBlocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
+	uint64_t m_iBlocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 };
+
+// Forward declaration
+class CWorld;
 
 class CChunk
 {
@@ -40,12 +43,12 @@ class CChunk
 	~CChunk();
 
 	CChunk *Neighbour( Direction dir );
-	CChunk *Neighbour( CVector dir );
+	CChunk *Neighbour( Vector3f dir );
 
-	CVector m_vPosition;
-	CVector GetPosInWorld() { return m_vPosition * CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ); }
+	Vector3f m_vPosition;
+	Vector3f GetPosInWorld() { return m_vPosition * Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ); }
 
-	CBlock *GetBlockAtLocal( CVector pos );
+	CBlock *GetBlockAtLocal( Vector3f pos );
 
 #ifdef CLIENTEXE
 	void RebuildMdl();
@@ -55,8 +58,8 @@ class CChunk
 #endif
 	void Update( int64_t iTick );
 
-	CVector PosToWorld( int x, int y, int z );
-	CVector PosToWorld( CVector pos );
+	Vector3f PosToWorld( int x, int y, int z );
+	Vector3f PosToWorld( Vector3f pos );
 
 	// Flat array of blocks, access with
 	// Indexed with [x + SIZEX * (y + SIZEZ * z)]
@@ -70,14 +73,13 @@ class CChunk
 	uint16_t m_iLightingValue[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 
 	// Alpha (w) is the sun value
-	Colour GetLightingLocal( CVector pos );
-	void SetLightingLocal( CVector pos, Colour color );
+	CColour GetLightingLocal( Vector3f pos );
+	void SetLightingLocal( Vector3f pos, CColour color );
 
 	void UpdateLighting();
 #endif
 
-	// World pointer (can't set type because circular include :lenny:)
-	void *m_pChunkMan = nullptr;
+	CWorld *m_pChunkMan = nullptr;
 
 	PortableChunkRepresentation m_portableDef;
 
@@ -87,4 +89,4 @@ class CChunk
 	int64_t m_iLastTick = 0;
 };
 
-bool ValidChunkPosition( CVector pos );
+bool ValidChunkPosition( Vector3f pos );

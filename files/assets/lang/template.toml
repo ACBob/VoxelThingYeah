@@ -1,0 +1,69 @@
+# Template for translation strings
+# Empty but based on the English strings
+# Comments show the english version, but they are for reference only
+
+["gui"]
+# "Disconnect"
+disconnect = ""
+# "Return"
+dismiss = ""
+# "Return To Game"
+dismiss_far = ""
+# "Kicked!"
+kicked = ""
+# "Inventory..."
+inventory = ""
+# "Cancel"
+cancel = ""
+
+["gui.options"]
+# "Enable Reverb"
+enablereverb = ""
+# "Master Volume: %d%%"
+mastervolume = ""
+# "Resource Packs"
+resourcepacks = ""
+
+["gui.title"]
+# "Play Singleplayer"
+startsingleplayer = ""
+# "Play Multiplayer"
+startmultiplayer = ""
+# "Join"
+join = ""
+# "Options"
+options = ""
+# "Quit Game"
+quit = ""
+# "IP Address"
+ip = ""
+# "Port"
+port = ""
+# "Username"
+username = ""
+
+["kick"]
+# "No reason given."
+generic = ""
+# "Somebody already has your username! Change it."
+existingusername = ""
+# "Protocol version mismatch."
+wrongprotocol = ""
+# "The username provided is invalid. Change it!"
+invalidusername = ""
+# "You are banned from this server"
+banned = ""
+# "The server is closing"
+closing = ""
+
+["msg"]
+# "%s has joined the game."
+joined = ""
+# "%s has left the game."
+left = ""
+# "%s has been opped."
+opped = ""
+# "%s has been deopped."
+deopped = ""
+# "You have operator priviliges on this server."
+youhaveop = ""

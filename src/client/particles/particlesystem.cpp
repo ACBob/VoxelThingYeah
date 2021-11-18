@@ -6,7 +6,7 @@ const CModel::Vertex particlePlane[4] = {
 	{ 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f },
 	{ 0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f },
 	{ -0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f } };
-const CModel::Face particlePlaneFaces[2] = { { 2, 1, 0 }, { 0, 3, 2 } };
+const CModel::Face particlePlaneFaces[2] = { { 0, 1, 2 }, { 2, 3, 0 } };
 
 namespace particleSystem
 {
@@ -17,7 +17,7 @@ namespace particleSystem
 		std::copy( particlePlaneFaces, particlePlaneFaces + 2, std::back_inserter( particleMdl->m_faces ) );
 		particleMdl->Update();
 
-		particleMdl->SetShader( shaderSystem::LoadShader( "shaders/particle.vert", "shaders/particle.frag" ) );
+		particleMdl->SetShader( shaderSystem::LoadShader( "particle.vert", "particle.frag" ) );
 		particleMdl->SetTexture( materialSystem::LoadTexture( "test.png" ) );
 	}
 	void UnInit() { delete particleMdl; }

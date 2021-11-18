@@ -3,6 +3,8 @@
 
 #include <cstring>
 
+#include <vector>
+
 #pragma once
 namespace ConVar
 {
@@ -49,6 +51,9 @@ namespace ConVar
 		bool IsModified() { return m_bModified; };
 		bool ShouldArchive() { return m_iFlags & CVAR_ARCHIVE; }
 
+		// Returns the name of the variable
+		const char *GetName() { return m_cName; };
+
 	  private:
 		int m_iFlags;
 
@@ -63,6 +68,28 @@ namespace ConVar
 		const char *m_cName;
 	};
 
+	// Function pointer for the console command
+	typedef void ( *ConsoleCommandFunc )( const char *args );
+
+	class CConCmd
+	{
+	  public:
+		// Takes the name, expected arguments and the function to call
+		CConCmd( const char *name, const char *expectedArgs, ConsoleCommandFunc func );
+
+		// Executes the command
+		// (handles the arguments and calls the function)
+		void Execute( const char *args );
+
+	  private:
+		const char *m_cName;
+		const char *m_cExpectedArgs;
+		// int m_iFlags;
+
+		// Execution function
+		void ( *m_pFunc )( const char *args );
+	};
+
 	class CConVarHandler
 	{
 	  private:
@@ -75,23 +102,30 @@ namespace ConVar
 		};
 
 		std::map<const char *, CConVar *, cmp_str> Cvars;
+		std::map<const char *, CConCmd *, cmp_str> Cmds;
 
-		void ParseConvarTokens( const char *cmd, const char *arg );
+		void HandleConvarTokens( const char *cmd, const char *arg );
 
 	  public:
 		CConVarHandler();
 		~CConVarHandler();
 
-		void WriteCFG();
+		void WriteCFG( const char *cfgName = "config.cfg" );
 
 		CConVar *DeclareConvar( const char *name, const char *defVal, int flags = F::CVAR_NOFLAGS );
+		CConCmd *DeclareConCmd( const char *name, const char *expectedArgs, ConsoleCommandFunc func );
 
 		// Find Cvar by name
 		CConVar *FindConVar( const char *name );
+		// Find Cmd by name
+		CConCmd *FindConCmd( const char *name );
 
 		CConVar *operator[]( const char *name ) { return FindConVar( name ); }
 
 		void Parse( const char *str );
+
+		// List all cvars
+		std::vector<CConVar *> ListConVars();
 	};
 } // namespace ConVar
 

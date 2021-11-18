@@ -4,9 +4,7 @@
 
 #include "physfs.h"
 
-#include "logging.hpp"
-
-#include "types.hpp"
+#include "shared/logging.hpp"
 
 #include <algorithm>
 
@@ -14,6 +12,7 @@
 
 namespace fileSystem
 {
+	std::vector<const char *> mountedPaths;
 
 	bool Init( const char *exePath )
 	{
@@ -29,7 +28,7 @@ namespace fileSystem
 
 	void UnInit() { PHYSFS_deinit(); }
 
-	const uchar_t *LoadFile( const char *virtualPath, int64_t &len, bool &success )
+	const unsigned char *LoadFile( const char *virtualPath, int64_t &len, bool &success )
 	{
 		PHYSFS_File *f = PHYSFS_openRead( virtualPath );
 
@@ -42,9 +41,9 @@ namespace fileSystem
 			return nullptr;
 		}
 
-		int64_t fileLen = PHYSFS_fileLength( f );
-		uchar_t *buf	= new uchar_t[fileLen + 1];
-		success			= true;
+		int64_t fileLen	   = PHYSFS_fileLength( f );
+		unsigned char *buf = new unsigned char[fileLen + 1];
+		success			   = true;
 
 		if ( PHYSFS_readBytes( f, buf, fileLen ) < fileLen )
 		{
@@ -59,8 +58,8 @@ namespace fileSystem
 		len			 = fileLen;
 
 		//! FIXME
-		int32_t l	 = fileLen;
-		uchar_t *out = new uchar_t[l + 1];
+		int32_t l		   = fileLen;
+		unsigned char *out = new unsigned char[l + 1];
 		std::copy( buf, buf + l, out );
 		out[l] = '\0';
 
@@ -69,7 +68,7 @@ namespace fileSystem
 		return out;
 	}
 
-	void WriteFile( const char *virtualPath, const uchar_t *data, int64_t dataLength, bool &success )
+	void WriteFile( const char *virtualPath, const unsigned char *data, int64_t dataLength, bool &success )
 	{
 		PHYSFS_File *f = PHYSFS_openWrite( virtualPath );
 
@@ -102,7 +101,29 @@ namespace fileSystem
 			return false;
 		}
 
+		char *cachepath = new char[strlen( realPath ) + 1];
+		strcpy( cachepath, realPath );
+		mountedPaths.push_back( cachepath );
+
 		return true;
+	}
+
+	void UnMount( const char *realPath )
+	{
+		if ( PHYSFS_unmount( realPath ) == 0 )
+		{
+			con_error( "unmount %s: %s", realPath, PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ) );
+		}
+
+		mountedPaths.erase( std::remove_if( mountedPaths.begin(), mountedPaths.end(),
+											[realPath]( auto &c ) { return strcmp( realPath, c ) == 0; } ),
+							mountedPaths.end() );
+	}
+
+	void UnMountAll()
+	{
+		while ( mountedPaths.size() > 0 )
+			UnMount( mountedPaths.front() );
 	}
 
 	bool MountWrite( const char *realPath )
@@ -114,5 +135,28 @@ namespace fileSystem
 		}
 
 		return true;
+	}
+
+	bool Exists( const char *virtualPath ) { return PHYSFS_exists( virtualPath ); }
+
+	std::vector<const char *> List( const char *path )
+	{
+		char **p = PHYSFS_enumerateFiles( path );
+		std::vector<const char *> l;
+
+		int i = 0;
+		while ( p[i] != NULL )
+		{
+			char *c = new char[strlen( p[i] ) + 1]();
+			strcpy( c, p[i] );
+
+			l.push_back( c );
+
+			i++;
+		}
+
+		PHYSFS_freeList( p );
+
+		return l;
 	}
 } // namespace fileSystem

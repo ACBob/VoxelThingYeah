@@ -1,0 +1,40 @@
+# Portuguese
+
+["gui"]
+disconnect = "Desconectar"
+dismiss = "Desistir"
+dismiss_far = "Desistir"
+kicked = "Expulsado"
+inventory = "Inventário"
+cancel = "Cancelar"
+
+["gui.options"]
+enablereverb = "Ativar Reverb"
+mastervolume = "Volume Mestre (%d%%)"
+resourcepacks = "Pacotes de Recursos"
+
+["gui.title"]
+startsingleplayer = "Iniciar Singleplayer"
+startmultiplayer = "Iniciar Multiplayer"
+join = "Entrar"
+options = "Opçoes" # TODO: Typo, we don't have the õ symbol
+quit = "Sair"
+ip = "IP do Servidor"
+port = "Port"
+username = "Nome de Usuário"
+
+["kick"]
+generic = "Nenhuma razão especificada"
+existingusername = "Nome de usuário já existente"
+wrongprotocol = "Versão de protocolo incorreta"
+invalidusername = "Nome de usuário inválido"
+banned = "Banido"
+closing = "Fechando conexão"
+
+
+["msg"]
+joined = "%s entrou no jogo."
+left = "%s saiu do jogo."
+opped = "%s foi promovido a moderador."
+deopped = "%s foi demitido."
+youhaveop = "Você é um moderador neste servidor."

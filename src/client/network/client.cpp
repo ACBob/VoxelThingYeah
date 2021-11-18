@@ -13,6 +13,12 @@ CNetworkClient::CNetworkClient()
 		con_error( "Couldn't create ENet client object" );
 		return;
 	}
+
+	if ( enet_host_compress_with_range_coder( m_pEnetHost ) != 0 )
+	{
+		con_error( "Couldn't enable compression!" );
+		return;
+	}
 }
 CNetworkClient::~CNetworkClient() { enet_host_destroy( m_pEnetHost ); }
 
@@ -83,7 +89,7 @@ void CNetworkClient::Disconnect()
 	m_bConnected = false;
 }
 
-void CNetworkClient::SpecialEffectHandle( CVector pos, SpecialEffect specialEffect, int attrib )
+void CNetworkClient::SpecialEffectHandle( Vector3f pos, SpecialEffect specialEffect, int attrib )
 {
 	if ( m_pParticleMan == nullptr )
 		return;
@@ -92,7 +98,7 @@ void CNetworkClient::SpecialEffectHandle( CVector pos, SpecialEffect specialEffe
 	{
 		case SPECIALEFFECT_BLOCKBREAK: {
 			// Attrib is taken to be the block id
-			blocktype_t b = (blocktype_t)attrib;
+			BLOCKID b = (BLOCKID)attrib;
 
 			// Air has no break effect
 			if ( b == AIR )
@@ -100,29 +106,28 @@ void CNetworkClient::SpecialEffectHandle( CVector pos, SpecialEffect specialEffe
 
 			BlockTexture tex = GetDefaultBlockTextureSide( b, NORTH );
 
-			ParticleDef blockBreak	= PARTICLE_BREAKBLOCK;
-			blockBreak.vUVOffsetMin = CVector( tex.sizex / 64.0f, tex.sizey / 64.0f, tex.x / 16.0f, tex.y / 16.0f );
-			blockBreak.vUVOffsetMax =
-				CVector( tex.sizex / 64.0f, tex.sizey / 64.0f, ( tex.x + tex.sizex / 2.0f ) / 16.0f,
-						 ( tex.y + tex.sizey / 2.0f ) / 16.0f );
+			ParticleDef blockBreak = PARTICLE_BREAKBLOCK;
+			// TODO: these aren't small pieces of the block anymore, they are the block
+			blockBreak.vUVOffsetMin = { tex.z / 64.0f, tex.w / 64.0f, tex.x / 16.0f, tex.y / 16.0f };
+			blockBreak.vUVOffsetMax = { tex.z / 64.0f, tex.w / 64.0f, tex.x / 16.0f + 1/32.0f, tex.y / 16.0f + 1/32.0f };
 			blockBreak.pTexture = materialSystem::LoadTexture( "terrain.png" );
 
-			soundSystem::PlayBreakSound( b, pos + CVector( 0.5, 0.5, 0.5 ) );
+			soundSystem::PlayBreakSound( b, pos + Vector3f( 0.5, 0.5, 0.5 ) );
 
 			for ( int x = 0; x < 4; x++ )
 				for ( int y = 0; y < 4; y++ )
 					for ( int z = 0; z < 4; z++ )
-						m_pParticleMan->CreateParticle( pos + CVector( x / 4.0f, y / 4.0f, z / 4.0f ), blockBreak );
+						m_pParticleMan->CreateParticle( pos + Vector3f( x / 4.0f, y / 4.0f, z / 4.0f ), blockBreak );
 		}
 		break;
 		case SPECIALEFFECT_BLOCKPLACE: {
 			// Attrib is taken to be the block id
-			blocktype_t b = (blocktype_t)attrib;
+			BLOCKID b = (BLOCKID)attrib;
 
 			// Air has no place effect
 			if ( b == AIR )
 				return;
-			soundSystem::PlayPlaceSound( b, pos + CVector( 0.5, 0.5, 0.5 ) );
+			soundSystem::PlayPlaceSound( b, pos + Vector3f( 0.5, 0.5, 0.5 ) );
 		}
 		break;
 		default:
@@ -158,11 +163,15 @@ void CNetworkClient::Update()
 		}
 	}
 
-	CVector cP = ( m_pLocalPlayer->m_vPosition / CVector( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
-	// MAGIC NUMBER: 4 == render distance
-	// TODO: tie to cvar
-	m_pLocalWorld->m_chunks.erase(
-		std::remove_if( m_pLocalWorld->m_chunks.begin(), m_pLocalWorld->m_chunks.end(),
-						[cP]( auto &&c ) { return ( ( cP - c.get()->m_vPosition ).Magnitude() > 6 ); } ),
-		m_pLocalWorld->m_chunks.end() );
+	// We may not have a local world and yet still be connected.
+	if ( m_pLocalPlayer != nullptr )
+	{
+		Vector3f cP = ( m_pLocalPlayer->m_vPosition / Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
+		// MAGIC NUMBER: 4 == render distance
+		// TODO: tie to cvar
+		m_pLocalWorld->m_chunks.erase(
+			std::remove_if( m_pLocalWorld->m_chunks.begin(), m_pLocalWorld->m_chunks.end(),
+							[cP]( auto &&c ) { return ( ( cP - c.get()->m_vPosition ).Magnitude() > 6 ); } ),
+			m_pLocalWorld->m_chunks.end() );
+	}
 }

@@ -1,0 +1,5 @@
+[pack-info]
+name = "Green GUI"
+desc = "The whole interface, but green!"
+license = "CC BY-NC 4.0"
+format = 0x01

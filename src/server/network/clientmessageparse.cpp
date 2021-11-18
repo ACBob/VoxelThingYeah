@@ -7,6 +7,8 @@
 
 #include "specialeffectdef.hpp"
 
+#include "blocks/blockbase.hpp"
+
 namespace protocol
 {
 	void DealWithPacket( NetworkPacket &p, void *pSide, ENetPeer *pPeer )
@@ -35,13 +37,13 @@ namespace protocol
 				{
 					con_error( "User %s attempted to join unsupported protocol version (%#010x) (Expected %#010x)",
 							   username.c_str(), protocolVersion, PROTOCOL_VERSION );
-					pServer->KickPlayer( pPeer, "Protocol version Mismatch!" );
+					pServer->KickPlayer( pPeer, "kick.wrongprotocol" );
 					return;
 				}
 				if ( pServer->ClientFromUsername( username.c_str() ) != nullptr )
 				{
 					con_error( "Duplicate username %s!", username.c_str() );
-					pServer->KickPlayer( pPeer, "Someone already has your username. Change it!" );
+					pServer->KickPlayer( pPeer, "kick.existingusername" );
 					return;
 				}
 
@@ -59,8 +61,8 @@ namespace protocol
 				int x = 8 + rand() % 8;
 				int z = 8 + rand() % 8;
 
-				p->m_vPosition = CVector( x, 20, z );
-				p->m_vRotation = CVector( 0, 0, 0 );
+				p->m_vPosition = Vector3f( x, 20, z );
+				p->m_vRotation = Vector3f( 0, 0, 0 );
 
 				SendServerPlayerSpawn( pPeer, "", p->m_vPosition, p->m_vRotation, false );
 
@@ -77,46 +79,44 @@ namespace protocol
 				}
 
 				// Now send them 0,0
-				SendServerChunkData( pPeer, &pServer->m_world, CVector( 0, 0, 0 ) );
+				SendServerChunkData( pPeer, &pServer->m_world, Vector3f( 0, 0, 0 ) );
 			}
 			break;
 
 			case ClientPacket::SET_BLOCK: {
 				float x, y, z;
 				uint blockType;
-				uint8_t valA, valB;
+				uint16_t val;
 				bufAccess >> x;
 				bufAccess >> y;
 				bufAccess >> z;
 				bufAccess >> blockType;
-				bufAccess >> valA;
-				bufAccess >> valB;
+				bufAccess >> val;
 
-				CBlock *b = pServer->m_world.BlockAtWorldPos( CVector( x, y, z ) );
+				CBlock *b = pServer->m_world.BlockAtWorldPos( Vector3f( x, y, z ) );
 
-				blocktype_t oldBlockType = b->m_iBlockType;
+				BLOCKID oldBlockType = b->m_iBlockType;
 				if ( true ) // If it's a valid block placement (for now no check)
 				{
-					b->m_iBlockType = (blocktype_t)blockType;
-					b->m_iValueA	= valA;
-					b->m_iValueB	= valB;
+					b->m_iBlockType = (BLOCKID)blockType;
+					b->m_iBlockData = val;
 					b->Update();
 
 					for ( CNetworkPlayer *c : pServer->m_players )
 					{
-						SendServerUpdateBlock( c->m_pPeer, CVector( x, y, z ), blocktype_t( blockType ), valA, valB );
+						SendServerUpdateBlock( c->m_pPeer, Vector3f( x, y, z ), BLOCKID( blockType ), val );
 
 						if ( blockType == AIR )
-							SendServerSpecialEffect( c->m_pPeer, CVector( x, y, z ).Floor(), SPECIALEFFECT_BLOCKBREAK,
+							SendServerSpecialEffect( c->m_pPeer, Vector3f( x, y, z ).Floor(), SPECIALEFFECT_BLOCKBREAK,
 													 oldBlockType );
 						else
-							SendServerSpecialEffect( c->m_pPeer, CVector( x, y, z ).Floor(), SPECIALEFFECT_BLOCKPLACE,
+							SendServerSpecialEffect( c->m_pPeer, Vector3f( x, y, z ).Floor(), SPECIALEFFECT_BLOCKPLACE,
 													 blockType );
 					}
 				}
 				else
 				{
-					SendServerUpdateBlock( pPeer, CVector( x, y, z ), b->m_iBlockType, b->m_iValueA, b->m_iValueB );
+					SendServerUpdateBlock( pPeer, Vector3f( x, y, z ), b->m_iBlockType, b->m_iBlockData );
 				}
 			}
 			break;
@@ -131,8 +131,8 @@ namespace protocol
 				bufAccess >> yaw;
 
 				CEntityPlayer *p = pServer->ClientFromPeer( pPeer )->m_pEntity;
-				p->m_vPosition	 = CVector( x, y, z );
-				p->m_vRotation	 = CVector( pitch, yaw, 0 );
+				p->m_vPosition	 = Vector3f( x, y, z );
+				p->m_vRotation	 = Vector3f( pitch, yaw, 0 );
 
 				for ( CNetworkPlayer *c : pServer->m_players )
 				{
@@ -197,9 +197,28 @@ namespace protocol
 				}
 			}
 			break;
+			case ClientPacket::USE_BLOCK: {
+				int x, y, z;
+				bufAccess >> x;
+				bufAccess >> y;
+				bufAccess >> z;
+
+				// test if the block is useable
+				CBlock *b = pServer->m_world.BlockAtWorldPos( Vector3f( x, y, z ) );
+				if ( b != nullptr && BlockType( b->m_iBlockType ).CanBeUsed() )
+					BlockType( b->m_iBlockType )
+						.OnUse( (CChunk *)b->m_pChunk, Vector3f( x, y, z ),
+								pServer->ClientFromPeer( pPeer )->m_pEntity );
+			}
+			break;
 
 			default: {
-				con_error( "Unknown packet of type %#010x", p.type );
+				// Kick player for unknown packet
+				con_warning( "Kicking player for unknown packet %#X", p.type );
+				char *reason = new char[128];
+				sprintf( reason, "Unknown packet %#X", p.type );
+				pServer->KickPlayer( pPeer, reason );
+				delete[] reason;
 			}
 			break;
 		}

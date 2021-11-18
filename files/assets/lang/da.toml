@@ -1,0 +1,38 @@
+["gui"]
+disconnect = "Afbryd"
+dismiss = "Tilbage"
+dismiss_far = "Tilbage til Spillet" # badly named
+kicked = "Sparket ud!"
+inventory = "Inventar..."
+cancel = "Annuller"
+
+["gui.options"]
+enablereverb = "Aktiver Ekko"
+mastervolume = "Master Volume: %d%%"
+resourcepacks = "Ressource Pakker"
+
+["gui.title"]
+startsingleplayer = "Spil Singleplayer"
+startmultiplayer = "Spil Multiplayer"
+join = "Deltag"
+options = "Indstillinger"
+quit = "Afslut"
+ip = "IP"
+port = "Port"
+username = "Brugernavn"
+
+["kick"]
+generic = "Ingen årsag givet."
+existingusername = "Nogen har allerede dit brugernavn! Find et andet!"
+wrongprotocol = "Forkert protokol version."
+invalidusername = "Ugyldigt brugernavn."
+banned = "Du er blevet udelukket fra serveren."
+closing = "Lukker..."
+
+
+["msg"]
+joined = "%s har koblet til spillet."
+left = "%s har forladt spillet."
+opped = "%s er blevet oppet."
+deopped = "%s er blevet deoppet."
+youhaveop = "Du har nu operator rettigheder på denne serveren."

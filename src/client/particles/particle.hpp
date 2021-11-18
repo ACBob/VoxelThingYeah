@@ -14,16 +14,16 @@ class CParticle
 	CParticle( ParticleDef pdef );
 	~CParticle();
 
-	void Render( CVector camRot );
+	void Render( Vector3f camRot );
 
 	void PhysicsTick( CWorld *pWorld, float fDelta );
 
-	CVector m_vPosition;
-	CVector m_vSize; // Z Ignored!!!
+	Vector3f m_vPosition;
+	Vector3f m_vSize; // Z Ignored!!!
 
-	CVector m_vVelocity;
+	Vector3f m_vVelocity;
 
-	CVector m_vUvOffset;
+	Vector4f m_vUvOffset;
 
 	ParticleDef m_particleDef;
 

@@ -1,0 +1,37 @@
+["gui"]
+disconnect = "SHIT"
+dismiss = "FUCK"
+dismiss_far = "GET THE FUCK BACK HERE" # badly named
+kicked = "STAY THE FUCK AWAY"
+inventory = "YOUR FIELD OF FUCKS"
+cancel = "FUCK OFF"
+
+["gui.options"]
+enablereverb = "aaaaAAAAAAAAA"
+mastervolume = "I AM SCREAMING IN YOUR EAR"
+resourcepacks = "CHANGE YOUR FUCKING CLOTHES ASSHOLE"
+
+["gui.title"]
+startsingleplayer = "WAKE THE FUCK UP"
+startmultiplayer = "WAKE THEM THE FUCK UP"
+join = "PLAY NOW"
+options = "SOMETHING'S GOTTA FUCKING CHANGE"
+quit = "GET THE FUCK OUT"
+ip = "I PEE"
+port = "PORTAPOTTY"
+username = "ME"
+
+["kick"]
+generic = "FUCK OFF"
+existingusername = "THAT'S MY NAME, DICK"
+wrongprotocol = "WRONG WAY, ASSHOLE"
+invalidusername = "STUPID FUCKING NAME"
+banned = "DON'T YOU FUCKING SHOW YOUR FACE HERE EVER AGAIN"
+closing = "THE SERVER'S CLOSED, FUCK OFF"
+
+["msg"]
+joined = "%s JOINED"
+left = "%s LEFT, FUCK THEM"
+opped = "%s IS A MOD NOW, FUCK THEM"
+deopped = "%s IS NO MORE A MOD, FUCK THEM"
+youhaveop = "YOU HAVE OP, FUCK YOU"

@@ -4,17 +4,6 @@
 
 #pragma once
 
-struct BlockTexture
-{
-	BlockTexture( int x, int y, int sizex, int sizey )
-	{
-		this->x		= x;
-		this->y		= y;
-		this->sizex = sizex;
-		this->sizey = sizey;
-	};
+using BlockTexture = Vector4f;
 
-	int x, y, sizex, sizey;
-};
-
-BlockTexture GetDefaultBlockTextureSide( blocktype_t type, Direction side );
+BlockTexture GetDefaultBlockTextureSide( BLOCKID type, Direction side );

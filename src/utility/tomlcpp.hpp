@@ -26,6 +26,7 @@
 #define TOML_HPP
 
 #include <memory>
+#include <string>
 #include <vector>
 
 struct toml_table_t;

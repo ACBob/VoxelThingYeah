@@ -12,10 +12,12 @@ namespace materialSystem
 		CTexture( const char *path );
 		CTexture( std::vector<unsigned char> imageData, unsigned int height, unsigned int width );
 
+		void Load();
+
 		std::vector<unsigned char> m_imageData;
 		unsigned int m_iWidth, m_iHeight, m_iId;
 
-		const char *m_cFilePath = nullptr;
+		char *m_cFilePath = nullptr;
 	};
 
 	void Init();
@@ -23,6 +25,8 @@ namespace materialSystem
 
 	CTexture *LoadTexture( const char *path );
 	CTexture *LoadTexture( std::vector<unsigned char> imageData, unsigned int height, unsigned int width );
+
+	void ReloadTextures();
 
 	extern std::vector<CTexture *> loadedTextures;
 }; // namespace materialSystem

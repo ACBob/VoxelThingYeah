@@ -1,6 +1,5 @@
 #include "entitybase.hpp"
 #include "entitycamera.hpp"
-#include "shared/inputmanager.hpp"
 #include "utility/raycast.hpp"
 #include "utility/types.hpp"
 
@@ -8,6 +7,7 @@
 
 #ifdef CLIENTEXE
 	#include "particles/particlemanager.hpp"
+	#include "inputmanager.hpp"
 #endif
 
 #pragma once
@@ -21,12 +21,15 @@ class CEntityPlayer : public CEntityBase
 	~CEntityPlayer();
 
 	void Tick( int64_t iTick );
-	void Spawn()
+	void Spawn( CWorld *world )
 	{
-		BaseClass::Spawn();
+		BaseClass::Spawn( world );
 #ifdef CLIENTEXE
-		m_pMdl = modelSystem::LoadModel( "models/player.obj" );
+		m_pMdl = modelSystem::LoadModel( "player.obj" );
 		m_pMdl->SetTexture( materialSystem::LoadTexture( "player.png" ) );
+
+		world->AddEntity( &m_camera );
+		m_camera.m_fEyeHeight = 1.72f;
 #endif
 	};
 	void Kill() { BaseClass::Kill(); }
@@ -55,6 +58,7 @@ class CEntityPlayer : public CEntityBase
 
 	bool m_bFly			= true;
 	bool m_bInInventory = false;
+	bool m_bCrouching	= false;
 
 	CInventory m_inventory;
 };

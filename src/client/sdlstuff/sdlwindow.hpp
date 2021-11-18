@@ -11,15 +11,20 @@
 
 #include "rendering/texturemanager.hpp"
 
-class CGameWindow : public CBobWindow
+#include "inputmanager.hpp"
+#include "utility/vector.hpp"
+
+class CGameWindow
 {
   private:
 	CTexture *m_pIcon;
 
+	SDL_Cursor **m_cursors;
+
   public:
-	CGameWindow( const char *title = "GameWindow", CVector size = CVector( 800, 600 ),
-				 bool resizeable = false ); // SDL_CreateWindow
-	~CGameWindow();							// SDL_DestroyWindow
+	CGameWindow( const char *title = "GameWindow", Vector3f size = Vector3f( 800, 600 ), bool resizeable = false,
+				 Vector3f minSize = Vector3f( 0, 0 ) ); // SDL_CreateWindow
+	~CGameWindow();										// SDL_DestroyWindow
 
 	// Gets the OpenGL Context
 	void GatherCTX();
@@ -38,12 +43,15 @@ class CGameWindow : public CBobWindow
 
 	// Z Ignored
 	// SDL_SetWindowSize / SDL_GetWindowSize
-	CVector GetSize();
-	void SetSize( CVector s );
+	Vector3f GetSize();
+	void SetSize( Vector3f s );
 	// Z Ignored
 	// SDL_SetWindowPos / SDL_GetWindowPos
-	CVector GetPos();
-	void SetPos( CVector p );
+	Vector3f GetPos();
+	void SetPos( Vector3f p );
+
+	void SetMouseVisibility( bool bVisible );
+	bool GetMouseVisibility();
 
 	// Displays an error message somehow, Use for when shit hits the fans and we need to exit immediately
 	void Panic( const char *err );

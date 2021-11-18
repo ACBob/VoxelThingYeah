@@ -6,20 +6,21 @@ CParticle::CParticle( ParticleDef pdef ) : m_vSize( 1, 1 ), m_vVelocity( 0 ), m_
 {
 	m_particleDef = pdef;
 
-	m_vVelocity = RandomVector( m_particleDef.vMinExplode, m_particleDef.vMaxExplode );
+	m_vVelocity = RandomVector3<float>( m_particleDef.vMinExplode, m_particleDef.vMaxExplode );
 	m_vSize =
 		m_particleDef.vMinSize + ( m_particleDef.vMaxSize - m_particleDef.vMinSize ) * ( ( rand() ) / (float)RAND_MAX );
-	m_vUvOffset = RandomVector( m_particleDef.vUVOffsetMin, m_particleDef.vUVOffsetMax );
+	m_vUvOffset = RandomVector4<float>( m_particleDef.vUVOffsetMin, m_particleDef.vUVOffsetMax );
 	m_fLifeTime = m_particleDef.fMinLifetime +
 				  ( m_particleDef.fMaxLifetime - m_particleDef.fMinLifetime ) * ( ( rand() ) / (float)RAND_MAX );
 }
 
 CParticle::~CParticle() {}
 
-void CParticle::Render( CVector camRot )
+void CParticle::Render( Vector3f camRot )
 {
 	m_mdl->m_vPosition = m_vPosition;
-	m_mdl->m_vRotation = camRot;
+	// HACK: set the rotation to the inverted camera rotation, but not on the x axis
+	m_mdl->m_vRotation = Vector3f( camRot.x, -camRot.y, -camRot.z );
 	m_mdl->m_vSize	   = m_vSize;
 	m_mdl->SetTexture( m_particleDef.pTexture );
 	m_mdl->m_vUvOffset = m_vUvOffset;
@@ -35,34 +36,43 @@ void CParticle::PhysicsTick( CWorld *pWorld, float fDelta )
 
 	m_fLifeTime -= fDelta;
 
-	m_vPosition.x += m_vVelocity.x * fDelta;
-	if ( pWorld->TestPointCollision( m_vPosition ) )
+	if ( m_particleDef.bCollision )
 	{
-		m_vPosition.x -= m_vVelocity.x * fDelta;
-		m_vVelocity.x /= 2;
+		m_vPosition.x += m_vVelocity.x * fDelta;
+		if ( pWorld->TestPointCollision( m_vPosition ) )
+		{
+			m_vPosition.x -= m_vVelocity.x * fDelta;
+			m_vVelocity.x /= 2;
 
-		applyFriction = true;
+			applyFriction = true;
+		}
+		m_vPosition.y += m_vVelocity.y * fDelta;
+		if ( pWorld->TestPointCollision( m_vPosition ) )
+		{
+			m_vPosition.y -= m_vVelocity.y * fDelta;
+			m_vVelocity.y /= 2;
+
+			applyFriction = true;
+		}
+		m_vPosition.z += m_vVelocity.z * fDelta;
+		if ( pWorld->TestPointCollision( m_vPosition ) )
+		{
+			m_vPosition.z -= m_vVelocity.z * fDelta;
+			m_vVelocity.z /= 2;
+
+			applyFriction = true;
+		}
 	}
-	m_vPosition.y += m_vVelocity.y * fDelta;
-	if ( pWorld->TestPointCollision( m_vPosition ) )
+	else
 	{
-		m_vPosition.y -= m_vVelocity.y * fDelta;
-		m_vVelocity.y /= 2;
-
-		applyFriction = true;
-	}
-	m_vPosition.z += m_vVelocity.z * fDelta;
-	if ( pWorld->TestPointCollision( m_vPosition ) )
-	{
-		m_vPosition.z -= m_vVelocity.z * fDelta;
-		m_vVelocity.z /= 2;
-
-		applyFriction = true;
+		m_vPosition.x += m_vVelocity.x * fDelta;
+		m_vPosition.y += m_vVelocity.y * fDelta;
+		m_vPosition.z += m_vVelocity.z * fDelta;
 	}
 
 	m_vVelocity = m_vVelocity + m_particleDef.vLinear;
 
-	CVector f = m_vVelocity * m_particleDef.vDrag;
+	Vector3f f = m_vVelocity * m_particleDef.vDrag;
 	if ( applyFriction )
 		f = f + m_vVelocity * m_particleDef.vFriction;
 	m_vVelocity = m_vVelocity - f;
@@ -73,5 +83,5 @@ void CParticle::PhysicsTick( CWorld *pWorld, float fDelta )
 	if ( m_vSize.x <= 0 || m_vSize.y <= 0 || m_vSize.z <= 0 )
 		m_fLifeTime = 0.0f;
 
-	m_mdl->m_vLighting = pWorld->GetLightingAtWorldPos( m_vPosition ) / 16.0f;
+	m_mdl->m_vLighting = pWorld->GetLightingAtWorldPos( m_vPosition );
 }

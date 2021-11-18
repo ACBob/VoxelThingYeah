@@ -21,5 +21,22 @@ set(client_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/cvar_clientside.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/gamestates.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/packs.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/devconsole.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/inputmanager.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/splash.cpp
+	PARENT_SCOPE
+)
+
+set(guiTest_SRCS
+	${sdlstuff_SRCS}
+	${gui_SRCS}
+
+	${CMAKE_CURRENT_SOURCE_DIR}/rendering/texturemanager.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/rendering/shadermanager.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/rendering/glad.c
+	${CMAKE_CURRENT_SOURCE_DIR}/gui/guitest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/cvar_clientside.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/inputmanager.cpp
 	PARENT_SCOPE
 )

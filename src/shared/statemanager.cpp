@@ -2,9 +2,9 @@
 
 void CStateMachine::PushState( std::unique_ptr<CState> state )
 {
-	state->m_pStateMan = this;
-	state->Enter();
 	m_stateStack.push_back( std::move( state ) );
+	m_stateStack.back()->m_pStateMan = this;
+	m_stateStack.back()->Enter();
 }
 
 void CStateMachine::PopState()

@@ -1,0 +1,37 @@
+["gui"]
+disconnect = "Disconnect"
+dismiss = "Return"
+dismiss_far = "Return to Game" # badly named
+kicked = "Kicked!"
+inventory = "Inventory..."
+cancel = "Cancel"
+
+["gui.options"]
+enablereverb = "Enable Reverb"
+mastervolume = "Master Volume: %d%%"
+resourcepacks = "Resource Packs"
+
+["gui.title"]
+startsingleplayer = "Play Singleplayer"
+startmultiplayer = "Play Multiplayer"
+join = "Join"
+options = "Options"
+quit = "Quit Game"
+ip = "IP Address"
+port = "Port"
+username = "Username"
+
+["kick"]
+generic = "No reason given."
+existingusername = "Somebody already has your username! Change it!"
+wrongprotocol = "Protocol version mismatch!"
+invalidusername = "The username provided is invalid. Change it!"
+banned = "You are banned from this server."
+closing = "The server is closing."
+
+["msg"]
+joined = "%s joined the game."
+left = "%s left the game."
+opped = "%s has been opped."
+deopped = "%s has been deopped."
+youhaveop = "You have operator priviliges on this server."

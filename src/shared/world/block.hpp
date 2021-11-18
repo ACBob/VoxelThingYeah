@@ -1,3 +1,5 @@
+// TODO: is this class neccesary? Seems bloaty!
+
 #include "blockdef.hpp"
 #include "utility/direction.hpp"
 #include "utility/vector.hpp"
@@ -8,31 +10,30 @@
 
 #pragma once
 
+// Forward Decl.
+class CChunk;
+
 class CBlock
 {
   public:
 	CBlock();
 
-	blocktype_t m_iBlockType = blocktype_t::AIR;
-
-	// Seperated uneccesarily
-	// Exactly sixteen (16) bits for data
-	uint8_t m_iValueA;
-	uint8_t m_iValueB;
+	BLOCKID m_iBlockType  = BLOCKID::AIR;
+	uint16_t m_iBlockData = 0;
 
 #ifdef CLIENTEXE
 	BlockTexture GetSideTexture( Direction side );
 #endif
 
 	// Pos is in local coords
-	bool TestPointCollision( CVector pos );
+	bool TestPointCollision( Vector3f pos );
 	// Pos is in local coords
-	bool TestAABBCollision( CVector pos, CVector size );
+	bool TestAABBCollision( Vector3f pos, Vector3f size );
 
 	// block update
 	// causes a mesh rebuild
 	void Update();
 
 	// Pointer to chunk that holds us
-	void *m_pChunk;
+	CChunk *m_pChunk;
 };

@@ -16,6 +16,12 @@
 
 #include "world/world.hpp"
 
+#include "sound/soundmanager.hpp"
+
+#include <thread>
+
+#include <iostream>
+
 #ifdef _WIN32
 	#include <windows.h>
 #endif
@@ -43,6 +49,19 @@ int main( int argc, char *args[] )
 	}
 	atexit( fileSystem::UnInit );
 
+	// write in the current directory
+	if ( !fileSystem::MountWrite( "." ) )
+		con_warning( "Couldn't mount current directory for writing!" );
+	if ( !fileSystem::Mount( ".", "/" ) )
+		con_warning( "Couldn't mount current directory for reading!" );
+
+	con_info( "Parsing svconfig.cfg..." );
+	bool succeed;
+	int64_t l;
+	char *file = (char *)fileSystem::LoadFile( "svconfig.cfg", l, succeed );
+	if ( succeed )
+		conVarHandle.Parse( file );
+
 	con_info( "Init Network..." );
 	if ( !network::Init() )
 	{
@@ -51,6 +70,10 @@ int main( int argc, char *args[] )
 	}
 	atexit( network::Uninit );
 
+	con_info( "Init Sound System..." );
+	soundSystem::Init();
+	atexit( soundSystem::UnInit );
+
 	con_info( "Create Server..." );
 	CNetworkServer server( sv_port->GetInt() );
 	if ( !server.WorkingServer() )
@@ -58,6 +81,24 @@ int main( int argc, char *args[] )
 		con_critical( "Server became invalid" );
 		return EXIT_FAILURE;
 	}
+	soundSystem::server = &server;
+
+	// Thread for getting input from the console
+	std::thread consoleThread( []() {
+		while ( sv_run->GetBool() )
+		{
+			// read from stdin
+			char *input = new char[1024];
+			std::cin.getline( input, 1024 );
+			if ( input )
+			{
+				con_info( "Console input: %s", input );
+				conVarHandle.Parse( input );
+			}
+			else
+				std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
+		}
+	} );
 
 	con_info( "Begin server main loop..." );
 	int64_t then =
@@ -65,7 +106,7 @@ int main( int argc, char *args[] )
 			.count();
 	int64_t now	   = then;
 	unsigned int i = 0;
-	while ( true )
+	while ( sv_run->GetBool() )
 	{
 		now =
 			std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() )
@@ -84,13 +125,21 @@ int main( int argc, char *args[] )
 			server.Update();
 			server.m_iCurrentTick = i;
 
-			if ( i % 5 == 0 )
+			if ( i % 40 == 0 )
 			{
 				for ( CNetworkPlayer *c : server.m_players )
 					protocol::SendServerTimeOfDay( c->m_pPeer, server.m_world.m_iTimeOfDay );
 			}
 		}
 	}
+
+	for ( CNetworkPlayer *c : server.m_players ) {
+		server.KickPlayer( c, "kick.closing" );
+		server.Update();
+	}
+
+	consoleThread.join();
+	conVarHandle.WriteCFG( "svconfig.cfg" );
 
 	return EXIT_SUCCESS;
 }

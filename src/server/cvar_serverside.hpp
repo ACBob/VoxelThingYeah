@@ -12,4 +12,6 @@ extern ConVar::CConVar *sv_desc;
 
 extern ConVar::CConVar *sv_port;
 
+extern ConVar::CConVar *sv_run;
+
 void SetupServerSideConvars();

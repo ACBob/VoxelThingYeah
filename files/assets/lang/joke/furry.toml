@@ -1,0 +1,37 @@
+["gui"]
+disconnect = "Awooo"
+dismiss = "OwO"
+dismiss_far = "T_T" # badly named
+kicked = "Nowo way"
+inventory = "What youw have"
+cancel = "Cancwel"
+
+["gui.options"]
+enablereverb = "uwu UwU UWU"
+mastervolume = "owo OwO OWO"
+resourcepacks = "Fuw pattewn"
+
+["gui.title"]
+startsingleplayer = "Stawt Snglplr!!!"
+startmultiplayer = "Stawt Multiplr!!!"
+join = "Join"
+options = "Lowoudness and stuwuf"
+quit = "Teeheee I'm done playing owo"
+ip = "ip"
+port = "Port"
+username = "My Fursona UwU"
+
+["kick"]
+generic = "OwOOO YOU DID AN OOPSIE DOO"
+existingusername = "SOMEONE HAZ THAT NAME!"
+wrongprotocol = "Prowocol wrongowo"
+invalidusername = "UwU Namey Wamey Invalidy"
+banned = "UwU admin wadmin got angyyyy"
+closing = "The sever is clowsing"
+
+["msg"]
+joined = "%s joiwned the furcon!"
+left = "%s lewft the furcon!"
+opped = "%s is now an admin uwu."
+deopped = "%s is no longer an admin uwu."
+youhaveop = "Youw awe an admin, uwu"

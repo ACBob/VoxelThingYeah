@@ -1,4 +1,4 @@
-#include "shared/inputmanager.hpp"
+#include "inputmanager.hpp"
 #include "utility/vector.hpp"
 
 class CBobWindow
@@ -21,12 +21,12 @@ class CBobWindow
 
 	// Z Ignored
 	// SDL_SetWindowSize / SDL_GetWindowSize
-	virtual CVector GetSize()		  = 0;
-	virtual void SetSize( CVector s ) = 0;
+	virtual Vector3f GetSize()		   = 0;
+	virtual void SetSize( Vector3f s ) = 0;
 	// Z Ignored
 	// SDL_SetWindowPos / SDL_GetWindowPos
-	virtual CVector GetPos()		 = 0;
-	virtual void SetPos( CVector p ) = 0;
+	virtual Vector3f GetPos()		  = 0;
+	virtual void SetPos( Vector3f p ) = 0;
 
 	// Returns the (milli)seconds per frame
 	// To get the FPS, 1000/this

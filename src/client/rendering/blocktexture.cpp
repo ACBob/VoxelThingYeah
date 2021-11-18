@@ -1,6 +1,6 @@
 #include "blocktexture.hpp"
 
-BlockTexture GetDefaultBlockTextureSide( blocktype_t type, Direction side )
+BlockTexture GetDefaultBlockTextureSide( BLOCKID type, Direction side )
 {
 	switch ( type )
 	{
@@ -125,6 +125,12 @@ BlockTexture GetDefaultBlockTextureSide( blocktype_t type, Direction side )
 			break;
 		case LIGHT_BLUE:
 			return { 15, 1, 1, 1 };
+			break;
+		case WOOL:
+			return { 0, 2, 1, 1 };
+			break;
+		case SOUNDMAKER:
+			return { 1, 2, 1, 1 };
 			break;
 	}
 }

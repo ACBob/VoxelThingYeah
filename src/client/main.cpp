@@ -12,6 +12,7 @@
 #include <stdlib.h>
 
 #include "cvar_clientside.hpp"
+#include "shared/cvar_shared.hpp"
 #include "utility/assorted.hpp"
 
 #include "sdlstuff/sdlwindow.hpp"
@@ -35,6 +36,14 @@
 
 #include "gamestates.hpp"
 
+#include "packs.hpp"
+
+#include <thread>
+
+#include "devconsole.hpp"
+
+#include "localization/localizer.hpp"
+
 #ifdef _WIN32
 	#include <stdio.h>
 	#include <windows.h>
@@ -49,8 +58,9 @@ int main( int argc, char *args[] )
 	freopen( "CON", "w", stderr );
 #endif
 	con_info( "Hello from Meegreef!" );
-	con_info( "Setting up client-side convars..." );
+	con_info( "Setting up convars..." );
 	SetupClientSideConvars();
+	SetupSharedConvars();
 
 	char *argstring = FlattenCharArray( args, 1, argc - 1 );
 	con_debug( "Args: %s", argstring );
@@ -74,7 +84,7 @@ int main( int argc, char *args[] )
 		delete errBuf;
 		return EXIT_FAILURE;
 	}
-	CGameWindow window( "VoxelThingYeah", CVector( scr_width->GetFloat(), scr_height->GetFloat() ), true );
+	CGameWindow window( "VoxelThingYeah", Vector3f( scr_width->GetFloat(), scr_height->GetFloat() ), true );
 
 	con_info( "Init Filesystem..." );
 	if ( !fileSystem::Init( args[0] ) )
@@ -83,10 +93,10 @@ int main( int argc, char *args[] )
 	}
 	atexit( fileSystem::UnInit );
 
-	con_info( "Mount assets..." );
-	if ( !fileSystem::Mount( "assets/", "/" ) )
+	con_info( "Mount game files..." );
+	if ( !fileSystem::Mount( "files/", "/" ) )
 		con_error( "Couldn't mount assets for some reason... nothing will work!" );
-	if ( !fileSystem::MountWrite( "assets/usr/" ) )
+	if ( !fileSystem::MountWrite( "files/usr/" ) )
 		con_error( "Couldn't set the write directory, your saves are in jeapordy!" );
 
 	con_info( "Parsing config.cfg..." );
@@ -95,6 +105,37 @@ int main( int argc, char *args[] )
 	char *file = (char *)fileSystem::LoadFile( "usr/config.cfg", l, succeed );
 	if ( succeed )
 		conVarHandle.Parse( file );
+
+	con_info( "Scan for resource pack..." );
+	if ( cl_resourcepacks->IsModified() )
+	{
+		size_t n = strlen( cl_resourcepacks->GetString() );
+		char *l	 = new char[n + 1]();
+		strcpy( l, cl_resourcepacks->GetString() );
+
+		// test each pack
+		char *t;
+		char *saveptr;
+		t = strtok_r( l, ",", &saveptr );
+
+		while ( t != NULL )
+		{
+			resourcePacks::packInfo inf = resourcePacks::GetPackInfo( t );
+
+			if ( inf.format == 0x00 )
+			{
+				con_warning( "Unknown Pack %s", t );
+			}
+			else
+			{
+				con_info( "%s (%s)", inf.name.c_str(), inf.path.c_str() );
+
+				resourcePacks::MountPack( inf );
+			}
+
+			t = strtok_r( NULL, ",", &saveptr );
+		}
+	}
 
 	con_info( "Init Network..." );
 	if ( !network::Init() )
@@ -137,10 +178,16 @@ int main( int argc, char *args[] )
 	glEnable( GL_DEPTH_TEST );
 	glDepthFunc( GL_LEQUAL );
 	glEnable( GL_CULL_FACE );
-	glCullFace( GL_FRONT );
+	glCullFace( GL_BACK );
 	glEnable( GL_BLEND );
 	glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
 	glBlendEquation( GL_FUNC_ADD );
+
+	// TODO: Proper loading screen
+	glClearColor( 0.19f, 0.2f, 0.13f, 1.0f );
+	glClear( GL_COLOR_BUFFER_BIT );
+
+	window.SwapBuffers();
 
 	shaderSystem::Init();
 	atexit( shaderSystem::UnInit );
@@ -164,25 +211,33 @@ int main( int argc, char *args[] )
 		window.Panic( "Client ended up in invalid state!" );
 	}
 
+	con_info( "Init Translator..." );
+	CLocalizer translator;
+
+	client.m_pTranslator = &translator;
+
 	con_info( "Init GUI..." );
 
-	CGui gui( scr_width->GetInt(), scr_height->GetInt() );
-	gui.m_pInputMan = &inputMan;
-	gui.m_pClient	= &client;
-	gui.m_iGuiUnit	= floor( window.GetSize().x / 53 );
-	gui.Resize( scr_width->GetInt(), scr_height->GetInt() );
+	CGui gui( window.GetSize() );
+	gui.m_pInputManager = &inputMan;
+
+	con_info( "Init Dev-Console..." );
+	CDevConsole console;
+	console.m_pGui		= &gui;
+	console.m_pInputMan = &inputMan;
 
 	con_info( "Init Game State..." );
 	CGameStateMachine gameStateMan;
-	gameStateMan.m_pClient	 = &client;
-	gameStateMan.m_pGui		 = &gui;
-	gameStateMan.m_pWindow	 = &window;
-	gameStateMan.m_pInputMan = &inputMan;
+	gameStateMan.m_pClient	  = &client;
+	gameStateMan.m_pGui		  = &gui;
+	gameStateMan.m_pWindow	  = &window;
+	gameStateMan.m_pInputMan  = &inputMan;
+	gameStateMan.m_pLocalizer = &translator;
 	gameStateMan.PushState( std::make_unique<CStateMenu>() );
 
 	inputMan.m_bInGui = true;
 
-	glm::mat4 screen = glm::ortho( 0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat() );
+	glm::mat4 screen = glm::ortho( 0.0f, scr_width->GetFloat(), scr_height->GetFloat(), 0.0f );
 	glm::mat4 a		 = glm::ortho( 0.0f, 0.0f, 0.0f, 0.0f );
 	glm::mat4 b		 = glm::ortho( 0.0f, 0.0f, 0.0f, 0.0f );
 
@@ -205,12 +260,12 @@ int main( int argc, char *args[] )
 
 		if ( window.m_bSizeChanged )
 		{
-			CVector s = window.GetSize();
+			Vector3f s = window.GetSize();
 			scr_width->SetInt( s.x );
 			scr_height->SetInt( s.y );
 			glViewport( 0, 0, s.x, s.y );
-			screen = glm::ortho( 0.0f, scr_width->GetFloat(), 0.0f, scr_height->GetFloat() );
-			gui.Resize( s.x, s.y );
+			screen = glm::ortho( 0.0f, s.x, s.y, 0.0f );
+			gui.Resize( s );
 			window.m_bSizeChanged = false;
 		}
 
@@ -226,10 +281,14 @@ int main( int argc, char *args[] )
 			musicTick = gameStateMan.m_iTick + 20000;
 
 			if ( rand() % 100 > 50 )
-				soundSystem::PlaySoundEvent( "game.music", CVector( 0, 0, 0 ) );
+				soundSystem::PlaySoundEvent( "game.music", Vector3f( 0, 0, 0 ) );
 		}
 
 		gameStateMan.Update();
+
+		// Update dev console after this to remain on-top
+		console.Update();
+
 		gui.m_iTick = gameStateMan.m_iTick;
 		gui.Update();
 		client.Update();
@@ -249,12 +308,23 @@ int main( int argc, char *args[] )
 
 		gameStateMan.m_fDelta = delta / 1000.0f;
 
+		// use the cl_maxfps cvar to cap the framerate
+		if ( cl_maxfps->GetInt() > 0 )
+		{
+			int64_t maxFrameTime = 1000 / cl_maxfps->GetInt();
+			int64_t sleepTime	 = maxFrameTime - delta;
+			if ( sleepTime > 0 )
+			{
+				std::this_thread::sleep_for( std::chrono::milliseconds( sleepTime ) );
+			}
+		}
+
 		if ( gameStateMan.IsEmpty() )
 			break;
 	}
 	gameStateMan.Flush();
 
-	conVarHandle.WriteCFG();
+	conVarHandle.WriteCFG( "config.cfg" );
 
 	return EXIT_SUCCESS;
 }

@@ -1,0 +1,94 @@
+[en]
+friendly_name = "English (EN)"
+lang_file = "en.toml"
+
+[da]
+friendly_name = "Dansk (DA)"
+lang_file = "da.toml"
+
+[de]
+friendly_name = "Deutsch (DE)"
+lang_file = "de.toml"
+
+[es]
+friendly_name = "Español (ES)"
+lang_file = "es.toml"
+
+[fr]
+friendly_name = "Français (FR)"
+lang_file = "fr.toml"
+
+[it]
+friendly_name = "Italiano (IT)"
+lang_file = "it.toml"
+
+[nl]
+friendly_name = "Nederlands (NL)"
+lang_file = "nl.toml"
+
+[no]
+friendly_name = "Norsk (NO)"
+lang_file = "no.toml"
+
+# Can't be done at the moment, need to have arbitrary font support
+# [pl]
+# friendly_name = "Polski (PL)"
+# lang_file = "pl.toml"
+
+[pt]
+friendly_name = "Português (PT)"
+lang_file = "pt.toml"
+
+# Joke languages
+
+[lol]
+friendly_name = "LOLCAT (LOL)"
+lang_file = "joke/lol.toml"
+
+[cat]
+friendly_name = "Cat (Meow!)"
+lang_file = "joke/cat.toml"
+
+[yarr]
+friendly_name = "Yarr! (Pirate Speak)"
+lang_file = "joke/yarr.toml"
+
+[swag]
+friendly_name = "Swag (Bacon)"
+lang_file = "joke/swag.toml"
+
+[furry]
+friendly_name = "Furry (OwO)"
+lang_file = "joke/furry.toml"
+
+[anger]
+friendly_name = "FUCK YOu, ASSHOLE!"
+lang_file = "joke/anger.toml"
+
+[stroke]
+friendly_name = "storke (sgytokr)"
+lang_file = "joke/stroke.toml"
+
+[polite]
+friendly_name = "Polite (England)"
+lang_file = "joke/polite.toml"
+
+[geese]
+friendly_name = "Portugeese (Goose)"
+lang_file = "joke/goose.toml"
+
+# I *Want* to pursue this, but I'm not sure how to do it.
+# [puns]
+# friendly_name = "Puns (Puns)"
+# lang_file = "joke/puns.toml"
+
+# Conlangs
+
+[beg]
+friendly_name = "Beg (Goisree)"
+lang_file = "conlang/beg.toml"
+
+# I say conlang, it's just old english
+[me]
+friendly_name = "Middel Englisch (ME)"
+lang_file = "conlang/me.toml"

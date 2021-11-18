@@ -1,0 +1,39 @@
+# Geese!
+
+["gui"]
+disconnect = "HONK"
+dismiss = "QUACK"
+dismiss_far = "HONK HONK QUACK"
+kicked = "HONK HONK QUACK QUACK"
+inventory = "HONK HONK QUACK"
+cancel = "QUACK HONK"
+
+["gui.options"]
+enablereverb = "HONK HONK QUACK"
+mastervolume = "HONK QUACK HONK"
+resourcepacks = "HONK"
+
+["gui.title"]
+startsingleplayer = "HONK"
+startmultiplayer = "HONK HONK"
+join = "HONK"
+options = "QUACK QUACK HONK"
+quit = "HONK HONK QUACK"
+ip = "IP QUACK"
+port = "HONK"
+username = "QUACK QUA-HONK"
+
+["kick"]
+generic = "HONK HONK QUACK"
+existingusername = "HONK HONK QUACK"
+wrongprotocol = "HONK HONK QUACK"
+invalidusername = "HONK HONK QUACK"
+banned = "HONK HONK QUACK"
+closing = "HONK HONK QUACK"
+
+["msg"]
+joined = "%s HONK HONK QUACK"
+left = "HONK %s HONK QUACK"
+opped = "HONK HONK %s QUACK"
+deopped = "HONK %s HONK QUACK"
+youhaveop = "HONK HONK QUACK"

@@ -60,10 +60,10 @@ void COverworldJeneration::GenBase( CChunk *c )
 {
 	for ( int i = 0; i < sizeof( c->m_blocks ) / sizeof( CBlock ); i++ )
 	{
-		// blocks[i].m_iBlockType = blocktype_t(random() % 4);
+		// blocks[i].m_iBlockType = BLOCKID(random() % 4);
 		int x, y, z;
 		CHUNK1D_TO_3D( i, x, y, z );
-		CVector WorldPosition = c->PosToWorld( CVector( x, y, z ) );
+		Vector3f WorldPosition = c->PosToWorld( Vector3f( x, y, z ) );
 
 		// Make the block aware of our existence
 		c->m_blocks[i].m_pChunk = c;
@@ -101,15 +101,15 @@ void COverworldJeneration::BiomeBlocks( CChunk *c )
 			for ( int y = CHUNKSIZE_Y; y > -1; y-- )
 			{
 				// TODO: Actually fix this as it tries to query chunks that don't exist yet.
-				CBlock *blk = c->GetBlockAtLocal( CVector( x, y, z ) );
+				CBlock *blk = c->GetBlockAtLocal( Vector3f( x, y, z ) );
 				if ( blk != nullptr && blk->m_iBlockType == AIR )
 					continue;
 
-				CBlock *b = c->GetBlockAtLocal( CVector( x, y + 1, z ) );
+				CBlock *b = c->GetBlockAtLocal( Vector3f( x, y + 1, z ) );
 				if ( b == nullptr )
 					continue;
 
-				CBiome *biome = GetBiomeAtPos( c->PosToWorld( CVector( x, y, z ) ) );
+				CBiome *biome = GetBiomeAtPos( c->PosToWorld( Vector3f( x, y, z ) ) );
 
 				if ( b->m_iBlockType == AIR )
 				{
@@ -146,7 +146,7 @@ void COverworldJeneration::Decorate( CChunk *c )
 	{
 		int x, y, z;
 		CHUNK1D_TO_3D( i, x, y, z );
-		CVector WorldPosition = c->PosToWorld( CVector( x, y, z ) );
+		Vector3f WorldPosition = c->PosToWorld( Vector3f( x, y, z ) );
 
 		// Ore
 		if ( c->m_blocks[i].m_iBlockType == STONE )
@@ -182,25 +182,25 @@ void COverworldJeneration::Generate( CChunk *c )
 	Decorate( c );
 }
 
-CBiome *COverworldJeneration::GetBiomeAtPos( CVector p )
+CBiome *COverworldJeneration::GetBiomeAtPos( Vector3f p )
 {
+	// temperature & humidity are 0 - 2
 	float fTemperature = ( fnlGetNoise2D( &m_biomesOvergroundTemperatureNoise, p.x, p.z ) + 1.0f );
-	// float fHumidity = fnlGetNoise2D( &m_biomesOvergroundHumidityNoise, p.x, p.z );
+	float fHumidity	   = ( fnlGetNoise2D( &m_biomesOvergroundHumidityNoise, p.x, p.z ) + 1.0f );
 
-	CBiome *closestBiome = biomes::biomeList[0];
-
-	for ( CBiome *biome : biomes::biomeList )
+	// return the biome that is closest to the given temperature and humidity
+	float fClosestDistance = 99999.0f;
+	CBiome *pClosestBiome  = nullptr;
+	for ( int i = 0; i < biomes::biomeList.size(); i++ )
 	{
-		if ( fTemperature >= biome->m_fMinTemperature && fTemperature <= biome->m_fMaxTemperature )
+		float fDistance = std::abs( biomes::biomeList[i]->m_fTemperature - fTemperature ) +
+						  std::abs( biomes::biomeList[i]->m_fHumidity - fHumidity );
+		if ( fDistance < fClosestDistance )
 		{
-			return biome;
+			fClosestDistance = fDistance;
+			pClosestBiome	 = biomes::biomeList[i];
 		}
-
-		// Else try to find the closest to the max temperature
-		if ( fabsf( biome->m_fMaxTemperature - fTemperature ) <
-			 fabsf( closestBiome->m_fMaxTemperature - fTemperature ) )
-			closestBiome = biome;
 	}
 
-	return closestBiome;
+	return pClosestBiome;
 }

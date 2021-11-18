@@ -1,13 +1,15 @@
 #include "entities/entityplayer.hpp"
 #include "gui/gui.hpp"
+#include "inventory/inventory.hpp"
+#include "localization/localizer.hpp"
 #include "network/client.hpp"
+#include "packs.hpp"
 #include "particles/particlesystem.hpp"
 #include "rendering/modelmanager.hpp"
 #include "rendering/shadermanager.hpp"
 #include "rendering/texturemanager.hpp"
 #include "sdlstuff/sdlwindow.hpp"
 #include "shared/statemanager.hpp"
-#include "sound/soundmanager.hpp"
 #include "world/world.hpp"
 
 #pragma once
@@ -20,6 +22,7 @@ class CGameStateMachine : public CStateMachine
 	CGui *m_pGui			   = nullptr;
 	CGameWindow *m_pWindow	   = nullptr;
 	CInputManager *m_pInputMan = nullptr;
+	CLocalizer *m_pLocalizer   = nullptr;
 
 	int64_t m_iTick = 0; // Client Tick
 	float m_fDelta	= 0.0f;
@@ -45,7 +48,10 @@ class CStatePlay : public CState
 	CShader *m_pWaterShader;
 
 	CModel m_skyboxModel;
+	CModel m_cloudModel;
 	CModel *m_pStellarModel;
+
+	Vector4f m_cloudOffset;
 
 	CParticleManager m_particleMan;
 
@@ -53,10 +59,15 @@ class CStatePlay : public CState
 	CTexture *m_pHotbarTex;
 	CTexture *m_pHotbarSelectTex;
 
-	bool m_bInPause = false;
-	bool m_bInChat	= false;
+	CInventory *m_invCreative;
+
+	bool m_bInPause		= false;
+	bool m_bInChat		= false;
+	bool m_bDebugScreen = false;
 
 	int64_t m_iLastTick = 0;
+
+	float m_fSunAngle = 76.65f;
 };
 
 class CStateMenu : public CState
@@ -65,6 +76,9 @@ class CStateMenu : public CState
 	void ReturnedTo();
 	void Exit();
 	void Update();
+
+	std::vector<std::string> m_splashes;
+	std::string m_splash;
 };
 
 class CStateOptionsMenu : public CState
@@ -78,6 +92,37 @@ class CStateOptionsMenu : public CState
 	bool m_bEnableReverb = true;
 };
 class CKickScreen : public CState
+{
+	void Enter();
+	void ReturnedTo();
+	void Exit();
+	void Update();
+};
+
+class CStatePackMenu : public CState
+{
+	void Enter();
+	void ReturnedTo();
+	void Exit();
+	void Update();
+
+	std::vector<resourcePacks::packInfo> m_packList;
+	std::vector<bool> m_packEnabled;
+	int m_iScroll = 0;
+};
+
+class CStateLanguageMenu : public CState
+{
+	void Enter();
+	void ReturnedTo();
+	void Exit();
+	void Update();
+
+	std::vector<std::pair<std::string, std::string>> m_languageList;
+	int m_iScroll = 0;
+};
+
+class CStateJoinMenu : public CState
 {
 	void Enter();
 	void ReturnedTo();

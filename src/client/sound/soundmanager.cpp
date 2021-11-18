@@ -30,6 +30,8 @@
 
 #include "stb_vorbis.c"
 
+#include "blocks/blockbase.hpp"
+
 std::map<std::string, CSound *> soundSystem::loadedSounds;
 std::map<std::string, CSoundEvent *> soundSystem::soundEvents;
 
@@ -37,7 +39,8 @@ ALCdevice *openAlDevice;
 ALCcontext *openAlContext;
 ALuint soundEffects;
 ALuint soundEffectSlot;
-// ALuint soundFilter;
+ALuint soundMuffle;
+ALuint soundMuffleSlot;
 
 // TODO: Error sound
 CSound::CSound( const char *path )
@@ -57,41 +60,76 @@ CSound::CSound( const char *path )
 		con_error( "OGG File %s failed to load!", path );
 	}
 
-	alGenSources( 1, &m_iId );
-	alSourcef( m_iId, AL_PITCH, 1.0 );
-	alSourcef( m_iId, AL_GAIN, 1.0 );
-	alSource3f( m_iId, AL_POSITION, 0, 0, 0 );
-	alSource3f( m_iId, AL_VELOCITY, 0, 0, 0 );
-	alSourcei( m_iId, AL_SOURCE_TYPE, AL_STATIC );
-	alSourcei( m_iId, AL_LOOPING, 0 );
-
 	uint32_t l = decode_len * channels * ( sizeof( int16_t ) / sizeof( uint8_t ) );
 	alGenBuffers( 1, &m_iBuffer );
 	alBufferData( m_iBuffer, channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, data, l, rate );
 
-	alSourcei( m_iId, AL_BUFFER, m_iBuffer );
+	// Generate a few sources for the sound
+	for ( int i = 0; i < SOURCES_PER_SOUND; i++ )
+	{
+		alGenSources( 1, &m_iSources[i] );
+		alSourcef( m_iSources[i], AL_PITCH, 1.0 );
+		alSourcef( m_iSources[i], AL_GAIN, 1.0 );
+		alSource3f( m_iSources[i], AL_POSITION, 0, 0, 0 );
+		alSource3f( m_iSources[i], AL_VELOCITY, 0, 0, 0 );
+		alSourcei( m_iSources[i], AL_SOURCE_TYPE, AL_STATIC );
+		alSourcei( m_iSources[i], AL_LOOPING, 0 );
 
-	delete soundData;
+		alSourcei( m_iSources[i], AL_BUFFER, m_iBuffer );
+	}
+
+	delete[] soundData;
 }
-void CSound::Play( CVector src, float pitch, float gain )
+void CSound::Play( Vector3f src, float pitch, float gain )
 {
-	alSourcef( m_iId, AL_PITCH, pitch );
-	alSourcef( m_iId, AL_GAIN, gain );
-	alSource3f( m_iId, AL_POSITION, src.x, src.y, src.z );
+	// Select the first available source
+	// A source is available if it is not playing
+	// or if it is playing but has stopped
+	// TODO: Should we have a global list of sources?
+	unsigned int iSource = -1;
+	for ( int i = 0; i < SOURCES_PER_SOUND; i++ )
+	{
+		ALint state;
+		alGetSourcei( m_iSources[i], AL_SOURCE_STATE, &state );
+
+		if ( state == AL_PLAYING )
+		{
+			continue;
+		}
+
+		iSource = m_iSources[i];
+		break;
+	}
+
+	if ( iSource == -1 )
+	{
+		// Forceably steal a source at random
+		unsigned int stealSource = rand() % SOURCES_PER_SOUND;
+		alSourceStop( m_iSources[stealSource] );
+		iSource = m_iSources[stealSource];
+	}
+
+	alSourcef( iSource, AL_PITCH, pitch );
+	alSourcef( iSource, AL_GAIN, gain );
+	alSource3f( iSource, AL_POSITION, src.x, src.y, src.z );
 #ifdef __linux__
-	alSource3i( m_iId, AL_AUXILIARY_SEND_FILTER, soundEffectSlot, 0, AL_FILTER_NULL );
+	// Apply Reverb & Muffle
+	alSourcei( iSource, AL_DIRECT_FILTER, soundEffects );
+	alSourcei( iSource, AL_AUXILIARY_SEND_FILTER, soundMuffle );
 #endif
 
-	alSourcePlay( m_iId );
+	alSourcePlay( iSource );
 }
 
 CSoundEvent::CSoundEvent( std::vector<std::string> sounds, const char *type, float minpitch, float maxpitch )
 {
 	for ( std::string soundName : sounds )
 	{
-		CSound *s = soundSystem::LoadSound( soundName.c_str() );
+		CSound *s = soundSystem::LoadSound( ( "/assets/sounds/" + soundName ).c_str() );
 		m_sounds.push_back( s );
 	}
+
+	// TODO: figure out better
 
 	if ( strcmp( type, "block" ) == 0 )
 	{
@@ -105,16 +143,25 @@ CSoundEvent::CSoundEvent( std::vector<std::string> sounds, const char *type, flo
 	{
 		m_iSoundType = SOUNDTYPE_GUI;
 	}
+	else if ( strcmp( type, "entity" ) == 0 )
+	{
+		m_iSoundType = SOUNDTYPE_ENTITY;
+	}
 
 	m_fMinPitch = minpitch;
 	m_fMaxPitch = maxpitch;
 }
 
-void CSoundEvent::Play( CVector pos )
+void CSoundEvent::Play( Vector3f pos )
 {
+	if ( m_sounds.size() <= 0 )
+		return;
+
 	float pitch = m_fMinPitch + ( m_fMaxPitch - m_fMinPitch ) * ( ( rand() ) / (float)RAND_MAX );
 
-	int soundIdx = ( rand() % m_sounds.size() );
+	int soundIdx = 0;
+	if ( m_sounds.size() >= 2 )
+		soundIdx = ( rand() % m_sounds.size() );
 
 	// TODO: Seperate volume variables
 	float gain = 1.0;
@@ -125,6 +172,12 @@ void CSoundEvent::Play( CVector pos )
 			break;
 		case SOUNDTYPE_MUSIC:
 			gain = 0.25f;
+			break;
+		case SOUNDTYPE_GUI:
+			gain = 1.0f;
+			break;
+		case SOUNDTYPE_ENTITY:
+			gain = 1.0f;
 			break;
 	}
 
@@ -172,6 +225,15 @@ void soundSystem::Init()
 
 		alAuxiliaryEffectSloti( soundEffectSlot, AL_EFFECTSLOT_EFFECT, soundEffects );
 	}
+
+	// For muffling sounds
+	if ( cl_mufflesounds->GetBool() )
+	{
+		alGenFilters( 1, &soundMuffle );
+		alFilteri( soundMuffle, AL_FILTER_TYPE, AL_FILTER_LOWPASS );
+		alFilterf( soundMuffle, AL_LOWPASS_GAIN, 1.0f );
+		alFilterf( soundMuffle, AL_LOWPASS_GAINHF, 1.0f );
+	}
 #endif
 
 	alListener3f( AL_POSITION, 0.0f, 0.0f, 0.0f );
@@ -185,7 +247,7 @@ void soundSystem::Init()
 
 	int64_t fl				  = 0;
 	bool bSuccess			  = false;
-	const uchar_t *soundsToml = fileSystem::LoadFile( "sound/sounds.toml", fl, bSuccess );
+	const uchar_t *soundsToml = fileSystem::LoadFile( "/assets/sounds/sounds.toml", fl, bSuccess );
 
 	toml::Result data = toml::parse( bSuccess ? (char *)soundsToml : "\0" );
 
@@ -218,6 +280,8 @@ void soundSystem::Init()
 
 		soundEvents[key] = new CSoundEvent( *sounds->getStringVector().get(), type.c_str(), minPitch, maxPitch );
 	}
+
+	delete[] soundsToml;
 }
 void soundSystem::UnInit()
 {
@@ -236,7 +300,7 @@ void soundSystem::UnInit()
 	alcCloseDevice( openAlDevice );
 }
 
-void soundSystem::SetListener( CWorld *world, CVector pos, CVector forward, CVector vel )
+void soundSystem::SetListener( CWorld *world, Vector3f pos, Vector3f forward, Vector3f vel )
 {
 	alListener3f( AL_POSITION, pos.x, pos.y, pos.z );
 	float orient[] = { forward.x, forward.y, forward.z,
@@ -269,8 +333,8 @@ void soundSystem::SetListener( CWorld *world, CVector pos, CVector forward, CVec
 				continue;
 			}
 
-			float reverb		= 0.0f;
-			blockmaterial_t mat = GetBlockMaterial( a.m_pBlock->m_iBlockType );
+			float reverb	  = 0.0f;
+			BLOCKMATERIAL mat = BlockType( a.m_pBlock->m_iBlockType ).GetMaterial();
 			switch ( mat )
 			{
 				default:
@@ -301,7 +365,44 @@ void soundSystem::SetListener( CWorld *world, CVector pos, CVector forward, CVec
 		alEffectf( soundEffects, AL_REVERB_DECAY_TIME, decayTime );
 		alAuxiliaryEffectSloti( soundEffectSlot, AL_EFFECTSLOT_EFFECT, soundEffects );
 	}
+	else if ( world == nullptr )
+	{
+		alEffectf( soundEffects, AL_REVERB_DECAY_TIME, 0.0f );
+		alAuxiliaryEffectSloti( soundEffectSlot, AL_EFFECTSLOT_EFFECT, soundEffects );
+	}
 
+	if ( cl_mufflesounds->GetBool() && world != nullptr )
+	{
+		// If the listener is inside liquid, we need to muffle the sounds
+		// we can just get the position of the listener
+
+		CBlock *block = world->BlockAtWorldPos( pos );
+		if ( block != nullptr && ( block->m_iBlockType == WATER || block->m_iBlockType == WATERSRC ) )
+		{
+			alFilterf( soundMuffle, AL_LOWPASS_GAIN, 0.2f );
+			alFilterf( soundMuffle, AL_LOWPASS_GAINHF, 0.2f );
+
+			// Also change the speed of sound
+			// (this is subtle, but it's neat)
+			alSpeedOfSound( 1493.0f );
+		}
+		else
+		{
+			alFilterf( soundMuffle, AL_LOWPASS_GAIN, 1.0f );
+			alFilterf( soundMuffle, AL_LOWPASS_GAINHF, 1.0f );
+
+			// Also change the speed of sound
+			alSpeedOfSound( 343.3f );
+		}
+	}
+	else if ( world == nullptr )
+	{
+		alFilterf( soundMuffle, AL_LOWPASS_GAIN, 1.0f );
+		alFilterf( soundMuffle, AL_LOWPASS_GAINHF, 1.0f );
+
+		// Also change the speed of sound
+		alSpeedOfSound( 343.3f );
+	}
 #endif
 }
 
@@ -316,9 +417,9 @@ CSound *soundSystem::LoadSound( const char *path )
 	return snd;
 }
 
-void soundSystem::PlayBreakSound( blocktype_t blockType, CVector pos )
+void soundSystem::PlayBreakSound( BLOCKID blockType, Vector3f pos )
 {
-	blockmaterial_t mat = GetBlockMaterial( blockType );
+	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial();
 
 	char *buf = new char[512];
 	snprintf( buf, 512, "block.break.%s", BlockMaterialSTR( mat ) );
@@ -326,9 +427,9 @@ void soundSystem::PlayBreakSound( blocktype_t blockType, CVector pos )
 
 	delete buf;
 }
-void soundSystem::PlayPlaceSound( blocktype_t blockType, CVector pos )
+void soundSystem::PlayPlaceSound( BLOCKID blockType, Vector3f pos )
 {
-	blockmaterial_t mat = GetBlockMaterial( blockType );
+	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial();
 
 	char *buf = new char[512];
 	snprintf( buf, 512, "block.place.%s", BlockMaterialSTR( mat ) );
@@ -336,16 +437,17 @@ void soundSystem::PlayPlaceSound( blocktype_t blockType, CVector pos )
 
 	delete buf;
 }
-void soundSystem::PlayStepSound( blocktype_t blockType, CVector pos )
+void soundSystem::PlayStepSound( BLOCKID blockType, Vector3f pos )
 {
-	blockmaterial_t mat = GetBlockMaterial( blockType );
+	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial();
 
 	char *buf = new char[512];
 	snprintf( buf, 512, "block.step.%s", BlockMaterialSTR( mat ) );
 	PlaySoundEvent( buf, pos );
 	delete buf;
 }
-void soundSystem::PlaySoundEvent( const char *soundEvent, CVector pos )
+void soundSystem::PlaySoundEvent( CSoundEvent *event, Vector3f pos ) { event->Play( pos ); }
+void soundSystem::PlaySoundEvent( const char *soundEvent, Vector3f pos )
 {
 	if ( !soundEvents.count( soundEvent ) )
 	{
@@ -353,5 +455,5 @@ void soundSystem::PlaySoundEvent( const char *soundEvent, CVector pos )
 		return;
 	}
 
-	soundEvents[soundEvent]->Play( pos );
+	PlaySoundEvent( soundEvents[soundEvent], pos );
 }

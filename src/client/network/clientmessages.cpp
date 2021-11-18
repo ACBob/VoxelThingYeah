@@ -13,7 +13,7 @@ namespace protocol
 
 		protocol::SendPacket( pPeer, p, true );
 	}
-	void SendClientSetBlock( ENetPeer *pPeer, CVector pos, blocktype_t blockType, uint8_t valA, uint8_t valB )
+	void SendClientSetBlock( ENetPeer *pPeer, Vector3f pos, BLOCKID blockType, uint16_t blockData )
 	{
 		ClientPacket p;
 		p.type					   = ClientPacket::SET_BLOCK;
@@ -22,12 +22,11 @@ namespace protocol
 		bufAcc << pos.y;
 		bufAcc << pos.z;
 		bufAcc << (uint)blockType;
-		bufAcc << valA;
-		bufAcc << valB;
+		bufAcc << blockData;
 
 		protocol::SendPacket( pPeer, p, true );
 	}
-	void SendClientPlayerPos( ENetPeer *pPeer, CVector pos, CVector rot )
+	void SendClientPlayerPos( ENetPeer *pPeer, Vector3f pos, Vector3f rot )
 	{
 		ClientPacket p;
 		p.type					   = ClientPacket::PLAYERPOSORT;
@@ -67,5 +66,16 @@ namespace protocol
 		bufAccess << resolution;
 
 		protocol::SendPacket( pPeer, p, true );
+	}
+	void SendClientUseBlock( ENetPeer *pPeer, Vector3f pos )
+	{
+		ClientPacket p;
+		p.type					   = ClientPacket::USE_BLOCK;
+		Archive<ArchiveBuf> bufAcc = p.GetAccess();
+		bufAcc << (int)pos.x;
+		bufAcc << (int)pos.y;
+		bufAcc << (int)pos.z;
+
+		SendPacket( pPeer, p );
 	}
 } // namespace protocol

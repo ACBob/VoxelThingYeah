@@ -1,0 +1,37 @@
+["gui"]
+disconnect = "disconect"
+dismiss = "reutnr"
+dismiss_far = "reutnr togmae" # badly named
+kicked = "kiceide!!"
+inventory = "Iinvetonr..."
+cancel = "cancele"
+
+["gui.options"]
+enablereverb = "enablerevber"
+mastervolume = "mawste volume: %d%%"
+resourcepacks = "resoruce packs"
+
+["gui.title"]
+startsingleplayer = "starsingleplayer"
+startmultiplayer = "starmuliplr"
+join = "jin"
+options = "opstimjs"
+quit = "quitrgame"
+ip = "i padres"
+port = "port"
+username = "uername"
+
+["kick"]
+generic = "noreason givne."
+existingusername = "soemogn already ahs ypor usxerena!! CHNGE IT"
+wrongprotocol = "rpotcyl versio nicinmatc"
+invalidusername = "the username procided is invaled change it!"
+banned = "you are banend from the searv"
+closing = "Server clsoin..."
+
+["msg"]
+joined = "%s hds jjouieed the game."
+left = "%s letf the game.."
+opped = "%s has neben oped."
+deopped = "%s has ebene dee oped."
+youhaveop = "You hve opretaro privvililiges on thiss erver."

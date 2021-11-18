@@ -1,0 +1,40 @@
+# French
+
+["gui"]
+disconnect = "Déconnexion"
+dismiss = "Rejeter"
+dismiss_far = "Rejeter"
+kicked = "Kické"
+inventory = "Inventaire"
+cancel = "Annuler"
+
+["gui.options"]
+enablereverb = "Activer le réverbération"
+mastervolume = "Volume principal (%d%%)"
+resourcepacks = "Packages de ressources"
+
+["gui.title"]
+startsingleplayer = "Lancer une partie en solo"
+startmultiplayer = "Lancer une partie en multijoueur"
+join = "Rejoindre"
+options = "Options"
+quit = "Quitter"
+ip = "IP du serveur"
+port = "Port"
+username = "Nom d'utilisateur"
+
+["kick"]
+generic = "Aucune raison donnée"
+existingusername = "Nom d'utilisateur déjà utilisé"
+wrongprotocol = "Mauvais protocole"
+invalidusername = "Nom d'utilisateur invalide"
+banned = "Vous êtes banni de ce serveur"
+closing = "Fermeture du serveur"
+
+
+["msg"]
+joined = "%s a rejoint le jeu."
+left = "%s a quitté le jeu."
+opped = "%s a été oppé."
+deopped = "%s a été déoppé."
+youhaveop = "Vous avez les privilèges d'opérateur sur ce serveur."

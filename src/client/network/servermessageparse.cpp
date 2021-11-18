@@ -7,6 +7,8 @@
 
 #include "specialeffectdef.hpp"
 
+#include "sound/soundmanager.hpp"
+
 namespace protocol
 {
 	void DealWithPacket( NetworkPacket &p, void *side, ENetPeer *pPeer )
@@ -60,6 +62,7 @@ namespace protocol
 				bufAccess >> crep.z;
 				bufAccess >> numBlocks;
 				bufAccess >> crep.m_iBlocks;
+				bufAccess >> crep.m_iValue;
 
 				// con_debug("ChunkData at <%d,%d,%d>", crep.x, crep.y, crep.z);
 				// con_info("%d Blocks", numBlocks);
@@ -71,24 +74,22 @@ namespace protocol
 
 			case ServerPacket::UPDATE_BLOCK: {
 				float x, y, z;
-				uint8_t valA, valB;
+				uint16_t val;
 				uint blockType;
 				bufAccess >> x;
 				bufAccess >> y;
 				bufAccess >> z;
 				bufAccess >> blockType;
-				bufAccess >> valA;
-				bufAccess >> valB;
+				bufAccess >> val;
 
 				// Woot, data!
 				// TODO: make sure the server isn't being malicious.. Somehow
-				CBlock *b = client->m_pLocalWorld->BlockAtWorldPos( CVector( x, y, z ) );
+				CBlock *b = client->m_pLocalWorld->BlockAtWorldPos( Vector3f( x, y, z ) );
 				if ( b != nullptr )
 				{
-					con_info( "Update Block At <%f,%f,%f>", x, y, z );
-					b->m_iBlockType = blocktype_t( blockType );
-					b->m_iValueA	= valA;
-					b->m_iValueB	= valB;
+					// con_info( "Update Block At <%f,%f,%f>", x, y, z );
+					b->m_iBlockType = BLOCKID( blockType );
+					b->m_iBlockData = val;
 					b->Update();
 				}
 			}
@@ -112,29 +113,30 @@ namespace protocol
 				{
 					// Then it's us
 					con_info( "Spawning at <%f,%f,%f> <%f,%f>", x, y, z, pitch, yaw );
-					client->m_pLocalPlayer->m_vPosition = CVector( x, y, z );
-					client->m_pLocalPlayer->m_vRotation = CVector( pitch, yaw, 0 );
+					client->m_pLocalPlayer->m_vPosition = Vector3f( x, y, z );
+					client->m_pLocalPlayer->m_vRotation = Vector3f( pitch, yaw, 0 );
 				}
 				else
 				{
 					con_info( "Player %s at <%f,%f,%f>", username.c_str(), x, y, z );
 
 					if ( joined )
-						client->m_chatBuffer.push_back( username + " joined." );
+						client->m_chatBuffer.push_back(
+							client->m_pTranslator->GetStringFMT( "msg.joined", username.c_str() ) );
 
 					if ( client->m_pLocalWorld->GetEntityByName( username.c_str() ) != nullptr )
 					{
 						CEntityPlayer *plyr =
 							(CEntityPlayer *)client->m_pLocalWorld->GetEntityByName( username.c_str() );
-						plyr->m_vPosition = CVector( x, y, z );
-						plyr->m_vRotation = CVector( pitch, yaw, 0 );
+						plyr->m_vPosition = Vector3f( x, y, z );
+						plyr->m_vRotation = Vector3f( pitch, yaw, 0 );
 					}
 					else
 					{
 						// New player
 						CEntityPlayer *plyr = new CEntityPlayer();
-						plyr->m_vPosition	= CVector( x, y, z );
-						plyr->m_vRotation	= CVector( pitch, yaw, 0 );
+						plyr->m_vPosition	= Vector3f( x, y, z );
+						plyr->m_vRotation	= Vector3f( pitch, yaw, 0 );
 						plyr->m_name		= username;
 
 						client->m_pLocalWorld->AddEntity( plyr );
@@ -157,7 +159,7 @@ namespace protocol
 				// Empty username is taken to mean us
 				if ( username == "" )
 				{
-					client->m_pLocalPlayer->m_vPosition = CVector( x, y, z );
+					client->m_pLocalPlayer->m_vPosition = Vector3f( x, y, z );
 				}
 				else
 				{
@@ -165,8 +167,8 @@ namespace protocol
 					{
 						CEntityPlayer *plyr =
 							(CEntityPlayer *)client->m_pLocalWorld->GetEntityByName( username.c_str() );
-						plyr->m_vPosition = CVector( x, y, z );
-						plyr->m_vRotation = CVector( pitch, yaw, 0 );
+						plyr->m_vPosition = Vector3f( x, y, z );
+						plyr->m_vRotation = Vector3f( pitch, yaw, 0 );
 					}
 				}
 			}
@@ -222,7 +224,8 @@ namespace protocol
 				if ( e != nullptr )
 				{
 					e->m_bIsKilled = true;
-					client->m_chatBuffer.push_back( username + " has left the game." );
+					client->m_chatBuffer.push_back(
+						client->m_pTranslator->GetStringFMT( "msg.left", username.c_str() ) );
 				}
 			}
 			break;
@@ -255,7 +258,19 @@ namespace protocol
 				bufAccess >> effectId;
 				bufAccess >> effectAttrib;
 
-				client->SpecialEffectHandle( CVector( x, y, z ), (SpecialEffect)effectId, effectAttrib );
+				client->SpecialEffectHandle( Vector3f( x, y, z ), (SpecialEffect)effectId, effectAttrib );
+			}
+			break;
+			case ServerPacket::SOUNDEVENT: {
+				std::string eventName;
+				float x, y, z;
+
+				bufAccess >> x;
+				bufAccess >> y;
+				bufAccess >> z;
+				bufAccess >> eventName;
+
+				soundSystem::PlaySoundEvent( eventName.c_str(), Vector3f( x, y, z ) );
 			}
 			break;
 

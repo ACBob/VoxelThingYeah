@@ -1,0 +1,37 @@
+["gui"]
+disconnect = "Lyz"
+dismiss = "Aof"
+dismiss_far = "Aof" # badly named
+kicked = "Nao shaoth geedhia!"
+inventory = "Jaz aof"
+cancel = "Nao"
+
+["gui.options"]
+enablereverb = "Juf iakaof"
+mastervolume = "Shtoig voijee: %d%%"
+resourcepacks = "Shu reef"
+
+["gui.title"]
+startsingleplayer = "Shtoirth vogpseen"
+startmultiplayer = "Shtoirth meenupseenf"
+join = "Shtoirth"
+options = "Oisrr geexogf"
+quit = "Lyz"
+ip = "IP"
+port = "Port"
+username = "Naa"
+
+["kick"]
+generic = "Nao shaoth geedhia."
+existingusername = "Naa jufeeg!"
+wrongprotocol = "Protocol naotrui."
+invalidusername = "Naa naotrui."
+banned = "Ja naokoi."
+
+
+["msg"]
+joined = "%s shtoirthia sheleeg."
+left = "%s lyz."
+opped = "%s mueeg shtoig."
+deopped = "%s muia shtoig."
+youhaveop = "Ja mueeg shtoig oig zeef xeef."

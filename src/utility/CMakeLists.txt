@@ -1,7 +1,15 @@
 set(utility_SRCS
-	${CMAKE_CURRENT_SOURCE_DIR}/vector.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/colour.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/raycast.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/fastnoise.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/tomlcpp.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/toml.c
+	${CMAKE_CURRENT_SOURCE_DIR}/utfz.cpp
+	PARENT_SCOPE
+)
+
+set(utility_minimal_SRCS
+	${CMAKE_CURRENT_SOURCE_DIR}/colour.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/tomlcpp.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/toml.c
 	${CMAKE_CURRENT_SOURCE_DIR}/utfz.cpp
