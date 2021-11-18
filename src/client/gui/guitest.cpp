@@ -108,7 +108,7 @@ int main( int argc, char *args[] )
 	glEnable( GL_DEPTH_TEST );
 	glDepthFunc( GL_LEQUAL );
 	glEnable( GL_CULL_FACE );
-	glCullFace( GL_FRONT );
+	glCullFace( GL_BACK );
 	glEnable( GL_BLEND );
 	glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
 	glBlendEquation( GL_FUNC_ADD );
@@ -130,10 +130,6 @@ int main( int argc, char *args[] )
 
 	con_info( "Init Translator..." );
 	CLocalizer translator;
-	for ( std::string &l : translator.ListLanguages() )
-	{
-		con_debug( "Found Language: %s", l.c_str() );
-	}
 
 	con_info( "Init GUI..." );
 

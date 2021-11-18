@@ -10,8 +10,6 @@
 
 #include "shared/logging.hpp"
 
-#warning INCLUDED_HERE
-
 #ifdef MEEGREEF_ENABLE_OPENAL
 
 	// Some extra buffers for OpenAL

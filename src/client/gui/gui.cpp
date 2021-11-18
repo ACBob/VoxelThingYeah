@@ -320,12 +320,16 @@ void CGui::_DrawText( const char *text, Vector3f pos, float scale, CColour colou
 
 	float onePixel = scale * ( 2.0f / 16.0f ) * (float)m_iGUIUnitSize;
 
+	bool garbage = false;
+
 	// Render
 	// OpenGl
 	{
-		int i = 0;
+		float i = 0;
 
 		int c;
+
+		int lastKnownChar = 0;
 
 		while ( utfz::next( text, c ) )
 		{
@@ -334,7 +338,75 @@ void CGui::_DrawText( const char *text, Vector3f pos, float scale, CColour colou
 
 			if ( j == 0 || j >= 256 )
 				j = 255;
+			
+			// HTML-like formatting (i.e &<code>;)
+			if ( j == '&' && lastKnownChar != '\\' )
+			{
+				// Get the next string up to the next semicolon
+				char *next = strchr( (char *)text, ';' );
 
+				if (next != nullptr)
+				{
+					// Get the length of the string
+					int length = next - text;
+
+					// Copy the string
+					char *code = new char[length + 1]();
+					strncpy( code, text, length );
+					code[length] = '\0';
+
+					bool applied = false;
+
+					// Color codes are prefixed with '@' or '#'
+					// '#' in the beginning means a hex code, @ is an ID for predefined colors
+					// Hex codes too long are gracefully ignored
+					if ( code[0] == '#' )
+					{
+						// Convert the hex code to a colour
+						// It is assumed to be 3 characters
+						int r, g, b;
+						sscanf( code + 1, "%02x%02x%02x", &r, &g, &b );
+						colour = CColour( r, g, b );
+
+						applied = true;
+					}
+					else if ( code[0] == '@' )
+					{
+						// Convert the ID to a colour
+						int id = atoi( code + 1 );
+
+						if ( id >= 0 && id < sizeof(DyePalette) / sizeof(uint32_t) )
+							colour = DyePalette[id];
+						
+
+						applied = true;
+					}
+					// The next codes are words
+					// "garbage" == Minecraft glitch text
+					else if (strcmp(code, "garbage") == 0)
+					{
+						garbage = !garbage;
+						applied = true;
+					}
+
+					// Delete the code
+					delete[] code;
+
+					if (applied)
+					{
+						// Move the text pointer to the next semicolon
+						text = next + 1;
+						continue;
+					}
+				}
+			}
+			
+			// Garbage text
+			if (garbage) {
+				// randomize the text based on tick (to avoid going too quickly)
+				j = (j + m_iTick) % 255;
+			}
+			
 			// Get the character's UV coordinates
 			Vector4f uv;
 			float x, y;
