@@ -121,3 +121,11 @@ class CStateLanguageMenu : public CState
 	std::vector<std::pair<std::string, std::string>> m_languageList;
 	int m_iScroll = 0;
 };
+
+class CStateJoinMenu : public CState
+{
+	void Enter();
+	void ReturnedTo();
+	void Exit();
+	void Update();
+};

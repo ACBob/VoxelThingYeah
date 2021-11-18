@@ -401,9 +401,6 @@ void CStateMenu::Enter()
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
 	pStateMan->m_pGui->ClearBuffers();
 
-	// 3 and 4 are used for ip and port respectively
-	pStateMan->m_pGui->SetTextBuffer( 3, cl_ip->GetString() );
-	pStateMan->m_pGui->SetTextBuffer( 4, cl_port->GetString() );
 	pStateMan->m_pGui->SetTextBuffer( 5, username->GetString() );
 
 	soundSystem::SetListener( nullptr, Vector3f( 0, 0, 0 ), Vector3f( 0, 0, 1 ), Vector3f( 0, 0, 0 ) );
@@ -444,9 +441,6 @@ void CStateMenu::ReturnedTo()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
 
-	// 3 and 4 are used for ip and port respectively
-	pStateMan->m_pGui->SetTextBuffer( 3, cl_ip->GetString() );
-	pStateMan->m_pGui->SetTextBuffer( 4, cl_port->GetString() );
 	pStateMan->m_pGui->SetTextBuffer( 5, username->GetString() );
 
 	// If there's a kick reason, it's safe to assume we've been kicked. In such case, display the kick screen.
@@ -483,8 +477,7 @@ void CStateMenu::Update()
 	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString( "gui.title.startgame" ),
 												 pStateMan->m_pGui->m_vGUICentre, { 32, 2 } ) )
 	{
-		pStateMan->m_pClient->Connect( cl_ip->GetString(), cl_port->GetInt() );
-		pStateMan->PushState( std::make_unique<CStatePlay>() );
+		pStateMan->PushState( std::make_unique<CStateJoinMenu>() );
 	}
 
 	if ( pStateMan->m_pGui->LabelButtonCentered(
@@ -713,6 +706,57 @@ void CStateLanguageMenu::Update()
 	if ( cvarLanguage->IsModified() &&
 		 pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString( "gui.cancel" ),
 												 { pStateMan->m_pGui->m_vGUICentre.x, -3 }, { 16, 2 } ) )
+	{
+		pStateMan->PopState();
+	}
+}
+
+
+void CStateJoinMenu::Enter()
+{
+	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+	pStateMan->m_pGui->ClearBuffers();
+
+	pStateMan->m_pGui->SetTextBuffer( 5, cl_ip->GetString() );
+	pStateMan->m_pGui->SetTextBuffer( 6, cl_port->GetString() );
+}
+
+void CStateJoinMenu::ReturnedTo() {
+	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+	pStateMan->m_pGui->ClearBuffers();
+
+	pStateMan->m_pGui->SetTextBuffer( 5, cl_ip->GetString() );
+	pStateMan->m_pGui->SetTextBuffer( 6, cl_port->GetString() );
+}
+void CStateJoinMenu::Exit() {}
+
+void CStateJoinMenu::Update()
+{
+	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
+
+	pStateMan->m_pInputMan->m_bInGui = true;
+
+	pStateMan->m_pGui->ImageRepeating( { 0, -1 }, pStateMan->m_pGui->m_vGUISize, pStateMan->m_pGui->m_pGuiBGTex );
+
+	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.title.ip"), { pStateMan->m_pGui->m_vGUICentre.x, pStateMan->m_pGui->m_vGUICentre.y - 8 }, 1.0f, {255,255,255}, CGui::TEXTALIGN_CENTER );
+	pStateMan->m_pGui->SelectableTextInputCentered( 5, { pStateMan->m_pGui->m_vGUICentre.x, pStateMan->m_pGui->m_vGUICentre.y - 6 }, { 16, 2 } );
+
+	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.title.port"), { pStateMan->m_pGui->m_vGUICentre.x, pStateMan->m_pGui->m_vGUICentre.y - 5 }, 1.0f, {255,255,255}, CGui::TEXTALIGN_CENTER );
+	pStateMan->m_pGui->SelectableTextInputCentered( 6, { pStateMan->m_pGui->m_vGUICentre.x, pStateMan->m_pGui->m_vGUICentre.y - 3 }, { 16, 2 } );
+
+	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.join"),
+												 { pStateMan->m_pGui->m_vGUICentre.x, pStateMan->m_pGui->m_vGUICentre.y + 3 }, { 16, 2 } ) )
+	{
+		cl_ip->SetString( pStateMan->m_pGui->GetTextBuffer(5) );
+		cl_port->SetString( pStateMan->m_pGui->GetTextBuffer(6) );
+
+		pStateMan->m_pClient->Connect( cl_ip->GetString(), cl_port->GetInt() );
+
+		pStateMan->PopState();
+		pStateMan->PushState( std::make_unique<CStatePlay>() );
+	}
+
+	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.cancel"), {pStateMan->m_pGui->m_vGUICentre.x, -3}, { 16, 2 } ) )
 	{
 		pStateMan->PopState();
 	}
