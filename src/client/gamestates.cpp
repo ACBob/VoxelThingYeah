@@ -608,6 +608,14 @@ void CStatePackMenu::Enter()
 	// List resource packs
 	m_packList = resourcePacks::ListPacks();
 	m_packEnabled.resize( m_packList.size(), false );
+	m_iScroll	   = m_packList.size() - 1;
+
+	// Load enabled packs
+	const char* packs = cl_resourcepacks->GetString();
+	for ( size_t i = 0; i < m_packList.size(); i++ )
+	{
+		m_packEnabled[i] = strstr( packs, m_packList[i].internalName.c_str() ) != nullptr;
+	}
 }
 void CStatePackMenu::ReturnedTo() {}
 void CStatePackMenu::Exit()
@@ -649,10 +657,60 @@ void CStatePackMenu::Update()
 
 	pStateMan->m_pGui->ImageRepeating( { 0, -1 }, pStateMan->m_pGui->m_vGUISize, pStateMan->m_pGui->m_pGuiBGTex );
 
-	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, "Nobody here but us chickens!",
-												 pStateMan->m_pGui->m_vGUICentre, { 24, 2 } ) )
+	// Scrollbar
+	pStateMan->m_pGui->Slider( GUIGEN_ID, { -6, -2 }, { 2, 25 }, m_packList.size() - 1, m_iScroll );
+
+	// List packs
+	for ( int i = 11; i > 0; i-- )
+	{
+		int index = m_iScroll - i;
+		if ( index < 0 || index >= m_packList.size() )
+			continue;
+
+		// Display Name
+		pStateMan->m_pGui->Label( m_packList[index].name.c_str(), { 2, 2.0f + i * 2.0f }, 1.0f );
+		
+		// Checkbox
+		bool enabled = m_packEnabled[index];
+		pStateMan->m_pGui->CheckBox( GUIGEN_ID, { -8, 2.0f + i * 2.0f }, enabled );
+		m_packEnabled[index] = enabled;
+
+		// Button that swaps the pack with the one above it
+		if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "\u25BC", { -12, 2.0f + i * 2.0f }, { 2, 2 } ) )
+		{
+			// Swap the two packs if we can
+			if ( index > 0 )
+			{
+				std::swap( m_packList[index], m_packList[index - 1] );
+				std::swap( m_packEnabled[index], m_packEnabled[index - 1] );
+				m_iScroll--;
+				index = m_iScroll - i;
+			}
+		}
+		if (pStateMan->m_pGui->LabelButton( GUIGEN_ID, "\u25B2", { -10, 2.0f + i * 2.0f }, { 2, 2 } ))
+		{
+			if ( index < m_packList.size() - 1 )
+			{
+				std::swap( m_packList[index], m_packList[index + 1] );
+				std::swap( m_packEnabled[index], m_packEnabled[index + 1] );
+				m_iScroll++;
+				index = m_iScroll - i;
+			}
+		}
+	}
+
+	// Dismiss button
+	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString( "gui.dismiss" ),
+												 pStateMan->m_pGui->m_vGUICentre + Vector3f( 0, 10 ), { 16, 2 } ) )
 	{
 		pStateMan->PopState();
+	}
+
+	// Open path in file browser
+	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString( "gui.openpath" ),
+												 pStateMan->m_pGui->m_vGUICentre + Vector3f( 0, 12 ), { 16, 2 } ) )
+	{
+		soundSystem::PlaySoundEvent( "gui.error", {0,0,0} );
 	}
 }
 
