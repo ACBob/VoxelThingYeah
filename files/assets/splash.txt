@@ -25,7 +25,7 @@ Chaos, Chaos! I can't do much!
 All the cool pop-culture references were taken.
 Full code-page 437 support ☺.
 This isn't even my final form.
-Also try Minecraft!
+Also try Minecraft (2011)!
 Meergeef
 You'er Mother.
 else if () {} else if () {} else if ()...
@@ -69,8 +69,8 @@ It's not a bug, it's an undocumented feature.
 Nice.
 Free, Open-Source!
 Months in the making!
-This splash had a 1/400 chance of being seen.
-Son of a █████!
+This splash had a 1/409 chance of being seen.
+Son of a &g;badd&r;!
 I'm here, your honor. I'm not a cat.
 It's dangerous to go alone. Take this!
 Slide to the left! Slide to the right! Criss-cross!
@@ -112,7 +112,7 @@ Do the Ceegreef Charleston
 Say hello to my little friend! Because they'll say hello, back!
 Good Morning! (I don't care if it's not morning for you.)
 Good Evening! (I don't care if it's not evening for you.)
-* taps mike * Is this on? Mike: Ow!
+&i;*taps mike*&r; Is this on? Mike: Ow!
 Ratio
 My lawyer advised me to avoid bringing up my opinion of the Rusters.
 Air Conditioning Bob
@@ -244,7 +244,7 @@ He's coming.
 That's what we would have said if anyone cared. Anyway, Something something business.
 Deer diary, today I ate grass.
 Deer dairy, today I milked a buck.
-So wait, does he MAKE the turtles? Or is HE the turtle?
+So wait, does he &i;make&r; the turtles? Or is &i;he&r; the turtle?
 Directly responsible for 1 automobile accident!
 Do not eat the pufferfish.
 Ambulance backwards is... uh...
@@ -398,4 +398,12 @@ Any server is a private server is you don't tell anyone about it.
 Good luck robbing me! I don't even have money!
 Thank you for completing the free demo! (Deluxe demo coming soon)
 Hey, how are you? Nice steel penny on ice!
-&garbage;You can't read this!&garbage;
+&g;You can't read this!&r;
+&i;Now with italics!&r;
+&b;Now with bold!&r;
+&b;May contain bold statements.&r;
+Leaves you on &#FF0000;Red!&r;
+&#FFFF00;Yellow, &#000000;Black, &#FFFF0000;Yellow...&r;
+#OMG #MEEGREEF #GAME #BLOCKS #HASHTAG
+Also try Roblox (2006)!
+Also try Terraria (2011)!

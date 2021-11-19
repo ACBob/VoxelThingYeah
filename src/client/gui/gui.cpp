@@ -224,17 +224,18 @@ bool CGui::RegionHit( Vector3f pos, Vector3f size )
 	return true;
 }
 
-std::vector<CGui::GuiVert> CGui::GetRect( Vector3f pos, Vector3f size, Vector4f uv, CColour colour )
+std::vector<CGui::GuiVert> CGui::GetRect( Vector3f pos, Vector3f size, Vector4f uv, CColour colour, float slant )
 {
 	Vector4f c = colour;
+	slant /= 2.0f;
 	return {
-		{ pos.x, pos.y - size.y, pos.z, uv.x, uv.y, c.x, c.y, c.z, c.w },
-		{ pos.x, pos.y, pos.z, uv.x, uv.w, c.x, c.y, c.z, c.w },
-		{ pos.x + size.x, pos.y, pos.z, uv.z, uv.w, c.x, c.y, c.z, c.w },
+		{ pos.x + slant, pos.y - size.y, pos.z, uv.x, uv.y, c.x, c.y, c.z, c.w },
+		{ pos.x - slant, pos.y, pos.z, uv.x, uv.w, c.x, c.y, c.z, c.w },
+		{ pos.x - slant + size.x, pos.y, pos.z, uv.z, uv.w, c.x, c.y, c.z, c.w },
 
-		{ pos.x, pos.y - size.y, pos.z, uv.x, uv.y, c.x, c.y, c.z, c.w },
-		{ pos.x + size.x, pos.y, pos.z, uv.z, uv.w, c.x, c.y, c.z, c.w },
-		{ pos.x + size.x, pos.y - size.y, pos.z, uv.z, uv.y, c.x, c.y, c.z, c.w },
+		{ pos.x + slant, pos.y - size.y, pos.z, uv.x, uv.y, c.x, c.y, c.z, c.w },
+		{ pos.x - slant + size.x, pos.y, pos.z, uv.z, uv.w, c.x, c.y, c.z, c.w },
+		{ pos.x + slant + size.x, pos.y - size.y, pos.z, uv.z, uv.y, c.x, c.y, c.z, c.w },
 	};
 }
 
@@ -299,10 +300,42 @@ float CGui::_TextLength( const char *text, float scale )
 
 	int c;
 
+	int lastKnownChar = 0;
+
 	while ( utfz::next( text, c ) )
 	{
 		// Find the index of the character in the font
 		int j = std::distance( CP437UNICODE, std::find( CP437UNICODE, CP437UNICODE + 256, c ) );
+
+		// Skip formatting codes
+		if ( j == '&' && lastKnownChar != '\\' )
+		{
+			// Get the next string up to the next semicolon
+			char *next = strchr( (char *)text, ';' );
+
+			if (next != nullptr)
+			{
+				// Get the length of the string
+				int length = next - text;
+
+				// Copy the string
+				char *code = new char[length + 1]();
+				strncpy( code, text, length );
+				code[length] = '\0';
+
+				if ( code[0] == '#' ||
+					code[0] == '@' ||
+					code[0] == 'r' ||
+					code[0] == 'g' ||
+					code[0] == 'i' ||
+					code[0] == 'b' )
+					{
+						// Skip the code
+						text += length;
+						continue;
+					}
+			}
+		}
 
 		if ( j == 0 || j >= 256 )
 			j = 255;
@@ -310,6 +343,8 @@ float CGui::_TextLength( const char *text, float scale )
 		// Add the width of the character to the total
 		total += m_charWidths[j] * m_iGUIUnitSize * scale;
 		total += onePixel;
+
+		lastKnownChar = c;
 	}
 
 	return total;
@@ -320,7 +355,11 @@ void CGui::_DrawText( const char *text, Vector3f pos, float scale, CColour colou
 
 	float onePixel = scale * ( 2.0f / 16.0f ) * (float)m_iGUIUnitSize;
 
+	CColour baseColour = colour;
 	bool garbage = false;
+	bool italic = false;
+	bool bold = false;
+	
 
 	// Render
 	// OpenGl
@@ -360,34 +399,69 @@ void CGui::_DrawText( const char *text, Vector3f pos, float scale, CColour colou
 					// Color codes are prefixed with '@' or '#'
 					// '#' in the beginning means a hex code, @ is an ID for predefined colors
 					// Hex codes too long are gracefully ignored
-					if ( code[0] == '#' )
+					switch (code[0])
 					{
-						// Convert the hex code to a colour
-						// It is assumed to be 3 characters
-						int r, g, b;
-						sscanf( code + 1, "%02x%02x%02x", &r, &g, &b );
-						colour = CColour( r, g, b );
+						case '#':
+							// Convert the hex code to a colour
+							// Both #RGB and #RRGGBB are supported
+							int r, g, b;
+							
+							// Check code length
+							if (length == 7)
+							{
+								sscanf( code + 1, "%02x%02x%02x", &r, &g, &b );
+							}
+							if (length == 4)
+							{
+								sscanf( code + 1, "%1x%1x%1x", &r, &g, &b );
+								r *= 17;
+								g *= 17;
+								b *= 17;
+							}
+							else
+							{
+								r = g = b = 0xFF;
+							}
+							colour = CColour( r, g, b );
 
-						applied = true;
-					}
-					else if ( code[0] == '@' )
-					{
-						// Convert the ID to a colour
-						int id = atoi( code + 1 );
+							applied = true;
+						break;
+						case '@':
+							// Convert the ID to a colour
+							int id;
+							id = atoi( code + 1 );
 
-						if ( id >= 0 && id < sizeof(DyePalette) / sizeof(uint32_t) )
-							colour = DyePalette[id];
-						
+							if ( id >= 0 && id < DYE_COLOURS )
+								colour = DyePalette[id];
+							
 
-						applied = true;
+							applied = true;
+						break;
+						case 'r':
+							// Reset the colour
+							colour = baseColour;
+							garbage = false;
+							italic = false;
+							bold = false;
+
+							applied = true;
+						break;
+						case 'i':
+							// Italic
+							italic = !italic;
+							applied = true;
+						break;
+						case 'b':
+							// Bold
+							bold = !bold;
+							applied = true;
+						break;
+						case 'g':
+							garbage = !garbage;
+							applied = true;
+						break;
 					}
-					// The next codes are words
-					// "garbage" == Minecraft glitch text
-					else if (strcmp(code, "garbage") == 0)
-					{
-						garbage = !garbage;
-						applied = true;
-					}
+
 
 					// Delete the code
 					delete[] code;
@@ -422,15 +496,32 @@ void CGui::_DrawText( const char *text, Vector3f pos, float scale, CColour colou
 			// Shadow first
 			std::vector<GuiVert> vertices = GetRect( pos + Vector3f( i, 0, 0 ) + Vector3f{ onePixel, onePixel },
 													 Vector3f( m_iGUIUnitSize * scale, m_iGUIUnitSize * scale ), uv,
-													 colour / CColour( 2, 2, 2, 1 ) );
+													 colour / CColour( 2, 2, 2, 1 ), italic ? m_iGUIUnitSize * 0.5f * scale : 0.0f );
 			m_vertices.insert( m_vertices.end(), vertices.begin(), vertices.end() );
 			// Text character
 			vertices = GetRect( pos + Vector3f( i, 0, 0 ), Vector3f( m_iGUIUnitSize * scale, m_iGUIUnitSize * scale ),
-								uv, colour );
+								uv, colour, italic ? m_iGUIUnitSize * 0.5f * scale : 0.0f );
 			m_vertices.insert( m_vertices.end(), vertices.begin(), vertices.end() );
 
+			// If we're bold, render the character again but slightly offset
+			// TODO: the shadow clips the bold text
+			if (bold)
+			{
+				// Shadow first
+				vertices = GetRect( pos + Vector3f( i, 0, 0 ) + Vector3f{ onePixel * 2, onePixel * 2 },
+									Vector3f( m_iGUIUnitSize * scale, m_iGUIUnitSize * scale ), uv,
+									colour / CColour( 2, 2, 2, 1 ), italic ? m_iGUIUnitSize * 0.5f * scale : 0.0f );
+				m_vertices.insert( m_vertices.end(), vertices.begin(), vertices.end() );
+				// Text character
+				vertices = GetRect( pos + Vector3f( i, 0, 0 ) + Vector3f{ onePixel, 0 },
+									Vector3f( m_iGUIUnitSize * scale, m_iGUIUnitSize * scale ), uv,
+									colour, italic ? m_iGUIUnitSize * 0.5f * scale : 0.0f );
+				m_vertices.insert( m_vertices.end(), vertices.begin(), vertices.end() );
+			}
+
+			// When bold, we move ahead slightly more to compensate for the bigger character
 			i += m_charWidths[j] * m_iGUIUnitSize * scale;
-			i += onePixel;
+			i += onePixel * (bold ? 2.0f : 1.0f);
 		}
 	}
 }
