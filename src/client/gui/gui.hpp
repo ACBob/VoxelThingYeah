@@ -54,7 +54,7 @@ class CGui
 	};
 
 	// NOTE: Z is ignored for size, but it might be interesting to see for a 3D GUI?
-	std::vector<GuiVert> GetRect( Vector3f pos, Vector3f size, Vector4f uv, CColour colour );
+	std::vector<GuiVert> GetRect( Vector3f pos, Vector3f size, Vector4f uv, CColour colour, float slant = 0.0f );
 
 	std::vector<GuiVert> m_vertices;
 	std::vector<GuiImage> m_images;
