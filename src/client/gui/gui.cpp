@@ -411,7 +411,7 @@ void CGui::_DrawText( const char *text, Vector3f pos, float scale, CColour colou
 							{
 								sscanf( code + 1, "%02x%02x%02x", &r, &g, &b );
 							}
-							if (length == 4)
+							else if (length == 4)
 							{
 								sscanf( code + 1, "%1x%1x%1x", &r, &g, &b );
 								r *= 17;

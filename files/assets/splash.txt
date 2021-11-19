@@ -62,7 +62,7 @@ More than meets the eye.
 It's a trap!
 CONGRATULATIONS! YOU ARE OUR 1,000,000TH USER!
 Mmm, I like it!
-The font does not have: “ß” or ”§”.
+The font does not have: “ø” or “ð”.
 std::cout << "Hello World!" << std::endl;
 Sometimes, This game makes mee greef.
 It's not a bug, it's an undocumented feature.
