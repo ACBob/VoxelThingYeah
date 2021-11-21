@@ -7,6 +7,14 @@
 // Thin wrapper around PhysFS.
 namespace fileSystem
 {
+	class File;
+
+	enum FILEMODE
+	{
+		READ,
+		WRITE
+	};
+
 	// exePath is usually argv[0].
 	bool Init( const char *exePath );
 
@@ -19,6 +27,9 @@ namespace fileSystem
 	// dataLength is the length of the bytes
 	// Success is set depending on if it succeeds or not
 	void WriteFile( const char *virtualPath, const unsigned char *data, int64_t dataLength, bool &success );
+
+	// Opens the file
+	File *OpenFile( const char *virtualPath, const char *mode );
 
 	// Mounts realPath at virtualPath in PhysFS
 	// Prepend will place the directory first in the search path, else at the end
@@ -43,4 +54,52 @@ namespace fileSystem
 	std::vector<const char *> List( const char *path );
 
 	void UnInit();
+
+	class File
+	{
+	  public:
+		File( const char *virtualPath, FILEMODE mode );
+		~File();
+
+		// Returns the number of bytes read
+		int64_t Read( void *buffer, int64_t len );
+
+		// Returns the number of bytes written
+		int64_t Write( const void *buffer, int64_t len );
+
+		// Returns the number of bytes written
+		int64_t Write( int value );
+
+		// Returns the number of bytes read
+		int64_t Seek( int64_t offset, int to );
+
+		// Returns the current position
+		int64_t Tell();
+
+		// Returns the size of the file
+		int64_t Size();
+
+		// Returns true if the file is open
+		bool IsOpen();
+
+		// Closes the file
+		void Close();
+
+		// Returns true if the file is at the end
+		bool Eof();
+
+		// Flushes the file
+		bool Flush();
+
+		// Returns the virtual path
+		const char *GetVirtualPath();
+
+		private:
+		bool m_bOpened;
+		FILEMODE m_mode;
+		const char *m_virtualPath;
+		int64_t m_position;
+		int64_t m_size;
+		void *m_pHandle;
+	};
 } // namespace fileSystem

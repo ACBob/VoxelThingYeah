@@ -15,6 +15,7 @@
 #include "shared/logging.hpp"
 
 #include "world/world.hpp"
+#include "world/worldsaver.hpp"
 
 #include "sound/soundmanager.hpp"
 
@@ -137,6 +138,9 @@ int main( int argc, char *args[] )
 		server.KickPlayer( c, "kick.closing" );
 		server.Update();
 	}
+
+	con_info("Saving World...");
+	worldIO::saveWorld( &server.m_world, "world.dat" );
 
 	consoleThread.join();
 	conVarHandle.WriteCFG( "svconfig.cfg" );

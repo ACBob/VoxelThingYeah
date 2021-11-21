@@ -44,6 +44,7 @@ enum BLOCKID {
 	WOOL		 = 30,
 	SOUNDMAKER	 = 31,
 };
+#define LASTBLOCK (SOUNDMAKER + 1)
 
 // May be changed one day, so use this always
 using BLOCKVAL = uint16_t;

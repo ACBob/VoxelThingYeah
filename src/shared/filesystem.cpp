@@ -159,4 +159,143 @@ namespace fileSystem
 
 		return l;
 	}
+
+
+	File::File( const char *virtualPath, FILEMODE mode )
+	{
+		if ( mode == FILEMODE::READ )
+		{
+			m_pHandle = PHYSFS_openRead( virtualPath );
+
+			m_size = PHYSFS_fileLength( (PHYSFS_File*)m_pHandle );
+		}
+		else if ( mode == FILEMODE::WRITE )
+		{
+			m_pHandle = PHYSFS_openWrite( virtualPath );
+
+			m_size = 0;
+		}
+
+		if ( !m_pHandle )
+		{
+			con_error( "Could not open %s: %s", virtualPath, PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ) );
+			m_size = 0;
+		}
+
+		m_bOpened = true;
+	}
+
+	File::~File()
+	{
+		if ( m_bOpened )
+		{
+			PHYSFS_close( (PHYSFS_File*)m_pHandle );
+		}
+	}
+
+	int64_t File::Read( void *buffer, int64_t len )
+	{
+		if ( !m_bOpened )
+			return 0;
+
+		int64_t r = PHYSFS_readBytes( (PHYSFS_File*)m_pHandle, buffer, len );
+
+		if ( r < 0 )
+		{
+			con_error( "Read error: %s", PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ) );
+			return 0;
+		}
+
+		return r;
+	}
+
+	int64_t File::Write( const void *buffer, int64_t len )
+	{
+		if ( !m_bOpened )
+			return 0;
+
+		int64_t r = PHYSFS_writeBytes( (PHYSFS_File*)m_pHandle, buffer, len );
+
+		if ( r < 0 )
+		{
+			con_error( "Write error: %s", PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ) );
+			return 0;
+		}
+
+		return r;
+	}
+
+	int64_t File::Write( int value )
+	{
+		return Write( &value, sizeof( value ) );
+	}
+
+	int64_t File::Seek( int64_t pos, int to )
+	{
+		if ( !m_bOpened )
+			return 0;
+
+		int64_t r = PHYSFS_seek( (PHYSFS_File*)m_pHandle, pos );
+
+		if ( r < 0 )
+		{
+			con_error( "Seek error: %s", PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ) );
+			return 0;
+		}
+
+		return r;
+	}
+
+	int64_t File::Tell()
+	{
+		if ( !m_bOpened )
+			return 0;
+
+		int64_t r = PHYSFS_tell( (PHYSFS_File*)m_pHandle );
+
+		if ( r < 0 )
+		{
+			con_error( "Tell error: %s", PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ) );
+			return 0;
+		}
+
+		return r;
+	}
+
+	int64_t File::Size()
+	{
+		return m_size;
+	}
+
+	bool File::IsOpen()
+	{
+		return m_bOpened;
+	}
+
+	void File::Close()
+	{
+		if ( m_bOpened )
+		{
+			PHYSFS_close( (PHYSFS_File*)m_pHandle );
+			m_bOpened = false;
+		}
+	}
+
+	bool File::Eof()
+	{
+		if ( !m_bOpened )
+			return true;
+
+		return PHYSFS_eof( (PHYSFS_File*)m_pHandle );
+	}
+
+	bool File::Flush()
+	{
+		if ( !m_bOpened )
+			return false;
+
+		return PHYSFS_flush( (PHYSFS_File*)m_pHandle ) != 0;
+	}
+	
+	const char *File::GetVirtualPath() { return m_virtualPath; }
 } // namespace fileSystem
