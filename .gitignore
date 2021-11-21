@@ -8,6 +8,8 @@
 
 *svconfig.cfg*
 
+*.dat
+
 /files/usr/
 
 /include/config.h
