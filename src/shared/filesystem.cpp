@@ -206,7 +206,32 @@ namespace fileSystem
 			return 0;
 		}
 
+		m_position = PHYSFS_tell( (PHYSFS_File*)m_pHandle );
+
 		return r;
+	}
+
+	int64_t File::Read( int &i, int64_t len )
+	{
+		if ( !m_bOpened )
+			return 0;
+			
+		int64_t r = PHYSFS_readBytes( (PHYSFS_File*)m_pHandle, &i, len );
+
+		if ( r < 0 )
+		{
+			con_error( "Read error: %s", PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ) );
+			return 0;
+		}
+
+		m_position = PHYSFS_tell( (PHYSFS_File*)m_pHandle );
+
+		return r;
+	}
+
+	int64_t File::Read( int &i )
+	{
+		return Read( &i, sizeof( i ) );
 	}
 
 	int64_t File::Write( const void *buffer, int64_t len )
@@ -222,6 +247,8 @@ namespace fileSystem
 			return 0;
 		}
 
+		m_position = PHYSFS_tell( (PHYSFS_File*)m_pHandle );
+
 		return r;
 	}
 
@@ -230,12 +257,31 @@ namespace fileSystem
 		return Write( &value, sizeof( value ) );
 	}
 
+	int64_t File::Write( uint64_t value )
+	{
+		return Write( &value, 8 );
+	}
+	int64_t File::Write( uint32_t value )
+	{
+		return Write( &value, 4 );
+	}
+	int64_t File::Write( uint16_t value )
+	{
+		return Write( &value, 2 );
+	}
+	int64_t File::Write( uint8_t value )
+	{
+		return Write( &value, 1 );
+	}
+
 	int64_t File::Seek( int64_t pos, int to )
 	{
 		if ( !m_bOpened )
 			return 0;
 
 		int64_t r = PHYSFS_seek( (PHYSFS_File*)m_pHandle, pos );
+
+		m_position = PHYSFS_tell( (PHYSFS_File*)m_pHandle );
 
 		if ( r < 0 )
 		{

@@ -101,6 +101,13 @@ int main( int argc, char *args[] )
 		}
 	} );
 
+	// Test if world exists
+	if ( fileSystem::Exists("world.dat") )
+	{
+		con_info("Loading World...");
+		worldIO::loadWorld( &server.m_world, "world.dat" );
+	}
+
 	con_info( "Begin server main loop..." );
 	int64_t then =
 		std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() )

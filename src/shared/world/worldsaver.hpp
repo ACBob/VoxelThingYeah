@@ -9,20 +9,24 @@
 	Version - 1 byte 
 	World name - up to 32 bytes
 
-	Block Palette size - 4 bytes
-	Block Palette, defines what id means what block (this is ignored for now, but still written)
+	Block Palette size - 1 byte
+	Block Palette - 2 * Palette size bytes,
+	  id - 1 byte
+	  mapped id - 1 byte
 
 	Chunk count - 4 bytes
 	Chunk data - Array of chunks, each chunk is written as:
 		Chunk position - 4 bytes for X, Y, Z
 		Chunk size - 4 bytes for X, Y, Z
-		Chunk data - Chunk size X*Y*Z bytes
+		Chunk data - Chunk size X*Y*Z :
+		 Block ID - 1 byte
+		 Block Meta - 2 bytes
 	
-	Time of day - 4 bytes
+	Time of day - 2 bytes
 */
 
 #define WORLDHEADER "MEEG"
-#define WORLDVERSION 0x01
+#define WORLDVERSION 0x1
 
 #pragma once
 

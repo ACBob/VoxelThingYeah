@@ -64,11 +64,23 @@ namespace fileSystem
 		// Returns the number of bytes read
 		int64_t Read( void *buffer, int64_t len );
 
+		// Returns the number of bytes read
+		int64_t Read( int &i, int64_t len );
+
+		// Returns the number of bytes read
+		int64_t Read( int &i );
+
 		// Returns the number of bytes written
 		int64_t Write( const void *buffer, int64_t len );
 
 		// Returns the number of bytes written
 		int64_t Write( int value );
+
+		// Returns the number of bytes written
+		int64_t Write( uint64_t value );
+		int64_t Write( uint32_t value );
+		int64_t Write( uint16_t value );
+		int64_t Write( uint8_t value );
 
 		// Returns the number of bytes read
 		int64_t Seek( int64_t offset, int to );
