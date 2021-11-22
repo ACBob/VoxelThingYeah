@@ -334,7 +334,7 @@ void soundSystem::SetListener( CWorld *world, Vector3f pos, Vector3f forward, Ve
 			}
 
 			float reverb	  = 0.0f;
-			BLOCKMATERIAL mat = BlockType( a.m_pBlock->m_iBlockType ).GetMaterial();
+			BLOCKMATERIAL mat = BlockType( a.m_pBlock->GetType() ).GetMaterial();
 			switch ( mat )
 			{
 				default:
@@ -376,8 +376,8 @@ void soundSystem::SetListener( CWorld *world, Vector3f pos, Vector3f forward, Ve
 		// If the listener is inside liquid, we need to muffle the sounds
 		// we can just get the position of the listener
 
-		CBlock *block = world->BlockAtWorldPos( pos );
-		if ( block != nullptr && ( block->m_iBlockType == WATER || block->m_iBlockType == WATERSRC ) )
+		block_t *block = world->BlockAtWorldPos( pos );
+		if ( block != nullptr && ( block->GetType() == WATER || block->GetType() == WATERSRC ) )
 		{
 			alFilterf( soundMuffle, AL_LOWPASS_GAIN, 0.2f );
 			alFilterf( soundMuffle, AL_LOWPASS_GAINHF, 0.2f );

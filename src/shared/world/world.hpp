@@ -44,7 +44,7 @@ class CWorld
 	// Returns the block at the position in world coords
 	// The given position is rounded by floor() before being used
 	// If outside the world it returns a nullptr
-	CBlock *BlockAtWorldPos( Vector3f pos );
+	block_t *BlockAtWorldPos( Vector3f pos );
 
 	// Test against an infinitely small point centred on pos
 	// Tests in world coordinates
@@ -52,7 +52,7 @@ class CWorld
 
 	// Tests in world coordinates
 	// Returning the first block that collides
-	CBlock *TestAABBCollision( CBoundingBox col );
+	block_t *TestAABBCollision( CBoundingBox col );
 
 	// Is the position within our place
 	bool ValidChunkPos( const Vector3f pos );

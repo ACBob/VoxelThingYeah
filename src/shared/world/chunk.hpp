@@ -29,8 +29,8 @@ struct PortableChunkRepresentation
 {
 	// Vector3f can't be used in this context
 	int32_t x, y, z;
-	uint16_t m_iValue[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
-	uint64_t m_iBlocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
+	BLOCKVAL m_iValue[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
+	BLOCKID m_iBlocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 };
 
 // Forward declaration
@@ -48,7 +48,7 @@ class CChunk
 	Vector3f m_vPosition;
 	Vector3f GetPosInWorld() { return m_vPosition * Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ); }
 
-	CBlock *GetBlockAtLocal( Vector3f pos );
+	block_t *GetBlockAtLocal( Vector3f pos );
 
 #ifdef CLIENTEXE
 	void RebuildMdl();
@@ -63,7 +63,7 @@ class CChunk
 
 	// Flat array of blocks, access with
 	// Indexed with [x + SIZEX * (y + SIZEZ * z)]
-	CBlock m_blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
+	block_t m_blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 
 #ifdef CLIENTEXE
 	CModel m_blocksMdl;

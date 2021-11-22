@@ -29,8 +29,8 @@ bool worldIO::saveWorld(CWorld *pWorld, const char *filename)
 	f->Write( (uint8_t)LASTBLOCK );
 	for( int i = 0; i < LASTBLOCK; i++ )
 	{
-		f->Write( (uint8_t)i );
-		f->Write( (uint8_t)i );
+		f->Write( (uint16_t)i );
+		f->Write( (uint16_t)i );
 	}
 
 	// Write the chunk count
@@ -51,7 +51,7 @@ bool worldIO::saveWorld(CWorld *pWorld, const char *filename)
 
 		for (int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++)
 		{
-			f->Write( (uint8_t)c.m_iBlocks[i] );
+			f->Write( (uint16_t)c.m_iBlocks[i] );
 			f->Write( (uint16_t)c.m_iValue[i] );
 		}
 	}
@@ -149,8 +149,8 @@ bool worldIO::loadWorld( CWorld *world, const char *filename )
 
 		for (int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++)
 		{
-			uint8_t id;
-			f->Read( &id, 1 );
+			uint16_t id;
+			f->Read( &id, 2 );
 			uint16_t value;
 			f->Read( &value, 2 );
 			c.m_iBlocks[i] = id;

@@ -58,7 +58,7 @@ COverworldJeneration::COverworldJeneration()
 // Generates the base stone skeleton
 void COverworldJeneration::GenBase( CChunk *c )
 {
-	for ( int i = 0; i < sizeof( c->m_blocks ) / sizeof( CBlock ); i++ )
+	for ( int i = 0; i < sizeof( c->m_blocks ) / sizeof( block_t ); i++ )
 	{
 		// blocks[i].m_iBlockType = BLOCKID(random() % 4);
 		int x, y, z;
@@ -74,7 +74,7 @@ void COverworldJeneration::GenBase( CChunk *c )
 
 		if ( WorldPosition.y <= seaFloor )
 		{
-			c->m_blocks[i].m_iBlockType = STONE;
+			c->m_blocks[i].Set(STONE);
 			continue;
 		}
 
@@ -82,7 +82,7 @@ void COverworldJeneration::GenBase( CChunk *c )
 		float percentToTopSurface = 1.0f - ( WorldPosition.y / 32.0f );
 		noiseData3D *= percentToTopSurface;
 
-		c->m_blocks[i].m_iBlockType = noiseData3D > 0.7 ? STONE : ( WorldPosition.y > m_iSeaLevel ? AIR : WATERSRC );
+		c->m_blocks[i].Set(noiseData3D > 0.7 ? STONE : ( WorldPosition.y > m_iSeaLevel ? AIR : WATERSRC ));
 	}
 }
 
@@ -101,38 +101,38 @@ void COverworldJeneration::BiomeBlocks( CChunk *c )
 			for ( int y = CHUNKSIZE_Y; y > -1; y-- )
 			{
 				// TODO: Actually fix this as it tries to query chunks that don't exist yet.
-				CBlock *blk = c->GetBlockAtLocal( Vector3f( x, y, z ) );
-				if ( blk != nullptr && blk->m_iBlockType == AIR )
+				block_t *blk = c->GetBlockAtLocal( Vector3f( x, y, z ) );
+				if ( blk != nullptr && blk->GetType() == AIR )
 					continue;
 
-				CBlock *b = c->GetBlockAtLocal( Vector3f( x, y + 1, z ) );
+				block_t *b = c->GetBlockAtLocal( Vector3f( x, y + 1, z ) );
 				if ( b == nullptr )
 					continue;
 
 				CBiome *biome = GetBiomeAtPos( c->PosToWorld( Vector3f( x, y, z ) ) );
 
-				if ( b->m_iBlockType == AIR )
+				if ( b->GetType() == AIR )
 				{
-					if ( blk->m_iBlockType == STONE )
+					if ( blk->GetType() == STONE )
 					{
-						b->m_iBlockType	  = biome->m_iBlockDust;
-						blk->m_iBlockType = biome->m_iBlockSurface;
+						b->Set( biome->m_iBlockDust );
+						blk->Set( biome->m_iBlockSurface );
 						grassDepth--;
 					}
 					else
 					{
-						blk->m_iBlockType = biome->m_iBlockWaterSurf;
+						blk->Set( biome->m_iBlockWaterSurf );
 					}
 				}
-				else if ( b->m_iBlockType == biome->m_iBlockSurface ||
-						  b->m_iBlockType == biome->m_iBlockSubSurface && grassDepth > 0 )
+				else if ( b->GetType() == biome->m_iBlockSurface ||
+						  b->GetType() == biome->m_iBlockSubSurface && grassDepth > 0 )
 				{
-					blk->m_iBlockType = biome->m_iBlockSubSurface;
+					blk->Set( biome->m_iBlockSubSurface );
 					grassDepth--;
 				}
-				else if ( blk->m_iBlockType == STONE )
+				else if ( blk->GetType() == STONE )
 				{
-					blk->m_iBlockType = biome->m_iBlockRock;
+					blk->Set( biome->m_iBlockRock );
 				}
 			}
 		}
@@ -142,19 +142,19 @@ void COverworldJeneration::BiomeBlocks( CChunk *c )
 // Decorates with ores, plants, etc.
 void COverworldJeneration::Decorate( CChunk *c )
 {
-	for ( int i = 0; i < sizeof( c->m_blocks ) / sizeof( CBlock ); i++ )
+	for ( int i = 0; i < sizeof( c->m_blocks ) / sizeof( block_t ); i++ )
 	{
 		int x, y, z;
 		CHUNK1D_TO_3D( i, x, y, z );
 		Vector3f WorldPosition = c->PosToWorld( Vector3f( x, y, z ) );
 
 		// Ore
-		if ( c->m_blocks[i].m_iBlockType == STONE )
+		if ( c->m_blocks[i].GetType() == STONE )
 		{
 			float noiseData = fnlGetNoise3D( &m_oreNoise, WorldPosition.x, WorldPosition.y, WorldPosition.z ) * 1.1;
 
 			if ( noiseData > 0.9 )
-				c->m_blocks[i].m_iBlockType = ORE_COAL;
+				c->m_blocks[i].Set( ORE_COAL );
 		}
 
 		// Caves
@@ -165,11 +165,11 @@ void COverworldJeneration::Decorate( CChunk *c )
 
 		if ( caveVal < 0.04f )
 		{
-			if ( c->m_blocks[i].m_iBlockType == STONE || c->m_blocks[i].m_iBlockType == GRASS ||
-				 c->m_blocks[i].m_iBlockType == DIRT || c->m_blocks[i].m_iBlockType == ORE_COAL ||
-				 c->m_blocks[i].m_iBlockType == SAND || c->m_blocks[i].m_iBlockType == SANDSTONE )
+			if ( c->m_blocks[i].GetType() == STONE || c->m_blocks[i].GetType() == GRASS ||
+				 c->m_blocks[i].GetType() == DIRT || c->m_blocks[i].GetType() == ORE_COAL ||
+				 c->m_blocks[i].GetType() == SAND || c->m_blocks[i].GetType() == SANDSTONE )
 			{
-				c->m_blocks[i].m_iBlockType = AIR;
+				c->m_blocks[i].Set( AIR );
 			}
 		}
 	}

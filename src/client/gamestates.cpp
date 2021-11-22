@@ -287,8 +287,8 @@ void CStatePlay::Update()
 			// Data displayed in hex
 			if ( m_pLocalPlayer->m_pointed.m_pBlock != nullptr )
 			{
-				snprintf( guiBuf, 100, "Pointed block: %i, %04X", m_pLocalPlayer->m_pointed.m_pBlock->m_iBlockType,
-						  m_pLocalPlayer->m_pointed.m_pBlock->m_iBlockData );
+				snprintf( guiBuf, 100, "Pointed block: %i, %04X", m_pLocalPlayer->m_pointed.m_pBlock->GetType(),
+						  m_pLocalPlayer->m_pointed.m_pBlock->GetMeta() );
 				pStateMan->m_pGui->Label( guiBuf, Vector3f( 0, 5 ) );
 			}
 			else
