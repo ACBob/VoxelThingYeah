@@ -15,6 +15,13 @@ namespace fileSystem
 		WRITE
 	};
 
+	enum SEEKMODE
+	{
+		BEGIN,
+		CURRENT,
+		END
+	};
+
 	// exePath is usually argv[0].
 	bool Init( const char *exePath );
 
@@ -83,7 +90,7 @@ namespace fileSystem
 		int64_t Write( uint8_t value );
 
 		// Returns the number of bytes read
-		int64_t Seek( int64_t offset, int to );
+		int64_t Seek( int64_t offset, SEEKMODE );
 
 		// Returns the current position
 		int64_t Tell();

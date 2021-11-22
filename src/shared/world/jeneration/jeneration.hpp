@@ -35,7 +35,7 @@ class COverworldJeneration
 	fnl_state m_biomesOvergroundHumidityNoise;
 	fnl_state m_biomesUndergroundNoise;
 
-	int m_iSeed = 69;
+	uint32_t m_iSeed = 69;
 
 	int m_iSeaLevel = 10;
 };
