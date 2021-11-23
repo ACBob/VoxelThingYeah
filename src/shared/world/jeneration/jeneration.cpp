@@ -4,6 +4,8 @@
 
 #include <math.h>
 
+#include "structure.hpp"
+
 COverworldJeneration::COverworldJeneration()
 {
 	m_baseNoise			   = fnlCreateState();
@@ -50,6 +52,12 @@ COverworldJeneration::COverworldJeneration()
 	m_biomesOvergroundHumidityNoise.octaves		 = 1;
 	m_biomesOvergroundHumidityNoise.noise_type	 = FNL_NOISE_PERLIN;
 	m_biomesOvergroundTemperatureNoise.frequency = 0.01f;
+
+	m_treeNoise									 = fnlCreateState();
+	m_treeNoise.seed							 = m_iSeed + 'TREE';
+	m_treeNoise.noise_type						 = FNL_NOISE_PERLIN;
+	m_treeNoise.octaves							 = 1;
+	m_treeNoise.frequency						 = 0.01f;
 
 	// Biomes
 	InitBiomes();
@@ -171,6 +179,40 @@ void COverworldJeneration::Decorate( CChunk *c )
 			{
 				c->m_blocks[i].m_iBlockType = AIR;
 			}
+		}
+	}
+
+	// As a last step, structures
+	CStructure tree = GetStructure(TREE);
+
+	// Test if we're in a chunk that has a tree
+	if ( true )
+	{
+		// Find a place to put the tree
+		int x = 0, z = 0;
+
+		x = rand() % CHUNKSIZE_X;
+		z = rand() % CHUNKSIZE_Z;
+
+		// Make sure we're not in a cave ( so above sea level )
+		if ( c->GetPosInWorld({(float)x,0,(float)z}).y > SEA_LEVEL )
+		{
+			// find the surface block
+			int y = 0;
+			for ( y = CHUNKSIZE_Y - 1; y > 0; y-- )
+			{
+				if ( c->GetBlockAtLocal({(float)x, (float)y, (float)z})->m_iBlockType != AIR )
+					break;
+			}
+
+			// Don't place on air
+			if ( y <= 0 )
+				return;
+
+			// Place the tree
+			// world coords
+			Vector3f worldPosition = c->PosToWorld({(float)x, (float)y, (float)z});
+			tree.Generate( c->m_pChunkMan, worldPosition.x, worldPosition.y, worldPosition.z, (Direction)(rand() % 4) );
 		}
 	}
 }

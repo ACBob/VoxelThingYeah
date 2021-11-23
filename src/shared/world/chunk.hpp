@@ -47,6 +47,7 @@ class CChunk
 
 	Vector3f m_vPosition;
 	Vector3f GetPosInWorld() { return m_vPosition * Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ); }
+	Vector3f GetPosInWorld(Vector3f pos) { return (m_vPosition * Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z )) + pos; }
 
 	CBlock *GetBlockAtLocal( Vector3f pos );
 

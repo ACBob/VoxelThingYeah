@@ -73,6 +73,33 @@ CChunk *CWorld::GetChunkGenerateAtPos( Vector3f pos )
 	m_jenerator.Generate( c );
 #endif
 
+	// test if there's any buffer blocks that intersect with this chunk
+	for ( auto &&b : m_blocksToPlace )
+	{
+		if ( b.first.x >= c->m_vPosition.x * CHUNKSIZE_X && b.first.x < (c->m_vPosition.x + 1) * CHUNKSIZE_X &&
+			 b.first.y >= c->m_vPosition.y * CHUNKSIZE_Y && b.first.y < (c->m_vPosition.y + 1) * CHUNKSIZE_Y &&
+			 b.first.z >= c->m_vPosition.z * CHUNKSIZE_Z && b.first.z < (c->m_vPosition.z + 1) * CHUNKSIZE_Z )
+		{
+			CBlock *blck = c->GetBlockAtLocal( b.first );
+			if ( blck == nullptr )
+				continue; // (What?)
+			// b.second is a 32bit int, and the block type is a 16bit int
+			blck->m_iBlockType = (BLOCKID)(b.second & 0xFFFF);
+			blck->m_iBlockData = (b.second >> 16) & 0xFFFF;
+		}
+	}
+
+	// TODO: remove the buffer blocks that intersect with this chunk
+	// Using std::remove_if is a bit of a pain, but it's the only way I can think of to do this
+	// m_blocksToPlace.erase(
+	// 	std::remove_if( m_blocksToPlace.begin(), m_blocksToPlace.end(),
+	// 					[c]( const std::pair<Vector3i, uint32_t> &b ) {
+	// 						return b.first.x >= c->m_vPosition.x * CHUNKSIZE_X && b.first.x < (c->m_vPosition.x + 1) * CHUNKSIZE_X &&
+	// 							   b.first.y >= c->m_vPosition.y * CHUNKSIZE_Y && b.first.y < (c->m_vPosition.y + 1) * CHUNKSIZE_Y &&
+	// 							   b.first.z >= c->m_vPosition.z * CHUNKSIZE_Z && b.first.z < (c->m_vPosition.z + 1) * CHUNKSIZE_Z;
+	// 					} ),
+	// 	m_blocksToPlace.end() );
+
 	c->m_bReallyDirty = c->m_bDirty = true;
 
 	return c;
@@ -102,6 +129,21 @@ CBlock *CWorld::BlockAtWorldPos( Vector3f pos )
 	Vector3f localPos = ( pos - chunk->GetPosInWorld() );
 
 	return chunk->GetBlockAtLocal( localPos );
+}
+
+void CWorld::SetBlockAtWorldPos( Vector3f pos, BLOCKID block, BLOCKVAL val )
+{
+	CBlock *b = BlockAtWorldPos( pos );
+	if ( b == nullptr ) { // place it in a buffer
+		// smash down to one uint32_t
+		uint32_t x = block | ( val << 16 );
+		m_blocksToPlace[pos] = x;
+		return;
+	}
+
+	b->m_iBlockType		= block;
+	b->m_iBlockData		= val;
+	b->Update();
 }
 
 #ifdef CLIENTEXE
