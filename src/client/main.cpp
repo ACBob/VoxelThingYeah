@@ -42,6 +42,11 @@
 
 #include "devconsole.hpp"
 
+#ifdef __linux__
+#include <unistd.h>
+#include <pwd.h>
+#endif
+
 #include "localization/localizer.hpp"
 
 #ifdef _WIN32
@@ -61,6 +66,33 @@ int main( int argc, char *args[] )
 	con_info( "Setting up convars..." );
 	SetupClientSideConvars();
 	SetupSharedConvars();
+
+	if (!username->IsModified())
+	{
+		// Get the user's computer username to use instead
+#ifdef __linux__
+		// The linux way!
+		passwd *pw;
+		uid_t uid;
+
+		uid = geteuid();
+		pw = getpwuid(uid);
+		
+		if (pw)
+			username->SetString( pw->pw_name );
+		else // In the situation we can't find it, just use player
+			username->SetString("Player");
+#elif _WIN32
+
+		char *name = new char[32];
+		GetUserNameEx(NameDisplay, name, 32);
+		username->SetString(name);
+		delete[] name;
+
+#endif
+
+		con_warning("Username set to %s", username->GetString());
+	}
 
 	char *argstring = FlattenCharArray( args, 1, argc - 1 );
 	con_debug( "Args: %s", argstring );

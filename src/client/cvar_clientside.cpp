@@ -35,7 +35,7 @@ void SetupClientSideConvars()
 	scr_width  = conVarHandle.DeclareConvar( "scr_width", "848", ConVar::CVAR_ARCHIVE );
 	scr_height = conVarHandle.DeclareConvar( "scr_height", "480", ConVar::CVAR_ARCHIVE );
 
-	username = conVarHandle.DeclareConvar( "username", "Player", ConVar::CVAR_ARCHIVE );
+	username = conVarHandle.DeclareConvar( "username", "", ConVar::CVAR_ARCHIVE );
 
 	cl_ip	= conVarHandle.DeclareConvar( "cl_ip", "127.0.0.1" );
 	cl_port = conVarHandle.DeclareConvar( "cl_port", "58008" );
