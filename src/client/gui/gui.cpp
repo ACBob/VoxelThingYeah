@@ -25,8 +25,9 @@
 
 #include <algorithm>
 
-// How many grid units are there in the screen at all times
+// How many grid units we expect there to be
 #define GUI_GRID_X 53
+#define GUI_GRID_Y 30
 // Size in pixels of the font we expect
 #define EXPECTED_FONT_SIZE 8
 
@@ -155,7 +156,11 @@ void CGui::Resize( Vector3f screenDimensions )
 	m_vScreenDimensions.x = screenDimensions.x;
 	m_vScreenDimensions.y = screenDimensions.y;
 	m_vScreenCentre		  = m_vScreenDimensions / 2.0f;
-	m_iGUIUnitSize		  = screenDimensions.x / GUI_GRID_X;
+
+	if ( screenDimensions.x < screenDimensions.y )
+		m_iGUIUnitSize		  = screenDimensions.x / GUI_GRID_X;
+	else
+		m_iGUIUnitSize		  = screenDimensions.y / GUI_GRID_Y;
 
 	m_vGUISize	 = m_vScreenDimensions / m_iGUIUnitSize;
 	m_vGUICentre = m_vScreenCentre / m_iGUIUnitSize;
