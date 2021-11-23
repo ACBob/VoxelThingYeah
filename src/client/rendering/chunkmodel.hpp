@@ -10,4 +10,4 @@
 // Forward Decl.
 class CChunk;
 
-void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], Vector3f pos, CChunk *chunk );
+void BuildChunkModel( CModel &mdl, CModel &wmdl, block_t blocks[], Vector3f pos, CChunk *chunk );

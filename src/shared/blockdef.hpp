@@ -10,7 +10,7 @@
 #pragma once
 
 // TODO: Rename to BLOCK_*
-enum BLOCKID {
+enum BLOCK {
 	AIR			 = 0,
 	STONE		 = 1,
 	DIRT		 = 2,
@@ -47,6 +47,7 @@ enum BLOCKID {
 #define LASTBLOCK (SOUNDMAKER + 1)
 
 // May be changed one day, so use this always
+using BLOCKID = uint16_t;
 using BLOCKVAL = uint16_t;
 
 enum BLOCKMATERIAL {

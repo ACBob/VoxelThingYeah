@@ -120,7 +120,7 @@ CChunk *CWorld::ChunkAtWorldPos( Vector3f pos )
 	return ChunkAtChunkPos( pos.Floor() );
 }
 
-CBlock *CWorld::BlockAtWorldPos( Vector3f pos )
+block_t *CWorld::BlockAtWorldPos( Vector3f pos )
 {
 	pos			  = pos.Floor();
 	CChunk *chunk = ChunkAtWorldPos( pos );
@@ -199,24 +199,24 @@ void CWorld::Render()
 
 bool CWorld::TestPointCollision( Vector3f pos )
 {
-	CBlock *b = BlockAtWorldPos( pos );
+	block_t *b = BlockAtWorldPos( pos );
 	if ( b == nullptr )
 		return false;
 	// BlockFeatures bF = GetBlockFeatures( b->m_iBlockType );
 	// if ( !bF.walkable )
 	// 	return false;
 
-	if ( !BlockType( b->m_iBlockType ).IsSolid( b->m_iBlockData ) )
+	if ( !BlockType( b->GetType() ).IsSolid( b->GetMeta() ) )
 		return false;
 
-	CBoundingBox blockBounds = BlockType( b->m_iBlockType ).GetBounds();
+	CBoundingBox blockBounds = BlockType( b->GetType() ).GetBounds();
 
 	pos						= pos - pos.Floor();
 	blockBounds.m_vPosition = pos.Floor();
 	return blockBounds.TestPointCollide( pos );
 }
 
-CBlock *CWorld::TestAABBCollision( CBoundingBox col )
+block_t *CWorld::TestAABBCollision( CBoundingBox col )
 {
 	CChunk *chunk = ChunkAtWorldPos( col.m_vPosition );
 	if ( chunk == nullptr )
@@ -229,9 +229,9 @@ CBlock *CWorld::TestAABBCollision( CBoundingBox col )
 		CHUNK1D_TO_3D( i, x, y, z );
 
 		// Don't collide with air
-		BLOCKID blockType = chunk->m_blocks[i].m_iBlockType;
+		BLOCKID blockType = chunk->m_blocks[i].GetType();
 
-		if ( !BlockType( blockType ).IsSolid( chunk->m_blocks[i].m_iBlockData ) )
+		if ( !BlockType( blockType ).IsSolid( chunk->m_blocks[i].GetMeta() ) )
 			continue;
 
 		CBoundingBox blockBounds = BlockType( blockType ).GetBounds();
@@ -308,7 +308,9 @@ void CWorld::UsePortable( PortableChunkRepresentation rep )
 
 	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
 	{
-		c->m_blocks[j].m_iBlockType = (BLOCKID)rep.m_iBlocks[j];
-		c->m_blocks[j].m_iBlockData = rep.m_iValue[j];
+		c->m_blocks[j].Set(
+			rep.m_iBlocks[j],
+			rep.m_iValue[j]
+		);
 	}
 }

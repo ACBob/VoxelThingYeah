@@ -84,13 +84,11 @@ namespace protocol
 
 				// Woot, data!
 				// TODO: make sure the server isn't being malicious.. Somehow
-				CBlock *b = client->m_pLocalWorld->BlockAtWorldPos( Vector3f( x, y, z ) );
+				block_t *b = client->m_pLocalWorld->BlockAtWorldPos( Vector3f( x, y, z ) );
 				if ( b != nullptr )
 				{
 					// con_info( "Update Block At <%f,%f,%f>", x, y, z );
-					b->m_iBlockType = BLOCKID( blockType );
-					b->m_iBlockData = val;
-					b->Update();
+					b->Set( blockType, val );
 				}
 			}
 			break;

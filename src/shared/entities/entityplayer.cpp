@@ -71,43 +71,39 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 			// BlockFeatures bF = GetBlockFeatures( m_pointed.m_pBlock->m_iBlockType );
 			// if ( bF.breakable )
 			// {
-			m_pointed.m_pBlock->m_iBlockType = BLOCKID::AIR;
-			m_pointed.m_pBlock->Update();
+			m_pointed.m_pBlock->Set( AIR );
 
-			protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5,
-										  BLOCKID::AIR, 0 );
+			protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5, AIR, 0 );
 			// }
 		}
 		if ( m_pInputMan->m_iMouseState & IN_RIGHT_MOUSE && m_pInputMan->m_iOldMouseState == 0 &&
 			 m_pointed.m_pBlock != nullptr )
 		{
-			if ( BlockType( m_pointed.m_pBlock->m_iBlockType ).CanBeUsed() )
+			if ( BlockType( m_pointed.m_pBlock->GetType() ).CanBeUsed() )
 			{
 				protocol::SendClientUseBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5 );
 			}
 			else
 			{
-				CBlock *b = clientSideWorld->BlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal );
+				block_t *b = clientSideWorld->BlockAtWorldPos( ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal );
 				if ( m_pSelectedItem != nullptr && m_pSelectedItem->GetCount() > 0 && b != nullptr )
 				{
-					BLOCKID oldType		 = b->m_iBlockType; // TODO: We're assuming it's a block item
-					uint16_t oldData	 = b->m_iBlockData;
+					BLOCKID oldType;
+					uint16_t oldVal;
+					b->Get( oldType, oldVal );
 					CBlockItem *blckItem = reinterpret_cast<CBlockItem *>( m_pSelectedItem );
-					b->m_iBlockType		 = blckItem->m_iBlockType;
-					b->m_iBlockData		 = blckItem->m_iBlockData;
+					b->Set( blckItem->m_iBlockType, blckItem->m_iBlockData );
 					if ( !clientSideWorld->TestAABBCollision( m_collisionBox ) )
 					{
-						b->Update();
 						m_pSelectedItem->SetCount( m_pSelectedItem->GetCount() - 1 );
 
 						protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer,
 													  ( m_pointed.m_vPosition - 0.5 ) + m_pointed.m_vNormal,
-													  b->m_iBlockType, b->m_iBlockData );
+													  b->GetType(), b->GetMeta() );
 					}
 					else
 					{
-						b->m_iBlockType = oldType;
-						b->m_iBlockData = oldData;
+						b->Set( oldType, oldVal );
 					}
 				}
 			}

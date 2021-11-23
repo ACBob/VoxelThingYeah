@@ -45,7 +45,7 @@ const std::vector<std::vector<int>> cubeTris = {
 
 const std::vector<int> plantTris = { 2, 1, 3, 0, 6, 5, 7, 4 };
 
-std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlock block, int x, int y, int z, CColour light,
+std::vector<CModel::Vertex> sampleCubeFace( Direction dir, block_t block, int x, int y, int z, CColour light,
 											CColour tint )
 {
 	std::vector<CModel::Vertex> g;
@@ -72,7 +72,7 @@ std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlock block, int x, 
 		g[i].ny = normal.y;
 		g[i].nz = normal.z;
 
-		BlockTexture tex = BlockType( block.m_iBlockType ).GetTexture( dir, block.m_iBlockData );
+		BlockTexture tex = BlockType( block.GetType() ).GetTexture( dir, block.GetMeta() );
 
 		switch ( i )
 		{
@@ -98,7 +98,7 @@ std::vector<CModel::Vertex> sampleCubeFace( Direction dir, CBlock block, int x, 
 	return g;
 }
 
-std::vector<CModel::Vertex> samplePlant( CBlock block, int x, int y, int z, int lr, int lg, int lb, int ls )
+std::vector<CModel::Vertex> samplePlant( block_t block, int x, int y, int z, int lr, int lg, int lb, int ls )
 {
 	std::vector<CModel::Vertex> g;
 	for ( int i = 0; i < 8; i++ )
@@ -156,7 +156,7 @@ std::vector<CModel::Vertex> samplePlant( CBlock block, int x, int y, int z, int 
 }
 
 // We include the chunk manager here so we can test our neighbouring chunks
-void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], Vector3f pos, CChunk *chunk )
+void BuildChunkModel( CModel &mdl, CModel &wmdl, block_t blocks[], Vector3f pos, CChunk *chunk )
 {
 	mdl.m_vertices.clear();
 	mdl.m_faces.clear();
@@ -169,25 +169,25 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], Vector3f pos, 
 		{
 			for ( int z = 0; z < CHUNKSIZE_Z; z++ )
 			{
-				CBlock block = blocks[CHUNK3D_TO_1D( x, y, z )];
+				block_t block = blocks[CHUNK3D_TO_1D( x, y, z )];
 
 				// block here! Construct!
-				if ( block.m_iBlockType != AIR )
+				if ( block.GetType() != AIR )
 				{
 					// TODO: Get Model from Block
 					for ( int i = 0; i < 6; i++ )
 					{
 						CColour lightColour;
 						CColour blockColouration =
-							BlockType( block.m_iBlockType )
-								.GetTint( chunk, pos, block.m_iBlockData, (Direction)i );
+							BlockType( block.GetType() )
+								.GetTint( chunk, pos, block.GetMeta(), (Direction)i );
 
 						Vector3f neighbour = Vector3f( x, y, z ) + DirectionVector[i];
 						if ( ValidChunkPosition( neighbour ) )
 						{
-							BLOCKID blockType = chunk->GetBlockAtLocal( neighbour )->m_iBlockType;
+							BLOCKID blockType = chunk->GetBlockAtLocal( neighbour )->GetType();
 
-							if ( !BlockType( block.m_iBlockType ).FaceVisible( (Direction)i, blockType ) )
+							if ( !BlockType( block.GetType() ).FaceVisible( (Direction)i, blockType ) )
 								continue;
 
 							lightColour = chunk->GetLightingLocal( neighbour );
@@ -201,10 +201,10 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], Vector3f pos, 
 								neighbour = neighbour + ( DirectionVector[i] *
 														  Vector3f( -CHUNKSIZE_X, -CHUNKSIZE_Y, -CHUNKSIZE_Z ) );
 
-								CBlock *b = chunkNeighbour->GetBlockAtLocal( neighbour );
+								block_t *b = chunkNeighbour->GetBlockAtLocal( neighbour );
 								if ( b == nullptr )
 									continue;
-								if ( !BlockType( block.m_iBlockType ).FaceVisible( (Direction)i, b->m_iBlockType ) )
+								if ( !BlockType( block.GetType() ).FaceVisible( (Direction)i, b->GetType() ) )
 									continue;
 
 								lightColour = chunkNeighbour->GetLightingLocal( neighbour );
@@ -214,7 +214,7 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, CBlock blocks[], Vector3f pos, 
 						std::vector<CModel::Vertex> g =
 							sampleCubeFace( Direction( i ), block, x, y, z, lightColour, blockColouration );
 
-						if ( block.m_iBlockType == WATER || block.m_iBlockType == WATERSRC )
+						if ( block.GetType() == WATER || block.GetType() == WATERSRC )
 						{
 							std::copy( g.begin(), g.end(), std::back_inserter( wmdl.m_vertices ) );
 

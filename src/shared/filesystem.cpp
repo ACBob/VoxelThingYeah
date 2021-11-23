@@ -274,10 +274,15 @@ namespace fileSystem
 		return Write( &value, 1 );
 	}
 
-	int64_t File::Seek( int64_t pos, int to )
+	int64_t File::Seek( int64_t pos, SEEKMODE type )
 	{
 		if ( !m_bOpened )
 			return 0;
+
+		if (type == CURRENT)
+			pos += m_position;
+		else if (type == END)
+			pos += m_size;
 
 		int64_t r = PHYSFS_seek( (PHYSFS_File*)m_pHandle, pos );
 

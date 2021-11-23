@@ -9,6 +9,8 @@
 
 #include <cstring>
 
+#include <algorithm>
+
 bool worldIO::saveWorld(CWorld *pWorld, const char *filename)
 {
 	// Start the file
@@ -29,8 +31,8 @@ bool worldIO::saveWorld(CWorld *pWorld, const char *filename)
 	f->Write( (uint8_t)LASTBLOCK );
 	for( int i = 0; i < LASTBLOCK; i++ )
 	{
-		f->Write( (uint8_t)i );
-		f->Write( (uint8_t)i );
+		f->Write( (uint16_t)i );
+		f->Write( (uint16_t)i );
 	}
 
 	// Write the chunk count
@@ -45,13 +47,17 @@ bool worldIO::saveWorld(CWorld *pWorld, const char *filename)
 		f->Write( (uint32_t)c.y );
 		f->Write( (uint32_t)c.z );
 
-		f->Write( (uint32_t)CHUNKSIZE_X );
-		f->Write( (uint32_t)CHUNKSIZE_Y );
-		f->Write( (uint32_t)CHUNKSIZE_Z );
+		// Quickly test if the chunk is just air (in which case we need to write the empty chunk header)
+		// SO 14120346
+		if (std::all_of(chunk->m_blocks, chunk->m_blocks + CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z, [](block_t b) { return b.GetType() == AIR; }))
+		{
+			f->Write( MAGIC_EMPTYCHUNK, 5 );
+			continue;
+		}
 
 		for (int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++)
 		{
-			f->Write( (uint8_t)c.m_iBlocks[i] );
+			f->Write( (uint16_t)c.m_iBlocks[i] );
 			f->Write( (uint16_t)c.m_iValue[i] );
 		}
 	}
@@ -113,9 +119,9 @@ bool worldIO::loadWorld( CWorld *world, const char *filename )
 	// Read the block palette
 	for( int i = 0; i < LASTBLOCK; i++ )
 	{
-		uint8_t id, mappedId;
-		f->Read( &id, 1 );
-		f->Read( &mappedId, 1 );
+		uint16_t id, mappedId;
+		f->Read( &id, 2 );
+		f->Read( &mappedId, 2 );
 	}
 
 	// Read the chunk count
@@ -130,31 +136,37 @@ bool worldIO::loadWorld( CWorld *world, const char *filename )
 		f->Read( &y, 4 );
 		f->Read( &z, 4 );
 
-		uint32_t chunkSizeX, chunkSizeY, chunkSizeZ;
-		f->Read( &chunkSizeX, 4 );
-		f->Read( &chunkSizeY, 4 );
-		f->Read( &chunkSizeZ, 4 );
-
-		if( chunkSizeX != CHUNKSIZE_X || chunkSizeY != CHUNKSIZE_Y || chunkSizeZ != CHUNKSIZE_Z )
-		{
-			con_error( "Invalid chunk size for world file %s", filename );
-			delete f;
-			return false;
-		}
-
 		PortableChunkRepresentation c;
 		c.x = x;
 		c.y = y;
 		c.z = z;
 
-		for (int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++)
+		// Test if the chunk is just air (in which case we need to skip it)
+		// Which is flagged by MAGIC_EMPTYCHUNK
+		char magic[5];
+		f->Read( magic, 5 );
+		if (strncmp(magic, MAGIC_EMPTYCHUNK, 5) == 0)
 		{
-			uint8_t id;
-			f->Read( &id, 1 );
+			for (int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++)
+			{
+				c.m_iBlocks[j] = AIR;
+				c.m_iValue[j] = 0;
+			}
+			continue;
+		}
+		// Otherwise, read the blocks
+		// the first 5 bytes have been read already
+		// So we need to put them back
+		f->Seek( -5, fileSystem::CURRENT );
+
+		for (int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++)
+		{
+			uint16_t id;
+			f->Read( &id, 2 );
 			uint16_t value;
 			f->Read( &value, 2 );
-			c.m_iBlocks[i] = id;
-			c.m_iValue[i] = value;
+			c.m_iBlocks[j] = id;
+			c.m_iValue[j] = value;
 		}
 
 		world->UsePortable( c );

@@ -11,9 +11,8 @@ CChunk::CChunk()
 {
 	for ( int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++ )
 	{
-		m_blocks[i].m_iBlockType   = BLOCKID::AIR;
 		m_iLightingValue[i]		   = 0;
-		m_portableDef.m_iBlocks[i] = m_blocks[i].m_iBlockType;
+		m_portableDef.m_iBlocks[i] = 0;
 		m_portableDef.m_iValue[i]  = 0;
 
 		m_blocks[i].m_pChunk = this;
@@ -30,8 +29,7 @@ CChunk::CChunk()
 {
 	for ( int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++ )
 	{
-		m_blocks[i].m_iBlockType   = BLOCKID::AIR;
-		m_portableDef.m_iBlocks[i] = m_blocks[i].m_iBlockType;
+		m_portableDef.m_iBlocks[i] = 0;
 		m_portableDef.m_iValue[i]  = 0;
 		
 		m_blocks[i].m_pChunk = this;
@@ -107,7 +105,7 @@ void CChunk::Update( int64_t iTick )
 
 	// for ( Vector3f pos : liquidBlocks )
 	// {
-	// 	CBlock *blockHandling		= GetBlockAtLocal( pos );
+	// 	block_t *blockHandling		= GetBlockAtLocal( pos );
 	// 	BLOCKID blockType		= blockHandling->m_iBlockType;
 	// 	BlockFeatures blockFeatures = GetBlockFeatures( blockType );
 
@@ -117,7 +115,7 @@ void CChunk::Update( int64_t iTick )
 	// 		continue;
 
 	// 	// Test Bottom first
-	// 	CBlock *pBlock =  m_pChunkMan->BlockAtWorldPos( PosToWorld( Vector3f( pos.x, pos.y - 1, pos.z ) ) );
+	// 	block_t *pBlock =  m_pChunkMan->BlockAtWorldPos( PosToWorld( Vector3f( pos.x, pos.y - 1, pos.z ) ) );
 	// 	if ( pBlock == nullptr )
 	// 		continue;
 
@@ -127,15 +125,15 @@ void CChunk::Update( int64_t iTick )
 	// 		pBlock->m_iBlockType = blockFeatures.liquidFlow;
 	// 		pBlock->m_iBlockData	 = blockFeatures.liquidRange;
 	// 	}
-	// 	else if ( pBlock->m_iBlockType == blockFeatures.liquidFlow ||
-	// 			  pBlock->m_iBlockType == blockFeatures.liquidSource )
+	// 	else if ( pBlock->GetType() == blockFeatures.liquidFlow ||
+	// 			  pBlock->GetType() == blockFeatures.liquidSource )
 	// 		continue;
 	// 	else
 	// 	{
 	// 		for ( int i = 0; i < 4; i++ )
 	// 		{
 	// 			Vector3f dir = DirectionVector[i];
-	// 			CBlock *b	= GetBlockAtLocal( Vector3f( pos.x, pos.y, pos.z ) + dir );
+	// 			block_t *b	= GetBlockAtLocal( Vector3f( pos.x, pos.y, pos.z ) + dir );
 	// 			if ( b == nullptr )
 	// 			{
 	// 				// It's not in *this* chunk
@@ -156,7 +154,7 @@ void CChunk::Update( int64_t iTick )
 	// 				b->m_iBlockData	= blockHandling->m_iBlockData - 1;
 	// 				bDirtyAgain		= true; // Something within us changed, we should update next tick too
 	// 			}
-	// 			else if ( b->m_iBlockType == blockFeatures.liquidFlow )
+	// 			else if ( b->GetType() == blockFeatures.liquidFlow )
 	// 			{
 	// 				if ( b->m_iBlockData < ( blockHandling->m_iBlockData - 1 ) )
 	// 					b->m_iBlockData = blockHandling->m_iBlockData - 1;
@@ -173,8 +171,10 @@ void CChunk::Update( int64_t iTick )
 
 	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
 	{
-		m_portableDef.m_iBlocks[j] = m_blocks[j].m_iBlockType;
-		m_portableDef.m_iValue[j]  = m_blocks[j].m_iBlockData;
+		m_blocks[j].Get(
+			m_portableDef.m_iBlocks[j],
+			m_portableDef.m_iValue[j]
+		);
 	}
 
 #ifdef CLIENTEXE
@@ -199,7 +199,7 @@ void CChunk::Update( int64_t iTick )
 	m_bReallyDirty = bDirtyAgain;
 }
 
-CBlock *CChunk::GetBlockAtLocal( Vector3f pos )
+block_t *CChunk::GetBlockAtLocal( Vector3f pos )
 {
 	if ( !ValidChunkPosition( pos ) )
 		return nullptr;

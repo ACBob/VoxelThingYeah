@@ -84,8 +84,8 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	// Test if we're in water
 	m_bInWater = false;
 
-	CBlock *blockInside = pWorld->BlockAtWorldPos( m_vPosition );
-	if ( blockInside != nullptr && ( blockInside->m_iBlockType == WATER || blockInside->m_iBlockType == WATERSRC ) )
+	block_t *blockInside = pWorld->BlockAtWorldPos( m_vPosition );
+	if ( blockInside != nullptr && ( blockInside->GetType() == WATER || blockInside->GetType() == WATERSRC ) )
 	{
 		// if we're in water, and we're going fast enough, make a splash
 		if ( !m_bInWater && m_vVelocity.Magnitude() > SPLASH_SPEED )
@@ -111,7 +111,7 @@ void CEntityBase::Tick( int64_t iTick )
 		{
 			if ( iTick >= m_iFootstepTick )
 			{
-				soundSystem::PlayStepSound( m_pLastBlockFloor->m_iBlockType, m_vPosition );
+				soundSystem::PlayStepSound( m_pLastBlockFloor->GetType(), m_vPosition );
 
 				// The time between footsteps is based on the speed of the player
 				m_iFootstepTick = iTick + ( 20 - (int)m_vVelocity.Magnitude() );

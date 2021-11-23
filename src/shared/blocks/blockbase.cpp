@@ -29,7 +29,7 @@ namespace
 	constexpr CBlockAir _BlockAir( AIR );
 	constexpr CBlockGeneric _BlockStone( STONE );
 
-	// TODO: Seperate CBlock variants for each block type
+	// TODO: Seperate block_t variants for each block type
 	constexpr CBlockGeneric _BlockDirt( DIRT );
 	constexpr CBlockGeneric _BlockGrass( GRASS );
 	constexpr CBlockGeneric _BlockCobble( COBBLE );

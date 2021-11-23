@@ -93,14 +93,12 @@ namespace protocol
 				bufAccess >> blockType;
 				bufAccess >> val;
 
-				CBlock *b = pServer->m_world.BlockAtWorldPos( Vector3f( x, y, z ) );
+				block_t *b = pServer->m_world.BlockAtWorldPos( Vector3f( x, y, z ) );
 
-				BLOCKID oldBlockType = b->m_iBlockType;
+				BLOCKID oldBlockType = (BLOCKID)b->GetType();
 				if ( true ) // If it's a valid block placement (for now no check)
 				{
-					b->m_iBlockType = (BLOCKID)blockType;
-					b->m_iBlockData = val;
-					b->Update();
+					b->Set( blockType, val );
 
 					for ( CNetworkPlayer *c : pServer->m_players )
 					{
@@ -116,7 +114,7 @@ namespace protocol
 				}
 				else
 				{
-					SendServerUpdateBlock( pPeer, Vector3f( x, y, z ), b->m_iBlockType, b->m_iBlockData );
+					SendServerUpdateBlock( pPeer, Vector3f( x, y, z ), (BLOCKID)b->GetType(), b->GetMeta() );
 				}
 			}
 			break;
@@ -204,9 +202,9 @@ namespace protocol
 				bufAccess >> z;
 
 				// test if the block is useable
-				CBlock *b = pServer->m_world.BlockAtWorldPos( Vector3f( x, y, z ) );
-				if ( b != nullptr && BlockType( b->m_iBlockType ).CanBeUsed() )
-					BlockType( b->m_iBlockType )
+				block_t *b = pServer->m_world.BlockAtWorldPos( Vector3f( x, y, z ) );
+				if ( b != nullptr && BlockType( b->GetType() ).CanBeUsed() )
+					BlockType( b->GetType() )
 						.OnUse( (CChunk *)b->m_pChunk, Vector3f( x, y, z ),
 								pServer->ClientFromPeer( pPeer )->m_pEntity );
 			}
