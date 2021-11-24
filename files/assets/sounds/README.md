@@ -61,3 +61,7 @@ CC-BY 3.0
 # placeorganic.ogg
 [Snoman - FreeSound - grass2.wav](https://freesound.org/people/Snoman/sounds/9905/)\
 CC-BY 3.0
+
+# placemetal.ogg, breakmetal.ogg
+[mypantsfelldown - FreeSound - Metal Footsteps](https://freesound.org/people/mypantsfelldown/sounds/398937/)\
+CC-0 Public Domain

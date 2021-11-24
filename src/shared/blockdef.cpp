@@ -23,6 +23,8 @@ const char *BlockMaterialSTR( BLOCKMATERIAL mat )
 			return "dust";
 		case MAT_FABRIC:
 			return "fabric";
+		case MAT_METAL:
+			return "metal";
 	}
 }
 

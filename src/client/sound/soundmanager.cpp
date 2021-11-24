@@ -254,6 +254,7 @@ void soundSystem::Init()
 	for ( std::string key : data.table->keys() )
 	{
 		auto tbl = data.table->getTable( key );
+		// con_debug( "Found sound event: %s", key.c_str() );
 
 		auto [has, type] = tbl->getString( "type" );
 		if ( !has )

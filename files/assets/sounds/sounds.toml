@@ -49,6 +49,12 @@ pitch = [0.8, 1.2]
 # Breaking Sounds                        #
 ##########################################
 
+["block.break.none"]
+type = "block"
+appendSounds = false
+sounds = ["break.ogg"]
+pitch = [0.9, 1.1]
+
 ["block.break.stone"]
 type = "block"
 appendSounds = false
@@ -91,9 +97,21 @@ appendSounds = false
 sounds = [ "breakfabric.ogg" ]
 pitch = [ 0.6, 1.2 ]
 
+["block.break.metal"]
+type = "block"
+appendSounds = false
+sounds = [ "breakmetal.ogg" ]
+pitch = [ 0.6, 1.2 ]
+
 ##########################################
 # Placing Sounds                         #
 ##########################################
+
+["block.place.none"]
+type = "block"
+appendSounds = false
+sounds = ["place.ogg"]
+pitch = [0.9, 1.1]
 
 ["block.place.stone"]
 type = "block"
@@ -137,9 +155,21 @@ appendSounds = false
 sounds = [ "breakfabric.ogg" ]
 pitch = [ 0.6, 1.2 ]
 
+["block.place.metal"]
+type = "block"
+appendSounds = false
+sounds = [ "placemetal.ogg" ]
+pitch = [ 0.6, 1.2 ]
+
 ##########################################
 # Footstep Sounds                        #
 ##########################################
+
+["block.step.none"]
+type = "block"
+appendSounds = false
+sounds = ["place.ogg"]
+pitch = [0.9, 1.1]
 
 ["block.step.stone"]
 type = "block"
@@ -181,6 +211,12 @@ pitch = [ 0.9, 1.1 ]
 type = "block"
 appendSounds = false
 sounds = [ "breakfabric.ogg" ]
+pitch = [ 0.9, 1.1 ]
+
+["block.step.metal"]
+type = "block"
+appendSounds = false
+sounds = [ "placemetal.ogg", "breakmetal.ogg" ]
 pitch = [ 0.9, 1.1 ]
 
 ##########################################
