@@ -363,10 +363,10 @@ void CStatePlay::Update()
 		}
 		else if ( m_pLocalPlayer->m_bInInventory )
 		{
-			pStateMan->m_pGui->Image9PatchCentered( pStateMan->m_pGui->m_vGUICentre, { 18, 19 }, 5,
+			pStateMan->m_pGui->Image9PatchCentered( pStateMan->m_pGui->m_vGUICentre, { 18, 21 }, 5,
 													pStateMan->m_pGui->m_pWindowTex );
 			pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString( "gui.inventory" ),
-									  pStateMan->m_pGui->m_vGUICentre - Vector3f( 8, 8 ), 1.0f, { 255, 255, 255 } );
+									  pStateMan->m_pGui->m_vGUICentre - Vector3f( 8, 8.75f ), 1.0f, { 255, 255, 255 } );
 
 			int s =
 				pStateMan->m_pGui->Inventory( pStateMan->m_pGui->m_vGUICentre - Vector3f( 8, 6.5 ), 8, m_invCreative );
