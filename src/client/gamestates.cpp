@@ -69,6 +69,7 @@ void CStatePlay::Enter()
 	m_pTerrainPNG	   = materialSystem::LoadTexture( "terrain.png" );
 	m_pHotbarTex	   = materialSystem::LoadTexture( "hotbar.png" );
 	m_pHotbarSelectTex = materialSystem::LoadTexture( "hotbar-selected.png" );
+	m_pWaterOverlay    = materialSystem::LoadTexture( "wateroverlay.png" );
 
 	m_pLocalPlayer = new CEntityPlayer();
 	m_pLocalWorld  = new CWorld( m_pChunkShader, m_pDiffuseShader, m_pTerrainPNG );
@@ -270,6 +271,10 @@ void CStatePlay::Update()
 		// -----------------------
 		// GUI
 		// -----------------------
+
+		// If the camera is underwater, we should overlay the GUI with a water texture
+		if (m_pLocalPlayer->m_camera.m_bInWater)
+			pStateMan->m_pGui->Image( {0,-1}, pStateMan->m_pGui->m_vGUISize, m_pWaterOverlay );
 
 		pStateMan->m_pGui->Label( "Meegreef " MEEGREEF_VERSION, { 0, 1 } );
 

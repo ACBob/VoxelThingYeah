@@ -145,7 +145,10 @@ CTexture *materialSystem::LoadTexture( std::vector<unsigned char> imageData, uns
 void materialSystem::ReloadTextures()
 {
 	for ( CTexture *t : loadedTextures )
-		t->Load();
+	{
+		if ( t->m_cFilePath != nullptr )
+			t->Load();
+	}
 }
 
 void materialSystem::UnInit()

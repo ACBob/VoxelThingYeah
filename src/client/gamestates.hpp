@@ -58,6 +58,7 @@ class CStatePlay : public CState
 	CTexture *m_pTerrainPNG;
 	CTexture *m_pHotbarTex;
 	CTexture *m_pHotbarSelectTex;
+	CTexture *m_pWaterOverlay;
 
 	CInventory *m_invCreative;
 
