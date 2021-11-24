@@ -15,6 +15,7 @@
 #pragma once
 
 #include <vector>
+#include <map>
 
 // Forward Decl.
 class CEntityBase;
@@ -45,6 +46,10 @@ class CWorld
 	// The given position is rounded by floor() before being used
 	// If outside the world it returns a nullptr
 	block_t *BlockAtWorldPos( Vector3f pos );
+
+	// The correct way to set a block
+	// Also takes into account that the block may be in a chunk that is not loaded
+	void SetBlockAtWorldPos( Vector3f pos, BLOCKID block, BLOCKVAL val = 0 );
 
 	// Test against an infinitely small point centred on pos
 	// Tests in world coordinates
@@ -92,6 +97,10 @@ class CWorld
 #endif
 
 	std::vector<std::unique_ptr<CChunk>> m_chunks;
+
+	// Keep track of blocks placed in chunks not yet loaded
+	// TODO: better data structure?
+	std::map<Vector3f, uint16_t> m_blocksToPlace;
 
 	int m_iTimeOfDay = 6890;
 
