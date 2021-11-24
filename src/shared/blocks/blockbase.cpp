@@ -8,6 +8,7 @@
 #include "blocksoundmaker.hpp"
 #include "blocktransgeneric.hpp"
 #include "blockwool.hpp"
+#include "blockplant.hpp"
 
 #include "world/chunk.hpp"
 
@@ -47,17 +48,17 @@ namespace
 	constexpr CBlockGeneric _BlockOreCoal(
 		ORE_COAL ); // These should probably have a generic CBlockOre, with some kind of "alloy" or "metal" to drop
 	constexpr CBlockGeneric _BlockOreIron( ORE_IRON );
-	constexpr CBlockGeneric _BlockFlower(
+	constexpr CBlockPlant _BlockFlower(
 		FLOWER ); // CBlockFlower should be generic, use the data value to determine which type of flower
 	constexpr CBlockGeneric _BlockSand( SAND );
 	constexpr CBlockGeneric _BlockSandStone( SANDSTONE );
 	constexpr CBlockGeneric _BlockBricks( BRICKS );
-	constexpr CBlockGeneric _BlockLongGrass( LGRASS );
+	constexpr CBlockPlant _BlockLongGrass( LGRASS );
 	constexpr CBlockGeneric _BlockMossyCobble( MOSSCBBLE );
 	constexpr CBlockGeneric _BlockSnow( SNOW ); // TODO: Do layers of snow like minecraft?
 	constexpr CBlockGeneric _BlockSnowyGrass(
 		SNOWGRASS ); // TODO: Data value of BlockGrass, instead of a separate block
-	constexpr CBlockGeneric _BlockIce( ICE );
+	constexpr CBlockTransGeneric _BlockIce( ICE );
 	constexpr CBlockGeneric _BlockLightYellow(
 		LIGHT_YELLOW ); // TODO: Should be a generic CBlockLight, with a data value of the color
 	constexpr CBlockGeneric _BlockLightWhite( LIGHT_WHITE );

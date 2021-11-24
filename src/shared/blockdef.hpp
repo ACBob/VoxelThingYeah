@@ -62,6 +62,14 @@ enum BLOCKMATERIAL {
 	MAT_FABRIC	= 8	 // Wool
 };
 
+#ifdef CLIENTEXE
+enum BLOCKMODEL {
+	BLOCKMODEL_CUBE = 0, // Simple cube
+	BLOCKMODEL_CROSS = 1, // A "X" - Like plants in Minecraft
+	// BLOCKMODEL_POUND = 2, // A "#" - Like farm plants in Minecraft
+};
+#endif
+
 const char *BlockMaterialSTR( BLOCKMATERIAL mat );
 
 BLOCKMATERIAL GetBlockMaterial( BLOCKID id );

@@ -60,6 +60,8 @@ class CBlockBase
 	virtual bool FaceVisible( Direction direction, BLOCKID blockId ) const;
 
 	virtual uint16_t GetTint( CChunk *pChunk, Vector3f pos, BLOCKVAL metadata, Direction dir ) const { return 0xFFFF; };
+
+	virtual BLOCKMODEL GetModel( CChunk *pChunk, Vector3f pos, BLOCKVAL metadata ) const { return BLOCKMODEL_CUBE; };
 #endif
 
   protected:
