@@ -49,6 +49,7 @@ class CStatePlay : public CState
 
 	CModel m_skyboxModel;
 	CModel m_cloudModel;
+	CModel m_selectionBox;
 	CModel *m_pStellarModel;
 
 	Vector4f m_cloudOffset;

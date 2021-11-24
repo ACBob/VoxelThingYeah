@@ -51,8 +51,13 @@ void CStatePlay::Enter()
 	GetCubeModel( m_skyboxModel, Vector3f( -5, -5, -5 ) );
 	m_pStellarModel = modelSystem::LoadModel( "sun.obj" );
 
+	GetCubeModel( m_selectionBox, Vector3f( 1.015f, 1.015f, 1.015f ) );
+
 	m_pStellarModel->SetShader( m_pUnlitShader );
 	m_skyboxModel.SetShader( m_pSkyboxShader );
+
+	m_selectionBox.SetShader( m_pUnlitShader );
+	m_selectionBox.SetTexture( materialSystem::LoadTexture( "selection.png" ) );
 
 	std::copy( cloudPlane, cloudPlane + 4, std::back_inserter( m_cloudModel.m_vertices ) );
 	std::copy( cloudPlaneFaces, cloudPlaneFaces + 4, std::back_inserter( m_cloudModel.m_faces ) );
@@ -227,6 +232,14 @@ void CStatePlay::Update()
 		glBindTexture( GL_TEXTURE_2D, m_pTerrainPNG->m_iId );
 
 		m_pLocalWorld->Render();
+
+		// Draw a selection box around the block under the crosshair
+		m_selectionBox.m_vPosition = m_pLocalPlayer->m_pointed.m_vPosition - Vector3f( 0.5, 0.5, 0.5 );
+		if ( m_pLocalPlayer->m_pointed.m_pBlock != nullptr && BlockType(m_pLocalPlayer->m_pointed.m_pBlock->GetType()).IsSelectable(m_pLocalPlayer->m_pointed.m_pBlock->GetMeta()) )
+		{
+			m_selectionBox.Render();
+		}
+
 
 		// Particles Last
 		m_particleMan.Render( m_pLocalPlayer->m_camera.m_vRotation );
