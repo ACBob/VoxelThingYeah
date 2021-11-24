@@ -215,6 +215,25 @@ bool CWorld::TestPointCollision( Vector3f pos )
 	return blockBounds.TestPointCollide( pos );
 }
 
+bool CWorld::TestSelectPointCollision( Vector3f pos )
+{
+	block_t *b = BlockAtWorldPos( pos );
+	if ( b == nullptr )
+		return false;
+	// BlockFeatures bF = GetBlockFeatures( b->m_iBlockType );
+	// if ( !bF.walkable )
+	// 	return false;
+
+	if ( !BlockType( b->GetType() ).IsSelectable( b->GetMeta() ) )
+		return false;
+
+	CBoundingBox blockBounds = BlockType( b->GetType() ).GetBounds();
+
+	pos						= pos - pos.Floor();
+	blockBounds.m_vPosition = pos.Floor();
+	return blockBounds.TestPointCollide( pos );
+}
+
 block_t *CWorld::TestAABBCollision( CBoundingBox col )
 {
 	CChunk *chunk = ChunkAtWorldPos( col.m_vPosition );

@@ -45,6 +45,7 @@ class CBlockBase
 	virtual CBoundingBox GetBounds() const;
 
 	virtual bool IsSolid( BLOCKVAL metadata ) const { return true; }
+	virtual bool IsSelectable( BLOCKVAL metadata ) const { return true; }
 
 	virtual bool IsTransparent() const { return false; }
 	virtual bool IsLiquid() const { return false; }

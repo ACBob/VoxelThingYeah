@@ -10,6 +10,7 @@ class CBlockLiquid final : public CBlockBase
 	using Super::Super;
 
 	virtual bool IsSolid( BLOCKVAL metadata ) const { return false; };
+	virtual bool IsSelectable( BLOCKVAL metadata ) const { return false; };
 
 #ifdef CLIENTEXE
 	virtual bool FaceVisible( Direction direction, BLOCKID blockId ) const

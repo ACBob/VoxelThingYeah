@@ -55,6 +55,11 @@ class CWorld
 	// Tests in world coordinates
 	bool TestPointCollision( Vector3f pos );
 
+	// Test against an infinitely small point centred on pos
+	// Tests in chunk coordinates
+	// This test ignores whether or not you can collide with the block, it just checks if you can select it
+	bool TestSelectPointCollision( Vector3f pos );
+
 	// Tests in world coordinates
 	// Returning the first block that collides
 	block_t *TestAABBCollision( CBoundingBox col );

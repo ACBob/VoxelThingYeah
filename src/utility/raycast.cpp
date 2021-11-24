@@ -24,7 +24,7 @@ CPointedThing CVoxRaycast::Cast( CWorld *pChunkMan, bool bUseCollision )
 
 		if ( bUseCollision )
 		{
-			if ( pChunkMan->TestPointCollision( vRay ) )
+			if ( pChunkMan->TestSelectPointCollision( vRay ) )
 				break;
 		}
 		else
