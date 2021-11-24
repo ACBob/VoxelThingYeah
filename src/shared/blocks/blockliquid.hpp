@@ -14,7 +14,11 @@ class CBlockLiquid final : public CBlockBase
 #ifdef CLIENTEXE
 	virtual bool FaceVisible( Direction direction, BLOCKID blockId ) const
 	{
-		return blockId != m_iBlockType && !BlockType( blockId ).IsSolid( 0 );
+		return blockId != m_iBlockType && (BlockType( blockId ).IsTransparent() || BlockType( blockId ).IsLiquid() || !BlockType( blockId ).IsFullCube());
 	}
+
+	virtual bool IsFullCube() const { return false; };
+	virtual bool IsTransparent() const { return true; };
+	virtual bool IsLiquid() const { return true; };
 #endif
 };

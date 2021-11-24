@@ -46,6 +46,10 @@ class CBlockBase
 
 	virtual bool IsSolid( BLOCKVAL metadata ) const { return true; }
 
+	virtual bool IsTransparent() const { return false; }
+	virtual bool IsLiquid() const { return false; }
+	virtual bool IsFullCube() const { return true; }
+
 	virtual BLOCKMATERIAL GetMaterial() const { return GetBlockMaterial( m_iBlockType ); };
 
 #ifdef CLIENTEXE

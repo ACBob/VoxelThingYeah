@@ -6,6 +6,8 @@
 #include "blockliquid.hpp"
 #include "blocksoundmaker.hpp"
 #include "blockwool.hpp"
+#include "blocktransgeneric.hpp"
+#include "blockleaves.hpp"
 
 #include "world/chunk.hpp"
 
@@ -19,7 +21,7 @@ CBoundingBox CBlockBase::GetBounds() const
 #ifdef CLIENTEXE
 bool CBlockBase::FaceVisible( Direction direction, BLOCKID blockId ) const
 {
-	return !BlockType( blockId ).IsSolid( 0 );
+	return BlockType( blockId ).IsTransparent() || !BlockType( blockId ).IsFullCube();
 }
 #endif
 
@@ -35,9 +37,9 @@ namespace
 	constexpr CBlockGeneric _BlockCobble( COBBLE );
 	constexpr CBlockGeneric _BlockPlanks( PLANKS );
 	constexpr CBlockGeneric _BlockBedrock( BEDROCK );
-	constexpr CBlockGeneric _BlockGlass( GLASS );
+	constexpr CBlockTransGeneric _BlockGlass( GLASS );
 	constexpr CBlockGeneric _BlockLog( LOG );
-	constexpr CBlockGeneric _BlockLeaves( LEAVES );
+	constexpr CBlockLeaves _BlockLeaves( LEAVES );
 	constexpr CBlockLiquid _BlockWater( WATER );
 	constexpr CBlockLiquid _BlockWaterSRC( WATERSRC );
 	constexpr CBlockLiquid _BlockLava( LAVA );
