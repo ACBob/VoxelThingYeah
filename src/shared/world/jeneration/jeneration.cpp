@@ -53,11 +53,11 @@ COverworldJeneration::COverworldJeneration()
 	m_biomesOvergroundHumidityNoise.noise_type	 = FNL_NOISE_PERLIN;
 	m_biomesOvergroundTemperatureNoise.frequency = 0.01f;
 
-	m_treeNoise									 = fnlCreateState();
-	m_treeNoise.seed							 = m_iSeed + 'TREE';
-	m_treeNoise.noise_type						 = FNL_NOISE_PERLIN;
-	m_treeNoise.octaves							 = 1;
-	m_treeNoise.frequency						 = 0.01f;
+	m_treeNoise			   = fnlCreateState();
+	m_treeNoise.seed	   = m_iSeed + 'TREE';
+	m_treeNoise.noise_type = FNL_NOISE_PERLIN;
+	m_treeNoise.octaves	   = 1;
+	m_treeNoise.frequency  = 0.01f;
 
 	// Biomes
 	InitBiomes();
@@ -82,7 +82,7 @@ void COverworldJeneration::GenBase( CChunk *c )
 
 		if ( WorldPosition.y <= seaFloor )
 		{
-			c->m_blocks[i].Set(STONE);
+			c->m_blocks[i].Set( STONE );
 			continue;
 		}
 
@@ -90,7 +90,7 @@ void COverworldJeneration::GenBase( CChunk *c )
 		float percentToTopSurface = 1.0f - ( WorldPosition.y / 32.0f );
 		noiseData3D *= percentToTopSurface;
 
-		c->m_blocks[i].Set(noiseData3D > 0.7 ? STONE : ( WorldPosition.y > m_iSeaLevel ? AIR : WATERSRC ));
+		c->m_blocks[i].Set( noiseData3D > 0.7 ? STONE : ( WorldPosition.y > m_iSeaLevel ? AIR : WATERSRC ) );
 	}
 }
 
@@ -183,7 +183,7 @@ void COverworldJeneration::Decorate( CChunk *c )
 	}
 
 	// As a last step, structures
-	CStructure tree = GetStructure(TREE);
+	CStructure tree = GetStructure( TREE );
 
 	// Test if we're in a chunk that has a tree
 	if ( true )
@@ -195,13 +195,13 @@ void COverworldJeneration::Decorate( CChunk *c )
 		z = rand() % CHUNKSIZE_Z;
 
 		// Make sure we're not in a cave ( so above sea level )
-		if ( c->GetPosInWorld({(float)x,0,(float)z}).y > SEA_LEVEL )
+		if ( c->GetPosInWorld( { (float)x, 0, (float)z } ).y > SEA_LEVEL )
 		{
 			// find the surface block
 			int y = 0;
 			for ( y = CHUNKSIZE_Y - 1; y > 0; y-- )
 			{
-				if ( c->GetBlockAtLocal({(float)x, (float)y, (float)z})->GetType() != AIR )
+				if ( c->GetBlockAtLocal( { (float)x, (float)y, (float)z } )->GetType() != AIR )
 					break;
 			}
 
@@ -211,8 +211,9 @@ void COverworldJeneration::Decorate( CChunk *c )
 
 			// Place the tree
 			// world coords
-			Vector3f worldPosition = c->PosToWorld({(float)x, (float)y, (float)z});
-			tree.Generate( c->m_pChunkMan, worldPosition.x, worldPosition.y, worldPosition.z, (Direction)(rand() % 4) );
+			Vector3f worldPosition = c->PosToWorld( { (float)x, (float)y, (float)z } );
+			tree.Generate( c->m_pChunkMan, worldPosition.x, worldPosition.y, worldPosition.z,
+						   ( Direction )( rand() % 4 ) );
 		}
 	}
 }

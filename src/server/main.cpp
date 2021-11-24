@@ -102,9 +102,9 @@ int main( int argc, char *args[] )
 	} );
 
 	// Test if world exists
-	if ( fileSystem::Exists("world.dat") )
+	if ( fileSystem::Exists( "world.dat" ) )
 	{
-		con_info("Loading World...");
+		con_info( "Loading World..." );
 		worldIO::loadWorld( &server.m_world, "world.dat" );
 	}
 
@@ -141,12 +141,13 @@ int main( int argc, char *args[] )
 		}
 	}
 
-	for ( CNetworkPlayer *c : server.m_players ) {
+	for ( CNetworkPlayer *c : server.m_players )
+	{
 		server.KickPlayer( c, "kick.closing" );
 		server.Update();
 	}
 
-	con_info("Saving World...");
+	con_info( "Saving World..." );
 	worldIO::saveWorld( &server.m_world, "world.dat" );
 
 	consoleThread.join();

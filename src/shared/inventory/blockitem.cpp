@@ -36,8 +36,5 @@ Vector4f CBlockItem::GetUV()
 	blockTex /= 16.0f;
 	return { blockTex.x, blockTex.y, blockTex.x + blockTex.z, blockTex.y + blockTex.w };
 }
-CColour CBlockItem::GetTint()
-{
-	return BlockType( m_iBlockType ).GetTint( nullptr, {}, m_iBlockData, NORTH );
-}
+CColour CBlockItem::GetTint() { return BlockType( m_iBlockType ).GetTint( nullptr, {}, m_iBlockData, NORTH ); }
 #endif

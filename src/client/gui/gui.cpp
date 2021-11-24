@@ -158,9 +158,9 @@ void CGui::Resize( Vector3f screenDimensions )
 	m_vScreenCentre		  = m_vScreenDimensions / 2.0f;
 
 	if ( screenDimensions.x < screenDimensions.y )
-		m_iGUIUnitSize		  = screenDimensions.x / GUI_GRID_X;
+		m_iGUIUnitSize = screenDimensions.x / GUI_GRID_X;
 	else
-		m_iGUIUnitSize		  = screenDimensions.y / GUI_GRID_Y;
+		m_iGUIUnitSize = screenDimensions.y / GUI_GRID_Y;
 
 	m_vGUISize	 = m_vScreenDimensions / m_iGUIUnitSize;
 	m_vGUICentre = m_vScreenCentre / m_iGUIUnitSize;
@@ -318,7 +318,7 @@ float CGui::_TextLength( const char *text, float scale )
 			// Get the next string up to the next semicolon
 			char *next = strchr( (char *)text, ';' );
 
-			if (next != nullptr)
+			if ( next != nullptr )
 			{
 				// Get the length of the string
 				int length = next - text;
@@ -328,17 +328,13 @@ float CGui::_TextLength( const char *text, float scale )
 				strncpy( code, text, length );
 				code[length] = '\0';
 
-				if ( code[0] == '#' ||
-					code[0] == '@' ||
-					code[0] == 'r' ||
-					code[0] == 'g' ||
-					code[0] == 'i' ||
-					code[0] == 'b' )
-					{
-						// Skip the code
-						text += length;
-						continue;
-					}
+				if ( code[0] == '#' || code[0] == '@' || code[0] == 'r' || code[0] == 'g' || code[0] == 'i' ||
+					 code[0] == 'b' )
+				{
+					// Skip the code
+					text += length;
+					continue;
+				}
 			}
 		}
 
@@ -361,10 +357,9 @@ void CGui::_DrawText( const char *text, Vector3f pos, float scale, CColour colou
 	float onePixel = scale * ( 2.0f / 16.0f ) * (float)m_iGUIUnitSize;
 
 	CColour baseColour = colour;
-	bool garbage = false;
-	bool italic = false;
-	bool bold = false;
-	
+	bool garbage	   = false;
+	bool italic		   = false;
+	bool bold		   = false;
 
 	// Render
 	// OpenGl
@@ -382,14 +377,14 @@ void CGui::_DrawText( const char *text, Vector3f pos, float scale, CColour colou
 
 			if ( j == 0 || j >= 256 )
 				j = 255;
-			
+
 			// HTML-like formatting (i.e &<code>;)
 			if ( j == '&' && lastKnownChar != '\\' )
 			{
 				// Get the next string up to the next semicolon
 				char *next = strchr( (char *)text, ';' );
 
-				if (next != nullptr)
+				if ( next != nullptr )
 				{
 					// Get the length of the string
 					int length = next - text;
@@ -404,19 +399,19 @@ void CGui::_DrawText( const char *text, Vector3f pos, float scale, CColour colou
 					// Color codes are prefixed with '@' or '#'
 					// '#' in the beginning means a hex code, @ is an ID for predefined colors
 					// Hex codes too long are gracefully ignored
-					switch (code[0])
+					switch ( code[0] )
 					{
 						case '#':
 							// Convert the hex code to a colour
 							// Both #RGB and #RRGGBB are supported
 							int r, g, b;
-							
+
 							// Check code length
-							if (length == 7)
+							if ( length == 7 )
 							{
 								sscanf( code + 1, "%02x%02x%02x", &r, &g, &b );
 							}
-							else if (length == 4)
+							else if ( length == 4 )
 							{
 								sscanf( code + 1, "%1x%1x%1x", &r, &g, &b );
 								r *= 17;
@@ -430,7 +425,7 @@ void CGui::_DrawText( const char *text, Vector3f pos, float scale, CColour colou
 							colour = CColour( r, g, b );
 
 							applied = true;
-						break;
+							break;
 						case '@':
 							// Convert the ID to a colour
 							int id;
@@ -438,40 +433,38 @@ void CGui::_DrawText( const char *text, Vector3f pos, float scale, CColour colou
 
 							if ( id >= 0 && id < DYE_COLOURS )
 								colour = DyePalette[id];
-							
 
 							applied = true;
-						break;
+							break;
 						case 'r':
 							// Reset the colour
-							colour = baseColour;
+							colour	= baseColour;
 							garbage = false;
-							italic = false;
-							bold = false;
+							italic	= false;
+							bold	= false;
 
 							applied = true;
-						break;
+							break;
 						case 'i':
 							// Italic
-							italic = !italic;
+							italic	= !italic;
 							applied = true;
-						break;
+							break;
 						case 'b':
 							// Bold
-							bold = !bold;
+							bold	= !bold;
 							applied = true;
-						break;
+							break;
 						case 'g':
 							garbage = !garbage;
 							applied = true;
-						break;
+							break;
 					}
-
 
 					// Delete the code
 					delete[] code;
 
-					if (applied)
+					if ( applied )
 					{
 						// Move the text pointer to the next semicolon
 						text = next + 1;
@@ -479,13 +472,14 @@ void CGui::_DrawText( const char *text, Vector3f pos, float scale, CColour colou
 					}
 				}
 			}
-			
+
 			// Garbage text
-			if (garbage) {
+			if ( garbage )
+			{
 				// randomize the text based on tick (to avoid going too quickly)
-				j = (j + m_iTick) % 255;
+				j = ( j + m_iTick ) % 255;
 			}
-			
+
 			// Get the character's UV coordinates
 			Vector4f uv;
 			float x, y;
@@ -499,9 +493,10 @@ void CGui::_DrawText( const char *text, Vector3f pos, float scale, CColour colou
 
 			// Render the character
 			// Shadow first
-			std::vector<GuiVert> vertices = GetRect( pos + Vector3f( i, 0, 0 ) + Vector3f{ onePixel, onePixel },
-													 Vector3f( m_iGUIUnitSize * scale, m_iGUIUnitSize * scale ), uv,
-													 colour / CColour( 2, 2, 2, 1 ), italic ? m_iGUIUnitSize * 0.5f * scale : 0.0f );
+			std::vector<GuiVert> vertices =
+				GetRect( pos + Vector3f( i, 0, 0 ) + Vector3f{ onePixel, onePixel },
+						 Vector3f( m_iGUIUnitSize * scale, m_iGUIUnitSize * scale ), uv, colour / CColour( 2, 2, 2, 1 ),
+						 italic ? m_iGUIUnitSize * 0.5f * scale : 0.0f );
 			m_vertices.insert( m_vertices.end(), vertices.begin(), vertices.end() );
 			// Text character
 			vertices = GetRect( pos + Vector3f( i, 0, 0 ), Vector3f( m_iGUIUnitSize * scale, m_iGUIUnitSize * scale ),
@@ -510,7 +505,7 @@ void CGui::_DrawText( const char *text, Vector3f pos, float scale, CColour colou
 
 			// If we're bold, render the character again but slightly offset
 			// TODO: the shadow clips the bold text
-			if (bold)
+			if ( bold )
 			{
 				// Shadow first
 				vertices = GetRect( pos + Vector3f( i, 0, 0 ) + Vector3f{ onePixel * 2, onePixel * 2 },
@@ -519,14 +514,14 @@ void CGui::_DrawText( const char *text, Vector3f pos, float scale, CColour colou
 				m_vertices.insert( m_vertices.end(), vertices.begin(), vertices.end() );
 				// Text character
 				vertices = GetRect( pos + Vector3f( i, 0, 0 ) + Vector3f{ onePixel, 0 },
-									Vector3f( m_iGUIUnitSize * scale, m_iGUIUnitSize * scale ), uv,
-									colour, italic ? m_iGUIUnitSize * 0.5f * scale : 0.0f );
+									Vector3f( m_iGUIUnitSize * scale, m_iGUIUnitSize * scale ), uv, colour,
+									italic ? m_iGUIUnitSize * 0.5f * scale : 0.0f );
 				m_vertices.insert( m_vertices.end(), vertices.begin(), vertices.end() );
 			}
 
 			// When bold, we move ahead slightly more to compensate for the bigger character
 			i += m_charWidths[j] * m_iGUIUnitSize * scale;
-			i += onePixel * (bold ? 2.0f : 1.0f);
+			i += onePixel * ( bold ? 2.0f : 1.0f );
 		}
 	}
 }
@@ -696,7 +691,7 @@ int CGui::Inventory( Vector3f position, int itemsAccross, CInventory *pInventory
 {
 	position = GetInScreen( position );
 
-	int itemsPerRow	   = itemsAccross;
+	int itemsPerRow = itemsAccross;
 
 	// Vector3f size = Vector3f( itemsPerRow * m_iGUIUnitSize * 2, itemsPerColumn * m_iGUIUnitSize * 2 );
 	// size.x += WINDOW_EDGE_RADIUS * 2;

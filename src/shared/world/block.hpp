@@ -18,40 +18,34 @@ class CChunk;
 struct block_t
 {
   public:
-  // Block data gives us
-  // 2 bytes for the block type
-  // 2 bytes for the block meta
-  // Block type is stored on the first two bytes
-  // Block meta is stored on the last two bytes
+	// Block data gives us
+	// 2 bytes for the block type
+	// 2 bytes for the block meta
+	// Block type is stored on the first two bytes
+	// Block meta is stored on the last two bytes
 	uint32_t blck = 0;
 
-	void Set(uint16_t type, uint16_t meta = 0)
+	void Set( uint16_t type, uint16_t meta = 0 )
 	{
-		blck = (type << 16) | meta;
+		blck = ( type << 16 ) | meta;
 		Update();
 	}
 
-	void Set (uint32_t data)
+	void Set( uint32_t data )
 	{
 		blck = data;
 		Update();
 	}
 
-	void Get(uint16_t &type, uint16_t &meta)
+	void Get( uint16_t &type, uint16_t &meta )
 	{
 		type = blck >> 16;
 		meta = blck & 0xFFFF;
 	}
 
-	uint16_t GetType()
-	{
-		return blck >> 16;
-	}
+	uint16_t GetType() { return blck >> 16; }
 
-	uint16_t GetMeta()
-	{
-		return blck & 0xFFFF;
-	}
+	uint16_t GetMeta() { return blck & 0xFFFF; }
 
 #ifdef CLIENTEXE
 	BlockTexture GetSideTexture( Direction side );

@@ -9,18 +9,9 @@ namespace fileSystem
 {
 	class File;
 
-	enum FILEMODE
-	{
-		READ,
-		WRITE
-	};
+	enum FILEMODE { READ, WRITE };
 
-	enum SEEKMODE
-	{
-		BEGIN,
-		CURRENT,
-		END
-	};
+	enum SEEKMODE { BEGIN, CURRENT, END };
 
 	// exePath is usually argv[0].
 	bool Init( const char *exePath );
@@ -113,7 +104,7 @@ namespace fileSystem
 		// Returns the virtual path
 		const char *GetVirtualPath();
 
-		private:
+	  private:
 		bool m_bOpened;
 		FILEMODE m_mode;
 		const char *m_virtualPath;

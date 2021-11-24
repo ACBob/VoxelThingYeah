@@ -15,8 +15,5 @@ Vector4f CItem::GetUV()
 {
 	return Vector4f( (float)m_iID / 16.0f, 0.0f, (float)m_iID / 16.0f + 1.0f / 16.0f, 1.0f / 16.0f );
 }
-CColour CItem::GetTint()
-{
-	return (uint16_t)0xFFFF;
-}
+CColour CItem::GetTint() { return (uint16_t)0xFFFF; }
 #endif

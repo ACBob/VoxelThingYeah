@@ -164,10 +164,10 @@ void CNetworkServer::Update()
 
 		// Queue it, only if it's not already queued and the player hasn't already loaded it
 		if ( std::find( c->m_pChunkQueue.begin(), c->m_pChunkQueue.end(), p ) == c->m_pChunkQueue.end() &&
-			std::find(c->m_pChunkSent.begin(), c->m_pChunkSent.end(), p) == c->m_pChunkSent.end() )
+			 std::find( c->m_pChunkSent.begin(), c->m_pChunkSent.end(), p ) == c->m_pChunkSent.end() )
 		{
 			c->m_pChunkQueue.push_back( p );
-			con_debug("QUEUE <%.0f,%.0f,%.0f>, %d", p.x, p.y, p.z, c->m_iLoadedChunkIDX);
+			con_debug( "QUEUE <%.0f,%.0f,%.0f>, %d", p.x, p.y, p.z, c->m_iLoadedChunkIDX );
 		}
 		else
 		{
@@ -189,7 +189,7 @@ void CNetworkServer::Update()
 		Vector3f pos = p->m_pChunkQueue.back();
 		p->m_pChunkQueue.pop_back();
 
-		con_debug("SEND <%.0f,%.0f,%.0f>, %d", pos.x, pos.y, pos.z, p->m_iLoadedChunkIDX);
+		con_debug( "SEND <%.0f,%.0f,%.0f>, %d", pos.x, pos.y, pos.z, p->m_iLoadedChunkIDX );
 
 		CChunk *c = m_world.GetChunkGenerateAtPos( pos );
 
@@ -199,21 +199,22 @@ void CNetworkServer::Update()
 	}
 
 	// Now for each player, test if they have any chunks outside of their view distance and remove it from sent
-	for (CNetworkPlayer *p : m_players)
+	for ( CNetworkPlayer *p : m_players )
 	{
-		if (p->m_pEntity == nullptr)
+		if ( p->m_pEntity == nullptr )
 			continue;
 
-		Vector3f pos = p->m_pEntity->m_vPosition;
-		Vector3f chunkPos = (pos / Vector3f(CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z)).Floor();
+		Vector3f pos	  = p->m_pEntity->m_vPosition;
+		Vector3f chunkPos = ( pos / Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor();
 
-		for (Vector3f &v : p->m_pChunkSent)
+		for ( Vector3f &v : p->m_pChunkSent )
 		{
-			if (v.Distance(chunkPos) > 6)
+			if ( v.Distance( chunkPos ) > 6 )
 			{
-				p->m_pChunkSent.erase(std::remove(p->m_pChunkSent.begin(), p->m_pChunkSent.end(), v), p->m_pChunkSent.end());
+				p->m_pChunkSent.erase( std::remove( p->m_pChunkSent.begin(), p->m_pChunkSent.end(), v ),
+									   p->m_pChunkSent.end() );
 
-				con_debug("REMOVED <%.0f,%.0f,%.0f>", v.x, v.y, v.z);
+				con_debug( "REMOVED <%.0f,%.0f,%.0f>", v.x, v.y, v.z );
 			}
 		}
 	}

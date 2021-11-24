@@ -10,9 +10,9 @@ class CPointedThing
 	CPointedThing();
 
 	block_t *m_pBlock = nullptr; // The block at the end
-	Vector3f m_vPosition;		// The position of the hit item
-	Vector3f m_vNormal;			// Facing towards where the ray came from
-	float m_fDistance;			// The distance travelled
+	Vector3f m_vPosition;		 // The position of the hit item
+	Vector3f m_vNormal;			 // Facing towards where the ray came from
+	float m_fDistance;			 // The distance travelled
 };
 
 class CVoxRaycast

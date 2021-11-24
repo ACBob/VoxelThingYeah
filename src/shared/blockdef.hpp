@@ -44,10 +44,10 @@ enum BLOCK : uint16_t {
 	WOOL		 = 30,
 	SOUNDMAKER	 = 31,
 };
-#define LASTBLOCK (SOUNDMAKER + 1)
+#define LASTBLOCK ( SOUNDMAKER + 1 )
 
 // May be changed one day, so use this always
-using BLOCKID = uint16_t;
+using BLOCKID  = uint16_t;
 using BLOCKVAL = uint16_t;
 
 enum BLOCKMATERIAL {

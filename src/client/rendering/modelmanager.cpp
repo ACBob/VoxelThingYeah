@@ -44,11 +44,12 @@ CModel::CModel( std::vector<Vertex> verts, std::vector<Face> faces ) : m_vertice
 	Update();
 }
 
-CModel::~CModel() { 
+CModel::~CModel()
+{
 	glDeleteVertexArrays( 1, &m_iVao );
 	glDeleteBuffers( 1, &m_iVbo );
 	glDeleteBuffers( 1, &m_iEbo );
- }
+}
 
 void CModel::Update()
 {

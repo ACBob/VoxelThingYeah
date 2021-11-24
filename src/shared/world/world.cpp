@@ -44,7 +44,7 @@ CChunk *CWorld::ChunkAtChunkPos( Vector3f pos )
 // Tries to get a chunk and generates a new one if it can't find one
 CChunk *CWorld::GetChunkGenerateAtWorldPos( Vector3f pos )
 {
-	return GetChunkGenerateAtPos( (pos / Vector3f(CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z)).Floor() );
+	return GetChunkGenerateAtPos( ( pos / Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor() );
 }
 
 CChunk *CWorld::GetChunkGenerateAtPos( Vector3f pos )
@@ -76,9 +76,9 @@ CChunk *CWorld::GetChunkGenerateAtPos( Vector3f pos )
 	// test if there's any buffer blocks that intersect with this chunk
 	for ( auto &&b : m_blocksToPlace )
 	{
-		if ( b.first.x >= c->m_vPosition.x * CHUNKSIZE_X && b.first.x < (c->m_vPosition.x + 1) * CHUNKSIZE_X &&
-			 b.first.y >= c->m_vPosition.y * CHUNKSIZE_Y && b.first.y < (c->m_vPosition.y + 1) * CHUNKSIZE_Y &&
-			 b.first.z >= c->m_vPosition.z * CHUNKSIZE_Z && b.first.z < (c->m_vPosition.z + 1) * CHUNKSIZE_Z )
+		if ( b.first.x >= c->m_vPosition.x * CHUNKSIZE_X && b.first.x < ( c->m_vPosition.x + 1 ) * CHUNKSIZE_X &&
+			 b.first.y >= c->m_vPosition.y * CHUNKSIZE_Y && b.first.y < ( c->m_vPosition.y + 1 ) * CHUNKSIZE_Y &&
+			 b.first.z >= c->m_vPosition.z * CHUNKSIZE_Z && b.first.z < ( c->m_vPosition.z + 1 ) * CHUNKSIZE_Z )
 		{
 			block_t *blck = c->GetBlockAtLocal( b.first );
 
@@ -94,11 +94,10 @@ CChunk *CWorld::GetChunkGenerateAtPos( Vector3f pos )
 	// m_blocksToPlace.erase(
 	// 	std::remove_if( m_blocksToPlace.begin(), m_blocksToPlace.end(),
 	// 					[c]( const std::pair<Vector3i, uint32_t> &b ) {
-	// 						return b.first.x >= c->m_vPosition.x * CHUNKSIZE_X && b.first.x < (c->m_vPosition.x + 1) * CHUNKSIZE_X &&
-	// 							   b.first.y >= c->m_vPosition.y * CHUNKSIZE_Y && b.first.y < (c->m_vPosition.y + 1) * CHUNKSIZE_Y &&
-	// 							   b.first.z >= c->m_vPosition.z * CHUNKSIZE_Z && b.first.z < (c->m_vPosition.z + 1) * CHUNKSIZE_Z;
-	// 					} ),
-	// 	m_blocksToPlace.end() );
+	// 						return b.first.x >= c->m_vPosition.x * CHUNKSIZE_X && b.first.x < (c->m_vPosition.x + 1) * CHUNKSIZE_X
+	// && 							   b.first.y >= c->m_vPosition.y * CHUNKSIZE_Y && b.first.y < (c->m_vPosition.y + 1) * CHUNKSIZE_Y && 							   b.first.z
+	// >= c->m_vPosition.z * CHUNKSIZE_Z && b.first.z < (c->m_vPosition.z + 1) * CHUNKSIZE_Z; 					} ), 	m_blocksToPlace.end()
+	// );
 
 	c->m_bReallyDirty = c->m_bDirty = true;
 
@@ -134,9 +133,10 @@ block_t *CWorld::BlockAtWorldPos( Vector3f pos )
 void CWorld::SetBlockAtWorldPos( Vector3f pos, BLOCKID block, BLOCKVAL val )
 {
 	block_t *b = BlockAtWorldPos( pos );
-	if ( b == nullptr ) { // place it in a buffer
+	if ( b == nullptr )
+	{ // place it in a buffer
 		// smash down to one uint32_t
-		uint32_t x = block | ( val << 16 );
+		uint32_t x			 = block | ( val << 16 );
 		m_blocksToPlace[pos] = x;
 		return;
 	}
@@ -250,9 +250,8 @@ void CWorld::WorldTick( int64_t iTick, float delta )
 	std::vector<Vector3f> playerChunkPositions;
 #endif
 
-	m_ents.erase(
-		std::remove_if( m_ents.begin(), m_ents.end(), []( CEntityBase *e ) { return e->m_bIsKilled; } ),
-		m_ents.end() );
+	m_ents.erase( std::remove_if( m_ents.begin(), m_ents.end(), []( CEntityBase *e ) { return e->m_bIsKilled; } ),
+				  m_ents.end() );
 
 	for ( CEntityBase *ent : m_ents )
 	{
@@ -261,9 +260,8 @@ void CWorld::WorldTick( int64_t iTick, float delta )
 
 #ifdef SERVEREXE
 		if ( ent->IsPlayer() )
-			playerChunkPositions.push_back( ( ent->m_vPosition /
-										 Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) )
-										   .Floor() );
+			playerChunkPositions.push_back(
+				( ent->m_vPosition / Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor() );
 #endif
 	}
 
@@ -324,9 +322,6 @@ void CWorld::UsePortable( PortableChunkRepresentation rep )
 
 	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
 	{
-		c->m_blocks[j].Set(
-			rep.m_iBlocks[j],
-			rep.m_iValue[j]
-		);
+		c->m_blocks[j].Set( rep.m_iBlocks[j], rep.m_iValue[j] );
 	}
 }

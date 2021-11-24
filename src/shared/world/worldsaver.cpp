@@ -11,11 +11,11 @@
 
 #include <algorithm>
 
-bool worldIO::saveWorld(CWorld *pWorld, const char *filename)
+bool worldIO::saveWorld( CWorld *pWorld, const char *filename )
 {
 	// Start the file
-	fileSystem::File *f = new fileSystem::File(filename, fileSystem::WRITE);
-	if( !f || !f->IsOpen() )
+	fileSystem::File *f = new fileSystem::File( filename, fileSystem::WRITE );
+	if ( !f || !f->IsOpen() )
 	{
 		delete f;
 		con_error( "Could not open file %s for saving world", filename );
@@ -29,7 +29,7 @@ bool worldIO::saveWorld(CWorld *pWorld, const char *filename)
 
 	// Write the block palette
 	f->Write( (uint8_t)LASTBLOCK );
-	for( int i = 0; i < LASTBLOCK; i++ )
+	for ( int i = 0; i < LASTBLOCK; i++ )
 	{
 		f->Write( (uint16_t)i );
 		f->Write( (uint16_t)i );
@@ -49,13 +49,14 @@ bool worldIO::saveWorld(CWorld *pWorld, const char *filename)
 
 		// Quickly test if the chunk is just air (in which case we need to write the empty chunk header)
 		// SO 14120346
-		if (std::all_of(chunk->m_blocks, chunk->m_blocks + CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z, [](block_t b) { return b.GetType() == AIR; }))
+		if ( std::all_of( chunk->m_blocks, chunk->m_blocks + CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z,
+						  []( block_t b ) { return b.GetType() == AIR; } ) )
 		{
 			f->Write( MAGIC_EMPTYCHUNK, 5 );
 			continue;
 		}
 
-		for (int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++)
+		for ( int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++ )
 		{
 			f->Write( (uint16_t)c.m_iBlocks[i] );
 			f->Write( (uint16_t)c.m_iValue[i] );
@@ -72,8 +73,8 @@ bool worldIO::saveWorld(CWorld *pWorld, const char *filename)
 bool worldIO::loadWorld( CWorld *world, const char *filename )
 {
 	// Start the file
-	fileSystem::File *f = new fileSystem::File(filename, fileSystem::READ);
-	if( !f || !f->IsOpen() )
+	fileSystem::File *f = new fileSystem::File( filename, fileSystem::READ );
+	if ( !f || !f->IsOpen() )
 	{
 		delete f;
 		con_error( "Could not open file %s for loading world", filename );
@@ -83,7 +84,7 @@ bool worldIO::loadWorld( CWorld *world, const char *filename )
 	// Read the header
 	char header[4];
 	f->Read( header, 4 );
-	if( strncmp( header, WORLDHEADER, 4 ) != 0 )
+	if ( strncmp( header, WORLDHEADER, 4 ) != 0 )
 	{
 		con_error( "Invalid file format for world file %s", filename );
 		delete f;
@@ -93,7 +94,7 @@ bool worldIO::loadWorld( CWorld *world, const char *filename )
 	// Read the version
 	uint8_t version;
 	f->Read( &version, 1 );
-	if( version != WORLDVERSION )
+	if ( version != WORLDVERSION )
 	{
 		con_error( "Invalid version for world file %s (expected %d, got %d)", filename, WORLDVERSION, version );
 		delete f;
@@ -109,15 +110,16 @@ bool worldIO::loadWorld( CWorld *world, const char *filename )
 	// Read the block palette
 	uint8_t paletteSize;
 	f->Read( &paletteSize, 1 );
-	if( paletteSize != LASTBLOCK )
+	if ( paletteSize != LASTBLOCK )
 	{
-		con_error( "Invalid block palette size for world file %s (expected %d, got %d)", filename, LASTBLOCK, paletteSize );
+		con_error( "Invalid block palette size for world file %s (expected %d, got %d)", filename, LASTBLOCK,
+				   paletteSize );
 		delete f;
 		return false;
 	}
 
 	// Read the block palette
-	for( int i = 0; i < LASTBLOCK; i++ )
+	for ( int i = 0; i < LASTBLOCK; i++ )
 	{
 		uint16_t id, mappedId;
 		f->Read( &id, 2 );
@@ -145,12 +147,12 @@ bool worldIO::loadWorld( CWorld *world, const char *filename )
 		// Which is flagged by MAGIC_EMPTYCHUNK
 		char magic[5];
 		f->Read( magic, 5 );
-		if (strncmp(magic, MAGIC_EMPTYCHUNK, 5) == 0)
+		if ( strncmp( magic, MAGIC_EMPTYCHUNK, 5 ) == 0 )
 		{
-			for (int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++)
+			for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
 			{
 				c.m_iBlocks[j] = AIR;
-				c.m_iValue[j] = 0;
+				c.m_iValue[j]  = 0;
 			}
 			continue;
 		}
@@ -159,14 +161,14 @@ bool worldIO::loadWorld( CWorld *world, const char *filename )
 		// So we need to put them back
 		f->Seek( -5, fileSystem::CURRENT );
 
-		for (int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++)
+		for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
 		{
 			uint16_t id;
 			f->Read( &id, 2 );
 			uint16_t value;
 			f->Read( &value, 2 );
 			c.m_iBlocks[j] = id;
-			c.m_iValue[j] = value;
+			c.m_iValue[j]  = value;
 		}
 
 		world->UsePortable( c );

@@ -6,7 +6,7 @@
 // And the format is simple:
 /*
 	Header - 4 bytes that spell "MEEG"
-	Version - 1 byte 
+	Version - 1 byte
 	World name - up to 32 bytes
 
 	Block Palette size - 1 byte
@@ -21,7 +21,7 @@
 		 Block ID - 2 bytes
 		 Block Meta - 2 bytes
 		Chunk data may be vacant if the chunk is empty, instead marked by "EMPTY"
-	
+
 	Time of day - 2 bytes
 */
 
@@ -36,7 +36,8 @@
 
 class CWorld; // Forward Decl.
 
-namespace worldIO {
+namespace worldIO
+{
 	bool saveWorld( CWorld *world, const char *filename );
 	bool loadWorld( CWorld *world, const char *filename );
-}
+} // namespace worldIO

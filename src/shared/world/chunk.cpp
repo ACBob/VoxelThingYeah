@@ -31,7 +31,7 @@ CChunk::CChunk()
 	{
 		m_portableDef.m_iBlocks[i] = 0;
 		m_portableDef.m_iValue[i]  = 0;
-		
+
 		m_blocks[i].m_pChunk = this;
 	}
 
@@ -171,10 +171,7 @@ void CChunk::Update( int64_t iTick )
 
 	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
 	{
-		m_blocks[j].Get(
-			m_portableDef.m_iBlocks[j],
-			m_portableDef.m_iValue[j]
-		);
+		m_blocks[j].Get( m_portableDef.m_iBlocks[j], m_portableDef.m_iValue[j] );
 	}
 
 #ifdef CLIENTEXE

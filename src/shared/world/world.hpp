@@ -14,8 +14,8 @@
 
 #pragma once
 
-#include <vector>
 #include <map>
+#include <vector>
 
 // Forward Decl.
 class CEntityBase;
@@ -73,7 +73,7 @@ class CWorld
 	// Returns the world rep at the chunk
 	PortableChunkRepresentation GetWorldRepresentation( Vector3f pos );
 
-	std::vector<CEntityBase*> m_ents;
+	std::vector<CEntityBase *> m_ents;
 	void AddEntity( CEntityBase *e );
 
 	CEntityBase *GetEntityByName( const char *name );

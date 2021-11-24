@@ -3,11 +3,11 @@
 #include "blockair.hpp"
 #include "blockerror.hpp"
 #include "blockgeneric.hpp"
+#include "blockleaves.hpp"
 #include "blockliquid.hpp"
 #include "blocksoundmaker.hpp"
-#include "blockwool.hpp"
 #include "blocktransgeneric.hpp"
-#include "blockleaves.hpp"
+#include "blockwool.hpp"
 
 #include "world/chunk.hpp"
 

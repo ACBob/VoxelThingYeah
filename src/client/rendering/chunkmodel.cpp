@@ -179,8 +179,7 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, block_t blocks[], Vector3f pos,
 					{
 						CColour lightColour;
 						CColour blockColouration =
-							BlockType( block.GetType() )
-								.GetTint( chunk, pos, block.GetMeta(), (Direction)i );
+							BlockType( block.GetType() ).GetTint( chunk, pos, block.GetMeta(), (Direction)i );
 
 						Vector3f neighbour = Vector3f( x, y, z ) + DirectionVector[i];
 						if ( ValidChunkPosition( neighbour ) )

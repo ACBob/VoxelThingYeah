@@ -160,14 +160,13 @@ namespace fileSystem
 		return l;
 	}
 
-
 	File::File( const char *virtualPath, FILEMODE mode )
 	{
 		if ( mode == FILEMODE::READ )
 		{
 			m_pHandle = PHYSFS_openRead( virtualPath );
 
-			m_size = PHYSFS_fileLength( (PHYSFS_File*)m_pHandle );
+			m_size = PHYSFS_fileLength( (PHYSFS_File *)m_pHandle );
 		}
 		else if ( mode == FILEMODE::WRITE )
 		{
@@ -189,7 +188,7 @@ namespace fileSystem
 	{
 		if ( m_bOpened )
 		{
-			PHYSFS_close( (PHYSFS_File*)m_pHandle );
+			PHYSFS_close( (PHYSFS_File *)m_pHandle );
 		}
 	}
 
@@ -198,7 +197,7 @@ namespace fileSystem
 		if ( !m_bOpened )
 			return 0;
 
-		int64_t r = PHYSFS_readBytes( (PHYSFS_File*)m_pHandle, buffer, len );
+		int64_t r = PHYSFS_readBytes( (PHYSFS_File *)m_pHandle, buffer, len );
 
 		if ( r < 0 )
 		{
@@ -206,7 +205,7 @@ namespace fileSystem
 			return 0;
 		}
 
-		m_position = PHYSFS_tell( (PHYSFS_File*)m_pHandle );
+		m_position = PHYSFS_tell( (PHYSFS_File *)m_pHandle );
 
 		return r;
 	}
@@ -215,8 +214,8 @@ namespace fileSystem
 	{
 		if ( !m_bOpened )
 			return 0;
-			
-		int64_t r = PHYSFS_readBytes( (PHYSFS_File*)m_pHandle, &i, len );
+
+		int64_t r = PHYSFS_readBytes( (PHYSFS_File *)m_pHandle, &i, len );
 
 		if ( r < 0 )
 		{
@@ -224,22 +223,19 @@ namespace fileSystem
 			return 0;
 		}
 
-		m_position = PHYSFS_tell( (PHYSFS_File*)m_pHandle );
+		m_position = PHYSFS_tell( (PHYSFS_File *)m_pHandle );
 
 		return r;
 	}
 
-	int64_t File::Read( int &i )
-	{
-		return Read( &i, sizeof( i ) );
-	}
+	int64_t File::Read( int &i ) { return Read( &i, sizeof( i ) ); }
 
 	int64_t File::Write( const void *buffer, int64_t len )
 	{
 		if ( !m_bOpened )
 			return 0;
 
-		int64_t r = PHYSFS_writeBytes( (PHYSFS_File*)m_pHandle, buffer, len );
+		int64_t r = PHYSFS_writeBytes( (PHYSFS_File *)m_pHandle, buffer, len );
 
 		if ( r < 0 )
 		{
@@ -247,46 +243,31 @@ namespace fileSystem
 			return 0;
 		}
 
-		m_position = PHYSFS_tell( (PHYSFS_File*)m_pHandle );
+		m_position = PHYSFS_tell( (PHYSFS_File *)m_pHandle );
 
 		return r;
 	}
 
-	int64_t File::Write( int value )
-	{
-		return Write( &value, sizeof( value ) );
-	}
+	int64_t File::Write( int value ) { return Write( &value, sizeof( value ) ); }
 
-	int64_t File::Write( uint64_t value )
-	{
-		return Write( &value, 8 );
-	}
-	int64_t File::Write( uint32_t value )
-	{
-		return Write( &value, 4 );
-	}
-	int64_t File::Write( uint16_t value )
-	{
-		return Write( &value, 2 );
-	}
-	int64_t File::Write( uint8_t value )
-	{
-		return Write( &value, 1 );
-	}
+	int64_t File::Write( uint64_t value ) { return Write( &value, 8 ); }
+	int64_t File::Write( uint32_t value ) { return Write( &value, 4 ); }
+	int64_t File::Write( uint16_t value ) { return Write( &value, 2 ); }
+	int64_t File::Write( uint8_t value ) { return Write( &value, 1 ); }
 
 	int64_t File::Seek( int64_t pos, SEEKMODE type )
 	{
 		if ( !m_bOpened )
 			return 0;
 
-		if (type == CURRENT)
+		if ( type == CURRENT )
 			pos += m_position;
-		else if (type == END)
+		else if ( type == END )
 			pos += m_size;
 
-		int64_t r = PHYSFS_seek( (PHYSFS_File*)m_pHandle, pos );
+		int64_t r = PHYSFS_seek( (PHYSFS_File *)m_pHandle, pos );
 
-		m_position = PHYSFS_tell( (PHYSFS_File*)m_pHandle );
+		m_position = PHYSFS_tell( (PHYSFS_File *)m_pHandle );
 
 		if ( r < 0 )
 		{
@@ -302,7 +283,7 @@ namespace fileSystem
 		if ( !m_bOpened )
 			return 0;
 
-		int64_t r = PHYSFS_tell( (PHYSFS_File*)m_pHandle );
+		int64_t r = PHYSFS_tell( (PHYSFS_File *)m_pHandle );
 
 		if ( r < 0 )
 		{
@@ -313,21 +294,15 @@ namespace fileSystem
 		return r;
 	}
 
-	int64_t File::Size()
-	{
-		return m_size;
-	}
+	int64_t File::Size() { return m_size; }
 
-	bool File::IsOpen()
-	{
-		return m_bOpened;
-	}
+	bool File::IsOpen() { return m_bOpened; }
 
 	void File::Close()
 	{
 		if ( m_bOpened )
 		{
-			PHYSFS_close( (PHYSFS_File*)m_pHandle );
+			PHYSFS_close( (PHYSFS_File *)m_pHandle );
 			m_bOpened = false;
 		}
 	}
@@ -337,7 +312,7 @@ namespace fileSystem
 		if ( !m_bOpened )
 			return true;
 
-		return PHYSFS_eof( (PHYSFS_File*)m_pHandle );
+		return PHYSFS_eof( (PHYSFS_File *)m_pHandle );
 	}
 
 	bool File::Flush()
@@ -345,8 +320,8 @@ namespace fileSystem
 		if ( !m_bOpened )
 			return false;
 
-		return PHYSFS_flush( (PHYSFS_File*)m_pHandle ) != 0;
+		return PHYSFS_flush( (PHYSFS_File *)m_pHandle ) != 0;
 	}
-	
+
 	const char *File::GetVirtualPath() { return m_virtualPath; }
 } // namespace fileSystem

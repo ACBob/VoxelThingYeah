@@ -20,6 +20,7 @@ namespace modelSystem
 		unsigned int m_iVao;
 		// Element buffer
 		unsigned int m_iEbo;
+
 	  public:
 		struct Vertex
 		{

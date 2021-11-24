@@ -43,8 +43,8 @@
 #include "devconsole.hpp"
 
 #ifdef __linux__
-#include <unistd.h>
-#include <pwd.h>
+	#include <pwd.h>
+	#include <unistd.h>
 #endif
 
 #include "localization/localizer.hpp"
@@ -67,7 +67,7 @@ int main( int argc, char *args[] )
 	SetupClientSideConvars();
 	SetupSharedConvars();
 
-	if (!username->IsModified())
+	if ( !username->IsModified() )
 	{
 		// Get the user's computer username to use instead
 #ifdef __linux__
@@ -76,22 +76,22 @@ int main( int argc, char *args[] )
 		uid_t uid;
 
 		uid = geteuid();
-		pw = getpwuid(uid);
-		
-		if (pw)
+		pw	= getpwuid( uid );
+
+		if ( pw )
 			username->SetString( pw->pw_name );
 		else // In the situation we can't find it, just use player
-			username->SetString("Player");
+			username->SetString( "Player" );
 #elif _WIN32
 
 		char *name = new char[32];
-		GetUserNameEx(NameDisplay, name, 32);
-		username->SetString(name);
+		GetUserNameEx( NameDisplay, name, 32 );
+		username->SetString( name );
 		delete[] name;
 
 #endif
 
-		con_warning("Username set to %s", username->GetString());
+		con_warning( "Username set to %s", username->GetString() );
 	}
 
 	char *argstring = FlattenCharArray( args, 1, argc - 1 );

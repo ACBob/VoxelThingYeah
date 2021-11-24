@@ -73,7 +73,8 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 			// {
 			m_pointed.m_pBlock->Set( AIR );
 
-			protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5, AIR, 0 );
+			protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5, AIR,
+										  0 );
 			// }
 		}
 		if ( m_pInputMan->m_iMouseState & IN_RIGHT_MOUSE && m_pInputMan->m_iOldMouseState == 0 &&

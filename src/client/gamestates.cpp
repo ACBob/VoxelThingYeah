@@ -474,7 +474,8 @@ void CStateMenu::Update()
 	pStateMan->m_pGui->Label( m_splash.c_str(), { pStateMan->m_pGui->m_vGUICentre.x, 10 }, 1.0f, { 127, 127, 255 },
 							  CGui::TEXTALIGN_CENTER );
 
-	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString( "gui.title.startmultiplayer" ),
+	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID,
+												 pStateMan->m_pLocalizer->GetString( "gui.title.startmultiplayer" ),
 												 pStateMan->m_pGui->m_vGUICentre, { 32, 2 } ) )
 	{
 		pStateMan->PushState( std::make_unique<CStateJoinMenu>() );
@@ -608,10 +609,10 @@ void CStatePackMenu::Enter()
 	// List resource packs
 	m_packList = resourcePacks::ListPacks();
 	m_packEnabled.resize( m_packList.size(), false );
-	m_iScroll	   = m_packList.size() - 1;
+	m_iScroll = m_packList.size() - 1;
 
 	// Load enabled packs
-	const char* packs = cl_resourcepacks->GetString();
+	const char *packs = cl_resourcepacks->GetString();
 	for ( size_t i = 0; i < m_packList.size(); i++ )
 	{
 		m_packEnabled[i] = strstr( packs, m_packList[i].internalName.c_str() ) != nullptr;
@@ -669,7 +670,7 @@ void CStatePackMenu::Update()
 
 		// Display Name
 		pStateMan->m_pGui->Label( m_packList[index].name.c_str(), { 2, 2.0f + i * 2.0f }, 1.0f );
-		
+
 		// Checkbox
 		bool enabled = m_packEnabled[index];
 		pStateMan->m_pGui->CheckBox( GUIGEN_ID, { -8, 2.0f + i * 2.0f }, enabled );
@@ -687,7 +688,7 @@ void CStatePackMenu::Update()
 				index = m_iScroll - i;
 			}
 		}
-		if (pStateMan->m_pGui->LabelButton( GUIGEN_ID, "\u25B2", { -10, 2.0f + i * 2.0f }, { 2, 2 } ))
+		if ( pStateMan->m_pGui->LabelButton( GUIGEN_ID, "\u25B2", { -10, 2.0f + i * 2.0f }, { 2, 2 } ) )
 		{
 			if ( index < m_packList.size() - 1 )
 			{
@@ -710,7 +711,7 @@ void CStatePackMenu::Update()
 	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString( "gui.openpath" ),
 												 pStateMan->m_pGui->m_vGUICentre + Vector3f( 0, 12 ), { 16, 2 } ) )
 	{
-		soundSystem::PlaySoundEvent( "gui.error", {0,0,0} );
+		soundSystem::PlaySoundEvent( "gui.error", { 0, 0, 0 } );
 	}
 }
 
@@ -769,7 +770,6 @@ void CStateLanguageMenu::Update()
 	}
 }
 
-
 void CStateJoinMenu::Enter()
 {
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
@@ -779,7 +779,8 @@ void CStateJoinMenu::Enter()
 	pStateMan->m_pGui->SetTextBuffer( 6, cl_port->GetString() );
 }
 
-void CStateJoinMenu::ReturnedTo() {
+void CStateJoinMenu::ReturnedTo()
+{
 	CGameStateMachine *pStateMan = reinterpret_cast<CGameStateMachine *>( m_pStateMan );
 	pStateMan->m_pGui->ClearBuffers();
 
@@ -796,17 +797,24 @@ void CStateJoinMenu::Update()
 
 	pStateMan->m_pGui->ImageRepeating( { 0, -1 }, pStateMan->m_pGui->m_vGUISize, pStateMan->m_pGui->m_pGuiBGTex );
 
-	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.title.ip"), { pStateMan->m_pGui->m_vGUICentre.x, pStateMan->m_pGui->m_vGUICentre.y - 8 }, 1.0f, {255,255,255}, CGui::TEXTALIGN_CENTER );
-	pStateMan->m_pGui->SelectableTextInputCentered( 5, { pStateMan->m_pGui->m_vGUICentre.x, pStateMan->m_pGui->m_vGUICentre.y - 6 }, { 16, 2 } );
+	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString( "gui.title.ip" ),
+							  { pStateMan->m_pGui->m_vGUICentre.x, pStateMan->m_pGui->m_vGUICentre.y - 8 }, 1.0f,
+							  { 255, 255, 255 }, CGui::TEXTALIGN_CENTER );
+	pStateMan->m_pGui->SelectableTextInputCentered(
+		5, { pStateMan->m_pGui->m_vGUICentre.x, pStateMan->m_pGui->m_vGUICentre.y - 6 }, { 16, 2 } );
 
-	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString("gui.title.port"), { pStateMan->m_pGui->m_vGUICentre.x, pStateMan->m_pGui->m_vGUICentre.y - 5 }, 1.0f, {255,255,255}, CGui::TEXTALIGN_CENTER );
-	pStateMan->m_pGui->SelectableTextInputCentered( 6, { pStateMan->m_pGui->m_vGUICentre.x, pStateMan->m_pGui->m_vGUICentre.y - 3 }, { 16, 2 } );
+	pStateMan->m_pGui->Label( pStateMan->m_pLocalizer->GetString( "gui.title.port" ),
+							  { pStateMan->m_pGui->m_vGUICentre.x, pStateMan->m_pGui->m_vGUICentre.y - 5 }, 1.0f,
+							  { 255, 255, 255 }, CGui::TEXTALIGN_CENTER );
+	pStateMan->m_pGui->SelectableTextInputCentered(
+		6, { pStateMan->m_pGui->m_vGUICentre.x, pStateMan->m_pGui->m_vGUICentre.y - 3 }, { 16, 2 } );
 
-	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.title.join"),
-												 { pStateMan->m_pGui->m_vGUICentre.x, pStateMan->m_pGui->m_vGUICentre.y + 3 }, { 16, 2 } ) )
+	if ( pStateMan->m_pGui->LabelButtonCentered(
+			 GUIGEN_ID, pStateMan->m_pLocalizer->GetString( "gui.title.join" ),
+			 { pStateMan->m_pGui->m_vGUICentre.x, pStateMan->m_pGui->m_vGUICentre.y + 3 }, { 16, 2 } ) )
 	{
-		cl_ip->SetString( pStateMan->m_pGui->GetTextBuffer(5) );
-		cl_port->SetString( pStateMan->m_pGui->GetTextBuffer(6) );
+		cl_ip->SetString( pStateMan->m_pGui->GetTextBuffer( 5 ) );
+		cl_port->SetString( pStateMan->m_pGui->GetTextBuffer( 6 ) );
 
 		pStateMan->m_pClient->Connect( cl_ip->GetString(), cl_port->GetInt() );
 
@@ -814,7 +822,8 @@ void CStateJoinMenu::Update()
 		pStateMan->PushState( std::make_unique<CStatePlay>() );
 	}
 
-	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString("gui.cancel"), {pStateMan->m_pGui->m_vGUICentre.x, -3}, { 16, 2 } ) )
+	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID, pStateMan->m_pLocalizer->GetString( "gui.cancel" ),
+												 { pStateMan->m_pGui->m_vGUICentre.x, -3 }, { 16, 2 } ) )
 	{
 		pStateMan->PopState();
 	}

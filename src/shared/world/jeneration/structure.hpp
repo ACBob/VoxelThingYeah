@@ -18,17 +18,16 @@ enum StructureType {
 #define l LEAVES
 
 // A tree
-static const BLOCKID TREE_STRUCTURE[5][25] =
-	{
-		{ N, N, N, N, N, N, N, N, N, N, N, N, L, N, N, N, N, N, N, N, N, N, N, N, N },
+static const BLOCKID TREE_STRUCTURE[5][25] = {
+	{ N, N, N, N, N, N, N, N, N, N, N, N, L, N, N, N, N, N, N, N, N, N, N, N, N },
 
-		{ N, N, N, N, N, N, N, N, N, N, N, N, L, N, N, N, N, N, N, N, N, N, N, N, N },
+	{ N, N, N, N, N, N, N, N, N, N, N, N, L, N, N, N, N, N, N, N, N, N, N, N, N },
 
-		{ N, N, N, N, N, N, l, l, l, N, N, l, L, l, N, N, l, l, l, N, N, N, N, N, N },
+	{ N, N, N, N, N, N, l, l, l, N, N, l, L, l, N, N, l, l, l, N, N, N, N, N, N },
 
-		{ l, l, l, l, l, l, l, l, l, l, l, l, L, l, l, l, l, l, l, l, l, l, l, l, l },
+	{ l, l, l, l, l, l, l, l, l, l, l, l, L, l, l, l, l, l, l, l, l, l, l, l, l },
 
-		{ N, N, N, N, N, N, l, l, l, N, N, l, l, l, N, N, l, l, l, N, N, N, N, N, N },
+	{ N, N, N, N, N, N, l, l, l, N, N, l, l, l, N, N, l, l, l, N, N, N, N, N, N },
 };
 
 #undef N
@@ -48,24 +47,25 @@ class CStructure
 		// We do this by copying TREE_STRUCTURE to the world
 		// Rotation is ignored for now
 
-        // each array is a slice of the structure
-        // and starts at the bottom of the structure
-        // and goes up
-        // Each slice is a 2d array of X by Z
+		// each array is a slice of the structure
+		// and starts at the bottom of the structure
+		// and goes up
+		// Each slice is a 2d array of X by Z
 
-        for ( int iy = 0; iy < 5; iy++ )
-        {
-            for ( int ix = 0; ix < 5; ix++ )
-            {
-                for ( int iz = 0; iz < 5; iz++ )
-                {
-                    if ( TREE_STRUCTURE[iy][ix * 5 + iz] != AIR )
-                    {
-                        pWorld->SetBlockAtWorldPos( {(float)x + ix, (float)y + iy, (float)z + iz}, TREE_STRUCTURE[iy][ix * 5 + iz] );
-                    }
-                }
-            }
-        }
+		for ( int iy = 0; iy < 5; iy++ )
+		{
+			for ( int ix = 0; ix < 5; ix++ )
+			{
+				for ( int iz = 0; iz < 5; iz++ )
+				{
+					if ( TREE_STRUCTURE[iy][ix * 5 + iz] != AIR )
+					{
+						pWorld->SetBlockAtWorldPos( { (float)x + ix, (float)y + iy, (float)z + iz },
+													TREE_STRUCTURE[iy][ix * 5 + iz] );
+					}
+				}
+			}
+		}
 	}
 
   private:
