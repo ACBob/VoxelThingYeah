@@ -161,8 +161,8 @@ class CGui
 	bool Button( GuiID id, Vector3f position, Vector3f minSize = { 4, 2 }, CTexture *pTexture = nullptr );
 	bool ButtonCentered( GuiID id, Vector3f position, Vector3f minSize = { 4, 2 }, CTexture *pTexture = nullptr );
 
-	bool Item( GuiID id, Vector3f position, Vector3f size, CItem *pItem );
-	bool ItemCentered( GuiID id, Vector3f position, Vector3f size, CItem *pItem );
+	bool Item( GuiID id, Vector3f position, Vector3f size, CItem *pItem, bool showCount = true );
+	bool ItemCentered( GuiID id, Vector3f position, Vector3f size, CItem *pItem, bool showCount = true );
 
 	int Inventory( Vector3f position, int itemsAccross, CInventory *pInventory );
 	int InventoryCentered( Vector3f position, int itemsAccross, CInventory *pInventory );

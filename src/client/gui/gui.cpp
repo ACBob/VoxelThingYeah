@@ -649,7 +649,7 @@ bool CGui::ButtonCentered( GuiID id, Vector3f position, Vector3f size, CTexture 
 	return Button( id, position, size, pTexture );
 }
 
-bool CGui::Item( GuiID id, Vector3f position, Vector3f size, CItem *pItem )
+bool CGui::Item( GuiID id, Vector3f position, Vector3f size, CItem *pItem, bool showCount )
 {
 	position = GetInScreen( position );
 
@@ -671,20 +671,23 @@ bool CGui::Item( GuiID id, Vector3f position, Vector3f size, CItem *pItem )
 	_Image( position, size * m_iGUIUnitSize, pTex, pItem->GetTint(), uv );
 
 	// At most we can have 2 digits in the count (up to 64)
-	char *buffer = new char[3];
-	sprintf( buffer, "%d", pItem->GetCount() );
-	_DrawText( buffer, position + Vector3f( size.x * 0.5f, size.y * 0.5f, 0 ), 1.0f, textColor );
-	delete[] buffer;
+	if (showCount)
+	{
+		char *buffer = new char[3];
+		sprintf( buffer, "%d", pItem->GetCount() );
+		_DrawText( buffer, position + Vector3f( size.x * 0.5f, size.y * 0.5f, 0 ), 1.0f, textColor );
+		delete[] buffer;
+	}
 
 	return state == BUTTON_STATE_PRESSED;
 }
 
-bool CGui::ItemCentered( GuiID id, Vector3f position, Vector3f size, CItem *pItem )
+bool CGui::ItemCentered( GuiID id, Vector3f position, Vector3f size, CItem *pItem, bool showCount )
 {
 	position.x -= size.x * 0.5f;
 	position.y += size.y * 0.5f;
 
-	return Item( id, position, size, pItem );
+	return Item( id, position, size, pItem, showCount );
 }
 
 int CGui::Inventory( Vector3f position, int itemsAccross, CInventory *pInventory )
@@ -706,7 +709,7 @@ int CGui::Inventory( Vector3f position, int itemsAccross, CInventory *pInventory
 	{
 		Vector3f itemPos = position + Vector3f( ( i % itemsPerRow ) * m_iGUIUnitSize * 2,
 												( i / itemsPerRow ) * m_iGUIUnitSize * 2, 0 );
-		if ( Item( 'i' + i, itemPos / (float)m_iGUIUnitSize, { 2, 2 }, pInventory->Slot( i ) ) )
+		if ( Item( 'i' + i, itemPos / (float)m_iGUIUnitSize, { 2, 2 }, pInventory->Slot( i ), !pInventory->m_bInfinite ) )
 			slot = i;
 	}
 
