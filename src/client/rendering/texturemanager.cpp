@@ -85,6 +85,30 @@ void CTexture::Load()
 	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, m_iWidth, m_iHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, &m_imageData[0] );
 }
 
+void CTexture::Save( const char *path )
+{
+	if ( path == nullptr )
+	{
+		path = m_cFilePath;
+	}
+
+	std::vector<unsigned char> imageData;
+	uint iError = lodepng::encode( imageData, m_imageData, m_iWidth, m_iHeight );
+	if ( iError != 0 )
+	{
+		con_error( "LodePNG Error when trying to save %s: %s", path, lodepng_error_text( iError ) );
+		return; // can't continue
+	}
+
+	bool bSuccess = false;
+	fileSystem::WriteFile( path, imageData.data(), imageData.size(), bSuccess );
+
+	if ( !bSuccess )
+	{
+		con_error( "Failed to save texture %s", path );
+	}
+}
+
 void materialSystem::Init() {}
 
 CTexture *materialSystem::LoadTexture( const char *path )
@@ -95,7 +119,8 @@ CTexture *materialSystem::LoadTexture( const char *path )
 
 	for ( CTexture *t : loadedTextures )
 	{
-		if ( strcmp( t->m_cFilePath, fp ) == 0 )
+		// Filepath may be nullptr if it was a texture created from image data
+		if ( t->m_cFilePath != nullptr && strcmp( t->m_cFilePath, fp ) == 0 )
 		{
 			delete[] fp;
 			return t;

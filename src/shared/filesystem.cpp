@@ -93,6 +93,17 @@ namespace fileSystem
 		success = true;
 	}
 
+	bool CreateDirectory( const char *virtualPath )
+	{
+		if ( PHYSFS_mkdir( virtualPath ) == 0 )
+		{
+			con_error( "%s: %s", virtualPath, PHYSFS_getErrorByCode( PHYSFS_getLastErrorCode() ) );
+			return false;
+		}
+
+		return true;
+	}
+
 	bool Mount( const char *realPath, const char *virtualPath, bool prepend )
 	{
 		if ( PHYSFS_mount( realPath, virtualPath, prepend ? 0 : 1 ) == 0 )

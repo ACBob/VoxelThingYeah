@@ -325,6 +325,45 @@ int main( int argc, char *args[] )
 
 		window.SwapBuffers();
 
+		// Screenshotting
+		if ( inputMan.m_bKeyboardState[KBD_F2] && !inputMan.m_bOldKeyboardState[KBD_F2] )
+		{
+			// TODO: Abstract this
+			int w = scr_width->GetInt();
+			int h = scr_height->GetInt();
+
+			std::vector<unsigned char> pixels( w * h * 4 );
+			glReadPixels( 0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data() );
+
+			// But we need to flip it vertically
+			int lineSize = w * 4;
+			for ( int y = 0; y < h / 2; y++ )
+			{
+				for ( int x = 0; x < lineSize; x++ )
+				{
+					std::swap( pixels[y * lineSize + x], pixels[(h - y - 1) * lineSize + x] );
+				}
+			}
+
+			// Make sure /screenshots/ exists
+			fileSystem::CreateDirectory( "/screenshots/" );
+
+			// Plop this into a texture (material system expects a std::vector)
+			CTexture *pTex = materialSystem::LoadTexture( pixels, w, h );
+			// Save the texture to disk
+			char *filename = new char[256];
+			// Take the current time and make a filename
+			time_t t = time( nullptr );
+			strftime( filename, 256, "/screenshots/screenshot_%Y-%m-%d_%H-%M-%S.png", localtime( &t ) );
+			pTex->Save( filename );
+
+			client.m_chatBuffer.push_back( (std::string)"Screenshot saved to " + filename );
+
+			// Clean up
+			delete[] filename;
+			delete pTex;
+		}
+
 		now =
 			std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() )
 				.count();

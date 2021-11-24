@@ -26,6 +26,10 @@ namespace fileSystem
 	// Success is set depending on if it succeeds or not
 	void WriteFile( const char *virtualPath, const unsigned char *data, int64_t dataLength, bool &success );
 
+	// Creates the directory if it doesn't exist
+	// Returns true if it succeeds or if it already exists
+	bool CreateDirectory( const char *virtualPath );
+
 	// Opens the file
 	File *OpenFile( const char *virtualPath, const char *mode );
 

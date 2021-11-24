@@ -14,6 +14,8 @@ namespace materialSystem
 
 		void Load();
 
+		void Save( const char *path = nullptr );
+
 		std::vector<unsigned char> m_imageData;
 		unsigned int m_iWidth, m_iHeight, m_iId;
 
