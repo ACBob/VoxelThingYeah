@@ -26,7 +26,7 @@ class CWorld
 {
   public:
 #ifdef CLIENTEXE
-	CWorld( CShader *shader, CShader *entShader, CShader *waterShader, CTexture *worldTex );
+	CWorld( CShader *shader, CShader *entShader, CTexture *worldTex );
 #elif SERVEREXE
 	CWorld();
 #endif
@@ -94,8 +94,6 @@ class CWorld
 	CShader *m_pWorldShader = nullptr;
 	// Shader entities render with
 	CShader *m_pEntityShader = nullptr;
-	// Shader we render specifically water with
-	CShader *m_pWaterShader = nullptr;
 
 	// Texture we use to render the world
 	CTexture *m_pWorldTex = nullptr;

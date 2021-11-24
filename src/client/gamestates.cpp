@@ -46,7 +46,6 @@ void CStatePlay::Enter()
 	m_pUnlitShader	 = shaderSystem::LoadShader( "generic.vert", "unlit.frag" );
 	m_pSkyboxShader	 = shaderSystem::LoadShader( "sky.vert", "sky.frag" );
 	m_pChunkShader	 = shaderSystem::LoadShader( "chunk.vert", "chunk.frag" );
-	m_pWaterShader	 = shaderSystem::LoadShader( "water.vert", "generic.frag" );
 
 	GetCubeModel( m_skyboxModel, Vector3f( -5, -5, -5 ) );
 	m_pStellarModel = modelSystem::LoadModel( "sun.obj" );
@@ -72,7 +71,7 @@ void CStatePlay::Enter()
 	m_pHotbarSelectTex = materialSystem::LoadTexture( "hotbar-selected.png" );
 
 	m_pLocalPlayer = new CEntityPlayer();
-	m_pLocalWorld  = new CWorld( m_pChunkShader, m_pDiffuseShader, m_pWaterShader, m_pTerrainPNG );
+	m_pLocalWorld  = new CWorld( m_pChunkShader, m_pDiffuseShader, m_pTerrainPNG );
 
 	m_pLocalPlayer->m_pInputMan = pStateMan->m_pInputMan;
 	m_pLocalPlayer->m_pClient	= pStateMan->m_pClient;

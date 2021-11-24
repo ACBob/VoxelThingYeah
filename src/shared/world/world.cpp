@@ -17,8 +17,8 @@
 #include "blocks/blockbase.hpp"
 
 #ifdef CLIENTEXE
-CWorld::CWorld( CShader *shader, CShader *entShader, CShader *waterShader, CTexture *worldTex )
-	: m_pWorldShader( shader ), m_pEntityShader( entShader ), m_pWaterShader( waterShader ), m_pWorldTex( worldTex )
+CWorld::CWorld( CShader *shader, CShader *entShader, CTexture *worldTex )
+	: m_pWorldShader( shader ), m_pEntityShader( entShader ), m_pWorldTex( worldTex )
 #elif SERVEREXE
 CWorld::CWorld()
 #endif
@@ -66,7 +66,7 @@ CChunk *CWorld::GetChunkGenerateAtPos( Vector3f pos )
 	c->m_blocksMdl.SetShader( m_pWorldShader );
 	c->m_blocksMdl.SetTexture( m_pWorldTex );
 	c->m_waterMdl.m_vPosition = c->GetPosInWorld();
-	c->m_waterMdl.SetShader( m_pWaterShader );
+	c->m_waterMdl.SetShader( m_pWorldShader );
 	c->m_waterMdl.SetTexture( m_pWorldTex );
 #elif SERVEREXE
 	// Generate only on the server
