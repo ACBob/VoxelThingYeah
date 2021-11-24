@@ -67,6 +67,11 @@ namespace
 	constexpr CBlockGeneric _BlockLightBlue( LIGHT_BLUE );
 	constexpr CBlockWool _BlockWool( WOOL );
 	constexpr CBlockSoundMaker _BlockSoundMaker( SOUNDMAKER );
+	constexpr CBlockGeneric _BlockStoneBricks( STONEBRICKS );
+	constexpr CBlockGeneric _BlockGravel( GRAVEL );
+	constexpr CBlockGeneric _BlockIronBlock( IRONBLOCK );
+	constexpr CBlockGeneric _BlockBookshelf( BOOKSHELF );
+	constexpr CBlockGeneric _BlockTNT( TNT );
 
 	constexpr CBlockError _BlockInvalid( AIR );
 } // namespace
@@ -139,6 +144,16 @@ const CBlockBase &BlockType( BLOCKID type )
 			return _BlockWool;
 		case SOUNDMAKER:
 			return _BlockSoundMaker;
+		case STONEBRICKS:
+			return _BlockStoneBricks;
+		case GRAVEL:
+			return _BlockGravel;
+		case IRONBLOCK:
+			return _BlockIronBlock;
+		case BOOKSHELF:
+			return _BlockBookshelf;
+		case TNT:
+			return _BlockTNT;
 		default:
 			return _BlockInvalid;
 	}

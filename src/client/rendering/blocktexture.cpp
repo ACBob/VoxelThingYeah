@@ -132,5 +132,33 @@ BlockTexture GetDefaultBlockTextureSide( BLOCKID type, Direction side )
 		case SOUNDMAKER:
 			return { 1, 2, 1, 1 };
 			break;
+		case STONEBRICKS:
+			return { 2, 2, 1, 1 };
+			break;
+		case GRAVEL:
+			return { 3, 2, 1, 1 };
+			break;
+		case IRONBLOCK:
+			return { 4, 2, 1, 1 };
+			break;
+		case BOOKSHELF:
+			if ( side == UP || side == DOWN)
+				return { 5, 0, 1, 1 };
+			return { 5, 2, 1, 1 };
+			break;
+		case TNT:
+			switch ( side )
+			{
+				case UP:
+					return { 8, 2, 1, 1 };
+					break;
+				case DOWN:
+					return { 6, 2, 1, 1 };
+					break;
+				default:
+					return { 7, 2, 1, 1 };
+					break;
+			}
+			break;
 	}
 }

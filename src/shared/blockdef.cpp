@@ -38,6 +38,7 @@ BLOCKMATERIAL GetBlockMaterial( BLOCKID id )
 		case ORE_IRON:
 		case SANDSTONE:
 		case BRICKS:
+		case STONEBRICKS:
 			return MAT_STONE;
 			break;
 
@@ -47,6 +48,7 @@ BLOCKMATERIAL GetBlockMaterial( BLOCKID id )
 
 		case PLANKS:
 		case LOG:
+		case BOOKSHELF:
 			return MAT_WOOD;
 			break;
 
@@ -77,12 +79,18 @@ BLOCKMATERIAL GetBlockMaterial( BLOCKID id )
 
 		case SAND:
 		case SNOW:
+		case GRAVEL:
 			return MAT_DUST;
 			break;
 
 		case SOUNDMAKER:
 		case WOOL:
+		case TNT:
 			return MAT_FABRIC;
+			break;
+
+		case IRONBLOCK:
+			return MAT_METAL;
 			break;
 	}
 }

@@ -131,6 +131,11 @@ void CStatePlay::Enter()
 			new CBlockItem( 64, WOOL, DyePalette[15] ),
 
 			new CBlockItem( 64, SOUNDMAKER ),
+			new CBlockItem( 64, STONEBRICKS ),
+			new CBlockItem( 64, GRAVEL ),
+			new CBlockItem( 64, IRONBLOCK ),
+			new CBlockItem( 64, BOOKSHELF ),
+			new CBlockItem( 64, TNT ),
 		},
 		true );
 }

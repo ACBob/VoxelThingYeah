@@ -43,8 +43,13 @@ enum BLOCK : uint16_t {
 	LIGHT_BLUE	 = 29,
 	WOOL		 = 30,
 	SOUNDMAKER	 = 31,
+	STONEBRICKS  = 32,
+	GRAVEL		 = 33,
+	IRONBLOCK	 = 34,
+	BOOKSHELF	 = 35,
+	TNT 		 = 36,
 };
-#define LASTBLOCK ( SOUNDMAKER + 1 )
+#define LASTBLOCK ( TNT + 1 )
 
 // May be changed one day, so use this always
 using BLOCKID  = uint16_t;
@@ -59,14 +64,16 @@ enum BLOCKMATERIAL {
 	MAT_ORGANIC = 5, // Grass, Leaves, Plants
 	MAT_LIQUID	= 6, // Water, Lava
 	MAT_DUST	= 7, // Sand
-	MAT_FABRIC	= 8	 // Wool
+	MAT_FABRIC	= 8, // Wool
+	MAT_METAL   = 9, // Iron, Gold, etc
 };
 
 #ifdef CLIENTEXE
-enum BLOCKMODEL {
+enum BLOCKMODEL { // The commented out ones are ideas for future models
 	BLOCKMODEL_CUBE = 0, // Simple cube
 	BLOCKMODEL_CROSS = 1, // A "X" - Like plants in Minecraft
 	// BLOCKMODEL_POUND = 2, // A "#" - Like farm plants in Minecraft
+	// BLOCKMODEL_FLAME = 3, // Fire-like, every face looks like it's coming out of the block
 };
 #endif
 
