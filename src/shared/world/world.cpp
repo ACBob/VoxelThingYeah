@@ -245,7 +245,10 @@ block_t *CWorld::TestAABBCollision( CBoundingBox col )
 
 void CWorld::WorldTick( int64_t iTick, float delta )
 {
-	std::vector<Vector3f> playerPositions;
+#ifdef SERVEREXE
+	// We only tick chunks near players
+	std::vector<Vector3f> playerChunkPositions;
+#endif
 
 	m_ents.erase(
 		std::remove_if( m_ents.begin(), m_ents.end(), []( CEntityBase *e ) { return e->m_bIsKilled; } ),
@@ -256,16 +259,19 @@ void CWorld::WorldTick( int64_t iTick, float delta )
 		ent->Tick( iTick );
 		ent->PhysicsTick( delta, this );
 
+#ifdef SERVEREXE
 		if ( ent->IsPlayer() )
-			playerPositions.push_back( ( ent->m_vPosition /
+			playerChunkPositions.push_back( ( ent->m_vPosition /
 										 Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) )
 										   .Floor() );
+#endif
 	}
 
 	if ( iTick == m_iLastTick )
 		return;
 	m_iLastTick = iTick;
 
+#ifdef SERVEREXE
 	for ( auto &&c : m_chunks )
 	{
 		if ( c->m_bDirty || c->m_bReallyDirty )
@@ -274,15 +280,26 @@ void CWorld::WorldTick( int64_t iTick, float delta )
 			continue;
 		}
 
-		for ( Vector3f plyrPos : playerPositions )
+		// Check if the chunk is near any players
+		bool bNearPlayer = false;
+		for ( Vector3f pos : playerChunkPositions )
 		{
-			if ( c->m_vPosition.Distance(plyrPos) < 7 )
+			if ( c->GetPosInWorld().Distance( pos ) < 7 )
 			{
-				c->Update( iTick );
+				bNearPlayer = true;
 				break;
 			}
 		}
+
+		if ( bNearPlayer )
+			c->Update( iTick );
 	}
+#elif CLIENTEXE
+	for ( auto &&c : m_chunks )
+	{
+		c->Update( iTick );
+	}
+#endif
 
 	// Progress time
 #ifdef CLIENTEXE
