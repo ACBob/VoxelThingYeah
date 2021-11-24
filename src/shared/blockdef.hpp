@@ -10,7 +10,7 @@
 #pragma once
 
 // TODO: Rename to BLOCK_*
-enum BLOCK {
+enum BLOCK : uint16_t {
 	AIR			 = 0,
 	STONE		 = 1,
 	DIRT		 = 2,

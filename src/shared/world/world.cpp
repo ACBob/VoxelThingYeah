@@ -80,12 +80,12 @@ CChunk *CWorld::GetChunkGenerateAtPos( Vector3f pos )
 			 b.first.y >= c->m_vPosition.y * CHUNKSIZE_Y && b.first.y < (c->m_vPosition.y + 1) * CHUNKSIZE_Y &&
 			 b.first.z >= c->m_vPosition.z * CHUNKSIZE_Z && b.first.z < (c->m_vPosition.z + 1) * CHUNKSIZE_Z )
 		{
-			CBlock *blck = c->GetBlockAtLocal( b.first );
-			if ( blck == nullptr )
-				continue; // (What?)
-			// b.second is a 32bit int, and the block type is a 16bit int
-			blck->m_iBlockType = (BLOCKID)(b.second & 0xFFFF);
-			blck->m_iBlockData = (b.second >> 16) & 0xFFFF;
+			block_t *blck = c->GetBlockAtLocal( b.first );
+
+			if ( blck != nullptr )
+			{
+				blck->Set( b.second );
+			}
 		}
 	}
 
@@ -133,7 +133,7 @@ block_t *CWorld::BlockAtWorldPos( Vector3f pos )
 
 void CWorld::SetBlockAtWorldPos( Vector3f pos, BLOCKID block, BLOCKVAL val )
 {
-	CBlock *b = BlockAtWorldPos( pos );
+	block_t *b = BlockAtWorldPos( pos );
 	if ( b == nullptr ) { // place it in a buffer
 		// smash down to one uint32_t
 		uint32_t x = block | ( val << 16 );
@@ -141,8 +141,7 @@ void CWorld::SetBlockAtWorldPos( Vector3f pos, BLOCKID block, BLOCKVAL val )
 		return;
 	}
 
-	b->m_iBlockType		= block;
-	b->m_iBlockData		= val;
+	b->Set( block, val );
 	b->Update();
 }
 

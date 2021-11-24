@@ -201,7 +201,7 @@ void COverworldJeneration::Decorate( CChunk *c )
 			int y = 0;
 			for ( y = CHUNKSIZE_Y - 1; y > 0; y-- )
 			{
-				if ( c->GetBlockAtLocal({(float)x, (float)y, (float)z})->m_iBlockType != AIR )
+				if ( c->GetBlockAtLocal({(float)x, (float)y, (float)z})->GetType() != AIR )
 					break;
 			}
 

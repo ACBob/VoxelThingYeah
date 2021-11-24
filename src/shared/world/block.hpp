@@ -31,6 +31,12 @@ struct block_t
 		Update();
 	}
 
+	void Set (uint32_t data)
+	{
+		blck = data;
+		Update();
+	}
+
 	void Get(uint16_t &type, uint16_t &meta)
 	{
 		type = blck >> 16;
