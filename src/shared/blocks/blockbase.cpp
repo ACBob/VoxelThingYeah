@@ -76,6 +76,8 @@ namespace
 	constexpr CBlockGeneric _BlockTNT( TNT );
 	constexpr CBlockSnowLayer _BlockSnowLayer( SNOWLAYER );
 	constexpr CBlockSlabGeneric _BlockSlab( SLAB );
+	constexpr CBlockGeneric _BlockGoldBlock( GOLDBLOCK );
+	constexpr CBlockGeneric _BlockDiamondBlock( DIAMONDBLOCK );
 
 	constexpr CBlockError _BlockInvalid( AIR );
 } // namespace
@@ -162,6 +164,10 @@ const CBlockBase &BlockType( BLOCKID type )
 			return _BlockSnowLayer;
 		case SLAB:
 			return _BlockSlab;
+		case GOLDBLOCK:
+			return _BlockGoldBlock;
+		case DIAMONDBLOCK:
+			return _BlockDiamondBlock;
 		default:
 			return _BlockInvalid;
 	}

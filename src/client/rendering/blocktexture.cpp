@@ -162,5 +162,11 @@ BlockTexture GetDefaultBlockTextureSide( BLOCKID type, Direction side )
 					break;
 			}
 			break;
+		case GOLDBLOCK:
+			return { 9, 2, 1, 1 };
+			break;
+		case DIAMONDBLOCK:
+			return { 10, 2, 1, 1 };
+			break;
 	}
 }

@@ -50,6 +50,8 @@ enum BLOCK : uint16_t {
 	TNT 		 = 36,
 	SNOWLAYER    = 37,
 	SLAB		 = 38,
+	GOLDBLOCK	 = 39,
+	DIAMONDBLOCK = 40,
 };
 #define LASTBLOCK ( TNT + 1 )
 

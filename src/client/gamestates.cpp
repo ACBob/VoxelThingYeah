@@ -143,6 +143,9 @@ void CStatePlay::Enter()
 			new CBlockItem( 64, SLAB, STONEBRICKS ),
 			new CBlockItem( 64, SLAB, MOSSCBBLE ),
 			new CBlockItem( 64, SLAB, SANDSTONE ),
+
+			new CBlockItem( 64, GOLDBLOCK ),
+			new CBlockItem( 64, DIAMONDBLOCK ),
 		},
 		true );
 }

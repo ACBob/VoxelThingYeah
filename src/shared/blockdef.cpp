@@ -61,6 +61,7 @@ BLOCKMATERIAL GetBlockMaterial( BLOCKID id )
 		case LIGHT_GREEN:
 		case LIGHT_WHITE:
 		case LIGHT_YELLOW:
+		case DIAMONDBLOCK:
 			return MAT_GLASS;
 			break;
 
@@ -93,6 +94,7 @@ BLOCKMATERIAL GetBlockMaterial( BLOCKID id )
 			break;
 
 		case IRONBLOCK:
+		case GOLDBLOCK:
 			return MAT_METAL;
 			break;
 	}
