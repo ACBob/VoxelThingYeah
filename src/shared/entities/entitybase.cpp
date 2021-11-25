@@ -27,17 +27,6 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 	m_fAge += fDelta;
 
 	m_bOnFloor = false;
-
-	m_vPosition.x += m_vVelocity.x * fDelta;
-	UpdateCollision();
-	if ( pWorld->TestAABBCollision( this->m_collisionBox ) )
-	{
-		if ( m_vVelocity.x >= SMACK_SPEED )
-			soundSystem::PlaySoundEvent( "entity.fastsmack", m_vPosition );
-
-		m_vPosition.x -= m_vVelocity.x * fDelta;
-		m_vVelocity.x /= 2;
-	}
 	m_vPosition.y += m_vVelocity.y * fDelta;
 	UpdateCollision();
 	m_pLastBlockFloor = pWorld->TestAABBCollision( this->m_collisionBox );
@@ -52,6 +41,29 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 		m_vPosition.y -= m_vVelocity.y * fDelta;
 		m_vVelocity.y /= 2;
 	}
+
+	m_vPosition.x += m_vVelocity.x * fDelta;
+	UpdateCollision();
+	if ( pWorld->TestAABBCollision( this->m_collisionBox ) )
+	{
+		if ( m_vVelocity.x >= SMACK_SPEED )
+			soundSystem::PlaySoundEvent( "entity.fastsmack", m_vPosition );
+
+		// We test against STEP_UP_HEIGHT to see if we can step up
+		m_vPosition.y += STEP_UP_HEIGHT;
+		UpdateCollision();
+		if ( m_bOnFloor && !pWorld->TestAABBCollision( this->m_collisionBox ) )
+		{
+			m_vVelocity.y = 0;
+			m_bOnFloor = true;
+		}
+		else
+		{
+			m_vPosition.y -= STEP_UP_HEIGHT;
+			m_vPosition.x -= m_vVelocity.x * fDelta;
+			m_vVelocity.x /= 2.0f;
+		}
+	}
 	m_vPosition.z += m_vVelocity.z * fDelta;
 	UpdateCollision();
 	if ( pWorld->TestAABBCollision( this->m_collisionBox ) )
@@ -59,8 +71,20 @@ void CEntityBase::PhysicsTick( float fDelta, CWorld *pWorld )
 		if ( m_vVelocity.z >= SMACK_SPEED )
 			soundSystem::PlaySoundEvent( "entity.fastsmack", m_vPosition );
 
-		m_vPosition.z -= m_vVelocity.z * fDelta;
-		m_vVelocity.z /= 2;
+		// We test against STEP_UP_HEIGHT to see if we can step up
+		m_vPosition.y += STEP_UP_HEIGHT;
+		UpdateCollision();
+		if ( m_bOnFloor && !pWorld->TestAABBCollision( this->m_collisionBox ) )
+		{
+			m_vVelocity.y = 0;
+			m_bOnFloor = true;
+		}
+		else
+		{
+			m_vPosition.y -= STEP_UP_HEIGHT;
+			m_vPosition.z -= m_vVelocity.z * fDelta;
+			m_vVelocity.z /= 2.0f;
+		}
 	}
 
 	if ( m_bApplyGravity )

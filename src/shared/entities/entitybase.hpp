@@ -16,6 +16,9 @@
 // Move fast enough into water? Splash!
 #define SPLASH_SPEED 10
 
+// The block you're moving into is shorter than this? Step up!
+#define STEP_UP_HEIGHT 0.55f
+
 #include <string>
 #include <vector>
 
