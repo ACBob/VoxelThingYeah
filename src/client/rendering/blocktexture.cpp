@@ -95,6 +95,7 @@ BlockTexture GetDefaultBlockTextureSide( BLOCKID type, Direction side )
 			return { 6, 1, 1, 1 };
 			break;
 		case SNOW:
+		case SNOWLAYER:
 			return { 9, 1, 1, 1 };
 			break;
 		case SNOWGRASS:

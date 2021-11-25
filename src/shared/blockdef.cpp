@@ -82,6 +82,7 @@ BLOCKMATERIAL GetBlockMaterial( BLOCKID id )
 		case SAND:
 		case SNOW:
 		case GRAVEL:
+		case SNOWLAYER:
 			return MAT_DUST;
 			break;
 

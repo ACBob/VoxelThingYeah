@@ -48,6 +48,7 @@ enum BLOCK : uint16_t {
 	IRONBLOCK	 = 34,
 	BOOKSHELF	 = 35,
 	TNT 		 = 36,
+	SNOWLAYER    = 37,
 };
 #define LASTBLOCK ( TNT + 1 )
 
@@ -72,8 +73,10 @@ enum BLOCKMATERIAL {
 enum BLOCKMODEL { // The commented out ones are ideas for future models
 	BLOCKMODEL_CUBE = 0, // Simple cube
 	BLOCKMODEL_CROSS = 1, // A "X" - Like plants in Minecraft
-	// BLOCKMODEL_POUND = 2, // A "#" - Like farm plants in Minecraft
-	// BLOCKMODEL_FLAME = 3, // Fire-like, every face looks like it's coming out of the block
+	BLOCKMODEL_1LAYER = 2, // 1/16th of a block
+	BLOCKMODEL_2LAYER = 3, // 2/16th of a block
+	// BLOCKMODEL_POUND = 3, // A "#" - Like farm plants in Minecraft
+	// BLOCKMODEL_FLAME = 4, // Fire-like, every face looks like it's coming out of the block
 };
 #endif
 

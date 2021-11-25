@@ -9,6 +9,7 @@
 #include "blocktransgeneric.hpp"
 #include "blockwool.hpp"
 #include "blockplant.hpp"
+#include "blocksnowlayer.hpp"
 
 #include "world/chunk.hpp"
 
@@ -72,6 +73,7 @@ namespace
 	constexpr CBlockGeneric _BlockIronBlock( IRONBLOCK );
 	constexpr CBlockGeneric _BlockBookshelf( BOOKSHELF );
 	constexpr CBlockGeneric _BlockTNT( TNT );
+	constexpr CBlockSnowLayer _BlockSnowLayer( SNOWLAYER );
 
 	constexpr CBlockError _BlockInvalid( AIR );
 } // namespace
@@ -154,6 +156,8 @@ const CBlockBase &BlockType( BLOCKID type )
 			return _BlockBookshelf;
 		case TNT:
 			return _BlockTNT;
+		case SNOWLAYER:
+			return _BlockSnowLayer;
 		default:
 			return _BlockInvalid;
 	}

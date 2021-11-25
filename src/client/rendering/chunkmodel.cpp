@@ -46,7 +46,7 @@ const std::vector<std::vector<int>> cubeTris = {
 const std::vector<int> plantTris = { 4, 7, 5, 6, 0, 3, 1, 2 };
 
 std::vector<CModel::Vertex> sampleCubeFace( Direction dir, block_t block, int x, int y, int z, CColour light,
-											CColour tint )
+											CColour tint, float height )
 {
 	std::vector<CModel::Vertex> g;
 	for ( int i = 0; i < 4; i++ )
@@ -54,8 +54,10 @@ std::vector<CModel::Vertex> sampleCubeFace( Direction dir, block_t block, int x,
 		g.push_back( cubeVertices[cubeTris[dir][i]] );
 
 		g[i].x += x;
-		g[i].y += y;
 		g[i].z += z;
+
+		g[i].y *= height;
+		g[i].y += y;
 
 		g[i].lr = light.r / 255.0f;
 		g[i].lg = light.g / 255.0f;
@@ -180,7 +182,15 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, block_t blocks[], Vector3f pos,
 					switch (model)
 					{
 						default:
+						case BLOCKMODEL_1LAYER:
+						case BLOCKMODEL_2LAYER:
 						case BLOCKMODEL_CUBE: {
+							float height = 1.0f;
+							if ( model == BLOCKMODEL_1LAYER )
+								height = 1.0f / 16.0f;
+							else if ( model == BLOCKMODEL_2LAYER )
+								height = 2.0f / 16.0f;
+
 							for ( int i = 0; i < 6; i++ )
 							{
 								CColour lightColour;
@@ -217,7 +227,7 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, block_t blocks[], Vector3f pos,
 								}
 
 								std::vector<CModel::Vertex> g =
-									sampleCubeFace( Direction( i ), block, x, y, z, lightColour, blockColouration );
+									sampleCubeFace( Direction( i ), block, x, y, z, lightColour, blockColouration, height );
 
 								if ( block.GetType() == WATER || block.GetType() == WATERSRC )
 								{

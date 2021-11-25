@@ -40,7 +40,7 @@ void InitBiomes()
 	biomeTundra.m_iBlockSurface	   = SNOWGRASS;
 	biomeTundra.m_iBlockSubSurface = DIRT;
 	biomeTundra.m_iBlockRock	   = STONE;
-	biomeTundra.m_iBlockDust	   = SNOW;
+	biomeTundra.m_iBlockDust	   = SNOWLAYER;
 	biomeTundra.m_iBlockWaterSurf  = ICE;
 	biomeTundra.m_fTemperature	   = 0.0f;
 	biomeTundra.m_fHumidity		   = 0.5f;
