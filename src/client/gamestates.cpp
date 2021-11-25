@@ -580,6 +580,7 @@ void CStateOptionsMenu::Update()
 										m_iVolumeSlider ) )
 	{
 		cl_volume->SetFloat( m_iVolumeSlider / 100.0f );
+		soundSystem::SetListener( nullptr, Vector3f( 0, 0, 0 ), Vector3f( 0, 0, 1 ), Vector3f( 0, 0, 0 ) );
 	}
 
 	if ( pStateMan->m_pGui->LabelButtonCentered( GUIGEN_ID,

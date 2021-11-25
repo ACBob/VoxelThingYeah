@@ -832,8 +832,8 @@ bool CGui::Slider( int id, Vector3f pos, Vector3f size, int max, int &value )
 
 		if ( val != value )
 		{
-			// if ( m_iTick % 2 == 0 )
-			// 	soundSystem::PlaySoundEvent( "ui.tick", Vector3f( 0, 0, 0 ) );
+			if ( m_iTick % 2 == 0 )
+				soundSystem::PlaySoundEvent( "ui.tick", Vector3f( 0, 0, 0 ) );
 
 			value = val;
 			return true;
@@ -885,8 +885,8 @@ bool CGui::HorzSlider( int id, Vector3f pos, Vector3f size, int max, int &value 
 
 		if ( val != value )
 		{
-			// if ( m_iTick % 2 == 0 )
-			// 	soundSystem::PlaySoundEvent( "ui.tick", Vector3f( 0, 0, 0 ) );
+			if ( m_iTick % 2 == 0 )
+				soundSystem::PlaySoundEvent( "ui.tick", Vector3f( 0, 0, 0 ) );
 
 			value = val;
 			return true;
