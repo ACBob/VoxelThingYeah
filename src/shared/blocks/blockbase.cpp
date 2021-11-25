@@ -10,6 +10,7 @@
 #include "blockwool.hpp"
 #include "blockplant.hpp"
 #include "blocksnowlayer.hpp"
+#include "blockslab.hpp"
 
 #include "world/chunk.hpp"
 
@@ -74,6 +75,7 @@ namespace
 	constexpr CBlockGeneric _BlockBookshelf( BOOKSHELF );
 	constexpr CBlockGeneric _BlockTNT( TNT );
 	constexpr CBlockSnowLayer _BlockSnowLayer( SNOWLAYER );
+	constexpr CBlockSlabGeneric _BlockSlab( SLAB );
 
 	constexpr CBlockError _BlockInvalid( AIR );
 } // namespace
@@ -158,6 +160,8 @@ const CBlockBase &BlockType( BLOCKID type )
 			return _BlockTNT;
 		case SNOWLAYER:
 			return _BlockSnowLayer;
+		case SLAB:
+			return _BlockSlab;
 		default:
 			return _BlockInvalid;
 	}

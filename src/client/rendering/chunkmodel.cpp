@@ -184,12 +184,15 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, block_t blocks[], Vector3f pos,
 						default:
 						case BLOCKMODEL_1LAYER:
 						case BLOCKMODEL_2LAYER:
+						case BLOCKMODEL_HALFBLOCK:
 						case BLOCKMODEL_CUBE: {
 							float height = 1.0f;
 							if ( model == BLOCKMODEL_1LAYER )
 								height = 1.0f / 16.0f;
 							else if ( model == BLOCKMODEL_2LAYER )
 								height = 2.0f / 16.0f;
+							else if ( model == BLOCKMODEL_HALFBLOCK )
+								height = 0.5f;
 
 							for ( int i = 0; i < 6; i++ )
 							{

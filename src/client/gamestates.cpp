@@ -137,6 +137,12 @@ void CStatePlay::Enter()
 			new CBlockItem( 64, BOOKSHELF ),
 			new CBlockItem( 64, TNT ),
 			new CBlockItem( 64, SNOWLAYER ),
+
+			new CBlockItem( 64, SLAB, PLANKS ),
+			new CBlockItem( 64, SLAB, COBBLE ),
+			new CBlockItem( 64, SLAB, STONEBRICKS ),
+			new CBlockItem( 64, SLAB, MOSSCBBLE ),
+			new CBlockItem( 64, SLAB, SANDSTONE ),
 		},
 		true );
 }

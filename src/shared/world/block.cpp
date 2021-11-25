@@ -1,6 +1,8 @@
 #include "block.hpp"
 #include "chunk.hpp"
 
+#include "blocks/blockbase.hpp"
+
 #include <stdio.h>
 
 void block_t::Update()
@@ -10,5 +12,5 @@ void block_t::Update()
 }
 
 #ifdef CLIENTEXE
-BlockTexture block_t::GetSideTexture( Direction side ) { return GetDefaultBlockTextureSide( this->GetType(), side ); }
+BlockTexture block_t::GetSideTexture( Direction side ) { return BlockType(GetType()).GetTexture(side, GetMeta()); }
 #endif

@@ -51,7 +51,7 @@ class CBlockBase
 	virtual bool IsLiquid() const { return false; }
 	virtual bool IsFullCube() const { return true; }
 
-	virtual BLOCKMATERIAL GetMaterial() const { return GetBlockMaterial( m_iBlockType ); };
+	virtual BLOCKMATERIAL GetMaterial( BLOCKVAL meta ) const { return GetBlockMaterial( m_iBlockType ); };
 
 #ifdef CLIENTEXE
 	virtual BlockTexture GetTexture( Direction direction, BLOCKVAL metadata ) const

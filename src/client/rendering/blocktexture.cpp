@@ -9,6 +9,7 @@ BlockTexture GetDefaultBlockTextureSide( BLOCKID type, Direction side )
 			break;
 
 		case STONE:
+		default:
 			return { 0, 0, 1, 1 };
 			break;
 

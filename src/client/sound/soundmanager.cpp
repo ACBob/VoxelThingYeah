@@ -335,7 +335,7 @@ void soundSystem::SetListener( CWorld *world, Vector3f pos, Vector3f forward, Ve
 			}
 
 			float reverb	  = 0.0f;
-			BLOCKMATERIAL mat = BlockType( a.m_pBlock->GetType() ).GetMaterial();
+			BLOCKMATERIAL mat = BlockType( a.m_pBlock->GetType() ).GetMaterial( a.m_pBlock->GetMeta() );
 			switch ( mat )
 			{
 				default:
@@ -420,7 +420,7 @@ CSound *soundSystem::LoadSound( const char *path )
 
 void soundSystem::PlayBreakSound( BLOCKID blockType, Vector3f pos )
 {
-	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial();
+	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial( 0 );
 
 	char *buf = new char[512];
 	snprintf( buf, 512, "block.break.%s", BlockMaterialSTR( mat ) );
@@ -430,7 +430,7 @@ void soundSystem::PlayBreakSound( BLOCKID blockType, Vector3f pos )
 }
 void soundSystem::PlayPlaceSound( BLOCKID blockType, Vector3f pos )
 {
-	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial();
+	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial( 0 );
 
 	char *buf = new char[512];
 	snprintf( buf, 512, "block.place.%s", BlockMaterialSTR( mat ) );
@@ -440,7 +440,7 @@ void soundSystem::PlayPlaceSound( BLOCKID blockType, Vector3f pos )
 }
 void soundSystem::PlayStepSound( BLOCKID blockType, Vector3f pos )
 {
-	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial();
+	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial( 0 );
 
 	char *buf = new char[512];
 	snprintf( buf, 512, "block.step.%s", BlockMaterialSTR( mat ) );

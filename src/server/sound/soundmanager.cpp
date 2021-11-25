@@ -19,7 +19,7 @@ void soundSystem::UnInit() {}
 
 void soundSystem::PlayBreakSound( BLOCKID blockType, Vector3f pos )
 {
-	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial();
+	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial( 0 );
 
 	char *buf = new char[512];
 	snprintf( buf, 512, "block.break.%s", BlockMaterialSTR( mat ) );
@@ -29,7 +29,7 @@ void soundSystem::PlayBreakSound( BLOCKID blockType, Vector3f pos )
 }
 void soundSystem::PlayPlaceSound( BLOCKID blockType, Vector3f pos )
 {
-	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial();
+	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial( 0 );
 
 	char *buf = new char[512];
 	snprintf( buf, 512, "block.place.%s", BlockMaterialSTR( mat ) );
@@ -39,7 +39,7 @@ void soundSystem::PlayPlaceSound( BLOCKID blockType, Vector3f pos )
 }
 void soundSystem::PlayStepSound( BLOCKID blockType, Vector3f pos )
 {
-	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial();
+	BLOCKMATERIAL mat = BlockType( blockType ).GetMaterial( 0 );
 
 	char *buf = new char[512];
 	snprintf( buf, 512, "block.step.%s", BlockMaterialSTR( mat ) );
