@@ -163,8 +163,18 @@ void CNetworkServer::Update()
 
 		if ( (-3 <= c->m_iSpiralX) && ( c->m_iSpiralX <= 3 ) && (-3 <= c->m_iSpiralZ) && ( c->m_iSpiralZ <= 3 ) )
 		{
-			con_debug("Spiral %d, %d", c->m_iSpiralX, c->m_iSpiralZ);
-			// DO STUFF...
+			for (int y = 0; y < 3; y++)
+			{
+				// Ok now the spiralling is out the way, we can work out 'p'.
+				Vector3f p = c->m_vChunkPos + Vector3f( c->m_iSpiralX, y, c->m_iSpiralZ );		
+
+				// Queue it, only if it's not already queued and the player hasn't already loaded it
+				if ( std::find( c->m_pChunkQueue.begin(), c->m_pChunkQueue.end(), p ) == c->m_pChunkQueue.end() &&
+					std::find( c->m_pChunkSent.begin(), c->m_pChunkSent.end(), p ) == c->m_pChunkSent.end() )
+				{
+					c->m_pChunkQueue.push_back( p );
+				}
+			}
 		}
 
 		if ( (c->m_iSpiralX == c->m_iSpiralZ) || (c->m_iSpiralX < 0 && c->m_iSpiralX == -c->m_iSpiralZ) || (c->m_iSpiralX > 0 && c->m_iSpiralX == 1 - c->m_iSpiralZ) )
@@ -175,21 +185,6 @@ void CNetworkServer::Update()
 
 		c->m_iSpiralX += c->m_iSpiralDX;
 		c->m_iSpiralZ += c->m_iSpiralDZ;
-
-		// Ok now the spiralling is out the way, we can work out 'p'.
-		Vector3f p = c->m_vChunkPos + Vector3f( c->m_iSpiralX, 0, c->m_iSpiralZ );		
-
-		// Queue it, only if it's not already queued and the player hasn't already loaded it
-		if ( std::find( c->m_pChunkQueue.begin(), c->m_pChunkQueue.end(), p ) == c->m_pChunkQueue.end() &&
-			 std::find( c->m_pChunkSent.begin(), c->m_pChunkSent.end(), p ) == c->m_pChunkSent.end() )
-		{
-			c->m_pChunkQueue.push_back( p );
-			// con_debug( "QUEUE <%.0f,%.0f,%.0f>, %d", p.x, p.y, p.z, c->m_iLoadedChunkIDX );
-		}
-		else
-		{
-			// con_debug("NOT QUEUE chunk <%.0f,%.0f,%.0f>", p.x, p.y, p.z);
-		}
 	}
 
 	// Now handle the queue
