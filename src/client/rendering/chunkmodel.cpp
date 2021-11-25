@@ -76,6 +76,9 @@ std::vector<CModel::Vertex> sampleCubeFace( Direction dir, block_t block, int x,
 
 		BlockTexture tex = BlockType( block.GetType() ).GetTexture( dir, block.GetMeta() );
 
+		// Of-course we'll also have to make sure the texture coords are correct with the height
+		if (dir != UP && dir != DOWN)
+			tex.w *= height;
 		switch ( i )
 		{
 			case 0:
