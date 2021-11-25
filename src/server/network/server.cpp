@@ -147,27 +147,44 @@ void CNetworkServer::Update()
 			c->m_iLoadedChunkIDX	= 0;
 			c->m_iNextChunkLoadTick = 0;
 			c->m_pChunkQueue.push_back( cP );
+
+			c->m_iSpiralX = c->m_iSpiralZ = 0;
+			c->m_iSpiralDX = 0;
+			c->m_iSpiralDZ = -1;
 		}
 		c->m_vChunkPos = cP;
 
-		if ( c->m_iLoadedChunkIDX >= ( 4 * 4 * 4 ) )
-			continue;
+		// https://stackoverflow.com/questions/398299/looping-in-a-spiral
+		// We can substitute the max(x,y)**2 with a known value as render distance is hard-coded
+		// So that's 6 render distance, or 36 chunks
 
-		int x = 0;
-		int y = 0;
-		int z = 0;
-		i1Dto3D( c->m_iLoadedChunkIDX, 4, 4, x, y, z );
-		Vector3f p( x - 2, y - 2, z - 2 );
-		c->m_iLoadedChunkIDX++;
+		if ( c->m_iLoadedChunkIDX >= 36 )
+			continue; // Nothing to do! they've loaded all their chunks.
 
-		p = c->m_vChunkPos + p;
+		if ( (-3 <= c->m_iSpiralX) && ( c->m_iSpiralX <= 3 ) && (-3 <= c->m_iSpiralZ) && ( c->m_iSpiralZ <= 3 ) )
+		{
+			con_debug("Spiral %d, %d", c->m_iSpiralX, c->m_iSpiralZ);
+			// DO STUFF...
+		}
+
+		if ( (c->m_iSpiralX == c->m_iSpiralZ) || (c->m_iSpiralX < 0 && c->m_iSpiralX == -c->m_iSpiralZ) || (c->m_iSpiralX > 0 && c->m_iSpiralX == 1 - c->m_iSpiralZ) )
+		{
+			std::swap( c->m_iSpiralDX, c->m_iSpiralDZ );
+			c->m_iSpiralDX = -c->m_iSpiralDX;
+		}
+
+		c->m_iSpiralX += c->m_iSpiralDX;
+		c->m_iSpiralZ += c->m_iSpiralDZ;
+
+		// Ok now the spiralling is out the way, we can work out 'p'.
+		Vector3f p = c->m_vChunkPos + Vector3f( c->m_iSpiralX, 0, c->m_iSpiralZ );		
 
 		// Queue it, only if it's not already queued and the player hasn't already loaded it
 		if ( std::find( c->m_pChunkQueue.begin(), c->m_pChunkQueue.end(), p ) == c->m_pChunkQueue.end() &&
 			 std::find( c->m_pChunkSent.begin(), c->m_pChunkSent.end(), p ) == c->m_pChunkSent.end() )
 		{
 			c->m_pChunkQueue.push_back( p );
-			con_debug( "QUEUE <%.0f,%.0f,%.0f>, %d", p.x, p.y, p.z, c->m_iLoadedChunkIDX );
+			// con_debug( "QUEUE <%.0f,%.0f,%.0f>, %d", p.x, p.y, p.z, c->m_iLoadedChunkIDX );
 		}
 		else
 		{
@@ -189,7 +206,7 @@ void CNetworkServer::Update()
 		Vector3f pos = p->m_pChunkQueue.back();
 		p->m_pChunkQueue.pop_back();
 
-		con_debug( "SEND <%.0f,%.0f,%.0f>, %d", pos.x, pos.y, pos.z, p->m_iLoadedChunkIDX );
+		// con_debug( "SEND <%.0f,%.0f,%.0f>, %d", pos.x, pos.y, pos.z, p->m_iLoadedChunkIDX );
 
 		CChunk *c = m_world.GetChunkGenerateAtPos( pos );
 
@@ -214,7 +231,7 @@ void CNetworkServer::Update()
 				p->m_pChunkSent.erase( std::remove( p->m_pChunkSent.begin(), p->m_pChunkSent.end(), v ),
 									   p->m_pChunkSent.end() );
 
-				con_debug( "REMOVED <%.0f,%.0f,%.0f>", v.x, v.y, v.z );
+				// con_debug( "REMOVED <%.0f,%.0f,%.0f>", v.x, v.y, v.z );
 			}
 		}
 	}

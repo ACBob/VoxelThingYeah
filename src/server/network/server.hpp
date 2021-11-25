@@ -22,6 +22,11 @@ class CNetworkPlayer
 	// The chunks that have been sent
 	std::vector<Vector3f> m_pChunkSent;
 
+	int m_iSpiralX = 0;
+	int m_iSpiralZ = 0;
+	int m_iSpiralDX = 0;
+	int m_iSpiralDZ = 0;
+
 	int m_iLoadedChunkIDX		  = 0;
 	uint64_t m_iNextChunkLoadTick = 0;
 	Vector3f m_vChunkPos; // the chunk we're in
