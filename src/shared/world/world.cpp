@@ -84,7 +84,7 @@ CChunk *CWorld::GetChunkGenerateAtPos( Vector3f pos )
 
 			if ( blck != nullptr )
 			{
-				blck->Set( b.second );
+				blck->Set( b.second, 0 );
 			}
 		}
 	}

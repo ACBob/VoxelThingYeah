@@ -52,6 +52,7 @@
 #ifdef _WIN32
 	#include <stdio.h>
 	#include <windows.h>
+	#include <lmcons.h>
 #endif
 
 int main( int argc, char *args[] )
@@ -66,33 +67,6 @@ int main( int argc, char *args[] )
 	con_info( "Setting up convars..." );
 	SetupClientSideConvars();
 	SetupSharedConvars();
-
-	if ( !username->IsModified() )
-	{
-		// Get the user's computer username to use instead
-#ifdef __linux__
-		// The linux way!
-		passwd *pw;
-		uid_t uid;
-
-		uid = geteuid();
-		pw	= getpwuid( uid );
-
-		if ( pw )
-			username->SetString( pw->pw_name );
-		else // In the situation we can't find it, just use player
-			username->SetString( "Player" );
-#elif _WIN32
-
-		char *name = new char[32];
-		GetUserNameEx( NameDisplay, name, 32 );
-		username->SetString( name );
-		delete[] name;
-
-#endif
-
-		con_warning( "Username set to %s", username->GetString() );
-	}
 
 	char *argstring = FlattenCharArray( args, 1, argc - 1 );
 	con_debug( "Args: %s", argstring );
@@ -137,6 +111,50 @@ int main( int argc, char *args[] )
 	char *file = (char *)fileSystem::LoadFile( "usr/config.cfg", l, succeed );
 	if ( succeed )
 		conVarHandle.Parse( file );
+
+	if ( !username->IsModified() )
+	{
+		// Get the user's computer username to use instead
+#ifdef __linux__
+		// The linux way!
+		passwd *pw;
+		uid_t uid;
+
+		uid = geteuid();
+		pw	= getpwuid( uid );
+
+		if ( pw ) {
+			// Truncate the username to 32 characters
+			// (TODO: what even is the max length of a linux username?)
+			char *buf = new char[32];
+			strncpy( buf, pw->pw_name, 32 );
+			username->SetString( buf );
+			delete[] buf;
+		}
+		else // In the situation we can't find it, just use player
+			username->SetString( "Player" );
+#elif _WIN32
+
+		// I have no idea what GetUserNameA will return, nor do I know what GetUserNameExA with NameDisplay will return.
+		// I hate windows.
+		// I can't even use GetUserNameExA, because it's in secext.h, and it wants me to define something, and I don't know what that does.
+		// Here's hoping GetUserNameA will work.
+		char *name = new char[UNLEN + 1];
+		DWORD size = UNLEN + 1;
+		if (GetUserNameA( name, &size ) == 0) {
+			// Of-course who the hell knows how long UNLEN is?
+			// Just truncate to 32 characters.
+			name[32] = '\0';
+			username->SetString( name );
+		}
+		else
+			username->SetString( "WinPlayer" );
+		delete[] name;
+
+#endif
+
+		con_warning( "Username set to %s", username->GetString() );
+	}
 
 	con_info( "Scan for resource pack..." );
 	if ( cl_resourcepacks->IsModified() )

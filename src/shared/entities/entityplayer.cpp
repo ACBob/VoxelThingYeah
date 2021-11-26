@@ -71,7 +71,7 @@ void CEntityPlayer::UpdateClient( CWorld *clientSideWorld, CParticleManager *pPa
 			// Test if it's selectable
 			if ( BlockType( m_pointed.m_pBlock->GetType() ).IsSelectable( m_pointed.m_pBlock->GetMeta() ) )
 			{
-				m_pointed.m_pBlock->Set( AIR );
+				m_pointed.m_pBlock->Set( AIR, 0 );
 
 				protocol::SendClientSetBlock( ( (CNetworkClient *)m_pClient )->m_pPeer, m_pointed.m_vPosition - 0.5, AIR,
 											0 );

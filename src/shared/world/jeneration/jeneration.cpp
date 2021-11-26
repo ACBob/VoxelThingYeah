@@ -156,7 +156,7 @@ void COverworldJeneration::BiomeBlocks( CChunk *c )
 				{
 					if ( blk->GetType() == STONE )
 					{
-						b->Set( biome->m_iBlockDust );
+						b->Set( biome->m_iBlockDust, 0 );
 						blk->Set( biome->m_iBlockSurface );
 						grassDepth--;
 					}

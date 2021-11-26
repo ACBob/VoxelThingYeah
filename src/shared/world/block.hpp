@@ -25,7 +25,7 @@ struct block_t
 	// Block meta is stored on the last two bytes
 	uint32_t blck = 0;
 
-	void Set( uint16_t type, uint16_t meta = 0 )
+	void Set( uint16_t type, uint16_t meta )
 	{
 		blck = ( type << 16 ) | meta;
 		Update();
@@ -34,6 +34,17 @@ struct block_t
 	void Set( uint32_t data )
 	{
 		blck = data;
+		Update();
+	}
+
+	void SetType( uint16_t type )
+	{
+		blck = ( type << 16 ) | ( blck & 0xFFFF );
+		Update();
+	}
+	void SetMeta( uint16_t meta )
+	{
+		blck = ( blck & 0xFFFF0000 ) | meta;
 		Update();
 	}
 
