@@ -101,6 +101,9 @@ CChunk *CWorld::GetChunkGenerateAtPos( Vector3f pos )
 
 	c->m_bReallyDirty = c->m_bDirty = true;
 
+	// rebuild the portable as it's air now
+	c->RebuildPortable();
+
 	return c;
 }
 

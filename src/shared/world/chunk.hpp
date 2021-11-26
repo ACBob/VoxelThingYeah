@@ -65,6 +65,8 @@ class CChunk
 	Vector3f PosToWorld( int x, int y, int z );
 	Vector3f PosToWorld( Vector3f pos );
 
+	void RebuildPortable();
+
 	// Flat array of blocks, access with
 	// Indexed with [x + SIZEX * (y + SIZEZ * z)]
 	block_t m_blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];

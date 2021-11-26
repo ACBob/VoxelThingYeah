@@ -62,6 +62,16 @@ void CChunk::RebuildMdl() { BuildChunkModel( m_blocksMdl, m_waterMdl, m_blocks, 
 // Intended to be used by in-chunk coords but doesn't throw a hissyfit if it's not
 Vector3f CChunk::PosToWorld( Vector3f pos ) { return GetPosInWorld() + pos; }
 
+void CChunk::RebuildPortable()
+{
+	for ( int i = 0; i < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; i++ )
+	{
+		m_blocks[i].Get(
+			m_portableDef.m_iBlocks[i], m_portableDef.m_iValue[i]
+		);
+	}
+}
+
 void CChunk::Update( int64_t iTick )
 {
 	// If true we're dirty next tick
@@ -165,14 +175,7 @@ void CChunk::Update( int64_t iTick )
 #endif
 
 	// Rebuild the portable information at last
-	m_portableDef.x = m_vPosition.x;
-	m_portableDef.y = m_vPosition.y;
-	m_portableDef.z = m_vPosition.z;
-
-	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
-	{
-		m_blocks[j].Get( m_portableDef.m_iBlocks[j], m_portableDef.m_iValue[j] );
-	}
+	RebuildPortable();
 
 #ifdef CLIENTEXE
 	// Chunk update makes neighbours and ourself update our model
