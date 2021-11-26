@@ -149,6 +149,7 @@ void CNetworkServer::Update()
 			// The old chunk queue is probably invalid now, so clear it
 			// But also queue the chunk they're immediately in
 			// (Don't clear the load queue, it's still valid and cleared later)
+			// TODO: Should we clear dirty chunks?
 			c->m_pChunkQueue.clear();
 			c->m_pChunkQueue.push_back( cP );
 
@@ -167,10 +168,12 @@ void CNetworkServer::Update()
 
 		if ( (-3 <= c->m_iSpiralX) && ( c->m_iSpiralX <= 3 ) && (-3 <= c->m_iSpiralZ) && ( c->m_iSpiralZ <= 3 ) )
 		{
+			// Vertical render distance is hard-coded to 3
+			// Loading 1 below, 1 at the same level, and 1 above
 			for (int y = 0; y < 3; y++)
 			{
 				// Ok now the spiralling is out the way, we can work out 'p'.
-				Vector3f p = c->m_vChunkPos + Vector3f( c->m_iSpiralX, y, c->m_iSpiralZ );		
+				Vector3f p = c->m_vChunkPos + Vector3f( c->m_iSpiralX, y - 1, c->m_iSpiralZ );		
 
 				// Queue it, only if it's not already queued and the player hasn't already loaded it
 				if ( std::find( c->m_pChunkQueue.begin(), c->m_pChunkQueue.end(), p ) == c->m_pChunkQueue.end() &&
