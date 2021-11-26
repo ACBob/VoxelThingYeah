@@ -204,33 +204,13 @@ void BuildChunkModel( CModel &mdl, CModel &wmdl, block_t blocks[], Vector3f pos,
 									BlockType( block.GetType() ).GetTint( chunk, pos, block.GetMeta(), (Direction)i );
 
 								Vector3f neighbour = Vector3f( x, y, z ) + DirectionVector[i];
-								if ( ValidChunkPosition( neighbour ) )
-								{
-									BLOCKID blockType = chunk->GetBlockAtLocal( neighbour )->GetType();
+								block_t *neighbourBlock = chunk->GetBlockAtRelative( neighbour );
+								BLOCKID blockType = neighbourBlock != nullptr ? neighbourBlock->GetType() : AIR;
 
-									if ( !BlockType( block.GetType() ).FaceVisible( (Direction)i, blockType ) )
-										continue;
+								if ( neighbourBlock != nullptr && !BlockType( block.GetType() ).FaceVisible( (Direction)i, blockType ) )
+									continue;
 
-									lightColour = chunk->GetLightingLocal( neighbour );
-								}
-								else
-								{
-									// Test a neighbour
-									CChunk *chunkNeighbour = chunk->Neighbour( Direction( i ) );
-									if ( chunkNeighbour != nullptr )
-									{
-										neighbour = neighbour + ( DirectionVector[i] *
-																Vector3f( -CHUNKSIZE_X, -CHUNKSIZE_Y, -CHUNKSIZE_Z ) );
-
-										block_t *b = chunkNeighbour->GetBlockAtLocal( neighbour );
-										if ( b == nullptr )
-											continue;
-										if ( !BlockType( block.GetType() ).FaceVisible( (Direction)i, b->GetType() ) )
-											continue;
-
-										lightColour = chunkNeighbour->GetLightingLocal( neighbour );
-									}
-								}
+								lightColour = chunk->GetLightingRelative( neighbour );
 
 								std::vector<CModel::Vertex> g =
 									sampleCubeFace( Direction( i ), block, x, y, z, lightColour, blockColouration, height );

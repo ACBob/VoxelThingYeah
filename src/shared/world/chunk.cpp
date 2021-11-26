@@ -206,6 +206,15 @@ block_t *CChunk::GetBlockAtLocal( Vector3f pos )
 	return &m_blocks[int( CHUNK3D_TO_1D( pos.x, pos.y, pos.z ) )];
 }
 
+// Returns the block at the given world position, relative to this chunk
+block_t *CChunk::GetBlockAtRelative( Vector3f pos )
+{
+	if (ValidChunkPosition( pos ))
+		return GetBlockAtLocal( pos );
+	Vector3f thePos = PosToWorld(pos);
+	return m_pChunkMan->BlockAtWorldPos( thePos );
+}
+
 bool ValidChunkPosition( int x, int y, int z )
 {
 	// If the position is valid
@@ -224,6 +233,14 @@ CColour CChunk::GetLightingLocal( Vector3f pos )
 	CColour c = m_iLightingValue[int( CHUNK3D_TO_1D( pos.x, pos.y, pos.z ) )];
 
 	return c;
+}
+
+CColour CChunk::GetLightingRelative( Vector3f pos )
+{
+	if ( ValidChunkPosition( pos ) )
+		return GetLightingLocal( pos );
+	Vector3f thePos = PosToWorld(pos);
+	return m_pChunkMan->GetLightingAtWorldPos( thePos );
 }
 
 void CChunk::SetLightingLocal( Vector3f pos, CColour colour )

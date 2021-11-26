@@ -54,6 +54,8 @@ class CChunk
 
 	block_t *GetBlockAtLocal( Vector3f pos );
 
+	block_t *GetBlockAtRelative( Vector3f pos );
+
 #ifdef CLIENTEXE
 	void RebuildMdl();
 
@@ -80,6 +82,7 @@ class CChunk
 
 	// Alpha (w) is the sun value
 	CColour GetLightingLocal( Vector3f pos );
+	CColour GetLightingRelative( Vector3f pos );
 	void SetLightingLocal( Vector3f pos, CColour color );
 
 	void UpdateLighting();
