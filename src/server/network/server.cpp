@@ -146,6 +146,10 @@ void CNetworkServer::Update()
 		{
 			c->m_iLoadedChunkIDX	= 0;
 			c->m_iNextChunkLoadTick = 0;
+			// The old chunk queue is probably invalid now, so clear it
+			// But also queue the chunk they're immediately in
+			// (Don't clear the load queue, it's still valid and cleared later)
+			c->m_pChunkQueue.clear();
 			c->m_pChunkQueue.push_back( cP );
 
 			c->m_iSpiralX = c->m_iSpiralZ = 0;
