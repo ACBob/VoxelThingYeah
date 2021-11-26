@@ -32,8 +32,8 @@ banned = "HISSS!"
 closing = "HISSS!"
 
 ["msg"]
-joined = "Meow %s!"
+joined = "&@15;Meow %s!"
 left = "Meow %s."
 opped = "Meow %s."
 deopped = "Meow %s."
-youhaveop = "Meow mow."
+youhaveop = "&@15;Meow mow."

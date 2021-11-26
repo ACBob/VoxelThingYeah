@@ -33,8 +33,8 @@ closing = "Chiusura..."
 
 
 ["msg"]
-joined = "%s si è unito alla partita."
-left = "%s ha lasciato la partita."
-opped = "%s è stato oppato."
-deopped = "%s è stato deoppato."
-youhaveop = "Hai i privilegi di operatore su questo server."
+joined = "&@15;%s si è unito alla partita."
+left = "&@15;%s ha lasciato la partita."
+opped = "&@15;%s è stato oppato."
+deopped = "&@15;%s è stato deoppato."
+youhaveop = "&@15;Hai i privilegi di operatore su questo server."

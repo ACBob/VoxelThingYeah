@@ -30,8 +30,8 @@ banned = "Yer' banned from this ship!"
 closing = "Th' ship's closing!"
 
 ["msg"]
-joined = "%s has come aboard!"
-left = "%s has left the ship!"
-opped = "%s is a matey now!"
-deopped = "%s is no longer a matey."
-youhaveop = "You are a matey of the ship!"
+joined = "&@15;%s has come aboard!"
+left = "&@15;%s has left the ship!"
+opped = "&@15;%s is a matey now!"
+deopped = "&@15;%s is no longer a matey."
+youhaveop = "&@15;You are a matey of the ship!"

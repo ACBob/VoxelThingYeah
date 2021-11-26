@@ -30,8 +30,8 @@ banned = "Ja naokoi."
 
 
 ["msg"]
-joined = "%s shtoirthia sheleeg."
-left = "%s lyz."
-opped = "%s mueeg shtoig."
-deopped = "%s muia shtoig."
-youhaveop = "Ja mueeg shtoig oig zeef xeef."
+joined = "&@15;%s shtoirthia sheleeg."
+left = "&@15;%s lyz."
+opped = "&@15;%s mueeg shtoig."
+deopped = "&@15;%s muia shtoig."
+youhaveop = "&@15;Ja mueeg shtoig oig zeef xeef."

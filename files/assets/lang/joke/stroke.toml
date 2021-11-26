@@ -30,8 +30,8 @@ banned = "you are banend from the searv"
 closing = "Server clsoin..."
 
 ["msg"]
-joined = "%s hds jjouieed the game."
-left = "%s letf the game.."
-opped = "%s has neben oped."
-deopped = "%s has ebene dee oped."
-youhaveop = "You hve opretaro privvililiges on thiss erver."
+joined = "&@15;%s hds jjouieed the game."
+left = "&@15;%s letf the game.."
+opped = "&@15;%s has neben oped."
+deopped = "&@15;%s has ebene dee oped."
+youhaveop = "&@15;You hve opretaro privvililiges on thiss erver."

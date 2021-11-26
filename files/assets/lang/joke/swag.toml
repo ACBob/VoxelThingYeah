@@ -32,8 +32,8 @@ banned = "You know you ain't welcome here, dawg."
 closing = "Server's closing, dawg."
 
 ["msg"]
-joined = "Ayo, welcome %s!"
+joined = "&@15;Ayo, welcome %s!"
 left = "Ayo, %s is outta here!"
 opped = "Ayo, %s is opped!"
 deopped = "Ayo, %s is no longer opped."
-youhaveop = "Ey, you're opped"
+youhaveop = "&@15;Ey, you're opped"

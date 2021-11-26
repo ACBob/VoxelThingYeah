@@ -30,8 +30,8 @@ banned = "You are banned from this server."
 closing = "The server is closing."
 
 ["msg"]
-joined = "%s joined the game."
-left = "%s left the game."
-opped = "%s has been opped."
-deopped = "%s has been deopped."
-youhaveop = "You have operator priviliges on this server."
+joined = "&@15;%s joined the game.&r;"
+left = "&@15;%s left the game.&r;"
+opped = "&@15;%s has been opped.&r;"
+deopped = "&@15;%s has been deopped.&r;"
+youhaveop = "&@15;You have operator priviliges on this server.&r;"

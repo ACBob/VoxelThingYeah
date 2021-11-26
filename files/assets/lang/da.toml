@@ -31,8 +31,8 @@ closing = "Lukker..."
 
 
 ["msg"]
-joined = "%s har koblet til spillet."
-left = "%s har forladt spillet."
-opped = "%s er blevet oppet."
-deopped = "%s er blevet deoppet."
-youhaveop = "Du har nu operator rettigheder på denne serveren."
+joined = "&@15;%s har koblet til spillet."
+left = "&@15;%s har forladt spillet."
+opped = "&@15;%s er blevet oppet."
+deopped = "&@15;%s er blevet deoppet."
+youhaveop = "&@15;Du har nu operator rettigheder på denne serveren."

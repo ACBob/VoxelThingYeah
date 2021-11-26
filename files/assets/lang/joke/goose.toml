@@ -32,8 +32,8 @@ banned = "HONK HONK QUACK"
 closing = "HONK HONK QUACK"
 
 ["msg"]
-joined = "%s HONK HONK QUACK"
+joined = "&@15;%s HONK HONK QUACK"
 left = "HONK %s HONK QUACK"
 opped = "HONK HONK %s QUACK"
 deopped = "HONK %s HONK QUACK"
-youhaveop = "HONK HONK QUACK"
+youhaveop = "&@15;HONK HONK QUACK"

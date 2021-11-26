@@ -30,8 +30,8 @@ banned = "DON'T YOU FUCKING SHOW YOUR FACE HERE EVER AGAIN"
 closing = "THE SERVER'S CLOSED, FUCK OFF"
 
 ["msg"]
-joined = "%s JOINED"
-left = "%s LEFT, FUCK THEM"
-opped = "%s IS A MOD NOW, FUCK THEM"
-deopped = "%s IS NO MORE A MOD, FUCK THEM"
-youhaveop = "YOU HAVE OP, FUCK YOU"
+joined = "&@15;%s JOINED"
+left = "&@15;%s LEFT, FUCK THEM"
+opped = "&@15;%s IS A MOD NOW, FUCK THEM"
+deopped = "&@15;%s IS NO MORE A MOD, FUCK THEM"
+youhaveop = "&@15;YOU HAVE OP, FUCK YOU"

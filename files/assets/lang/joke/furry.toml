@@ -30,8 +30,8 @@ banned = "UwU admin wadmin got angyyyy"
 closing = "The sever is clowsing"
 
 ["msg"]
-joined = "%s joiwned the furcon!"
-left = "%s lewft the furcon!"
-opped = "%s is now an admin uwu."
-deopped = "%s is no longer an admin uwu."
-youhaveop = "Youw awe an admin, uwu"
+joined = "&@15;%s joiwned the furcon!"
+left = "&@15;%s lewft the furcon!"
+opped = "&@15;%s is now an admin uwu."
+deopped = "&@15;%s is no longer an admin uwu."
+youhaveop = "&@15;Youw awe an admin, uwu"

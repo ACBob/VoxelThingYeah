@@ -32,8 +32,8 @@ banned = "YOU WERE BAD! NO MORE!"
 closing = "GOODBYE!"
 
 ["msg"]
-joined = "%s HAZ JOINED!!! HI!!"
-left = "%s HAS LETF, GOOBYE!!"
-opped = "%s HAS OPED!"
-deopped = "%s HAS DEOPED!"
-youhaveop = "YOU HAVE UNLIMITED POWER! >:3"
+joined = "&@15;%s HAZ JOINED!!! HI!!"
+left = "&@15;%s HAS LETF, GOOBYE!!"
+opped = "&@15;%s HAS OPED!"
+deopped = "&@15;%s HAS DEOPED!"
+youhaveop = "&@15;YOU HAVE UNLIMITED POWER! >:3"

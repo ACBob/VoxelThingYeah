@@ -29,8 +29,8 @@ invalidusername = "This namen is wrong. Finde an other!"
 banned = "Thou hath been banysshed from this place."
 
 ["msg"]
-joined = "%s hath comen."
-left = "%s hath lefte"
-opped = "%s hath becomen king."
-deopped = "%s hath becomen paissaunt."
-youhaveop = "Thou art king here."
+joined = "&@15;%s hath comen."
+left = "&@15;%s hath lefte"
+opped = "&@15;%s hath becomen king."
+deopped = "&@15;%s hath becomen paissaunt."
+youhaveop = "&@15;Thou art king here."
