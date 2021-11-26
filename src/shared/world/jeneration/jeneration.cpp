@@ -138,6 +138,9 @@ void COverworldJeneration::BiomeBlocks( CChunk *c )
 			// We follow down to -1 so we can alter the blocks in the chunk below
 			for ( int y = CHUNKSIZE_Y; y > -1; y-- )
 			{
+				if ( c->PosToWorld( Vector3f( x, y, z ) ).y < m_iSeaLevel )
+					continue;
+
 				// TODO: Actually fix this as it tries to query chunks that don't exist yet.
 				block_t *blk = c->GetBlockAtLocal( Vector3f( x, y, z ) );
 				if ( blk != nullptr && blk->GetType() == AIR )
@@ -175,6 +178,40 @@ void COverworldJeneration::BiomeBlocks( CChunk *c )
 			}
 		}
 	}
+
+	// Now for everything below the sea, set the surface to gravel
+	for ( int x = 0; x < CHUNKSIZE_X; x++ )
+	{
+		for ( int z = 0; z < CHUNKSIZE_Z; z++ )
+		{
+			int gravelDepth =
+				2 + ( 2 * ( 1 + fnlGetNoise2D( &m_dirtNoise, x + c->GetPosInWorld().x, z + c->GetPosInWorld().z ) ) );
+			for ( int y = 0; y < CHUNKSIZE_Y; y++ )
+			{
+				if ( c->PosToWorld( Vector3f( x, y, z ) ).y >= m_iSeaLevel )
+					continue;
+
+				block_t *blk = c->GetBlockAtLocal( Vector3f( x, y, z ) );
+				if ( blk == nullptr )
+					continue;
+				
+				block_t *b = c->GetBlockAtLocal( Vector3f( x, y + 1, z ) );
+				if ( b == nullptr )
+					continue;
+
+				if ( (b->GetType() == WATER || b->GetType() == WATERSRC) && blk->GetType() == STONE )
+				{
+					blk->Set( GRAVEL );
+					gravelDepth--;
+				}
+				else if ( b->GetType() == GRAVEL && gravelDepth > 0 && blk->GetType() == STONE )
+				{
+					blk->Set( GRAVEL );
+					gravelDepth--;
+				}
+			}
+		}
+	}
 }
 
 // Decorates with ores, plants, etc.
@@ -203,9 +240,12 @@ void COverworldJeneration::Decorate( CChunk *c )
 
 		if ( caveVal < 0.04f )
 		{
-			if ( c->m_blocks[i].GetType() == STONE || c->m_blocks[i].GetType() == GRASS ||
-				 c->m_blocks[i].GetType() == DIRT || c->m_blocks[i].GetType() == ORE_COAL ||
-				 c->m_blocks[i].GetType() == SAND || c->m_blocks[i].GetType() == SANDSTONE )
+			BLOCKID id = c->m_blocks[i].GetType();
+			if ( id == STONE || id == GRASS     ||
+				 id == DIRT  || id == ORE_COAL  ||
+				 id == SAND  || id == SANDSTONE ||
+				 id == GRAVEL|| id == SNOWGRASS ||
+				 id == SNOWLAYER )
 			{
 				c->m_blocks[i].Set( AIR );
 			}
