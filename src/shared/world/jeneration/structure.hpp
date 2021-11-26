@@ -18,16 +18,42 @@ enum StructureType {
 #define l LEAVES
 
 // A tree
-static const BLOCKID TREE_STRUCTURE[5][25] = {
-	{ N, N, N, N, N, N, N, N, N, N, N, N, L, N, N, N, N, N, N, N, N, N, N, N, N },
+static const BLOCKID TREE_STRUCTURE[6][25] = {
+	{ N, N, N, N, N, 
+	  N, N, N, N, N,
+	  N, N, L, N, N,
+	  N, N, N, N, N,
+	  N, N, N, N, N },
 
-	{ N, N, N, N, N, N, N, N, N, N, N, N, L, N, N, N, N, N, N, N, N, N, N, N, N },
+	{ N, N, N, N, N,
+	  N, N, N, N, N,
+	  N, N, L, N, N,
+	  N, N, N, N, N,
+	  N, N, N, N, N },
 
-	{ N, N, N, N, N, N, l, l, l, N, N, l, L, l, N, N, l, l, l, N, N, N, N, N, N },
+	{ l, l, l, l, l,
+	  l, l, l, l, l,
+	  l, l, L, l, l,
+	  l, l, l, l, l,
+	  l, l, l, l, l },
 
-	{ l, l, l, l, l, l, l, l, l, l, l, l, L, l, l, l, l, l, l, l, l, l, l, l, l },
+	{ N, l, l, l, N,
+	  l, l, l, l, l,
+	  l, l, L, l, l,
+	  l, l, l, l, l,
+	  N, l, l, l, N },
 
-	{ N, N, N, N, N, N, l, l, l, N, N, l, l, l, N, N, l, l, l, N, N, N, N, N, N },
+	{ N, N, l, N, N,
+	  N, l, l, l, N,
+	  l, l, L, l, l,
+	  N, l, l, l, N,
+	  N, N, l, N, N },
+
+	{ N, N, N, N, N,
+	  N, N, l, N, N,
+	  N, l, l, l, N,
+	  N, N, l, N, N,
+	  N, N, N, N, N },
 };
 
 #undef N
@@ -52,7 +78,7 @@ class CStructure
 		// and goes up
 		// Each slice is a 2d array of X by Z
 
-		for ( int iy = 0; iy < 5; iy++ )
+		for ( int iy = 0; iy < 6; iy++ )
 		{
 			for ( int ix = 0; ix < 5; ix++ )
 			{

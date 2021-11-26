@@ -12,6 +12,20 @@ COverworldJeneration::COverworldJeneration()
 	m_baseNoise.seed	   = m_iSeed;
 	m_baseNoise.noise_type = FNL_NOISE_OPENSIMPLEX2;
 	m_baseNoise.frequency  = 0.005;
+	m_baseNoise.octaves	   = 5;
+
+	m_hillNoise			   = fnlCreateState();
+	m_hillNoise.seed	   = m_iSeed + 'H';
+	m_hillNoise.noise_type = FNL_NOISE_OPENSIMPLEX2;
+	m_hillNoise.frequency  = 0.01;
+	m_hillNoise.octaves	   = 1;
+
+	m_riverNoise		   = fnlCreateState();
+	m_riverNoise.seed	   = m_iSeed + 'R';
+	m_riverNoise.noise_type = FNL_NOISE_CELLULAR;
+	m_riverNoise.frequency  = 0.01;
+	m_riverNoise.octaves	   = 4;
+	m_riverNoise.cellular_distance_func = FNL_CELLULAR_DISTANCE_EUCLIDEANSQ;
 
 	m_seafloorNoise			   = fnlCreateState();
 	m_seafloorNoise.seed	   = m_iSeed + 23;
@@ -37,21 +51,29 @@ COverworldJeneration::COverworldJeneration()
 	{
 		m_caveNoises[i]			  = fnlCreateState();
 		m_caveNoises[i].seed	  = m_iSeed + 'CAVE' + i;
-		m_caveNoises[i].frequency = 0.01;
+		m_caveNoises[i].frequency = 0.01 * ( i + 1 );
+		m_caveNoises[i].octaves	  = 1 + i;
+		m_caveNoises[i].noise_type = FNL_NOISE_PERLIN;
 	}
 
 	// Biome numbers provided by Jen
 	m_biomesOvergroundTemperatureNoise			  = fnlCreateState();
 	m_biomesOvergroundTemperatureNoise.seed		  = m_iSeed + 102;
-	m_biomesOvergroundTemperatureNoise.noise_type = FNL_NOISE_PERLIN;
-	m_biomesOvergroundTemperatureNoise.octaves	  = 1;
+	m_biomesOvergroundTemperatureNoise.noise_type = FNL_NOISE_VALUE;
 	m_biomesOvergroundTemperatureNoise.frequency  = 0.02f;
+	m_biomesOvergroundTemperatureNoise.domain_warp_type = FNL_DOMAIN_WARP_BASICGRID;
+	m_biomesOvergroundTemperatureNoise.fractal_type = FNL_FRACTAL_DOMAIN_WARP_PROGRESSIVE;
+	m_biomesOvergroundTemperatureNoise.domain_warp_amp = 50.0f;
+	m_biomesOvergroundTemperatureNoise.frequency = 0.01f;
+	m_biomesOvergroundTemperatureNoise.octaves = 5;
 
 	m_biomesOvergroundHumidityNoise				 = fnlCreateState();
 	m_biomesOvergroundHumidityNoise.seed		 = m_iSeed + 22106;
-	m_biomesOvergroundHumidityNoise.octaves		 = 1;
-	m_biomesOvergroundHumidityNoise.noise_type	 = FNL_NOISE_PERLIN;
-	m_biomesOvergroundTemperatureNoise.frequency = 0.01f;
+	m_biomesOvergroundTemperatureNoise.domain_warp_type = FNL_DOMAIN_WARP_BASICGRID;
+	m_biomesOvergroundTemperatureNoise.fractal_type = FNL_FRACTAL_DOMAIN_WARP_PROGRESSIVE;
+	m_biomesOvergroundTemperatureNoise.domain_warp_amp = 50.0f;
+	m_biomesOvergroundTemperatureNoise.frequency = 0.02f;
+	m_biomesOvergroundTemperatureNoise.octaves = 5;
 
 	m_treeNoise			   = fnlCreateState();
 	m_treeNoise.seed	   = m_iSeed + 'TREE';
@@ -86,9 +108,17 @@ void COverworldJeneration::GenBase( CChunk *c )
 			continue;
 		}
 
+		// base noise
 		float noiseData3D = 1 + fnlGetNoise3D( &m_baseNoise, WorldPosition.x, WorldPosition.y, WorldPosition.z );
-		float percentToTopSurface = 1.0f - ( WorldPosition.y / 32.0f );
+		// Hill noise
+		noiseData3D += fmaxf(fnlGetNoise2D( &m_hillNoise, WorldPosition.x, WorldPosition.z ), 0);
+		
+
+		float percentToTopSurface = 1.0f - ( WorldPosition.y / 64.0f );
 		noiseData3D *= percentToTopSurface;
+
+		// River noise
+		noiseData3D += fminf(fnlGetNoise2D( &m_riverNoise, WorldPosition.x, WorldPosition.z ), 0);
 
 		c->m_blocks[i].Set( noiseData3D > 0.7 ? STONE : ( WorldPosition.y > m_iSeaLevel ? AIR : WATERSRC ) );
 	}
@@ -201,13 +231,15 @@ void COverworldJeneration::Decorate( CChunk *c )
 			int y = 0;
 			for ( y = CHUNKSIZE_Y - 1; y > 0; y-- )
 			{
-				if ( c->GetBlockAtLocal( { (float)x, (float)y, (float)z } )->GetType() != AIR )
+				if ( c->GetBlockAtLocal( { (float)x, (float)y, (float)z } )->GetType() == GRASS )
 					break;
 			}
 
 			// Don't place on air
 			if ( y <= 0 )
 				return;
+
+			y ++; // Move out of the block so that we don't get stuck in the ground
 
 			// Place the tree
 			// world coords
