@@ -337,6 +337,27 @@ void CStatePlay::Update()
 			{
 				pStateMan->m_pGui->Label( "Pointed block: null", Vector3f( 0, 5 ) );
 			}
+ 
+			// FPS (taken from the delta time)
+			// TODO: this is not accurate, it should be the average of the last few frames
+			snprintf( guiBuf, 100, "FPS: %.1f", 1.0f / pStateMan->m_fDelta );
+			pStateMan->m_pGui->Label( guiBuf, Vector3f( 0, 6 ) );
+
+			// Chunk count
+			snprintf( guiBuf, 100, "Chunks: %i", m_pLocalWorld->m_chunks.size() );
+			pStateMan->m_pGui->Label( guiBuf, Vector3f( 0, 7 ) );
+
+			// Position in chunk coordinates
+			// So floorf( x / CHUNKSIZE_X ), etc.
+			snprintf( guiBuf, 100, "Chunk coords: <%i, %i, %i>",
+					  (int)floorf( m_pLocalPlayer->m_vPosition.x / CHUNKSIZE_X ),
+					  (int)floorf( m_pLocalPlayer->m_vPosition.y / CHUNKSIZE_Y ),
+					  (int)floorf( m_pLocalPlayer->m_vPosition.z / CHUNKSIZE_Z ) );
+			pStateMan->m_pGui->Label( guiBuf, Vector3f( 0, 8 ) );
+
+			// Client Tick
+			snprintf( guiBuf, 100, "Client Tick: %i", pStateMan->m_iTick );
+			pStateMan->m_pGui->Label( guiBuf, Vector3f( 0, 9 ) );
 		}
 
 		// Hot-bar
