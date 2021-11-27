@@ -365,7 +365,7 @@ void CStatePlay::Update()
 										  pStateMan->m_pGui->m_pHotbarTex );
 
 		float p;
-		for ( int i = 0; i < 8; i++ )
+		for ( int i = 0; i < 9; i++ )
 		{
 			p = 8.0f * ( i / 4.0f - 1.0f );
 
