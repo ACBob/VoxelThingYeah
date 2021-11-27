@@ -20,7 +20,7 @@ class CBlockSnowLayer : public CBlockBase
     }
 
     virtual CBoundingBox GetBounds() const {
-        return CBoundingBox( Vector3f( 0 ), Vector3f( BLOCKUNIT, 2 / BLOCKUNIT, BLOCKUNIT ), Vector3f( 0 ) );
+        return CBoundingBox( Vector3f( 0 ), Vector3f( BLOCKUNIT, (2.0f / 16.0f) * BLOCKUNIT, BLOCKUNIT ), Vector3f( 0 ) );
     }
 
 #ifdef CLIENTEXE

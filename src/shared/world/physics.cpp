@@ -27,9 +27,10 @@ bool CBoundingBox::TestCollide( CBoundingBox other )
 
 bool CBoundingBox::TestPointCollide( Vector3f pos )
 {
-	if ( pos < this->m_vPosition || pos > ( this->m_vPosition + this->m_vBounds ) )
-		return false; // Out of m_vBounds
+	Vector3f vMin = this->m_vPosition - this->m_vOrigin * this->m_vBounds;
+	Vector3f vMax = this->m_vPosition + (VEC_ONE - this->m_vOrigin) * this->m_vBounds;
 
-	// If it's in m_vBounds, it's logically going to collide
-	return true;
+	return (vMin.x <= pos.x && vMax.x >= pos.x) &&
+		   (vMin.y <= pos.y && vMax.y >= pos.y) &&
+		   (vMin.z <= pos.z && vMax.z >= pos.z);
 }
