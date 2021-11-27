@@ -34,6 +34,14 @@ CPointedThing CVoxRaycast::Cast( CWorld *pChunkMan, bool bUseCollision )
 		}
 	}
 
+	// if we reached the end of the ray, we didn't hit anything
+	if ( i >= m_fLength )
+	{
+		pBlock = nullptr;
+		vRay   = m_vPosition + m_vDirection * m_fLength;
+		i = m_fLength;
+	}
+
 	CPointedThing pointedThing;
 	pointedThing.m_vPosition = Vector3f( ceil( vRay.x ), ceil( vRay.y ), ceil( vRay.z ) );
 	pointedThing.m_pBlock	 = pBlock;
