@@ -239,27 +239,33 @@ bool CWorld::TestSelectPointCollision( Vector3f pos )
 
 block_t *CWorld::TestAABBCollision( CBoundingBox col )
 {
-	CChunk *chunk = ChunkAtWorldPos( col.m_vPosition );
-	if ( chunk == nullptr )
-		return nullptr;
+	// We can just test all the *blocks* this bounding box intersects.
+	// The exact blocks to test is the ceiling of the furthest and floor of the closest
+	Vector3f here = col.m_vPosition - col.m_vOrigin * col.m_vBounds;
+	Vector3f there = col.m_vPosition + (VEC_ONE - col.m_vOrigin) * col.m_vBounds;
+	here = here.Floor();
+	there = there.Ceil();
 
-	// Test A (pos)
-	for ( int i = 0; i < ( CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z ); i++ )
+	for (int y = here.y; y < there.y; y++)
 	{
-		int x, y, z;
-		CHUNK1D_TO_3D( i, x, y, z );
+		for (int z = here.z; z < there.z; z++)
+		{
+			for (int x = here.x; x < there.x; x++)
+			{
+				block_t *block = BlockAtWorldPos( {(float)x, (float)y, (float)z} );
+				if (block == nullptr)
+					continue;
+				
+				if ( !BlockType( block->GetType() ).IsSolid( block->GetMeta() ) )
+					continue;
 
-		// Don't collide with air
-		BLOCKID blockType = chunk->m_blocks[i].GetType();
+				CBoundingBox blockBounds = BlockType( block->GetType() ).GetBounds();
+				blockBounds.m_vPosition	 = Vector3f( x, y, z );
 
-		if ( !BlockType( blockType ).IsSolid( chunk->m_blocks[i].GetMeta() ) )
-			continue;
-
-		CBoundingBox blockBounds = BlockType( blockType ).GetBounds();
-		blockBounds.m_vPosition	 = chunk->GetPosInWorld() + Vector3f( x, y, z );
-
-		if ( col.TestCollide( blockBounds ) )
-			return &chunk->m_blocks[i];
+				if ( col.TestCollide( blockBounds ) )
+					return block;
+			}
+		}
 	}
 
 	return nullptr;

@@ -255,6 +255,16 @@ void CStatePlay::Update()
 			m_selectionBox.Render();
 		}
 
+		// Vector3f here = m_pLocalPlayer->m_collisionBox.m_vPosition - m_pLocalPlayer->m_collisionBox.m_vOrigin * m_pLocalPlayer->m_collisionBox.m_vBounds;
+		// Vector3f there = m_pLocalPlayer->m_collisionBox.m_vPosition + (VEC_ONE - m_pLocalPlayer->m_collisionBox.m_vOrigin) * m_pLocalPlayer->m_collisionBox.m_vBounds;
+		// here = here.Floor();
+		// there = there.Ceil();
+
+		// m_selectionBox.m_vPosition = here;
+		// m_selectionBox.Render();
+		// m_selectionBox.m_vPosition = there;
+		// m_selectionBox.Render();
+
 
 		// Particles Last
 		m_particleMan.Render( m_pLocalPlayer->m_camera.m_vRotation );

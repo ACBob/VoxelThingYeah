@@ -178,6 +178,8 @@ using Vector3i = Vector3<int>;
 using Vector3c = Vector3<char>;
 
 static const Vector3f VEC_UP = { 0, 1, 0 };
+static const Vector3f VEC_ONE = { 1, 1, 1 };
+static const Vector3f VEC_ZERO = { 0, 0, 0 };
 
 // Generic vector class of 4 elements
 // (It's like Vector3 but with w, and some limited functions)
