@@ -1,7 +1,7 @@
 # Copied from Platforrmer's 3d fork (Which I will never ever release)
 cmake_minimum_required(VERSION 3.16)
 
-project(VoxelThingYeah VERSION 0.0.0)
+project(VoxelThingYeah VERSION 1.0.0)
 
 option(MEEGREEF_ENABLE_OPENAL "Enable OpenAL support" ON)
 # If no build type is specified, Build in release.
