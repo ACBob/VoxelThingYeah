@@ -104,7 +104,7 @@ void COverworldJeneration::GenBase( CChunk *c )
 
 		if ( WorldPosition.y <= seaFloor )
 		{
-			c->m_blocks[i].Set( STONE );
+			c->m_blocks[i].SetType( STONE );
 			continue;
 		}
 
@@ -120,7 +120,7 @@ void COverworldJeneration::GenBase( CChunk *c )
 		// River noise
 		noiseData3D += fminf(fnlGetNoise2D( &m_riverNoise, WorldPosition.x, WorldPosition.z ), 0);
 
-		c->m_blocks[i].Set( noiseData3D > 0.7 ? STONE : ( WorldPosition.y > m_iSeaLevel ? AIR : WATERSRC ) );
+		c->m_blocks[i].SetType( noiseData3D > 0.7 ? STONE : ( WorldPosition.y > m_iSeaLevel ? AIR : WATERSRC ) );
 	}
 }
 
@@ -156,24 +156,24 @@ void COverworldJeneration::BiomeBlocks( CChunk *c )
 				{
 					if ( blk->GetType() == STONE )
 					{
-						b->Set( biome->m_iBlockDust, 0 );
-						blk->Set( biome->m_iBlockSurface );
+						b->SetType( biome->m_iBlockDust );
+						blk->SetType( biome->m_iBlockSurface );
 						grassDepth--;
 					}
 					else
 					{
-						blk->Set( biome->m_iBlockWaterSurf );
+						blk->SetType( biome->m_iBlockWaterSurf );
 					}
 				}
 				else if ( b->GetType() == biome->m_iBlockSurface ||
 						  b->GetType() == biome->m_iBlockSubSurface && grassDepth > 0 )
 				{
-					blk->Set( biome->m_iBlockSubSurface );
+					blk->SetType( biome->m_iBlockSubSurface );
 					grassDepth--;
 				}
 				else if ( blk->GetType() == STONE )
 				{
-					blk->Set( biome->m_iBlockRock );
+					blk->SetType( biome->m_iBlockRock );
 				}
 			}
 		}
@@ -201,12 +201,12 @@ void COverworldJeneration::BiomeBlocks( CChunk *c )
 
 				if ( (b->GetType() == WATER || b->GetType() == WATERSRC) && blk->GetType() == STONE )
 				{
-					blk->Set( GRAVEL );
+					blk->SetType( GRAVEL );
 					gravelDepth--;
 				}
 				else if ( b->GetType() == GRAVEL && gravelDepth > 0 && blk->GetType() == STONE )
 				{
-					blk->Set( GRAVEL );
+					blk->SetType( GRAVEL );
 					gravelDepth--;
 				}
 			}
@@ -229,7 +229,7 @@ void COverworldJeneration::Decorate( CChunk *c )
 			float noiseData = fnlGetNoise3D( &m_oreNoise, WorldPosition.x, WorldPosition.y, WorldPosition.z ) * 1.1;
 
 			if ( noiseData > 0.9 )
-				c->m_blocks[i].Set( ORE_COAL );
+				c->m_blocks[i].SetType( ORE_COAL );
 		}
 
 		// Caves
@@ -247,7 +247,7 @@ void COverworldJeneration::Decorate( CChunk *c )
 				 id == GRAVEL|| id == SNOWGRASS ||
 				 id == SNOWLAYER )
 			{
-				c->m_blocks[i].Set( AIR );
+				c->m_blocks[i].SetType( AIR );
 			}
 		}
 	}
