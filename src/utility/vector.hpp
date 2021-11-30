@@ -1,6 +1,18 @@
 #pragma once
 
-#include "types.hpp"
+#ifdef BUILD_UTIL
+	#ifdef _WIN32
+		#define DLLEXPORT __declspec(dllexport)
+	#else
+		#define DLLEXPORT
+	#endif
+	#else
+	#ifdef _WIN32
+		#define DLLEXPORT __declspec(dllimport)
+	#else
+		#define DLLEXPORT
+	#endif
+#endif // BUILD_UTIL
 
 #include <math.h>
 
@@ -11,7 +23,7 @@
 // Defines the math operations
 // Woah mamma, that's very verbose!
 // Thanks C++ for making me do this
-template <typename T> class Vector3
+template <typename T> class DLLEXPORT Vector3
 {
   public:
 	T x, y, z;
@@ -161,13 +173,13 @@ template <typename T> class Vector3
 	bool operator<=( const Vector3<T> &v ) const { return x <= v.x && y <= v.y && z <= v.z; }
 };
 
-template <typename T> Vector3<T> RandomVector3( T min, T max )
+template <typename T> Vector3<T> inline DLLEXPORT RandomVector3( T min, T max )
 {
 	return Vector3<T>( rand() * ( max - min ) / RAND_MAX + min, rand() * ( max - min ) / RAND_MAX + min,
 					   rand() * ( max - min ) / RAND_MAX + min );
 }
 
-template <typename T> Vector3<T> RandomVector3( Vector3<T> min, Vector3<T> max )
+template <typename T> Vector3<T> inline DLLEXPORT RandomVector3( Vector3<T> min, Vector3<T> max )
 {
 	return Vector3<T>( rand() * ( max.x - min.x ) / RAND_MAX + min.x, rand() * ( max.y - min.y ) / RAND_MAX + min.y,
 					   rand() * ( max.z - min.z ) / RAND_MAX + min.z );
@@ -177,13 +189,19 @@ using Vector3f = Vector3<float>;
 using Vector3i = Vector3<int>;
 using Vector3c = Vector3<char>;
 
+#ifdef BUILD_UTIL
 static const Vector3f VEC_UP = { 0, 1, 0 };
 static const Vector3f VEC_ONE = { 1, 1, 1 };
 static const Vector3f VEC_ZERO = { 0, 0, 0 };
+#else
+DLLEXPORT const Vector3f VEC_UP;
+DLLEXPORT const Vector3f VEC_ONE;
+DLLEXPORT const Vector3f VEC_ZERO;
+#endif // BUILD_UTIL
 
 // Generic vector class of 4 elements
 // (It's like Vector3 but with w, and some limited functions)
-template <typename T> class Vector4
+template <typename T> class DLLEXPORT Vector4
 {
   public:
 	T x, y, z, w;
@@ -288,13 +306,13 @@ template <typename T> class Vector4
 	bool operator<=( const Vector4<T> &v ) const { return x <= v.x && y <= v.y && z <= v.z && w <= v.w; }
 };
 
-template <typename T> Vector4<T> RandomVector4( T min, T max )
+template <typename T> Vector4<T> inline DLLEXPORT RandomVector4( T min, T max )
 {
 	return Vector4<T>( rand() * ( max - min ) / RAND_MAX + min, rand() * ( max - min ) / RAND_MAX + min,
 					   rand() * ( max - min ) / RAND_MAX + min, rand() * ( max - min ) / RAND_MAX + min );
 }
 
-template <typename T> Vector4<T> RandomVector4( Vector4<T> min, Vector4<T> max )
+template <typename T> Vector4<T> inline DLLEXPORT RandomVector4( Vector4<T> min, Vector4<T> max )
 {
 	return Vector4<T>( rand() * ( max.x - min.x ) / RAND_MAX + min.x, rand() * ( max.y - min.y ) / RAND_MAX + min.y,
 					   rand() * ( max.z - min.z ) / RAND_MAX + min.z, rand() * ( max.w - min.w ) / RAND_MAX + min.w );

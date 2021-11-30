@@ -1,6 +1,6 @@
 #include "entitybase.hpp"
 #include "entitycamera.hpp"
-#include "utility/raycast.hpp"
+#include "shared/raycast.hpp"
 #include "utility/types.hpp"
 
 #include "inventory/inventory.hpp"

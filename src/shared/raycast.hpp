@@ -1,4 +1,4 @@
-#include "utility/vector.hpp"
+#include "vector.hpp"
 #include "world/block.hpp"
 #include "world/world.hpp"
 

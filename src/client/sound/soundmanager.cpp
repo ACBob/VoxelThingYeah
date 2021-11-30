@@ -6,7 +6,7 @@
 
 #include <random>
 
-#include "utility/raycast.hpp"
+#include "shared/raycast.hpp"
 
 #ifdef __linux__
 	#define AL_ALEXT_PROTOTYPES

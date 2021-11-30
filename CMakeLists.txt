@@ -22,6 +22,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Put the game executable in /bin
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
@@ -82,6 +83,7 @@ set(SERVER_BIN "${PROJECT_NAME}_server")
 
 add_executable(${CLIENT_BIN} ${gameClient_SRCS})
 target_link_libraries(${CLIENT_BIN} ${SDL2_LIBRARIES} ${OPENAL_LIBRARY} ${CMAKE_DL_LIBS} lodepng ${OPENGL_LIBRARIES} glm::glm physfs-static enet)
+target_link_libraries(${CLIENT_BIN} util) # our libraries
 target_compile_definitions(${CLIENT_BIN} PUBLIC CLIENTEXE)
 target_include_directories(${CLIENT_BIN} PRIVATE "${CMAKE_CURRENT_LIST_DIR}/src/client")
 
@@ -91,6 +93,7 @@ else()
 endif()
 
 add_executable(${SERVER_BIN} ${gameServer_SRCS})
+target_link_libraries(${SERVER_BIN} util) # our libraries
 target_link_libraries(${SERVER_BIN} ${CMAKE_DL_LIBS} physfs-static enet Threads::Threads)
 target_compile_definitions(${SERVER_BIN} PUBLIC SERVEREXE)
 target_include_directories(${SERVER_BIN} PRIVATE "${CMAKE_CURRENT_LIST_DIR}/src/server")
