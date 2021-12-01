@@ -11,16 +11,4 @@ class CBlockLiquid final : public CBlockBase
 
 	virtual bool IsSolid( BLOCKVAL metadata ) const { return false; };
 	virtual bool IsSelectable( BLOCKVAL metadata ) const { return false; };
-
-#ifdef CLIENTEXE
-	virtual bool FaceVisible( Direction direction, BLOCKID blockId ) const
-	{
-		return blockId != m_iBlockType && ( BlockType( blockId ).IsTransparent() || BlockType( blockId ).IsLiquid() ||
-											!BlockType( blockId ).IsFullCube() );
-	}
-
-	virtual bool IsFullCube() const { return false; };
-	virtual bool IsTransparent() const { return true; };
-	virtual bool IsLiquid() const { return true; };
-#endif
 };

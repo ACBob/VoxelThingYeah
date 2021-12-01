@@ -4,10 +4,6 @@
 #include "utility/direction.hpp"
 #include "utility/vector.hpp"
 
-#ifdef CLIENTEXE
-	#include "rendering/blocktexture.hpp"
-#endif
-
 #pragma once
 
 // Forward Decl.
@@ -57,10 +53,6 @@ struct block_t
 	uint16_t GetType() { return blck >> 16; }
 
 	uint16_t GetMeta() { return blck & 0xFFFF; }
-
-#ifdef CLIENTEXE
-	BlockTexture GetSideTexture( Direction side );
-#endif
 
 	// Pos is in local coords
 	bool TestPointCollision( Vector3f pos );

@@ -3,9 +3,9 @@
 #include "cvar_shared.hpp"
 
 #include "filesystem.hpp"
-#include <types.hpp>
+#include "utility/types.hpp"
 
-#include <tomlcpp.hpp>
+#include "utility/tomlcpp.hpp"
 
 #include "logging.hpp"
 

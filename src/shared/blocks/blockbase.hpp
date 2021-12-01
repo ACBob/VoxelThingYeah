@@ -3,14 +3,10 @@
 
 #pragma once
 
-#include "types.hpp"
+#include "utility/types.hpp"
 #include "world/physics.hpp"
 
 #include "blockdef.hpp"
-
-#ifdef CLIENTEXE
-	#include "rendering/blocktexture.hpp"
-#endif
 
 // Forward decl.
 class CChunk;
@@ -52,18 +48,6 @@ class CBlockBase
 	virtual bool IsFullCube() const { return true; }
 
 	virtual BLOCKMATERIAL GetMaterial( BLOCKVAL meta ) const { return GetBlockMaterial( m_iBlockType ); };
-
-#ifdef CLIENTEXE
-	virtual BlockTexture GetTexture( Direction direction, BLOCKVAL metadata ) const
-	{
-		return GetDefaultBlockTextureSide( m_iBlockType, direction );
-	};
-	virtual bool FaceVisible( Direction direction, BLOCKID blockId ) const;
-
-	virtual uint16_t GetTint( CChunk *pChunk, Vector3f pos, BLOCKVAL metadata, Direction dir ) const { return 0xFFFF; };
-
-	virtual BLOCKMODEL GetModel( CChunk *pChunk, Vector3f pos, BLOCKVAL metadata ) const { return BLOCKMODEL_CUBE; };
-#endif
 
   protected:
 	~CBlockBase() = default;

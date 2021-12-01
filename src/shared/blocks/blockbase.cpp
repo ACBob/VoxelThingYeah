@@ -21,13 +21,6 @@ CBoundingBox CBlockBase::GetBounds() const
 	return CBoundingBox( Vector3f( 0 ), Vector3f( BLOCKUNIT, BLOCKUNIT, BLOCKUNIT ), Vector3f( 0 ) );
 }
 
-#ifdef CLIENTEXE
-bool CBlockBase::FaceVisible( Direction direction, BLOCKID blockId ) const
-{
-	return BlockType( blockId ).IsTransparent() || !BlockType( blockId ).IsFullCube();
-}
-#endif
-
 // I am *some-what* copying Cuberite here.
 namespace
 {

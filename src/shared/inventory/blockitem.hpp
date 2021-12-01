@@ -1,4 +1,4 @@
-#include "assorted.hpp"
+#include "utility/assorted.hpp"
 #include "item.hpp"
 
 #include "../blockdef.hpp"
@@ -12,12 +12,6 @@ class CBlockItem : public CItem
   public:
 	CBlockItem( int count = 1, BLOCKID blockType = AIR, uint16_t blockData = 0 );
 	~CBlockItem();
-
-#ifdef CLIENTEXE
-	CTexture *GetTexture();
-	Vector4f GetUV();
-	CColour GetTint();
-#endif
 
 	int GetID();
 	void SetID( int id );

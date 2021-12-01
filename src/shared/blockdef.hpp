@@ -2,7 +2,7 @@
 // Like ID
 // For what used to be BlockFeatures, see BlockBase.cpp
 
-#include <types.hpp>
+#include "utility/types.hpp"
 
 // size of X,Y,Z of blocks
 #define BLOCKUNIT 1.0f
@@ -71,18 +71,6 @@ enum BLOCKMATERIAL {
 	MAT_FABRIC	= 8, // Wool
 	MAT_METAL   = 9, // Iron, Gold, etc
 };
-
-#ifdef CLIENTEXE
-enum BLOCKMODEL { // The commented out ones are ideas for future models
-	BLOCKMODEL_CUBE = 0, // Simple cube
-	BLOCKMODEL_CROSS = 1, // A "X" - Like plants in Minecraft
-	BLOCKMODEL_1LAYER = 2, // 1/16th of a block
-	BLOCKMODEL_2LAYER = 3, // 2/16th of a block
-	BLOCKMODEL_HALFBLOCK = 4, // 1/2 block
-	// BLOCKMODEL_POUND = 3, // A "#" - Like farm plants in Minecraft
-	// BLOCKMODEL_FLAME = 4, // Fire-like, every face looks like it's coming out of the block
-};
-#endif
 
 const char *BlockMaterialSTR( BLOCKMATERIAL mat );
 

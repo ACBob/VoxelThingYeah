@@ -1,5 +1,5 @@
 #include "biomes.hpp"
-#include "fastnoise.h"
+#include "utility/fastnoise.h"
 #include "world/block.hpp"
 #include "world/chunk.hpp"
 

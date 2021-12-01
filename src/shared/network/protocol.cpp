@@ -4,12 +4,6 @@
 
 #include "logging.hpp"
 
-#ifdef CLIENTEXE
-	#include "cvar_clientside.hpp"
-#elif SERVEREXE
-	#include "cvar_serverside.hpp"
-#endif
-
 namespace protocol
 {
 	void SendPacket( ENetPeer *pPeer, NetworkPacket &p, bool important )

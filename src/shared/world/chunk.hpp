@@ -2,12 +2,7 @@
 
 #include "world/block.hpp"
 
-#ifdef CLIENTEXE
-	#include "rendering/chunkmodel.hpp"
-	#include "rendering/shadermanager.hpp"
-#endif
-
-#include "fastnoise.h"
+#include "utility/fastnoise.h"
 
 #define CHUNKSIZE_X 16
 #define CHUNKSIZE_Y 16
@@ -56,12 +51,6 @@ class CChunk
 
 	block_t *GetBlockAtRelative( Vector3f pos );
 
-#ifdef CLIENTEXE
-	void RebuildMdl();
-
-	void Render();
-	void RenderTrans(); // Renders things that should be done last, like water
-#endif
 	void Update( int64_t iTick );
 
 	Vector3f PosToWorld( int x, int y, int z );
@@ -72,21 +61,6 @@ class CChunk
 	// Flat array of blocks, access with
 	// Indexed with [x + SIZEX * (y + SIZEZ * z)]
 	block_t m_blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
-
-#ifdef CLIENTEXE
-	CModel m_blocksMdl;
-	CModel m_waterMdl;
-	// 16 bits
-	// 4 red, 4 green, 4 blue and 4 extra for the sky/natural light
-	uint16_t m_iLightingValue[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
-
-	// Alpha (w) is the sun value
-	CColour GetLightingLocal( Vector3f pos );
-	CColour GetLightingRelative( Vector3f pos );
-	void SetLightingLocal( Vector3f pos, CColour color );
-
-	void UpdateLighting();
-#endif
 
 	CWorld *m_pChunkMan = nullptr;
 

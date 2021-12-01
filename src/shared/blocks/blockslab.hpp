@@ -24,13 +24,4 @@ class CBlockSlabGeneric : public CBlockBase
     }
 
     virtual BLOCKMATERIAL GetMaterial( BLOCKVAL meta ) const { return GetBlockMaterial( meta ); }; 
-    
-#ifdef CLIENTEXE
-	virtual BlockTexture GetTexture( Direction direction, BLOCKVAL metadata ) const
-	{
-		return GetDefaultBlockTextureSide( metadata, direction );
-	}
-
-    virtual BLOCKMODEL GetModel( CChunk *pChunk, Vector3f pos, BLOCKVAL metadata ) const { return BLOCKMODEL_HALFBLOCK; };
-#endif
 };

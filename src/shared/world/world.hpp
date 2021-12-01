@@ -3,10 +3,6 @@
 
 #include "utility/vector.hpp"
 
-#ifdef CLIENTEXE
-	#include "rendering/shadermanager.hpp"
-#endif
-
 #include "physics.hpp"
 #include "world/block.hpp"
 
@@ -25,11 +21,7 @@ class CEntityBase;
 class CWorld
 {
   public:
-#ifdef CLIENTEXE
-	CWorld( CShader *shader, CShader *entShader, CTexture *worldTex );
-#elif SERVEREXE
 	CWorld();
-#endif
 	~CWorld();
 
 	CChunk *ChunkAtWorldPos( Vector3f pos );
@@ -82,22 +74,6 @@ class CWorld
 	void AddEntity( CEntityBase *e );
 
 	CEntityBase *GetEntityByName( const char *name );
-
-#ifdef CLIENTEXE
-	void Render();
-
-	CColour GetLightingAtWorldPos( Vector3f pos );
-
-	CEntityBase *m_pLocalPlayer = nullptr;
-
-	// Shader we render with
-	CShader *m_pWorldShader = nullptr;
-	// Shader entities render with
-	CShader *m_pEntityShader = nullptr;
-
-	// Texture we use to render the world
-	CTexture *m_pWorldTex = nullptr;
-#endif
 
 	std::vector<std::unique_ptr<CChunk>> m_chunks;
 

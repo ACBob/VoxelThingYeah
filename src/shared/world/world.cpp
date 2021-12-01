@@ -6,22 +6,11 @@
 
 #include "shared/logging.hpp"
 
-#ifdef SERVEREXE
-	#include "server/cvar_serverside.hpp"
-#elif CLIENTEXE
-	#include "client/cvar_clientside.hpp"
-#endif
-
 #include <algorithm>
 
 #include "blocks/blockbase.hpp"
 
-#ifdef CLIENTEXE
-CWorld::CWorld( CShader *shader, CShader *entShader, CTexture *worldTex )
-	: m_pWorldShader( shader ), m_pEntityShader( entShader ), m_pWorldTex( worldTex )
-#elif SERVEREXE
 CWorld::CWorld()
-#endif
 {
 }
 CWorld::~CWorld()
@@ -61,17 +50,6 @@ CChunk *CWorld::GetChunkGenerateAtPos( Vector3f pos )
 	c->m_portableDef.y = pos.y;
 	c->m_portableDef.z = pos.z;
 	c->m_pChunkMan	   = this;
-#ifdef CLIENTEXE
-	c->m_blocksMdl.m_vPosition = c->GetPosInWorld();
-	c->m_blocksMdl.SetShader( m_pWorldShader );
-	c->m_blocksMdl.SetTexture( m_pWorldTex );
-	c->m_waterMdl.m_vPosition = c->GetPosInWorld();
-	c->m_waterMdl.SetShader( m_pWorldShader );
-	c->m_waterMdl.SetTexture( m_pWorldTex );
-#elif SERVEREXE
-	// Generate only on the server
-	m_jenerator.Generate( c );
-#endif
 
 	// test if there's any buffer blocks that intersect with this chunk
 	for ( auto &&b : m_blocksToPlace )
@@ -148,28 +126,12 @@ void CWorld::SetBlockAtWorldPos( Vector3f pos, BLOCKID block, BLOCKVAL val )
 	b->Update();
 }
 
-#ifdef CLIENTEXE
-CColour CWorld::GetLightingAtWorldPos( Vector3f pos )
-{
-	pos			  = pos.Floor();
-	CChunk *chunk = ChunkAtWorldPos( pos );
-	if ( chunk == nullptr )
-		return CColour( 0, 0, 0 );
-	Vector3f localPos = ( pos - chunk->GetPosInWorld() );
-
-	return chunk->GetLightingLocal( localPos );
-}
-#endif
-
 bool CWorld::ValidChunkPos( const Vector3f pos ) { return ChunkAtWorldPos( pos ) != nullptr; }
 
 void CWorld::AddEntity( CEntityBase *e )
 {
 	m_ents.push_back( e );
 	e->Spawn( this );
-#ifdef CLIENTEXE
-	e->SetShader( m_pEntityShader );
-#endif
 }
 
 CEntityBase *CWorld::GetEntityByName( const char *name )
@@ -181,23 +143,6 @@ CEntityBase *CWorld::GetEntityByName( const char *name )
 	}
 	return nullptr;
 }
-
-#ifdef CLIENTEXE
-void CWorld::Render()
-{
-	// Render regular blocks
-	for ( auto &&c : m_chunks )
-		c.get()->Render();
-	// Render entities
-	for ( CEntityBase *ent : m_ents )
-	{
-		ent->Render();
-	}
-	// Render stuff like water
-	for ( auto &&c : m_chunks )
-		c.get()->RenderTrans();
-}
-#endif
 
 bool CWorld::TestPointCollision( Vector3f pos )
 {
@@ -273,10 +218,6 @@ block_t *CWorld::TestAABBCollision( CBoundingBox col )
 
 void CWorld::WorldTick( int64_t iTick, float delta )
 {
-#ifdef SERVEREXE
-	// We only tick chunks near players
-	std::vector<Vector3f> playerChunkPositions;
-#endif
 
 	m_ents.erase( std::remove_if( m_ents.begin(), m_ents.end(), []( CEntityBase *e ) { return e->m_bIsKilled; } ),
 				  m_ents.end() );
@@ -285,53 +226,14 @@ void CWorld::WorldTick( int64_t iTick, float delta )
 	{
 		ent->Tick( iTick );
 		ent->PhysicsTick( delta, this );
-
-#ifdef SERVEREXE
-		if ( ent->IsPlayer() )
-			playerChunkPositions.push_back(
-				( ent->m_vPosition / Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ).Floor() );
-#endif
 	}
 
 	if ( iTick == m_iLastTick )
 		return;
 	m_iLastTick = iTick;
-
-#ifdef SERVEREXE
-	for ( auto &&c : m_chunks )
-	{
-		if ( c->m_bDirty || c->m_bReallyDirty )
-		{
-			c->Update( iTick );
-			continue;
-		}
-
-		// Check if the chunk is near any players
-		bool bNearPlayer = false;
-		for ( Vector3f pos : playerChunkPositions )
-		{
-			if ( c->GetPosInWorld().Distance( pos ) < 7 )
-			{
-				bNearPlayer = true;
-				break;
-			}
-		}
-
-		if ( bNearPlayer )
-			c->Update( iTick );
-	}
-#elif CLIENTEXE
-	for ( auto &&c : m_chunks )
-	{
-		c->Update( iTick );
-	}
-#endif
-
+	
 	// Progress time
-#ifdef CLIENTEXE
-	if ( cl_dodaylightcycle->GetBool() )
-#endif
-		m_iTimeOfDay++;
+	m_iTimeOfDay++;
 
 	if ( m_iTimeOfDay > 24000 )
 	{

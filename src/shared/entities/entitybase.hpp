@@ -5,11 +5,6 @@
 
 #include "world/world.hpp"
 
-#ifdef CLIENTEXE
-	#include "rendering/modelmanager.hpp"
-	#include "rendering/shadermanager.hpp"
-#endif
-
 // Move faster than this? Smack!
 #define SMACK_SPEED 30
 
@@ -46,25 +41,6 @@ class CEntityBase
 	// Updates the entity's children
 	virtual void UpdateChildren();
 
-#ifdef CLIENTEXE
-	// Update any client-side things we may have, called every frame rather than per tick
-	// Uses the client-side version of the world for testing things (i.e player hand)
-	virtual void UpdateClient( CWorld *clientSideWorld ){};
-
-	// Renders our Model.
-	virtual void Render()
-	{
-		m_pMdl->m_vLighting = m_vLighting;
-		m_pMdl->m_vPosition = m_vPosition;
-		m_pMdl->m_vRotation = m_vRotation;
-		m_pMdl->Render();
-	}
-
-	virtual void SetShader( CShader *shader ) { m_pMdl->SetShader( shader ); }
-
-	CModel *m_pMdl;
-#endif
-
 	std::string m_name;
 
 	// Gets a forward vector based on the rotation
@@ -81,11 +57,6 @@ class CEntityBase
 	Vector3f m_vRotation;
 	// Velocity
 	Vector3f m_vVelocity;
-#ifdef CLIENTEXE
-	// Lighting
-	CColour m_vLighting = { 1, 1, 1, 1 };
-#endif
-
 	CWorld *m_pWorld;
 
 	bool m_bOnFloor		   = false;

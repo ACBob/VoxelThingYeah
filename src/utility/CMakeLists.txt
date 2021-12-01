@@ -12,4 +12,4 @@ set(UTIL_SOURCES
 )
 
 # add the shared library
-add_library(util SHARED ${UTIL_SOURCES})
+add_library(VoxelThingYeah_UTIL STATIC ${UTIL_SOURCES})

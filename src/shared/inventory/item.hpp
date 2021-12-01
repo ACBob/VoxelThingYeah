@@ -4,12 +4,6 @@
 
 #pragma once
 
-#ifdef CLIENTEXE
-	#include "rendering/texturemanager.hpp"
-	#include "vector.hpp"
-	#include "colour.hpp"
-#endif
-
 class CItem
 {
   public:
@@ -21,12 +15,6 @@ class CItem
 
 	virtual int GetID();
 	virtual void SetID( int id );
-
-#ifdef CLIENTEXE
-	virtual CTexture *GetTexture();
-	virtual Vector4f GetUV();
-	virtual CColour GetTint();
-#endif
 
   protected:
 	// How many of this item does this stack represent

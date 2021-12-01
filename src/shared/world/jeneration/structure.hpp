@@ -3,7 +3,7 @@
 #pragma once
 
 #include "blockdef.hpp"
-#include "direction.hpp"
+#include "utility/direction.hpp"
 
 #include "../world.hpp"
 
