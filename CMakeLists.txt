@@ -29,12 +29,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 # LodePNG
 add_library(lodepng STATIC subprojects/lodepng/lodepng.cpp subprojects/lodepng/lodepng.h)
 
-# TODO: Have to add physfs first because GLM has an if guard around an uninstall target
-# EXCLUDE_FROM_ALL isn't working for me for whatever reason
-
-# GLM
-add_subdirectory(subprojects/glm EXCLUDE_FROM_ALL)
-
 # Includes
 set(includes
 	${CMAKE_CURRENT_LIST_DIR}/src
