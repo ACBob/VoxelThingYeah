@@ -39,6 +39,7 @@ add_executable( "${PROJECT_NAME}_client" ${CLIENT_SOURCES} )
 target_link_libraries( "${PROJECT_NAME}_client" libVoxelThingYeahShared libVoxelThingYeahUtil Threads::Threads
 	${SDL2_LIBRARIES}
 	${OpenGL_LIBRARIES}
+	${CMAKE_DL_LIBS}
 	lodepng
 )
 target_include_directories( "${PROJECT_NAME}_client" PUBLIC
@@ -56,6 +57,7 @@ add_executable( guiTest ${GUI_TEST_SOURCES} )
 target_link_libraries( guiTest libVoxelThingYeahShared libVoxelThingYeahUtil Threads::Threads
 	${SDL2_LIBRARIES}
 	${OpenGL_LIBRARIES}
+	${CMAKE_DL_LIBS}
 	lodepng
 )
 target_include_directories( guiTest PUBLIC
