@@ -9,7 +9,4 @@ set(UTIL_SOURCES
 	"${CMAKE_CURRENT_SOURCE_DIR}/tomlcpp.hpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/utfz.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/utfz.h"
-)
-
-# add the shared library
-add_library(VoxelThingYeah_UTIL STATIC ${UTIL_SOURCES})
+PARENT_SCOPE)

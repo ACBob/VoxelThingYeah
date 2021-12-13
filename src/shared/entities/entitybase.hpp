@@ -3,7 +3,7 @@
 #include "utility/assorted.hpp"
 #include "utility/vector.hpp"
 
-#include "world/world.hpp"
+#include "shared/world/world.hpp"
 
 // Move faster than this? Smack!
 #define SMACK_SPEED 30

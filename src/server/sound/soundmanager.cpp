@@ -2,7 +2,7 @@
 
 #include "tomlcpp.hpp"
 
-#include "blockdef.hpp"
+#include "shared/blockdef.hpp"
 
 #include <random>
 

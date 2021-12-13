@@ -20,6 +20,8 @@ endif()
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
 # Put the game executable in /bin
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
@@ -77,38 +79,3 @@ include_directories(${includes}
 )
 
 configure_file( "${CMAKE_CURRENT_LIST_DIR}/include/config.h.in" "${CMAKE_CURRENT_LIST_DIR}/include/config.h" )
-
-# The static libs
-target_link_libraries(
-	VoxelThingYeah_SHARED enet Threads::Threads physfs-static ${CMAKE_DL_LIBS} VoxelThingYeah_UTIL
-)
-
-set(CLIENT_BIN "${PROJECT_NAME}_client")
-set(SERVER_BIN "${PROJECT_NAME}_server")
-
-add_executable(${CLIENT_BIN} ${gameClient_SRCS})
-target_link_libraries(${CLIENT_BIN} ${SDL2_LIBRARIES} ${OPENAL_LIBRARY} ${CMAKE_DL_LIBS} lodepng ${OPENGL_LIBRARIES} glm::glm physfs-static enet)
-target_link_libraries(${CLIENT_BIN} VoxelThingYeah_UTIL VoxelThingYeah_SHARED) # our libraries
-target_compile_definitions(${CLIENT_BIN} PUBLIC CLIENTEXE)
-target_include_directories(${CLIENT_BIN} PRIVATE "${CMAKE_CURRENT_LIST_DIR}/src/client")
-
-if (${CMAKE_BUILD_TYPE} MATCHES "Debug" OR "RelWithDebInfo")
-else()
-	target_compile_definitions(${CLIENT_BIN} PUBLIC LOG_LEVEL=1)
-endif()
-
-add_executable(${SERVER_BIN} ${gameServer_SRCS})
-target_link_libraries(${SERVER_BIN} VoxelThingYeah_UTIL VoxelThingYeah_SHARED) # our libraries
-target_link_libraries(${SERVER_BIN} ${CMAKE_DL_LIBS} physfs-static enet Threads::Threads)
-target_compile_definitions(${SERVER_BIN} PUBLIC SERVEREXE)
-target_include_directories(${SERVER_BIN} PRIVATE "${CMAKE_CURRENT_LIST_DIR}/src/server")
-
-if (${CMAKE_BUILD_TYPE} MATCHES "Debug" OR "RelWithDebInfo")
-else()
-	target_compile_definitions(${SERVER_BIN} PUBLIC LOG_LEVEL=1)
-endif()
-
-add_executable("guiTest" ${guiTest_SRCS})
-target_link_libraries("guiTest" ${SDL2_LIBRARIES} ${OPENAL_LIBRARY} ${CMAKE_DL_LIBS} lodepng ${OPENGL_LIBRARIES} glm::glm physfs-static enet)
-target_compile_definitions("guiTest" PUBLIC CLIENTEXE)
-target_include_directories("guiTest" PRIVATE "${CMAKE_CURRENT_LIST_DIR}/src/client")

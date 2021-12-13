@@ -1,7 +1,7 @@
 #include "utility/assorted.hpp"
 #include "item.hpp"
 
-#include "../blockdef.hpp"
+#include "../shared/blockdef.hpp"
 
 #pragma once
 

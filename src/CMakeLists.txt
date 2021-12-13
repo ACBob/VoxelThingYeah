@@ -3,29 +3,19 @@ add_subdirectory(client)
 add_subdirectory(server)
 add_subdirectory(shared)
 
-set(gameClient_SRCS
-	${utility_SRCS}
-	${client_SRCS}
-	${shared_SRCS}
+find_package(PhysFS REQUIRED)
+find_package(ENet REQUIRED)
 
-	PARENT_SCOPE
-)
 
-set(guiTest_SRCS
-	${guiTest_SRCS}
-	${utility_minimal_SRCS}
-	${shared_minimal_SRCS}
-	PARENT_SCOPE
-)
+add_library(libVoxelThingYeahUtil SHARED ${UTIL_SOURCES})
+# target_link_libraries(libVoxelThingYeahUtil ${PhysFS_LIBRARIES})
 
-set(gameServer_SRCS
-	${utility_SRCS}
-	${server_SRCS}
-	${shared_SRCS}
-
-	PARENT_SCOPE
-)
-
-include_directories(
-	${CMAKE_CURRENT_LIST_DIR}
+add_library(libVoxelThingYeahShared SHARED ${SHARED_SOURCES})
+target_link_libraries(libVoxelThingYeahShared ${PhysFS_LIBRARIES} ${ENet_LIBRARIES})
+target_include_directories(libVoxelThingYeahShared PUBLIC
+	${PhysFS_INCLUDE_DIRS} 
+	${ENet_INCLUDE_DIRS}
+	"${CMAKE_CURRENT_SOURCE_DIR}/../include"
+	"${CMAKE_CURRENT_SOURCE_DIR}"
+	"${CMAKE_CURRENT_SOURCE_DIR}/shared"
 )

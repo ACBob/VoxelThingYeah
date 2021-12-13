@@ -1,4 +1,4 @@
-#include "blockdef.hpp"
+#include "shared/blockdef.hpp"
 #include "texturemanager.hpp"
 #include "utility/direction.hpp"
 

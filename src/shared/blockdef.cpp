@@ -1,4 +1,4 @@
-#include "blockdef.hpp"
+#include "shared/blockdef.hpp"
 
 const char *BlockMaterialSTR( BLOCKMATERIAL mat )
 {

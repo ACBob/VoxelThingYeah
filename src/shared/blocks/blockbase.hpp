@@ -6,7 +6,7 @@
 #include "utility/types.hpp"
 #include "world/physics.hpp"
 
-#include "blockdef.hpp"
+#include "shared/blockdef.hpp"
 
 // Forward decl.
 class CChunk;

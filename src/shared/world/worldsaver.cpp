@@ -5,7 +5,7 @@
 
 #include "chunk.hpp"
 
-#include "../blockdef.hpp"
+#include "../shared/blockdef.hpp"
 
 #include <cstring>
 

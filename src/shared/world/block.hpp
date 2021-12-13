@@ -1,6 +1,6 @@
 // TODO: is this class neccesary? Seems bloaty!
 
-#include "blockdef.hpp"
+#include "shared/blockdef.hpp"
 #include "utility/direction.hpp"
 #include "utility/vector.hpp"
 

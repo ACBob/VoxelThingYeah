@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "blockdef.hpp"
+#include "shared/blockdef.hpp"
 #include "utility/direction.hpp"
 
 #include "../world.hpp"

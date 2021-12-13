@@ -5,7 +5,7 @@ add_subdirectory(inventory)
 add_subdirectory(blocks)
 add_subdirectory(localization)
 
-set(shared_SRCS
+set(SHARED_SOURCES
 	${ent_SRCS}
 	${world_SRCS}
 	${network_SRCS}
@@ -19,15 +19,4 @@ set(shared_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/statemanager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/cvar_shared.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/raycast.cpp
-)
-
-# We also handle ENet stuff here, so include that too
-add_library(VoxelThingYeah_SHARED STATIC ${shared_SRCS})
-target_include_directories(
-	# Grody, is there a better way to do this?
-	VoxelThingYeah_SHARED PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}"
-	VoxelThingYeah_SHARED PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../"
-	VoxelThingYeah_SHARED PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../subprojects/enet/include"
-	VoxelThingYeah_SHARED PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../subprojects/physfs/src"
-	VoxelThingYeah_SHARED PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../include"
-)
+PARENT_SCOPE)
