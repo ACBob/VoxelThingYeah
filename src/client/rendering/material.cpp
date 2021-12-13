@@ -9,6 +9,9 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include <regex>
+
+
 namespace materialSystem {
 
     std::map<std::string, CTexture*> vTextures;
@@ -124,6 +127,51 @@ namespace materialSystem {
         glBindTexture( GL_TEXTURE_2D, 0 );
     }
 
+    void ShaderPreprocessor(std::string& shader, int depth) {
+        if ( depth >= MATSYS_MAX_SHADER_INCLUDE_DEPTH) {
+            con_error("Shader include depth exceeded");
+            return;
+        }
+
+        std::regex include( "#include \"([^\"]+)\"" );
+
+        std::smatch match;
+
+        std::regex_search( shader, match, include );
+
+        // There aren't any includes
+        if ( match.size() == 0 )
+            return;
+
+        std::string includeFile = "/assets/shaders/" + match[1].str();
+
+        bool bSuccess = false;
+        int64_t iFileLength = 0;
+        const char *sIncludeFile = (char*)fileSystem::LoadFile( includeFile.c_str(), iFileLength, bSuccess );
+
+        if ( !bSuccess )
+        {
+            con_error( "Failed to load shader include %s", includeFile.c_str() );
+
+            // delete the include
+            shader.erase( match[0].first, match[0].second );
+        }
+        else
+        {
+            std::string includeContents( sIncludeFile, iFileLength );
+
+            ShaderPreprocessor( includeContents, depth + 1 );
+
+            shader.replace( match[0].first, match[0].second, includeContents );
+
+            delete sIncludeFile;
+        }
+
+        // HACK: continue searching for includes
+        if ( match.size() > 0 )
+            ShaderPreprocessor( shader, depth );
+    }
+
     CShader::CShader( const std::string &vertexShaderFilepath, const std::string &fragmentShaderFilepath )
     {
         m_sVertexShaderFilepath = vertexShaderFilepath;
@@ -134,25 +182,31 @@ namespace materialSystem {
 
         bool bSuccess = false;
         int64_t iFileLength = 0;
-        char *sVertexShaderSource = (char *)fileSystem::LoadFile( m_sVertexShaderFilepath.c_str(), iFileLength, bSuccess );
+        std::string sVertexShaderSource = (char *)fileSystem::LoadFile( m_sVertexShaderFilepath.c_str(), iFileLength, bSuccess );
 
         if ( !bSuccess )
         {
             con_error( "Failed to load vertex shader %s", m_sVertexShaderFilepath.c_str() );
         }
 
-        glShaderSource( nVertexShader, 1, &sVertexShaderSource, NULL );
+        ShaderPreprocessor( sVertexShaderSource, 0 );
+
+        const char *sVertexShaderSourceCStr = sVertexShaderSource.c_str();
+        glShaderSource( nVertexShader, 1, &sVertexShaderSourceCStr, NULL );
         
         bSuccess = false;
         iFileLength = 0;
-        char *sFragmentShaderSource = (char *)fileSystem::LoadFile( m_sFragmentShaderFilepath.c_str(), iFileLength, bSuccess );
+        std::string sFragmentShaderSource = (char *)fileSystem::LoadFile( m_sFragmentShaderFilepath.c_str(), iFileLength, bSuccess );
 
         if ( !bSuccess )
         {
             con_error( "Failed to load fragment shader %s", m_sFragmentShaderFilepath.c_str() );
         }
 
-        glShaderSource( nFragmentShader, 1, &sFragmentShaderSource, NULL );
+        ShaderPreprocessor( sFragmentShaderSource, 0 );
+
+        const char *sFragmentShaderSourceCStr = sFragmentShaderSource.c_str();
+        glShaderSource( nFragmentShader, 1, &sFragmentShaderSourceCStr, NULL );
 
         glCompileShader( nVertexShader );
         glCompileShader( nFragmentShader );
@@ -187,9 +241,6 @@ namespace materialSystem {
 
         glDeleteShader( nVertexShader );
         glDeleteShader( nFragmentShader );
-
-        delete sVertexShaderSource;
-        delete sFragmentShaderSource;
     }
 
     CShader::~CShader()
@@ -206,21 +257,21 @@ namespace materialSystem {
         glUseProgram( 0 );
     }
 
-    void CShader::SetUInt( const std::string &name, unsigned int value )
+    void CShader::SetUInt( const char *name, unsigned int value )
     {
-        glUniform1ui( glGetUniformLocation( m_nShaderID, name.c_str() ), value );
+        glUniform1ui( glGetUniformLocation( m_nShaderID, name ), value );
     }
-    void CShader::SetFloat( const std::string &name, float value )
+    void CShader::SetFloat( const char *name, float value )
     {
-        glUniform1f( glGetUniformLocation( m_nShaderID, name.c_str() ), value );
+        glUniform1f( glGetUniformLocation( m_nShaderID, name ), value );
     }
-    void CShader::SetVec3( const std::string &name, float x, float y, float z )
+    void CShader::SetVec3( const char *name, float x, float y, float z )
     {
-        glUniform3f( glGetUniformLocation( m_nShaderID, name.c_str() ), x, y, z );
+        glUniform3f( glGetUniformLocation( m_nShaderID, name ), x, y, z );
     }
-    void CShader::SetMat4( const std::string &name, const glm::mat4 &value )
+    void CShader::SetMat4( const char *name, glm::mat4 value )
     {
-        glUniformMatrix4fv( glGetUniformLocation( m_nShaderID, name.c_str() ), 1, GL_FALSE, glm::value_ptr( value ) );
+        glUniformMatrix4fv( glGetUniformLocation( m_nShaderID, name ), 1, GL_FALSE, glm::value_ptr( value ) );
     }
 
 }

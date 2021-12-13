@@ -8,6 +8,9 @@
 #include <glm/glm.hpp>
 #include <glm/mat4x4.hpp>
 
+// How far you can include in a shader.
+#define MATSYS_MAX_SHADER_INCLUDE_DEPTH 128
+
 namespace materialSystem {
 
     class CTexture
@@ -38,10 +41,10 @@ namespace materialSystem {
             CShader( const std::string &vertexShaderFilepath, const std::string &fragmentShaderFilepath );
             ~CShader();
 
-            void SetUInt( const std::string &name, unsigned int value );
-            void SetFloat( const std::string &name, float value );
-            void SetVec3( const std::string &name, float x, float y, float z );
-            void SetMat4( const std::string &name, const glm::mat4 &mat );
+            void SetUInt( const char *name, unsigned int value );
+            void SetFloat( const char *name, float value );
+            void SetVec3( const char *name, float x, float y, float z );
+            void SetMat4( const char *name, glm::mat4 mat );
 
             void Bind();
             void Unbind();
