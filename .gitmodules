@@ -4,9 +4,3 @@
 [submodule "subprojects/glm"]
 	path = subprojects/glm
 	url = https://github.com/g-truc/glm.git
-[submodule "subprojects/physfs"]
-	path = subprojects/physfs
-	url = https://github.com/icculus/physfs.git
-[submodule "subprojects/enet"]
-	path = subprojects/enet
-	url = https://github.com/lsalzman/enet.git

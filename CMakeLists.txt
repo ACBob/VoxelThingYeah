@@ -26,8 +26,6 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
-find_package(SDL2 REQUIRED)
-find_package(OpenGL REQUIRED)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
@@ -50,32 +48,15 @@ add_library(lodepng STATIC subprojects/lodepng/lodepng.cpp subprojects/lodepng/l
 # TODO: Have to add physfs first because GLM has an if guard around an uninstall target
 # EXCLUDE_FROM_ALL isn't working for me for whatever reason
 
-# PhysFS
-set(PHYSFS_BUILD_SHARED FALSE)
-set(PHYSFS_BUILD_TEST FALSE)
-add_subdirectory(subprojects/physfs EXCLUDE_FROM_ALL)
-# ENet
-add_subdirectory(subprojects/enet EXCLUDE_FROM_ALL)
 # GLM
 add_subdirectory(subprojects/glm EXCLUDE_FROM_ALL)
-
-# Game Sources
-add_subdirectory(src)
 
 # Includes
 set(includes
 	${CMAKE_CURRENT_LIST_DIR}/src
 )
-include_directories(${includes} 
-	${SDL2_INCLUDE_DIRS}
-	${OPENAL_INCLUDE_DIRS}
-	"${CMAKE_CURRENT_LIST_DIR}/subprojects/lodepng" 
-	"${CMAKE_CURRENT_LIST_DIR}/subprojects/physfs/src" 
-	"${CMAKE_CURRENT_LIST_DIR}/subprojects/enet/include"
-	"${CMAKE_CURRENT_LIST_DIR}/include"
-	
-	"${CMAKE_CURRENT_LIST_DIR}/src/shared"
-	"${CMAKE_CURRENT_LIST_DIR}/src/utility"
-)
 
 configure_file( "${CMAKE_CURRENT_LIST_DIR}/include/config.h.in" "${CMAKE_CURRENT_LIST_DIR}/include/config.h" )
+
+# Game Sources
+add_subdirectory(src)

@@ -5,6 +5,8 @@ add_subdirectory(shared)
 
 find_package(PhysFS REQUIRED)
 find_package(ENet REQUIRED)
+find_package(SDL2 REQUIRED)
+find_package(OpenGL REQUIRED)
 
 
 add_library(libVoxelThingYeahUtil SHARED ${UTIL_SOURCES})
