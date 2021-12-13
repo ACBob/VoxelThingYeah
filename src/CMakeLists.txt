@@ -7,6 +7,7 @@ find_package(PhysFS REQUIRED)
 find_package(ENet REQUIRED)
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
+find_package(GLM REQUIRED)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
@@ -32,4 +33,38 @@ target_include_directories( "${PROJECT_NAME}_server" PUBLIC
 	"${CMAKE_CURRENT_SOURCE_DIR}"
 	"${CMAKE_CURRENT_SOURCE_DIR}/shared"
 	"${CMAKE_CURRENT_SOURCE_DIR}/server"
+)
+
+add_executable( "${PROJECT_NAME}_client" ${CLIENT_SOURCES} )
+target_link_libraries( "${PROJECT_NAME}_client" libVoxelThingYeahShared libVoxelThingYeahUtil Threads::Threads
+	${SDL2_LIBRARIES}
+	${OpenGL_LIBRARIES}
+	lodepng
+)
+target_include_directories( "${PROJECT_NAME}_client" PUBLIC
+	${GLM_INCLUDE_DIRS}
+	${SDL2_INCLUDE_DIRS}
+	${OpenGL_INCLUDE_DIRS}
+	"${CMAKE_CURRENT_SOURCE_DIR}/../include"
+	"${CMAKE_CURRENT_SOURCE_DIR}"
+	"${CMAKE_CURRENT_SOURCE_DIR}/shared"
+	"${CMAKE_CURRENT_SOURCE_DIR}/client"
+	"${CMAKE_CURRENT_SOURCE_DIR}/utility"
+)
+
+add_executable( guiTest ${GUI_TEST_SOURCES} )
+target_link_libraries( guiTest libVoxelThingYeahShared libVoxelThingYeahUtil Threads::Threads
+	${SDL2_LIBRARIES}
+	${OpenGL_LIBRARIES}
+	lodepng
+)
+target_include_directories( guiTest PUBLIC
+	${GLM_INCLUDE_DIRS}
+	${SDL2_INCLUDE_DIRS}
+	${OpenGL_INCLUDE_DIRS}
+	"${CMAKE_CURRENT_SOURCE_DIR}/../include"
+	"${CMAKE_CURRENT_SOURCE_DIR}"
+	"${CMAKE_CURRENT_SOURCE_DIR}/shared"
+	"${CMAKE_CURRENT_SOURCE_DIR}/client"
+	"${CMAKE_CURRENT_SOURCE_DIR}/utility"
 )

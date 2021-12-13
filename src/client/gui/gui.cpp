@@ -25,6 +25,8 @@
 
 #include <algorithm>
 
+#include <cstring>
+
 // How many grid units we expect there to be
 #define GUI_GRID_X 53
 #define GUI_GRID_Y 30
@@ -649,7 +651,7 @@ bool CGui::ButtonCentered( GuiID id, Vector3f position, Vector3f size, CTexture 
 	return Button( id, position, size, pTexture );
 }
 
-bool CGui::Item( GuiID id, Vector3f position, Vector3f size, CItem *pItem, bool showCount )
+bool CGui::Item( GuiID id, Vector3f position, Vector3f size, CClientItem *pItem, bool showCount )
 {
 	position = GetInScreen( position );
 
@@ -682,7 +684,7 @@ bool CGui::Item( GuiID id, Vector3f position, Vector3f size, CItem *pItem, bool 
 	return state == BUTTON_STATE_PRESSED;
 }
 
-bool CGui::ItemCentered( GuiID id, Vector3f position, Vector3f size, CItem *pItem, bool showCount )
+bool CGui::ItemCentered( GuiID id, Vector3f position, Vector3f size, CClientItem *pItem, bool showCount )
 {
 	position.x -= size.x * 0.5f;
 	position.y += size.y * 0.5f;
@@ -709,7 +711,7 @@ int CGui::Inventory( Vector3f position, int itemsAccross, CInventory *pInventory
 	{
 		Vector3f itemPos = position + Vector3f( ( i % itemsPerRow ) * m_iGUIUnitSize * 2,
 												( i / itemsPerRow ) * m_iGUIUnitSize * 2, 0 );
-		if ( Item( 'i' + i, itemPos / (float)m_iGUIUnitSize, { 2, 2 }, pInventory->Slot( i ), !pInventory->m_bInfinite ) )
+		if ( Item( 'i' + i, itemPos / (float)m_iGUIUnitSize, { 2, 2 }, (CClientItem*)pInventory->Slot( i ), !pInventory->m_bInfinite ) )
 			slot = i;
 	}
 

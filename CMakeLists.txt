@@ -26,18 +26,6 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
-if (MEEGREEF_ENABLE_OPENAL AND NOT DEFINED OPENAL_INCLUDE_DIRS)
-	find_package(OpenAL)
-	if (${OPENAL_FOUND})
-		add_compile_definitions(MEEGREEF_ENABLE_OPENAL)
-	else()
-		set(MEEGREEF_ENABLE_OPENAL OFF)
-		message(WARNING "Couldn't find OpenAL, Disabling audio support.")
-	endif()
-elseif(DEFINED OPENAL_INCLUDE_DIRS AND MEEGREEF_ENABLE_OPENAL)
-	add_compile_definitions(MEEGREEF_ENABLE_OPENAL)
-endif()
-
 # LodePNG
 add_library(lodepng STATIC subprojects/lodepng/lodepng.cpp subprojects/lodepng/lodepng.h)
 
