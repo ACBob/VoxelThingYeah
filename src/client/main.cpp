@@ -14,6 +14,13 @@
 #include "shared/filesystem.hpp"
 #include "shared/network/network.hpp"
 
+#include "rendering/model.hpp"
+#include "rendering/material.hpp"
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/mat4x4.hpp>
+
 int main( int argc, char *args[] )
 {
 	// Because Windows is from the stoneage
@@ -54,7 +61,7 @@ int main( int argc, char *args[] )
 		return EXIT_FAILURE;
 	}
 
-    CGameWindow window( "VoxelThingYeah", 1280, 720, false );
+    CGameWindow window( "VoxelThingYeah", Vector3i( scr_width->GetInt(), scr_height->GetInt() ), false );
 
     con_info("Init Filesystem...");
     if (!fileSystem::Init( args[0] ))
@@ -113,6 +120,43 @@ int main( int argc, char *args[] )
     con_info("Ok cool done");
 
     window.SetIcon( "logo64.png" );
+
+    con_info("Init Renderer...");
+    if (!materialSystem::Init())
+        window.Panic("Failed to initialize material system!");
+    atexit(materialSystem::Uninit);
+
+    materialSystem::CTexture *testTexture = materialSystem::LoadTexture("test.png");
+    materialSystem::CShader *testShader = materialSystem::LoadShader( "generic.vert", "generic.frag" );
+
+    CModel testModel;
+    testModel.LoadOBJ( "/assets/models/player.obj" );
+    testModel.m_pShader = testShader;
+    testModel.m_pTexture = testTexture;
+
+    glm::mat4 projection = glm::perspective(glm::radians(70.0f), (float)scr_width->GetInt() / (float)scr_height->GetInt(), 0.1f, 100.0f);
+    glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+    testShader->SetMat4( "projection", projection );
+    testShader->SetMat4( "view", view );
+
+    while ( !window.m_bShouldClose )
+    {
+        window.PollEvents();
+        inputManager.Update();
+
+        glClearColor( 0.0f, 0.5f, 0.5f, 1.0f );
+        glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT );
+
+        testModel.Render(
+            Vector3f( 0.0f, 0.0f, -5.0f ),
+            Vector3f( 0.0f, 0.0f, 0.0f ),
+            Vector3f( 1.0f, 1.0f, 1.0f )
+        );
+
+
+        window.SwapBuffers();
+    }
 
 
     return 0;

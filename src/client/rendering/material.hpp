@@ -1,0 +1,64 @@
+// -- Material System
+// Handles shaders & textures at the same time.
+
+#include <vector>
+#include <map>
+#include <string>
+
+#include <glm/glm.hpp>
+#include <glm/mat4x4.hpp>
+
+namespace materialSystem {
+
+    class CTexture
+    {
+        public:
+            CTexture( const std::string &filepath );
+            ~CTexture();
+
+            void Load();
+            
+            std::vector<unsigned char> m_uchImageData;
+
+            unsigned int m_nHeight;
+            unsigned int m_nWidth;
+
+            void Bind( int slot = 0 );
+            void Unbind( int slot = 0 );
+
+        protected:
+            unsigned int m_nTextureID;
+            std::string m_sFilepath;
+    };
+
+
+    class CShader
+    {
+        public:
+            CShader( const std::string &vertexShaderFilepath, const std::string &fragmentShaderFilepath );
+            ~CShader();
+
+            void SetUInt( const std::string &name, unsigned int value );
+            void SetFloat( const std::string &name, float value );
+            void SetVec3( const std::string &name, float x, float y, float z );
+            void SetMat4( const std::string &name, const glm::mat4 &mat );
+
+            void Bind();
+            void Unbind();
+
+        protected:
+            unsigned int m_nShaderID;
+            std::string m_sVertexShaderFilepath;
+            std::string m_sFragmentShaderFilepath;
+    };
+
+
+    extern std::map<std::string, CTexture*> vTextures;
+    extern std::vector<CShader*> vShaders;
+
+    bool Init();
+    void Uninit();
+
+    CTexture* LoadTexture( const std::string &filepath );
+    CShader* LoadShader( const std::string &vertexShaderFilepath, const std::string &fragmentShaderFilepath );
+} // namespace materialSystem

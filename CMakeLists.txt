@@ -38,3 +38,16 @@ configure_file( "${CMAKE_CURRENT_LIST_DIR}/include/config.h.in" "${CMAKE_CURRENT
 
 # Game Sources
 add_subdirectory(src)
+
+target_link_libraries(
+	"${PROJECT_NAME}_client" lodepng
+)
+target_include_directories(
+	"${PROJECT_NAME}_client" PUBLIC "subprojects/lodepng/"
+)
+target_link_libraries(
+	"guiTest" lodepng
+)
+target_include_directories(
+	"guiTest" PUBLIC "subprojects/lodepng/"
+)
