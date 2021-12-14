@@ -133,8 +133,6 @@ int main( int argc, char *args[] )
         scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f );
     glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
-    inputManager.m_bInGui = true;
-
     Vector3f camPos = Vector3f(0.0f, 0.0f, 0.0f);
     Vector3f camLook = Vector3f(0.0f, 0.0f, -1.0f);
     Vector3f camUp = Vector3f(0.0f, 1.0f, 0.0f);
@@ -154,7 +152,16 @@ int main( int argc, char *args[] )
         camPitch += inputManager.m_vMouseMovement.y * 0.01f;
         camYaw += inputManager.m_vMouseMovement.x * 0.01f;
 
-        camPitch = fminf( fmaxf( camPitch, -85.5f ), 85.5f );
+        if ( inputManager.m_bInputState[CONTROLS_FRONT] )
+            camPos += camLook * 0.1f;
+        if ( inputManager.m_bInputState[CONTROLS_BACK] )
+            camPos -= camLook * 0.1f;
+        if ( inputManager.m_bInputState[CONTROLS_LEFT] )
+            camPos -= camLook.Cross( camUp ).Normal() * 0.1f;
+        if ( inputManager.m_bInputState[CONTROLS_RIGHT] )
+            camPos += camLook.Cross( camUp ).Normal() * 0.1f;
+
+        camPitch = fminf( fmaxf( camPitch, -89.9f ), 89.9f );
 
         camLook = Vector3f(0, 0, -1.0f).RotateAxis( 0, -camPitch ).RotateAxis( 1, -camYaw );
 
