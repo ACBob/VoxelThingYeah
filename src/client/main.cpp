@@ -135,6 +135,13 @@ int main( int argc, char *args[] )
 
     inputManager.m_bInGui = true;
 
+    Vector3f camPos = Vector3f(0.0f, 0.0f, 0.0f);
+    Vector3f camLook = Vector3f(0.0f, 0.0f, -1.0f);
+    Vector3f camUp = Vector3f(0.0f, 1.0f, 0.0f);
+    
+    float camPitch = 0.0f;
+    float camYaw = 0.0f;
+
     while ( !window.m_bShouldClose )
     {
         window.PollEvents();
@@ -142,6 +149,16 @@ int main( int argc, char *args[] )
 
         glClearColor( 0.0f, 0.5f, 0.5f, 1.0f );
         glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT );
+
+        // camera rotation
+        camPitch += inputManager.m_vMouseMovement.y * 0.01f;
+        camYaw += inputManager.m_vMouseMovement.x * 0.01f;
+
+        camPitch = fminf( fmaxf( camPitch, -85.5f ), 85.5f );
+
+        camLook = Vector3f(0, 0, -1.0f).RotateAxis( 0, -camPitch ).RotateAxis( 1, -camYaw );
+
+        view = glm::lookAt(glm::vec3(camPos.x, camPos.y, camPos.z), glm::vec3(camPos.x + camLook.x, camPos.y + camLook.y, camPos.z + camLook.z), glm::vec3(camUp.x, camUp.y, camUp.z));
 
         materialSystem::UpdateUniforms( projection, view );
 
