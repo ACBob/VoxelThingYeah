@@ -52,7 +52,7 @@ void CModel::Update() {
     glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(Vertex), &m_vertices[0], GL_DYNAMIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_nEBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_faces.size() * sizeof(GLuint), &m_faces[0], GL_DYNAMIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_faces.size() * sizeof(Face), &m_faces[0], GL_DYNAMIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -80,7 +80,7 @@ void CModel::Render( Vector3f pos, Vector3f rot, Vector3f scale ) {
     glBindVertexArray( m_nVAO );
 
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_nEBO );
-    glDrawElements( GL_TRIANGLES, m_faces.size(), GL_UNSIGNED_INT, 0 );
+    glDrawElements( GL_TRIANGLES, m_faces.size() * sizeof(Face), GL_UNSIGNED_INT, 0 );
 
     glBindVertexArray( 0 );
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
@@ -194,6 +194,9 @@ void CModel::LoadOBJ( const std::string &filePath ) {
 
             m_bones.push_back( { (boneIndex_t)m_bones.size(), parent, x, y, z } );
         }
+		else {
+			con_error( "Unknown OBJ token: %s", token );
+		}
 
 	skip:
 		token = strtok_r( NULL, sep, &saveptr );
