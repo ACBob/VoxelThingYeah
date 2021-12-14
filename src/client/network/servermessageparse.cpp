@@ -116,9 +116,9 @@ namespace protocol
 				{
 					con_info( "Player %s at <%f,%f,%f>", username.c_str(), x, y, z );
 
-					if ( joined )
-						client->m_chatBuffer.push_back(
-							client->m_pTranslator->GetStringFMT( "msg.joined", username.c_str() ) );
+					// if ( joined )
+					// 	client->m_chatBuffer.push_back(
+					// 		client->m_pTranslator->GetStringFMT( "msg.joined", username.c_str() ) );
 
 					if ( client->m_pLocalWorld->GetEntityByName( username.c_str() ) != nullptr )
 					{
@@ -220,8 +220,8 @@ namespace protocol
 				if ( e != nullptr )
 				{
 					e->m_bIsKilled = true;
-					client->m_chatBuffer.push_back(
-						client->m_pTranslator->GetStringFMT( "msg.left", username.c_str() ) );
+					// client->m_chatBuffer.push_back(
+					// 	client->m_pTranslator->GetStringFMT( "msg.left", username.c_str() ) );
 				}
 			}
 			break;

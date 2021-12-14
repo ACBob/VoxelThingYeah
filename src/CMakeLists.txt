@@ -15,6 +15,7 @@ find_package(Threads REQUIRED)
 
 add_library(libVoxelThingYeahUtil SHARED ${UTIL_SOURCES})
 # target_link_libraries(libVoxelThingYeahUtil ${PhysFS_LIBRARIES})
+target_compile_definitions(libVoxelThingYeahUtil PRIVATE TOML_HEADER_ONLY)
 
 add_library(libVoxelThingYeahShared SHARED ${SHARED_SOURCES})
 target_link_libraries(libVoxelThingYeahShared ${PHYSFS_LIBRARY} ${ENET_LIBRARIES})
@@ -25,6 +26,7 @@ target_include_directories(libVoxelThingYeahShared PUBLIC
 	"${CMAKE_CURRENT_SOURCE_DIR}"
 	"${CMAKE_CURRENT_SOURCE_DIR}/shared"
 )
+target_compile_definitions(libVoxelThingYeahShared PRIVATE TOML_HEADER_ONLY)
 
 add_executable( "${PROJECT_NAME}_server" ${SERVER_SOURCES} )
 target_link_libraries( "${PROJECT_NAME}_server" libVoxelThingYeahShared libVoxelThingYeahUtil Threads::Threads )
@@ -34,6 +36,7 @@ target_include_directories( "${PROJECT_NAME}_server" PUBLIC
 	"${CMAKE_CURRENT_SOURCE_DIR}/shared"
 	"${CMAKE_CURRENT_SOURCE_DIR}/server"
 )
+target_compile_definitions( "${PROJECT_NAME}_server" PRIVATE TOML_HEADER_ONLY)
 
 add_executable( "${PROJECT_NAME}_client" ${CLIENT_SOURCES} )
 target_link_libraries( "${PROJECT_NAME}_client" libVoxelThingYeahShared libVoxelThingYeahUtil Threads::Threads
@@ -52,6 +55,7 @@ target_include_directories( "${PROJECT_NAME}_client" PUBLIC
 	"${CMAKE_CURRENT_SOURCE_DIR}/client"
 	"${CMAKE_CURRENT_SOURCE_DIR}/utility"
 )
+target_compile_definitions( "${PROJECT_NAME}_client" PRIVATE TOML_HEADER_ONLY)
 
 add_executable( guiTest ${GUI_TEST_SOURCES} )
 target_link_libraries( guiTest libVoxelThingYeahShared libVoxelThingYeahUtil Threads::Threads
@@ -70,3 +74,4 @@ target_include_directories( guiTest PUBLIC
 	"${CMAKE_CURRENT_SOURCE_DIR}/client"
 	"${CMAKE_CURRENT_SOURCE_DIR}/utility"
 )
+target_compile_definitions( guiTest PRIVATE TOML_HEADER_ONLY)

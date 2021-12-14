@@ -62,6 +62,10 @@ namespace materialSystem {
     bool Init();
     void Uninit();
 
+    void UpdateUniforms( glm::mat4 projection, glm::mat4 view );
+
     CTexture* LoadTexture( const std::string &filepath );
     CShader* LoadShader( const std::string &vertexShaderFilepath, const std::string &fragmentShaderFilepath );
+
+    CShader* GetNamedShader( const std::string &name );
 } // namespace materialSystem

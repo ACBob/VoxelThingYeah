@@ -194,6 +194,26 @@ void CModel::LoadOBJ( const std::string &filePath ) {
 
             m_bones.push_back( { (boneIndex_t)m_bones.size(), parent, x, y, z } );
         }
+		// Texture Name
+		else if ( token[0] == 't' )
+		{
+			char *textureName = new char[256];
+			sscanf( token, "t %s", textureName );
+
+			m_pTexture = materialSystem::LoadTexture( textureName );
+
+			delete[] textureName;
+		}
+		// Shader Name
+		else if ( token[0] == 's' )
+		{
+			char *shaderName = new char[256];
+			sscanf( token, "s %s", shaderName );
+
+			m_pShader = materialSystem::GetNamedShader( shaderName );
+
+			delete[] shaderName;
+		}
 		else {
 			con_error( "Unknown OBJ token: %s", token );
 		}

@@ -126,22 +126,14 @@ int main( int argc, char *args[] )
         window.Panic("Failed to initialize material system!");
     atexit(materialSystem::Uninit);
 
-    materialSystem::CTexture *testTexture = materialSystem::LoadTexture("test.png");
-    materialSystem::CShader *testShader = materialSystem::LoadShader( "generic.vert", "generic.frag" );
-
     CModel testModel;
     testModel.LoadOBJ( "player.obj" );
-    testModel.m_pShader = testShader;
-    testModel.m_pTexture = testTexture;
 
     glm::mat4 projection = glm::perspective( glm::radians( fov->GetFloat() ),
         scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f );
     glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
-    testShader->Bind();
-    testShader->SetMat4( "projection", projection );
-    testShader->SetMat4( "view", view );
-    testShader->Unbind();
+    inputManager.m_bInGui = true;
 
     while ( !window.m_bShouldClose )
     {
@@ -150,6 +142,8 @@ int main( int argc, char *args[] )
 
         glClearColor( 0.0f, 0.5f, 0.5f, 1.0f );
         glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT );
+
+        materialSystem::UpdateUniforms( projection, view );
 
         testModel.Render(
             Vector3f( 0.0f, 0.0f, 1.0f ),

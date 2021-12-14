@@ -6,6 +6,7 @@
 #include "filesystem.hpp"
 
 #include "lodepng.h"
+#include "utility/toml.hpp"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -16,8 +17,62 @@ namespace materialSystem {
 
     std::map<std::string, CTexture*> vTextures;
     std::vector<CShader*> vShaders;
+    std::map<std::string, CShader*> vShaderMap;
 
     bool Init() {
+        // Attempt to load the assets/shaders/shaders.toml file
+        bool bSucceed = false;
+        int64_t nFileSize = 0;
+        char* pFileData = (char *)fileSystem::LoadFile("assets/shaders/shaders.toml", nFileSize, bSucceed);
+
+        // Don't error out if the file doesn't exist
+        if (!bSucceed && fileSystem::Exists("assets/shaders/shaders.toml")) {
+            con_error("Failed to load assets/shaders/shaders.toml");
+            return false;
+        }
+
+        if (!fileSystem::Exists("assets/shaders/shaders.toml")) {
+            con_error("assets/shaders/shaders.toml does not exist");
+            pFileData = (char *)malloc(1);
+            pFileData[0] = '\0';
+        }
+
+        // Parse the TOML file
+        toml::table root = toml::parse(pFileData);
+
+        for ( auto &k : root ) {
+            
+            // the name is the key
+            std::string sName = k.first;
+
+            toml::table *pShaderDef = k.second.as_table();
+
+            std::string vertexShader;
+            std::string fragmentShader;
+
+            vertexShader = pShaderDef->get("vertex")->value_or<std::string>("");
+            if (vertexShader.empty()) {
+                con_error("Vertex shader for %s is empty", sName.c_str());
+                continue;
+            }
+
+            fragmentShader = pShaderDef->get("fragment")->value_or<std::string>("");
+            if (fragmentShader.empty()) {
+                con_error("Fragment shader for %s is empty", sName.c_str());
+                continue;
+            }
+
+            // Create the shader
+            CShader* pShader = LoadShader(vertexShader, fragmentShader);
+            if (!pShader) {
+                con_error("Failed to load shader %s", sName.c_str());
+                continue;
+            }
+
+            // map the name to the shader
+            vShaderMap[sName] = pShader;
+        }
+
         return true;
     }
     void Uninit() {
@@ -25,6 +80,7 @@ namespace materialSystem {
             delete shader;
         }
         vShaders.clear();
+        vShaderMap.clear();
         for (auto& texture : vTextures) {
             delete texture.second;
         }
@@ -49,6 +105,14 @@ namespace materialSystem {
         CShader *shader = new CShader( vertexFilePath, fragmentFilePath );
         vShaders.push_back(shader);
         return shader;
+    }
+
+    CShader *GetNamedShader(const std::string& name) {
+        if (vShaderMap.find(name) != vShaderMap.end()) {
+            return vShaderMap[name];
+        }
+        con_error("Could not find shader %s", name.c_str());
+        return nullptr; // TODO: error shader
     }
 
     CTexture::CTexture( const std::string &filepath )
@@ -182,11 +246,16 @@ namespace materialSystem {
 
         bool bSuccess = false;
         int64_t iFileLength = 0;
-        std::string sVertexShaderSource = (char *)fileSystem::LoadFile( m_sVertexShaderFilepath.c_str(), iFileLength, bSuccess );
+        const char *cVertexShaderSource = (char *)fileSystem::LoadFile( m_sVertexShaderFilepath.c_str(), iFileLength, bSuccess );
+        std::string sVertexShaderSource;
 
         if ( !bSuccess )
         {
             con_error( "Failed to load vertex shader %s", m_sVertexShaderFilepath.c_str() );
+        }
+        else
+        {
+            sVertexShaderSource = std::string( cVertexShaderSource, iFileLength );
         }
 
         ShaderPreprocessor( sVertexShaderSource, 0 );
@@ -196,12 +265,18 @@ namespace materialSystem {
         
         bSuccess = false;
         iFileLength = 0;
-        std::string sFragmentShaderSource = (char *)fileSystem::LoadFile( m_sFragmentShaderFilepath.c_str(), iFileLength, bSuccess );
+        const char *FragmentShaderSource = (char *)fileSystem::LoadFile( m_sFragmentShaderFilepath.c_str(), iFileLength, bSuccess );
+        std::string sFragmentShaderSource;
 
         if ( !bSuccess )
         {
             con_error( "Failed to load fragment shader %s", m_sFragmentShaderFilepath.c_str() );
         }
+        else
+        {
+            sFragmentShaderSource = std::string( FragmentShaderSource, iFileLength );
+        }
+
 
         ShaderPreprocessor( sFragmentShaderSource, 0 );
 
@@ -272,6 +347,18 @@ namespace materialSystem {
     void CShader::SetMat4( const char *name, glm::mat4 value )
     {
         glUniformMatrix4fv( glGetUniformLocation( m_nShaderID, name ), 1, GL_FALSE, glm::value_ptr( value ) );
+    }
+
+
+    void UpdateUniforms( glm::mat4 projection, glm::mat4 view )
+    {
+        for ( CShader *shd : vShaders )
+        {
+            shd->Bind();
+            shd->SetMat4( "projection", projection );
+            shd->SetMat4( "view", view );
+            shd->Unbind();
+        }
     }
 
 }

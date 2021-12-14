@@ -3,8 +3,6 @@
 #include "network/protocol.hpp"
 #include "world/world.hpp"
 
-#include "shared/localization/localizer.hpp"
-
 #include "specialeffectdef.hpp"
 
 #pragma once
@@ -31,8 +29,6 @@ class CNetworkClient
 	CWorld *m_pLocalWorld = nullptr;
 	// Pointer to the local player
 	CEntityPlayer *m_pLocalPlayer = nullptr;
-	// Pointer to the translation manager
-	CLocalizer *m_pTranslator = nullptr;
 
 	// Please don't modify
 	// Returns if we're connected or not

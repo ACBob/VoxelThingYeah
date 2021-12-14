@@ -3,7 +3,6 @@ add_subdirectory(entities)
 add_subdirectory(network)
 add_subdirectory(inventory)
 add_subdirectory(blocks)
-add_subdirectory(localization)
 
 set(SHARED_SOURCES
 	${ent_SRCS}
@@ -11,7 +10,6 @@ set(SHARED_SOURCES
 	${network_SRCS}
 	${inventory_SRCS}
 	${block_SRCS}
-	${localization_SRCS}
 
 	${CMAKE_CURRENT_SOURCE_DIR}/filesystem.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/cvar.cpp

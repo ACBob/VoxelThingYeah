@@ -1,0 +1,21 @@
+# Named Shaders
+
+[generic]
+vertex = "generic.vert"
+fragment = "generic.frag"
+
+[sky]
+vertex = "sky.vert"
+fragment = "sky.frag"
+
+# [unlit]
+# vertex = "unlit.vert"
+# fragment = "unlit.frag"
+
+# [particle]
+# vertex = "particle.vert"
+# fragment = "particle.frag"
+
+# [wireframe]
+# vertex = "wireframe.vert"
+# fragment = "wireframe.frag"
