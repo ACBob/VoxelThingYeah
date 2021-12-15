@@ -56,7 +56,7 @@ class CShtoiGUI {
         float m_fVirtualCursorX, m_fVirtualCursorY; // The position of the virtual cursor, used to scale-up the GUI and for 3D
 
         // Rendering
-        void _Quad(float x, float y, float z, float w, float h, float u, float v, float r, float g, float b, float a);
+        void _Quad(float x, float y, float z, float w, float h, float u, float v, float u1, float v1, float r, float g, float b, float a);
 
         unsigned int m_nVAO, m_nVBO;
 

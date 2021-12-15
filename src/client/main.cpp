@@ -135,11 +135,14 @@ int main( int argc, char *args[] )
         scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f );
     glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
+    glm::mat4 screen = glm::ortho( 0.0f, scr_width->GetFloat(), scr_height->GetFloat(), 0.0f, -1.0f, 1.0f );
+
     Vector3f camPos = Vector3f(0.0f, 0.0f, 0.0f);
     Vector3f camLook = Vector3f(0.0f, 0.0f, -1.0f);
     Vector3f camUp = Vector3f(0.0f, 1.0f, 0.0f);
 
-    materialSystem::CShader *guiShader = materialSystem::GetNamedShader( "generic" );
+    materialSystem::CShader *guiShader = materialSystem::GetNamedShader( "gui" );
+    materialSystem::CTexture *testTexture = materialSystem::LoadTexture( "filledSquare.png" );
     
     float camPitch = 0.0f;
     float camYaw = 0.0f;
@@ -173,7 +176,7 @@ int main( int argc, char *args[] )
 
         view = glm::lookAt(glm::vec3(camPos.x, camPos.y, camPos.z), glm::vec3(camPos.x + camLook.x, camPos.y + camLook.y, camPos.z + camLook.z), glm::vec3(camUp.x, camUp.y, camUp.z));
 
-        materialSystem::UpdateUniforms( projection, view );
+        materialSystem::UpdateUniforms( projection, view, screen );
 
         testModel.Render(
             Vector3f( 0.0f, 0.0f, 1.0f ),
@@ -182,13 +185,20 @@ int main( int argc, char *args[] )
         );
         
         // gui
-        gui.Rect( 0, 0, 0, 200, 200, 1, 1, 1, 1 );
+        gui.Rect( 0, 0, 0, 200, 200, 0, 0, 0, 1 );
 
-        projection = glm::ortho( 0.0f, (float)window.GetSize().x, (float)window.GetSize().y, 0.0f );
-        view = glm::mat4(1.0f);
-        materialSystem::UpdateUniforms( projection, view );
+        gui.BeginLayout( ShtoiGUI_layoutType::Vertical, 0, 0, 0, 200, 200, 15, 15);
+        {
+            gui.Rect( 0, 0, 1, 200, 20, 1, 0, 0, 1 );
+            gui.Rect( 0, 0, 1, 200, 20, 0, 1, 0, 1 );
+            gui.Rect( 0, 0, 1, 200, 20, 0, 0, 1, 1 );
+        }
+        gui.EndLayout();
+
         guiShader->Bind();
+        testTexture->Bind();
         gui.Update();
+        testTexture->Unbind();
         guiShader->Unbind();
 
         projection = glm::perspective( glm::radians( fov->GetFloat() ),

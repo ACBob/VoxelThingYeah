@@ -8,6 +8,10 @@ fragment = "generic.frag"
 vertex = "sky.vert"
 fragment = "sky.frag"
 
+[gui]
+vertex = "gui.vert"
+fragment = "gui.frag"
+
 # [unlit]
 # vertex = "unlit.vert"
 # fragment = "unlit.frag"

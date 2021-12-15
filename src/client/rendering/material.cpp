@@ -350,13 +350,14 @@ namespace materialSystem {
     }
 
 
-    void UpdateUniforms( glm::mat4 projection, glm::mat4 view )
+    void UpdateUniforms( glm::mat4 projection, glm::mat4 view, glm::mat4 screen )
     {
         for ( CShader *shd : vShaders )
         {
             shd->Bind();
             shd->SetMat4( "projection", projection );
             shd->SetMat4( "view", view );
+            shd->SetMat4( "screen", screen );
             shd->Unbind();
         }
     }
