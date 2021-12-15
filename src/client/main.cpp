@@ -21,6 +21,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/mat4x4.hpp>
 
+#include "gui/shtoigui.hpp"
+
 int main( int argc, char *args[] )
 {
 	// Because Windows is from the stoneage
@@ -136,9 +138,13 @@ int main( int argc, char *args[] )
     Vector3f camPos = Vector3f(0.0f, 0.0f, 0.0f);
     Vector3f camLook = Vector3f(0.0f, 0.0f, -1.0f);
     Vector3f camUp = Vector3f(0.0f, 1.0f, 0.0f);
+
+    materialSystem::CShader *guiShader = materialSystem::GetNamedShader( "generic" );
     
     float camPitch = 0.0f;
     float camYaw = 0.0f;
+
+    CShtoiGUI gui( ShtoiGUI_displayMode::TwoDee, window.GetSize().x, window.GetSize().y );
 
     while ( !window.m_bShouldClose )
     {
@@ -149,8 +155,8 @@ int main( int argc, char *args[] )
         glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT );
 
         // camera rotation
-        camPitch += inputManager.m_vMouseMovement.y * 0.01f;
-        camYaw += inputManager.m_vMouseMovement.x * 0.01f;
+        camPitch += inputManager.m_vMouseMovement.y * 0.1f;
+        camYaw += inputManager.m_vMouseMovement.x * 0.1f;
 
         if ( inputManager.m_bInputState[CONTROLS_FRONT] )
             camPos += camLook * 0.1f;
@@ -163,7 +169,7 @@ int main( int argc, char *args[] )
 
         camPitch = fminf( fmaxf( camPitch, -89.9f ), 89.9f );
 
-        camLook = Vector3f(0, 0, -1.0f).RotateAxis( 0, -camPitch ).RotateAxis( 1, -camYaw );
+        camLook = Vector3f(0, 0, -1.0f).RotateAxis( 0, -camPitch * DEG2RAD ).RotateAxis( 1, -camYaw * DEG2RAD );
 
         view = glm::lookAt(glm::vec3(camPos.x, camPos.y, camPos.z), glm::vec3(camPos.x + camLook.x, camPos.y + camLook.y, camPos.z + camLook.z), glm::vec3(camUp.x, camUp.y, camUp.z));
 
@@ -174,7 +180,19 @@ int main( int argc, char *args[] )
             Vector3f( 0.0f, 0.0f, 0.0f ),
             Vector3f( 1.0f, 1.0f, 1.0f )
         );
+        
+        // gui
+        gui.Rect( 0, 0, 0, 200, 200, 1, 1, 1, 1 );
 
+        projection = glm::ortho( 0.0f, (float)window.GetSize().x, (float)window.GetSize().y, 0.0f );
+        view = glm::mat4(1.0f);
+        materialSystem::UpdateUniforms( projection, view );
+        guiShader->Bind();
+        gui.Update();
+        guiShader->Unbind();
+
+        projection = glm::perspective( glm::radians( fov->GetFloat() ),
+            scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f );
 
         window.SwapBuffers();
     }
