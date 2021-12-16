@@ -68,10 +68,10 @@ void CShtoiGUI::Update()
     m_nActiveElement = 0;
 
     // render
-    // Sort vertices by the z coordinate
-    std::sort( m_vertices.begin(), m_vertices.end(), []( const Vertex &a, const Vertex &b ) {
-        return a.z < b.z;
-    } );
+    // TODO: Sort vertices by the z coordinate
+    // std::sort( m_vertices.begin(), m_vertices.end(), []( const Vertex &a, const Vertex &b ) {
+    //     return a.z < b.z;
+    // } );
     // now set all z to 0
     for ( Vertex &v : m_vertices )
     {
@@ -105,6 +105,8 @@ void CShtoiGUI::Update()
 
 void CShtoiGUI::BeginLayout( ShtoiGUI_layoutType layoutType, float x, float y, float z, float sizeX, float sizeY, float spacingX, float spacingY, int a, int b )
 {
+    _transformToLayout( x, y, z, sizeX, sizeY );
+
     m_layoutStack.push_back( {
         layoutType,
         x, y, z,
@@ -174,8 +176,8 @@ inline void CShtoiGUI::_transformToLayout(float &x, float &y, float &z, float &s
             y = currentLayout.posY + currentLayout.offsetY;
             z += currentLayout.posZ;
 
-            sizeX = (currentLayout.sizeY / currentLayout.extraNumber) * currentLayout.extraNumber1;
-            sizeY = currentLayout.sizeX;
+            sizeX = (currentLayout.sizeX / currentLayout.extraNumber) * currentLayout.extraNumber1;
+            sizeY = currentLayout.sizeY;
 
             currentLayout.offsetX += sizeX;
             currentLayout.extraNumber1 = 1;

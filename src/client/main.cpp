@@ -192,8 +192,30 @@ int main( int argc, char *args[] )
             gui.SetLayoutNumbers(4, 2);
             gui.Rect( 0, 0, 1, 200, 20, 1, 0, 0, 1 );
 
-            gui.Rect( 0, 0, 1, 200, 20, 0, 1, 0, 1 );
-            gui.Rect( 0, 0, 1, 200, 20, 0, 0, 1, 1 );
+            gui.BeginLayout( ShtoiGUI_layoutType::FlexColumns, 0, 0, 0, 200, 200, 0, 0, 5);
+            {
+                gui.SetLayoutNumbers(5, 2);
+                gui.Rect( 0, 0, 1, 20, 20, 1, 0, 0, 1 );
+
+                gui.Rect( 0, 0, 1, 20, 20, 0, 1, 0, 1 );
+                gui.Rect( 0, 0, 1, 20, 20, 0, 0, 1, 1 );
+                gui.Rect( 0, 0, 1, 20, 20, 1, 1, 0, 1 );
+            }
+            gui.EndLayout();
+            
+            gui.BeginLayout( ShtoiGUI_layoutType::FlexColumns, 0, 0, 0, 200, 200, 0, 0, 2 );
+            {
+                gui.Rect(0, 0, 0, 20, 20, 1, 0, 1, 1);
+
+                gui.BeginLayout(ShtoiGUI_layoutType::FlexRows, 0, 0, 0, 200, 200, 0, 0, 3 );
+                {
+                    gui.Rect(0, 0, 0, 20, 20, 1, 1, 1, 1);
+                    gui.Rect(0, 0, 0, 20, 20, 1, 0, 1, 1);
+                    gui.Rect(0, 0, 0, 20, 20, 0, 1, 1, 1);
+                }
+                gui.EndLayout();
+            }
+            gui.EndLayout();
         }
         gui.EndLayout();
 
