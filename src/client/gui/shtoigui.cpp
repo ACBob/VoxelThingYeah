@@ -4,6 +4,8 @@
 
 #include <algorithm>
 
+#include "shared/logging.hpp"
+
 CShtoiGUI::CShtoiGUI( ShtoiGUI_displayMode displayMode, float virtualScreenSizeX, float virtualScreenSizeY )
 {
     m_displayMode = displayMode;
@@ -14,14 +16,6 @@ CShtoiGUI::CShtoiGUI( ShtoiGUI_displayMode displayMode, float virtualScreenSizeX
     m_nHoverElement = 0;
     m_nPressedElement = 0;
     m_nKeyboardFocusElement = 0;
-
-    m_layoutType = ShtoiGUI_layoutType::Normal;
-    m_fLayoutX = 0.0f;
-    m_fLayoutY = 0.0f;
-    m_fLayoutSizeX = 0.0f;
-    m_fLayoutSizeY = 0.0f;
-    m_fLayoutSpacingX = 0.0f;
-    m_fLayoutSpacingY = 0.0f;
 
     m_fVirtualCursorX = 0.0f;
     m_fVirtualCursorY = 0.0f;
@@ -84,6 +78,12 @@ void CShtoiGUI::Update()
         v.z = 0.0f;
     }
 
+    // Shouldn't happen, but also don't want to endlessly push layouts...
+    if (m_layoutStack.size()) {
+        con_warning("Layout not closed!!");
+        m_layoutStack.clear();
+    }
+
     // Disable depth test so that the quad is rendered on top of everything else
     glDisable( GL_DEPTH_TEST );
     glDisable( GL_CULL_FACE );
@@ -103,42 +103,103 @@ void CShtoiGUI::Update()
 }
 
 
-void CShtoiGUI::BeginLayout( ShtoiGUI_layoutType layoutType, float x, float y, float z, float sizeX, float sizeY, float spacingX, float spacingY )
+void CShtoiGUI::BeginLayout( ShtoiGUI_layoutType layoutType, float x, float y, float z, float sizeX, float sizeY, float spacingX, float spacingY, int a, int b )
 {
-    m_layoutType = layoutType;
-    m_fLayoutX = x;
-    m_fLayoutY = y;
-    m_fLayoutSizeX = sizeX;
-    m_fLayoutSizeY = sizeY;
-    m_fLayoutSpacingX = spacingX;
-    m_fLayoutSpacingY = spacingY;
+    m_layoutStack.push_back( {
+        layoutType,
+        x, y, z,
+        sizeX, sizeY,
+        0, 0,
+        spacingX, spacingY,
+        a, b,
+    } );
+}
+
+inline void CShtoiGUI::_transformToLayout(float &x, float &y, float &z, float &sizeX, float &sizeY)
+{
+    if (m_layoutStack.size() == 0)
+        return;
+
+    ShtoiGUI_layout &currentLayout = m_layoutStack.back();
+
+    switch (currentLayout.type)
+    {
+        default:
+        case ShtoiGUI_layoutType::Normal:
+            return;
+        break;
+        case ShtoiGUI_layoutType::Vertical:
+            x = currentLayout.posX + currentLayout.offsetX;
+            y = currentLayout.posY + currentLayout.offsetY;
+            z += currentLayout.posZ; // Our depth is relative to this, it acts like a container
+
+            currentLayout.posY += sizeY;
+        break;
+        case ShtoiGUI_layoutType::Horizontal:
+            x = currentLayout.posX + currentLayout.offsetX;
+            y = currentLayout.posY + currentLayout.offsetY;
+            z += currentLayout.posZ; // Our depth is relative to this, it acts like a container
+
+            currentLayout.offsetX += sizeX;
+        break;
+        case ShtoiGUI_layoutType::Form:
+            // TODO: Implement form (use the different args as the number to work out row/column)
+        break;
+        case ShtoiGUI_layoutType::Flex:
+            // TODO: act more like a grid, instead of diagonal
+            x = currentLayout.posX + currentLayout.offsetX;
+            y = currentLayout.posY + currentLayout.offsetY;
+            z += currentLayout.posZ;
+
+            sizeX = (currentLayout.sizeX / currentLayout.extraNumber) * currentLayout.extraNumber1;
+            sizeY = (currentLayout.sizeY / currentLayout.extraNumber) * currentLayout.extraNumber1;
+
+            currentLayout.offsetX += sizeX;
+            currentLayout.offsetY += sizeY;
+            currentLayout.extraNumber1 = 1;
+        break;
+        case ShtoiGUI_layoutType::FlexRows:
+            x = currentLayout.posX + currentLayout.offsetX;
+            y = currentLayout.posY + currentLayout.offsetY;
+            z += currentLayout.posZ;
+
+            sizeX = currentLayout.sizeX;
+            sizeY = (currentLayout.sizeY / currentLayout.extraNumber) * currentLayout.extraNumber1;
+
+            currentLayout.offsetY += sizeY;
+            currentLayout.extraNumber1 = 1;
+        break;
+        case ShtoiGUI_layoutType::FlexColumns:
+            x = currentLayout.posX + currentLayout.offsetX;
+            y = currentLayout.posY + currentLayout.offsetY;
+            z += currentLayout.posZ;
+
+            sizeX = (currentLayout.sizeY / currentLayout.extraNumber) * currentLayout.extraNumber1;
+            sizeY = currentLayout.sizeX;
+
+            currentLayout.offsetX += sizeX;
+            currentLayout.extraNumber1 = 1;
+        break;
+    }
+}
+
+void CShtoiGUI::SetLayoutNumbers(int a, int b)
+{
+    if (m_layoutStack.size() == 0)
+        return;
+
+    ShtoiGUI_layout &layout = m_layoutStack.back();
+    layout.extraNumber = a;
+    layout.extraNumber1 = b;
 }
 
 void CShtoiGUI::EndLayout()
 {
-    m_layoutType = ShtoiGUI_layoutType::Normal;
-    m_fLayoutX = 0.0f;
-    m_fLayoutY = 0.0f;
-    m_fLayoutSizeX = 0.0f;
-    m_fLayoutSizeY = 0.0f;
-    m_fLayoutSpacingX = 0.0f;
-    m_fLayoutSpacingY = 0.0f;
+    m_layoutStack.pop_back();
 }
 
 void CShtoiGUI::Rect( float x, float y, float z, float w, float h, float r, float g, float b, float a )
 {
-    if( m_layoutType == ShtoiGUI_layoutType::Normal )
-    {
-        _Quad( x, y, z, w, h, 0.0f, 0.0f, 1.0f, 1.0f, r, g, b, a );
-    }
-    else if( m_layoutType == ShtoiGUI_layoutType::Horizontal )
-    {
-        _Quad( m_fLayoutX, m_fLayoutY, z, w, m_fLayoutSizeY, 0.0f, 0.0f, 1.0f, 1.0f, r, g, b, a );
-        m_fLayoutX += w + m_fLayoutSpacingX;
-    }
-    else if( m_layoutType == ShtoiGUI_layoutType::Vertical )
-    {
-        _Quad( m_fLayoutX, m_fLayoutY, z, m_fLayoutSizeX, h, 0.0f, 0.0f, 1.0f, 1.0f, r, g, b, a );
-        m_fLayoutY += h + m_fLayoutSpacingY;
-    }
+    _transformToLayout(x, y, z, w, h);
+    _Quad( x, y, z, w, h, 0.0f, 0.0f, 1.0f, 1.0f, r, g, b, a );
 }

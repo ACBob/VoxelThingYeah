@@ -187,9 +187,11 @@ int main( int argc, char *args[] )
         // gui
         gui.Rect( 0, 0, 0, 200, 200, 0, 0, 0, 1 );
 
-        gui.BeginLayout( ShtoiGUI_layoutType::Vertical, 0, 0, 0, 200, 200, 15, 15);
+        gui.BeginLayout( ShtoiGUI_layoutType::FlexRows, 0, 0, 0, 200, 200, 15, 15, 4);
         {
+            gui.SetLayoutNumbers(4, 2);
             gui.Rect( 0, 0, 1, 200, 20, 1, 0, 0, 1 );
+
             gui.Rect( 0, 0, 1, 200, 20, 0, 1, 0, 1 );
             gui.Rect( 0, 0, 1, 200, 20, 0, 0, 1, 1 );
         }

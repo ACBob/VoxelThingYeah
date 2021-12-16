@@ -25,8 +25,10 @@ enum class ShtoiGUI_layoutType {
     Normal, // Position is hand-entered
     Vertical, // Each successive element is placed below the previous
     Horizontal, // Each successive element is placed to the right of the previous
-    Grid, // Each successive element is placed in a grid, where their x/y coords determine their position (in 3D this also uses the Z coordinate)
     Form, // Each elements are laid out in rows with two elements each
+    Flex, // Each element tries to take up a percentage of the space. Requires you to use the non-generic BeginFlex()
+    FlexRows, // Each element tries to take up a percentage of vertical space.
+    FlexColumns, // Each element tries to take up a percentage of horizontal space.
 };
 
 class CShtoiGUI {
@@ -46,14 +48,24 @@ class CShtoiGUI {
 
         ShtoiGUI_displayMode m_displayMode;
 
-        ShtoiGUI_layoutType m_layoutType;
+        struct ShtoiGUI_layout {
+            ShtoiGUI_layoutType type; // The type of the layout, controls behaviour
+            float posX, posY, posZ; // The position of the layout origin X/Y
+            float sizeX, sizeY; // Size of the layout
+            float offsetX, offsetY; // The position of the next widget, relative to the layout pos
+            float spacingX, spacingY; // The amount of space between widgets
 
-        float m_fLayoutX, m_fLayoutY; // The position of the next element to be added
-        float m_fLayoutSizeX, m_fLayoutSizeY; // The size of the next element to be added
-        float m_fLayoutSpacingX, m_fLayoutSpacingY; // The spacing between elements in the layout
+            // extra information used in some layouts
+            int extraNumber; // For flex layouts, this is the number of elements
+            int extraNumber1; // For flex layouts, this is the bias (usually 1)
+        };
+        std::vector<ShtoiGUI_layout> m_layoutStack; // Holds the layout on a stack, allowing nested layouts.
         
         float m_fVirtualScreenSizeX, m_fVirtualScreenSizeY; // The size of the virtual screen, used to scale-up the GUI and for 3D
         float m_fVirtualCursorX, m_fVirtualCursorY; // The position of the virtual cursor, used to scale-up the GUI and for 3D
+
+        // Layout
+        inline void _transformToLayout(float &x, float &y, float &z, float &sizeX, float &sizeY);
 
         // Rendering
         void _Quad(float x, float y, float z, float w, float h, float u, float v, float u1, float v1, float r, float g, float b, float a);
@@ -72,7 +84,8 @@ class CShtoiGUI {
         void Update();
 
         // Layout
-        void BeginLayout( ShtoiGUI_layoutType layoutType, float layoutX, float layoutY, float layoutZ, float layoutSizeX, float layoutSizeY, float layoutSpacingX = 0.0f, float layoutSpacingY = 0.0f );
+        void BeginLayout( ShtoiGUI_layoutType layoutType, float layoutX, float layoutY, float layoutZ, float layoutSizeX, float layoutSizeY, float layoutSpacingX = 0.0f, float layoutSpacingY = 0.0f, int a = 0, int b = 1 );
+        void SetLayoutNumbers( int a, int b );
         void EndLayout();
 
         // Elements
