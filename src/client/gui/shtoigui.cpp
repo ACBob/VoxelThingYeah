@@ -19,6 +19,7 @@ CShtoiGUI::CShtoiGUI( ShtoiGUI_displayMode displayMode, float virtualScreenSizeX
 
     m_fVirtualCursorX = 0.0f;
     m_fVirtualCursorY = 0.0f;
+    m_nMouseState = 0;
 
     // Rendering
     glGenVertexArrays( 1, &m_nVAO );
@@ -49,7 +50,7 @@ CShtoiGUI::~CShtoiGUI()
     glDeleteBuffers( 1, &m_nVBO );
 }
 
-void CShtoiGUI::_Quad( float x, float y, float z, float w, float h, float u, float v, float u1, float v1, float r, float g, float b, float a )
+void CShtoiGUI::_quad( float x, float y, float z, float w, float h, float u, float v, float u1, float v1, float r, float g, float b, float a )
 {
     Vertex vertices[6] = {
         { x, y, z, u, v, r, g, b, a },
@@ -63,9 +64,34 @@ void CShtoiGUI::_Quad( float x, float y, float z, float w, float h, float u, flo
     m_vertices.insert( m_vertices.end(), vertices, vertices + 6 );
 }
 
-void CShtoiGUI::Update()
+ShtoiGUI_buttonState CShtoiGUI::_buttonLogic(int id, float x, float y, float w, float h)
+{
+    ShtoiGUI_buttonState state = ShtoiGUI_buttonState::Normal;
+
+    // test mouse position against bounds
+    if ( m_fVirtualCursorX >= x && m_fVirtualCursorY >= y && m_fVirtualCursorX <= x + w && m_fVirtualCursorY <= y + h )
+    {
+        state = ShtoiGUI_buttonState::Hover;
+        m_nHoverElement = id;
+
+        if (m_nMouseState & (int)ShtoiGUI_mouseState::Left)
+        {
+            state = ShtoiGUI_buttonState::Held;
+            m_nActiveElement = id;
+        }
+    }
+
+    return state;
+}
+
+void CShtoiGUI::Update(float mouseX, float mouseY, int mouseState)
 {
     m_nActiveElement = 0;
+    m_nHoverElement = 0;
+
+    m_nMouseState = mouseState;
+    m_fVirtualCursorX = mouseX;
+    m_fVirtualCursorY = mouseY;
 
     // render
     // TODO: Sort vertices by the z coordinate
@@ -203,5 +229,28 @@ void CShtoiGUI::EndLayout()
 void CShtoiGUI::Rect( float x, float y, float z, float w, float h, float r, float g, float b, float a )
 {
     _transformToLayout(x, y, z, w, h);
-    _Quad( x, y, z, w, h, 0.0f, 0.0f, 1.0f, 1.0f, r, g, b, a );
+    _quad( x, y, z, w, h, 0.0f, 0.0f, 1.0f, 1.0f, r, g, b, a );
+}
+
+ShtoiGUI_buttonState CShtoiGUI::Button( int id, float x, float y, float z, float w, float h )
+{
+    _transformToLayout(x, y, z, w, h);
+
+    ShtoiGUI_buttonState state = _buttonLogic(id, x, y, w, h);
+
+    float r, g, b;
+    r = g = b = 1.0f;
+
+    if (state == ShtoiGUI_buttonState::Hover) {
+        r = 0.8f;
+        g = 0.6f;
+        b = 1.0f;
+    }
+    else if (state == ShtoiGUI_buttonState::Pressed || state == ShtoiGUI_buttonState::Held) {
+        r = g = b = 0.5f;
+    }
+
+    _quad( x, y, z, w, h, 0.0f, 0.0f, 1.0f, 1.0f, r, g, b, 1.0f);
+
+    return state;
 }

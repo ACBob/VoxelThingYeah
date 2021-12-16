@@ -31,6 +31,19 @@ enum class ShtoiGUI_layoutType {
     FlexColumns, // Each element tries to take up a percentage of horizontal space.
 };
 
+enum class ShtoiGUI_buttonState {
+    Normal, // Nothing
+    Hover, // Mouse is over it
+    Pressed, // Mouse JUST Pressed it
+    Held, // The mouse is held down on it
+};
+
+enum class ShtoiGUI_mouseState : int {
+    Left = 1 << 0,
+    Right = 1 << 1,
+    Middle = 1 << 2,
+};
+
 class CShtoiGUI {
     protected:
         struct Vertex {
@@ -63,12 +76,16 @@ class CShtoiGUI {
         
         float m_fVirtualScreenSizeX, m_fVirtualScreenSizeY; // The size of the virtual screen, used to scale-up the GUI and for 3D
         float m_fVirtualCursorX, m_fVirtualCursorY; // The position of the virtual cursor, used to scale-up the GUI and for 3D
+        int m_nMouseState; // State of the mouse, see enum ShtoiGUI_mouseState
 
         // Layout
         inline void _transformToLayout(float &x, float &y, float &z, float &sizeX, float &sizeY);
 
         // Rendering
-        void _Quad(float x, float y, float z, float w, float h, float u, float v, float u1, float v1, float r, float g, float b, float a);
+        void _quad(float x, float y, float z, float w, float h, float u, float v, float u1, float v1, float r, float g, float b, float a);
+
+        // Logic
+        ShtoiGUI_buttonState _buttonLogic(int id, float x, float y, float w, float h);
 
         unsigned int m_nVAO, m_nVBO;
 
@@ -81,7 +98,7 @@ class CShtoiGUI {
         void SetVirtualCursorPosition( float virtualCursorX, float virtualCursorY );
 
         // Updates & Renders to the screen
-        void Update();
+        void Update(float mouseX, float mouseY, int mouseState);
 
         // Layout
         void BeginLayout( ShtoiGUI_layoutType layoutType, float layoutX, float layoutY, float layoutZ, float layoutSizeX, float layoutSizeY, float layoutSpacingX = 0.0f, float layoutSpacingY = 0.0f, int a = 0, int b = 1 );
@@ -91,4 +108,5 @@ class CShtoiGUI {
         // Elements
         void Rect( float x, float y, float z, float sizeX, float sizeY, float r, float g, float b, float a );
 
+        ShtoiGUI_buttonState Button( int id, float x, float y, float z, float w, float h );
 };

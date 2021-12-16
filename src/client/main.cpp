@@ -149,6 +149,13 @@ int main( int argc, char *args[] )
 
     CShtoiGUI gui( ShtoiGUI_displayMode::TwoDee, window.GetSize().x, window.GetSize().y );
 
+    inputManager.m_bInGui = true;
+
+    float guiTestPosX = 0.0f;
+    float guiTestPosY = 0.0f;
+    float guiTestSizeX = 200.0f;
+    float guiTestSizeY = 200.0f;
+
     while ( !window.m_bShouldClose )
     {
         window.PollEvents();
@@ -185,12 +192,16 @@ int main( int argc, char *args[] )
         );
         
         // gui
-        gui.Rect( 0, 0, 0, 200, 200, 0, 0, 0, 1 );
+        gui.Rect( guiTestPosX, guiTestPosY, 0, guiTestSizeX, guiTestSizeY, 0, 0, 0, 1 );
 
-        gui.BeginLayout( ShtoiGUI_layoutType::FlexRows, 0, 0, 0, 200, 200, 15, 15, 4);
+        gui.BeginLayout( ShtoiGUI_layoutType::FlexRows, guiTestPosX, guiTestPosY, 0, guiTestSizeX, guiTestSizeY, 15, 15, 4);
         {
             gui.SetLayoutNumbers(4, 2);
-            gui.Rect( 0, 0, 1, 200, 20, 1, 0, 0, 1 );
+
+            if (gui.Button(1, 0, 0, 0, 0, 0) == ShtoiGUI_buttonState::Held) {
+                guiTestPosX = inputManager.m_vMousePos.x;
+                guiTestPosY = inputManager.m_vMousePos.y;
+            }
 
             gui.BeginLayout( ShtoiGUI_layoutType::FlexColumns, 0, 0, 0, 200, 200, 0, 0, 5);
             {
@@ -219,14 +230,18 @@ int main( int argc, char *args[] )
         }
         gui.EndLayout();
 
+        if ( gui.Button(2, guiTestPosX + guiTestSizeX, guiTestPosY + guiTestSizeY, 4, 32, 32) == ShtoiGUI_buttonState::Held ) {
+            guiTestSizeX = inputManager.m_vMousePos.x - guiTestPosX;
+            guiTestSizeY = inputManager.m_vMousePos.y - guiTestPosY;
+        }
+
         guiShader->Bind();
         testTexture->Bind();
-        gui.Update();
+
+        gui.Update( inputManager.m_vMousePos.x, inputManager.m_vMousePos.y, inputManager.m_iMouseState );
+
         testTexture->Unbind();
         guiShader->Unbind();
-
-        projection = glm::perspective( glm::radians( fov->GetFloat() ),
-            scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f );
 
         window.SwapBuffers();
     }
