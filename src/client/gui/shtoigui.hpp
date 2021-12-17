@@ -103,6 +103,7 @@ class CShtoiGUI {
         struct Character {
             int code = 0x0; // code
             int texNumber = 0; // Where in the texture it is (0-255)
+            float width = 1.0f; // size of the char
             materialSystem::CTexture *m_pTexture = nullptr;
         };
 

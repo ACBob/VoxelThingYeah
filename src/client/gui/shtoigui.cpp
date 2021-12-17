@@ -93,12 +93,32 @@ CShtoiGUI::CShtoiGUI( ShtoiGUI_displayMode displayMode, float virtualScreenSizeX
 
         con_debug("%s", texName.c_str());
 
+        int resX = pTex->m_nWidth / 16;
+        int resY = pTex->m_nHeight / 16;
+
         int i = 0;
         for ( toml::node& elem : *charsArray ) {
             Character chr;
             chr.code = elem.as_integer()->value_or(0xfffd); // TODO: handle error
             chr.texNumber = i;
             chr.m_pTexture = pTex;
+
+            int px = ( i % 16 ) * resX;
+            int py = ( i / 16 ) * resY;
+
+            chr.width = 1.0f;
+            for (int y = 0; y < resY; y++)
+            {
+                for (int x = 0; x < resX; x++)
+                {
+                    int idx = 4 * ( py + y ) * pTex->m_nWidth + 4 * ( px + x ) + 3;
+                    if ( pTex->m_uchImageData[idx] && x + 1 >= chr.width )
+                    {
+                        chr.width = x + 1;
+                    }
+                }
+            }
+            chr.width /= resX;
 
             i++;
             m_charMap[chr.code] = chr;
@@ -363,6 +383,8 @@ void CShtoiGUI::Label( std::string text, float x, float y, float z, float size )
     int c = 0;
     // int lastKnownChar = 0;
 
+    float letterSpacing = ( 1.0f / 8.0f ) * size;
+
     const char* str = text.c_str();
 
     while ( utfz::next(str, c) )
@@ -381,7 +403,7 @@ void CShtoiGUI::Label( std::string text, float x, float y, float z, float size )
 
         _charQuad( chr, x + i, y, z, size, size, 1, 1, 1, 1 );
 
-        i += size;
-        i += 1.0f;
+        i += chr.width * size;
+        i += letterSpacing;
     }
 }
