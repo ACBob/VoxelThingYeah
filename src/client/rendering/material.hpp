@@ -8,6 +8,8 @@
 #include <glm/glm.hpp>
 #include <glm/mat4x4.hpp>
 
+#pragma once
+
 // How far you can include in a shader.
 #define MATSYS_MAX_SHADER_INCLUDE_DEPTH 128
 

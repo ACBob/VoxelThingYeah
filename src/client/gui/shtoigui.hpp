@@ -2,6 +2,9 @@
 // Little C++ ImGui
 
 #include <vector>
+#include <wchar.h>
+
+#include "rendering/material.hpp"
 
 using ShtoiGUI_elementID = unsigned short; // 65535 elements max
 
@@ -52,7 +55,13 @@ class CShtoiGUI {
             float r, g, b, a;
         };
 
-        std::vector<Vertex> m_vertices;
+        struct Quad {
+            Vertex vertices[6];
+            float z;
+            materialSystem::CTexture *m_pTexture;
+        };
+
+        std::vector<Quad> m_quads;
 
         ShtoiGUI_elementID m_nActiveElement; // The element that is currently being interacted with
         ShtoiGUI_elementID m_nHoverElement; // The element that is currently being hovered over
@@ -89,6 +98,19 @@ class CShtoiGUI {
 
         unsigned int m_nVAO, m_nVBO;
 
+        materialSystem::CTexture *m_pTexture;
+
+        struct Character {
+            int code = 0x0; // code
+            int texNumber = 0; // Where in the texture it is (0-255)
+            materialSystem::CTexture *m_pTexture = nullptr;
+        };
+
+        std::map<int, Character> m_charMap;
+
+        void _charQuad(Character character, float x, float y, float z, float w, float h, float r, float g, float b, float a);
+        
+
     public:
         CShtoiGUI( ShtoiGUI_displayMode displayMode, float virtualScreenSizeX, float virtualScreenSizeY );
         ~CShtoiGUI();
@@ -107,6 +129,7 @@ class CShtoiGUI {
 
         // Elements
         void Rect( float x, float y, float z, float sizeX, float sizeY, float r, float g, float b, float a );
+        void Label( std::string text, float x, float y, float z, float size );
 
         ShtoiGUI_buttonState Button( int id, float x, float y, float z, float w, float h );
 };

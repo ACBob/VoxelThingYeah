@@ -5,6 +5,10 @@
 #include <algorithm>
 
 #include "shared/logging.hpp"
+#include "utility/toml.hpp"
+#include "shared/filesystem.hpp"
+
+#include "utility/utfz.h"
 
 CShtoiGUI::CShtoiGUI( ShtoiGUI_displayMode displayMode, float virtualScreenSizeX, float virtualScreenSizeY )
 {
@@ -42,6 +46,49 @@ CShtoiGUI::CShtoiGUI( ShtoiGUI_displayMode displayMode, float virtualScreenSizeX
     glVertexAttribPointer( 2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, r) );
 
     glBindVertexArray( 0 );
+
+    // now handle the font definition file
+    bool bSuccess = false;
+    int64_t fileSize = 0;
+    char *data = (char*)fileSystem::LoadFile("/assets/lang/font.toml", fileSize, bSuccess);
+    toml::table root = toml::parse(data);
+
+    // [font]
+    // textures = [""] # array of texture files
+    // TODO: glue each texture together and such
+    if (!root.contains("font") || !root["font"].is_table()) {
+        con_error("Font file does not have [font]");
+        return;
+    }
+    toml::table *fontTble = root["font"].as_table();
+    if (!fontTble->contains("textures") || !fontTble->get("textures")->is_array()) {
+        con_error("Font file does not have font.textures");
+        return;
+    }
+    if (!fontTble->contains("characters") || !fontTble->get("characters")->is_table()) {
+        con_error("Font file does not have a font.characters");
+        return;
+    }
+    toml::table *fontChars = fontTble->get("characters")->as_table();
+
+    toml::array *fontTextures = fontTble->get("textures")->as_array();
+    m_pTexture = materialSystem::LoadTexture(fontTextures->get_as<std::string>(0)->value_or("/assets/textures/font.png"));
+
+    // Now load the char definitions
+    toml::array *charsArray = fontChars->get("0")->as_array();
+
+    int i = 0;
+    for ( toml::node& elem : *charsArray ) {
+        Character chr;
+        chr.code = elem.as_integer()->value_or(0xfffd); // TODO: handle error
+        chr.texNumber = i;
+        chr.m_pTexture = m_pTexture;
+
+        i++;
+        m_charMap[chr.code] = chr;
+    }
+
+    con_debug("Loaded %d chars", i);
 }
 
 CShtoiGUI::~CShtoiGUI()
@@ -52,16 +99,43 @@ CShtoiGUI::~CShtoiGUI()
 
 void CShtoiGUI::_quad( float x, float y, float z, float w, float h, float u, float v, float u1, float v1, float r, float g, float b, float a )
 {
-    Vertex vertices[6] = {
-        { x, y, z, u, v, r, g, b, a },
-        { x + w, y, z, u1, v, r, g, b, a },
-        { x + w, y + h, z, u1, v1, r, g, b, a },
-        { x, y, z, u, v, r, g, b, a },
-        { x + w, y + h, z, u1, v1, r, g, b, a },
-        { x, y + h, z, u, v1, r, g, b, a }
+    Quad quad = {
+        {
+            { x, y, z, u, v, r, g, b, a },
+            { x + w, y, z, u1, v, r, g, b, a },
+            { x + w, y + h, z, u1, v1, r, g, b, a },
+            { x, y, z, u, v, r, g, b, a },
+            { x + w, y + h, z, u1, v1, r, g, b, a },
+            { x, y + h, z, u, v1, r, g, b, a }
+        },
+        z,
+        nullptr, // TODO: texture
     };
 
-    m_vertices.insert( m_vertices.end(), vertices, vertices + 6 );
+    m_quads.insert( m_quads.end(), quad );
+}
+
+void CShtoiGUI::_charQuad(Character character, float x, float y, float z, float w, float h, float r, float g, float b, float a)
+{
+    float u = (character.texNumber % 16) / 16.0f;
+    float v = (character.texNumber / 16) / 16.0f;
+    float u1 = u + 1 / 16.0f;
+    float v1 = v + 1 / 16.0f;
+
+    Quad quad = {
+        {
+            { x, y, z, u, v, r, g, b, a },
+            { x + w, y, z, u1, v, r, g, b, a },
+            { x + w, y + h, z, u1, v1, r, g, b, a },
+            { x, y, z, u, v, r, g, b, a },
+            { x + w, y + h, z, u1, v1, r, g, b, a },
+            { x, y + h, z, u, v1, r, g, b, a }
+        },
+        z,
+        m_pTexture, // TODO: texture
+    };
+
+    m_quads.insert( m_quads.end(), quad );
 }
 
 ShtoiGUI_buttonState CShtoiGUI::_buttonLogic(int id, float x, float y, float w, float h)
@@ -95,14 +169,9 @@ void CShtoiGUI::Update(float mouseX, float mouseY, int mouseState)
 
     // render
     // TODO: Sort vertices by the z coordinate
-    // std::sort( m_vertices.begin(), m_vertices.end(), []( const Vertex &a, const Vertex &b ) {
-    //     return a.z < b.z;
-    // } );
-    // now set all z to 0
-    for ( Vertex &v : m_vertices )
-    {
-        v.z = 0.0f;
-    }
+    std::sort( m_quads.begin(), m_quads.end(), []( const Quad &a, const Quad &b ) {
+        return a.z < b.z;
+    } );
 
     // Shouldn't happen, but also don't want to endlessly push layouts...
     if (m_layoutStack.size()) {
@@ -116,16 +185,26 @@ void CShtoiGUI::Update(float mouseX, float mouseY, int mouseState)
 
     glBindVertexArray( m_nVAO );
     glBindBuffer( GL_ARRAY_BUFFER, m_nVBO );
-    glBufferData( GL_ARRAY_BUFFER, sizeof(Vertex) * m_vertices.size(), &m_vertices[0], GL_DYNAMIC_DRAW );
 
-    glDrawArrays( GL_TRIANGLES, 0, m_vertices.size() );
+    for ( const Quad& q : m_quads )
+    {
+        glBufferData( GL_ARRAY_BUFFER, sizeof(Vertex) * 6, &q.vertices, GL_DYNAMIC_DRAW );
+
+        if (q.m_pTexture != nullptr)
+            q.m_pTexture->Bind();
+
+        glDrawArrays( GL_TRIANGLES, 0, 6 );
+
+        if (q.m_pTexture != nullptr)
+            q.m_pTexture->Unbind();
+    }
 
     glBindVertexArray( 0 );
 
     glEnable( GL_DEPTH_TEST );
     glEnable( GL_CULL_FACE );
 
-    m_vertices.clear();
+    m_quads.clear();
 }
 
 
@@ -253,4 +332,36 @@ ShtoiGUI_buttonState CShtoiGUI::Button( int id, float x, float y, float z, float
     _quad( x, y, z, w, h, 0.0f, 0.0f, 1.0f, 1.0f, r, g, b, 1.0f);
 
     return state;
+}
+
+void CShtoiGUI::Label( std::string text, float x, float y, float z, float size ) {
+    float w, h; // ignored, just here to satisfy transformToLayout
+    _transformToLayout(x, y, z, w, h);
+
+
+    int i = 0;
+    int c = 0;
+    int lastKnownChar = 0;
+
+    const char* str = text.c_str();
+
+    while ( utfz::next(str, c) )
+    {
+        Character chr;
+        if (m_charMap.find(c) == m_charMap.end()) {
+            chr.code = 0xfffd; // UNICODE_REPLACEMENT_CHARACTER
+            chr.m_pTexture = m_pTexture;
+            chr.texNumber = 255;
+        }
+        else {
+            chr = m_charMap.at(c);
+        }
+
+        // TODO: formatting codes
+
+        _charQuad( chr, x + i, y, z, size, size, 1, 1, 1, 1 );
+
+        i += size;
+        i += 1.0f;
+    }
 }
