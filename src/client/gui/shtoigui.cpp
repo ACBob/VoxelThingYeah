@@ -71,24 +71,44 @@ CShtoiGUI::CShtoiGUI( ShtoiGUI_displayMode displayMode, float virtualScreenSizeX
     }
     toml::table *fontChars = fontTble->get("characters")->as_table();
 
+    // TODO: we pretty heavily rely on the material system giving us already loaded textures
     toml::array *fontTextures = fontTble->get("textures")->as_array();
-    m_pTexture = materialSystem::LoadTexture(fontTextures->get_as<std::string>(0)->value_or("/assets/textures/font.png"));
+    // m_pTexture = materialSystem::LoadTexture(fontTextures->get_as<std::string>(0)->value_or("/assets/textures/font.png"));
+
+    m_pTexture = nullptr;
 
     // Now load the char definitions
-    toml::array *charsArray = fontChars->get("0")->as_array();
+    int tex = 0;
+    char *texNumBuf = new char[16];
+    for ( auto &k : *fontChars )
+    {
+        // Load texture
+        // TODO: enforce size limit
+        // TODO: error handling
+        sprintf(texNumBuf, "%d", tex);
+        toml::array *charsArray = fontChars->get(texNumBuf)->as_array();
 
-    int i = 0;
-    for ( toml::node& elem : *charsArray ) {
-        Character chr;
-        chr.code = elem.as_integer()->value_or(0xfffd); // TODO: handle error
-        chr.texNumber = i;
-        chr.m_pTexture = m_pTexture;
+        std::string texName = fontTextures->get(tex)->value_or<std::string>("font/cp437.png");
+        materialSystem::CTexture *pTex = materialSystem::LoadTexture(texName);
 
-        i++;
-        m_charMap[chr.code] = chr;
+        con_debug("%s", texName.c_str());
+
+        int i = 0;
+        for ( toml::node& elem : *charsArray ) {
+            Character chr;
+            chr.code = elem.as_integer()->value_or(0xfffd); // TODO: handle error
+            chr.texNumber = i;
+            chr.m_pTexture = pTex;
+
+            i++;
+            m_charMap[chr.code] = chr;
+        }
+
+        tex++;
     }
 
-    con_debug("Loaded %d chars", i);
+    con_debug("Loaded %d chars", m_charMap.size() );
+    con_debug("With %d pages", tex);
 }
 
 CShtoiGUI::~CShtoiGUI()
@@ -132,7 +152,7 @@ void CShtoiGUI::_charQuad(Character character, float x, float y, float z, float 
             { x, y + h, z, u, v1, r, g, b, a }
         },
         z,
-        m_pTexture, // TODO: texture
+        character.m_pTexture
     };
 
     m_quads.insert( m_quads.end(), quad );
@@ -341,7 +361,7 @@ void CShtoiGUI::Label( std::string text, float x, float y, float z, float size )
 
     int i = 0;
     int c = 0;
-    int lastKnownChar = 0;
+    // int lastKnownChar = 0;
 
     const char* str = text.c_str();
 

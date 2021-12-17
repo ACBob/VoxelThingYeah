@@ -195,6 +195,7 @@ int main( int argc, char *args[] )
         gui.Rect( guiTestPosX, guiTestPosY, 0, guiTestSizeX, guiTestSizeY, 0, 0, 0, 1 );
 
         gui.Label( "Hello, World!", 0, 0, 5, 16 );
+        gui.Label( "Эх, чужак, общий съём цен шляп (юфть) - вдрызг!", 0, 16, 5, 16 );
 
         gui.BeginLayout( ShtoiGUI_layoutType::FlexRows, guiTestPosX, guiTestPosY, 0, guiTestSizeX, guiTestSizeY, 15, 15, 4);
         {
