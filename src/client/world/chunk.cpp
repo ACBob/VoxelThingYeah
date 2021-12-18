@@ -1,6 +1,9 @@
 #include "chunk.hpp"
 
-CClientChunk::CClientChunk() {}
+CClientChunk::CClientChunk( int x, int y, int z, int sizeX, int sizeY, int sizeZ ) : CChunk(x, y, z, sizeX, sizeY, sizeZ)
+{
+
+}
 CClientChunk::~CClientChunk() {}
 
 const int cubeVertices[8][3] = {
@@ -28,18 +31,18 @@ const int cubeTriangles[6][4] = {
 
 const int dir[6][3] = { { 0, 0, 1 }, { 1, 0, 0 }, { 0, 0, -1 }, { -1, 0, 0 }, { 0, 1, 0 }, { 0, -1, 0 } };
 
-void CClientChunk::ConstructModel()
+void CClientChunk::constructModel()
 {
-	m_model->m_vertices.clear();
-	m_model->m_faces.clear();
+	m_model.m_vertices.clear();
+	m_model.m_faces.clear();
 
-	for ( int z = 0; z < CHUNKSIZE_Z; z++ )
+	for ( int z = 0; z < m_size.z; z++ )
 	{
-		for ( int y = 0; y < CHUNKSIZE_Y; y++ )
+		for ( int y = 0; y < m_size.y; y++ )
 		{
-			for ( int x = 0; x < CHUNKSIZE_X; x++ )
+			for ( int x = 0; x < m_size.x; x++ )
 			{
-				if ( Get )
+				if ( getID(x, y, z) != 0 )
 				{
 					continue;
 				}
@@ -66,23 +69,13 @@ void CClientChunk::ConstructModel()
 					// construct the face
 					for ( int i = 0; i < 4; i++ )
 					{
-						Model::Vertex v;
+						CModel::Vertex v;
 						v.x = m_pos.x * m_size.x + x + cubeVertices[cubeTriangles[face][i]][0];
 						v.y = m_pos.y * m_size.y + y + cubeVertices[cubeTriangles[face][i]][1];
 						v.z = m_pos.z * m_size.z + z + cubeVertices[cubeTriangles[face][i]][2];
-						v.r = qBound(0.1f, fmaxf( red / 16.0f, sky / 16.0f ) * 1.5f, 1.0f);
-						v.g = qBound(0.1f, fmaxf( green / 16.0f, sky / 16.0f ) * 1.5f, 1.0f);
-						v.b = qBound(0.1f, fmaxf( blue / 16.0f, sky / 16.0f ) * 1.5f, 1.0f);
 
 						Vector4f uv;
-						if ( m_editorState != nullptr && m_editorState->m_pBlockDefs != nullptr )
-						{
-							uv = render::getUV( m_editorState->m_pBlockDefs, getID( x, y, z ) );
-							uv.y -= 1 / 16.0f; // HACK: otherwise all textures are offset by 1/16
-							uv.w -= 1 / 16.0f;
-						}
-						else
-							uv = { 0, 0, 1, 1 };
+						uv = { 0, 0, 1, 1 };
 
 						switch ( i )
 						{
@@ -108,19 +101,28 @@ void CClientChunk::ConstructModel()
 						v.ny = dir[face][1];
 						v.nz = dir[face][2];
 
-						m_model->m_vertices.push_back( v );
+						m_model.m_vertices.push_back( v );
 					}
 
-					m_model->m_faces.push_back( Model::Face{ m_model->m_vertices.size() - 4,
-															 m_model->m_vertices.size() - 3,
-															 m_model->m_vertices.size() - 2 } );
-					m_model->m_faces.push_back( Model::Face{ m_model->m_vertices.size() - 4,
-															 m_model->m_vertices.size() - 2,
-															 m_model->m_vertices.size() - 1 } );
+					m_model.m_faces.push_back( CModel::Face{ (vertexIndex_t)m_model.m_vertices.size() - 4,
+															 (vertexIndex_t)m_model.m_vertices.size() - 3,
+															 (vertexIndex_t)m_model.m_vertices.size() - 2 } );
+					m_model.m_faces.push_back( CModel::Face{ (vertexIndex_t)m_model.m_vertices.size() - 4,
+															 (vertexIndex_t)m_model.m_vertices.size() - 2,
+															 (vertexIndex_t)m_model.m_vertices.size() - 1 } );
 				}
 			}
 		}
 	}
 
-	m_model->update();
+	m_model.Update();
+}
+
+void CClientChunk::render()
+{
+	m_model.Render(
+		m_pos,
+		{0,0,0},
+		{1,1,1}
+	);
 }

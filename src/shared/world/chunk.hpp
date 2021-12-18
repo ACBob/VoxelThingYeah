@@ -27,65 +27,61 @@ class CChunk
 			int sizeZ = DEF_CHUNK_SIZE_Z );
 	~CChunk();
 
-	int getX();
-	void setX( int x );
-	int getY();
-	void setY( int y );
-	int getZ();
-	void setZ( int z );
+	virtual int getX();
+	virtual void setX( int x );
+	virtual int getY();
+	virtual void setY( int y );
+	virtual int getZ();
+	virtual void setZ( int z );
 
-	int getSizeX();
-	void setSizeX( int sizeX );
-	int getSizeY();
-	void setSizeY( int sizeY );
-	int getSizeZ();
-	void setSizeZ( int sizeZ );
+	virtual int getSizeX();
+	virtual void setSizeX( int sizeX );
+	virtual int getSizeY();
+	virtual void setSizeY( int sizeY );
+	virtual int getSizeZ();
+	virtual void setSizeZ( int sizeZ );
 
-	uint16_t getID( int x, int y, int z );
-	uint16_t getMeta( int x, int y, int z );
+	virtual uint16_t getID( int x, int y, int z );
+	virtual uint16_t getMeta( int x, int y, int z );
 
-	void setID( int x, int y, int z, uint16_t id );
-	void setMeta( int x, int y, int z, uint16_t meta );
+	virtual void setID( int x, int y, int z, uint16_t id );
+	virtual void setMeta( int x, int y, int z, uint16_t meta );
 
-	void set( int x, int y, int z, uint16_t id, uint16_t meta );
-	void set( int x, int y, int z, uint32_t voxel );
+	virtual void set( int x, int y, int z, uint16_t id, uint16_t meta );
+	virtual void set( int x, int y, int z, uint32_t voxel );
 
-	uint32_t get( int x, int y, int z );
-	void get( int x, int y, int z, uint16_t &id, uint16_t &meta );
-	void get( int x, int y, int z, uint32_t &voxel );
+	virtual uint32_t get( int x, int y, int z );
+	virtual void get( int x, int y, int z, uint16_t &id, uint16_t &meta );
+	virtual void get( int x, int y, int z, uint32_t &voxel );
 
-	void set( int i, uint16_t id, uint16_t data );
-	void set( int i, uint32_t voxel );
+	virtual void set( int i, uint16_t id, uint16_t data );
+	virtual void set( int i, uint32_t voxel );
 
-	uint32_t get( int i );
-	uint16_t getID( int i );
-	uint16_t getMeta( int i );
-	void getID( int i, uint16_t &id );
-	void getMeta( int i, uint16_t &meta );
-	void get( int i, uint16_t &id, uint16_t &data );
-	void get( int i, uint32_t &voxel );
-
-	void rebuildModel();
-
-	void render();
+	virtual uint32_t get( int i );
+	virtual uint16_t getID( int i );
+	virtual uint16_t getMeta( int i );
+	virtual void getID( int i, uint16_t &id );
+	virtual void getMeta( int i, uint16_t &meta );
+	virtual void get( int i, uint16_t &id, uint16_t &data );
+	virtual void get( int i, uint32_t &voxel );
 
 	Vector3i getPosition() { return m_pos; }
 	Vector3i getSize() { return m_size; }
 
-	void simulateLiquid();
-	void calculateLighting();
+	virtual void simulateLiquid();
+	virtual void calculateLighting();
 
 	uint8_t getSkyLight( int x, int y, int z );
 	uint16_t getBlockLight( int x, int y, int z );
 	uint16_t getLighting( int x, int y, int z );
 
-	void setSkyLight( int x, int y, int z, uint8_t light );
-	void setBlockLight( int x, int y, int z, uint16_t light );
-	void setBlockLight( int x, int y, int z, uint8_t red, uint8_t green, uint8_t blue );
+	virtual void setSkyLight( int x, int y, int z, uint8_t light );
+	virtual void setBlockLight( int x, int y, int z, uint16_t light );
+	virtual void setBlockLight( int x, int y, int z, uint8_t red, uint8_t green, uint8_t blue );
 
 	CWorld *m_world;
 
-  private:
+  protected:
 	uint32_t *m_voxels;
 	uint16_t *m_lighting; // 4 bit red, 4 bit green, 4 bit blue, 4 bit sky light (16 bits)
 

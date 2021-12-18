@@ -10,6 +10,8 @@ using vertexIndex_t = uint32_t; // Max 4,294,967,295 vertices (If you reach this
 
 #include "utility/vector.hpp"
 
+#pragma once
+
 // name-space'd forward declarations
 namespace materialSystem {
     class CTexture;
@@ -18,8 +20,16 @@ namespace materialSystem {
 
 // Generic model class.
 class CModel {
+    public:
+    CModel();
+    ~CModel();
 
-    private:
+    void Render( Vector3f pos, Vector3f rot, Vector3f scale );
+
+    void Update();
+
+    uint64_t m_nAnimationTick;
+    
     struct Vertex {
         float x, y, z;
         float nx, ny, nz;
@@ -38,16 +48,6 @@ class CModel {
         float rx, ry, rz;
         float sx, sy, sz;
     };
-
-    public:
-    CModel();
-    ~CModel();
-
-    void Render( Vector3f pos, Vector3f rot, Vector3f scale );
-
-    void Update();
-
-    uint64_t m_nAnimationTick;
 
     std::vector<Vertex> m_vertices;
     std::vector<Face> m_faces;

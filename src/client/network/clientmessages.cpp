@@ -13,7 +13,7 @@ namespace protocol
 
 		protocol::SendPacket( pPeer, p, true );
 	}
-	void SendClientSetBlock( ENetPeer *pPeer, Vector3f pos, BLOCKID blockType, BLOCKVAL val )
+	void SendClientSetBlock( ENetPeer *pPeer, Vector3f pos, uint32_t voxel )
 	{
 		ClientPacket p;
 		p.type					   = ClientPacket::SET_BLOCK;
@@ -21,8 +21,7 @@ namespace protocol
 		bufAcc << pos.x;
 		bufAcc << pos.y;
 		bufAcc << pos.z;
-		bufAcc << (uint)blockType;
-		bufAcc << val;
+		bufAcc << voxel;
 
 		protocol::SendPacket( pPeer, p, true );
 	}

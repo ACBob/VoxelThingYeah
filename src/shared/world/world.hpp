@@ -21,59 +21,59 @@ class CWorld
 	CWorld();
 	~CWorld();
 
-	CChunk *getChunk( int x, int y, int z );
-	CChunk *getChunk( const Vector3i &coord );
+	virtual CChunk *getChunk( int x, int y, int z );
+	virtual CChunk *getChunk( const Vector3i &coord );
 
-	CChunk *createChunk( int x, int y, int z );
-	CChunk *createChunk( const Vector3i &coord );
+	virtual CChunk *createChunk( int x, int y, int z );
+	virtual CChunk *createChunk( const Vector3i &coord );
 
-	CChunk *getOrCreateChunk( int x, int y, int z );
-	CChunk *getOrCreateChunk( const Vector3i &coord );
+	virtual CChunk *getOrCreateChunk( int x, int y, int z );
+	virtual CChunk *getOrCreateChunk( const Vector3i &coord );
 
-	CChunk *getChunkWorldPos( int x, int y, int z );
-	CChunk *getChunkWorldPos( const Vector3i &coord );
-
-	// Converts from Chunk grid coords to world pos
-	Vector3f chunkPosToWorldPos( const Vector3f &pos );
-
-	// Converts from world pos to Chunk grid coords
-	Vector3f worldPosToChunkPos( const Vector3f &pos );
+	virtual CChunk *getChunkWorldPos( int x, int y, int z );
+	virtual CChunk *getChunkWorldPos( const Vector3i &coord );
 
 	// Converts from Chunk grid coords to world pos
-	void chunkPosToWorldPos( int &x, int &y, int &z );
+	virtual Vector3f chunkPosToWorldPos( const Vector3f &pos );
 
 	// Converts from world pos to Chunk grid coords
-	void worldPosToChunkPos( int &x, int &y, int &z );
+	virtual Vector3f worldPosToChunkPos( const Vector3f &pos );
 
-	uint16_t getID( int x, int y, int z );
-	void setID( int x, int y, int z, uint16_t id );
+	// Converts from Chunk grid coords to world pos
+	virtual void chunkPosToWorldPos( int &x, int &y, int &z );
 
-	uint16_t getMeta( int x, int y, int z );
-	void setMeta( int x, int y, int z, uint16_t meta );
+	// Converts from world pos to Chunk grid coords
+	virtual void worldPosToChunkPos( int &x, int &y, int &z );
 
-	void get( int x, int y, int z, uint16_t &id, uint16_t &meta );
-	void set( int x, int y, int z, uint16_t id, uint16_t meta );
-	uint32_t get( int x, int y, int z );
-	void set( int x, int y, int z, uint32_t data );
+	virtual uint16_t getID( int x, int y, int z );
+	virtual void setID( int x, int y, int z, uint16_t id );
 
-	void setChunkSize(int x, int y, int z);
-	void getChunkSize(int &x, int &y, int &z);
+	virtual uint16_t getMeta( int x, int y, int z );
+	virtual void setMeta( int x, int y, int z, uint16_t meta );
 
-	Vector3i getChunkSize();
+	virtual void get( int x, int y, int z, uint16_t &id, uint16_t &meta );
+	virtual void set( int x, int y, int z, uint16_t id, uint16_t meta );
+	virtual uint32_t get( int x, int y, int z );
+	virtual void set( int x, int y, int z, uint32_t data );
 
-	std::vector<CChunk *> getChunks();
-	void clearChunks();
+	virtual void setChunkSize(int x, int y, int z);
+	virtual void getChunkSize(int &x, int &y, int &z);
 
-	std::string getName();
-	void setName( std::string name );
+	virtual Vector3i getChunkSize();
 
-	uint32_t getSeed();
-	void setSeed( uint32_t seed );
+	virtual std::vector<CChunk *> getChunks();
+	virtual void clearChunks();
 
-	uint32_t getTime();
-	void setTime( uint32_t time );
+	virtual std::string getName();
+	virtual void setName( std::string name );
 
-  private:
+	virtual uint32_t getSeed();
+	virtual void setSeed( uint32_t seed );
+
+	virtual uint32_t getTime();
+	virtual void setTime( uint32_t time );
+
+  protected:
 	std::map<Vector3i, CChunk *> m_chunks;
 
 	// Luckily, chunk sizes are per world, not per chunk.

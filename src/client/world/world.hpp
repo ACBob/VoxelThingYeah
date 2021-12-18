@@ -11,7 +11,7 @@ class CClientWorld : public CWorld
         CClientWorld();
         ~CClientWorld();
 
-        void Render();
+        void render();
 
-        std::map<Vector3i, std::unique_ptr<CClientChunk>> m_chunks;
+        std::map<Vector3i, CClientChunk*> m_chunks;
 };

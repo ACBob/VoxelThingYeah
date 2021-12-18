@@ -203,6 +203,13 @@ void CWorld::setChunkSize( int x, int y, int z )
 	m_chunkSize.z = z;
 }
 
+void CWorld::getChunkSize( int &x, int &y, int &z )
+{
+	x = m_chunkSize.x;
+	y = m_chunkSize.y;
+	z = m_chunkSize.z;
+}
+
 uint32_t CWorld::get( int x, int y, int z ) {
     // get in chunk coordinates
     int cx = x;

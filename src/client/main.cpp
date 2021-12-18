@@ -23,7 +23,7 @@
 
 #include "gui/shtoigui.hpp"
 
-#include "shared/world/world.hpp"
+#include "world/world.hpp"
 
 int main( int argc, char *args[] )
 {
@@ -151,7 +151,7 @@ int main( int argc, char *args[] )
 
     CShtoiGUI gui( ShtoiGUI_displayMode::TwoDee, window.GetSize().x, window.GetSize().y );
 
-    CWorld testingWorld;
+    CClientWorld testingWorld;
 
     // inputManager.m_bInGui = true;
 
@@ -192,7 +192,7 @@ int main( int argc, char *args[] )
             Vector3f( 1.0f, 1.0f, 1.0f )
         );
 
-        testingWorld.
+        testingWorld.render();
         
         // gui
         snprintf(guiBuf, 256, "<%.3f, %.3f, %.3f>", camPos.x, camPos.y, camPos.z);

@@ -1,9 +1,10 @@
 #include "enet/enet.h"
-#include "entities/entityplayer.hpp"
 #include "network/protocol.hpp"
 #include "world/world.hpp"
 
 #include "specialeffectdef.hpp"
+
+class CEntityPlayer;
 
 #pragma once
 
