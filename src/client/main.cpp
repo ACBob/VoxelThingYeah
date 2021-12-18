@@ -194,8 +194,13 @@ int main( int argc, char *args[] )
         // gui
         gui.Rect( guiTestPosX, guiTestPosY, 0, guiTestSizeX, guiTestSizeY, 0, 0, 0, 1 );
 
-        gui.Label( "Hello, World!", 0, 0, 5, 16 );
-        gui.Label( "Эх, чужак, общий съём цен шляп (юфть) - вдрызг!", 0, 16, 5, 16 );
+        gui.Label( "Playing jazz vibe chords quickly excites my wife.", 0, 0, 5, 16 ); // English
+        gui.Label( "Эх, чужак, общий съём цен шляп (юфть) - вдрызг!", 0, 16, 5, 16 ); // Russian
+        gui.Label( "Høj bly gom vandt fræk sexquiz på wc", 0, 32, 5, 16 ); // Danish
+        gui.Label( "Mus d’fhàg Cèit-Ùna ròp Ì le ob", 0, 48, 5, 16 ); // Scots Gaelic
+        gui.Label( "Gud hjälpe Zorns mö qvickt få byxa.", 0, 64, 5, 16 ); // Swedish
+        gui.Label( "Jovencillo emponzoñado de whisky: ¡qué figurota exhibe!", 0, 80,5, 16 ); // Spanish
+        gui.Label( "Eble ĉiu kvazaŭ-deca fuŝĥoraĵo ĝojigos homtipon.", 0, 96, 5, 16 ); // Esperanto
 
         gui.BeginLayout( ShtoiGUI_layoutType::FlexRows, guiTestPosX, guiTestPosY, 0, guiTestSizeX, guiTestSizeY, 15, 15, 4);
         {
