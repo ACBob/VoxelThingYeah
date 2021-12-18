@@ -24,6 +24,7 @@
 #include "gui/shtoigui.hpp"
 
 #include "world/world.hpp"
+#include "world/chunk.hpp"
 
 int main( int argc, char *args[] )
 {
@@ -152,6 +153,11 @@ int main( int argc, char *args[] )
     CShtoiGUI gui( ShtoiGUI_displayMode::TwoDee, window.GetSize().x, window.GetSize().y );
 
     CClientWorld testingWorld;
+    testingWorld.setChunkSize(16, 16, 16);
+    CClientChunk *c = testingWorld.createChunk(0, 0, 0);
+    for (int i = 0; i < c->getSizeX() * c->getSizeY() * c->getSizeZ(); i ++)
+        c->set(i, rand() & 3 );
+    c->constructModel();
 
     // inputManager.m_bInGui = true;
 

@@ -21,17 +21,17 @@ class CWorld
 	CWorld();
 	~CWorld();
 
-	virtual CChunk *getChunk( int x, int y, int z );
-	virtual CChunk *getChunk( const Vector3i &coord );
+	CChunk *getChunk( int x, int y, int z );
+	CChunk *getChunk( const Vector3i &coord );
 
-	virtual CChunk *createChunk( int x, int y, int z );
-	virtual CChunk *createChunk( const Vector3i &coord );
+	CChunk *createChunk( int x, int y, int z );
+	CChunk *createChunk( const Vector3i &coord );
 
-	virtual CChunk *getOrCreateChunk( int x, int y, int z );
-	virtual CChunk *getOrCreateChunk( const Vector3i &coord );
+	CChunk *getOrCreateChunk( int x, int y, int z );
+	CChunk *getOrCreateChunk( const Vector3i &coord );
 
-	virtual CChunk *getChunkWorldPos( int x, int y, int z );
-	virtual CChunk *getChunkWorldPos( const Vector3i &coord );
+	CChunk *getChunkWorldPos( int x, int y, int z );
+	CChunk *getChunkWorldPos( const Vector3i &coord );
 
 	// Converts from Chunk grid coords to world pos
 	virtual Vector3f chunkPosToWorldPos( const Vector3f &pos );

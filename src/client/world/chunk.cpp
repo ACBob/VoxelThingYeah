@@ -1,8 +1,10 @@
 #include "chunk.hpp"
+#include "rendering/material.hpp"
 
 CClientChunk::CClientChunk( int x, int y, int z, int sizeX, int sizeY, int sizeZ ) : CChunk(x, y, z, sizeX, sizeY, sizeZ)
 {
-
+	m_model.m_pShader = materialSystem::GetNamedShader("generic");
+	m_model.m_pTexture = materialSystem::LoadTexture("terrain.png");
 }
 CClientChunk::~CClientChunk() {}
 
