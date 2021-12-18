@@ -38,13 +38,15 @@ void CClientChunk::constructModel()
 	m_model.m_vertices.clear();
 	m_model.m_faces.clear();
 
+	calculateLighting();
+
 	for ( int z = 0; z < m_size.z; z++ )
 	{
 		for ( int y = 0; y < m_size.y; y++ )
 		{
 			for ( int x = 0; x < m_size.x; x++ )
 			{
-				if ( getID(x, y, z) != 0 )
+				if ( getID( x, y, z ) == 0 )
 				{
 					continue;
 				}
@@ -75,9 +77,12 @@ void CClientChunk::constructModel()
 						v.x = m_pos.x * m_size.x + x + cubeVertices[cubeTriangles[face][i]][0];
 						v.y = m_pos.y * m_size.y + y + cubeVertices[cubeTriangles[face][i]][1];
 						v.z = m_pos.z * m_size.z + z + cubeVertices[cubeTriangles[face][i]][2];
+						v.r = fmaxf( red / 16.0f, sky / 16.0f );
+						v.g = fmaxf( green / 16.0f, sky / 16.0f );
+						v.b = fmaxf( blue / 16.0f, sky / 16.0f );
 
 						Vector4f uv;
-						uv = { 0, 0, 1, 1 };
+						uv = { 0, 0, 1 / 16.0f, -1 / 16.0f };
 
 						switch ( i )
 						{

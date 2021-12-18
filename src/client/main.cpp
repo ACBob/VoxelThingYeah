@@ -156,7 +156,7 @@ int main( int argc, char *args[] )
     testingWorld.setChunkSize(16, 16, 16);
     CClientChunk *c = testingWorld.createChunk(0, 0, 0);
     for (int i = 0; i < c->getSizeX() * c->getSizeY() * c->getSizeZ(); i ++)
-        c->set(i, rand() & 3 );
+        c->set(i, rand() & 2 );
     c->constructModel();
 
     // inputManager.m_bInGui = true;

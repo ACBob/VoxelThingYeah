@@ -2,7 +2,7 @@
 
 #include "client/rendering/model.hpp"
 
-class CClientChunk final : public CChunk
+class CClientChunk : public CChunk
 {
 
     public:
