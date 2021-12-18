@@ -149,12 +149,9 @@ int main( int argc, char *args[] )
 
     CShtoiGUI gui( ShtoiGUI_displayMode::TwoDee, window.GetSize().x, window.GetSize().y );
 
-    inputManager.m_bInGui = true;
+    // inputManager.m_bInGui = true;
 
-    float guiTestPosX = 0.0f;
-    float guiTestPosY = 0.0f;
-    float guiTestSizeX = 200.0f;
-    float guiTestSizeY = 200.0f;
+    char* guiBuf = new char[256];
 
     while ( !window.m_bShouldClose )
     {
@@ -192,57 +189,8 @@ int main( int argc, char *args[] )
         );
         
         // gui
-        gui.Rect( guiTestPosX, guiTestPosY, 0, guiTestSizeX, guiTestSizeY, 0, 0, 0, 1 );
-
-        gui.Label( "Playing jazz vibe chords quickly excites my wife.", 0, 0, 5, 16 ); // English
-        gui.Label( "Эх, чужак, общий съём цен шляп (юфть) - вдрызг!", 0, 16, 5, 16 ); // Russian
-        gui.Label( "Høj bly gom vandt fræk sexquiz på wc", 0, 32, 5, 16 ); // Danish
-        gui.Label( "Mus d’fhàg Cèit-Ùna ròp Ì le ob", 0, 48, 5, 16 ); // Scots Gaelic
-        gui.Label( "Gud hjälpe Zorns mö qvickt få byxa.", 0, 64, 5, 16 ); // Swedish
-        gui.Label( "Jovencillo emponzoñado de whisky: ¡qué figurota exhibe!", 0, 80,5, 16 ); // Spanish
-        gui.Label( "Eble ĉiu kvazaŭ-deca fuŝĥoraĵo ĝojigos homtipon.", 0, 96, 5, 16 ); // Esperanto
-        gui.Label( "    ", 0, 112, 5, 16);
-
-        gui.BeginLayout( ShtoiGUI_layoutType::FlexRows, guiTestPosX, guiTestPosY, 0, guiTestSizeX, guiTestSizeY, 15, 15, 4);
-        {
-            gui.SetLayoutNumbers(4, 2);
-
-            if (gui.Button(1, 0, 0, 0, 0, 0) == ShtoiGUI_buttonState::Held) {
-                guiTestPosX = inputManager.m_vMousePos.x;
-                guiTestPosY = inputManager.m_vMousePos.y;
-            }
-
-            gui.BeginLayout( ShtoiGUI_layoutType::FlexColumns, 0, 0, 0, 200, 200, 0, 0, 5);
-            {
-                gui.SetLayoutNumbers(5, 2);
-                gui.Rect( 0, 0, 1, 20, 20, 1, 0, 0, 1 );
-
-                gui.Rect( 0, 0, 1, 20, 20, 0, 1, 0, 1 );
-                gui.Rect( 0, 0, 1, 20, 20, 0, 0, 1, 1 );
-                gui.Rect( 0, 0, 1, 20, 20, 1, 1, 0, 1 );
-            }
-            gui.EndLayout();
-            
-            gui.BeginLayout( ShtoiGUI_layoutType::FlexColumns, 0, 0, 0, 200, 200, 0, 0, 2 );
-            {
-                gui.Rect(0, 0, 0, 20, 20, 1, 0, 1, 1);
-
-                gui.BeginLayout(ShtoiGUI_layoutType::FlexRows, 0, 0, 0, 200, 200, 0, 0, 3 );
-                {
-                    gui.Rect(0, 0, 0, 20, 20, 1, 1, 1, 1);
-                    gui.Rect(0, 0, 0, 20, 20, 1, 0, 1, 1);
-                    gui.Rect(0, 0, 0, 20, 20, 0, 1, 1, 1);
-                }
-                gui.EndLayout();
-            }
-            gui.EndLayout();
-        }
-        gui.EndLayout();
-
-        if ( gui.Button(2, guiTestPosX + guiTestSizeX, guiTestPosY + guiTestSizeY, 4, 32, 32) == ShtoiGUI_buttonState::Held ) {
-            guiTestSizeX = inputManager.m_vMousePos.x - guiTestPosX;
-            guiTestSizeY = inputManager.m_vMousePos.y - guiTestPosY;
-        }
+        snprintf(guiBuf, 256, "<%.3f, %.3f, %.3f>", camPos.x, camPos.y, camPos.z);
+        gui.Label(guiBuf, 0, 0, 0, 16);
 
         guiShader->Bind();
         testTexture->Bind();
