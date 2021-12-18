@@ -4,7 +4,7 @@
 
 #include "archive.h"
 #include "netarchive.hpp"
-#include "world/world.hpp"
+#include "world/chunk.hpp"
 
 #include "enet/enet.h"
 
@@ -241,7 +241,7 @@ namespace protocol
 	void SendServerPlayerID( ENetPeer *pPeer, bool isOp );
 	void SendServerChunkData( ENetPeer *pPeer, CWorld *world, Vector3f pos );
 	void SendServerChunkDataFromRep( ENetPeer *pPeer, PortableChunkRepresentation crep );
-	void SendServerUpdateBlock( ENetPeer *pPeer, Vector3f pos, BLOCKID blockType, uint16_t blockData );
+	void SendServerUpdateBlock( ENetPeer *pPeer, Vector3f pos, uint32_t voxel );
 	void SendServerPlayerSpawn( ENetPeer *pPeer, std::string username, Vector3f pos, Vector3f rot, bool join );
 	void SendServerPlayerPos( ENetPeer *pPeer, std::string username, Vector3f pos, Vector3f rot );
 	void SendServerPlayerMessage( ENetPeer *pPeer, std::string username, std::string message );
@@ -257,7 +257,7 @@ namespace protocol
 	/******************* CLIENT *************************/
 	/****************************************************/
 	void SendClientPlayerID( ENetPeer *pPeer );
-	void SendClientSetBlock( ENetPeer *pPeer, Vector3f pos, BLOCKID blockType, uint16_t blockData );
+	void SendClientSetBlock( ENetPeer *pPeer, Vector3f pos, uint32_t voxel );
 	void SendClientPlayerPos( ENetPeer *pPeer, Vector3f pos, Vector3f rot );
 	void SendClientChatMessage( ENetPeer *pPeer, std::string message );
 	void SendClientLeave( ENetPeer *pPeer );

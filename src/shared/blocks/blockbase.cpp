@@ -14,8 +14,6 @@
 
 #include "world/chunk.hpp"
 
-#include "entities/entitybase.hpp"
-
 CBoundingBox CBlockBase::GetBounds() const
 {
 	return CBoundingBox( Vector3f( 0 ), Vector3f( BLOCKUNIT, BLOCKUNIT, BLOCKUNIT ), Vector3f( 0 ) );

@@ -1,76 +1,94 @@
+// -- Chunk
+
+// Concepts:
+// "Block" - uint16_t Block ID.
+// "Meta" - uint16_t Block Meta.
+// "Voxel" - uint32_t Block ID + Meta.
+// "Chunk" - Collection of Blocks.
+
+// Default chunk size
+// Used if the map doesn't specify, or on new maps
+#define DEF_CHUNK_SIZE_X 16
+#define DEF_CHUNK_SIZE_Y 16
+#define DEF_CHUNK_SIZE_Z 16
+
+class CWorld;	   // Forward declaration
+
 #include "utility/vector.hpp"
 
-#include "world/block.hpp"
+#include <inttypes.h>
 
-#include "utility/fastnoise.h"
-
-#define CHUNKSIZE_X 16
-#define CHUNKSIZE_Y 16
-#define CHUNKSIZE_Z 16
-
-// Why yes, I am a C++ Programmer, how could you tell?
-#define CHUNK3D_TO_1D( x, y, z ) x + y *CHUNKSIZE_X + z *CHUNKSIZE_X *CHUNKSIZE_Z
-#define CHUNK1D_TO_3D( i, x, y, z )                                                                                    \
-	z = round( i / ( CHUNKSIZE_X * CHUNKSIZE_Y ) );                                                                    \
-	y = round( ( i - z * CHUNKSIZE_X * CHUNKSIZE_Y ) / CHUNKSIZE_X );                                                  \
-	x = i - CHUNKSIZE_X * ( y + CHUNKSIZE_Y * z )
-
-#pragma once
-
-// A storage only type of chunk
-// that stores JUST essential information to rebuild a chunk
-// Used for saving/loading and network stuff
-struct PortableChunkRepresentation
-{
-	// Vector3i can't be used in this context
-	int32_t x, y, z;
-	BLOCKVAL m_iValue[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
-	BLOCKID m_iBlocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
-};
-
-// Forward declaration
-class CWorld;
+struct PortableChunkRepresentation; // TODO:
 
 class CChunk
 {
   public:
-	CChunk();
+	CChunk( int x, int y, int z, int sizeX = DEF_CHUNK_SIZE_X, int sizeY = DEF_CHUNK_SIZE_Y,
+			int sizeZ = DEF_CHUNK_SIZE_Z );
 	~CChunk();
 
-	CChunk *Neighbour( Direction dir );
-	CChunk *Neighbour( Vector3i dir );
+	int getX();
+	void setX( int x );
+	int getY();
+	void setY( int y );
+	int getZ();
+	void setZ( int z );
 
-	Vector3i m_vPosition;
-	Vector3i GetPosInWorld() { return m_vPosition * Vector3i( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ); }
-	Vector3i GetPosInWorld( Vector3i pos )
-	{
-		return ( m_vPosition * Vector3i( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ) + pos;
-	}
+	int getSizeX();
+	void setSizeX( int sizeX );
+	int getSizeY();
+	void setSizeY( int sizeY );
+	int getSizeZ();
+	void setSizeZ( int sizeZ );
 
-	block_t *GetBlockAtLocal( Vector3i pos );
+	uint16_t getID( int x, int y, int z );
+	uint16_t getMeta( int x, int y, int z );
 
-	block_t *GetBlockAtRelative( Vector3i pos );
+	void setID( int x, int y, int z, uint16_t id );
+	void setMeta( int x, int y, int z, uint16_t meta );
 
-	void Update( int64_t iTick );
+	void set( int x, int y, int z, uint16_t id, uint16_t meta );
+	void set( int x, int y, int z, uint32_t voxel );
 
-	Vector3i PosToWorld( int x, int y, int z );
-	Vector3i PosToWorld( Vector3i pos );
-	Vector3f PosToWorld( Vector3f pos );
+	uint32_t get( int x, int y, int z );
+	void get( int x, int y, int z, uint16_t &id, uint16_t &meta );
+	void get( int x, int y, int z, uint32_t &voxel );
 
-	void RebuildPortable();
+	void set( int i, uint16_t id, uint16_t data );
+	void set( int i, uint32_t voxel );
 
-	// Flat array of blocks, access with
-	// Indexed with [x + SIZEX * (y + SIZEZ * z)]
-	block_t m_blocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
+	uint32_t get( int i );
+	uint16_t getID( int i );
+	uint16_t getMeta( int i );
+	void getID( int i, uint16_t &id );
+	void getMeta( int i, uint16_t &meta );
+	void get( int i, uint16_t &id, uint16_t &data );
+	void get( int i, uint32_t &voxel );
 
-	CWorld *m_pChunkMan = nullptr;
+	void rebuildModel();
 
-	PortableChunkRepresentation m_portableDef;
+	void render();
 
-	bool m_bDirty		= false; // We need to update regardless of if we're near anyone
-	bool m_bReallyDirty = false; // We need to be completely resent
+	Vector3i getPosition() { return m_pos; }
+	Vector3i getSize() { return m_size; }
 
-	int64_t m_iLastTick = 0;
+	void simulateLiquid();
+	void calculateLighting();
+
+	uint8_t getSkyLight( int x, int y, int z );
+	uint16_t getBlockLight( int x, int y, int z );
+	uint16_t getLighting( int x, int y, int z );
+
+	void setSkyLight( int x, int y, int z, uint8_t light );
+	void setBlockLight( int x, int y, int z, uint16_t light );
+	void setBlockLight( int x, int y, int z, uint8_t red, uint8_t green, uint8_t blue );
+
+	CWorld *m_world;
+
+  private:
+	uint32_t *m_voxels;
+	uint16_t *m_lighting; // 4 bit red, 4 bit green, 4 bit blue, 4 bit sky light (16 bits)
+
+	Vector3i m_pos;
+	Vector3i m_size;
 };
-
-bool ValidChunkPosition( Vector3i pos );

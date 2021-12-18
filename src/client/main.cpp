@@ -23,6 +23,8 @@
 
 #include "gui/shtoigui.hpp"
 
+#include "shared/world/world.hpp"
+
 int main( int argc, char *args[] )
 {
 	// Because Windows is from the stoneage
@@ -149,6 +151,8 @@ int main( int argc, char *args[] )
 
     CShtoiGUI gui( ShtoiGUI_displayMode::TwoDee, window.GetSize().x, window.GetSize().y );
 
+    CWorld testingWorld;
+
     // inputManager.m_bInGui = true;
 
     char* guiBuf = new char[256];
@@ -187,6 +191,8 @@ int main( int argc, char *args[] )
             Vector3f( 0.0f, 0.0f, 0.0f ),
             Vector3f( 1.0f, 1.0f, 1.0f )
         );
+
+        testingWorld.
         
         // gui
         snprintf(guiBuf, 256, "<%.3f, %.3f, %.3f>", camPos.x, camPos.y, camPos.z);

@@ -1,12 +1,6 @@
-add_subdirectory(jeneration)
-
 set(world_SRCS
-	${jeneration_SRCS}
-
-	${CMAKE_CURRENT_SOURCE_DIR}/block.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/chunk.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/world.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/worldsaver.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/physics.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/raycast.cpp
 	PARENT_SCOPE
 )

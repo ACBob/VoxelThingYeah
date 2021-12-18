@@ -1,222 +1,269 @@
 #include "world.hpp"
 
-#include "entities/entitybase.hpp"
+#include "utility/vector.hpp"
+#include "chunk.hpp"
 
-#include "physics.hpp"
-
-#include "shared/logging.hpp"
-
-#include <algorithm>
-
-#include "blocks/blockbase.hpp"
-
-CWorld::CWorld()
+CWorld::CWorld( )
 {
 }
+
 CWorld::~CWorld()
 {
-	// Destroy chunks
-	m_chunks.clear();
+	for ( auto &&c : m_chunks )
+		delete c.second;
 }
 
-// Return in good faith that it's a valid position
-CChunk *CWorld::ChunkAtChunkPos( Vector3i pos )
+CChunk *CWorld::getChunk( int x, int y, int z ) { return getChunk( Vector3f( x, y, z ) ); }
+
+CChunk *CWorld::getChunk( const Vector3i &pos )
 {
-	if (m_chunks.find(pos) != m_chunks.end())
-		return m_chunks.at(pos).get();
-	return nullptr;
+	if (m_chunks.find(pos) == m_chunks.end())
+		return nullptr;
+	return m_chunks.at(pos);
 }
 
-// Tries to get a chunk and generates a new one if it can't find one
-CChunk *CWorld::GetChunkGenerateAtWorldPos( Vector3i pos )
+CChunk *CWorld::createChunk( int x, int y, int z ) { return createChunk( Vector3f( x, y, z ) ); }
+
+CChunk *CWorld::createChunk( const Vector3i &pos )
 {
-	return GetChunkGenerateAtPos( pos / Vector3i( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) );
-}
+	if ( m_chunks.find( pos ) != m_chunks.end() )
+		return nullptr; // Couldn't create it
 
-CChunk *CWorld::GetChunkGenerateAtPos( Vector3i pos )
-{
-	// pos is in chunk space
-	CChunk *c = ChunkAtChunkPos( pos );
-	if ( c != nullptr )
-		return c;
+	CChunk *c = new CChunk( pos.x, pos.y, pos.z, m_chunkSize.x, m_chunkSize.y, m_chunkSize.z );
 
-	m_chunks[pos] = std::make_unique<CChunk>();
-	c				   = m_chunks[pos].get();
-	c->m_vPosition	   = pos;
-	c->m_portableDef.x = pos.x;
-	c->m_portableDef.y = pos.y;
-	c->m_portableDef.z = pos.z;
-	c->m_pChunkMan	   = this;
-
-	c->m_bReallyDirty = c->m_bDirty = true;
-
-	// rebuild the portable as it's air now
-	c->RebuildPortable();
+	m_chunks[pos] = c;
+	c->m_world	  = this;
 
 	return c;
 }
 
-void CWorld::UnloadChunk( Vector3i pos )
+CChunk *CWorld::getOrCreateChunk( int x, int y, int z ) { return getOrCreateChunk( Vector3f( x, y, z ) ); }
+
+CChunk *CWorld::getOrCreateChunk( const Vector3i &pos )
 {
-	if (m_chunks.find(pos) != m_chunks.end())
-		m_chunks.erase(pos);
+	CChunk *c = getChunk( pos );
+	return c != nullptr ? c : createChunk( pos );
 }
 
-// Return in good faith that it's a valid position
-CChunk *CWorld::ChunkAtWorldPos( Vector3i pos )
-{
-	pos = pos / Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z );
+CChunk *CWorld::getChunkWorldPos( int x, int y, int z ) { return getChunkWorldPos( Vector3f( x, y, z ) ); }
 
-	return ChunkAtChunkPos( pos.Floor() );
+CChunk *CWorld::getChunkWorldPos( const Vector3i &pos )
+{
+	int x = pos.x;
+	int y = pos.y;
+	int z = pos.z;
+
+	worldPosToChunkPos( x, y, z );
+
+	return getChunk( x, y, z );
 }
 
-block_t *CWorld::BlockAtWorldPos( Vector3i pos )
-{
-	pos			  = pos.Floor();
-	CChunk *chunk = ChunkAtWorldPos( pos );
-	if ( chunk == nullptr )
-		return nullptr;
-	Vector3f localPos = ( pos - chunk->GetPosInWorld() );
+Vector3f CWorld::chunkPosToWorldPos( const Vector3f &pos ) { return pos * m_chunkSize; }
 
-	return chunk->GetBlockAtLocal( localPos );
+Vector3f CWorld::worldPosToChunkPos( const Vector3f &pos ) { return pos / m_chunkSize; }
+
+void CWorld::chunkPosToWorldPos( int &x, int &y, int &z )
+{
+	Vector3f pos = chunkPosToWorldPos( Vector3f( x, y, z ) );
+	x			 = pos.x;
+	y			 = pos.y;
+	z			 = pos.z;
 }
 
-void CWorld::SetBlockAtWorldPos( Vector3i pos, BLOCKID block, BLOCKVAL val )
+void CWorld::worldPosToChunkPos( int &x, int &y, int &z )
 {
-	block_t *b = BlockAtWorldPos( pos );
-	if ( b == nullptr )
+	Vector3f pos = worldPosToChunkPos( Vector3f( x, y, z ) );
+	x			 = pos.x;
+	y			 = pos.y;
+	z			 = pos.z;
+}
+
+uint16_t CWorld::getID( int x, int y, int z )
+{
+	// get in chunk coordinates
+	int cx = x;
+	int cy = y;
+	int cz = z;
+	worldPosToChunkPos( cx, cy, cz );
+
+	x -= cx * m_chunkSize.x;
+	y -= cy * m_chunkSize.y;
+	z -= cz * m_chunkSize.z;
+
+	CChunk *c = getChunk( cx, cy, cz );
+	if ( c == nullptr )
+		return 0;
+
+	return c->getID( x, y, z );
+}
+
+void CWorld::setID( int x, int y, int z, uint16_t id )
+{
+	// get in chunk coordinates
+	int cx = x;
+	int cy = y;
+	int cz = z;
+	worldPosToChunkPos( cx, cy, cz );
+
+	x -= cx * m_chunkSize.x;
+	y -= cy * m_chunkSize.y;
+	z -= cz * m_chunkSize.z;
+
+	CChunk *c = getChunk( cx, cy, cz );
+	if ( c == nullptr )
 		return;
 
-	b->Set( block, val );
-	b->Update();
+	c->setID( x, y, z, id );
 }
 
-bool CWorld::ValidChunkPos( const Vector3i pos ) { return ChunkAtWorldPos( pos ) != nullptr; }
-
-void CWorld::AddEntity( CEntityBase *e )
+uint16_t CWorld::getMeta( int x, int y, int z )
 {
-	m_ents.push_back( e );
-	e->Spawn( this );
+	// get in chunk coordinates
+	int cx = x;
+	int cy = y;
+	int cz = z;
+	worldPosToChunkPos( cx, cy, cz );
+
+	x -= cx * m_chunkSize.x;
+	y -= cy * m_chunkSize.y;
+	z -= cz * m_chunkSize.z;
+
+	CChunk *c = getChunk( cx, cy, cz );
+	if ( c == nullptr )
+		return 0;
+
+	return c->getMeta( x, y, z );
 }
 
-CEntityBase *CWorld::GetEntityByName( const char *name )
+void CWorld::setMeta( int x, int y, int z, uint16_t meta )
 {
-	for ( CEntityBase *e : m_ents )
-	{
-		if ( e->m_name == name )
-			return e;
-	}
-	return nullptr;
-}
+	// get in chunk coordinates
+	int cx = x;
+	int cy = y;
+	int cz = z;
+	worldPosToChunkPos( cx, cy, cz );
 
-bool CWorld::TestPointCollision( Vector3i pos )
-{
-	block_t *b = BlockAtWorldPos( pos );
-	if ( b == nullptr )
-		return false;
-	// BlockFeatures bF = GetBlockFeatures( b->m_iBlockType );
-	// if ( !bF.walkable )
-	// 	return false;
+	x -= cx * m_chunkSize.x;
+	y -= cy * m_chunkSize.y;
+	z -= cz * m_chunkSize.z;
 
-	if ( !BlockType( b->GetType() ).IsSolid( b->GetMeta() ) )
-		return false;
-
-	CBoundingBox blockBounds = BlockType( b->GetType() ).GetBounds();
-
-	pos						= pos - pos.Floor();
-	blockBounds.m_vPosition = pos.Floor();
-	return blockBounds.TestPointCollide( pos );
-}
-
-bool CWorld::TestSelectPointCollision( Vector3i pos )
-{
-	block_t *b = BlockAtWorldPos( pos );
-	if ( b == nullptr )
-		return false;
-	// BlockFeatures bF = GetBlockFeatures( b->m_iBlockType );
-	// if ( !bF.walkable )
-	// 	return false;
-
-	if ( !BlockType( b->GetType() ).IsSelectable( b->GetMeta() ) )
-		return false;
-
-	CBoundingBox blockBounds = BlockType( b->GetType() ).GetBounds();
-
-	pos						= pos - pos.Floor();
-	blockBounds.m_vPosition = pos.Floor();
-	return blockBounds.TestPointCollide( pos );
-}
-
-block_t *CWorld::TestAABBCollision( CBoundingBox col )
-{
-	// We can just test all the *blocks* this bounding box intersects.
-	// The exact blocks to test is the ceiling of the furthest and floor of the closest
-	Vector3f here = col.m_vPosition - col.m_vOrigin * col.m_vBounds;
-	Vector3f there = col.m_vPosition + (Vector3f(1,1,1) - col.m_vOrigin) * col.m_vBounds;
-	here = here.Floor();
-	there = there.Ceil();
-
-	for (int y = here.y; y < there.y; y++)
-	{
-		for (int z = here.z; z < there.z; z++)
-		{
-			for (int x = here.x; x < there.x; x++)
-			{
-				block_t *block = BlockAtWorldPos( {x, y, z} );
-				if (block == nullptr)
-					continue;
-				
-				if ( !BlockType( block->GetType() ).IsSolid( block->GetMeta() ) )
-					continue;
-
-				CBoundingBox blockBounds = BlockType( block->GetType() ).GetBounds();
-				blockBounds.m_vPosition	 = Vector3f( x, y, z );
-
-				if ( col.TestCollide( blockBounds ) )
-					return block;
-			}
-		}
-	}
-
-	return nullptr;
-}
-
-void CWorld::WorldTick( int64_t iTick, float delta )
-{
-
-	m_ents.erase( std::remove_if( m_ents.begin(), m_ents.end(), []( CEntityBase *e ) { return e->m_bIsKilled; } ),
-				  m_ents.end() );
-
-	for ( CEntityBase *ent : m_ents )
-	{
-		ent->Tick( iTick );
-		ent->PhysicsTick( delta, this );
-	}
-
-	if ( iTick == m_iLastTick )
+	CChunk *c = getChunk( cx, cy, cz );
+	if ( c == nullptr )
 		return;
-	m_iLastTick = iTick;
-	
-	// Progress time
-	m_iTimeOfDay++;
 
-	if ( m_iTimeOfDay > 24000 )
-	{
-		m_iTimeOfDay = 0;
-	}
+	c->setMeta( x, y, z, meta );
 }
 
-PortableChunkRepresentation CWorld::GetWorldRepresentation( Vector3i pos )
+void CWorld::get( int x, int y, int z, uint16_t &id, uint16_t &meta )
 {
-	return GetChunkGenerateAtWorldPos( pos )->m_portableDef;
-}
+	// get in chunk coordinates
+	int cx = x;
+	int cy = y;
+	int cz = z;
+	worldPosToChunkPos( cx, cy, cz );
 
-void CWorld::UsePortable( PortableChunkRepresentation rep )
-{
-	CChunk *c = GetChunkGenerateAtPos( Vector3f( rep.x, rep.y, rep.z ) );
+	x -= cx * m_chunkSize.x;
+	y -= cy * m_chunkSize.y;
+	z -= cz * m_chunkSize.z;
 
-	for ( int j = 0; j < CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z; j++ )
+	CChunk *c = getChunk( cx, cy, cz );
+	if ( c == nullptr )
 	{
-		c->m_blocks[j].Set( rep.m_iBlocks[j], rep.m_iValue[j] );
+		id	 = 0;
+		meta = 0;
+		return;
 	}
+
+	c->get( x, y, z, id, meta );
 }
+
+void CWorld::set( int x, int y, int z, uint16_t id, uint16_t meta )
+{
+	// get in chunk coordinates
+	int cx = x;
+	int cy = y;
+	int cz = z;
+	worldPosToChunkPos( cx, cy, cz );
+
+	x -= cx * m_chunkSize.x;
+	y -= cy * m_chunkSize.y;
+	z -= cz * m_chunkSize.z;
+
+	CChunk *c = getChunk( cx, cy, cz );
+	if ( c == nullptr )
+		return;
+
+	c->set( x, y, z, id, meta );
+}
+
+void CWorld::setChunkSize( int x, int y, int z )
+{
+	m_chunkSize.x = x;
+	m_chunkSize.y = y;
+	m_chunkSize.z = z;
+}
+
+uint32_t CWorld::get( int x, int y, int z ) {
+    // get in chunk coordinates
+    int cx = x;
+    int cy = y;
+    int cz = z;
+    worldPosToChunkPos(cx, cy, cz);
+
+    x -= cx * m_chunkSize.x;
+    y -= cy * m_chunkSize.y;
+    z -= cz * m_chunkSize.z;
+
+    CChunk *c = getChunk(cx, cy, cz);
+    if (c == nullptr)
+        return 0;
+
+    return c->get(x, y, z);
+}
+
+void CWorld::set( int x, int y, int z, uint32_t data ) {
+    // get in chunk coordinates
+    int cx = x;
+    int cy = y;
+    int cz = z;
+    worldPosToChunkPos(cx, cy, cz);
+
+    x -= cx * m_chunkSize.x;
+    y -= cy * m_chunkSize.y;
+    z -= cz * m_chunkSize.z;
+
+    CChunk *c = getChunk(cx, cy, cz);
+    if (c == nullptr)
+        return;
+
+    c->set(x, y, z, data);
+}
+
+Vector3i CWorld::getChunkSize() { return m_chunkSize; }
+
+std::vector<CChunk *> CWorld::getChunks() { 
+	std::vector<CChunk *> list;
+	for (auto &&c : m_chunks)
+		list.push_back(c.second);
+
+	return list;
+}
+
+void CWorld::clearChunks()
+{
+	for ( auto &&c : m_chunks )
+		delete c.second;
+	m_chunks.clear();
+}
+
+std::string CWorld::getName() { return m_name; }
+
+void CWorld::setName( std::string name ) { m_name = name; }
+
+uint32_t CWorld::getSeed() { return m_seed; }
+
+void CWorld::setSeed( uint32_t seed ) { m_seed = seed; }
+
+uint32_t CWorld::getTime() { return m_time; }
+
+void CWorld::setTime( uint32_t time ) { m_time = time; }

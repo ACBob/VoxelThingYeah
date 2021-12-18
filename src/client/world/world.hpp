@@ -1,0 +1,17 @@
+#include "shared/world/world.hpp"
+
+#include "client/rendering/material.hpp"
+#include "client/rendering/model.hpp"
+
+class CClientChunk;
+
+class CClientWorld : public CWorld
+{
+    public:
+        CClientWorld();
+        ~CClientWorld();
+
+        void Render();
+
+        std::map<Vector3i, std::unique_ptr<CClientChunk>> m_chunks;
+};

@@ -13,8 +13,6 @@ set(SHARED_SOURCES
 
 	${CMAKE_CURRENT_SOURCE_DIR}/filesystem.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/cvar.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/blockdef.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/statemanager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/cvar_shared.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/raycast.cpp
 PARENT_SCOPE)

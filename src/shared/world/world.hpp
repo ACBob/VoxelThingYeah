@@ -1,22 +1,19 @@
-#include "world/block.hpp"
-#include "world/chunk.hpp"
+// -- World.hpp
+// Holds chunks in a QMap<Vector3f, CChunk*>
+// and also some other useful things (like rendering a world)
+// At some point, will also hold entities!
 
 #include "utility/vector.hpp"
 
-#include "physics.hpp"
-#include "world/block.hpp"
-
-#include "jeneration/jeneration.hpp"
+#include <vector>
+#include <map>
+#include <string>
 
 #pragma once
 
-#include <map>
-#include <vector>
+class CChunk; // Forward Decl.
 
-// Forward Decl.
-class CEntityBase;
-
-#include <memory>
+#include <inttypes.h>
 
 class CWorld
 {
@@ -24,60 +21,67 @@ class CWorld
 	CWorld();
 	~CWorld();
 
-	CChunk *ChunkAtWorldPos( Vector3i pos );
-	CChunk *ChunkAtChunkPos( Vector3i chunkPos );
+	CChunk *getChunk( int x, int y, int z );
+	CChunk *getChunk( const Vector3i &coord );
 
-	// Tries to get a chunk and generates a new one if it can't find one
-	CChunk *GetChunkGenerateAtWorldPos( Vector3i pos );
-	CChunk *GetChunkGenerateAtPos( Vector3i pos );
+	CChunk *createChunk( int x, int y, int z );
+	CChunk *createChunk( const Vector3i &coord );
 
-	// Deletes the chunk at the chunk position
-	void UnloadChunk( Vector3i pos );
+	CChunk *getOrCreateChunk( int x, int y, int z );
+	CChunk *getOrCreateChunk( const Vector3i &coord );
 
-	// Returns the block at the position in world coords
-	// The given position is rounded by floor() before being used
-	// If outside the world it returns a nullptr
-	block_t *BlockAtWorldPos( Vector3i pos );
+	CChunk *getChunkWorldPos( int x, int y, int z );
+	CChunk *getChunkWorldPos( const Vector3i &coord );
 
-	// The correct way to set a block
-	// Also takes into account that the block may be in a chunk that is not loaded
-	void SetBlockAtWorldPos( Vector3i pos, BLOCKID block, BLOCKVAL val = 0 );
+	// Converts from Chunk grid coords to world pos
+	Vector3f chunkPosToWorldPos( const Vector3f &pos );
 
-	// Test against an infinitely small point centred on pos
-	// Tests in world coordinates
-	bool TestPointCollision( Vector3i pos );
+	// Converts from world pos to Chunk grid coords
+	Vector3f worldPosToChunkPos( const Vector3f &pos );
 
-	// Test against an infinitely small point centred on pos
-	// Tests in chunk coordinates
-	// This test ignores whether or not you can collide with the block, it just checks if you can select it
-	bool TestSelectPointCollision( Vector3i pos );
+	// Converts from Chunk grid coords to world pos
+	void chunkPosToWorldPos( int &x, int &y, int &z );
 
-	// Tests in world coordinates
-	// Returning the first block that collides
-	block_t *TestAABBCollision( CBoundingBox col );
+	// Converts from world pos to Chunk grid coords
+	void worldPosToChunkPos( int &x, int &y, int &z );
 
-	// Is the position within our place
-	bool ValidChunkPos( const Vector3i pos );
+	uint16_t getID( int x, int y, int z );
+	void setID( int x, int y, int z, uint16_t id );
 
-	// Tick is the tick since the start of the game
-	// TODO: This will overflow maybe
-	void WorldTick( int64_t tick, float delta );
+	uint16_t getMeta( int x, int y, int z );
+	void setMeta( int x, int y, int z, uint16_t meta );
 
-	int64_t m_iLastTick = 0;
+	void get( int x, int y, int z, uint16_t &id, uint16_t &meta );
+	void set( int x, int y, int z, uint16_t id, uint16_t meta );
+	uint32_t get( int x, int y, int z );
+	void set( int x, int y, int z, uint32_t data );
 
-	// Merges the PortableChunkRepresentation into us :)
-	void UsePortable( PortableChunkRepresentation rep );
-	// Returns the world rep at the chunk
-	PortableChunkRepresentation GetWorldRepresentation( Vector3i pos );
+	void setChunkSize(int x, int y, int z);
+	void getChunkSize(int &x, int &y, int &z);
 
-	std::vector<CEntityBase *> m_ents;
-	void AddEntity( CEntityBase *e );
+	Vector3i getChunkSize();
 
-	CEntityBase *GetEntityByName( const char *name );
+	std::vector<CChunk *> getChunks();
+	void clearChunks();
 
-	std::map<Vector3i, std::unique_ptr<CChunk>> m_chunks;
+	std::string getName();
+	void setName( std::string name );
 
-	int m_iTimeOfDay = 6890;
+	uint32_t getSeed();
+	void setSeed( uint32_t seed );
 
-	COverworldJeneration m_jenerator;
+	uint32_t getTime();
+	void setTime( uint32_t time );
+
+  private:
+	std::map<Vector3i, CChunk *> m_chunks;
+
+	// Luckily, chunk sizes are per world, not per chunk.
+	// The first map format had it be per chunk, and that's silly.
+	// Even luckier is that I rectified it *before* working on this and was able to avoid the headache that is.
+	Vector3i m_chunkSize;
+
+	std::string m_name;
+	uint32_t m_seed;
+	uint32_t m_time;
 };
