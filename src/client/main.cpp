@@ -201,6 +201,7 @@ int main( int argc, char *args[] )
         gui.Label( "Gud hjälpe Zorns mö qvickt få byxa.", 0, 64, 5, 16 ); // Swedish
         gui.Label( "Jovencillo emponzoñado de whisky: ¡qué figurota exhibe!", 0, 80,5, 16 ); // Spanish
         gui.Label( "Eble ĉiu kvazaŭ-deca fuŝĥoraĵo ĝojigos homtipon.", 0, 96, 5, 16 ); // Esperanto
+        gui.Label( "    ", 0, 112, 5, 16);
 
         gui.BeginLayout( ShtoiGUI_layoutType::FlexRows, guiTestPosX, guiTestPosY, 0, guiTestSizeX, guiTestSizeY, 15, 15, 4);
         {
