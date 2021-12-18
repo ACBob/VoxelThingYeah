@@ -22,7 +22,7 @@
 // Used for saving/loading and network stuff
 struct PortableChunkRepresentation
 {
-	// Vector3f can't be used in this context
+	// Vector3i can't be used in this context
 	int32_t x, y, z;
 	BLOCKVAL m_iValue[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
 	BLOCKID m_iBlocks[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
@@ -38,22 +38,23 @@ class CChunk
 	~CChunk();
 
 	CChunk *Neighbour( Direction dir );
-	CChunk *Neighbour( Vector3f dir );
+	CChunk *Neighbour( Vector3i dir );
 
-	Vector3f m_vPosition;
-	Vector3f GetPosInWorld() { return m_vPosition * Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ); }
-	Vector3f GetPosInWorld( Vector3f pos )
+	Vector3i m_vPosition;
+	Vector3i GetPosInWorld() { return m_vPosition * Vector3i( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ); }
+	Vector3i GetPosInWorld( Vector3i pos )
 	{
-		return ( m_vPosition * Vector3f( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ) + pos;
+		return ( m_vPosition * Vector3i( CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z ) ) + pos;
 	}
 
-	block_t *GetBlockAtLocal( Vector3f pos );
+	block_t *GetBlockAtLocal( Vector3i pos );
 
-	block_t *GetBlockAtRelative( Vector3f pos );
+	block_t *GetBlockAtRelative( Vector3i pos );
 
 	void Update( int64_t iTick );
 
-	Vector3f PosToWorld( int x, int y, int z );
+	Vector3i PosToWorld( int x, int y, int z );
+	Vector3i PosToWorld( Vector3i pos );
 	Vector3f PosToWorld( Vector3f pos );
 
 	void RebuildPortable();
@@ -72,4 +73,4 @@ class CChunk
 	int64_t m_iLastTick = 0;
 };
 
-bool ValidChunkPosition( Vector3f pos );
+bool ValidChunkPosition( Vector3i pos );

@@ -21,7 +21,7 @@ class COverworldJeneration
 	void BiomeBlocks( CChunk *c );
 	void Decorate( CChunk *c );
 
-	CBiome *GetBiomeAtPos( Vector3f p );
+	CBiome *GetBiomeAtPos( Vector3i p );
 
   private:
 	fnl_state m_baseNoise; // Base noise, used for all biomes

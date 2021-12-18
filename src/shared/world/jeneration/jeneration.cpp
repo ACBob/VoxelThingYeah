@@ -188,7 +188,7 @@ void COverworldJeneration::BiomeBlocks( CChunk *c )
 				2 + ( 2 * ( 1 + fnlGetNoise2D( &m_dirtNoise, x + c->GetPosInWorld().x, z + c->GetPosInWorld().z ) ) );
 			for ( int y = 0; y < CHUNKSIZE_Y; y++ )
 			{
-				if ( c->PosToWorld( Vector3f( x, y, z ) ).y >= m_iSeaLevel )
+				if ( c->PosToWorld( Vector3i( x, y, z ) ).y >= m_iSeaLevel )
 					continue;
 
 				block_t *blk = c->GetBlockAtLocal( Vector3f( x, y, z ) );
@@ -265,13 +265,13 @@ void COverworldJeneration::Decorate( CChunk *c )
 		z = rand() % CHUNKSIZE_Z;
 
 		// Make sure we're not in a cave ( so above sea level )
-		if ( c->GetPosInWorld( { (float)x, 0, (float)z } ).y > SEA_LEVEL )
+		if ( c->GetPosInWorld( { x, 0, z } ).y > SEA_LEVEL )
 		{
 			// find the surface block
 			int y = 0;
 			for ( y = CHUNKSIZE_Y - 1; y > 0; y-- )
 			{
-				if ( c->GetBlockAtLocal( { (float)x, (float)y, (float)z } )->GetType() == GRASS )
+				if ( c->GetBlockAtLocal( { x, y, z } )->GetType() == GRASS )
 					break;
 			}
 
@@ -283,7 +283,7 @@ void COverworldJeneration::Decorate( CChunk *c )
 
 			// Place the tree
 			// world coords
-			Vector3f worldPosition = c->PosToWorld( { (float)x, (float)y, (float)z } );
+			Vector3i worldPosition = c->PosToWorld( Vector3i{ x, y, z } );
 			tree.Generate( c->m_pChunkMan, worldPosition.x, worldPosition.y, worldPosition.z,
 						   ( Direction )( rand() % 4 ) );
 		}
@@ -297,7 +297,7 @@ void COverworldJeneration::Generate( CChunk *c )
 	Decorate( c );
 }
 
-CBiome *COverworldJeneration::GetBiomeAtPos( Vector3f p )
+CBiome *COverworldJeneration::GetBiomeAtPos( Vector3i p )
 {
 	// temperature & humidity are 0 - 2
 	float fTemperature = ( fnlGetNoise2D( &m_biomesOvergroundTemperatureNoise, p.x, p.z ) + 1.0f );

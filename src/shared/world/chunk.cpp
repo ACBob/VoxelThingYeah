@@ -22,17 +22,18 @@ CChunk::~CChunk() {}
 
 CChunk *CChunk::Neighbour( Direction dir )
 {
-	Vector3f neighbourPos = m_vPosition + DirectionVector[dir];
+	Vector3i neighbourPos = m_vPosition + DirectionVector[dir];
 	return m_pChunkMan->ChunkAtChunkPos( neighbourPos );
 }
-CChunk *CChunk::Neighbour( Vector3f dir )
+CChunk *CChunk::Neighbour( Vector3i dir )
 {
-	Vector3f neighbourPos = m_vPosition + dir;
+	Vector3i neighbourPos = m_vPosition + dir;
 	return m_pChunkMan->ChunkAtChunkPos( neighbourPos );
 }
 
 // Takes a coordinate and returns a vector in world coordinates relative to this chunk
 // Intended to be used by in-chunk coords but doesn't throw a hissyfit if it's not
+Vector3i CChunk::PosToWorld( Vector3i pos ) { return GetPosInWorld() + pos; }
 Vector3f CChunk::PosToWorld( Vector3f pos ) { return GetPosInWorld() + pos; }
 
 void CChunk::RebuildPortable()
@@ -64,7 +65,7 @@ void CChunk::Update( int64_t iTick )
 	m_bReallyDirty = bDirtyAgain;
 }
 
-block_t *CChunk::GetBlockAtLocal( Vector3f pos )
+block_t *CChunk::GetBlockAtLocal( Vector3i pos )
 {
 	if ( !ValidChunkPosition( pos ) )
 		return nullptr;
@@ -72,11 +73,11 @@ block_t *CChunk::GetBlockAtLocal( Vector3f pos )
 }
 
 // Returns the block at the given world position, relative to this chunk
-block_t *CChunk::GetBlockAtRelative( Vector3f pos )
+block_t *CChunk::GetBlockAtRelative( Vector3i pos )
 {
 	if (ValidChunkPosition( pos ))
 		return GetBlockAtLocal( pos );
-	Vector3f thePos = PosToWorld(pos);
+	Vector3i thePos = PosToWorld(pos);
 	return m_pChunkMan->BlockAtWorldPos( thePos );
 }
 
@@ -85,7 +86,7 @@ bool ValidChunkPosition( int x, int y, int z )
 	// If the position is valid
 	return !( x < 0 || y < 0 || z < 0 || x >= CHUNKSIZE_X || y >= CHUNKSIZE_Y || z >= CHUNKSIZE_Z );
 }
-bool ValidChunkPosition( Vector3f pos )
+bool ValidChunkPosition( Vector3i pos )
 {
 	// If the position is valid
 	return ValidChunkPosition( pos.x, pos.y, pos.z );

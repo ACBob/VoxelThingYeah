@@ -86,7 +86,7 @@ class CStructure
 				{
 					if ( TREE_STRUCTURE[iy][ix * 5 + iz] != AIR )
 					{
-						pWorld->SetBlockAtWorldPos( { (float)x + ix, (float)y + iy, (float)z + iz },
+						pWorld->SetBlockAtWorldPos( { x + ix, y + iy, z + iz },
 													TREE_STRUCTURE[iy][ix * 5 + iz] );
 					}
 				}
