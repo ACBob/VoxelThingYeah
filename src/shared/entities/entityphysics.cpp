@@ -36,6 +36,12 @@ void CBasePhysicsEntity::GetVelocity(float& x, float& y, float& z)
     z = m_velocity.z;
 }
 
+void CBasePhysicsEntity::Update(float dt)
+{
+    PhysicsUpdate(dt);
+    BaseClass::Update(dt);
+}
+
 void CBasePhysicsEntity::PhysicsUpdate(float dt)
 {
     if (!m_bCollides)

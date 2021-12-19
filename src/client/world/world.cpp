@@ -8,8 +8,19 @@ CClientWorld::~CClientWorld() {
 }
 
 void CClientWorld::render() {
-    for (auto &&c : m_chunks)
+    for (auto &&c : m_chunks) {
         c.second->render();
+	}
+	// now entities
+	for (auto e : m_entities) {
+		e->Render();
+	}
+}
+
+void CClientWorld::update(float dt) {
+	for (auto e : m_entities) {
+		e->Update(dt);
+	}
 }
 
 
@@ -56,4 +67,32 @@ CClientChunk *CClientWorld::getChunkWorldPos( const Vector3i &pos )
 	worldPosToChunkPos( x, y, z );
 
 	return getChunk( x, y, z );
+}
+
+CClientEntityBase *CClientWorld::getEntity( int id )
+{
+	if ( id < 0 || id >= m_entities.size() )
+		return nullptr;
+
+	return m_entities[id];
+}
+
+CClientEntityBase *CClientWorld::getEntity( const std::string &name )
+{
+	for ( auto &&e : m_entities )
+		if ( e->GetName() == name )
+			return e;
+
+	return nullptr;
+}
+
+std::vector<CClientEntityBase *> CClientWorld::getEntitiesByName( const std::string &name )
+{
+	std::vector<CClientEntityBase *> ret;
+
+	for ( auto &&e : m_entities )
+		if ( e->GetName() == name )
+			ret.push_back( e );
+
+	return ret;
 }

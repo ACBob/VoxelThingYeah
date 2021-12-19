@@ -339,3 +339,9 @@ bool CWorld::testCollision( CBoundingBox &box )
 
 	return false;
 }
+
+void CWorld::update( float dt )
+{
+	for (auto &e : m_entities)
+		e->Update( dt );
+}

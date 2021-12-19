@@ -6,6 +6,8 @@ CClientEntityPlayer::CClientEntityPlayer(entityId_t id) : BaseClass(id)
 {
     m_pInputManager = nullptr;
     m_bFly = true;
+
+    SetModel("player.obj");
 }
 
 CClientEntityPlayer::~CClientEntityPlayer()

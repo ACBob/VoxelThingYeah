@@ -92,6 +92,8 @@ class CWorld
 
 	virtual bool testCollision( CBoundingBox &box );
 
+	virtual void update(float dt);
+
   protected:
 	std::map<Vector3i, CChunk *> m_chunks;
 	std::vector<CEntityBase *> m_entities;

@@ -2,10 +2,11 @@
 // The player entity.
 
 #include "shared/entities/entityplayer.hpp"
+#include "entitybase.hpp"
 
 class CInputManager;
 
-class CClientEntityPlayer : public CEntityPlayer
+class CClientEntityPlayer : public CClientEntityBase, public CEntityPlayer
 {
     DeclBaseClass(CClientEntityPlayer, CEntityPlayer);
 

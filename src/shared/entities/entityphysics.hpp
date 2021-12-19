@@ -23,6 +23,7 @@ class CBasePhysicsEntity : virtual public CEntityBase
     Vector3f GetVelocity();
     void GetVelocity(float& x, float& y, float& z);
 
+    virtual void Update(float dt);
     virtual void PhysicsUpdate(float dt);
 
     protected:

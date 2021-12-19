@@ -185,18 +185,7 @@ int main( int argc, char *args[] )
         camPitch += inputManager.m_vMouseMovement.y * 0.1f;
         camYaw += inputManager.m_vMouseMovement.x * 0.1f;
 
-        camPos = player->GetPosition();
-        player->Update(deltaTime);
-        player->PhysicsUpdate( deltaTime );
-
-        if ( inputManager.m_bInputState[CONTROLS_FRONT] )
-            camPos += camLook * 0.1f;
-        if ( inputManager.m_bInputState[CONTROLS_BACK] )
-            camPos -= camLook * 0.1f;
-        if ( inputManager.m_bInputState[CONTROLS_LEFT] )
-            camPos -= camLook.Cross( camUp ).Normal() * 0.1f;
-        if ( inputManager.m_bInputState[CONTROLS_RIGHT] )
-            camPos += camLook.Cross( camUp ).Normal() * 0.1f;
+        testingWorld.update(deltaTime);
 
         camPitch = fminf( fmaxf( camPitch, -89.9f ), 89.9f );
 
@@ -218,11 +207,14 @@ int main( int argc, char *args[] )
         snprintf(guiBuf, 256, "<%.3f, %.3f, %.3f>", camPos.x, camPos.y, camPos.z);
         gui.Label(guiBuf, 0, 0, 0, 16);
 
-        snprintf(guiBuf, 256, "<%.3f, %.3f, %.3f>", player->GetVelocity().x, player->GetVelocity().y, player->GetVelocity().z);
+        snprintf(guiBuf, 256, "<%.3f, %.3f, %.3f>", player->GetPosition().x, player->GetPosition().y, player->GetPosition().z);
         gui.Label(guiBuf, 0, 16, 0, 16);
 
-        snprintf(guiBuf, 256, "%f (%f)", deltaTime, 1.0f / deltaTime);
+        snprintf(guiBuf, 256, "<%.3f, %.3f, %.3f>", player->GetVelocity().x, player->GetVelocity().y, player->GetVelocity().z);
         gui.Label(guiBuf, 0, 32, 0, 16);
+
+        snprintf(guiBuf, 256, "%f (%f)", deltaTime, 1.0f / deltaTime);
+        gui.Label(guiBuf, 0, 48, 0, 16);
 
         guiShader->Bind();
         testTexture->Bind();
