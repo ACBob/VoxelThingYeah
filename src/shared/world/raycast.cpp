@@ -84,9 +84,29 @@ std::pair<Vector3f, Vector3f> CRaycast::cast( CWorld *world )
 
 std::pair<Vector3f, Vector3f> CRaycast::cast( CWorld *world, Vector3f start, Vector3f direction, float length )
 {
-	m_start		= start;
-	m_direction = direction;
-	m_fLength	= length;
+	Vector3f ray = start;
+	Vector3f oRay; // Used for figuring out the normal
 
-	return cast( world );
+	const float step = 0.01f;
+	float i			 = 0.0f;
+
+	while ( i < length )
+	{
+		oRay = ray;
+		ray	 = start + direction * i;
+		i += step;
+
+		int x = floor( ray.x );
+		int y = floor( ray.y );
+		int z = floor( ray.z );
+
+		if ( world->getID( x, y, z ) > 0 )
+		{
+			Vector3f normal = Vector3f( floor( oRay.x ), floor( oRay.y ), floor( oRay.z ) ) - Vector3f( x, y, z );
+			normal.Normal();
+			return { ray, normal };
+		}
+	}
+
+	return { Vector3f( 0, 0, 0 ), Vector3f( 0, 0, 0 ) };
 }

@@ -12,6 +12,9 @@
 #pragma once
 
 class CChunk; // Forward Decl.
+class CBoundingBox; // Forward Decl.
+
+#include "entities/entitybase.hpp"
 
 #include <inttypes.h>
 
@@ -32,6 +35,20 @@ class CWorld
 
 	CChunk *getChunkWorldPos( int x, int y, int z );
 	CChunk *getChunkWorldPos( const Vector3i &coord );
+
+	CEntityBase *getEntity( int id );
+	CEntityBase *getEntity( const std::string &name );
+	std::vector<CEntityBase *> getEntitiesByName( const std::string &name );
+
+	template <typename T>
+	CEntityBase *createEntity()
+	{
+		// TODO: better id management
+		CEntityBase *e = new T( m_entities.size() );
+		e->SetWorld( this );
+		m_entities.push_back( e );
+		return e;
+	}
 
 	// Converts from Chunk grid coords to world pos
 	virtual Vector3f chunkPosToWorldPos( const Vector3f &pos );
@@ -73,8 +90,11 @@ class CWorld
 	virtual uint32_t getTime();
 	virtual void setTime( uint32_t time );
 
+	virtual bool testCollision( CBoundingBox &box );
+
   protected:
 	std::map<Vector3i, CChunk *> m_chunks;
+	std::vector<CEntityBase *> m_entities;
 
 	// Luckily, chunk sizes are per world, not per chunk.
 	// The first map format had it be per chunk, and that's silly.

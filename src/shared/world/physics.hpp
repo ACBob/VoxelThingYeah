@@ -1,5 +1,7 @@
 #include "utility/vector.hpp"
 
+#include <inttypes.h>
+
 #pragma once
 
 class CBoundingBox
@@ -12,4 +14,6 @@ class CBoundingBox
 	Vector3f m_vPosition;
 	Vector3f m_vBounds;
 	Vector3f m_vOrigin;
+
+	uint16_t m_nLastTouched;
 };

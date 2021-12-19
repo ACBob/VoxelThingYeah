@@ -3,6 +3,9 @@
 #include "utility/vector.hpp"
 #include "chunk.hpp"
 
+#include "physics.hpp"
+#include "entities/entitybase.hpp"
+
 CWorld::CWorld( )
 {
 }
@@ -56,6 +59,34 @@ CChunk *CWorld::getChunkWorldPos( const Vector3i &pos )
 	worldPosToChunkPos( x, y, z );
 
 	return getChunk( x, y, z );
+}
+
+CEntityBase *CWorld::getEntity( int id )
+{
+	if ( id < 0 || id >= m_entities.size() )
+		return nullptr;
+
+	return m_entities[id];
+}
+
+CEntityBase *CWorld::getEntity( const std::string &name )
+{
+	for ( auto &&e : m_entities )
+		if ( e->GetName() == name )
+			return e;
+
+	return nullptr;
+}
+
+std::vector<CEntityBase *> CWorld::getEntitiesByName( const std::string &name )
+{
+	std::vector<CEntityBase *> ret;
+
+	for ( auto &&e : m_entities )
+		if ( e->GetName() == name )
+			ret.push_back( e );
+
+	return ret;
 }
 
 Vector3f CWorld::chunkPosToWorldPos( const Vector3f &pos ) { return pos * m_chunkSize; }
@@ -274,3 +305,37 @@ void CWorld::setSeed( uint32_t seed ) { m_seed = seed; }
 uint32_t CWorld::getTime() { return m_time; }
 
 void CWorld::setTime( uint32_t time ) { m_time = time; }
+
+bool CWorld::testCollision( CBoundingBox &box )
+{
+	// We can just test all the *blocks* this bounding box intersects.
+	// The exact blocks to test is the ceiling of the furthest and floor of the closest
+	Vector3f here = box.m_vPosition - box.m_vOrigin * box.m_vBounds;
+	Vector3f there = box.m_vPosition + (Vector3f(1,1,1) - box.m_vOrigin) * box.m_vBounds;
+	here = here.Floor();
+	there = there.Ceil();
+
+	for (int y = here.y; y < there.y; y++)
+	{
+		for (int z = here.z; z < there.z; z++)
+		{
+			for (int x = here.x; x < there.x; x++)
+			{
+				if (get(x, y, z) == 0)
+					continue;
+				
+				// TODO: test block def for collision
+
+				CBoundingBox blockBounds = CBoundingBox(Vector3f(x, y, z), Vector3f(1, 1, 1));
+				blockBounds.m_vPosition	 = Vector3f( x, y, z );
+
+				if ( box.TestCollide( blockBounds ) ) {
+					box.m_nLastTouched = getID( x, y, z );
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
+}

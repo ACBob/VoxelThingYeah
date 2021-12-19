@@ -20,5 +20,5 @@ class CRaycast
 	// std::pair<Vector3f, Vector3f> cast( CChunk *chunk );
 	// std::pair<Vector3f, Vector3f> cast( CChunk *chunk, Vector3f start, Vector3f direction, float length );
 	std::pair<Vector3f, Vector3f> cast( CWorld *world );
-	std::pair<Vector3f, Vector3f> cast( CWorld *world, Vector3f start, Vector3f direction, float length );
+	static std::pair<Vector3f, Vector3f> cast( CWorld *world, Vector3f start, Vector3f direction, float length );
 };

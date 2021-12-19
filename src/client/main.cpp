@@ -12,7 +12,7 @@
 #include <glad/glad.h>
 
 #include "shared/filesystem.hpp"
-#include "shared/network/network.hpp"
+// #include "shared/network/network.hpp"
 
 #include "rendering/model.hpp"
 #include "rendering/material.hpp"
@@ -25,6 +25,7 @@
 
 #include "world/world.hpp"
 #include "world/chunk.hpp"
+#include "entities/entityplayer.hpp"
 
 int main( int argc, char *args[] )
 {
@@ -81,10 +82,10 @@ int main( int argc, char *args[] )
     
     // TODO: parse config.cfg
 
-    con_info("Init Network...");
-    if (!network::Init())
-        window.Panic("Failed to initialize network!"); // TODO: Single-player only mode?
-    atexit(network::Uninit);
+    // con_info("Init Network...");
+    // if (!network::Init())
+    //     window.Panic("Failed to initialize network!"); // TODO: Single-player only mode?
+    // atexit(network::Uninit);
 
     CInputManager inputManager;
     window.m_pInputMan = &inputManager;
@@ -159,7 +160,15 @@ int main( int argc, char *args[] )
         c->set(i, rand() & 2 );
     c->constructModel();
 
+    CEntityPlayer *player = (CEntityPlayer*)testingWorld.createEntity<CEntityPlayer>();
+    player->SetPosition(Vector3f(8.0f, 24.0f, 8.0f));
+
     // inputManager.m_bInGui = true;
+
+    float deltaTime = 0.0f;
+    
+    uint32_t lastTime = 0;
+    uint32_t curTime = 0;
 
     char* guiBuf = new char[256];
 
@@ -174,6 +183,9 @@ int main( int argc, char *args[] )
         // camera rotation
         camPitch += inputManager.m_vMouseMovement.y * 0.1f;
         camYaw += inputManager.m_vMouseMovement.x * 0.1f;
+
+        camPos = player->GetPosition();
+        player->PhysicsUpdate( deltaTime );
 
         if ( inputManager.m_bInputState[CONTROLS_FRONT] )
             camPos += camLook * 0.1f;
@@ -204,6 +216,12 @@ int main( int argc, char *args[] )
         snprintf(guiBuf, 256, "<%.3f, %.3f, %.3f>", camPos.x, camPos.y, camPos.z);
         gui.Label(guiBuf, 0, 0, 0, 16);
 
+        snprintf(guiBuf, 256, "<%.3f, %.3f, %.3f>", player->GetVelocity().x, player->GetVelocity().y, player->GetVelocity().z);
+        gui.Label(guiBuf, 0, 16, 0, 16);
+
+        snprintf(guiBuf, 256, "%f (%f)", deltaTime, 1.0f / deltaTime);
+        gui.Label(guiBuf, 0, 32, 0, 16);
+
         guiShader->Bind();
         testTexture->Bind();
 
@@ -213,6 +231,10 @@ int main( int argc, char *args[] )
         guiShader->Unbind();
 
         window.SwapBuffers();
+
+        curTime = window.GetMS();
+        deltaTime = (curTime - lastTime) / 1000.0f;
+        lastTime = curTime;
     }
 
 
