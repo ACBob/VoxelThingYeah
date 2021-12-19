@@ -10,14 +10,21 @@
 
 using entityId_t = uint32_t; // max 2^32 (4 billion) entities
 
-#define DeclBaseClass(className) \
-    using BaseClass = className; \
-    using BaseClass::BaseClass;
+#define DeclBaseClass(className, baseClassName) \
+    using BaseClass = baseClassName; \
+    using BaseClass::BaseClass; \
+    protected: \
+    className() {}; \
+    public: \
+    static const std::string GetClassName() { return #className; } \
+    static const std::string GetBaseClassName() { return #baseClassName; }
 
 class CWorld;
 
 class CEntityBase
 {
+    protected:
+    CEntityBase() {};
 public:
     CEntityBase(entityId_t id);
     virtual ~CEntityBase() {};

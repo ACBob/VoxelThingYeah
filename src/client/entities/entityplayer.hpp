@@ -7,7 +7,7 @@ class CInputManager;
 
 class CClientEntityPlayer : public CEntityPlayer
 {
-    DeclBaseClass(CEntityPlayer);
+    DeclBaseClass(CClientEntityPlayer, CEntityPlayer);
 
     public:
     CClientEntityPlayer(entityId_t id);

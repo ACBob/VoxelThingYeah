@@ -160,7 +160,7 @@ int main( int argc, char *args[] )
         c->set(i, rand() & 2 );
     c->constructModel();
 
-    CClientEntityPlayer *player = (CClientEntityPlayer*)testingWorld.createEntity<CClientEntityPlayer>();
+    CClientEntityPlayer *player = testingWorld.createEntity<CClientEntityPlayer>();
     player->SetPosition(Vector3f(8.0f, 24.0f, 8.0f));
     player->SetInputManager( &inputManager );
 

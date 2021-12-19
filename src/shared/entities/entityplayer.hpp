@@ -3,9 +3,9 @@
 
 #include "entityphysics.hpp"
 
-class CEntityPlayer : public CBasePhysicsEntity
+class CEntityPlayer : virtual public CBasePhysicsEntity
 {
-    DeclBaseClass(CBasePhysicsEntity);
+    DeclBaseClass(CEntityPlayer, CBasePhysicsEntity);
 
     public:
     CEntityPlayer(entityId_t id);

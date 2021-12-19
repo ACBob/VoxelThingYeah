@@ -9,9 +9,9 @@
 // Max. height a step can be in blocks
 #define STEP_SIZE 0.55f
 
-class CBasePhysicsEntity : public CEntityBase
+class CBasePhysicsEntity : virtual public CEntityBase
 {
-    DeclBaseClass(CEntityBase);
+    DeclBaseClass(CBasePhysicsEntity, CEntityBase);
 
     public:
     CBasePhysicsEntity(entityId_t id);
@@ -37,5 +37,9 @@ class CBasePhysicsEntity : public CEntityBase
     Vector3f m_gravity;
     Vector3f m_friction;
 
-    CBoundingBox m_boundingBox; // Used for collision detection
+    CBoundingBox m_boundingBox = {
+        { 0.0f, 0.0f, 0.0f },
+        { 0.0f, 0.0f, 0.0f },
+        { 0.0f, 0.0f, 0.0f }
+    }; // Used for collision detection
 };

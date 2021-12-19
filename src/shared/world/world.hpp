@@ -41,10 +41,10 @@ class CWorld
 	std::vector<CEntityBase *> getEntitiesByName( const std::string &name );
 
 	template <typename T>
-	CEntityBase *createEntity()
+	T *createEntity()
 	{
 		// TODO: better id management
-		CEntityBase *e = new T( m_entities.size() );
+		T *e = new T( m_entities.size() );
 		e->SetWorld( this );
 		m_entities.push_back( e );
 		return e;
