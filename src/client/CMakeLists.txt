@@ -3,6 +3,7 @@ add_subdirectory(sdlstuff)
 add_subdirectory(rendering)
 add_subdirectory(gui)
 add_subdirectory(world)
+add_subdirectory(entities)
 
 set(CLIENT_SOURCES
     ${net_SRCS}
@@ -10,6 +11,7 @@ set(CLIENT_SOURCES
     ${rendering_SRCS}
     ${gui_SRCS}
     ${world_SRCS}
+    ${ent_SRCS}
 
 	"${CMAKE_CURRENT_SOURCE_DIR}/main.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/cvar_clientside.cpp"

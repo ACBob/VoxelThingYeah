@@ -160,8 +160,9 @@ int main( int argc, char *args[] )
         c->set(i, rand() & 2 );
     c->constructModel();
 
-    CEntityPlayer *player = (CEntityPlayer*)testingWorld.createEntity<CEntityPlayer>();
+    CClientEntityPlayer *player = (CClientEntityPlayer*)testingWorld.createEntity<CClientEntityPlayer>();
     player->SetPosition(Vector3f(8.0f, 24.0f, 8.0f));
+    player->SetInputManager( &inputManager );
 
     // inputManager.m_bInGui = true;
 
@@ -185,6 +186,7 @@ int main( int argc, char *args[] )
         camYaw += inputManager.m_vMouseMovement.x * 0.1f;
 
         camPos = player->GetPosition();
+        player->Update(deltaTime);
         player->PhysicsUpdate( deltaTime );
 
         if ( inputManager.m_bInputState[CONTROLS_FRONT] )
