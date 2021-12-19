@@ -15,6 +15,9 @@
 
 #include <cstring>
 
+using namespace rendering;
+using namespace rendering::materials;
+
 CModel::CModel()
 {
     m_nAnimationTick = 0;
@@ -200,7 +203,7 @@ void CModel::LoadOBJ( const std::string &filePath ) {
 			char *textureName = new char[256];
 			sscanf( token, "t %s", textureName );
 
-			m_pTexture = materialSystem::LoadTexture( textureName );
+			m_pTexture = LoadTexture( textureName );
 
 			delete[] textureName;
 		}
@@ -210,7 +213,7 @@ void CModel::LoadOBJ( const std::string &filePath ) {
 			char *shaderName = new char[256];
 			sscanf( token, "s %s", shaderName );
 
-			m_pShader = materialSystem::GetNamedShader( shaderName );
+			m_pShader = GetNamedShader( shaderName );
 
 			delete[] shaderName;
 		}

@@ -14,8 +14,7 @@
 #include "shared/filesystem.hpp"
 // #include "shared/network/network.hpp"
 
-#include "render/model.hpp"
-#include "render/material.hpp"
+#include "render/render.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -90,49 +89,18 @@ int main( int argc, char *args[] )
     CInputManager inputManager;
     window.m_pInputMan = &inputManager;
 
-    con_info("Doing OpenGL/SDL cruft...");
-    {
-		atexit( SDL_Quit );
-		SDL_GL_LoadLibrary( NULL );
-
-		SDL_GL_SetAttribute( SDL_GL_ACCELERATED_VISUAL, 1 );
-		SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 4 ); // TODO: OpenGL 3.3 support
-		SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 5 );
-		SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
-
-		SDL_GL_SetAttribute( SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG );
-
-		SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
-		SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 16 );
-
-		SDL_LogSetPriority( SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO );
-
-        window.GatherCTX();
-
-        if ( !gladLoadGLLoader( SDL_GL_GetProcAddress ) )
-		{
-			window.Panic( "GLAD Could not be loaded!" );
-		}
-
-        glEnable( GL_DEPTH_TEST );
-        glDepthFunc( GL_LEQUAL );
-        glEnable( GL_CULL_FACE );
-        glCullFace( GL_BACK );
-        glEnable( GL_BLEND );
-        glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
-        glBlendEquation( GL_FUNC_ADD );
-    }
+    con_info("Init renderer");
+    rendering::LoadGL();
+    window.GatherCTX();
+    if (!rendering::Init())
+        window.Panic("Failed to initialize rendering!");
+    atexit(rendering::Uninit);
 
     con_info("Ok cool done");
 
     window.SetIcon( "logo64.png" );
 
-    con_info("Init Renderer...");
-    if (!materialSystem::Init())
-        window.Panic("Failed to initialize material system!");
-    atexit(materialSystem::Uninit);
-
-    CModel testModel;
+    rendering::CModel testModel;
     testModel.LoadOBJ( "player.obj" );
 
     glm::mat4 projection = glm::perspective( glm::radians( fov->GetFloat() ),
@@ -145,8 +113,8 @@ int main( int argc, char *args[] )
     Vector3f camLook = Vector3f(0.0f, 0.0f, -1.0f);
     Vector3f camUp = Vector3f(0.0f, 1.0f, 0.0f);
 
-    materialSystem::CShader *guiShader = materialSystem::GetNamedShader( "gui" );
-    materialSystem::CTexture *testTexture = materialSystem::LoadTexture( "filledSquare.png" );
+    rendering::materials::CShader *guiShader = rendering::materials::GetNamedShader( "gui" );
+    rendering::materials::CTexture *testTexture = rendering::materials::LoadTexture( "filledSquare.png" );
     
     float camPitch = 0.0f;
     float camYaw = 0.0f;
@@ -193,7 +161,7 @@ int main( int argc, char *args[] )
 
         view = glm::lookAt(glm::vec3(camPos.x, camPos.y, camPos.z), glm::vec3(camPos.x + camLook.x, camPos.y + camLook.y, camPos.z + camLook.z), glm::vec3(camUp.x, camUp.y, camUp.z));
 
-        materialSystem::UpdateUniforms( projection, view, screen );
+        rendering::materials::UpdateUniforms( projection, view, screen );
 
         testModel.Render(
             Vector3f( 0.0f, 0.0f, 1.0f ),

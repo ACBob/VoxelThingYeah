@@ -30,7 +30,7 @@ target_include_directories(libVoxelThingYeahShared PUBLIC
 target_compile_definitions(libVoxelThingYeahShared PRIVATE TOML_HEADER_ONLY)
 
 add_library(libVoxelThingYeahRender SHARED ${RENDER_SOURCES})
-target_link_libraries(libVoxelThingYeahRender ${OpenGL_LIBRARIES} ${GLM_LIBRARIES} ${Threads_LIBRARIES})
+target_link_libraries(libVoxelThingYeahRender ${OpenGL_LIBRARIES} ${GLM_LIBRARIES} ${Threads_LIBRARIES} ${SDL2_LIBRARIES})
 target_compile_definitions(libVoxelThingYeahRender PRIVATE TOML_HEADER_ONLY)
 target_include_directories(libVoxelThingYeahRender PUBLIC
 	${GLM_INCLUDE_DIRS}

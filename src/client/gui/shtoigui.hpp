@@ -58,7 +58,7 @@ class CShtoiGUI {
         struct Quad {
             Vertex vertices[6];
             float z;
-            materialSystem::CTexture *m_pTexture;
+            rendering::materials::CTexture *m_pTexture;
         };
 
         std::vector<Quad> m_quads;
@@ -98,13 +98,13 @@ class CShtoiGUI {
 
         unsigned int m_nVAO, m_nVBO;
 
-        materialSystem::CTexture *m_pTexture;
+        rendering::materials::CTexture *m_pTexture;
 
         struct Character {
             int code = 0x0; // code
             int texNumber = 0; // Where in the texture it is (0-255)
             float width = 1.0f; // size of the char
-            materialSystem::CTexture *m_pTexture = nullptr;
+            rendering::materials::CTexture *m_pTexture = nullptr;
         };
 
         std::map<int, Character> m_charMap;

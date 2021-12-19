@@ -20,5 +20,5 @@ class CClientEntityBase : virtual public CEntityBase
     void Render();
 
     protected:
-    CModel m_model;
+    rendering::CModel m_model;
 };

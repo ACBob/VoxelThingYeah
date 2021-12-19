@@ -89,7 +89,7 @@ CShtoiGUI::CShtoiGUI( ShtoiGUI_displayMode displayMode, float virtualScreenSizeX
         toml::array *charsArray = fontChars->get(texNumBuf)->as_array();
 
         std::string texName = fontTextures->get(tex)->value_or<std::string>("font/cp437.png");
-        materialSystem::CTexture *pTex = materialSystem::LoadTexture(texName);
+        rendering::materials::CTexture *pTex = rendering::materials::LoadTexture(texName);
 
         con_debug("%s", texName.c_str());
 

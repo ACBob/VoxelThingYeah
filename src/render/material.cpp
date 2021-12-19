@@ -12,8 +12,7 @@
 
 #include <regex>
 
-
-namespace materialSystem {
+namespace rendering::materials {
 
     std::map<std::string, CTexture*> vTextures;
     std::vector<CShader*> vShaders;
