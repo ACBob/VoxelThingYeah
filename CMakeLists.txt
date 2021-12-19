@@ -26,6 +26,8 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 # LodePNG
 add_library(lodepng STATIC subprojects/lodepng/lodepng.cpp subprojects/lodepng/lodepng.h)
 
@@ -40,14 +42,8 @@ configure_file( "${CMAKE_CURRENT_LIST_DIR}/include/config.h.in" "${CMAKE_CURRENT
 add_subdirectory(src)
 
 target_link_libraries(
-	"${PROJECT_NAME}_client" lodepng
+	libVoxelThingYeahRender lodepng
 )
 target_include_directories(
-	"${PROJECT_NAME}_client" PUBLIC "subprojects/lodepng/"
-)
-target_link_libraries(
-	"guiTest" lodepng
-)
-target_include_directories(
-	"guiTest" PUBLIC "subprojects/lodepng/"
+	libVoxelThingYeahRender PUBLIC "subprojects/lodepng/"
 )

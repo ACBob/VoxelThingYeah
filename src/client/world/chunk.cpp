@@ -1,5 +1,5 @@
 #include "chunk.hpp"
-#include "rendering/material.hpp"
+#include "render/material.hpp"
 
 CClientChunk::CClientChunk( int x, int y, int z, int sizeX, int sizeY, int sizeZ ) : CChunk(x, y, z, sizeX, sizeY, sizeZ)
 {

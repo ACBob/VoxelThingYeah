@@ -2,6 +2,7 @@ add_subdirectory(utility)
 add_subdirectory(client)
 add_subdirectory(server)
 add_subdirectory(shared)
+add_subdirectory(render)
 
 find_package(PhysFS REQUIRED)
 find_package(ENet REQUIRED)
@@ -28,6 +29,20 @@ target_include_directories(libVoxelThingYeahShared PUBLIC
 )
 target_compile_definitions(libVoxelThingYeahShared PRIVATE TOML_HEADER_ONLY)
 
+add_library(libVoxelThingYeahRender SHARED ${RENDER_SOURCES})
+target_link_libraries(libVoxelThingYeahRender ${OpenGL_LIBRARIES} ${GLM_LIBRARIES} ${Threads_LIBRARIES})
+target_compile_definitions(libVoxelThingYeahRender PRIVATE TOML_HEADER_ONLY)
+target_include_directories(libVoxelThingYeahRender PUBLIC
+	${GLM_INCLUDE_DIRS}
+	${SDL2_INCLUDE_DIRS}
+	${OpenGL_INCLUDE_DIRS}
+	"${CMAKE_CURRENT_SOURCE_DIR}/../include"
+	"${CMAKE_CURRENT_SOURCE_DIR}"
+	"${CMAKE_CURRENT_SOURCE_DIR}/shared"
+	"${CMAKE_CURRENT_SOURCE_DIR}/client"
+	"${CMAKE_CURRENT_SOURCE_DIR}/utility"
+)
+
 add_executable( "${PROJECT_NAME}_server" ${SERVER_SOURCES} )
 target_link_libraries( "${PROJECT_NAME}_server" libVoxelThingYeahShared libVoxelThingYeahUtil Threads::Threads )
 target_include_directories( "${PROJECT_NAME}_server" PUBLIC
@@ -41,9 +56,8 @@ target_compile_definitions( "${PROJECT_NAME}_server" PRIVATE TOML_HEADER_ONLY)
 add_executable( "${PROJECT_NAME}_client" ${CLIENT_SOURCES} )
 target_link_libraries( "${PROJECT_NAME}_client" libVoxelThingYeahShared libVoxelThingYeahUtil Threads::Threads
 	${SDL2_LIBRARIES}
-	${OpenGL_LIBRARIES}
 	${CMAKE_DL_LIBS}
-	lodepng
+	libVoxelThingYeahRender
 )
 target_include_directories( "${PROJECT_NAME}_client" PUBLIC
 	${GLM_INCLUDE_DIRS}
@@ -60,9 +74,8 @@ target_compile_definitions( "${PROJECT_NAME}_client" PRIVATE TOML_HEADER_ONLY)
 add_executable( guiTest ${GUI_TEST_SOURCES} )
 target_link_libraries( guiTest libVoxelThingYeahShared libVoxelThingYeahUtil Threads::Threads
 	${SDL2_LIBRARIES}
-	${OpenGL_LIBRARIES}
 	${CMAKE_DL_LIBS}
-	lodepng
+	libVoxelThingYeahRender
 )
 target_include_directories( guiTest PUBLIC
 	${GLM_INCLUDE_DIRS}

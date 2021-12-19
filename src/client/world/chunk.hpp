@@ -1,6 +1,6 @@
 #include "shared/world/chunk.hpp"
 
-#include "client/rendering/model.hpp"
+#include "render/model.hpp"
 
 class CClientChunk : public CChunk
 {

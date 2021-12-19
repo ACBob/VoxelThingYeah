@@ -3,7 +3,7 @@
 
 #include "shared/entities/entitybase.hpp"
 
-#include "rendering/model.hpp"
+#include "render/model.hpp"
 
 #pragma once
 

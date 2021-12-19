@@ -4,7 +4,7 @@
 #include <vector>
 #include <wchar.h>
 
-#include "rendering/material.hpp"
+#include "render/material.hpp"
 
 using ShtoiGUI_elementID = unsigned short; // 65535 elements max
 

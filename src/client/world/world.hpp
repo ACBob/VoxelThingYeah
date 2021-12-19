@@ -1,7 +1,7 @@
 #include "shared/world/world.hpp"
 
-#include "client/rendering/material.hpp"
-#include "client/rendering/model.hpp"
+#include "render/material.hpp"
+#include "render/model.hpp"
 
 #include "client/entities/entitybase.hpp"
 
