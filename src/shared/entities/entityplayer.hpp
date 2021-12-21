@@ -8,7 +8,7 @@ class CEntityPlayer : virtual public CBasePhysicsEntity
     DeclBaseClass(CEntityPlayer, CBasePhysicsEntity);
 
     public:
-    CEntityPlayer(entityId_t id);
+    CEntityPlayer(entityId_t id, CWorld *pWorld);
     ~CEntityPlayer();
 
     void Update(float dt);

@@ -36,8 +36,7 @@ class CClientWorld final : public CWorld
         T *createEntity()
         {
             // TODO: better id management
-            T *e = new T( m_entities.size() );
-            e->SetWorld( this );
+            T *e = new T( m_entities.size(), this );
             m_entities.push_back( e );
             return e;
         }
