@@ -4,7 +4,8 @@
 #include "chunk.hpp"
 
 #include "physics.hpp"
-#include "entities/entitybase.hpp"
+
+#include <algorithm>
 
 CWorld::CWorld( )
 {
@@ -61,7 +62,7 @@ CChunk *CWorld::getChunkWorldPos( const Vector3i &pos )
 	return getChunk( x, y, z );
 }
 
-CEntityBase *CWorld::getEntity( int id )
+CEntity *CWorld::getEntity( int id )
 {
 	if ( id < 0 || id >= m_entities.size() )
 		return nullptr;
@@ -69,21 +70,21 @@ CEntityBase *CWorld::getEntity( int id )
 	return m_entities[id];
 }
 
-CEntityBase *CWorld::getEntity( const std::string &name )
+CEntity *CWorld::getEntity( const std::string &name )
 {
 	for ( auto &&e : m_entities )
-		if ( e->GetName() == name )
+		if ( e->getName() == name )
 			return e;
 
 	return nullptr;
 }
 
-std::vector<CEntityBase *> CWorld::getEntitiesByName( const std::string &name )
+std::vector<CEntity *> CWorld::getEntitiesByName( const std::string &name )
 {
-	std::vector<CEntityBase *> ret;
+	std::vector<CEntity *> ret;
 
 	for ( auto &&e : m_entities )
-		if ( e->GetName() == name )
+		if ( e->getName() == name )
 			ret.push_back( e );
 
 	return ret;
@@ -342,6 +343,12 @@ bool CWorld::testCollision( CBoundingBox &box )
 
 void CWorld::update( float dt )
 {
-	for (auto &e : m_entities)
-		e->Update( dt );
+	// Scan for dead entites, and remove them
+	m_entities.erase( std::remove_if( m_entities.begin(), m_entities.end(), []( CEntity *e ) { return e->isDead(); } ), m_entities.end() );
+	for (auto &e : m_entities) {
+		if (!e->isSpawned())
+			continue;
+		
+		e->update( dt );
+	}
 }

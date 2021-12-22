@@ -7,7 +7,7 @@ CBoundingBox::CBoundingBox( Vector3f vPosition, Vector3f size, Vector3f vOrigin 
 	this->m_vOrigin	  = vOrigin;
 }
 
-bool CBoundingBox::TestCollide( CBoundingBox other )
+bool CBoundingBox::TestCollide( CBoundingBox other ) const
 {
 	// origin is 0-1 in each axis
 	// if origin is 0,0,0 then m_vPosition is vMin
@@ -25,7 +25,7 @@ bool CBoundingBox::TestCollide( CBoundingBox other )
 		   (vMin.z <= otherMax.z && vMax.z >= otherMin.z);
 }
 
-bool CBoundingBox::TestPointCollide( Vector3f pos )
+bool CBoundingBox::TestPointCollide( Vector3f pos ) const
 {
 	Vector3f vMin = this->m_vPosition - this->m_vOrigin * this->m_vBounds;
 	Vector3f vMax = this->m_vPosition + (Vector3f(1,1,1) - this->m_vOrigin) * this->m_vBounds;
@@ -33,4 +33,16 @@ bool CBoundingBox::TestPointCollide( Vector3f pos )
 	return (vMin.x <= pos.x && vMax.x >= pos.x) &&
 		   (vMin.y <= pos.y && vMax.y >= pos.y) &&
 		   (vMin.z <= pos.z && vMax.z >= pos.z);
+}
+
+const CBoundingBox &CBoundingBox::operator*( const Vector3f &scale )
+{
+	this->m_vBounds *= scale;
+	return *this;
+}
+
+const CBoundingBox &CBoundingBox::operator*( float scale )
+{
+	this->m_vBounds *= scale;
+	return *this;
 }

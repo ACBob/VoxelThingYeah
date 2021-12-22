@@ -3,8 +3,6 @@
 #include "render/material.hpp"
 #include "render/model.hpp"
 
-#include "client/entities/entitybase.hpp"
-
 class CClientChunk;
 
 class CClientWorld final : public CWorld
@@ -28,20 +26,6 @@ class CClientWorld final : public CWorld
         void render();
         void update(float dt);
 
-        CClientEntityBase *getEntity( int id );
-        CClientEntityBase *getEntity( const std::string &name );
-        std::vector<CClientEntityBase *> getEntitiesByName( const std::string &name );
-
-        template <typename T>
-        T *createEntity()
-        {
-            // TODO: better id management
-            T *e = new T( m_entities.size(), this );
-            m_entities.push_back( e );
-            return e;
-        }
-
     protected:
         std::map<Vector3i, CClientChunk*> m_chunks;
-        std::vector<CClientEntityBase*> m_entities;
 };

@@ -1,71 +1,35 @@
-#include "entityphysics.hpp"
+#include "entities.hpp"
 
-#include "world/physics.hpp"
 #include "world/world.hpp"
 #include "world/raycast.hpp"
 
-CBasePhysicsEntity::CBasePhysicsEntity(entityId_t id, CWorld *pWorld) : BaseClass(id, pWorld),
-    m_boundingBox(Vector3f(0.0f, 0.0f, 0.0f), Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.5f, 0.5f, 0.5f))
-{
-    m_bFloor = false;
-    m_nFloor = 0;
-    m_bCollides = true;
-    m_bGravity = true;
-    m_gravity = Vector3f(0.0f, -9.8f, 0.0f);
-}
+#define STEP_SIZE 0.55f
 
-void CBasePhysicsEntity::SetVelocity(const Vector3f& velocity)
+void CPhysicalEntity::update(float dt)
 {
-    m_velocity = velocity;
-}
-void CBasePhysicsEntity::SetVelocity(float x, float y, float z)
-{
-    m_velocity.x = x;
-    m_velocity.y = y;
-    m_velocity.z = z;
-}
-
-Vector3f CBasePhysicsEntity::GetVelocity()
-{
-    return m_velocity;
-}
-void CBasePhysicsEntity::GetVelocity(float& x, float& y, float& z)
-{
-    x = m_velocity.x;
-    y = m_velocity.y;
-    z = m_velocity.z;
-}
-
-void CBasePhysicsEntity::Update(float dt)
-{
-    PhysicsUpdate(dt);
-    BaseClass::Update(dt);
-}
-
-void CBasePhysicsEntity::PhysicsUpdate(float dt)
-{
-    if (!m_bCollides)
+    if (!m_collision)
         m_position += m_velocity * dt;
     else
     {
         Vector3f newPosition = m_position + m_velocity * dt;
+        CBoundingBox bbox = getBoundingBox();
 
-        m_boundingBox.m_vPosition.y = newPosition.y;
-        if (m_pWorld->testCollision(m_boundingBox))
+        bbox.m_vPosition.y = newPosition.y;
+        if (m_world->testCollision(bbox))
         {
-            m_position.y = m_boundingBox.m_vPosition.y;
+            m_position.y = bbox.m_vPosition.y;
             m_velocity.y = 0.0f;
 
-            m_bFloor = true;
-            m_nFloor = m_boundingBox.m_nLastTouched;
+            m_onGround = true;
+            m_floorType = bbox.m_nLastTouched;
         }
         else
             m_position.y = newPosition.y;
 
         // TODO: handle slopes as I think the casting will be jittery and slow 
 
-        m_boundingBox.m_vPosition.x = newPosition.x;
-        if (m_pWorld->testCollision(m_boundingBox))
+        bbox.m_vPosition.x = newPosition.x;
+        if (m_world->testCollision(bbox))
         {
             // Quake seems to try casting a ray to find the step-iness of a collision
             // So create a ray from our current position + the step height facing down
@@ -77,32 +41,32 @@ void CBasePhysicsEntity::PhysicsUpdate(float dt)
 
             Vector3f rayStart = newPosition + Vector3f(0.0f, STEP_SIZE, 0.0f);
             
-            std::pair<Vector3f, Vector3f> ray = CRaycast::cast(m_pWorld, rayStart, Vector3f(0.0f, -1.0f, 0.0f), STEP_SIZE);
+            std::pair<Vector3f, Vector3f> ray = CRaycast::cast(m_world, rayStart, Vector3f(0.0f, -1.0f, 0.0f), STEP_SIZE);
 
             // move the bounding box to the new position
-            m_boundingBox.m_vPosition = ray.first;
+            bbox.m_vPosition = ray.first;
             
-            if (m_pWorld->testCollision(m_boundingBox))
+            if (m_world->testCollision(bbox))
             {
-                m_position.x = m_boundingBox.m_vPosition.x;
+                m_position.x = bbox.m_vPosition.x;
                 m_velocity.x = 0.0f;
             }
             else
             {
-                m_position.y = m_boundingBox.m_vPosition.y;
+                m_position.y = bbox.m_vPosition.y;
                 m_position.x = newPosition.x;
                 
                 m_velocity.y = 0.0f;
                 
-                m_bFloor = true;
-                m_nFloor = m_boundingBox.m_nLastTouched;
+                m_onGround = true;
+                m_floorType = bbox.m_nLastTouched;
             }
         }
         else
             m_position.x = newPosition.x;
 
-        m_boundingBox.m_vPosition.z = newPosition.z;
-        if (m_pWorld->testCollision(m_boundingBox))
+        bbox.m_vPosition.z = newPosition.z;
+        if (m_world->testCollision(bbox))
         {
             // Quake seems to try casting a ray to find the step-iness of a collision
             // So create a ray from our current position + the step height facing down
@@ -114,41 +78,73 @@ void CBasePhysicsEntity::PhysicsUpdate(float dt)
 
             Vector3f rayStart = newPosition + Vector3f(0.0f, STEP_SIZE, 0.0f);
             
-            std::pair<Vector3f, Vector3f> ray = CRaycast::cast(m_pWorld, rayStart, Vector3f(0.0f, -1.0f, 0.0f), STEP_SIZE);
+            std::pair<Vector3f, Vector3f> ray = CRaycast::cast(m_world, rayStart, Vector3f(0.0f, -1.0f, 0.0f), STEP_SIZE);
 
             // move the bounding box to the new position
-            m_boundingBox.m_vPosition = ray.first;
+            bbox.m_vPosition = ray.first;
             
-            if (m_pWorld->testCollision(m_boundingBox))
+            if (m_world->testCollision(bbox))
             {
-                m_position.z = m_boundingBox.m_vPosition.z;
+                m_position.z = bbox.m_vPosition.z;
                 m_velocity.z = 0.0f;
             }
             else
             {
-                m_position.y = m_boundingBox.m_vPosition.y;
+                m_position.y = bbox.m_vPosition.y;
                 m_position.z = newPosition.z;
                 
                 m_velocity.y = 0.0f;
                 
-                m_bFloor = true;
-                m_nFloor = m_boundingBox.m_nLastTouched;
+                m_onGround = true;
+                m_floorType = bbox.m_nLastTouched;
             }
         }
         else
             m_position.x = newPosition.x;
     }
 
-    if (m_bGravity)
+    if (m_gravity)
     {
         m_velocity += m_gravity * dt;
     }
     
     Vector3f friction;
-    if (!m_bFloor)
+    if (!m_onGround)
         friction = m_velocity * 0.7f * -1.0f;
     else
         friction = m_velocity * 0.1f * -1.0f;
     
     m_velocity += friction * dt;
+}
+
+void CActorEntity::update(float dt)
+{
+    CPhysicalEntity::update(dt);
+
+    // TODO: handle movement
+
+    // Vector3f move;
+
+    // if (m_inForward)
+    //     move += Vector3f(0.0f, 0.0f, 1.0f);
+    // if (m_inBack)
+    //     move += Vector3f(0.0f, 0.0f, -1.0f);
+    // if (m_inLeft)
+    //     move += Vector3f(-1.0f, 0.0f, 0.0f);
+    // if (m_inRight)
+    //     move += Vector3f(1.0f, 0.0f, 0.0f);
+    // if (m_inUp)
+    //     move += Vector3f(0.0f, 1.0f, 0.0f);
+    // if (m_inDown)
+    //     move += Vector3f(0.0f, -1.0f, 0.0f);
+
+    // if (move.length() > 0.0f)
+    // {
+    //     // Rotate the move vector to the actor's orientation
+    //     Vector3f forward = Vector3f(0.0f, 0.0f, 1.0f).Rotate(m_rotation);
+    //     Vector3f right = Vector3f(1.0f, 0.0f, 0.0f).Rotate(m_rotation);
+
+    //     move = move.Dot(forward) * forward + move.Dot(right) * right;
+    //     move.normalize();
+    // }
 }

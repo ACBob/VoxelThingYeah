@@ -73,7 +73,7 @@ void CClientChunk::constructModel()
 					// construct the face
 					for ( int i = 0; i < 4; i++ )
 					{
-						rendering::CModel::Vertex v;
+						rendering::models::CModel::Vertex v;
 						v.x = m_pos.x * m_size.x + x + cubeVertices[cubeTriangles[face][i]][0];
 						v.y = m_pos.y * m_size.y + y + cubeVertices[cubeTriangles[face][i]][1];
 						v.z = m_pos.z * m_size.z + z + cubeVertices[cubeTriangles[face][i]][2];
@@ -111,10 +111,10 @@ void CClientChunk::constructModel()
 						m_model.m_vertices.push_back( v );
 					}
 
-					m_model.m_faces.push_back( rendering::CModel::Face{ (vertexIndex_t)m_model.m_vertices.size() - 4,
+					m_model.m_faces.push_back( rendering::models::CModel::Face{ (vertexIndex_t)m_model.m_vertices.size() - 4,
 															 (vertexIndex_t)m_model.m_vertices.size() - 3,
 															 (vertexIndex_t)m_model.m_vertices.size() - 2 } );
-					m_model.m_faces.push_back( rendering::CModel::Face{ (vertexIndex_t)m_model.m_vertices.size() - 4,
+					m_model.m_faces.push_back( rendering::models::CModel::Face{ (vertexIndex_t)m_model.m_vertices.size() - 4,
 															 (vertexIndex_t)m_model.m_vertices.size() - 2,
 															 (vertexIndex_t)m_model.m_vertices.size() - 1 } );
 				}

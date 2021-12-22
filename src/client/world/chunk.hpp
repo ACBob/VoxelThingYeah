@@ -12,6 +12,6 @@ class CClientChunk : public CChunk
         void constructModel();
         void render();
 
-        rendering::CModel m_model;
+        rendering::models::CModel m_model;
 
 };

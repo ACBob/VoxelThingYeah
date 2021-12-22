@@ -24,7 +24,6 @@
 
 #include "world/world.hpp"
 #include "world/chunk.hpp"
-#include "entities/entityplayer.hpp"
 
 int main( int argc, char *args[] )
 {
@@ -100,7 +99,7 @@ int main( int argc, char *args[] )
 
     window.SetIcon( "logo64.png" );
 
-    rendering::CModel testModel;
+    rendering::models::CModel testModel;
     testModel.LoadOBJ( "player.obj" );
 
     glm::mat4 projection = glm::perspective( glm::radians( fov->GetFloat() ),
@@ -128,9 +127,12 @@ int main( int argc, char *args[] )
         c->set(i, rand() & 2 );
     c->constructModel();
 
-    CClientEntityPlayer *player = testingWorld.createEntity<CClientEntityPlayer>();
-    player->SetPosition(Vector3f(8.0f, 24.0f, 8.0f));
-    player->SetInputManager( &inputManager );
+    CPlayerEntity *player = testingWorld.createEntity<CPlayerEntity>();
+    player->setposition(Vector3f(0.0f, 0.0f, 0.0f));
+
+    CCameraEntity *playerCam = testingWorld.createEntity<CCameraEntity>();
+    playerCam->setposition(Vector3f(0.0f, 0.0f, 0.0f));
+    playerCam->setparent(player);
 
     // inputManager.m_bInGui = true;
 
@@ -155,6 +157,7 @@ int main( int argc, char *args[] )
 
         testingWorld.update(deltaTime);
 
+        camPos = playerCam->getposition();
         camPitch = fminf( fmaxf( camPitch, -89.9f ), 89.9f );
 
         camLook = Vector3f(0, 0, -1.0f).RotateAxis( 0, -camPitch * DEG2RAD ).RotateAxis( 1, -camYaw * DEG2RAD );
@@ -175,10 +178,10 @@ int main( int argc, char *args[] )
         snprintf(guiBuf, 256, "<%.3f, %.3f, %.3f>", camPos.x, camPos.y, camPos.z);
         gui.Label(guiBuf, 0, 0, 0, 16);
 
-        snprintf(guiBuf, 256, "<%.3f, %.3f, %.3f>", player->GetPosition().x, player->GetPosition().y, player->GetPosition().z);
+        snprintf(guiBuf, 256, "<%.3f, %.3f, %.3f>", player->getposition().x, player->getposition().y, player->getposition().z);
         gui.Label(guiBuf, 0, 16, 0, 16);
 
-        snprintf(guiBuf, 256, "<%.3f, %.3f, %.3f>", player->GetVelocity().x, player->GetVelocity().y, player->GetVelocity().z);
+        snprintf(guiBuf, 256, "<%.3f, %.3f, %.3f>", player->getvelocity().x, player->getvelocity().y, player->getvelocity().z);
         gui.Label(guiBuf, 0, 32, 0, 16);
 
         snprintf(guiBuf, 256, "%f (%f)", deltaTime, 1.0f / deltaTime);
