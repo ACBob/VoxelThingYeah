@@ -1,0 +1,6 @@
+[models]
+# Mobs
+Mobs_Player = "player.obj"
+
+# Stellar
+Sky_Sun = "sun.obj"

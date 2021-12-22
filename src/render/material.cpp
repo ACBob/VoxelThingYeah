@@ -15,6 +15,7 @@
 namespace rendering::materials {
 
     std::map<std::string, CTexture*> vTextures;
+    
     std::vector<CShader*> vShaders;
     std::map<std::string, CShader*> vShaderMap;
 

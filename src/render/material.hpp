@@ -58,10 +58,6 @@ namespace rendering {
                 std::string m_sFragmentShaderFilepath;
         };
 
-
-        extern std::map<std::string, CTexture*> vTextures;
-        extern std::vector<CShader*> vShaders;
-
         bool Init();
         void Uninit();
 

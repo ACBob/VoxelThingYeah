@@ -45,10 +45,13 @@ bool rendering::Init() {
 
     if (!materials::Init())
         return false;
+    if (!models::Init())
+        return false;
 
     return true;
 }
 
 void rendering::Uninit() {
     materials::Uninit();
+    models::Uninit();
 }
