@@ -23,6 +23,17 @@ class CClientWorld final : public CWorld
         CClientChunk *getChunkWorldPos( int x, int y, int z );
         CClientChunk *getChunkWorldPos( const Vector3i &coord );
 
+        uint16_t getID( int x, int y, int z );
+        void setID( int x, int y, int z, uint16_t id );
+
+        uint16_t getMeta( int x, int y, int z );
+        void setMeta( int x, int y, int z, uint16_t meta );
+
+        void get(int x, int y, int z, uint16_t &id, uint16_t &meta);
+        void set(int x, int y, int z, uint16_t id, uint16_t meta);
+        uint32_t get(int x, int y, int z);
+        void set(int x, int y, int z, uint32_t data);
+
         void render();
         void update(float dt);
 

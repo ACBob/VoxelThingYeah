@@ -160,12 +160,16 @@ public:
     virtual const CBoundingBox getBoundingBox() {
         return CBoundingBox(Vector3f(0, 0, 0), Vector3f(0, 0, 0)) * m_scale;
     }
+
+    Vector3f getForward() {
+        return Vector3f( 0, 0, -1 ).Rotate( m_rotation ).Normal();
+    }
 };
 
 class CActorEntity : public CPhysicalEntity // An entity that can recieve input
 {
 protected:
-    ENTITY_ATTRIBUTE(Vector3f, lookDirection); // Direction the entity is looking
+    ENTITY_ATTRIBUTE(Vector3f, lookRotation); // Direction the entity is looking
 
     ENTITY_ATTRIBUTE(int, hearts); // Health, measured in half-hearts
     ENTITY_ATTRIBUTE(int, maxHearts); // Maximum health, measured in half-hearts
@@ -178,7 +182,7 @@ public:
     bool m_inAttack, m_inJump, m_inCrouch; // Inputs
 
     CActorEntity() : CPhysicalEntity() {
-        m_lookDirection = Vector3f(0, 0, 0);
+        m_lookRotation = Vector3f(0, 0, 0);
         m_inForward = m_inBackward = m_inLeft = m_inRight = m_inUp = m_inDown = false;
         m_inAttack = m_inJump = m_inCrouch = false;
         m_hearts = m_maxHearts = 0;
@@ -188,7 +192,7 @@ public:
 
     void reset() {
         CPhysicalEntity::reset();
-        m_lookDirection = Vector3f(0, 0, 0);
+        m_lookRotation = Vector3f(0, 0, 0);
         m_inForward = m_inBackward = m_inLeft = m_inRight = m_inUp = m_inDown = false;
         m_inAttack = m_inJump = m_inCrouch = false;
         m_hearts = m_maxHearts = 0;
@@ -245,7 +249,7 @@ public:
     }
 
     virtual const CBoundingBox getBoundingBox() {
-        return CBoundingBox(Vector3f(-0.5, -0.5, -0.5), Vector3f(0.5, 0.5, 0.5)) * m_scale;
+        return CBoundingBox(m_position, Vector3f(1, 1, 1)) * m_scale;
     }
 };
 

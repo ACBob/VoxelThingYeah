@@ -78,3 +78,155 @@ CClientChunk *CClientWorld::getChunkWorldPos( const Vector3i &pos )
 
 	return getChunk( x, y, z );
 }
+
+uint16_t CClientWorld::getID( int x, int y, int z )
+{
+	// get in chunk coordinates
+	int cx = x;
+	int cy = y;
+	int cz = z;
+	worldPosToChunkPos( cx, cy, cz );
+
+	x -= cx * m_chunkSize.x;
+	y -= cy * m_chunkSize.y;
+	z -= cz * m_chunkSize.z;
+
+	CClientChunk *c = getChunk( cx, cy, cz );
+	if ( c == nullptr )
+		return 0;
+
+	return c->getID( x, y, z );
+}
+
+void CClientWorld::setID( int x, int y, int z, uint16_t id )
+{
+	// get in chunk coordinates
+	int cx = x;
+	int cy = y;
+	int cz = z;
+	worldPosToChunkPos( cx, cy, cz );
+
+	x -= cx * m_chunkSize.x;
+	y -= cy * m_chunkSize.y;
+	z -= cz * m_chunkSize.z;
+
+	CClientChunk *c = getChunk( cx, cy, cz );
+	if ( c == nullptr )
+		return;
+
+	c->setID( x, y, z, id );
+}
+
+uint16_t CClientWorld::getMeta( int x, int y, int z )
+{
+	// get in chunk coordinates
+	int cx = x;
+	int cy = y;
+	int cz = z;
+	worldPosToChunkPos( cx, cy, cz );
+
+	x -= cx * m_chunkSize.x;
+	y -= cy * m_chunkSize.y;
+	z -= cz * m_chunkSize.z;
+
+	CClientChunk *c = getChunk( cx, cy, cz );
+	if ( c == nullptr )
+		return 0;
+
+	return c->getMeta( x, y, z );
+}
+
+void CClientWorld::setMeta( int x, int y, int z, uint16_t meta )
+{
+	// get in chunk coordinates
+	int cx = x;
+	int cy = y;
+	int cz = z;
+	worldPosToChunkPos( cx, cy, cz );
+
+	x -= cx * m_chunkSize.x;
+	y -= cy * m_chunkSize.y;
+	z -= cz * m_chunkSize.z;
+
+	CClientChunk *c = getChunk( cx, cy, cz );
+	if ( c == nullptr )
+		return;
+
+	c->setMeta( x, y, z, meta );
+}
+
+void CClientWorld::get( int x, int y, int z, uint16_t &id, uint16_t &meta )
+{
+	// get in chunk coordinates
+	int cx = x;
+	int cy = y;
+	int cz = z;
+	worldPosToChunkPos( cx, cy, cz );
+
+	x -= cx * m_chunkSize.x;
+	y -= cy * m_chunkSize.y;
+	z -= cz * m_chunkSize.z;
+
+	CClientChunk *c = getChunk( cx, cy, cz );
+	if ( c == nullptr )
+		return;
+
+	c->get( x, y, z, id, meta );
+}
+
+void CClientWorld::set( int x, int y, int z, uint16_t id, uint16_t meta )
+{
+	// get in chunk coordinates
+	int cx = x;
+	int cy = y;
+	int cz = z;
+	worldPosToChunkPos( cx, cy, cz );
+
+	x -= cx * m_chunkSize.x;
+	y -= cy * m_chunkSize.y;
+	z -= cz * m_chunkSize.z;
+
+	CClientChunk *c = getChunk( cx, cy, cz );
+	if ( c == nullptr )
+		return;
+
+	c->set( x, y, z, id, meta );
+}
+
+uint32_t CClientWorld::get( int x, int y, int z )
+{
+	// get in chunk coordinates
+	int cx = x;
+	int cy = y;
+	int cz = z;
+	worldPosToChunkPos( cx, cy, cz );
+
+	x -= cx * m_chunkSize.x;
+	y -= cy * m_chunkSize.y;
+	z -= cz * m_chunkSize.z;
+
+	CClientChunk *c = getChunk( cx, cy, cz );
+	if ( c == nullptr )
+		return 0;
+
+	return c->get( x, y, z );
+}
+
+void CClientWorld::set( int x, int y, int z, uint32_t data )
+{
+	// get in chunk coordinates
+	int cx = x;
+	int cy = y;
+	int cz = z;
+	worldPosToChunkPos( cx, cy, cz );
+
+	x -= cx * m_chunkSize.x;
+	y -= cy * m_chunkSize.y;
+	z -= cz * m_chunkSize.z;
+
+	CClientChunk *c = getChunk( cx, cy, cz );
+	if ( c == nullptr )
+		return;
+
+	c->set( x, y, z, data );
+}

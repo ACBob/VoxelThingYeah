@@ -99,9 +99,6 @@ int main( int argc, char *args[] )
 
     window.SetIcon( "logo64.png" );
 
-    rendering::models::CModel testModel;
-    testModel.LoadOBJ( "player.obj" );
-
     glm::mat4 projection = glm::perspective( glm::radians( fov->GetFloat() ),
         scr_width->GetFloat() / scr_height->GetFloat(), 0.1f, 10000.0f );
     glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -155,13 +152,18 @@ int main( int argc, char *args[] )
         glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT );
 
         // camera rotation
-        camPitch += inputManager.m_vMouseMovement.y * 0.1f;
-        camYaw += inputManager.m_vMouseMovement.x * 0.1f;
+        camPitch -= inputManager.m_vMouseMovement.y * 0.1f;
+        camYaw -= inputManager.m_vMouseMovement.x * 0.1f;
 
         testingWorld.update(deltaTime);
 
         camPos = playerCam->getposition();
         camPitch = fminf( fmaxf( camPitch, -89.9f ), 89.9f );
+
+        while (camYaw > 360.0f)
+            camYaw -= 360.0f;
+        while (camYaw < 0.0f)
+            camYaw += 360.0f;
 
         player->m_inForward = inputManager.m_bInputState[CONTROLS_FRONT];
         player->m_inBackward = inputManager.m_bInputState[CONTROLS_BACK];
@@ -170,27 +172,18 @@ int main( int argc, char *args[] )
         player->m_inUp = inputManager.m_bInputState[CONTROLS_UP];
         player->m_inDown = inputManager.m_bInputState[CONTROLS_DOWN];
 
-        camLook = Vector3f(0, 0, -1.0f).RotateAxis( 0, -camPitch * DEG2RAD ).RotateAxis( 1, -camYaw * DEG2RAD );
+        camLook = Vector3f(0, 0, -1.0f).RotateAxis( 0, camPitch * DEG2RAD ).RotateAxis( 1, camYaw * DEG2RAD );
 
         playerCam->setrotation(camLook);
-        player->setlookDirection(camLook);
+        player->setlookRotation( Vector3f( camPitch, camYaw ) );
 
         view = glm::lookAt(glm::vec3(camPos.x, camPos.y, camPos.z), glm::vec3(camPos.x + camLook.x, camPos.y + camLook.y, camPos.z + camLook.z), glm::vec3(camUp.x, camUp.y, camUp.z));
 
         rendering::materials::UpdateUniforms( projection, view, screen );
 
-        testModel.Render(
-            Vector3f( 0.0f, 0.0f, 1.0f ),
-            Vector3f( 0.0f, 0.0f, 0.0f ),
-            Vector3f( 1.0f, 1.0f, 1.0f )
-        );
-
         testingWorld.render();
         
         // gui
-        snprintf(guiBuf, 256, "<%.3f, %.3f, %.3f>", camPos.x, camPos.y, camPos.z);
-        gui.Label(guiBuf, 0, 0, 0, 16);
-
         snprintf(guiBuf, 256, "<%.3f, %.3f, %.3f>", player->getposition().x, player->getposition().y, player->getposition().z);
         gui.Label(guiBuf, 0, 16, 0, 16);
 
@@ -199,6 +192,9 @@ int main( int argc, char *args[] )
 
         snprintf(guiBuf, 256, "%f (%f)", deltaTime, 1.0f / deltaTime);
         gui.Label(guiBuf, 0, 48, 0, 16);
+
+        snprintf(guiBuf, 256, "<%.3f, %.3f, %.3f>", player->getForward().x, player->getForward().y, player->getForward().z);
+        gui.Label(guiBuf, 0, 64, 0, 16);
 
         guiShader->Bind();
         testTexture->Bind();

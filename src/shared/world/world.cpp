@@ -4,6 +4,7 @@
 #include "chunk.hpp"
 
 #include "physics.hpp"
+#include "entities/entities.hpp"
 
 #include <algorithm>
 
