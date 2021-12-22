@@ -1,6 +1,6 @@
 #include "entitybase.hpp"
 
-CClientEntityBase::CClientEntityBase(entityId_t id) : CEntityBase(id)
+CClientEntityBase::CClientEntityBase(entityId_t id, CWorld *pWorld) : BaseClass(id, pWorld)
 {
 }
 

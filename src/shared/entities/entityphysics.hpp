@@ -14,7 +14,7 @@ class CBasePhysicsEntity : virtual public CEntityBase
     DeclBaseClass(CBasePhysicsEntity, CEntityBase);
 
     public:
-    CBasePhysicsEntity(entityId_t id);
+    CBasePhysicsEntity(entityId_t id, CWorld *pWorld);
     virtual ~CBasePhysicsEntity() {};
 
     void SetVelocity(const Vector3f& velocity);
