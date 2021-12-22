@@ -1,6 +1,6 @@
 #include "entityplayer.hpp"
 
-CEntityPlayer::CEntityPlayer(entityId_t id, CWorld *pWorld) : BaseClass(id, pWorld)
+CEntityPlayer::CEntityPlayer(entityId_t id) : BaseClass(id)
 {
 }
 

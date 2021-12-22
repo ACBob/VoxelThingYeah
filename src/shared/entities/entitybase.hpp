@@ -5,7 +5,6 @@
 
 #include <string>
 #include <map>
-#include <vector>
 
 #pragma once
 
@@ -27,10 +26,10 @@ class CEntityBase
     protected:
     CEntityBase() {};
 public:
-    CEntityBase(entityId_t id, CWorld *pWorld);
+    CEntityBase(entityId_t id);
     virtual ~CEntityBase() {};
 
-    virtual void Update(float dt);
+    virtual void Update(float dt) {};
 
     void SetPosition(const Vector3f& position);
     void SetPosition(float x, float y, float z);
@@ -46,20 +45,6 @@ public:
     Vector3f GetScale();
     void GetScale(float& x, float& y, float& z);
 
-    void SetLocalPosition(const Vector3f& position);
-    void SetLocalPosition(float x, float y, float z);
-    void SetLocalRotation(const Vector3f& rotation);
-    void SetLocalRotation(float x, float y, float z);
-    void SetLocalScale(const Vector3f& scale);
-    void SetLocalScale(float x, float y, float z);
-
-    Vector3f GetLocalPosition();
-    void GetLocalPosition(float& x, float& y, float& z);
-    Vector3f GetLocalRotation();
-    void GetLocalRotation(float& x, float& y, float& z);
-    Vector3f GetLocalScale();
-    void GetLocalScale(float& x, float& y, float& z);
-
     void SetName(const std::string& name);
     std::string GetName();
 
@@ -67,15 +52,6 @@ public:
 
     void SetWorld(CWorld* world);
     CWorld* GetWorld();
-
-    void AddChild(CEntityBase* child);
-    void RemoveChild(CEntityBase* child);
-    void DestroyChild(CEntityBase* child);
-    void RemoveAllChildren();
-    std::vector<CEntityBase*> GetChildren();
-
-    CEntityBase* GetParent();
-    void SetParent(CEntityBase* parent);
 
     // key/value runtime data
     void SetData(const std::string& key, const std::string& value);
@@ -97,12 +73,6 @@ public:
 
     // key/value runtime data
     std::map<std::string, std::string> m_data;
-    std::vector<CEntityBase*> m_children;
-    CEntityBase* m_parent;
-
-    Vector3f m_relativePosition;
-    Vector3f m_relativeRotation;
-    Vector3f m_relativeScale;
 
     CWorld *m_pWorld;
 };

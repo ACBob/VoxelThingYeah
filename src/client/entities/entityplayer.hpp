@@ -6,14 +6,12 @@
 
 class CInputManager;
 
-class CEntityCamera;
-
 class CClientEntityPlayer : public CClientEntityBase, public CEntityPlayer
 {
     DeclBaseClass(CClientEntityPlayer, CEntityPlayer);
 
     public:
-    CClientEntityPlayer(entityId_t id, CWorld *pWorld);
+    CClientEntityPlayer(entityId_t id);
     ~CClientEntityPlayer();
 
     void Update(float dt);
@@ -23,6 +21,4 @@ class CClientEntityPlayer : public CClientEntityBase, public CEntityPlayer
     private:
     CInputManager* m_pInputManager;
     bool m_bFly;
-
-    CEntityCamera* m_pCamera;
 };

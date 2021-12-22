@@ -4,7 +4,7 @@
 #include "world/world.hpp"
 #include "world/raycast.hpp"
 
-CBasePhysicsEntity::CBasePhysicsEntity(entityId_t id, CWorld *pWorld) : BaseClass(id, pWorld),
+CBasePhysicsEntity::CBasePhysicsEntity(entityId_t id) : BaseClass(id),
     m_boundingBox(Vector3f(0.0f, 0.0f, 0.0f), Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.5f, 0.5f, 0.5f))
 {
     m_bFloor = false;

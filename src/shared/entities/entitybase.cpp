@@ -1,22 +1,8 @@
 #include "entitybase.hpp"
 
-CEntityBase::CEntityBase(entityId_t id, CWorld *pWorld)
+CEntityBase::CEntityBase(entityId_t id)
 {
     m_id = id;
-    m_parent = nullptr;
-    m_pWorld = pWorld;
-
-    m_scale = Vector3f(1.0f, 1.0f, 1.0f);
-}
-
-void CEntityBase::Update(float dt)
-{
-    if (m_parent != nullptr)
-    {
-        m_position = m_parent->GetPosition() + m_relativePosition;
-        m_rotation = m_parent->GetRotation() + m_relativeRotation;
-        m_scale = m_parent->GetScale() * m_relativeScale;
-    }
 }
 
 void CEntityBase::SetPosition(const Vector3f& position)
@@ -81,37 +67,6 @@ void CEntityBase::GetScale(float& x, float& y, float& z)
     z = m_scale.z;
 }
 
-void CEntityBase::SetLocalPosition(const Vector3f& position)
-{
-    m_relativePosition = position;
-}
-void CEntityBase::SetLocalPosition(float x, float y, float z)
-{
-    m_relativePosition.x = x;
-    m_relativePosition.y = y;
-    m_relativePosition.z = z;
-}
-void CEntityBase::SetLocalRotation(const Vector3f& rotation)
-{
-    m_relativeRotation = rotation;
-}
-void CEntityBase::SetLocalRotation(float x, float y, float z)
-{
-    m_relativeRotation.x = x;
-    m_relativeRotation.y = y;
-    m_relativeRotation.z = z;
-}
-void CEntityBase::SetLocalScale(const Vector3f& scale)
-{
-    m_relativeScale = scale;
-}
-void CEntityBase::SetLocalScale(float x, float y, float z)
-{
-    m_relativeScale.x = x;
-    m_relativeScale.y = y;
-    m_relativeScale.z = z;
-}
-
 void CEntityBase::SetWorld(CWorld* world)
 {
     m_pWorld = world;
@@ -128,59 +83,6 @@ void CEntityBase::SetName(const std::string& name)
 std::string CEntityBase::GetName()
 {
     return m_name;
-}
-
-entityId_t CEntityBase::GetId()
-{
-    return m_id;
-}
-
-void CEntityBase::AddChild(CEntityBase* child)
-{
-    if (m_children.size() > 0)
-    {
-        for (auto it = m_children.begin(); it != m_children.end(); ++it)
-        {
-            if ((*it)->GetId() == child->GetId())
-            {
-                return;
-            }
-        }
-    }
-
-    m_children.push_back(child);
-    child->SetParent(this);
-}
-void CEntityBase::RemoveChild(CEntityBase* child)
-{
-    for (auto it = m_children.begin(); it != m_children.end(); ++it)
-    {
-        if (*it == child)
-        {
-            m_children.erase(it);
-            child->SetParent(nullptr);
-            break;
-        }
-    }
-}
-void CEntityBase::DestroyChild(CEntityBase* child)
-{
-    RemoveChild(child);
-    delete child;
-}
-std::vector<CEntityBase*> CEntityBase::GetChildren()
-{
-    return m_children;
-}
-
-CEntityBase* CEntityBase::GetParent()
-{
-    return m_parent;
-}
-
-void CEntityBase::SetParent(CEntityBase* parent)
-{
-    m_parent = parent;
 }
 
 void CEntityBase::SetData(const std::string& key, const std::string& value)

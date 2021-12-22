@@ -2,20 +2,12 @@
 
 #include "inputmanager.hpp"
 
-#include "shared/world/world.hpp"
-#include "entitycamera.hpp"
-
-#include "client/world/world.hpp"
-
-CClientEntityPlayer::CClientEntityPlayer(entityId_t id, CWorld *pWorld) : BaseClass(id, pWorld)
+CClientEntityPlayer::CClientEntityPlayer(entityId_t id) : BaseClass(id)
 {
     m_pInputManager = nullptr;
     m_bFly = true;
 
     SetModel("player.obj");
-
-    m_pCamera = ((CClientWorld*)m_pWorld)->createEntity<CEntityCamera>();
-    AddChild(m_pCamera);
 }
 
 CClientEntityPlayer::~CClientEntityPlayer()

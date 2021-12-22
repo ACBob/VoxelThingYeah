@@ -12,7 +12,7 @@ class CClientEntityBase : virtual public CEntityBase
     DeclBaseClass(CClientEntityBase, CEntityBase);
 
     public:
-    CClientEntityBase(entityId_t id, CWorld *pWorld);
+    CClientEntityBase(entityId_t id);
     virtual ~CClientEntityBase() {};
 
     void SetModel(const std::string& model);
