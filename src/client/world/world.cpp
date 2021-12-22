@@ -12,9 +12,8 @@ void CClientWorld::render() {
         c.second->render();
 	}
 	// now entities
-	for (auto e : m_entities) {
-		if (!e->hasModel())
-			continue;
+	for (CEntity *e : m_entities) {
+		if (!e->hasModel() || !e->getvisible()) continue;
 
 		rendering::models::CModel *mdl = rendering::models::GetModel(e->getModelName());
 		if (!mdl)
@@ -29,6 +28,9 @@ void CClientWorld::render() {
 }
 
 void CClientWorld::update(float dt) {
+	for (CEntity *e : m_entities) {
+		e->update(dt);
+	}
 }
 
 

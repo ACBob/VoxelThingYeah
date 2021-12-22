@@ -45,6 +45,7 @@ class CWorld
 	{
 		// TODO: better id management
 		T *e = new T();
+		e->setworld(this);
 		m_entities.push_back( e );
 		return e;
 	}

@@ -128,11 +128,14 @@ int main( int argc, char *args[] )
     c->constructModel();
 
     CPlayerEntity *player = testingWorld.createEntity<CPlayerEntity>();
-    player->setposition(Vector3f(0.0f, 0.0f, 0.0f));
+    player->setposition(Vector3f(8.0f, 24.0f, 8.0f));
+    player->setvisible(false);
+    player->setgravity(false);
+    player->setmaxSpeed(4.3f);
 
     CCameraEntity *playerCam = testingWorld.createEntity<CCameraEntity>();
-    playerCam->setposition(Vector3f(0.0f, 0.0f, 0.0f));
     playerCam->setparent(player);
+    playerCam->setparentPositionOffset(Vector3f(0.0f, 1.0f, 0.0f));
 
     // inputManager.m_bInGui = true;
 
@@ -160,7 +163,17 @@ int main( int argc, char *args[] )
         camPos = playerCam->getposition();
         camPitch = fminf( fmaxf( camPitch, -89.9f ), 89.9f );
 
+        player->m_inForward = inputManager.m_bInputState[CONTROLS_FRONT];
+        player->m_inBackward = inputManager.m_bInputState[CONTROLS_BACK];
+        player->m_inLeft = inputManager.m_bInputState[CONTROLS_LEFT];
+        player->m_inRight = inputManager.m_bInputState[CONTROLS_RIGHT];
+        player->m_inUp = inputManager.m_bInputState[CONTROLS_UP];
+        player->m_inDown = inputManager.m_bInputState[CONTROLS_DOWN];
+
         camLook = Vector3f(0, 0, -1.0f).RotateAxis( 0, -camPitch * DEG2RAD ).RotateAxis( 1, -camYaw * DEG2RAD );
+
+        playerCam->setrotation(camLook);
+        player->setlookDirection(camLook);
 
         view = glm::lookAt(glm::vec3(camPos.x, camPos.y, camPos.z), glm::vec3(camPos.x + camLook.x, camPos.y + camLook.y, camPos.z + camLook.z), glm::vec3(camUp.x, camUp.y, camUp.z));
 

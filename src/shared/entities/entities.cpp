@@ -7,6 +7,11 @@
 
 void CPhysicalEntity::update(float dt)
 {
+    CEntity::update(dt);
+
+    if (m_parent != nullptr)
+        return;
+
     if (!m_collision)
         m_position += m_velocity * dt;
     else
@@ -100,12 +105,13 @@ void CPhysicalEntity::update(float dt)
             }
         }
         else
-            m_position.x = newPosition.x;
+            m_position.z = newPosition.z;
     }
 
     if (m_gravity)
     {
-        m_velocity += m_gravity * dt;
+        // TODO: gravity on world
+        m_velocity.y += -9.8f * dt;
     }
     
     Vector3f friction;
@@ -115,6 +121,22 @@ void CPhysicalEntity::update(float dt)
         friction = m_velocity * 0.1f * -1.0f;
     
     m_velocity += friction * dt;
+
+    // Make sure the velocity never reaches more than m_maxSpeed in any direction
+    if (m_velocity.x > m_maxSpeed)
+        m_velocity.x = m_maxSpeed;
+    else if (m_velocity.x < -m_maxSpeed)
+        m_velocity.x = -m_maxSpeed;
+    
+    if (m_velocity.y > m_maxSpeed)
+        m_velocity.y = m_maxSpeed;
+    else if (m_velocity.y < -m_maxSpeed)
+        m_velocity.y = -m_maxSpeed;
+    
+    if (m_velocity.z > m_maxSpeed)
+        m_velocity.z = m_maxSpeed;
+    else if (m_velocity.z < -m_maxSpeed)
+        m_velocity.z = -m_maxSpeed;
 }
 
 void CActorEntity::update(float dt)
@@ -123,28 +145,32 @@ void CActorEntity::update(float dt)
 
     // TODO: handle movement
 
-    // Vector3f move;
+    Vector3f forward = m_lookDirection;
+    Vector3f right = forward.Cross(Vector3f(0.0f, 1.0f, 0.0f));
+    right.y = 0.0f;
+    right = right.Normal();
+    Vector3f up = Vector3f(0.0f, 1.0f, 0.0f);
 
-    // if (m_inForward)
-    //     move += Vector3f(0.0f, 0.0f, 1.0f);
-    // if (m_inBack)
-    //     move += Vector3f(0.0f, 0.0f, -1.0f);
-    // if (m_inLeft)
-    //     move += Vector3f(-1.0f, 0.0f, 0.0f);
-    // if (m_inRight)
-    //     move += Vector3f(1.0f, 0.0f, 0.0f);
-    // if (m_inUp)
-    //     move += Vector3f(0.0f, 1.0f, 0.0f);
-    // if (m_inDown)
-    //     move += Vector3f(0.0f, -1.0f, 0.0f);
+    Vector3f move;
 
-    // if (move.length() > 0.0f)
-    // {
-    //     // Rotate the move vector to the actor's orientation
-    //     Vector3f forward = Vector3f(0.0f, 0.0f, 1.0f).Rotate(m_rotation);
-    //     Vector3f right = Vector3f(1.0f, 0.0f, 0.0f).Rotate(m_rotation);
+    if (m_inForward)
+        move += forward;
+    if (m_inBackward)
+        move -= forward;
+    if (m_inLeft)
+        move -= right;
+    if (m_inRight)
+        move += right;
+    if (m_inUp)
+        move += up;
+    if (m_inDown)
+        move -= up;
 
-    //     move = move.Dot(forward) * forward + move.Dot(right) * right;
-    //     move.normalize();
-    // }
+
+    if (move.Magnitude() > 0.0f)
+    {
+        move = move.Normal();
+        move *= m_maxSpeed;
+        m_velocity += move;
+    }
 }

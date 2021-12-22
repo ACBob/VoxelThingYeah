@@ -37,10 +37,10 @@
 // RAW data needed to reconstruct entities
 // Stored when saving the map
 struct SRawEntity {
-    Vector3f position; // Position in-world
-    char name[MAX_ENTITY_NAME_LENGTH]; // Name of the entity
-    char *properties; // A series of bytes that represent properties, parsed by individual entities
-    unsigned char type; // Type of the entity
+    Vector3f m_position; // Position in-world
+    char m_name[MAX_ENTITY_NAME_LENGTH]; // Name of the entity
+    char *m_properties; // A series of bytes that represent properties, parsed by individual entities
+    unsigned char m_type; // Type of the entity
 };
 
 enum EEntityFlags : unsigned char {
@@ -59,17 +59,21 @@ protected:
     ENTITY_ATTRIBUTE(Vector3f, position); // Position in-world
     ENTITY_ATTRIBUTE(unsigned char, flags); // Flags
 
+    ENTITY_ATTRIBUTE(Vector3f, parentPositionOffset); // Offset from parent position
+
     ENTITY_ATTRIBUTE(CWorld*, world); // World this entity is in
 
     STUB_ATTRIBUTE(Vector3f, velocity); // Velocity in-world
     STUB_ATTRIBUTE(Vector3f, rotation); // Rotation in-world
     STUB_ATTRIBUTE(Vector3f, scale); // Scale in-world
+    STUB_ATTRIBUTE(bool, visible); // Is the entity visible?
 
 public:
     CEntity() : m_parent(NULL) {
-        position = Vector3f(0, 0, 0);
-        properties = NULL;
-        type = 0;
+        m_parent = nullptr;
+        m_position = Vector3f(0, 0, 0);
+        m_parentPositionOffset = Vector3f(0, 0, 0);
+        m_world = nullptr;
     }
 
     bool isSpawned() {
@@ -90,7 +94,7 @@ public:
     }
 
     const char* getName() {
-        return name;
+        return m_name;
     }
 
     const char* className() {
@@ -98,6 +102,9 @@ public:
     }
 
     virtual void update(float dt) {
+        if (m_parent != nullptr) {
+            m_position = m_parent->getposition() + m_parentPositionOffset;
+        }
     }
 
     virtual bool hasModel() {
@@ -115,7 +122,6 @@ protected:
     ENTITY_ATTRIBUTE(Vector3f, rotation); // Rotation in-world
     ENTITY_ATTRIBUTE(Vector3f, scale); // Scale in-world
 
-    ENTITY_ATTRIBUTE(float, mass); // Mass of the entity
     ENTITY_ATTRIBUTE(float, maxSpeed); // Maximum speed of the entity, in m/s
 
     ENTITY_ATTRIBUTE(bool, gravity); // Gravity enabled
@@ -127,15 +133,22 @@ public:
     CPhysicalEntity() : CEntity() {
         m_velocity = Vector3f(0, 0, 0);
         m_rotation = Vector3f(0, 0, 0);
+        m_scale = Vector3f(1, 1, 1);
         m_maxSpeed = 0;
-        m_mass = 0;
+        m_gravity = true;
+        m_collision = true;
+        m_onGround = false;
+        m_floorType = 0;
     }
 
     void reset() {
-        m_velocity = Vector3f(0, 0, 0);
         m_rotation = Vector3f(0, 0, 0);
+        m_scale = Vector3f(1, 1, 1);
         m_maxSpeed = 0;
-        m_mass = 0;
+        m_gravity = true;
+        m_collision = true;
+        m_onGround = false;
+        m_floorType = 0;
     }
 
     virtual void update(float dt);
@@ -152,28 +165,35 @@ public:
 class CActorEntity : public CPhysicalEntity // An entity that can recieve input
 {
 protected:
+    ENTITY_ATTRIBUTE(Vector3f, lookDirection); // Direction the entity is looking
+
     ENTITY_ATTRIBUTE(int, hearts); // Health, measured in half-hearts
     ENTITY_ATTRIBUTE(int, maxHearts); // Maximum health, measured in half-hearts
 
     ENTITY_ATTRIBUTE(bool, immortal); // Whether the entity is immortal
+    ENTITY_ATTRIBUTE(bool, visible); // Is the entity visible?
 
 public:
-    bool m_inForward, m_inBackward, m_inLeft, m_inRight, m_inUp, m_inBack; // Inputs
+    bool m_inForward, m_inBackward, m_inLeft, m_inRight, m_inUp, m_inDown; // Inputs
     bool m_inAttack, m_inJump, m_inCrouch; // Inputs
 
     CActorEntity() : CPhysicalEntity() {
-        m_inForward = m_inBackward = m_inLeft = m_inRight = m_inUp = m_inBack = false;
+        m_lookDirection = Vector3f(0, 0, 0);
+        m_inForward = m_inBackward = m_inLeft = m_inRight = m_inUp = m_inDown = false;
         m_inAttack = m_inJump = m_inCrouch = false;
         m_hearts = m_maxHearts = 0;
         m_immortal = false;
+        m_visible = true;
     }
 
     void reset() {
         CPhysicalEntity::reset();
-        m_inForward = m_inBackward = m_inLeft = m_inRight = m_inUp = m_inBack = false;
+        m_lookDirection = Vector3f(0, 0, 0);
+        m_inForward = m_inBackward = m_inLeft = m_inRight = m_inUp = m_inDown = false;
         m_inAttack = m_inJump = m_inCrouch = false;
         m_hearts = m_maxHearts = 0;
         m_immortal = false;
+        m_visible = true;
     }
 
     void damage(int amount) {
@@ -216,7 +236,7 @@ public:
 
     CPlayerEntity() : CActorEntity() {
         m_hearts = m_maxHearts = 20;
-        type = ENT_PLAYER;
+        m_type = ENT_PLAYER;
     }
 
     void reset() {
@@ -240,7 +260,7 @@ public:
     CCameraEntity() : CEntity() {
         m_fov = 90;
         m_rotation = Vector3f(0, 0, 0);
-        type = ENT_CAMERA;
+        m_type = ENT_CAMERA;
     }
 
     void reset() {
