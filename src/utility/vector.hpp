@@ -98,6 +98,8 @@ template <typename T> class Vector3
 	Vector3<T> Normal() const
 	{
 		T m = Magnitude();
+		if ( m == 0 )
+			return Vector3<T>( 0, 0, 0 );
 		return Vector3<T>( x / m, y / m, z / m );
 	}
 

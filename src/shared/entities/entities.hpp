@@ -122,7 +122,8 @@ protected:
     ENTITY_ATTRIBUTE(Vector3f, rotation); // Rotation in-world
     ENTITY_ATTRIBUTE(Vector3f, scale); // Scale in-world
 
-    ENTITY_ATTRIBUTE(float, maxSpeed); // Maximum speed of the entity, in m/s
+    ENTITY_ATTRIBUTE(float, maxSpeed); // Maximum horizontal speed of the entity, in m/s (0 = no limit)
+    ENTITY_ATTRIBUTE(float, terminalVelocity); // Terminal velocity of the entity, in m/s (0 = no limit)
 
     ENTITY_ATTRIBUTE(bool, gravity); // Gravity enabled
     ENTITY_ATTRIBUTE(bool, collision); // Collision enabled
@@ -135,6 +136,7 @@ public:
         m_rotation = Vector3f(0, 0, 0);
         m_scale = Vector3f(1, 1, 1);
         m_maxSpeed = 0;
+        m_terminalVelocity = 0;
         m_gravity = true;
         m_collision = true;
         m_onGround = false;
@@ -145,6 +147,7 @@ public:
         m_rotation = Vector3f(0, 0, 0);
         m_scale = Vector3f(1, 1, 1);
         m_maxSpeed = 0;
+        m_terminalVelocity = 0;
         m_gravity = true;
         m_collision = true;
         m_onGround = false;
@@ -176,6 +179,7 @@ protected:
 
     ENTITY_ATTRIBUTE(bool, immortal); // Whether the entity is immortal
     ENTITY_ATTRIBUTE(bool, visible); // Is the entity visible?
+    ENTITY_ATTRIBUTE(bool, flying); // Is the entity flying?
 
 public:
     bool m_inForward, m_inBackward, m_inLeft, m_inRight, m_inUp, m_inDown; // Inputs
@@ -188,6 +192,7 @@ public:
         m_hearts = m_maxHearts = 0;
         m_immortal = false;
         m_visible = true;
+        m_flying = false;
     }
 
     void reset() {
@@ -198,6 +203,7 @@ public:
         m_hearts = m_maxHearts = 0;
         m_immortal = false;
         m_visible = true;
+        m_flying = false;
     }
 
     void damage(int amount) {
@@ -241,11 +247,15 @@ public:
     CPlayerEntity() : CActorEntity() {
         m_hearts = m_maxHearts = 20;
         m_type = ENT_PLAYER;
+        m_maxSpeed = 4.3f;
+        m_terminalVelocity = 10.0f;
     }
 
     void reset() {
         BaseClass::reset();
         m_hearts = m_maxHearts = 20;
+        m_maxSpeed = 4.3f;
+        m_terminalVelocity = 10.0f;
     }
 
     virtual const CBoundingBox getBoundingBox() {

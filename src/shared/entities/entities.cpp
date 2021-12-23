@@ -19,34 +19,34 @@ void CPhysicalEntity::update(float dt)
         Vector3f newPosition = m_position + m_velocity * dt;
         CBoundingBox bbox = getBoundingBox();
 
+        m_onGround = false;
+
         bbox.m_vPosition.y = newPosition.y;
-        if (m_world->testCollision(bbox))
-        {
-            m_velocity.y /= 2.0f;
+        if (!m_world->testCollision(bbox))
+            m_position.y = newPosition.y;
+        else {
+            m_velocity.y = 0;
+            bbox.m_vPosition.y = m_position.y;
 
             m_onGround = true;
             m_floorType = bbox.m_nLastTouched;
         }
-        else
-            m_position.y = newPosition.y;
-
-        // TODO: handle slopes/stairs
 
         bbox.m_vPosition.x = newPosition.x;
-        if (m_world->testCollision(bbox))
-        {
-            m_velocity.x /= 2.0f;
-        }
-        else
+        if (!m_world->testCollision(bbox))
             m_position.x = newPosition.x;
+        else {
+            m_velocity.x = 0;
+            bbox.m_vPosition.x = m_position.x;
+        }
 
         bbox.m_vPosition.z = newPosition.z;
-        if (m_world->testCollision(bbox))
-        {
-            m_velocity.z /= 2.0f;
-        }
-        else
+        if (!m_world->testCollision(bbox))
             m_position.z = newPosition.z;
+        else {
+            m_velocity.z = 0;
+            bbox.m_vPosition.z = m_position.z;
+        }
     }
 
     if (m_gravity)
@@ -57,37 +57,74 @@ void CPhysicalEntity::update(float dt)
     
     Vector3f friction;
     if (!m_onGround)
-        friction = m_velocity * 0.7f * -1.0f;
+        friction = m_velocity * 1.5f * -1.0f;
     else
-        friction = m_velocity * 0.1f * -1.0f;
+        friction = m_velocity * 2.0f * -1.0f;
     
     m_velocity += friction * dt;
+
+    // clip velocity
+    float ySpeed = m_velocity.y;
+    if (m_maxSpeed != 0) {
+        if (m_velocity.Magnitude() > m_maxSpeed)
+            m_velocity.Normal() *= m_maxSpeed;
+    }
+    if (m_terminalVelocity != 0) {
+        m_velocity.y = fmaxf(ySpeed, -m_terminalVelocity);
+    }
 }
 
 void CActorEntity::update(float dt)
 {
+    CPhysicalEntity::update(dt);
     m_rotation.y = m_lookRotation.y;
+
+    m_gravity = !m_flying;
 
     Vector3f forward = getForward();
     Vector3f right = forward.RotateAxis(1, -90 * DEG2RAD);
     right.y = 0.0f;
     right = right.Normal();
 
-    float speed = 0.40f;
+    float speed = m_maxSpeed;
 
-    if (m_inForward)
-        m_velocity += forward * speed;
-    if (m_inBackward)
-        m_velocity += forward * -speed;
-    if (m_inLeft)
-        m_velocity += right * -speed;
-    if (m_inRight)
-        m_velocity += right * speed;
-    if (m_inUp)
-        m_velocity += Vector3f(0.0f, 1.0f, 0.0f) * speed;
-    if (m_inDown)
-        m_velocity += Vector3f(0.0f, 1.0f, 0.0f) * -speed;
+    Vector3f movement;
 
+    // Flying movement
+    if (m_flying)
+    {
+        if (m_inForward)
+            movement += forward;
+        if (m_inBackward)
+            movement -= forward;
+        if (m_inLeft)
+            movement -= right;
+        if (m_inRight)
+            movement += right;
 
-    CPhysicalEntity::update(dt);
+        if (m_inUp)
+            movement += Vector3f(0, 1, 0);
+        if (m_inDown)
+            movement += Vector3f(0, 1, 0);
+    }
+    // Ground movement
+    else
+    {
+        if (m_inForward)
+            movement += forward;
+        if (m_inBackward)
+            movement -= forward;
+        if (m_inLeft)
+            movement -= right;
+        if (m_inRight)
+            movement += right;
+
+        if (m_inUp && m_onGround)
+            m_velocity.y = speed;
+    }
+
+    movement = movement.Normal();
+    movement *= speed;
+
+    m_velocity += movement * dt;
 }
