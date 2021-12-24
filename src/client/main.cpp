@@ -132,7 +132,7 @@ int main( int argc, char *args[] )
 
     CCameraEntity *playerCam = testingWorld.createEntity<CCameraEntity>();
     playerCam->setparent(player);
-    playerCam->setparentPositionOffset(Vector3f(0.0f, 1.0f, 0.0f));
+    playerCam->setparentPositionOffset(Vector3f(0.0f, 1.62f, 0.0f));
 
     // inputManager.m_bInGui = true;
 

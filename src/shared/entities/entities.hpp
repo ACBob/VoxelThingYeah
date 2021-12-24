@@ -259,7 +259,7 @@ public:
     }
 
     virtual const CBoundingBox getBoundingBox() {
-        return CBoundingBox(m_position, Vector3f(1, 1, 1)) * m_scale;
+        return CBoundingBox(m_position, Vector3f(0.5f, 2.0f, 0.5f)) * m_scale;
     }
 };
 

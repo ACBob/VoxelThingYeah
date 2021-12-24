@@ -328,7 +328,7 @@ bool CWorld::testCollision( CBoundingBox &box )
 				
 				// TODO: test block def for collision
 
-				CBoundingBox blockBounds = CBoundingBox(Vector3f(x, y, z), Vector3f(1, 1, 1));
+				CBoundingBox blockBounds = CBoundingBox(Vector3f(x, y, z), Vector3f(1, 1, 1), Vector3f(0, 0, 0));
 				blockBounds.m_vPosition	 = Vector3f( x, y, z );
 
 				if ( box.TestCollide( blockBounds ) ) {
