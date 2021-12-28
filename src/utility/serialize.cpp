@@ -54,6 +54,10 @@ void CSerializer::Write(char *value, int length) {
     m_nBufferPos += length;
 }
 
+void CSerializer::Write(std::string value) {
+    Write(value.c_str());
+}
+
 #define SERIALIZE_READ(type) \
     bool CSerializer::Read(type &value) { \
         if (m_nBufferPos + sizeof(type) > m_nBufferSize) \
@@ -89,4 +93,13 @@ bool CSerializer::Read(char *value) {
     value = new char[length + 1];
     value[length] = '\0';
     return Read(value, length);
+}
+
+bool CSerializer::Read(std::string &value) {
+    char *value_;
+    if (!Read(value_))
+        return false;
+    value = value_;
+    delete[] value_;
+    return true;
 }

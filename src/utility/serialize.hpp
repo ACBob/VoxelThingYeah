@@ -16,6 +16,8 @@
             Given as a length, followed by the string
 */
 
+#include <string>
+
 #define MAX_SERIALIZE_BUFFER_SIZE 0xFFFF
 
 class CSerializer
@@ -43,6 +45,7 @@ class CSerializer
         void Write(float value);
         void Write(char *value);
         void Write(char *value, int length);
+        void Write(std::string);
 
         bool Read(bool &value);
         bool Read(char &value);
@@ -56,6 +59,7 @@ class CSerializer
         bool Read(float &value);
         bool Read(char *value, int length);
         bool Read(char *value); // Creates a new string of read length
+        bool Read(std::string &value);
 
         CSerializer &operator <<(bool value) { Write(value); return *this; }
         CSerializer &operator <<(char value) { Write(value); return *this; }
@@ -68,6 +72,7 @@ class CSerializer
         CSerializer &operator <<(unsigned long value) { Write(value); return *this; }
         CSerializer &operator <<(float value) { Write(value); return *this; }
         CSerializer &operator <<(char *value) { Write(value); return *this; }
+        CSerializer &operator <<(std::string value) { Write(value); return *this; }
 
         CSerializer &operator >>(bool &value) { Read(value); return *this; }
         CSerializer &operator >>(char &value) { Read(value); return *this; }
@@ -80,4 +85,5 @@ class CSerializer
         CSerializer &operator >>(unsigned long &value) { Read(value); return *this; }
         CSerializer &operator >>(float &value) { Read(value); return *this; }
         CSerializer &operator >>(char *value) { Read(value); return *this; }
+        CSerializer &operator >>(std::string &value) { Read(value); return *this; }
 };

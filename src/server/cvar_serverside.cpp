@@ -9,6 +9,7 @@ ConVar::CConVar *sv_name = nullptr;
 ConVar::CConVar *sv_desc = nullptr;
 
 ConVar::CConVar *sv_port = nullptr;
+ConVar::CConVar *sv_maxclients = nullptr;
 
 ConVar::CConVar *sv_run = nullptr;
 
@@ -41,6 +42,8 @@ void SetupServerSideConvars()
 
 	// Port to open
 	sv_port = conVarHandle.DeclareConvar( "sv_port", "58008", ConVar::F::CVAR_ARCHIVE );
+	// Maximum number of clients
+	sv_maxclients = conVarHandle.DeclareConvar( "sv_maxclients", "16", ConVar::F::CVAR_ARCHIVE );
 
 	// If the server should run
 	sv_run = conVarHandle.DeclareConvar( "sv_run", "true", ConVar::F::CVAR_SESSION );

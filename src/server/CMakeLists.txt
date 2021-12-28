@@ -1,5 +1,4 @@
 add_subdirectory(network)
-add_subdirectory(sound)
 
 set(SERVER_SOURCES
 	${net_SRCS}

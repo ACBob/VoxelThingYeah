@@ -1,5 +1,9 @@
 // Meegreef protocol
 
+#include "enet/enet.h"
+
+#include "utility/vector.hpp"
+
 // Version
 #define MEEGREEF_PROTOCOL_VERSION 0x01
 
@@ -11,12 +15,12 @@ struct NetworkPacket
     unsigned char m_chVersion;
     unsigned short m_usPacketSize;
     unsigned char m_chPacketType;
-    unsigned char m_chPacketData[MEEGREEF_MAX_PACKET_SIZE];
+    char m_chPacketData[MEEGREEF_MAX_PACKET_SIZE];
 };
 
 struct ClientPacket : public NetworkPacket // Coming FROM the client TO the server
 {
-    enum class PacketType : unsigned char {
+    enum PacketType : unsigned char {
         INVALID = 0x00,
         JOIN_GAME = 0x01, // Sent by the client when it wants to join a game
         /*
@@ -65,12 +69,12 @@ struct ClientPacket : public NetworkPacket // Coming FROM the client TO the serv
                 int z;
             }
         */
-    }:
+    };
 };
 
 struct ServerPacket : public NetworkPacket // Coming FROM the client TO the server
 {
-    enum class PacketType : unsigned char {
+    enum PacketType : unsigned char {
         INVALID = 0x00,
         JOIN_GAME_RESPONSE = 0x01, // Sent as a response to a JOIN_GAME request
         /*
@@ -145,3 +149,31 @@ struct ServerPacket : public NetworkPacket // Coming FROM the client TO the serv
         */
     };
 };
+
+namespace network
+{
+    void sendPacket(const NetworkPacket& packet, ENetPeer* peer);
+
+    // These functions are called only by the side that needs them, and only defined by the side that needs them
+    // The void* side is a disgusting hack for laziness, but it points towards the CClient or CServer that needs the packet
+    void handlePacket(const ClientPacket& packet, ENetPeer* peer, void* side);
+    void handlePacket(const ServerPacket& packet, ENetPeer* peer, void* side);
+
+    // Client
+    void sendJoinGame(ENetPeer* peer, const std::string& username, const std::string& passwordHash);
+    void sendSetVoxel(ENetPeer* peer, Vector3i pos, unsigned int voxel);
+    void sendPlayerPosOrt(ENetPeer* peer, Vector3f pos, float pitch, float yaw);
+    void sendChatMessage(ENetPeer* peer, const std::string& message);
+    void sendLeaveGame(ENetPeer* peer);
+    void sendUseBlock(ENetPeer* peer, Vector3i pos);
+
+    // Server
+    void sendJoinGameResponse(ENetPeer* peer, const std::string& serverName, const std::string& serverMotd, bool isPriviledged, Vector3i chunkSize);
+    void sendChunkData(ENetPeer* peer, Vector3i pos, const unsigned int* chunkData);
+    void sendUpdateVoxel(ENetPeer* peer, Vector3i pos, unsigned int voxel);
+    void sendSpawnPlayer(ENetPeer* peer, const std::string& username, Vector3f pos, float pitch, float yaw);
+    void sendMovePlayer(ENetPeer* peer, const std::string& username, Vector3f pos, float pitch, float yaw);
+    void sendChatMessage(ENetPeer* peer, const std::string& username, const std::string& message);
+    void sendLeaveGame(ENetPeer* peer, const std::string& username);
+    void sendDisconnect(ENetPeer* peer, const std::string& reason);
+}

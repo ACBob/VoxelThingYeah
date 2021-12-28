@@ -11,6 +11,7 @@ extern ConVar::CConVar *sv_name;
 extern ConVar::CConVar *sv_desc;
 
 extern ConVar::CConVar *sv_port;
+extern ConVar::CConVar *sv_maxclients;
 
 extern ConVar::CConVar *sv_run;
 

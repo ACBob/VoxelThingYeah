@@ -3,7 +3,6 @@
 #include <cstdio>
 
 #include "network/network.hpp"
-#include "network/server.hpp"
 #include "shared/filesystem.hpp"
 
 #include <chrono>
@@ -15,9 +14,6 @@
 #include "shared/logging.hpp"
 
 #include "world/world.hpp"
-#include "world/worldsaver.hpp"
-
-#include "sound/soundmanager.hpp"
 
 #include <thread>
 
@@ -63,28 +59,27 @@ int main( int argc, char *args[] )
 	if ( succeed )
 		conVarHandle.Parse( file );
 
-	con_info( "Init Network..." );
-	if ( !network::Init() )
-	{
-		con_critical( "Couldn't initialise Network! Unrecoverable!" );
-		return EXIT_FAILURE;
-	}
-	atexit( network::Uninit );
-
-	con_info( "Init Sound System..." );
-	soundSystem::Init();
-	atexit( soundSystem::UnInit );
+	// con_info( "Init Network..." );
+	// if ( !network::Init() )
+	// {
+	// 	con_critical( "Couldn't initialise Network! Unrecoverable!" );
+	// 	return EXIT_FAILURE;
+	// }
+	// atexit( network::Uninit );
 
 	con_info( "Create Server..." );
-	CNetworkServer server( sv_port->GetInt() );
-	if ( !server.WorkingServer() )
+	CServer server( sv_port->GetInt(), sv_maxclients->GetInt() );
+	if ( !true ) // TODO: validate server
 	{
 		con_critical( "Server became invalid" );
 		return EXIT_FAILURE;
 	}
-	soundSystem::server = &server;
+
+	con_info( "Create World..." );
+	CWorld world;
 
 	// Thread for getting input from the console
+	// TODO: move to a more generic fashion so that the client can also have it, and try to achieve readline-like functionality
 	std::thread consoleThread( []() {
 		while ( sv_run->GetBool() )
 		{
@@ -100,13 +95,6 @@ int main( int argc, char *args[] )
 				std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
 		}
 	} );
-
-	// Test if world exists
-	if ( fileSystem::Exists( "world.dat" ) )
-	{
-		con_info( "Loading World..." );
-		worldIO::loadWorld( &server.m_world, "world.dat" );
-	}
 
 	con_info( "Begin server main loop..." );
 	int64_t then =
@@ -127,28 +115,18 @@ int main( int argc, char *args[] )
 			i++;
 
 			// World
-			server.m_world.WorldTick( i, sv_tickms->GetFloat() / 1000.0f );
+			// world.Tick( i, delta );
 
 			// Networking
 			server.Update();
-			server.m_iCurrentTick = i;
-
-			if ( i % 40 == 0 )
-			{
-				for ( CNetworkPlayer *c : server.m_players )
-					protocol::SendServerTimeOfDay( c->m_pPeer, server.m_world.m_iTimeOfDay );
-			}
 		}
 	}
 
-	for ( CNetworkPlayer *c : server.m_players )
+	for ( CClient *c : server.m_clients )
 	{
-		server.KickPlayer( c, "kick.closing" );
+		server.KickPlayer( c, "server.shutdown" );
 		server.Update();
 	}
-
-	con_info( "Saving World..." );
-	worldIO::saveWorld( &server.m_world, "world.dat" );
 
 	consoleThread.join();
 	conVarHandle.WriteCFG( "svconfig.cfg" );
