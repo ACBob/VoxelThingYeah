@@ -1,15 +1,16 @@
 #include "protocol.hpp"
 
+#include "utility/serialize.hpp"
+
 namespace network
 {
-    void sendPacket(const NetworkPacket& packet, ENetPeer* peer)
+    ENetPacket *createClientPacket(char packetType, char* data, unsigned short dataSize)
     {
-        if (peer == nullptr)
-        {
-            return;
-        }
+        CSerializer serializer;
+        serializer << (char)MEEGREEF_PROTOCOL_VERSION << packetType << dataSize;
+        serializer.Write(data, dataSize);
 
-        ENetPacket* pPacket = enet_packet_create(packet.m_chPacketData, packet.m_usPacketSize, ENET_PACKET_FLAG_RELIABLE);
-        enet_peer_send(peer, 0, pPacket);
+        ENetPacket *packet = enet_packet_create(serializer.GetBuffer(), serializer.GetSize(), ENET_PACKET_FLAG_RELIABLE);
+        return packet;
     }
 }

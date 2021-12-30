@@ -27,11 +27,13 @@ class CSerializer
         CSerializer(char *pBuffer, int iBufferSize);
         ~CSerializer();
 
-        char m_chBuffer[MAX_SERIALIZE_BUFFER_SIZE];
+        char *m_chBuffer;
         int m_nBufferSize;
         int m_nBufferPos;
 
         char *GetBuffer();
+
+        void Resize(int iNewSize);
 
         void Write(bool value);
         void Write(char value);

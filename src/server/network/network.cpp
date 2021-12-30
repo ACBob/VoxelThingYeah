@@ -28,7 +28,7 @@ CServer::CServer(int port, int maxClients)
 
     con_info("Starting server on port %d", port);
 
-    m_pHost = enet_host_create(nullptr, 1, 2, 0, 0);
+    m_pHost = enet_host_create( &m_address, maxClients, 2, 0, 0);
     if (m_pHost == nullptr)
     {
         con_error("Failed to create ENet server");
@@ -50,7 +50,7 @@ CServer::~CServer()
 
 void CServer::Update()
 {
-    while ( enet_host_service( m_pHost, &m_event, 0 ) > 0 )
+    while ( enet_host_service( m_pHost, &m_event, 10 ) > 0 )
     {
         switch (m_event.type)
         {
@@ -75,6 +75,22 @@ void CServer::Update()
                 }
             }
             break;
+            case ENET_EVENT_TYPE_CONNECT:
+            {
+                con_info("Client connected");
+
+                // Create client
+                CClient *pClient = new CClient();
+                pClient->m_pEntity = nullptr;
+                pClient->m_pPeer = m_event.peer;
+                pClient->m_sName = "";
+
+                // Add client to list
+                m_clients.push_back(pClient);
+                m_clientMap[pClient->m_sName] = pClient;
+                m_peerMap[m_event.peer] = pClient;
+            }
+            break;
             case ENET_EVENT_TYPE_RECEIVE:
             {
                 // Get client
@@ -89,10 +105,24 @@ void CServer::Update()
             break;
         }
     }
+
+    // Send the position of all players to every other client
+    for (auto client : m_clients)
+    {
+        if (client->m_pEntity != nullptr)
+        {
+            for (auto otherClient : m_clients)
+            {
+                if (otherClient != client)
+                {
+                    // TODO: pitch and yaw
+                    network::sv_sendMovePlayer(otherClient->m_pPeer, client->m_sName, client->m_pEntity->getposition(), 0, 0);
+                }
+            }
+        }
+    }
 }
 
-// This next function is very big.
-// It decodes the packets and handles them
 void CServer::HandlePacket(CClient *pClient, std::string message)
 {
     CSerializer serializer((char*)message.c_str(), message.size());
@@ -120,6 +150,33 @@ void CServer::HandlePacket(CClient *pClient, std::string message)
     network::handlePacket(packet, pClient->m_pPeer, this);
 }
 
+void CServer::KickPlayer( std::string name, std::string reason )
+{
+    // Get client
+    CClient *pClient = m_clientMap[name];
+
+    // Kick the client
+    KickPlayer(pClient, reason);
+}
+
+void CServer::KickPlayer( CClient *pClient, std::string reason )
+{
+    // Send the kick reason
+    network::sv_sendDisconnect(pClient->m_pPeer, reason);
+
+    // Disconnect the client
+    enet_peer_disconnect_now(pClient->m_pPeer, 0);
+}
+
+void CServer::KickPlayer( ENetPeer* peer, std::string reason )
+{
+    // Get client
+    CClient *pClient = m_peerMap[peer];
+
+    // Kick the client
+    KickPlayer(pClient, reason);
+}
+
 // Protocol Implementation
 namespace network
 {
@@ -139,6 +196,8 @@ namespace network
 
                 CSerializer serializer((char*)packet.m_chPacketData, packet.m_usPacketSize);
                 serializer >> username >> passwordHash;
+
+                con_info("%s has joined the game", username.c_str());
 
                 // Check if the username is already taken
                 if (pServer->m_clientMap.find(username) != pServer->m_clientMap.end())
@@ -162,29 +221,77 @@ namespace network
                 // Set the client's name
                 pClient->m_sName = username;
 
-                // Add the client to the list
-                pServer->m_clients.push_back(pClient);
-                pServer->m_clientMap[username] = pClient;
-                pServer->m_peerMap[pClient->m_pPeer] = pClient;
-
                 // Give them an entity
                 pClient->m_pEntity = pServer->m_pWorld->createEntity<CPlayerEntity>();
                 
                 // Set the entity's position
                 pClient->m_pEntity->setposition(Vector3f(0, 0, 0));
 
-                sendJoinGameResponse(pClient->m_pPeer, sv_name->GetString(), sv_desc->GetString(), false, pServer->m_pWorld->getChunkSize());
+                sv_sendJoinGameResponse(pClient->m_pPeer, sv_name->GetString(), sv_desc->GetString(), false, pServer->m_pWorld->getChunkSize());
 
                 // Now tell everyone else about the new player
                 for (auto& client : pServer->m_clients)
                 {
                     if (client != pClient)
                     {
-                        sendSpawnPlayer(client->m_pPeer, pClient->m_sName, pClient->m_pEntity->getposition(), 0, 0);
+                        sv_sendSpawnPlayer(client->m_pPeer, pClient->m_sName, pClient->m_pEntity->getposition(), 0, 0);
+
+                        // And tell the new player about everyone else
+                        sv_sendSpawnPlayer(pClient->m_pPeer, client->m_sName, client->m_pEntity->getposition(), 0, 0);
                     }
                 }
 
             }
+            break;
+            default:
+                con_error("Unknown packet type: %d", packet.m_chPacketType);
+            break;
         }
+    }
+
+    ENetPacket *createServerPacket(char packetType, char* data, unsigned short dataSize)
+    {
+        CSerializer serializer;
+        serializer << (char)MEEGREEF_PROTOCOL_VERSION << packetType << dataSize;
+        serializer.Write(data, dataSize);
+
+        ENetPacket *packet = enet_packet_create(serializer.GetBuffer(), serializer.m_nBufferSize, ENET_PACKET_FLAG_RELIABLE);
+        return packet;
+    }
+
+    void sv_sendJoinGameResponse(ENetPeer* peer, const std::string& serverName, const std::string& serverMotd, bool isPriviledged, Vector3i chunkSize)
+    {
+        CSerializer serializer;
+        serializer << serverName << serverMotd << isPriviledged << chunkSize.x << chunkSize.y << chunkSize.z;
+
+        ENetPacket *packet = createServerPacket(ServerPacket::JOIN_GAME_RESPONSE, serializer.m_chBuffer, serializer.m_nBufferSize);
+        enet_peer_send(peer, 0, packet);
+    }
+
+    void sv_sendSpawnPlayer(ENetPeer* peer, const std::string &name, Vector3f position, float pitch, float yaw)
+    {
+        CSerializer serializer;
+        serializer << name << position.x << position.y << position.z << pitch << yaw;
+
+        ENetPacket *packet = createServerPacket(ServerPacket::SPAWN_PLAYER, serializer.m_chBuffer, serializer.m_nBufferSize);
+        enet_peer_send(peer, 0, packet);
+    }
+
+    void sv_sendMovePlayer(ENetPeer* peer, const std::string& username, Vector3f pos, float pitch, float yaw)
+    {
+        CSerializer serializer;
+        serializer << username << pos.x << pos.y << pos.z << pitch << yaw;
+
+        ENetPacket *packet = createServerPacket(ServerPacket::MOVE_PLAYER, serializer.m_chBuffer, serializer.m_nBufferSize);
+        enet_peer_send(peer, 0, packet);
+    }
+
+    void sv_sendDisconnect(ENetPeer* peer, const std::string &reason)
+    {
+        CSerializer serializer;
+        serializer << reason;
+
+        ENetPacket *packet = createServerPacket(ServerPacket::DISCONNECT, serializer.m_chBuffer, serializer.m_nBufferSize);
+        enet_peer_send(peer, 0, packet);
     }
 }

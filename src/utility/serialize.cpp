@@ -3,29 +3,53 @@
 #include <cstring>
 
 CSerializer::CSerializer() {
-    m_chBuffer[0] = '\0';
     m_nBufferSize = 0;
     m_nBufferPos = 0;
+
+    m_chBuffer = new char[m_nBufferSize];
 }
 
 CSerializer::CSerializer(char *pBuffer, int iBufferSize) {
-    m_chBuffer[0] = '\0';
     m_nBufferSize = iBufferSize;
     m_nBufferPos = 0;
-    strncpy(m_chBuffer, pBuffer, iBufferSize);
+
+    m_chBuffer = pBuffer;
 }
 
 CSerializer::~CSerializer() {
+    delete[] m_chBuffer;
 }
 
 char *CSerializer::GetBuffer() {
     return m_chBuffer;
 }
 
+void CSerializer::Resize(int iNewSize) {
+    if (iNewSize < m_nBufferSize)
+    {
+        // Shrink and eradicate any excess data
+        m_nBufferSize = iNewSize;
+        m_chBuffer[m_nBufferSize] = '\0';
+    }
+
+    if (iNewSize > m_nBufferSize) {
+        m_nBufferSize = iNewSize;
+        m_chBuffer = (char *)realloc(m_chBuffer, m_nBufferSize);
+    }
+    if (m_nBufferPos > m_nBufferSize) {
+        m_nBufferPos = m_nBufferSize;
+    }
+
+    m_chBuffer[m_nBufferPos] = '\0';
+}
+
 #define SERIALIZE_WRITE(type) \
     void CSerializer::Write(type value) { \
         if (m_nBufferPos + sizeof(type) > m_nBufferSize) \
-            return; \
+            if (m_nBufferPos + sizeof(type) > MAX_SERIALIZE_BUFFER_SIZE) \
+                return; \
+            else \
+                Resize(m_nBufferPos + sizeof(type)); \
         memcpy(m_chBuffer + m_nBufferPos, &value, sizeof(type)); \
         m_nBufferPos += sizeof(type); \
     }
@@ -49,7 +73,10 @@ void CSerializer::Write(char *value) {
 
 void CSerializer::Write(char *value, int length) {
     if (m_nBufferPos + length > m_nBufferSize)
-        return;
+        if (m_nBufferPos + length > MAX_SERIALIZE_BUFFER_SIZE)
+            return;
+        else
+            Resize(m_nBufferPos + length);
     memcpy(m_chBuffer + m_nBufferPos, value, length);
     m_nBufferPos += length;
 }

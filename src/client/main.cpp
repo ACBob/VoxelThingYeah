@@ -12,7 +12,7 @@
 #include <glad/glad.h>
 
 #include "shared/filesystem.hpp"
-// #include "shared/network/network.hpp"
+#include "network/network.hpp"
 
 #include "render/render.hpp"
 
@@ -80,10 +80,13 @@ int main( int argc, char *args[] )
     
     // TODO: parse config.cfg
 
-    // con_info("Init Network...");
-    // if (!network::Init())
-    //     window.Panic("Failed to initialize network!"); // TODO: Single-player only mode?
-    // atexit(network::Uninit);
+    con_info("Create Network Client");
+    CClient client;
+
+    // Try and connect to the server
+    if (!client.Connect("127.0.0.1", 58008))
+        window.Panic("Failed to connect to server!");
+
 
     CInputManager inputManager;
     window.m_pInputMan = &inputManager;
@@ -129,6 +132,8 @@ int main( int argc, char *args[] )
     player->setvisible(false);
     player->setgravity(false);
     player->setmaxSpeed(4.3f);
+
+    client.m_pEntity = player;
 
     CCameraEntity *playerCam = testingWorld.createEntity<CCameraEntity>();
     playerCam->setparent(player);
