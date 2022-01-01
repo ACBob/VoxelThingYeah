@@ -4,9 +4,10 @@
 #include <vector>
 #include <wchar.h>
 
-#include "render/material.hpp"
-
 using ShtoiGUI_elementID = unsigned short; // 65535 elements max
+
+#include "render/material.hpp"
+#include "render/model.hpp"
 
 /*
 Display Modes:
@@ -49,14 +50,9 @@ enum class ShtoiGUI_mouseState : int {
 
 class CShtoiGUI {
     protected:
-        struct Vertex {
-            float x, y, z;
-            float u, v;
-            float r, g, b, a;
-        };
 
         struct Quad {
-            Vertex vertices[6];
+            rendering::models::CModel::Vertex vertices[6];
             float z;
             rendering::materials::CTexture *m_pTexture;
         };
@@ -96,8 +92,7 @@ class CShtoiGUI {
         // Logic
         ShtoiGUI_buttonState _buttonLogic(int id, float x, float y, float w, float h);
 
-        unsigned int m_nVAO, m_nVBO;
-
+        rendering::models::CModel *m_pModel;
         rendering::materials::CTexture *m_pTexture;
 
         struct Character {

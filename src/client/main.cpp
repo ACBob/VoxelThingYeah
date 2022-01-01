@@ -201,13 +201,7 @@ int main( int argc, char *args[] )
         snprintf(guiBuf, 256, "<%.3f, %.3f, %.3f>", player->getForward().x, player->getForward().y, player->getForward().z);
         gui.Label(guiBuf, 0, 64, 0, 16);
 
-        guiShader->Bind();
-        testTexture->Bind();
-
         gui.Update( inputManager.m_vMousePos.x, inputManager.m_vMousePos.y, inputManager.m_iMouseState );
-
-        testTexture->Unbind();
-        guiShader->Unbind();
 
         window.SwapBuffers();
 

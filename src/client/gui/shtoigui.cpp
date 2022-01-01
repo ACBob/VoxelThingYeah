@@ -1,12 +1,12 @@
 #include "shtoigui.hpp"
 
-#include <glad/glad.h>
-
 #include <algorithm>
 
 #include "shared/logging.hpp"
 #include "utility/toml.hpp"
 #include "shared/filesystem.hpp"
+
+#include "render/model.hpp"
 
 #include "utility/utfz.h"
 
@@ -25,27 +25,14 @@ CShtoiGUI::CShtoiGUI( ShtoiGUI_displayMode displayMode, float virtualScreenSizeX
     m_fVirtualCursorY = 0.0f;
     m_nMouseState = 0;
 
-    // Rendering
-    glGenVertexArrays( 1, &m_nVAO );
-    glGenBuffers( 1, &m_nVBO );
+    m_pModel = new rendering::models::CModel();
+    m_pModel->m_pShader = rendering::materials::GetNamedShader( "gui" );
 
-    glBindVertexArray( m_nVAO );
-    glBindBuffer( GL_ARRAY_BUFFER, m_nVBO );
-    glBufferData( GL_ARRAY_BUFFER, sizeof(Vertex) * 4, NULL, GL_DYNAMIC_DRAW );
-    
-    // Position
-    glEnableVertexAttribArray( 0 );
-    glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0 );
-
-    // UV
-    glEnableVertexAttribArray( 1 );
-    glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, u) );
-
-    // Color
-    glEnableVertexAttribArray( 2 );
-    glVertexAttribPointer( 2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, r) );
-
-    glBindVertexArray( 0 );
+    // Vertices are given individually per quad, but the faces remain constant
+    m_pModel->m_faces = {
+        { 2, 1, 0 },
+        { 3, 2, 0 }
+    };
 
     // now handle the font definition file
     bool bSuccess = false;
@@ -133,20 +120,17 @@ CShtoiGUI::CShtoiGUI( ShtoiGUI_displayMode displayMode, float virtualScreenSizeX
 
 CShtoiGUI::~CShtoiGUI()
 {
-    glDeleteVertexArrays( 1, &m_nVAO );
-    glDeleteBuffers( 1, &m_nVBO );
+    delete m_pModel;
 }
 
 void CShtoiGUI::_quad( float x, float y, float z, float w, float h, float u, float v, float u1, float v1, float r, float g, float b, float a )
 {
     Quad quad = {
         {
-            { x, y, z, u, v, r, g, b, a },
-            { x + w, y, z, u1, v, r, g, b, a },
-            { x + w, y + h, z, u1, v1, r, g, b, a },
-            { x, y, z, u, v, r, g, b, a },
-            { x + w, y + h, z, u1, v1, r, g, b, a },
-            { x, y + h, z, u, v1, r, g, b, a }
+            { x, y, z, 0, 0, -1, u, v, r, g, b },
+            { x + w, y, z, 0, 0, -1, u1, v, r, g, b },
+            { x + w, y + h, z, 0, 0, -1, u1, v1, r, g, b },
+            { x, y + h, z, 0, 0, -1, u, v1, r, g, b }
         },
         z,
         nullptr, // TODO: texture
@@ -164,17 +148,15 @@ void CShtoiGUI::_charQuad(Character character, float x, float y, float z, float 
 
     Quad quad = {
         {
-            { x, y, z, u, v, r, g, b, a },
-            { x + w, y, z, u1, v, r, g, b, a },
-            { x + w, y + h, z, u1, v1, r, g, b, a },
-            { x, y, z, u, v, r, g, b, a },
-            { x + w, y + h, z, u1, v1, r, g, b, a },
-            { x, y + h, z, u, v1, r, g, b, a }
+            { x, y, z, 0, 0, -1, u, v, r, g, b },
+            { x + w, y, z, 0, 0, -1, u1, v, r, g, b },
+            { x + w, y + h, z, 0, 0, -1, u1, v1, r, g, b },
+            { x, y + h, z, 0, 0, -1, u, v1, r, g, b }
         },
         z,
-        character.m_pTexture
+        character.m_pTexture,
     };
-
+    
     m_quads.insert( m_quads.end(), quad );
 }
 
@@ -220,29 +202,34 @@ void CShtoiGUI::Update(float mouseX, float mouseY, int mouseState)
     }
 
     // Disable depth test so that the quad is rendered on top of everything else
-    glDisable( GL_DEPTH_TEST );
-    glDisable( GL_CULL_FACE );
+    // glDisable( GL_DEPTH_TEST );
+    // glDisable( GL_CULL_FACE );
 
-    glBindVertexArray( m_nVAO );
-    glBindBuffer( GL_ARRAY_BUFFER, m_nVBO );
+    // glBindVertexArray( m_nVAO );
+    // glBindBuffer( GL_ARRAY_BUFFER, m_nVBO );;
 
     for ( const Quad& q : m_quads )
     {
-        glBufferData( GL_ARRAY_BUFFER, sizeof(Vertex) * 6, &q.vertices, GL_DYNAMIC_DRAW );
+        m_pModel->m_vertices.clear();
+        // q.vertices is an array of 6 vertices
+        m_pModel->m_vertices.push_back( q.vertices[0] );
+        m_pModel->m_vertices.push_back( q.vertices[1] );
+        m_pModel->m_vertices.push_back( q.vertices[2] );
+        m_pModel->m_vertices.push_back( q.vertices[3] );
+        m_pModel->m_vertices.push_back( q.vertices[4] );
+        m_pModel->m_vertices.push_back( q.vertices[5] );
+        m_pModel->Update();
 
         if (q.m_pTexture != nullptr)
-            q.m_pTexture->Bind();
+            m_pModel->m_pTexture = q.m_pTexture;
 
-        glDrawArrays( GL_TRIANGLES, 0, 6 );
-
-        if (q.m_pTexture != nullptr)
-            q.m_pTexture->Unbind();
+        m_pModel->Render( Vector3f(0, 0, 0), Vector3f(0, 0, 0), Vector3f(1, 1, 1) );
     }
 
-    glBindVertexArray( 0 );
+    // glBindVertexArray( 0 );
 
-    glEnable( GL_DEPTH_TEST );
-    glEnable( GL_CULL_FACE );
+    // glEnable( GL_DEPTH_TEST );
+    // glEnable( GL_CULL_FACE );
 
     m_quads.clear();
 }
