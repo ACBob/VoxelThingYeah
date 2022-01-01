@@ -62,7 +62,8 @@ namespace rendering {
             materials::CShader *m_pShader;
             materials::CTexture *m_pTexture;
 
-            void LoadOBJ( const std::string &filename );
+            void LoadOBJ( const std::string &filename ); // Loads the given OBJ file.
+            std::string DumpOBJ(); // Dumps the model data as an OBJ file.
 
             protected:
             unsigned int m_nVAO;

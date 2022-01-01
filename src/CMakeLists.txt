@@ -62,7 +62,6 @@ target_link_libraries( "${PROJECT_NAME}_client" libVoxelThingYeahShared libVoxel
 target_include_directories( "${PROJECT_NAME}_client" PUBLIC
 	${GLM_INCLUDE_DIRS}
 	${SDL2_INCLUDE_DIRS}
-	${OpenGL_INCLUDE_DIRS}
 	"${CMAKE_CURRENT_SOURCE_DIR}/../include"
 	"${CMAKE_CURRENT_SOURCE_DIR}"
 	"${CMAKE_CURRENT_SOURCE_DIR}/shared"

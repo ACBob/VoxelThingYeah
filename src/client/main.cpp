@@ -203,6 +203,21 @@ int main( int argc, char *args[] )
 
         gui.Update( inputManager.m_vMousePos.x, inputManager.m_vMousePos.y, inputManager.m_iMouseState );
 
+        if ( inputManager.m_bKeyboardState[KBD_BACKSPACE] && !inputManager.m_bOldKeyboardState[KBD_BACKSPACE] )
+        {
+            con_info("Dumping testing world as OBJ");
+            std::string obj = testingWorld.getChunk(0, 0, 0)->m_model.DumpOBJ();
+            std::string filename = "test.obj";
+
+            con_info("Writing to %s", filename.c_str());
+            bool bSuccess = false;
+            fileSystem::WriteFile(filename.c_str(), (unsigned char*)obj.c_str(), obj.length(), bSuccess);
+            if (bSuccess)
+                con_info("Success!");
+            else
+                con_error("Failed!");
+        }
+
         window.SwapBuffers();
 
         curTime = window.GetMS();

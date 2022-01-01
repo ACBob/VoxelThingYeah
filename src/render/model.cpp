@@ -292,4 +292,41 @@ namespace rendering::models {
 
 		Update();
 	}
+
+	std::string CModel::DumpOBJ()
+	{
+		std::stringstream ss;
+
+		// Add a header
+		ss << "# VoxelThingYeah OBJ Dump\n";
+		ss << "# Usability not garunteed\n";
+		ss << "#\n";
+
+		// Some other stuff
+		ss << "o VoxelThingYeah-Dump\n";
+		// Don't wanna have to deal with materials
+		ss << "usemtl none\n";
+		ss << "s off\n";
+
+		for ( int i = 0; i < m_vertices.size(); i++ )
+		{
+			ss << "v " << m_vertices[i].x << " " << m_vertices[i].y << " " << m_vertices[i].z << "\n";
+			ss << "vn " << m_vertices[i].nx << " " << m_vertices[i].ny << " " << m_vertices[i].nz << "\n";
+			ss << "vt " << m_vertices[i].u << " " << m_vertices[i].v << "\n";
+		}
+
+		for ( int i = 0; i < m_bones.size(); i++ )
+		{
+			ss << "b " << m_bones[i].parent << " " << m_bones[i].x << " " << m_bones[i].y << " " << m_bones[i].z << "\n";
+		}
+
+		for ( int i = 0; i < m_faces.size(); i++ )
+		{
+			ss << "f " << m_faces[i].v1 + 1 << "/" << m_faces[i].v1 + 1 << "/" << m_faces[i].v1 + 1 << " " << m_faces[i].v2 + 1
+			   << "/" << m_faces[i].v2 + 1 << "/" << m_faces[i].v2 + 1 << " " << m_faces[i].v3 + 1 << "/" << m_faces[i].v3 + 1
+			   << "/" << m_faces[i].v3 + 1 << "\n";
+		}
+
+		return ss.str();
+	}
 }
