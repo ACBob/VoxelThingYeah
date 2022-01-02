@@ -4,11 +4,15 @@ add_subdirectory(server)
 add_subdirectory(shared)
 add_subdirectory(render)
 
-find_package(PhysFS REQUIRED)
-find_package(ENet REQUIRED)
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLM REQUIRED)
+
+# PhysFS & ENet are included as submodules
+set(PHYSFS_BUILD_STATIC OFF)
+set(PHYSFS_BUILD_SHARED ON)
+add_subdirectory("${PROJECT_SOURCE_DIR}/src/subprojects/physfs")
+add_subdirectory("${PROJECT_SOURCE_DIR}/src/subprojects/enet")
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
@@ -50,6 +54,7 @@ target_include_directories( "${PROJECT_NAME}_server" PUBLIC
 	"${CMAKE_CURRENT_SOURCE_DIR}"
 	"${CMAKE_CURRENT_SOURCE_DIR}/shared"
 	"${CMAKE_CURRENT_SOURCE_DIR}/server"
+	enet
 )
 target_compile_definitions( "${PROJECT_NAME}_server" PRIVATE TOML_HEADER_ONLY)
 
@@ -58,6 +63,7 @@ target_link_libraries( "${PROJECT_NAME}_client" libVoxelThingYeahShared libVoxel
 	${SDL2_LIBRARIES}
 	${CMAKE_DL_LIBS}
 	libVoxelThingYeahRender
+	enet
 )
 target_include_directories( "${PROJECT_NAME}_client" PUBLIC
 	${GLM_INCLUDE_DIRS}

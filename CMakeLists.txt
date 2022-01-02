@@ -20,8 +20,6 @@ endif()
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-
 # Put the game executable in /bin
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
@@ -29,7 +27,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # LodePNG
-add_library(lodepng STATIC subprojects/lodepng/lodepng.cpp subprojects/lodepng/lodepng.h)
+add_library(lodepng STATIC src/subprojects/lodepng/lodepng.cpp src/subprojects/lodepng/lodepng.h)
 
 # Includes
 set(includes
@@ -45,5 +43,5 @@ target_link_libraries(
 	libVoxelThingYeahRender lodepng
 )
 target_include_directories(
-	libVoxelThingYeahRender PUBLIC "subprojects/lodepng/"
+	libVoxelThingYeahRender PUBLIC "src/subprojects/lodepng/"
 )
