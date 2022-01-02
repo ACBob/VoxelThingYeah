@@ -10,6 +10,34 @@
 template <typename T> class Vector3;
 template <typename T> class Vector4;
 
+#define DECL_INPLACE_OPERATOR(classname, op) \
+	const classname<T> &operator op (const classname<T> &v); \
+	const classname<T> &operator op (T v);
+
+#define DECL_OPERATOR(classname, op) \
+	const classname<T> operator op (const classname<T> &v) const; \
+	const classname<T> operator op (T v) const;
+
+#define DECL_COMPARE_OPERATOR(classname, op) \
+	bool operator op (const classname<T> &v) const; \
+	bool operator op (T v) const;
+
+// Forward Decl.
+template <typename T> class Vector3;
+template <typename T> class Vector4;
+
+using Vector3f = Vector3<float>;
+using Vector3i = Vector3<int>;
+using Vector3c = Vector3<char>;
+using Vector3uc = Vector3<unsigned char>;
+using Vector3d = Vector3<double>;
+
+using Vector4f = Vector4<float>;
+using Vector4i = Vector4<int>;
+using Vector4c = Vector4<char>;
+using Vector4uc = Vector4<unsigned char>;
+using Vector4d = Vector4<double>;
+
 // Generic vector class of 3 elements
 // Defines the math operations
 // Woah mamma, that's very verbose!
@@ -19,142 +47,51 @@ template <typename T> class Vector3
   public:
 	T x, y, z;
 
-	Vector3() : x( 0 ), y( 0 ), z( 0 ){};
-	Vector3( T i ) : x( i ), y( i ), z( i ){};
-	Vector3( T x, T y ) : x( x ), y( y ), z( 0 ){};
-	Vector3( T x, T y, T z ) : x( x ), y( y ), z( z ){};
-	Vector3( const Vector3<T> &v ) : x( v.x ), y( v.y ), z( v.z ){};
+	Vector3();
+	Vector3( T i );
+	Vector3( T x, T y );
+	Vector3( T x, T y, T z );
+	Vector3( const Vector3<T> &v );
+	
+	const Vector3<T> &operator=(const Vector3<T> &v);
+	const Vector3<T> &operator=(T v);
 
-	Vector3<T> &operator=( const Vector3<T> &v )
-	{
-		x = v.x;
-		y = v.y;
-		z = v.z;
-		return *this;
-	}
+	DECL_INPLACE_OPERATOR(Vector3, +=);
+	DECL_INPLACE_OPERATOR(Vector3, -=);
+	DECL_INPLACE_OPERATOR(Vector3, *=);
+	DECL_INPLACE_OPERATOR(Vector3, /=);
+	
+	DECL_OPERATOR(Vector3, +);
+	DECL_OPERATOR(Vector3, -);
+	DECL_OPERATOR(Vector3, *);
+	DECL_OPERATOR(Vector3, /);
 
-	Vector3<T> &operator+=( const Vector3<T> &v )
-	{
-		x += v.x;
-		y += v.y;
-		z += v.z;
-		return *this;
-	}
+	T Magnitude() const; // Magnitude of the vector
+	T MagnitudeSq() const; // Magnitude squared
 
-	Vector3<T> &operator-=( const Vector3<T> &v )
-	{
-		x -= v.x;
-		y -= v.y;
-		z -= v.z;
-		return *this;
-	}
+	T Dot( const Vector3<T> &v ) const; // Dot product
 
-	Vector3<T> &operator*=( const Vector3<T> &v )
-	{
-		x *= v.x;
-		y *= v.y;
-		z *= v.z;
-		return *this;
-	}
+	Vector3<T> Cross( const Vector3<T> &v ) const; // Cross product
 
-	Vector3<T> &operator/=( const Vector3<T> &v )
-	{
-		x /= v.x;
-		y /= v.y;
-		z /= v.z;
-		return *this;
-	}
+	Vector3<T> Normal() const; // Returns the normalized vector
+	const Vector3<T> &Normalize(); // Performs the normalization in-place
 
-	Vector3<T> &operator*=( T s )
-	{
-		x *= s;
-		y *= s;
-		z *= s;
-		return *this;
-	}
+	Vector3<T> Floor() const; // Returns a vector with each element rounded down to the nearest integer
+	Vector3<T> Ceil() const; // Returns a vector with each element rounded up to the nearest integer
 
-	Vector3<T> &operator/=( T s )
-	{
-		x /= s;
-		y /= s;
-		z /= s;
-		return *this;
-	}
+	Vector3<T> Lerp( const Vector3<T> &v, T t ) const; // Returns a vector that is the linear interpolation between this vector and v
+	Vector3<T> Slerp( const Vector3<T> &v, T t ) const; // Returns a vector that is the spherical interpolation between this vector and v
 
-	Vector3<T> operator+( const Vector3<T> &v ) const { return Vector3<T>( x + v.x, y + v.y, z + v.z ); }
+	const Vector3<T> &LerpInPlace( const Vector3<T> &v, T t ); // Performs the linear interpolation in-place
+	const Vector3<T> &SlerpInPlace( const Vector3<T> &v, T t ); // Performs the spherical interpolation in-place
 
-	Vector3<T> operator-( const Vector3<T> &v ) const { return Vector3<T>( x - v.x, y - v.y, z - v.z ); }
+	Vector3<T> Rotate( const Vector3<T> &v, T angle ) const; // Returns a rotated by angle around v, in radians
+	const Vector3<T> &RotateInPlace( const Vector3<T> &v, T angle ); // Rotates in-place by angle around v, in radians
 
-	Vector3<T> operator*( const Vector3<T> &v ) const { return Vector3<T>( x * v.x, y * v.y, z * v.z ); }
+	T Distance( const Vector3<T> &v ) const;
 
-	Vector3<T> operator/( const Vector3<T> &v ) const { return Vector3<T>( x / v.x, y / v.y, z / v.z ); }
-
-	Vector3<T> operator*( T s ) const { return Vector3<T>( x * s, y * s, z * s ); }
-
-	Vector3<T> operator/( T s ) const { return Vector3<T>( x / s, y / s, z / s ); }
-
-	T Magnitude() const { return sqrt( x * x + y * y + z * z ); }
-
-	Vector3<T> Normal() const
-	{
-		T m = Magnitude();
-		if ( m == 0 )
-			return Vector3<T>( 0, 0, 0 );
-		return Vector3<T>( x / m, y / m, z / m );
-	}
-
-	Vector3<T> Floor() const { return Vector3<T>( floor( x ), floor( y ), floor( z ) ); }
-	Vector3<T> Ceil() const { return Vector3<T>( ceil( x ), ceil( y ), ceil( z ) ); }
-
-	Vector3<T> Lerp( const Vector3<T> &v, T t ) const
-	{
-		return Vector3<T>( x + ( v.x - x ) * t, y + ( v.y - y ) * t, z + ( v.z - z ) * t );
-	}
-
-	Vector3<T> Lerp( const T v, T t ) const
-	{
-		return Vector3<T>( x + ( v - x ) * t, y + ( v - y ) * t, z + ( v - z ) * t );
-	}
-
-	Vector3<T> Inverse() const { return Vector3<T>( -x, -y, -z ); }
-
-	Vector3<T> Rotate( const Vector3<T> &v, T angle ) const
-	{
-		T ca = cos( angle );
-		T sa = sin( angle );
-		return Vector3<T>( x * ca + y * sa, -x * sa + y * ca, z );
-	}
-	// It's assumed here that the vector is in degrees
-	Vector3<T> Rotate( const Vector3<T> &v ) const
-	{
-		return RotateAxis( 0, v.x * DEG2RAD ).RotateAxis( 1, v.y * DEG2RAD ).RotateAxis( 2, v.z * DEG2RAD );
-	}
-
-	Vector3<T> RotateAxis( int axis, T angle ) const
-	{
-		switch ( axis )
-		{
-			case 0:
-				return Vector3<T>( x, y * cos( angle ) - z * sin( angle ), y * sin( angle ) + z * cos( angle ) );
-			case 1:
-				return Vector3<T>( x * cos( angle ) + z * sin( angle ), y, -x * sin( angle ) + z * cos( angle ) );
-			case 2:
-				return Vector3<T>( x * cos( angle ) - y * sin( angle ), x * sin( angle ) + y * cos( angle ), z );
-		}
-		return Vector3<T>( x, y, z );
-	}
-
-	Vector3<T> LookingAt( const Vector3<T> &v ) const { return Vector3<T>( v.x - x, v.y - y, v.z - z ); }
-	Vector3<T> RotateTowards( const Vector3<T> &v ) const { return Rotate( LookingAt( v ), acos( Dot( v ) ) ); }
-
-	T Dot( const Vector3<T> &v ) const { return x * v.x + y * v.y + z * v.z; }
-
-	Vector3<T> Cross( const Vector3<T> &v ) const
-	{
-		return Vector3<T>( y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x );
-	}
-
-	T Distance( const Vector3<T> &v ) const { return ( *this - v ).Magnitude(); }
+	Vector3<T> LookingAt( const Vector3<T> &v, const Vector3<T> &up ) const; // Returns a vector that is looking at v from this vector
+	const Vector3<T> &LookAt( const Vector3<T> &v, const Vector3<T> &up ); // Performs the look-at in-place
 
 	// Math hurts my head
 	// Copied the project/unproject from the glu library (roughly)
@@ -182,160 +119,87 @@ template <typename T> class Vector3
 	}
 
 	// Comparison
-
-	bool operator==( const Vector3<T> &v ) const { return x == v.x && y == v.y && z == v.z; }
-	bool operator!=( const Vector3<T> &v ) const { return x != v.x || y != v.y || z != v.z; }
-	bool operator>( const Vector3<T> &v ) const { return x > v.x && y > v.y && z > v.z; }
-	bool operator<( const Vector3<T> &v ) const { return x < v.x || y < v.y || z < v.z; }
-	bool operator>=( const Vector3<T> &v ) const { return x >= v.x && y >= v.y && z >= v.z; }
-	bool operator<=( const Vector3<T> &v ) const { return x <= v.x && y <= v.y && z <= v.z; }
+	DECL_COMPARE_OPERATOR(Vector3, ==);
+	DECL_COMPARE_OPERATOR(Vector3, !=);
+	DECL_COMPARE_OPERATOR(Vector3, <);
+	DECL_COMPARE_OPERATOR(Vector3, >);
+	DECL_COMPARE_OPERATOR(Vector3, <=);
+	DECL_COMPARE_OPERATOR(Vector3, >=);
 
 	// Conversion to arbitrary types
-	template <typename U> operator Vector3<U>() const { return Vector3<U>( (U)x, (U)y, (U)z ); }
+	template <typename U> operator Vector3<U>() const;
+
+	// Conversion to Vector4
+	operator Vector4<T>() const;
 };
 
-template <typename T> Vector3<T> inline RandomVector3( T min, T max )
-{
-	return Vector3<T>( rand() * ( max - min ) / RAND_MAX + min, rand() * ( max - min ) / RAND_MAX + min,
-					   rand() * ( max - min ) / RAND_MAX + min );
-}
-
-template <typename T> Vector3<T> inline RandomVector3( Vector3<T> min, Vector3<T> max )
-{
-	return Vector3<T>( rand() * ( max.x - min.x ) / RAND_MAX + min.x, rand() * ( max.y - min.y ) / RAND_MAX + min.y,
-					   rand() * ( max.z - min.z ) / RAND_MAX + min.z );
-}
-
-using Vector3f = Vector3<float>;
-using Vector3i = Vector3<int>;
-using Vector3c = Vector3<char>;
-
 // Generic vector class of 4 elements
-// (It's like Vector3 but with w, and some limited functions)
+// (Identical to Vector3, with the addition of a w component)
 template <typename T> class Vector4
 {
   public:
 	T x, y, z, w;
 
-	Vector4() : x( 0 ), y( 0 ), z( 0 ), w( 0 ) {}
-	Vector4( T i ) : x( i ), y( i ), z( i ), w( i ){};
-	Vector4( T x, T y ) : x( x ), y( y ), z( 0 ), w( 0 ){};
-	Vector4( T x, T y, T z ) : x( x ), y( y ), z( z ), w( 0 ){};
-	Vector4( T x, T y, T z, T w ) : x( x ), y( y ), z( z ), w( w ) {}
-	Vector4( const Vector4<T> &v ) : x( v.x ), y( v.y ), z( v.z ), w( v.w ) {}
-	Vector4( const Vector3<T> &v ) : x( v.x ), y( v.y ), z( v.z ), w( 0 ) {}
+	Vector4();
+	Vector4( T i );
+	Vector4( T x, T y );
+	Vector4( T x, T y, T z );
+	Vector4( T x, T y, T z, T w );
+	Vector4( const Vector4<T> &v );
 
-	Vector4<T> operator+( const Vector4<T> &v ) const { return Vector4<T>( x + v.x, y + v.y, z + v.z, w + v.w ); }
-	Vector4<T> operator-( const Vector4<T> &v ) const { return Vector4<T>( x - v.x, y - v.y, z - v.z, w - v.w ); }
-	Vector4<T> operator*( const Vector4<T> &v ) const { return Vector4<T>( x * v.x, y * v.y, z * v.z, w * v.w ); }
-	Vector4<T> operator/( const Vector4<T> &v ) const { return Vector4<T>( x / v.x, y / v.y, z / v.z, w / v.w ); }
+	const Vector4<T> &operator=(const Vector4<T> &v);
+	const Vector4<T> &operator=(T v);
 
-	Vector4<T> operator+( T v ) const { return Vector4<T>( x + v, y + v, z + v, w + v ); }
-	Vector4<T> operator-( T v ) const { return Vector4<T>( x - v, y - v, z - v, w - v ); }
-	Vector4<T> operator*( T v ) const { return Vector4<T>( x * v, y * v, z * v, w * v ); }
-	Vector4<T> operator/( T v ) const { return Vector4<T>( x / v, y / v, z / v, w / v ); }
+	DECL_INPLACE_OPERATOR(Vector4, +=);
+	DECL_INPLACE_OPERATOR(Vector4, -=);
+	DECL_INPLACE_OPERATOR(Vector4, *=);
+	DECL_INPLACE_OPERATOR(Vector4, /=);
 
-	Vector4<T> &operator=( const Vector4<T> &v )
-	{
-		x = v.x;
-		y = v.y;
-		z = v.z;
-		w = v.w;
-		return *this;
-	}
-	Vector4<T> &operator+=( const Vector4<T> &v )
-	{
-		x += v.x;
-		y += v.y;
-		z += v.z;
-		w += v.w;
-		return *this;
-	}
-	Vector4<T> &operator-=( const Vector4<T> &v )
-	{
-		x -= v.x;
-		y -= v.y;
-		z -= v.z;
-		w -= v.w;
-		return *this;
-	}
-	Vector4<T> &operator*=( const Vector4<T> &v )
-	{
-		x *= v.x;
-		y *= v.y;
-		z *= v.z;
-		w *= v.w;
-		return *this;
-	}
-	Vector4<T> &operator/=( const Vector4<T> &v )
-	{
-		x /= v.x;
-		y /= v.y;
-		z /= v.z;
-		w /= v.w;
-		return *this;
-	}
+	DECL_OPERATOR(Vector4, +);
+	DECL_OPERATOR(Vector4, -);
+	DECL_OPERATOR(Vector4, *);
+	DECL_OPERATOR(Vector4, /);
 
-	Vector4<T> &operator+=( T v )
-	{
-		x += v;
-		y += v;
-		z += v;
-		w += v;
-		return *this;
-	}
-	Vector4<T> &operator-=( T v )
-	{
-		x -= v;
-		y -= v;
-		z -= v;
-		w -= v;
-		return *this;
-	}
-	Vector4<T> &operator*=( T v )
-	{
-		x *= v;
-		y *= v;
-		z *= v;
-		w *= v;
-		return *this;
-	}
-	Vector4<T> &operator/=( T v )
-	{
-		x /= v;
-		y /= v;
-		z /= v;
-		w /= v;
-		return *this;
-	}
+	T Magnitude() const; // Magnitude of the vector
+	T MagnitudeSq() const; // Magnitude squared
 
-	bool operator==( const Vector4<T> &v ) const { return x == v.x && y == v.y && z == v.z && w == v.w; }
-	bool operator!=( const Vector4<T> &v ) const { return x != v.x || y != v.y || z != v.z || w != v.w; }
-	bool operator>( const Vector4<T> &v ) const { return x > v.x && y > v.y && z > v.z && w > v.w; }
-	bool operator<( const Vector4<T> &v ) const { return x < v.x || y < v.y || z < v.z || w < v.w; }
-	bool operator>=( const Vector4<T> &v ) const { return x >= v.x && y >= v.y && z >= v.z && w >= v.w; }
-	bool operator<=( const Vector4<T> &v ) const { return x <= v.x && y <= v.y && z <= v.z && w <= v.w; }
+	T Dot( const Vector4<T> &v ) const; // Dot product
+
+	Vector4<T> Cross( const Vector4<T> &v ) const; // Cross product
+
+	Vector4<T> Normal() const; // Returns the normalized vector
+	const Vector4<T> &Normalize(); // Performs the normalization in-place
+
+	Vector4<T> Floor() const; // Returns a vector with each element rounded down to the nearest integer
+	Vector4<T> Ceil() const; // Returns a vector with each element rounded up to the nearest integer
+
+	Vector4<T> Lerp( const Vector4<T> &v, T t ) const; // Returns a vector that is the linear interpolation between this vector and v
+	Vector4<T> Slerp( const Vector4<T> &v, T t ) const; // Returns a vector that is the spherical interpolation between this vector and v
+
+	const Vector4<T> &LerpInPlace( const Vector4<T> &v, T t ); // Performs the linear interpolation in-place
+	const Vector4<T> &SlerpInPlace( const Vector4<T> &v, T t ); // Performs the spherical interpolation in-place
+
+	Vector4<T> Rotate( const Vector4<T> &v, T angle ) const; // Returns a rotated by angle around v, in radians
+	const Vector4<T> &RotateInPlace( const Vector4<T> &v, T angle ); // Rotates in-place by angle around v, in radians
+
+	T Distance( const Vector4<T> &v ) const;
+
+	Vector4<T> LookingAt( const Vector4<T> &v, const Vector4<T> &up ) const; // Returns a vector that is looking at v from this vector
+	const Vector4<T> &LookAt( const Vector4<T> &v, const Vector4<T> &up ); // Performs the look-at in-place
+
+	// Sans the projection functions
+
+	// Comparison
+	DECL_COMPARE_OPERATOR(Vector4, ==);
+	DECL_COMPARE_OPERATOR(Vector4, !=);
+	DECL_COMPARE_OPERATOR(Vector4, <);
+	DECL_COMPARE_OPERATOR(Vector4, >);
+	DECL_COMPARE_OPERATOR(Vector4, <=);
+	DECL_COMPARE_OPERATOR(Vector4, >=);
+
+	// Conversion to arbitrary types
+	template <typename U> operator Vector4<U>() const;
 
 	// Conversion to Vector3
-	operator Vector3<T>() const { return Vector3<T>( x, y, z ); }
-
-	// Arbitrary conversions
-	template <typename U> operator Vector3<U>() const { return Vector3<U>( x, y, z ); }
-	template <typename U> operator Vector4<U>() const { return Vector4<U>( x, y, z, w ); }
+	operator Vector3<T>() const;
 };
-
-template <typename T> Vector4<T> inline RandomVector4( T min, T max )
-{
-	return Vector4<T>( rand() * ( max - min ) / RAND_MAX + min, rand() * ( max - min ) / RAND_MAX + min,
-					   rand() * ( max - min ) / RAND_MAX + min, rand() * ( max - min ) / RAND_MAX + min );
-}
-
-template <typename T> Vector4<T> inline RandomVector4( Vector4<T> min, Vector4<T> max )
-{
-	return Vector4<T>( rand() * ( max.x - min.x ) / RAND_MAX + min.x, rand() * ( max.y - min.y ) / RAND_MAX + min.y,
-					   rand() * ( max.z - min.z ) / RAND_MAX + min.z, rand() * ( max.w - min.w ) / RAND_MAX + min.w );
-}
-
-using Vector4f = Vector4<float>;
-using Vector4i = Vector4<int>;
-using Vector4c = Vector4<char>;

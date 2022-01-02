@@ -1,4 +1,6 @@
 set(UTIL_SOURCES
+	"${CMAKE_CURRENT_SOURCE_DIR}/vector.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/vector.hpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/colour.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/colour.hpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/direction.hpp"
