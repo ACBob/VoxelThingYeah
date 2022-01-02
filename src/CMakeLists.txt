@@ -6,13 +6,14 @@ add_subdirectory(render)
 
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
-find_package(GLM REQUIRED)
 
 # PhysFS & ENet are included as submodules
 set(PHYSFS_BUILD_STATIC OFF)
 set(PHYSFS_BUILD_SHARED ON)
-add_subdirectory("${PROJECT_SOURCE_DIR}/src/subprojects/physfs")
-add_subdirectory("${PROJECT_SOURCE_DIR}/src/subprojects/enet")
+add_subdirectory("${PROJECT_SOURCE_DIR}/src/subprojects/physfs" EXCLUDE_FROM_ALL)
+add_subdirectory("${PROJECT_SOURCE_DIR}/src/subprojects/enet" EXCLUDE_FROM_ALL)
+
+add_subdirectory("${PROJECT_SOURCE_DIR}/src/subprojects/glm" EXCLUDE_FROM_ALL)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
@@ -34,7 +35,7 @@ target_include_directories(libVoxelThingYeahShared PUBLIC
 target_compile_definitions(libVoxelThingYeahShared PRIVATE TOML_HEADER_ONLY)
 
 add_library(libVoxelThingYeahRender SHARED ${RENDER_SOURCES})
-target_link_libraries(libVoxelThingYeahRender ${OpenGL_LIBRARIES} ${GLM_LIBRARIES} ${Threads_LIBRARIES} ${SDL2_LIBRARIES})
+target_link_libraries(libVoxelThingYeahRender ${OpenGL_LIBRARIES} glm::glm ${Threads_LIBRARIES} ${SDL2_LIBRARIES})
 target_compile_definitions(libVoxelThingYeahRender PRIVATE TOML_HEADER_ONLY)
 target_include_directories(libVoxelThingYeahRender PUBLIC
 	${GLM_INCLUDE_DIRS}
