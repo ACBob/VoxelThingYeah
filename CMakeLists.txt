@@ -40,8 +40,8 @@ configure_file( "${CMAKE_CURRENT_LIST_DIR}/include/config.h.in" "${CMAKE_CURRENT
 add_subdirectory(src)
 
 target_link_libraries(
-	libVoxelThingYeahRender lodepng
+	VoxelThingYeahRender lodepng
 )
 target_include_directories(
-	libVoxelThingYeahRender PUBLIC "src/subprojects/lodepng/"
+	VoxelThingYeahRender PUBLIC "src/subprojects/lodepng/"
 )
