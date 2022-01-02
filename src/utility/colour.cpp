@@ -183,3 +183,5 @@ CColour::operator Vector4f() const
 {
 	return Vector4f( this->r / 255.0f, this->g / 255.0f, this->b / 255.0f, this->a / 255.0f );
 }
+CColour::operator Vector3c() const { return Vector3c( this->r, this->g, this->b ); }
+CColour::operator Vector4c() const { return Vector4c( this->r, this->g, this->b, this->a ); }

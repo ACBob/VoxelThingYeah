@@ -64,6 +64,8 @@ class CColour
 	operator uint32_t() const;
 	operator Vector3f() const;
 	operator Vector4f() const;
+	operator Vector3c() const;
+	operator Vector4c() const;
 };
 
 CColour RandomCColour( uchar_t rmax, uchar_t rmin, uchar_t gmax, uchar_t gmin, uchar_t bmax, uchar_t bmin,
