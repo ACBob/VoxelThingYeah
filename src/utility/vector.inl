@@ -1,5 +1,3 @@
-#include "vector.hpp"
-
 template <typename T> Vector3<T>::Vector3() : x(0), y(0), z(0) {}
 template <typename T> Vector3<T>::Vector3(T x ) : x(x), y(x), z(x) {}
 template <typename T> Vector3<T>::Vector3(T x, T y) : x(x), y(y), z(0) {}

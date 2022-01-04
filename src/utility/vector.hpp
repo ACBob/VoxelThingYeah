@@ -203,3 +203,6 @@ template <typename T> class Vector4
 	// Conversion to Vector3
 	operator Vector3<T>() const;
 };
+
+// Grody
+#include "vector.inl"
