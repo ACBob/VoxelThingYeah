@@ -206,3 +206,8 @@ template <typename T> class Vector4
 
 // Grody
 #include "vector.inl"
+
+// avoid polluting the macros
+#undef DECL_OPERATOR
+#undef DECL_INPLACE_OPERATOR
+#undef DECL_COMPARE_OPERATOR

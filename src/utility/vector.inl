@@ -420,3 +420,12 @@ template <typename T> Vector4<T>::operator Vector3<T>() const
 {
     return Vector3<T>(x, y, z);
 }
+
+// Avoid polluting my macros with this
+#undef IMPL_VEC3_INPLACE_OPERATOR
+#undef IMPL_VEC3_COMPARE_OPERATOR
+#undef IMPL_VEC3_OPERATOR
+
+#undef IMPL_VEC4_INPLACE_OPERATOR
+#undef IMPL_VEC4_COMPARE_OPERATOR
+#undef IMPL_VEC4_OPERATOR
