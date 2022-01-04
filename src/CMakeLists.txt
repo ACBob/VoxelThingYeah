@@ -24,7 +24,7 @@ add_library(VoxelThingYeahUtil SHARED ${UTIL_SOURCES})
 target_compile_definitions(VoxelThingYeahUtil PRIVATE TOML_HEADER_ONLY)
 
 add_library(VoxelThingYeahShared SHARED ${SHARED_SOURCES})
-target_link_libraries(VoxelThingYeahShared physfs enet)
+target_link_libraries(VoxelThingYeahShared VoxelThingYeahUtil physfs enet)
 target_include_directories(VoxelThingYeahShared PUBLIC
 	"${CMAKE_CURRENT_SOURCE_DIR}/subprojects/physfs/src" 
 	"${CMAKE_CURRENT_SOURCE_DIR}/subprojects/enet/include"
@@ -35,7 +35,7 @@ target_include_directories(VoxelThingYeahShared PUBLIC
 target_compile_definitions(VoxelThingYeahShared PRIVATE TOML_HEADER_ONLY)
 
 add_library(VoxelThingYeahRender SHARED ${RENDER_SOURCES})
-target_link_libraries(VoxelThingYeahRender ${OpenGL_LIBRARIES} glm::glm ${Threads_LIBRARIES} ${SDL2_LIBRARIES})
+target_link_libraries(VoxelThingYeahRender VoxelThingYeahUtil ${OpenGL_LIBRARIES} glm::glm ${Threads_LIBRARIES} ${SDL2_LIBRARIES})
 target_compile_definitions(VoxelThingYeahRender PRIVATE TOML_HEADER_ONLY)
 target_include_directories(VoxelThingYeahRender PUBLIC
 	${SDL2_INCLUDE_DIRS}

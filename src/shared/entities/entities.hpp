@@ -165,7 +165,7 @@ public:
     }
 
     Vector3f getForward() {
-        return Vector3f( 0, 0, -1 ).Rotate( m_rotation ).Normal();
+        return Vector3f( 0, 0, -1 ).Rotate( Vector3f( 1, 0, 0 ), m_rotation.x ).Rotate( Vector3f( 0, 1, 0 ), m_rotation.y ).Rotate( Vector3f( 0, 0, 1 ), m_rotation.z );
     }
 };
 

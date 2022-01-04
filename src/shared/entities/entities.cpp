@@ -82,7 +82,7 @@ void CActorEntity::update(float dt)
     m_gravity = !m_flying;
 
     Vector3f forward = getForward();
-    Vector3f right = forward.RotateAxis(1, -90 * DEG2RAD);
+    Vector3f right = forward.Cross(Vector3f(0, 1, 0));
     right.y = 0.0f;
     right = right.Normal();
 

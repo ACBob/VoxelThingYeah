@@ -177,7 +177,7 @@ int main( int argc, char *args[] )
         player->m_inUp = inputManager.m_bInputState[CONTROLS_UP];
         player->m_inDown = inputManager.m_bInputState[CONTROLS_DOWN];
 
-        camLook = Vector3f(0, 0, -1.0f).RotateAxis( 0, camPitch * DEG2RAD ).RotateAxis( 1, camYaw * DEG2RAD );
+        camLook = Vector3f(0, 0, -1.0f).Rotate( Vector3f(0, 1, 0), camPitch * DEG2RAD ).Rotate( Vector3f(1, 0, 0), camYaw * DEG2RAD );
 
         playerCam->setrotation(camLook);
         player->setlookRotation( Vector3f( camPitch, camYaw ) );
