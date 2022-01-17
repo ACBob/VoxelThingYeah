@@ -27,7 +27,7 @@ bool CClient::Connect(std::string host, int port)
         return false;
     }
 
-    if (enet_address_set_host(&m_address, host.c_str()) != 0)
+    if (enet_address_set_host_ip(&m_address, host.c_str()) != 0)
     {
         con_error("Failed to resolve hostname");
         return false;

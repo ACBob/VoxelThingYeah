@@ -28,11 +28,11 @@ CServer::CServer(int port, int maxClients)
 
     con_info("Starting server on port %d", port);
 
-    m_pHost = enet_host_create( &m_address, maxClients, 2, 0, 0);
+    m_pHost = enet_host_create( &m_address, maxClients, 1, 0, 0);
     if (m_pHost == nullptr)
     {
         con_error("Failed to create ENet server");
-        return;
+        return;\
     }
 }
 
@@ -50,9 +50,10 @@ CServer::~CServer()
 
 void CServer::Update()
 {
-    while ( enet_host_service( m_pHost, &m_event, 10 ) > 0 )
+    ENetEvent event;
+    while ( enet_host_service( m_pHost, &event, 0 ) > 0 )
     {
-        switch (m_event.type)
+        switch (event.type)
         {
             case ENET_EVENT_TYPE_DISCONNECT:
             {
@@ -60,10 +61,10 @@ void CServer::Update()
                 con_info("Client disconnected");
 
                 // Remove client from list
-                CClient *pClient = m_peerMap[m_event.peer];
+                CClient *pClient = m_peerMap[event.peer];
                 m_clients.erase(std::remove(m_clients.begin(), m_clients.end(), pClient), m_clients.end());
                 m_clientMap.erase(pClient->m_sName);
-                m_peerMap.erase(m_event.peer);
+                m_peerMap.erase(event.peer);
 
                 con_info("Goodbye, %s!", pClient->m_sName.c_str());
 
@@ -82,22 +83,22 @@ void CServer::Update()
                 // Create client
                 CClient *pClient = new CClient();
                 pClient->m_pEntity = nullptr;
-                pClient->m_pPeer = m_event.peer;
+                pClient->m_pPeer = event.peer;
                 pClient->m_sName = "";
 
                 // Add client to list
                 m_clients.push_back(pClient);
                 m_clientMap[pClient->m_sName] = pClient;
-                m_peerMap[m_event.peer] = pClient;
+                m_peerMap[event.peer] = pClient;
             }
             break;
             case ENET_EVENT_TYPE_RECEIVE:
             {
                 // Get client
-                CClient *pClient = m_peerMap[m_event.peer];
+                CClient *pClient = m_peerMap[event.peer];
 
                 // Plop the data into a string
-                std::string data(m_event.packet->data, m_event.packet->data + m_event.packet->dataLength);
+                std::string data(event.packet->data, event.packet->data + event.packet->dataLength);
 
                 // Go forth, and handle it my child
                 HandlePacket(pClient, data);

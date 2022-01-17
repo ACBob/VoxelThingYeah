@@ -48,7 +48,6 @@ class CServer
     protected:
         ENetAddress m_address;
         ENetHost *m_pHost = nullptr;
-        ENetEvent m_event;
         int m_port;
         int m_maxClients;
 };
