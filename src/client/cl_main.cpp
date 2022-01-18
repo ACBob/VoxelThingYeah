@@ -12,7 +12,7 @@
 #include <glad/glad.h>
 
 #include "shared/filesystem.hpp"
-#include "network/network.hpp"
+#include "network/cl_network.hpp"
 
 #include "render/render.hpp"
 
@@ -84,7 +84,7 @@ int main( int argc, char *args[] )
     CClient client;
 
     // Try and connect to the server
-    if (!client.Connect("127.0.0.1", 58008))
+    if (!client.Connect("127.0.0.1", DEFAULT_PORT))
         window.Panic("Failed to connect to server!");
 
 
@@ -152,6 +152,8 @@ int main( int argc, char *args[] )
     {
         window.PollEvents();
         inputManager.Update();
+
+        client.Update();
 
         glClearColor( 0.0f, 0.5f, 0.5f, 1.0f );
         glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT );

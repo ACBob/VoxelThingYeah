@@ -77,20 +77,20 @@ target_include_directories( "${PROJECT_NAME}_client" PUBLIC
 )
 target_compile_definitions( "${PROJECT_NAME}_client" PRIVATE TOML_HEADER_ONLY)
 
-add_executable( guiTest ${GUI_TEST_SOURCES} )
-target_link_libraries( guiTest VoxelThingYeahShared VoxelThingYeahUtil Threads::Threads
-	${SDL2_LIBRARIES}
-	${CMAKE_DL_LIBS}
-	VoxelThingYeahRender
-)
-target_include_directories( guiTest PUBLIC
-	${GLM_INCLUDE_DIRS}
-	${SDL2_INCLUDE_DIRS}
-	${OpenGL_INCLUDE_DIRS}
-	"${CMAKE_CURRENT_SOURCE_DIR}/../include"
-	"${CMAKE_CURRENT_SOURCE_DIR}"
-	"${CMAKE_CURRENT_SOURCE_DIR}/shared"
-	"${CMAKE_CURRENT_SOURCE_DIR}/client"
-	"${CMAKE_CURRENT_SOURCE_DIR}/utility"
-)
-target_compile_definitions( guiTest PRIVATE TOML_HEADER_ONLY)
+# add_executable( guiTest ${GUI_TEST_SOURCES} )
+# target_link_libraries( guiTest VoxelThingYeahShared VoxelThingYeahUtil Threads::Threads
+# 	${SDL2_LIBRARIES}
+# 	${CMAKE_DL_LIBS}
+# 	VoxelThingYeahRender
+# )
+# target_include_directories( guiTest PUBLIC
+# 	${GLM_INCLUDE_DIRS}
+# 	${SDL2_INCLUDE_DIRS}
+# 	${OpenGL_INCLUDE_DIRS}
+# 	"${CMAKE_CURRENT_SOURCE_DIR}/../include"
+# 	"${CMAKE_CURRENT_SOURCE_DIR}"
+# 	"${CMAKE_CURRENT_SOURCE_DIR}/shared"
+# 	"${CMAKE_CURRENT_SOURCE_DIR}/client"
+# 	"${CMAKE_CURRENT_SOURCE_DIR}/utility"
+# )
+# target_compile_definitions( guiTest PRIVATE TOML_HEADER_ONLY)

@@ -11,7 +11,7 @@ set(CLIENT_SOURCES
     ${world_SRCS}
     ${ent_SRCS}
 
-	"${CMAKE_CURRENT_SOURCE_DIR}/main.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/cl_main.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/cvar_clientside.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/inputmanager.cpp"
 

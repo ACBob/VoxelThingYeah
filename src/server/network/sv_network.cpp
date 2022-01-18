@@ -1,4 +1,4 @@
-#include "network.hpp"
+#include "sv_network.hpp"
 
 #include "shared/logging.hpp"
 #include "shared/network/protocol.hpp"
@@ -23,16 +23,19 @@ CServer::CServer(int port, int maxClients)
     m_address.host = ENET_HOST_ANY;
     m_address.port = port;
 
+    enet_initialize();
+    atexit(enet_deinitialize);
+
     m_port = port;
     m_maxClients = maxClients;
 
     con_info("Starting server on port %d", port);
 
-    m_pHost = enet_host_create( &m_address, maxClients, 1, 0, 0);
+    m_pHost = enet_host_create( &m_address, maxClients, 2, 0, 0);
     if (m_pHost == nullptr)
     {
         con_error("Failed to create ENet server");
-        return;\
+        return;
     }
 }
 
@@ -53,6 +56,7 @@ void CServer::Update()
     ENetEvent event;
     while ( enet_host_service( m_pHost, &event, 0 ) > 0 )
     {
+        con_info("Event: %d", event.type);
         switch (event.type)
         {
             case ENET_EVENT_TYPE_DISCONNECT:
@@ -104,6 +108,9 @@ void CServer::Update()
                 HandlePacket(pClient, data);
             }
             break;
+
+            // Shut up compiler
+            case ENET_EVENT_TYPE_NONE: break;
         }
     }
 

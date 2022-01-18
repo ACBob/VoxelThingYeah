@@ -2,7 +2,7 @@
 
 #include <cstdio>
 
-#include "network/network.hpp"
+#include "network/sv_network.hpp"
 #include "shared/filesystem.hpp"
 
 #include <chrono>
@@ -68,7 +68,7 @@ int main( int argc, char *args[] )
 	// atexit( network::Uninit );
 
 	con_info( "Create Server..." );
-	CServer server( sv_port->GetInt(), sv_maxclients->GetInt() );
+	CServer server( 27015, sv_maxclients->GetInt() );
 	if ( !true ) // TODO: validate server
 	{
 		con_critical( "Server became invalid" );
@@ -80,21 +80,21 @@ int main( int argc, char *args[] )
 
 	// Thread for getting input from the console
 	// TODO: move to a more generic fashion so that the client can also have it, and try to achieve readline-like functionality
-	std::thread consoleThread( []() {
-		while ( sv_run->GetBool() )
-		{
-			// read from stdin
-			char *input = new char[1024];
-			std::cin.getline( input, 1024 );
-			if ( input )
-			{
-				con_info( "Console input: %s", input );
-				conVarHandle.Parse( input );
-			}
-			else
-				std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
-		}
-	} );
+	// std::thread consoleThread( []() {
+	// 	while ( sv_run->GetBool() )
+	// 	{
+	// 		// read from stdin
+	// 		char *input = new char[1024];
+	// 		std::cin.getline( input, 1024 );
+	// 		if ( input )
+	// 		{
+	// 			con_info( "Console input: %s", input );
+	// 			conVarHandle.Parse( input );
+	// 		}
+	// 		else
+	// 			std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
+	// 	}
+	// } );
 
 	con_info( "Begin server main loop..." );
 	int64_t then =
@@ -116,10 +116,10 @@ int main( int argc, char *args[] )
 
 			// World
 			// world.Tick( i, delta );
-
-			// Networking
-			server.Update();
 		}
+
+		// Networking
+		server.Update();
 	}
 
 	for ( CClient *c : server.m_clients )
@@ -128,7 +128,7 @@ int main( int argc, char *args[] )
 		server.Update();
 	}
 
-	consoleThread.join();
+	// consoleThread.join();
 	conVarHandle.WriteCFG( "svconfig.cfg" );
 
 	return EXIT_SUCCESS;

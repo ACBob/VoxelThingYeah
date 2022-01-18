@@ -5,7 +5,7 @@ set(SERVER_SOURCES
 	${sound_SRCS}
 
 	
-	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/cvar_serverside.cpp
+	"${CMAKE_CURRENT_SOURCE_DIR}/sv_main.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/cvar_serverside.cpp"
 	PARENT_SCOPE
 )

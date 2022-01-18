@@ -1,4 +1,4 @@
-#include "network.hpp"
+#include "cl_network.hpp"
 
 #include "shared/logging.hpp"
 
@@ -6,7 +6,10 @@
 
 CClient::CClient()
 {
-    m_pHost = enet_host_create(nullptr, 1, 1, 0, 0);
+    enet_initialize();
+    atexit(enet_deinitialize);
+
+    m_pHost = enet_host_create(NULL, 1, 2, 0, 0);
 
     if (m_pHost == nullptr)
     {
@@ -45,30 +48,44 @@ bool CClient::Connect(std::string host, int port)
         return false;
     }
 
-    con_info("Connected to server");
-    con_info("Waiting for server to accept connection");
-    if (enet_host_service(m_pHost, &m_event, 5000) > 0)
+    // Wait for connection
+    ENetEvent event;
+    if (enet_host_service(m_pHost, &event, 5000) > 0 && event.type == ENET_EVENT_TYPE_CONNECT)
     {
-        if (m_event.type == ENET_EVENT_TYPE_CONNECT)
-        {
-            con_info("Hello! We've connected to the server!");
-            con_info("Sending necessary information to server");
-            m_pServer->m_pPeer = m_event.peer;
-            network::cl_sendJoinGame(m_pServer->m_pPeer, "Deez", "Deez");
-            return true;
-        }
-        else
-        {
-            con_error("Connection refused");
-            return false;
-        }
-    }
-    else
-    {
-        con_error("Connection timed out :(");
-        return false;
+        con_info("Connected to server");
+        con_info("Send our info");
+        network::cl_sendJoinGame(m_pServer->m_pPeer, "test", "test");
+        return true;
     }
 
+    con_error("Failed to connect to server");
+    return false;
+}
+
+void CClient::Update() {
+    ENetEvent event;
+    while (enet_host_service(m_pHost, &event, 0) > 0)
+    {
+        con_info("Event: %d", event.type);
+        switch (event.type)
+        {
+            case ENET_EVENT_TYPE_CONNECT:
+            {
+                con_info("Connected to server");
+                break;
+            }
+            case ENET_EVENT_TYPE_RECEIVE:
+            {
+                con_info("Received packet");
+                break;
+            }
+            case ENET_EVENT_TYPE_DISCONNECT:
+            {
+                con_info("Disconnected from server");
+                break;
+            }
+        }
+    }
 }
 
 void CClient::Disconnect()

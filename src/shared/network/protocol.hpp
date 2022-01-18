@@ -10,6 +10,9 @@
 // Max bytes in a packet
 #define MEEGREEF_MAX_PACKET_SIZE 0xFFFF
 
+#define DEFAULT_PORT 27015
+#define DEF_MAX_CLIENTS 64
+
 struct NetworkPacket
 {
     unsigned char m_chVersion;
