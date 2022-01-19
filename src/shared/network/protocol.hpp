@@ -19,6 +19,13 @@ struct NetworkPacket
     unsigned char m_chPacketType;
     char *m_chPacketData;
     unsigned short m_usPacketSize; // Size of network packet minus 2 bytes for version and packet type
+
+    ~NetworkPacket()
+    {
+        // laziness
+        if (m_chPacketData != nullptr)
+            delete[] m_chPacketData;
+    }
 };
 
 struct ClientPacket : public NetworkPacket // Coming FROM the client TO the server
@@ -82,7 +89,7 @@ struct ServerPacket : public NetworkPacket // Coming FROM the client TO the serv
         JOIN_GAME_RESPONSE = 0x01, // Sent as a response to a JOIN_GAME request
         /*
             {
-                unsigned char protoclVersion;
+                unsigned char protocolVersion;
                 string serverName;
                 string serverMotd;
                 bool isPriviledged;

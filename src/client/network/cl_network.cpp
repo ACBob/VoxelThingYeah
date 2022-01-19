@@ -6,6 +6,8 @@
 
 #include <cstring>
 
+#include "cvar_clientside.hpp"
+
 CClient::CClient()
 {
     enet_initialize();
@@ -79,8 +81,20 @@ void CClient::Update() {
             }
             case ENET_EVENT_TYPE_RECEIVE:
             {
-                con_info("Received packet");
-                break;
+                // we need to deserialize the packet before we can use it
+                CSerializer serializer((char*)event.packet->data, event.packet->dataLength);
+                ServerPacket packet;
+
+                packet.m_usPacketSize = event.packet->dataLength - 2;
+
+                serializer.ReadUChar(packet.m_chVersion);
+                serializer.ReadUChar(packet.m_chPacketType);
+                
+                packet.m_chPacketData = new char[packet.m_usPacketSize];
+                serializer.ReadBytes(packet.m_chPacketData, packet.m_usPacketSize);
+
+                // Handle packet
+                network::handlePacket(packet, event.peer, this);
             }
             case ENET_EVENT_TYPE_DISCONNECT:
             {
@@ -117,6 +131,41 @@ void CClient::Disconnect()
 
 namespace network
 {
+    void handlePacket(const ServerPacket& packet, ENetPeer* peer, void* side)
+    {
+        CClient *pClient = (CClient*)side;
+
+        switch(packet.m_chPacketType) {
+            case ServerPacket::JOIN_GAME_RESPONSE:
+                {
+                    unsigned char chVersion;
+                    std::string serverName;
+                    std::string serverMotd;
+                    bool bPrivilaged;
+                    Vector3c chunkSizes;
+
+                    CSerializer serializer((char*)packet.m_chPacketData, packet.m_usPacketSize);
+                    serializer.ReadUChar(chVersion);
+                    serializer.ReadSTDString(serverName);
+                    serializer.ReadSTDString(serverMotd);
+                    serializer.ReadBool(bPrivilaged);
+
+                    serializer.ReadChar(chunkSizes.x);
+                    serializer.ReadChar(chunkSizes.y);
+                    serializer.ReadChar(chunkSizes.z);
+
+                    con_info("Server info: %s", serverName.c_str());
+                    con_info("Server MOTD: %s", serverMotd.c_str());
+
+                    // Set the appropriate cvars
+                    cl_servername->SetString(serverName.c_str());
+
+                    // pClient->m_pWorld->SetChunkSizes(chunkSizes);
+                }
+            break;
+        }
+    }
+
     ENetPacket *giveMeAPacket(char packetType, char* data, unsigned short dataSize)
     {
         // dataSize is the packet's 'data' area

@@ -39,6 +39,7 @@ class CSerializer
 
         void Resize(int iNewSize);
 
+        void WriteBool(bool bValue);
         void WriteChar(char value);
         void WriteUChar(unsigned char value);
         void WriteShort(short value);
@@ -53,6 +54,7 @@ class CSerializer
         void WriteBytes(char *value, int iLength);
         void WriteBytes(const char *value, int iLength);
 
+        bool ReadBool(bool &bValue);
         bool ReadChar(char &value);
         bool ReadUChar(unsigned char &value);
         bool ReadShort(short &value);

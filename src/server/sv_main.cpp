@@ -78,6 +78,8 @@ int main( int argc, char *args[] )
 	con_info( "Create World..." );
 	CWorld world;
 
+	server.m_pWorld = &world;
+
 	// Thread for getting input from the console
 	// TODO: move to a more generic fashion so that the client can also have it, and try to achieve readline-like functionality
 	// std::thread consoleThread( []() {

@@ -97,6 +97,7 @@ void CSerializer::Resize(int iNewSize) {
         m_nBufferPos += sizeof(type); \
     }
 
+SERIALIZE_WRITE(bool, Bool);
 SERIALIZE_WRITE(char, Char);
 SERIALIZE_WRITE(unsigned char, UChar);
 SERIALIZE_WRITE(short, Short);
@@ -148,6 +149,7 @@ void CSerializer::WriteSTDString(std::string value) {
         return true; \
     }
 
+SERIALIZE_READ(bool, Bool);
 SERIALIZE_READ(char, Char);
 SERIALIZE_READ(unsigned char, UChar);
 SERIALIZE_READ(short, Short);

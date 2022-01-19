@@ -106,16 +106,9 @@ void CServer::Update()
 
                 serializer.ReadUChar(packet.m_chVersion);
                 serializer.ReadUChar(packet.m_chPacketType);
+
+                packet.m_chPacketData = new char[packet.m_usPacketSize];
                 serializer.ReadBytes(packet.m_chPacketData, packet.m_usPacketSize);
-
-                std::string debug;
-                // append hex
-                for (int i = 0; i < serializer.m_nBufferSize; i++)
-                {
-                    debug += std::to_string((int)serializer.m_chBuffer[i]) + " ";
-                }
-
-                con_debug("Received packet: %s", debug.c_str());
 
                 // Handle packet
                 network::handlePacket(packet, event.peer, this);
@@ -261,7 +254,12 @@ namespace network
     void sv_sendJoinGameResponse(ENetPeer* peer, const std::string& serverName, const std::string& serverMotd, bool isPriviledged, Vector3i chunkSize)
     {
         CSerializer serializer;
-        serializer << serverName << serverMotd << isPriviledged << chunkSize.x << chunkSize.y << chunkSize.z;
+        serializer.WriteSTDString(serverName);
+        serializer.WriteSTDString(serverMotd);
+        serializer.WriteBool(isPriviledged);
+        serializer.WriteChar(chunkSize.x);
+        serializer.WriteChar(chunkSize.y);
+        serializer.WriteChar(chunkSize.z);
 
         ENetPacket *packet = giveMeAPacket(ServerPacket::JOIN_GAME_RESPONSE, serializer.m_chBuffer, serializer.m_nBufferSize);
         enet_peer_send(peer, 0, packet);
