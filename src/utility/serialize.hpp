@@ -14,6 +14,7 @@
         - Single-Precision 32-bit IEEE 754 floating point
         - UTF-8 String, up to 2^16-1 characters
             Given as a length, followed by the string
+            Does NOT include the null terminator
 */
 
 #include <string>
@@ -25,6 +26,8 @@ class CSerializer
     public:
         CSerializer();
         CSerializer(char *pBuffer, int iBufferSize);
+        CSerializer(char *pBuffer); // assumes null-termination
+        CSerializer(std::string sBuffer); // Copies the string into a new buffer
         ~CSerializer();
 
         char *m_chBuffer;
@@ -32,60 +35,60 @@ class CSerializer
         int m_nBufferPos;
 
         char *GetBuffer();
+        int GetBufferSize();
 
         void Resize(int iNewSize);
 
-        void Write(bool value);
-        void Write(char value);
-        void Write(unsigned char value);
-        void Write(short value);
-        void Write(unsigned short value);
-        void Write(int value);
-        void Write(unsigned int value);
-        void Write(long value);
-        void Write(unsigned long value);
-        void Write(float value);
-        void Write(char *value);
-        void Write(char *value, int length);
-        void Write(std::string);
+        void WriteChar(char value);
+        void WriteUChar(unsigned char value);
+        void WriteShort(short value);
+        void WriteUShort(unsigned short value);
+        void WriteInt(int value);
+        void WriteUInt(unsigned int value);
+        void WriteLong(long value);
+        void WriteULong(unsigned long value);
+        void WriteFloat(float value);
+        void WriteString(char *value); // Like WriteBytes, but writes the length first
+        void WriteSTDString(std::string value); // Like WriteString, but uses std::string
+        void WriteBytes(char *value, int iLength);
+        void WriteBytes(const char *value, int iLength);
 
-        bool Read(bool &value);
-        bool Read(char &value);
-        bool Read(unsigned char &value);
-        bool Read(short &value);
-        bool Read(unsigned short &value);
-        bool Read(int &value);
-        bool Read(unsigned int &value);
-        bool Read(long &value);
-        bool Read(unsigned long &value);
-        bool Read(float &value);
-        bool Read(char *value, int length);
-        bool Read(char *value); // Creates a new string of read length
-        bool Read(std::string &value);
+        bool ReadChar(char &value);
+        bool ReadUChar(unsigned char &value);
+        bool ReadShort(short &value);
+        bool ReadUShort(unsigned short &value);
+        bool ReadInt(int &value);
+        bool ReadUInt(unsigned int &value);
+        bool ReadLong(long &value);
+        bool ReadULong(unsigned long &value);
+        bool ReadFloat(float &value);
+        bool ReadString(char *value);
+        bool ReadSTDString(std::string &value);
+        bool ReadBytes(char *value, int iLength);
 
-        CSerializer &operator <<(bool value) { Write(value); return *this; }
-        CSerializer &operator <<(char value) { Write(value); return *this; }
-        CSerializer &operator <<(unsigned char value) { Write(value); return *this; }
-        CSerializer &operator <<(short value) { Write(value); return *this; }
-        CSerializer &operator <<(unsigned short value) { Write(value); return *this; }
-        CSerializer &operator <<(int value) { Write(value); return *this; }
-        CSerializer &operator <<(unsigned int value) { Write(value); return *this; }
-        CSerializer &operator <<(long value) { Write(value); return *this; }
-        CSerializer &operator <<(unsigned long value) { Write(value); return *this; }
-        CSerializer &operator <<(float value) { Write(value); return *this; }
-        CSerializer &operator <<(char *value) { Write(value); return *this; }
-        CSerializer &operator <<(std::string value) { Write(value); return *this; }
+        CSerializer &operator <<(char value) { WriteChar(value); return *this; }
+        CSerializer &operator <<(unsigned char value) { WriteUChar(value); return *this; }
+        CSerializer &operator <<(short value) { WriteShort(value); return *this; }
+        CSerializer &operator <<(unsigned short value) { WriteUShort(value); return *this; }
+        CSerializer &operator <<(int value) { WriteInt(value); return *this; }
+        CSerializer &operator <<(unsigned int value) { WriteUInt(value); return *this; }
+        CSerializer &operator <<(long value) { WriteLong(value); return *this; }
+        CSerializer &operator <<(unsigned long value) { WriteULong(value); return *this; }
+        CSerializer &operator <<(float value) { WriteFloat(value); return *this; }
+        CSerializer &operator <<(char *value) { WriteString(value); return *this; }
+        CSerializer &operator <<(std::string value) { WriteSTDString(value); return *this; }
+        // There is no operator << for bytes, because it's ambiguous. Especially so since bytes needs length specified.
 
-        CSerializer &operator >>(bool &value) { Read(value); return *this; }
-        CSerializer &operator >>(char &value) { Read(value); return *this; }
-        CSerializer &operator >>(unsigned char &value) { Read(value); return *this; }
-        CSerializer &operator >>(short &value) { Read(value); return *this; }
-        CSerializer &operator >>(unsigned short &value) { Read(value); return *this; }
-        CSerializer &operator >>(int &value) { Read(value); return *this; }
-        CSerializer &operator >>(unsigned int &value) { Read(value); return *this; }
-        CSerializer &operator >>(long &value) { Read(value); return *this; }
-        CSerializer &operator >>(unsigned long &value) { Read(value); return *this; }
-        CSerializer &operator >>(float &value) { Read(value); return *this; }
-        CSerializer &operator >>(char *value) { Read(value); return *this; }
-        CSerializer &operator >>(std::string &value) { Read(value); return *this; }
+        CSerializer &operator >>(char &value) { ReadChar(value); return *this; }
+        CSerializer &operator >>(unsigned char &value) { ReadUChar(value); return *this; }
+        CSerializer &operator >>(short &value) { ReadShort(value); return *this; }
+        CSerializer &operator >>(unsigned short &value) { ReadUShort(value); return *this; }
+        CSerializer &operator >>(int &value) { ReadInt(value); return *this; }
+        CSerializer &operator >>(unsigned int &value) { ReadUInt(value); return *this; }
+        CSerializer &operator >>(long &value) { ReadLong(value); return *this; }
+        CSerializer &operator >>(unsigned long &value) { ReadULong(value); return *this; }
+        CSerializer &operator >>(float &value) { ReadFloat(value); return *this; }
+        CSerializer &operator >>(char *value) { ReadString(value); return *this; }
+        CSerializer &operator >>(std::string &value) { ReadSTDString(value); return *this; }
+        // There is no operator >> for bytes, because it's ambiguous. Especially so since bytes needs length specified.
 };

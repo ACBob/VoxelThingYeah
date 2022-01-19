@@ -2,131 +2,199 @@
 
 #include <cstring>
 
+/*
+    Data Types:
+        - Boolean, 0x00 = false, 0x01 = true
+        - Byte, 0x00 - 0xFF
+        - Unsigned Byte, 0x00 - 0xFF
+        - Short, 0x0000 - 0xFFFF
+        - Unsigned Short, 0x0000 - 0xFFFF
+        - Int, 0x00000000 - 0xFFFFFFFF
+        - Unsigned Int, 0x00000000 - 0xFFFFFFFF
+        - Long, 0x0000000000000000 - 0xFFFFFFFFFFFFFFFF
+        - Unsigned Long, 0x0000000000000000 - 0xFFFFFFFFFFFFFFFF
+        - Single-Precision 32-bit IEEE 754 floating point
+        - UTF-8 String, up to 2^16-1 characters
+            Given as a length, followed by the string
+            Does NOT include the null terminator
+*/
+
 CSerializer::CSerializer() {
     m_nBufferSize = 0;
     m_nBufferPos = 0;
 
-    m_chBuffer = new char[m_nBufferSize];
+    m_chBuffer = nullptr;
 }
 
 CSerializer::CSerializer(char *pBuffer, int iBufferSize) {
     m_nBufferSize = iBufferSize;
     m_nBufferPos = 0;
 
-    m_chBuffer = pBuffer;
+    m_chBuffer = new char[m_nBufferSize];
+    memcpy(m_chBuffer, pBuffer, m_nBufferSize);
+}
+
+CSerializer::CSerializer(char *pBuffer) {
+    m_nBufferSize = strlen(pBuffer);
+    m_nBufferPos = 0;
+
+    m_chBuffer = new char[m_nBufferSize];
+    memcpy(m_chBuffer, pBuffer, m_nBufferSize);
+}
+
+CSerializer::CSerializer(std::string sBuffer) {
+    m_nBufferSize = sBuffer.length();
+    m_nBufferPos = 0;
+
+    m_chBuffer = new char[m_nBufferSize];
+    memcpy(m_chBuffer, sBuffer.c_str(), m_nBufferSize);
 }
 
 CSerializer::~CSerializer() {
-    delete[] m_chBuffer;
+    if (m_chBuffer != nullptr) {
+        delete[] m_chBuffer;
+    }
 }
 
 char *CSerializer::GetBuffer() {
     return m_chBuffer;
 }
 
+int CSerializer::GetBufferSize() {
+    return m_nBufferSize;
+}
+
 void CSerializer::Resize(int iNewSize) {
-    if (iNewSize < m_nBufferSize)
-    {
-        // Shrink and eradicate any excess data
+    if (m_chBuffer == nullptr) {
+        // We're actually creating a new buffer
+        m_chBuffer = new char[iNewSize];
+        memset(m_chBuffer, 0, iNewSize);
+        m_nBufferPos = 0;
         m_nBufferSize = iNewSize;
-        m_chBuffer[m_nBufferSize] = '\0';
+        return;
     }
 
-    if (iNewSize > m_nBufferSize) {
-        m_nBufferSize = iNewSize;
-        m_chBuffer = (char *)realloc(m_chBuffer, m_nBufferSize);
-    }
+    if (iNewSize > MAX_SERIALIZE_BUFFER_SIZE)
+        return;
+
+    char *pNewBuffer = new char[iNewSize];
+    memcpy(pNewBuffer, m_chBuffer, m_nBufferSize);
+    delete[] m_chBuffer;
+    m_chBuffer = pNewBuffer;
+    m_nBufferSize = iNewSize;
+
     if (m_nBufferPos > m_nBufferSize) {
         m_nBufferPos = m_nBufferSize;
     }
-
-    m_chBuffer[m_nBufferPos] = '\0';
 }
 
-#define SERIALIZE_WRITE(type) \
-    void CSerializer::Write(type value) { \
-        if (m_nBufferPos + sizeof(type) > m_nBufferSize) \
-            if (m_nBufferPos + sizeof(type) > MAX_SERIALIZE_BUFFER_SIZE) \
-                return; \
-            else \
-                Resize(m_nBufferPos + sizeof(type)); \
+#define SERIALIZE_WRITE(type, name) \
+    void CSerializer::Write##name(type value) { \
+        if (m_nBufferPos + sizeof(type) > m_nBufferSize) { \
+            Resize(m_nBufferSize + sizeof(type)); \
+        } \
         memcpy(m_chBuffer + m_nBufferPos, &value, sizeof(type)); \
         m_nBufferPos += sizeof(type); \
     }
 
-SERIALIZE_WRITE(bool);
-SERIALIZE_WRITE(char);
-SERIALIZE_WRITE(unsigned char);
-SERIALIZE_WRITE(short);
-SERIALIZE_WRITE(unsigned short);
-SERIALIZE_WRITE(int);
-SERIALIZE_WRITE(unsigned int);
-SERIALIZE_WRITE(long);
-SERIALIZE_WRITE(unsigned long);
-SERIALIZE_WRITE(float);
+SERIALIZE_WRITE(char, Char);
+SERIALIZE_WRITE(unsigned char, UChar);
+SERIALIZE_WRITE(short, Short);
+SERIALIZE_WRITE(unsigned short, UShort);
+SERIALIZE_WRITE(int, Int);
+SERIALIZE_WRITE(unsigned int, UInt);
+SERIALIZE_WRITE(long, Long);
+SERIALIZE_WRITE(unsigned long, ULong);
+SERIALIZE_WRITE(float, Float);
 
-void CSerializer::Write(char *value) {
-    int length = strlen(value);
-    Write(length);
-    Write(value, length);
+void CSerializer::WriteString(char *pString) {
+    int iStringLength = strlen(pString);
+    WriteInt(iStringLength);
+    if (m_nBufferPos + iStringLength > m_nBufferSize) {
+        Resize(m_nBufferSize + iStringLength);
+    }
+    memcpy(m_chBuffer + m_nBufferPos, pString, iStringLength);
+    m_nBufferPos += iStringLength;
 }
 
-void CSerializer::Write(char *value, int length) {
-    if (m_nBufferPos + length > m_nBufferSize)
-        if (m_nBufferPos + length > MAX_SERIALIZE_BUFFER_SIZE)
-            return;
-        else
-            Resize(m_nBufferPos + length);
+void CSerializer::WriteBytes(char *value, int length) {
+    if (m_nBufferPos + length > m_nBufferSize) {
+        Resize(m_nBufferSize + length);
+    }
     memcpy(m_chBuffer + m_nBufferPos, value, length);
     m_nBufferPos += length;
 }
 
-void CSerializer::Write(std::string value) {
-    Write(value.c_str());
+void CSerializer::WriteBytes(const char *value, int length) {
+    if (m_nBufferPos + length > m_nBufferSize) {
+        Resize(m_nBufferSize + length);
+    }
+    memcpy(m_chBuffer + m_nBufferPos, value, length);
+    m_nBufferPos += length;
 }
 
-#define SERIALIZE_READ(type) \
-    bool CSerializer::Read(type &value) { \
-        if (m_nBufferPos + sizeof(type) > m_nBufferSize) \
+void CSerializer::WriteSTDString(std::string value) {
+    WriteShort(value.length());
+    WriteBytes(value.c_str(), value.length());
+}
+
+#define SERIALIZE_READ(type, name) \
+    bool CSerializer::Read##name (type &value) { \
+        if (m_nBufferPos + sizeof(type) > m_nBufferSize) { \
             return false; \
+        } \
         memcpy(&value, m_chBuffer + m_nBufferPos, sizeof(type)); \
         m_nBufferPos += sizeof(type); \
         return true; \
     }
 
-SERIALIZE_READ(bool);
-SERIALIZE_READ(char);
-SERIALIZE_READ(unsigned char);
-SERIALIZE_READ(short);
-SERIALIZE_READ(unsigned short);
-SERIALIZE_READ(int);
-SERIALIZE_READ(unsigned int);
-SERIALIZE_READ(long);
-SERIALIZE_READ(unsigned long);
-SERIALIZE_READ(float);
+SERIALIZE_READ(char, Char);
+SERIALIZE_READ(unsigned char, UChar);
+SERIALIZE_READ(short, Short);
+SERIALIZE_READ(unsigned short, UShort);
+SERIALIZE_READ(int, Int);
+SERIALIZE_READ(unsigned int, UInt);
+SERIALIZE_READ(long, Long);
+SERIALIZE_READ(unsigned long, ULong);
+SERIALIZE_READ(float, Float);
 
-bool CSerializer::Read(char *value, int length) {
-    if (m_nBufferPos + length > m_nBufferSize)
+bool CSerializer::ReadString(char *value) {
+    unsigned short iStringLength;
+    if (!ReadUShort(iStringLength)) {
         return false;
-    memcpy(value, m_chBuffer + m_nBufferPos, length);
-    m_nBufferPos += length;
+    }
+
+    if (m_nBufferPos + iStringLength > m_nBufferSize) {
+        return false;
+    }
+
+    memcpy(value, m_chBuffer + m_nBufferPos, iStringLength);
+    value[iStringLength] = '\0';
+    m_nBufferPos += iStringLength;
     return true;
 }
 
-bool CSerializer::Read(char *value) {
-    int length;
-    if (!Read(length))
+bool CSerializer::ReadSTDString(std::string &value) {
+    unsigned short iStringLength;
+    if (!ReadUShort(iStringLength)) {
         return false;
-    value = new char[length + 1];
-    value[length] = '\0';
-    return Read(value, length);
+    }
+
+    if (m_nBufferPos + iStringLength > m_nBufferSize) {
+        return false;
+    }
+
+    value.assign(m_chBuffer + m_nBufferPos, iStringLength);
+    m_nBufferPos += iStringLength;
+    return true;
 }
 
-bool CSerializer::Read(std::string &value) {
-    char *value_;
-    if (!Read(value_))
+bool CSerializer::ReadBytes(char *value, int length) {
+    if (m_nBufferPos + length > m_nBufferSize) {
         return false;
-    value = value_;
-    delete[] value_;
+    }
+
+    memcpy(value, m_chBuffer + m_nBufferPos, length);
+    m_nBufferPos += length;
     return true;
 }

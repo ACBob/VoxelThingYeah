@@ -4,6 +4,8 @@
 
 #include "utility/serialize.hpp"
 
+#include <cstring>
+
 CClient::CClient()
 {
     enet_initialize();
@@ -72,6 +74,7 @@ void CClient::Update() {
             case ENET_EVENT_TYPE_CONNECT:
             {
                 con_info("Connected to server");
+                network::cl_sendJoinGame(m_pServer->m_pPeer, "test", "test");
                 break;
             }
             case ENET_EVENT_TYPE_RECEIVE:
@@ -114,28 +117,61 @@ void CClient::Disconnect()
 
 namespace network
 {
-    ENetPacket *createClientPacket(char packetType, char* data, unsigned short dataSize)
+    ENetPacket *giveMeAPacket(char packetType, char* data, unsigned short dataSize)
     {
-        CSerializer serializer;
-        serializer << (char)MEEGREEF_PROTOCOL_VERSION << packetType << dataSize;
-        serializer.Write(data, dataSize);
+        // dataSize is the packet's 'data' area
+        // So we want to add the other fields (Version (1), PacketSize (2), PacketType (1))
+        // Create packet
 
-        ENetPacket *packet = enet_packet_create(serializer.m_chBuffer, serializer.m_nBufferSize, ENET_PACKET_FLAG_RELIABLE);
+        // We need to serialize the data
+        CSerializer serializer;
+        serializer.WriteUChar(MEEGREEF_PROTOCOL_VERSION);
+        serializer.WriteUChar(packetType);
+        serializer.WriteBytes(data, dataSize);
+
+        // Then create the packet
+        ENetPacket *packet = enet_packet_create(serializer.GetBuffer(), serializer.GetBufferSize(), ENET_PACKET_FLAG_RELIABLE);
+
+        std::string debug;
+        // append the hex values
+        for (int i = 0; i < serializer.GetBufferSize(); i++)
+        {
+            debug += std::to_string((int)serializer.GetBuffer()[i]) + " ";
+        }
+
+        con_debug("Packet: %s", debug.c_str());
+
         return packet;
     }
 
     void cl_sendJoinGame(ENetPeer* peer, const std::string &name, const std::string &password)
     {
+        // Serialize data
         CSerializer serializer;
         serializer << name << password;
 
-        ENetPacket *packet = createClientPacket(ClientPacket::JOIN_GAME, serializer.m_chBuffer, serializer.m_nBufferSize);
+        // // DEBUG: print the buffer as hex
+        // con_debug("Sending join game packet");
+        // con_debug("%s, %s", name.c_str(), password.c_str());
+        // for (int i = 0; i < serializer.m_nBufferSize; i++)
+        // {
+        //     con_debug("0x%02X", serializer.m_chBuffer[i]);
+        // }
+        // con_debug("..");
+
+        ENetPacket *packet = giveMeAPacket(ClientPacket::JOIN_GAME, serializer.m_chBuffer, serializer.m_nBufferSize);
+
+        // for (int i = 0; i < packet->dataLength; i++)
+        // {
+        //     con_debug("0x%02X", packet->data[i]);
+        // }
+
         enet_peer_send(peer, 0, packet);
     }
 
     void cl_sendLeaveGame(ENetPeer* peer)
     {
-        ENetPacket *packet = createClientPacket(ClientPacket::LEAVE_GAME, nullptr, 0);
+        ENetPacket *packet = giveMeAPacket(ClientPacket::LEAVE_GAME, nullptr, 0);
         enet_peer_send(peer, 0, packet);
     }
 }

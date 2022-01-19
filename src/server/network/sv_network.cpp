@@ -98,14 +98,27 @@ void CServer::Update()
             break;
             case ENET_EVENT_TYPE_RECEIVE:
             {
-                // Get client
-                CClient *pClient = m_peerMap[event.peer];
+                // we need to deserialize the packet before we can use it
+                CSerializer serializer((char*)event.packet->data, event.packet->dataLength);
+                ClientPacket packet;
 
-                // Plop the data into a string
-                std::string data(event.packet->data, event.packet->data + event.packet->dataLength);
+                packet.m_usPacketSize = event.packet->dataLength - 2;
 
-                // Go forth, and handle it my child
-                HandlePacket(pClient, data);
+                serializer.ReadUChar(packet.m_chVersion);
+                serializer.ReadUChar(packet.m_chPacketType);
+                serializer.ReadBytes(packet.m_chPacketData, packet.m_usPacketSize);
+
+                std::string debug;
+                // append hex
+                for (int i = 0; i < serializer.m_nBufferSize; i++)
+                {
+                    debug += std::to_string((int)serializer.m_chBuffer[i]) + " ";
+                }
+
+                con_debug("Received packet: %s", debug.c_str());
+
+                // Handle packet
+                network::handlePacket(packet, event.peer, this);
             }
             break;
 
@@ -129,33 +142,6 @@ void CServer::Update()
             }
         }
     }
-}
-
-void CServer::HandlePacket(CClient *pClient, std::string message)
-{
-    CSerializer serializer((char*)message.c_str(), message.size());
-
-    ClientPacket packet;
-    serializer >> packet.m_chVersion >> packet.m_usPacketSize >> packet.m_chPacketType;
-    serializer.Read(packet.m_chPacketData, packet.m_usPacketSize);
-
-    // // Check version
-    // if (packet.m_chVersion != PROTOCOL_VERSION)
-    // {
-    //     con_error("Client version mismatch: %d", packet.m_chVersion);
-    //     KickPlayer(pClient, "kick.versionMismatch");
-    //     return;
-    // }
-
-    // // Check packet size
-    // if (packet.m_usPacketSize > MAX_PACKET_SIZE)
-    // {
-    //     con_error("Client packet size too large: %d", packet.m_usPacketSize);
-    //     KickPlayer(pClient, "kick.packetSizeTooLarge");
-    //     return;
-    // }
-
-    network::handlePacket(packet, pClient->m_pPeer, this);
 }
 
 void CServer::KickPlayer( std::string name, std::string reason )
@@ -251,19 +237,24 @@ namespace network
 
             }
             break;
-            default:
-                con_error("Unknown packet type: %d", packet.m_chPacketType);
-            break;
         }
     }
 
-    ENetPacket *createServerPacket(char packetType, char* data, unsigned short dataSize)
+    ENetPacket *giveMeAPacket(char packetType, char* data, unsigned short dataSize)
     {
-        CSerializer serializer;
-        serializer << (char)MEEGREEF_PROTOCOL_VERSION << packetType << dataSize;
-        serializer.Write(data, dataSize);
+        // dataSize is the packet's 'data' area
+        // So we want to add the other fields (Version (1), PacketSize (2), PacketType (1))
+        // Create packet
+        ENetPacket *packet = enet_packet_create(nullptr, dataSize + 4, ENET_PACKET_FLAG_RELIABLE);
 
-        ENetPacket *packet = enet_packet_create(serializer.GetBuffer(), serializer.m_nBufferSize, ENET_PACKET_FLAG_RELIABLE);
+        // Now we need to serialize the data
+        CSerializer serializer;
+        serializer << (char)MEEGREEF_PROTOCOL_VERSION << dataSize << packetType;
+        serializer.WriteBytes(data, dataSize);
+
+        // Now we can copy the serialized data to the packet
+        memcpy(packet->data, serializer.GetBuffer(), dataSize + 4);
+
         return packet;
     }
 
@@ -272,7 +263,7 @@ namespace network
         CSerializer serializer;
         serializer << serverName << serverMotd << isPriviledged << chunkSize.x << chunkSize.y << chunkSize.z;
 
-        ENetPacket *packet = createServerPacket(ServerPacket::JOIN_GAME_RESPONSE, serializer.m_chBuffer, serializer.m_nBufferSize);
+        ENetPacket *packet = giveMeAPacket(ServerPacket::JOIN_GAME_RESPONSE, serializer.m_chBuffer, serializer.m_nBufferSize);
         enet_peer_send(peer, 0, packet);
     }
 
@@ -281,7 +272,7 @@ namespace network
         CSerializer serializer;
         serializer << name << position.x << position.y << position.z << pitch << yaw;
 
-        ENetPacket *packet = createServerPacket(ServerPacket::SPAWN_PLAYER, serializer.m_chBuffer, serializer.m_nBufferSize);
+        ENetPacket *packet = giveMeAPacket(ServerPacket::SPAWN_PLAYER, serializer.m_chBuffer, serializer.m_nBufferSize);
         enet_peer_send(peer, 0, packet);
     }
 
@@ -290,7 +281,7 @@ namespace network
         CSerializer serializer;
         serializer << username << pos.x << pos.y << pos.z << pitch << yaw;
 
-        ENetPacket *packet = createServerPacket(ServerPacket::MOVE_PLAYER, serializer.m_chBuffer, serializer.m_nBufferSize);
+        ENetPacket *packet = giveMeAPacket(ServerPacket::MOVE_PLAYER, serializer.m_chBuffer, serializer.m_nBufferSize);
         enet_peer_send(peer, 0, packet);
     }
 
@@ -299,7 +290,7 @@ namespace network
         CSerializer serializer;
         serializer << reason;
 
-        ENetPacket *packet = createServerPacket(ServerPacket::DISCONNECT, serializer.m_chBuffer, serializer.m_nBufferSize);
+        ENetPacket *packet = giveMeAPacket(ServerPacket::DISCONNECT, serializer.m_chBuffer, serializer.m_nBufferSize);
         enet_peer_send(peer, 0, packet);
     }
 }

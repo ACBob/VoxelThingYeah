@@ -16,9 +16,9 @@
 struct NetworkPacket
 {
     unsigned char m_chVersion;
-    unsigned short m_usPacketSize;
     unsigned char m_chPacketType;
-    char m_chPacketData[MEEGREEF_MAX_PACKET_SIZE];
+    char *m_chPacketData;
+    unsigned short m_usPacketSize; // Size of network packet minus 2 bytes for version and packet type
 };
 
 struct ClientPacket : public NetworkPacket // Coming FROM the client TO the server
